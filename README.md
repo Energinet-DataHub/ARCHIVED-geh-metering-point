@@ -13,7 +13,7 @@ These are the processes maintained by this domain.
 | Submission of master data – grid company                  |
 | Close down metering point                                               |
 | Connection of metering point with status new                                             |
-| Disconnection and reconnection of metering point                                                            |
+| Disconnect or reconnect metering point                                                            |
 | Change of settlement method                                                        |
 | Update production obligation                                                              |
 | Request service from grid company                              |
