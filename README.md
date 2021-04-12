@@ -9,14 +9,14 @@ These are the processes maintained by this domain.
 
 | Process                                                                      |
 | ---------------------------------------------------------------------------- |
-| Create Metering Point |
-| Submission of master data – grid company                  |
-| Close down metering point                                               |
-| Connection of metering point with status new                                             |
-| Disconnect or reconnect metering point                                                            |
-| Change of settlement method                                                        |
-| Update production obligation                                                              |
-| Request service from grid company                              |
+| [Create Metering Point](docs/business-processes/create-metering-point.md) |
+| [Submission of master data – grid company](docs/business-processes/submission-of-master-data-grid-acess-provider.md)                |
+| [Close down metering point](docs/business-processes/close-down-metering-point.md)                                               |
+| [Connection of metering point with status new](docs/business-processes/connection-of-metering-point-with-status-new.md)                                             |
+| [Disconnect or reconnect metering point](docs/business-processes/disconnect-or-reconnect-metering-point.md)                                                            |
+| [Change of settlement method](docs/business-processes/change-of-settlement-method.md)                                                        |
+| [Update production obligation](docs/business-processes/update-production-obligation.md)                                                              |
+| [Request service from grid company](docs/business-processes/request-service-from-grid-company.md)                             |
 | ....                                                                         |
 
 ## Architecture
