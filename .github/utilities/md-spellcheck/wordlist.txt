@@ -5,3 +5,9 @@ IaC
 mergeable
 Terraform
 MeteringPoints
+md
+Roadmap
+TBD
+TODO
+ADR
+TSO
