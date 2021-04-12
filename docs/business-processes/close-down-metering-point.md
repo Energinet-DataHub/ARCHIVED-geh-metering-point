@@ -1,4 +1,4 @@
-﻿#Close down metering point
+﻿# Close down metering point
 
 This business process may be used when the existing consumer wishes to close down a metering point and inform the grid access provider.
 Implementing this process results in the metering point being closed down.
