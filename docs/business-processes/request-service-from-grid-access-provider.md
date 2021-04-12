@@ -6,7 +6,6 @@ The following services are covered:
 
 * Ordinary metering point disconnection
 * Reconnect a metering point
-* Extra meter reading (consumption statement)
 * Close down metering point
 * Meter check
 * Change to Flex-settlement
