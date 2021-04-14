@@ -33,7 +33,7 @@ TBD
 
 ## Getting Started
 
-TBD
+[Read here how to get started](https://github.com/Energinet-DataHub/green-energy-hub/blob/main/docs/getting-started.md).
 
 ## Where can I get more help?
 
