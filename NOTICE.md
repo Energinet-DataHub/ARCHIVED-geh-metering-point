@@ -19,7 +19,7 @@ We recommend you read their licenses, as their terms may differ from the terms d
 
 <br/>
 
-### Github Actions
+### GitHub Actions
 
 | Action                                               | Url                                                                  | License                |
 | ---------------------------------------------------- | -------------------------------------------------------------------- | ---------------------- |
