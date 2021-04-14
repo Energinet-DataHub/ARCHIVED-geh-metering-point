@@ -46,3 +46,7 @@ dk
 energinet
 greenenergyhub
 thirdparty
+GSRN
+Dxx
+MeteringPointCreated
+CoS
