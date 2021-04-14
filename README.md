@@ -29,7 +29,14 @@ TBD
 
 ## Domain Roadmap
 
-TBD
+In current program increment we are working on the following>
+
+* We are able to create consumption metering points
+* We can messages as described in the CoS sequence diagram (TBD)
+* We are able to create exchange metering points
+* We are able to create production metering points
+* We are able to create Dxx metering points (Danish MP types)
+* We publish a MeteringPointCreated event upon MP creation containing MP Type and GSRN
 
 ## Getting Started
 
