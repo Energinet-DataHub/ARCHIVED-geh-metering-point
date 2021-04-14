@@ -1,5 +1,9 @@
 # Notice
 
+Energinet and any contributors reserve all others rights, whether under their respective copyrights, patents, licenses, or trademarks, whether by implication, estoppel or otherwise.
+
+It is our intention to acknowledge all third-party product licenses used in this document. If you miss your license please contact greenenergyhub@energinet.dk, and we will take action to change the file.
+
 ## Third-Party Licenses
 
 This domain relies on open source libraries.
@@ -39,8 +43,3 @@ We recommend you read their licenses, as their terms may differ from the terms d
 | `peter-evans/repository-dispatch@v1`                 | <https://github.com/peter-evans/repository-dispatch>                 | MIT                    |
 | `rojopolis/spellcheck-github-actions@0.5.0`          | <https://github.com/rojopolis/spellcheck-github-actions>             | MIT                    |
 | `xt0rted/markdownlint-problem-matcher@v1`            | <https://github.com/xt0rted/markdownlint-problem-matcher>            | MIT                    |
-
-<br/>
-Energinet and any contributors reserve all others rights, whether under their respective copyrights, patents, licenses, or trademarks, whether by implication, estoppel or otherwise.
-
-It is our intention to acknowledge all third-party product licenses used in this document. If you miss your license please contact greenenergyhub@energinet.dk, and we will take action to change the file.
