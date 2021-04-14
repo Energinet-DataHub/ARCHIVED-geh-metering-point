@@ -12,3 +12,6 @@ TODO
 ADR
 TSO
 GSRN
+Dxx
+MeteringPointCreated
+CoS
