@@ -2,7 +2,7 @@
 
 ## Third-Party Licenses
 
-The Market Roles domain relies on open source libraries.
+This domain relies on open source libraries.
 We recommend you read their licenses, as their terms may differ from the terms described in our [LICENSE](https://github.com/Energinet-DataHub/geh-market-roles/blob/main/LICENSE):
 
 | Name                                | Version | Url                                                                | License                    |
