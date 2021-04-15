@@ -25,7 +25,7 @@ These are the processes maintained by this domain.
 
 ## Context Streams
 
-TBD
+<img width="412" alt="MP context stream" src="https://user-images.githubusercontent.com/25637982/114844794-6dc5a480-9ddb-11eb-9603-56d6c36a15af.PNG">
 
 ## Domain Roadmap
 
