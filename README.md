@@ -21,7 +21,7 @@ These are the processes maintained by this domain.
 
 ## Architecture
 
-![design](ARCHITECTURE.png)
+![design](ARCHITECTURE.drawio.png)
 
 ## Context Streams
 
