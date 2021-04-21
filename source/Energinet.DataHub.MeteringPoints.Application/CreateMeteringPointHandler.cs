@@ -18,9 +18,9 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application
 {
-    public class CreateMeeteringPointHandler : IRequestHandler<CreateMeteringPoint>
+    public class CreateMeteringPointHandler : IRequestHandler<CreateMeteringPoint, CreateMeteringPointResult>
     {
-        public Task<Unit> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
+        public Task<CreateMeteringPointResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();
         }
