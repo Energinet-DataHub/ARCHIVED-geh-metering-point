@@ -2,6 +2,18 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion", "Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion\Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.csproj", "{60445A7E-EB19-4AA2-88BD-663D89F8BC4E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.Application", "Energinet.DataHub.MeteringPoints.Application\Energinet.DataHub.MeteringPoints.Application.csproj", "{84D753D3-9EB9-4271-A59B-EDF02762BDEE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.Domain", "Energinet.DataHub.MeteringPoints.Domain\Energinet.DataHub.MeteringPoints.Domain.csproj", "{D7233786-C557-4A8F-AEAC-C2CB64053F43}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.Infrastructure", "Energinet.DataHub.MeteringPoints.Infrastructure\Energinet.DataHub.MeteringPoints.Infrastructure.csproj", "{6525F5BF-B10A-434B-A5F5-DA72C2FF1AB1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{251113C8-9673-45D2-AFA6-2D53AF6E8756}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.IntegrationTests", "Energinet.DataHub.MeteringPoints.IntegrationTests\Energinet.DataHub.MeteringPoints.IntegrationTests.csproj", "{9E85728F-B8F0-49EE-AAC6-922AD394CFBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.Tests", "Energinet.DataHub.MeteringPoints.Tests\Energinet.DataHub.MeteringPoints.Tests.csproj", "{18ED8314-929C-4466-980D-92546BF30E70}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +24,29 @@ Global
 		{60445A7E-EB19-4AA2-88BD-663D89F8BC4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60445A7E-EB19-4AA2-88BD-663D89F8BC4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60445A7E-EB19-4AA2-88BD-663D89F8BC4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84D753D3-9EB9-4271-A59B-EDF02762BDEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84D753D3-9EB9-4271-A59B-EDF02762BDEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84D753D3-9EB9-4271-A59B-EDF02762BDEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84D753D3-9EB9-4271-A59B-EDF02762BDEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7233786-C557-4A8F-AEAC-C2CB64053F43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7233786-C557-4A8F-AEAC-C2CB64053F43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7233786-C557-4A8F-AEAC-C2CB64053F43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7233786-C557-4A8F-AEAC-C2CB64053F43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6525F5BF-B10A-434B-A5F5-DA72C2FF1AB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6525F5BF-B10A-434B-A5F5-DA72C2FF1AB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6525F5BF-B10A-434B-A5F5-DA72C2FF1AB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6525F5BF-B10A-434B-A5F5-DA72C2FF1AB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E85728F-B8F0-49EE-AAC6-922AD394CFBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E85728F-B8F0-49EE-AAC6-922AD394CFBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E85728F-B8F0-49EE-AAC6-922AD394CFBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E85728F-B8F0-49EE-AAC6-922AD394CFBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18ED8314-929C-4466-980D-92546BF30E70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18ED8314-929C-4466-980D-92546BF30E70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18ED8314-929C-4466-980D-92546BF30E70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18ED8314-929C-4466-980D-92546BF30E70}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9E85728F-B8F0-49EE-AAC6-922AD394CFBA} = {251113C8-9673-45D2-AFA6-2D53AF6E8756}
+		{18ED8314-929C-4466-980D-92546BF30E70} = {251113C8-9673-45D2-AFA6-2D53AF6E8756}
 	EndGlobalSection
 EndGlobal
