@@ -33,7 +33,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     x.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
                     x.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkBehavior<,>));
                     x.AddTransient(typeof(IPipelineBehavior<,>), typeof(IntegrationEventBehavior<,>));
-                    x.AddSingleton(new AzureServicebusConfig(Environment.GetEnvironmentVariable("METERINGPOINTINTEGRATION_QUEUE_NAME"), Environment.GetEnvironmentVariable("METERINGPOINTINTEGRATION_QUEUE_CONNECTION_STRING")));
+                    x.AddSingleton(new AzureServiceBusConfig(Environment.GetEnvironmentVariable("METERINGPOINTINTEGRATION_QUEUE_NAME"), Environment.GetEnvironmentVariable("METERINGPOINTINTEGRATION_QUEUE_CONNECTION_STRING")));
+                    x.AddTransient<IAzureBusService, AzureBusService>();
+                    x.AddTransient<ICreateMeteringPointPublisher, CreateMeteringPointPublisher>();
                 })
                 .ConfigureFunctionsWorkerDefaults()
                 .Build();

@@ -13,28 +13,29 @@
 // limitations under the License.
 
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Azure.ServiceBus;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices
 {
-    public class AzureBusService
+    public class AzureBusService : IAzureBusService
     {
         private QueueClient _client;
 
-        public AzureBusService(AzureServicebusConfig azureServicebusConfig)
+        public AzureBusService(AzureServiceBusConfig azureServiceBusConfig)
         {
-            if (azureServicebusConfig is not null)
+            if (azureServiceBusConfig is not null)
             {
-                _client = new QueueClient(azureServicebusConfig.ConnectionString, azureServicebusConfig.QueueName);
+                _client = new QueueClient(azureServiceBusConfig.ConnectionString, azureServiceBusConfig.QueueName);
             }
         }
 
         public async Task SendMessageAsync(object serviceBusMessage)
         {
             // we convert the annonymous obj to a json
-            // var msg = new Message(Encoding.UTF8.GetBytes(msgBody));
-            // await queueClient.SendAsync(msg);
+            var msg = new Message(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(serviceBusMessage)));
+            await _client.SendAsync(msg).ConfigureAwait(false);
         }
     }
 }
