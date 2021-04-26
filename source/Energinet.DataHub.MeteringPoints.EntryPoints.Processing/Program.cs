@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,6 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     x.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
                     x.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkBehavior<,>));
                     x.AddTransient(typeof(IPipelineBehavior<,>), typeof(IntegrationEventBehavior<,>));
+                    x.AddSingleton(new AzureServicebusConfig(Environment.GetEnvironmentVariable("METERINGPOINTINTEGRATION_QUEUE_NAME"), Environment.GetEnvironmentVariable("METERINGPOINTINTEGRATION_QUEUE_CONNECTION_STRING")));
                 })
                 .ConfigureFunctionsWorkerDefaults()
                 .Build();
