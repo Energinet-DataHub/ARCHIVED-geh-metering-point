@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application;
-using Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 {

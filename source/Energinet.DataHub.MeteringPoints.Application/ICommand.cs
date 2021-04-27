@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
+namespace Energinet.DataHub.MeteringPoints.Application
 {
     /// <summary>
     /// Command object
     /// </summary>
+    #pragma warning disable CA1040 // TODO: This ICommand is just a placeholder
     public interface ICommand
     {
     }
