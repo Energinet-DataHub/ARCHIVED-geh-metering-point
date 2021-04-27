@@ -20,8 +20,8 @@ on:
   workflow_dispatch: {}
 
 env:
-  CSPROJ_FILE_PATH: 'source/business-workflow/source/Energinet.DataHub.MeteringPoints.EntryPoints.Processing/Energinet.DataHub.MeteringPoints.EntryPoints.Processing.csproj'
-  SOLUTION_FILE_PATH: 'source/business-workflow/Energinet.DataHub.MeteringPoints.sln'
+  CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.Processing/Energinet.DataHub.MeteringPoints.EntryPoints.Processing.csproj'
+  SOLUTION_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.sln'
   DOTNET_VERSION: '5.0'
 
 jobs:
