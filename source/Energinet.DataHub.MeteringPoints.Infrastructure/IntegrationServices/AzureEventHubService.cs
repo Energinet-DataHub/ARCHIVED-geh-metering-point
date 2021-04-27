@@ -21,7 +21,7 @@ using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices
 {
-    public class AzureEventHubService : IAzureEventHubService, System.IDisposable
+    public sealed class AzureEventHubService : IAzureEventHubService, System.IDisposable
     {
         private readonly EventHubProducerClient _client;
 
@@ -44,7 +44,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices
 
         public void Dispose()
         {
-            throw new System.NotImplementedException();
+           _client?.DisposeAsync();
         }
     }
 }

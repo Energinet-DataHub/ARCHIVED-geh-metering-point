@@ -36,9 +36,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (next == null) throw new ArgumentNullException(nameof(next));
 
-            await _azureEventHubService.SendEventAsync(request).ConfigureAwait(false);
-
             var result = await next().ConfigureAwait(false);
+
+            await _azureEventHubService.SendEventAsync(request).ConfigureAwait(false);
 
             return result;
         }
