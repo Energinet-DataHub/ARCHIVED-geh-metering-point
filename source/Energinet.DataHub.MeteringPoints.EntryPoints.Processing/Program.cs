@@ -18,6 +18,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 {
@@ -29,13 +30,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 .ConfigureServices(x =>
                 {
                     x.AddMediatR(typeof(CreateMeteringPointHandler).Assembly);
-                    x.AddTransient(typeof(IPipelineBehavior<,>), typeof(InputValidationBehavior<,>));
-                    x.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
-                    x.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkBehavior<,>));
+
+                    // x.AddTransient(typeof(IPipelineBehavior<,>), typeof(InputValidationBehavior<,>));
+                    // x.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
+                    // x.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkBehavior<,>));
                     x.AddTransient(typeof(IPipelineBehavior<,>), typeof(IntegrationEventBehavior<,>));
-                    x.AddSingleton(new AzureServiceBusConfig(Environment.GetEnvironmentVariable("METERINGPOINTINTEGRATION_QUEUE_NAME"), Environment.GetEnvironmentVariable("METERINGPOINTINTEGRATION_QUEUE_CONNECTION_STRING")));
-                    x.AddTransient<IAzureBusService, AzureBusService>();
-                    x.AddTransient<ICreateMeteringPointPublisher, CreateMeteringPointPublisher>();
+                    x.AddSingleton(new AzureEventHubConfig(Environment.GetEnvironmentVariable("METERINGPOINTEVENTHUB_HUB_NAME"), Environment.GetEnvironmentVariable("METERINGPOINTEVENTHUB_CONNECTION_STRING")));
+                    x.AddTransient<IAzureEventHubService, AzureEventHubService>();
                 })
                 .ConfigureFunctionsWorkerDefaults()
                 .Build();

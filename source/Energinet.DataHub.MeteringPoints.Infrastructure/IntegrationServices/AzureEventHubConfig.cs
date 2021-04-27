@@ -12,23 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices
 {
-    public class CreateMeteringPointPublisher : ICreateMeteringPointPublisher
-    {
-        private readonly IAzureBusService _azureBusService;
-
-        public CreateMeteringPointPublisher(IAzureBusService azureBusService)
-        {
-            _azureBusService = azureBusService;
-        }
-
-        public async Task PublishAsync()
-        {
-            var obj = new { GSRN = "something to do with GSRN", };
-            await _azureBusService.SendMessageAsync(obj).ConfigureAwait(false);
-        }
-    }
+    public record AzureEventHubConfig(string HubName, string ConnectionString);
 }

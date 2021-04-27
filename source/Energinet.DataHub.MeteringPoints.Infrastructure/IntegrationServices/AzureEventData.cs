@@ -12,20 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
+using System;
+using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices
 {
-    /// <summary>
-    /// s
-    /// </summary>
-    public interface IAzureBusService
-    {
-        /// <summary>
-        /// s
-        /// </summary>
-        /// <param name="serviceBusMessage"></param>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task SendMessageAsync(object serviceBusMessage);
-    }
+    public record AzureEventData(string Gsrn, Type MpType, string GridAccessProvider, bool Child,
+        string EnergySupplierCurrent) : IRequest<AzureEventDataResult>;
 }

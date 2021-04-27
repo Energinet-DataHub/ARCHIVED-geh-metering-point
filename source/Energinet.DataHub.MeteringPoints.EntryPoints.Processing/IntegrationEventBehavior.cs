@@ -12,17 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 {
     public class IntegrationEventBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        private readonly IAzureEventHubService _azureEventHubService;
+
+        public IntegrationEventBehavior(IAzureEventHubService azureEventHubService)
         {
-            throw new System.NotImplementedException();
+            _azureEventHubService = azureEventHubService;
+        }
+
+        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (next == null) throw new ArgumentNullException(nameof(next));
+
+            await _azureEventHubService.SendEventAsync(request).ConfigureAwait(false);
+
+            var result = await next().ConfigureAwait(false);
+
+            return result;
         }
     }
 }

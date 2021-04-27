@@ -12,7 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading.Tasks;
+
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices
 {
-    public record AzureServiceBusConfig(string QueueName, string ConnectionString);
+    /// <summary>
+    /// s
+    /// </summary>
+    public interface IAzureEventHubService
+    {
+        /// <summary>
+        /// s
+        /// </summary>
+        /// <param name="serviceBusMessage"></param>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        Task SendEventAsync<T>(T serviceBusMessage);
+    }
 }

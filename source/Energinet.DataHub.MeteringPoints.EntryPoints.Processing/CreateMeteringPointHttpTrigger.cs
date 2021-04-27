@@ -14,8 +14,11 @@
 
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices;
+using MediatR;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
@@ -24,11 +27,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 {
     public class HttpTrigger
     {
-        private readonly ICreateMeteringPointPublisher _createMeteringPointPublisher;
+        private readonly IMediator _mediator;
 
-        public HttpTrigger(ICreateMeteringPointPublisher createMeteringPointPublisher)
+        public HttpTrigger(IMediator mediator)
         {
-            _createMeteringPointPublisher = createMeteringPointPublisher;
+            _mediator = mediator;
         }
 
         [Function("CreateMeteringPoint")]
@@ -43,7 +46,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
 
             await response.WriteStringAsync("Ready, set, go!").ConfigureAwait(false);
-            await _createMeteringPointPublisher.PublishAsync().ConfigureAwait(false);
+            var createMeteringPointCommand = new CreateMeteringPoint { GsrnNumber = "Gsrn" };
+            await _mediator.Send(createMeteringPointCommand, CancellationToken.None).ConfigureAwait(false);
             return response;
         }
     }
