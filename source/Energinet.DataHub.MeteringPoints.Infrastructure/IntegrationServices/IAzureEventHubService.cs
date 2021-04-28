@@ -24,8 +24,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices
         /// <summary>
         /// s
         /// </summary>
-        /// <param name="serviceBusMessage"></param>
+        /// <param name="eventMessage"></param>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task SendEventAsync<T>(T serviceBusMessage);
+        Task SendEventAsync<T>(T eventMessage);
     }
 }

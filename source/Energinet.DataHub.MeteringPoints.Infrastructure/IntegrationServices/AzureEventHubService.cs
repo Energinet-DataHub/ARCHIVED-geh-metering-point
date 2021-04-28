@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Azure.Messaging.EventHubs;
 using Azure.Messaging.EventHubs.Producer;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
+using Energinet.DataHub.MeteringPoints.Contracts;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices
 {
@@ -33,12 +34,13 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices
             }
         }
 
-        public async Task SendEventAsync<T>(T serviceBusMessage)
+        public async Task SendEventAsync<T>(T eventMessage)
         {
             using var eventBatch = await _client.CreateBatchAsync().ConfigureAwait(false);
-
+            Type t = eventMessage.GetType();
+            var eventContract = new EventContract { Gsrn = "smth" };
             // we convert the annonymous obj to a json
-            eventBatch.TryAdd(new EventData(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(serviceBusMessage))));
+            eventBatch.TryAdd(new EventData(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(eventMessage))));
             await _client.SendAsync(eventBatch).ConfigureAwait(false);
         }
 
