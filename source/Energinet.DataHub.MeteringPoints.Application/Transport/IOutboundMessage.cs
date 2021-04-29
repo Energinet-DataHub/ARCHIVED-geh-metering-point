@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-
-namespace Energinet.DataHub.MeteringPoints.Infrastructure
+namespace Energinet.DataHub.MeteringPoints.Application.Transport
 {
-    public class Class1
+    /// <summary>
+    /// Marker interface for outgoing messages
+    /// </summary>
+    #pragma warning disable CA1040 // Marker interface
+    public interface IOutboundMessage
     {
     }
 }
