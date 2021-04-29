@@ -15,14 +15,16 @@
 using System;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.EventHubs;
 using Azure.Messaging.EventHubs.Producer;
+using Energinet.DataHub.MeteringPoints.Application.Transport;
 using Energinet.DataHub.MeteringPoints.Contracts;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices
 {
-    public sealed class AzureEventHubService : IAzureEventHubService, System.IDisposable
+    public sealed class AzureEventHubService : Channel, IAzureEventHubService, System.IDisposable
     {
         private readonly EventHubProducerClient _client;
 
@@ -47,6 +49,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices
         public void Dispose()
         {
            _client?.DisposeAsync();
+        }
+
+        protected override Task WriteAsync(byte[] data, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
         }
     }
 }
