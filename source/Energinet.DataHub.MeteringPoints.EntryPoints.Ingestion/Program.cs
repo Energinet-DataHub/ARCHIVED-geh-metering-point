@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,11 +25,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
         public static void Main()
         {
             var host = new HostBuilder()
-                .ConfigureServices(x =>
+                .ConfigureServices(services =>
                 {
-                    x.AddMediatR(typeof(CreateMeteringPointHandler).Assembly);
-                    x.AddTransient(typeof(IPipelineBehavior<,>), typeof(InputValidationBehavior<,>));
-                    x.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
+                    services.AddMediatR(typeof(CreateMeteringPointHandler).Assembly);
+                    services.AddTransient(typeof(IPipelineBehavior<,>), typeof(InputValidationBehavior<,>));
+                    services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
                 })
                 .ConfigureFunctionsWorkerDefaults()
                 .Build();

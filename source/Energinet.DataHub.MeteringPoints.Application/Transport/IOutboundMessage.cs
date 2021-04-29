@@ -11,21 +11,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-using System;
-using HelloWorld.HelloWorldFunction;
-using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 
-[assembly: FunctionsStartup(typeof(Startup))]
-
-namespace HelloWorld.HelloWorldFunction
+namespace Energinet.DataHub.MeteringPoints.Application.Transport
 {
-    #pragma warning disable CA1812
-    internal class Startup : FunctionsStartup
+    /// <summary>
+    /// Marker interface for outgoing messages
+    /// </summary>
+    #pragma warning disable CA1040 // Marker interface
+    public interface IOutboundMessage
     {
-        public override void Configure(IFunctionsHostBuilder builder)
-        {
-            // Register services
-        }
     }
-    #pragma warning restore CA1812
 }

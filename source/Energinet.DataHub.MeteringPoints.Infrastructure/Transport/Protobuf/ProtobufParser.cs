@@ -11,19 +11,21 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-using Xunit;
 
-namespace HelloWorld.Tests
+using Google.Protobuf;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf
 {
-    public class SomeTests
+    /// <summary>
+    /// Parser for protobuf
+    /// </summary>
+    public abstract class ProtobufParser
     {
-        [Fact]
-        public void DummySuccessfulTest()
-        {
-            // Write clever tests (not this one) to include in the template
-            var sut = nameof(DummySuccessfulTest);
-
-            Assert.Equal("DummySuccessfulTest", sut);
-        }
+        /// <summary>
+        /// Create an <see cref="IMessage"/> from a payload
+        /// </summary>
+        /// <param name="data">payload containing the <see cref="IMessage"/></param>
+        /// <returns>Message from the payload</returns>
+        public abstract IMessage Parse(byte[] data);
     }
 }
