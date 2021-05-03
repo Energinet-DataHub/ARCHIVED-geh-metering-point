@@ -41,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices
             using var eventBatch = await _client.CreateBatchAsync().ConfigureAwait(false);
             Type t = eventMessage.GetType();
             var eventContract = new EventContract { Gsrn = "smth" };
-            // we convert the annonymous obj to a json
+            // we convert the anonymous obj to a json
             eventBatch.TryAdd(new EventData(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(eventMessage))));
             await _client.SendAsync(eventBatch).ConfigureAwait(false);
         }
