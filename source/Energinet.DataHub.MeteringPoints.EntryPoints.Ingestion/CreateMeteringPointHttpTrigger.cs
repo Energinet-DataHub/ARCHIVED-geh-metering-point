@@ -20,7 +20,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 {
-    public static class HttpTrigger
+    public class CreateMeteringPointHttpTrigger
     {
         [Function("CreateMeteringPoint")]
         public static HttpResponseData Run(

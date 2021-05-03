@@ -12,11 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-
-namespace Energinet.DataHub.MeteringPoints.Infrastructure
+namespace Energinet.DataHub.MeteringPoints.Application
 {
-    public class Class1
+    /// <summary>
+    /// Context for the current scope identified by a correlation id.
+    /// </summary>
+    public interface ICorrelationContext
     {
+        /// <summary>
+        /// Get the current correlation id.
+        /// </summary>
+        string GetCorrelationId();
+
+        /// <summary>
+        /// Set the current correlation id.
+        /// </summary>
+        void SetCorrelationId(string correlationId);
     }
 }
