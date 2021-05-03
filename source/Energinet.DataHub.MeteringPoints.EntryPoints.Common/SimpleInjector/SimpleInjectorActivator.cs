@@ -16,7 +16,7 @@ using System;
 using Microsoft.Azure.Functions.Worker;
 using SimpleInjector;
 
-namespace Energinet.DataHub.MarketRoles.EntryPoints.Common.SimpleInjector
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector
 {
     public class SimpleInjectorActivator : IFunctionActivator
     {

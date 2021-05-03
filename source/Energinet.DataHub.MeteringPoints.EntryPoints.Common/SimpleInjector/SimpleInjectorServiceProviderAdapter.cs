@@ -15,7 +15,7 @@
 using System;
 using SimpleInjector;
 
-namespace Energinet.DataHub.MarketRoles.EntryPoints.Common.SimpleInjector
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector
 {
     public class SimpleInjectorServiceProviderAdapter : IServiceProvider
     {

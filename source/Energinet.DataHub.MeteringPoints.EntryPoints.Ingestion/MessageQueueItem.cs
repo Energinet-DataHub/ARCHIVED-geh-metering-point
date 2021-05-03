@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application;
-
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 {
     public class MessageQueueItem
