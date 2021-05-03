@@ -12,30 +12,68 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
+using Energinet.DataHub.MeteringPoints.Infrastructure;
 using MediatR;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using SimpleInjector;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 {
     public static class Program
     {
-        public static void Main()
+        public static async Task Main()
         {
+            var container = new Container();
             var host = new HostBuilder()
-                .ConfigureServices(x =>
+                .ConfigureFunctionsWorkerDefaults(options =>
                 {
-                    x.AddMediatR(typeof(CreateMeteringPointHandler).Assembly);
-                    x.AddTransient(typeof(IPipelineBehavior<,>), typeof(InputValidationBehavior<,>));
-                    x.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
-                    x.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkBehavior<,>));
-                    x.AddTransient(typeof(IPipelineBehavior<,>), typeof(IntegrationEventBehavior<,>));
+                    options.UseMiddleware<SimpleInjectorScopedRequest>();
+                    options.UseMiddleware<ServiceBusCorrelationIdMiddleware>();
                 })
-                .ConfigureFunctionsWorkerDefaults()
-                .Build();
+                .ConfigureServices(services =>
+                {
+                    var descriptor = new ServiceDescriptor(
+                        typeof(IFunctionActivator),
+                        typeof(SimpleInjectorActivator),
+                        ServiceLifetime.Singleton);
+                    services.Replace(descriptor); // Replace existing activator
 
-            host.Run();
+                    services.AddMediatR(typeof(CreateMeteringPoint).Assembly);
+
+                    services.AddLogging();
+                    services.AddSimpleInjector(container, options =>
+                    {
+                        options.AddLogging();
+                    });
+                })
+                .Build()
+                .UseSimpleInjector(container);
+
+            // Register application components.
+            container.Register<QueueSubscriber>(Lifestyle.Scoped);
+            container.Register<ServiceBusCorrelationIdMiddleware>(Lifestyle.Scoped);
+            container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
+
+            // Setup pipeline behaviors
+            container.Collection.Register(
+                typeof(IPipelineBehavior<,>),
+                new[]
+                {
+                    typeof(UnitOfWorkBehavior<,>),
+                },
+                Lifestyle.Scoped);
+
+            container.Verify();
+
+            await host.RunAsync().ConfigureAwait(false);
+
+            await container.DisposeAsync().ConfigureAwait(false);
         }
     }
 }
