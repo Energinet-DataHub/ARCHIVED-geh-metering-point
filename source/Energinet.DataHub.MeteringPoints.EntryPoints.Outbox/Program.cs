@@ -12,13 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application
+using System;
+using Microsoft.Extensions.Hosting;
+
+[assembly: CLSCompliant(false)]
+
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
 {
-    /// <summary>
-    /// Command object
-    /// </summary>
-    #pragma warning disable CA1040 // TODO: This ICommand is just a placeholder
-    public interface ICommand
+    public static class Program
     {
+        public static void Main()
+        {
+            var host = new HostBuilder()
+                .ConfigureFunctionsWorkerDefaults()
+                .Build();
+
+            host.Run();
+        }
     }
 }
