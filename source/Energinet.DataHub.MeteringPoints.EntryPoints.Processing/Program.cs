@@ -65,6 +65,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 typeof(IPipelineBehavior<,>),
                 new[]
                 {
+                    typeof(InputValidationBehavior<,>),
+                    typeof(AuthorizationBehavior<,>),
+                    typeof(BusinessProcessResponderBehavior<,>),
+                    typeof(IntegrationEventsDispatchBehavior<,>),
+                    typeof(ValidationReportsBehavior<,>),
                     typeof(UnitOfWorkBehavior<,>),
                 },
                 Lifestyle.Scoped);
