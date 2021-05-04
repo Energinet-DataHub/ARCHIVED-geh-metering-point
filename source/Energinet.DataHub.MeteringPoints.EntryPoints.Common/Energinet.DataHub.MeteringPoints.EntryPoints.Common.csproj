@@ -24,7 +24,8 @@ limitations under the License.
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Application\Energinet.DataHub.MeteringPoints.Application.csproj" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Core" Version="1.1.0" />
+    <PackageReference Include="SimpleInjector" Version="5.3.0" />
   </ItemGroup>
 
 </Project>

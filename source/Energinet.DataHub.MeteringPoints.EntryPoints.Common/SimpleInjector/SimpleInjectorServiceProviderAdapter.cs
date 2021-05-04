@@ -13,10 +13,24 @@
 // limitations under the License.
 
 using System;
+using SimpleInjector;
 
-namespace Energinet.DataHub.MeteringPoints.Domain
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector
 {
-    public class Class1
+    public class SimpleInjectorServiceProviderAdapter : IServiceProvider
     {
+        private readonly Container _container;
+
+        public SimpleInjectorServiceProviderAdapter(Container container)
+        {
+            _container = container;
+        }
+
+        public object? GetService(Type serviceType)
+        {
+            if (serviceType == null) throw new ArgumentNullException(nameof(serviceType));
+
+            return _container.GetInstance(serviceType);
+        }
     }
 }

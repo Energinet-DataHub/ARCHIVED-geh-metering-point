@@ -12,28 +12,55 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
-using MediatR;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
+using Energinet.DataHub.MeteringPoints.Infrastructure;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using SimpleInjector;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 {
     public static class Program
     {
-        public static void Main()
+        public static async Task Main()
         {
+            var container = new Container();
             var host = new HostBuilder()
-                .ConfigureServices(x =>
+                .ConfigureFunctionsWorkerDefaults(options =>
                 {
-                    x.AddMediatR(typeof(CreateMeteringPointHandler).Assembly);
-                    x.AddTransient(typeof(IPipelineBehavior<,>), typeof(InputValidationBehavior<,>));
-                    x.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
+                    options.UseMiddleware<SimpleInjectorScopedRequest>();
+                    options.UseMiddleware<HttpCorrelationIdMiddleware>();
                 })
-                .ConfigureFunctionsWorkerDefaults()
-                .Build();
+                .ConfigureServices(services =>
+                {
+                    var descriptor = new ServiceDescriptor(
+                        typeof(IFunctionActivator),
+                        typeof(SimpleInjectorActivator),
+                        ServiceLifetime.Singleton);
+                    services.Replace(descriptor); // Replace existing activator
 
-            host.Run();
+                    services.AddLogging();
+                    services.AddSimpleInjector(container, options =>
+                    {
+                        options.AddLogging();
+                    });
+                })
+                .Build()
+                .UseSimpleInjector(container);
+
+            // Register application components.
+            container.Register<CreateMeteringPointHttpTrigger>(Lifestyle.Scoped);
+            container.Register<HttpCorrelationIdMiddleware>(Lifestyle.Scoped);
+            container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
+            container.Verify();
+
+            await host.RunAsync().ConfigureAwait(false);
+
+            await container.DisposeAsync().ConfigureAwait(false);
         }
     }
 }
