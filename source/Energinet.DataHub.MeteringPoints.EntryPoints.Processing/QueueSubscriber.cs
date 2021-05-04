@@ -35,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
         [Function("QueueSubscriber")]
         public void Run(
-            [ServiceBusTrigger("sbq-marketroles", Connection = "MARKET_DATA_QUEUE_CONNECTION_STRING")] byte[] item,
+            [ServiceBusTrigger("%METERINGPOINT_QUEUE_TOPIC_NAME%", Connection = "METERINGPOINT_QUEUE_CONNECTION_STRING")] byte[] item,
             FunctionContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
