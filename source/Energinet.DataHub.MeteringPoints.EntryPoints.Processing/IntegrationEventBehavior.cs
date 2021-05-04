@@ -38,8 +38,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             var result = await next().ConfigureAwait(false);
 
-            await _azureEventHubService.SendEventAsync(request).ConfigureAwait(false);
-
             return result;
         }
     }

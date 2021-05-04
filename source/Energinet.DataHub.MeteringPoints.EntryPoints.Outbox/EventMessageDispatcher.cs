@@ -13,29 +13,29 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.EventServices;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Services;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-
-[assembly: CLSCompliant(false)]
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Extensions.Logging;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
 {
-    public static class Program
+    public class EventMessageDispatcher
     {
-        public static void Main()
-        {
-            var host = new HostBuilder()
-                .ConfigureServices(service =>
-                {
-                    service.AddTransient<IEventService, EventService>();
-                    service.AddTransient<IEventRepository, EventRepository>();
-                })
-                .ConfigureFunctionsWorkerDefaults()
-                .Build();
+        private readonly IEventService _eventService;
 
-            host.Run();
+        public EventMessageDispatcher(IEventService eventService)
+        {
+            _eventService = eventService;
+        }
+
+        [Function("EventMessageDispatcher")]
+        public static void Run(
+        [TimerTrigger("%EVENT_MESSAGE_DISPATCH_TRIGGER_TIMER%")] string timerInformation,
+        FunctionContext context)
+        {
+            var logger = context.GetLogger("EventMessageDispatcher");
+            logger.LogInformation($"C# Timer trigger function executed at: {DateTimeOffset.UtcNow} (UTC)");
+            logger.LogInformation($"From function timer trigger input: {timerInformation}");
         }
     }
 }

@@ -12,30 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.EventServices;
-using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Services;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
-[assembly: CLSCompliant(false)]
-
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Services
 {
-    public static class Program
+    public class EventService : IEventService
     {
-        public static void Main()
-        {
-            var host = new HostBuilder()
-                .ConfigureServices(service =>
-                {
-                    service.AddTransient<IEventService, EventService>();
-                    service.AddTransient<IEventRepository, EventRepository>();
-                })
-                .ConfigureFunctionsWorkerDefaults()
-                .Build();
+        private readonly IEventRepository _eventRepository;
 
-            host.Run();
+        public EventService(IEventRepository eventRepository)
+        {
+            _eventRepository = eventRepository;
+        }
+
+        public Task ProcessMessagesAsync()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
