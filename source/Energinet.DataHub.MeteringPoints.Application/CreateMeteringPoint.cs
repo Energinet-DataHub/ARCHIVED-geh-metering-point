@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Application.Transport;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application
 {
-    public class CreateMeteringPoint : IRequest<Unit>, IRequest<CreateMeteringPointResult>
+    public class CreateMeteringPoint : IRequest<Unit>, IRequest<CreateMeteringPointResult>, IOutboundMessage, IInboundMessage
     {
         public string GsrnNumber { get; set; }
 

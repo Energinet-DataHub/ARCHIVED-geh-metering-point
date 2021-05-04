@@ -15,23 +15,32 @@
 
 syntax = "proto3";
 
-import "google/protobuf/timestamp.proto";
+// import "google/protobuf/timestamp.proto";
 
 option csharp_namespace = "Energinet.DataHub.MeteringPoints.Contracts";
 
-message Hello {
-  string world = 1;
-  google.protobuf.Timestamp when = 2;
+message CreateMeteringPoint {
+  string gsrnNumber = 1;
+  string typeOfMeteringPoint = 2;
+  string subTypeOfMeteringPoint = 3;
+  string meterReadingOccurrence = 4;
+  int32 maximumCurrent = 5;
+  int32 maximumPower = 6;
+  string meteringGridAreaUsedDomainLocation = 7;
+  string powerPlantDomainLocation = 8;
+  string locationDescription = 9;
+  string includedProductCharacteristic = 10;
+  string parentRelatedMeteringPoint = 11;
+  // Address InstallationLocationAddress = 12;
 }
 
-message Foo {
-  string bar = 1;
-  int32  isBaz = 2;
+message UserIdentity {
+  string foo = 1;
 }
 
-message TestEnvelope {
-  oneof Tests {
-    Hello hello = 1;
-    Foo foo = 2;
+message MeteringPointEnvelope {
+  UserIdentity userIdentity = 1;
+  oneof MeteringPointMessages {
+    CreateMeteringPoint createMeteringPoint = 2;
   }
 }

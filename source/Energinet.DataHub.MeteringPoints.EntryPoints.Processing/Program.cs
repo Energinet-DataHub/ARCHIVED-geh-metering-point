@@ -14,14 +14,17 @@
 
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using MediatR;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using SimpleInjector;
+using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Application.CreateMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 {
@@ -51,6 +54,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     {
                         options.AddLogging();
                     });
+
+                    services.ReceiveProtobuf<MeteringPointEnvelope>(
+                        config => config
+                            .FromOneOf(envelope => envelope.MeteringPointMessagesCase)
+                            .WithParser(() => MeteringPointEnvelope.Parser));
                 })
                 .Build()
                 .UseSimpleInjector(container);
