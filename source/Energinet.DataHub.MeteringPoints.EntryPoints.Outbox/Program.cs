@@ -13,10 +13,15 @@
 // limitations under the License.
 
 using System;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataBaseAccess.Write;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using SimpleInjector;
 
 [assembly: CLSCompliant(false)]
 
@@ -24,22 +29,45 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
 {
     public static class Program
     {
-        public static void Main()
+        public static async Task Main()
         {
+            var container = new Container();
             var host = new HostBuilder()
-                .ConfigureServices(service =>
+                .ConfigureFunctionsWorkerDefaults(options =>
                 {
-                    service.AddScoped<IWriteDatabaseContext>(s =>
+                    options.UseMiddleware<SimpleInjectorScopedRequest>();
+                })
+                .ConfigureServices(services =>
+                {
+                    var descriptor = new ServiceDescriptor(
+                        typeof(IFunctionActivator),
+                        typeof(SimpleInjectorActivator),
+                        ServiceLifetime.Singleton);
+                    services.Replace(descriptor); // Replace existing activator
+
+                    services.AddLogging();
+                    services.AddSimpleInjector(container, options =>
                     {
-                        var configuration = s.GetService<IConfiguration>();
-                        var connectionString = configuration.GetValue<string>("METERING_POINT_DB_CONNECTION_STRING");
-                        return new WriteDatabaseContext(connectionString);
+                        options.AddLogging();
                     });
                 })
-                .ConfigureFunctionsWorkerDefaults()
-                .Build();
+                .Build()
+                .UseSimpleInjector(container);
+            container.Register<IWriteDatabaseContext>(
+                () =>
+                {
+                    var connectionString = Environment.GetEnvironmentVariable("METERING_POINT_DB_CONNECTION_STRING")
+                                           ?? throw new InvalidOperationException(
+                                               "Metering point db connection string not found.");
 
-            host.Run();
+                    return new WriteDatabaseContext(connectionString);
+                },
+                Lifestyle.Scoped);
+            container.Verify();
+
+            await host.RunAsync().ConfigureAwait(false);
+
+            await container.DisposeAsync().ConfigureAwait(false);
         }
     }
 }

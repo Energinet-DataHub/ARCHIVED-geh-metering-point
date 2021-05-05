@@ -14,10 +14,11 @@
 
 using Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.Helpers;
 using Xunit;
+using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.ApplyDBMigrationsApp.Helpers
 {
-    [Trait("Category", "Unit")]
+    [UnitTest]
     public class ConnectionStringFactoryTests
     {
         [Fact]
