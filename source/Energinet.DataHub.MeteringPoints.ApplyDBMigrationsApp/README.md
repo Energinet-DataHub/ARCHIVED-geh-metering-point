@@ -2,7 +2,7 @@
 
 ## Purpose
 
-During the cause of time, the structure contained in a SQL server will change, be it tables, views, stored procedures etc.
+During the course of time, the structure contained in a SQL server will change, be it tables, views, stored procedures etc.
 
 The purpose of the migrations app is to make sure that the database structures are up to date.
 
