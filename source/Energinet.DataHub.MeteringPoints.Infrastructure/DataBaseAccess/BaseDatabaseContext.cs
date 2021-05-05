@@ -14,7 +14,6 @@
 
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataBaseAccess.Write.Outbox;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataBaseAccess
 {

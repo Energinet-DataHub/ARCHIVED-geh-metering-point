@@ -14,6 +14,7 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataBaseAccess.Write
