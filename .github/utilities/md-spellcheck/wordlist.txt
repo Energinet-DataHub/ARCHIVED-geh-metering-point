@@ -1,4 +1,5 @@
 ﻿DataHub
+codecov
 github
 Energinet
 IaC
