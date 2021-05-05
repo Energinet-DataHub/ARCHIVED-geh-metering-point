@@ -8,7 +8,7 @@ The purpose of the migrations app is to make sure that the database structures a
 
 As such, it contains a number of scripts needed to go from an empty database to a database containing all the needed structure for the newest version. That is, the entire update history.
 
-After the SQL server has been deployed this tool can be run and will then ensure that all the scripts available that has not already been run on the server will be executed.
+After the SQL server has been deployed this tool can be run and will then ensure that all the scripts available that have not already been run on the server will be executed.
 
 ## Running the tool manually
 
