@@ -12,14 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure
 {
-    public class MessageQueueItem
+    public class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : notnull
     {
-        // public IUserIdentity UserIdentity { get; set; }
-        //
-        // public string CommandType { get; set; }
-        //
-        // public ICommand Command { get; set; }
+        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

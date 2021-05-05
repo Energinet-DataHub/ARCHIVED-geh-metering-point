@@ -12,14 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
+using System;
+using System.Linq;
+
+namespace Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.Helpers
 {
-    public class MessageQueueItem
+    public static class EnvironmentFilter
     {
-        // public IUserIdentity UserIdentity { get; set; }
-        //
-        // public string CommandType { get; set; }
-        //
-        // public ICommand Command { get; set; }
+        public static Func<string, bool> GetFilter(string[] args)
+        {
+            return file => file.EndsWith(".sql") &&
+                           ((file.Contains(".Scripts.Seed.") && args.Contains("includeSeedData")) ||
+                            (file.Contains(".Scripts.Test.") && args.Contains("includeTestData")) ||
+                            file.Contains(".Scripts.Model."));
+        }
     }
 }

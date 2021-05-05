@@ -12,18 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
-using System.Threading.Tasks;
+using System;
 using Energinet.DataHub.MeteringPoints.Application;
-using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
+namespace Energinet.DataHub.MeteringPoints.Infrastructure
 {
-    public class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public sealed class CorrelationContext : ICorrelationContext
     {
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        private string? _correlationId;
+
+        public string GetCorrelationId()
         {
-            throw new System.NotImplementedException();
+            if (string.IsNullOrWhiteSpace(_correlationId))
+            {
+                throw new InvalidOperationException("Correlation id not set");
+            }
+
+            return _correlationId;
+        }
+
+        public void SetCorrelationId(string correlationId)
+        {
+            _correlationId = correlationId;
         }
     }
 }

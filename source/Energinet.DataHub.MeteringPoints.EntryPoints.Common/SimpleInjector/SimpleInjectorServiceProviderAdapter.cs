@@ -12,14 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
+using System;
+using SimpleInjector;
+
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector
 {
-    public class MessageQueueItem
+    public class SimpleInjectorServiceProviderAdapter : IServiceProvider
     {
-        // public IUserIdentity UserIdentity { get; set; }
-        //
-        // public string CommandType { get; set; }
-        //
-        // public ICommand Command { get; set; }
+        private readonly Container _container;
+
+        public SimpleInjectorServiceProviderAdapter(Container container)
+        {
+            _container = container;
+        }
+
+        public object? GetService(Type serviceType)
+        {
+            if (serviceType == null) throw new ArgumentNullException(nameof(serviceType));
+
+            return _container.GetInstance(serviceType);
+        }
     }
 }

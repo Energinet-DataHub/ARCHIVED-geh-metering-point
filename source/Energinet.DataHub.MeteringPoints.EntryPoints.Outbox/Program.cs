@@ -13,10 +13,21 @@
 // limitations under the License.
 
 using System;
+using Microsoft.Extensions.Hosting;
 
-namespace Energinet.DataHub.MeteringPoints.Domain
+[assembly: CLSCompliant(false)]
+
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
 {
-    public class Class1
+    public static class Program
     {
+        public static void Main()
+        {
+            var host = new HostBuilder()
+                .ConfigureFunctionsWorkerDefaults()
+                .Build();
+
+            host.Run();
+        }
     }
 }

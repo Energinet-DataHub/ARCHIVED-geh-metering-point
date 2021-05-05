@@ -12,18 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
-using MediatR;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Middleware;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 {
-    public class InputValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public sealed class HttpCorrelationIdMiddleware : IFunctionsWorkerMiddleware
     {
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        private readonly ICorrelationContext _correlationContext;
+
+        public HttpCorrelationIdMiddleware(
+            ICorrelationContext correlationContext)
         {
-            throw new System.NotImplementedException();
+            _correlationContext = correlationContext;
+        }
+
+        public async Task Invoke(FunctionContext context, [NotNull] FunctionExecutionDelegate next)
+        {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
+            _correlationContext.SetCorrelationId(context.InvocationId);
+
+            await next(context).ConfigureAwait(false);
         }
     }
 }

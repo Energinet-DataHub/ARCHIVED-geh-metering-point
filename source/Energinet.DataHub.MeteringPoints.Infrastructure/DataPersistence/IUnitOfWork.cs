@@ -12,14 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
+using System.Threading.Tasks;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataPersistence
 {
-    public class MessageQueueItem
+    /// <summary>
+    /// Interact with our datastore
+    /// </summary>
+    public interface IUnitOfWork
     {
-        // public IUserIdentity UserIdentity { get; set; }
-        //
-        // public string CommandType { get; set; }
-        //
-        // public ICommand Command { get; set; }
+        /// <summary>
+        /// Commit transaction and persist data in datastore
+        /// </summary>
+        Task CommitAsync();
     }
 }
