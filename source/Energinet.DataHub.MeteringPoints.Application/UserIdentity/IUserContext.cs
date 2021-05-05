@@ -12,17 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
-
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
 {
-    public class CreateMeteringPointHandler : IRequestHandler<CreateMeteringPoint, CreateMeteringPointResult>
+    /// <summary>
+    /// Context for the current scope identified by a correlation id.
+    /// </summary>
+    public interface IUserContext
     {
-        public Task<CreateMeteringPointResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(new CreateMeteringPointResult());
-        }
+        /// <summary>
+        /// Get the current correlation id.
+        /// </summary>
+        public UserIdentity CurrentUser { get; set; }
+
+        /// <summary>
+        /// Key to be used when storing identity in property collections.
+        /// </summary>
+        public string Key { get; }
     }
 }

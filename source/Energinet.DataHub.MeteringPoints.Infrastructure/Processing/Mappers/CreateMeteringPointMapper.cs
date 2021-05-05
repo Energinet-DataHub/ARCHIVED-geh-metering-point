@@ -12,16 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application
+using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Energinet.DataHub.MeteringPoints.Contracts;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
 {
-    /// <summary>
-    /// User identity
-    /// </summary>
-    public interface IUserIdentity
+    public class CreateMeteringPointMapper : ProtobufInboundMapper<CreateMeteringPoint>
     {
-        /// <summary>
-        /// Id for the given user
-        /// </summary>
-        public string Id { get; set; }
+        protected override IInboundMessage Convert(CreateMeteringPoint obj)
+        {
+            return new Application.CreateMeteringPoint
+            {
+                GsrnNumber = obj.GsrnNumber,
+            };
+        }
     }
 }

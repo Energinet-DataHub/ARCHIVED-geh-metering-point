@@ -12,16 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Xunit;
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR.Pipeline;
 
-namespace Energinet.DataHub.MeteringPoints.Tests
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR
 {
-    public class UnitTest1
+    public class EmptyRequestPreProcessor<TRequest> : IRequestPreProcessor<TRequest>
+        where TRequest : notnull
     {
-        [Fact]
-        public void Test1()
+        public Task Process(TRequest request, CancellationToken cancellationToken)
         {
+            return Task.CompletedTask;
         }
     }
 }

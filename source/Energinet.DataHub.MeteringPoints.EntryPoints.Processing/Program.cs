@@ -14,14 +14,19 @@
 
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.UserIdentity;
+using Energinet.DataHub.MeteringPoints.Contracts;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using MediatR;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using SimpleInjector;
+using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Application.CreateMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 {
@@ -35,6 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 {
                     options.UseMiddleware<SimpleInjectorScopedRequest>();
                     options.UseMiddleware<ServiceBusCorrelationIdMiddleware>();
+                    options.UseMiddleware<ServiceBusUserContextMiddleware>();
                 })
                 .ConfigureServices(services =>
                 {
@@ -44,13 +50,16 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                         ServiceLifetime.Singleton);
                     services.Replace(descriptor); // Replace existing activator
 
-                    services.AddMediatR(typeof(CreateMeteringPoint).Assembly);
-
                     services.AddLogging();
                     services.AddSimpleInjector(container, options =>
                     {
                         options.AddLogging();
                     });
+
+                    services.ReceiveProtobuf<MeteringPointEnvelope>(
+                        config => config
+                            .FromOneOf(envelope => envelope.MeteringPointMessagesCase)
+                            .WithParser(() => MeteringPointEnvelope.Parser));
                 })
                 .Build()
                 .UseSimpleInjector(container);
@@ -59,10 +68,16 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<QueueSubscriber>(Lifestyle.Scoped);
             container.Register<ServiceBusCorrelationIdMiddleware>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
+            container.Register<ServiceBusUserContextMiddleware>(Lifestyle.Scoped);
+            container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
+            container.Register<UserIdentityFactory>(Lifestyle.Singleton);
 
             // Setup pipeline behaviors
-            container.Collection.Register(
-                typeof(IPipelineBehavior<,>),
+            container.BuildMediator(
+                new[]
+                {
+                    typeof(CreateMeteringPoint).Assembly,
+                },
                 new[]
                 {
                     typeof(InputValidationBehavior<,>),
@@ -71,8 +86,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     typeof(IntegrationEventsDispatchBehavior<,>),
                     typeof(ValidationReportsBehavior<,>),
                     typeof(UnitOfWorkBehavior<,>),
-                },
-                Lifestyle.Scoped);
+                });
 
             container.Verify();
 

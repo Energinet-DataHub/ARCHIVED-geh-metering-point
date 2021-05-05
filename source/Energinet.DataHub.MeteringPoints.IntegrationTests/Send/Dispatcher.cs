@@ -12,15 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Xunit;
+using Energinet.DataHub.MeteringPoints.Application.Transport;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Send
 {
-    public class UnitTest1
+    public class Dispatcher : MessageDispatcher
     {
-        [Fact]
-        public void Test1()
+        public Dispatcher(MessageSerializer serializer, InProcessChannel channel)
+            : base(serializer, channel)
         {
         }
     }

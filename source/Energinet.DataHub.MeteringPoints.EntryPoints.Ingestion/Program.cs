@@ -12,10 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Energinet.DataHub.MeteringPoints.Application.UserIdentity;
+using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -34,6 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
                 {
                     options.UseMiddleware<SimpleInjectorScopedRequest>();
                     options.UseMiddleware<HttpCorrelationIdMiddleware>();
+                    options.UseMiddleware<HttpUserContextMiddleware>();
                 })
                 .ConfigureServices(services =>
                 {
@@ -48,6 +56,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
                     {
                         options.AddLogging();
                     });
+
+                    services.SendProtobuf<MeteringPointEnvelope>();
                 })
                 .Build()
                 .UseSimpleInjector(container);
@@ -56,6 +66,17 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             container.Register<CreateMeteringPointHttpTrigger>(Lifestyle.Scoped);
             container.Register<HttpCorrelationIdMiddleware>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
+            container.Register<HttpUserContextMiddleware>(Lifestyle.Scoped);
+            container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
+
+            container.Register<MessageDispatcher, InternalDispatcher>();
+            container.Register<InternalServiceBus>();
+
+            var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING");
+            var topic = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME");
+            container.Register<ServiceBusSender>(
+                () => new ServiceBusClient(connectionString).CreateSender(topic),
+                Lifestyle.Singleton);
             container.Verify();
 
             await host.RunAsync().ConfigureAwait(false);

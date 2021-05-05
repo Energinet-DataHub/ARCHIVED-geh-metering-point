@@ -13,6 +13,9 @@
 // limitations under the License.
 
 using System.Net;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.Transport;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
@@ -21,8 +24,19 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 {
     public class CreateMeteringPointHttpTrigger
     {
+        private readonly ICorrelationContext _correlationContext;
+        private readonly MessageDispatcher _dispatcher;
+
+        public CreateMeteringPointHttpTrigger(
+            ICorrelationContext correlationContext,
+            MessageDispatcher dispatcher)
+        {
+            _correlationContext = correlationContext;
+            _dispatcher = dispatcher;
+        }
+
         [Function("CreateMeteringPoint")]
-        public static HttpResponseData Run(
+        public async Task<HttpResponseData> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData request,
             FunctionContext executionContext)
         {
@@ -32,7 +46,14 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             var response = request.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
 
-            response.WriteString("Ready, set, go!");
+            await response.WriteStringAsync("Correlation id: " + _correlationContext.GetCorrelationId()).ConfigureAwait(false);
+
+            var command = new CreateMeteringPoint
+            {
+                GsrnNumber = "1234567",
+            };
+
+            await _dispatcher.DispatchAsync(command).ConfigureAwait(false);
 
             return response;
         }

@@ -12,17 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+using System;
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
 {
-    public class CreateMeteringPointHandler : IRequestHandler<CreateMeteringPoint, CreateMeteringPointResult>
+    public class UserIdentityFactory
     {
-        public Task<CreateMeteringPointResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
+        public UserIdentity FromString(string userIdentity)
         {
-            return Task.FromResult(new CreateMeteringPointResult());
+            if (userIdentity == null) throw new ArgumentNullException(nameof(userIdentity));
+            return System.Text.Json.JsonSerializer.Deserialize<UserIdentity>(userIdentity);
         }
     }
 }
