@@ -14,15 +14,16 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
+using MediatR.Pipeline;
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR
 {
-    public class CreateMeteringPointHandler : IRequestHandler<CreateMeteringPoint, CreateMeteringPointResult>
+    public class EmptyRequestPreProcessor<TRequest> : IRequestPreProcessor<TRequest>
+        where TRequest : notnull
     {
-        public Task<CreateMeteringPointResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
+        public Task Process(TRequest request, CancellationToken cancellationToken)
         {
-            return Task.FromResult(new CreateMeteringPointResult());
+            return Task.CompletedTask;
         }
     }
 }

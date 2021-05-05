@@ -12,17 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+using Energinet.DataHub.MeteringPoints.Application.Transport;
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Send
 {
-    public class CreateMeteringPointHandler : IRequestHandler<CreateMeteringPoint, CreateMeteringPointResult>
+    public class Dispatcher : MessageDispatcher
     {
-        public Task<CreateMeteringPointResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
+        public Dispatcher(MessageSerializer serializer, InProcessChannel channel)
+            : base(serializer, channel)
         {
-            return Task.FromResult(new CreateMeteringPointResult());
         }
     }
 }

@@ -12,16 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Xunit;
+using Google.Protobuf;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf
 {
-    public class UnitTest1
+    /// <summary>
+    /// Parser for protobuf
+    /// </summary>
+    public abstract class ProtobufParser
     {
-        [Fact]
-        public void Test1()
-        {
-        }
+        /// <summary>
+        /// Create an <see cref="IMessage"/> from a payload
+        /// </summary>
+        /// <param name="data">payload containing the <see cref="IMessage"/></param>
+        /// <returns>Message from the payload</returns>
+        public abstract IMessage Parse(byte[] data);
     }
 }

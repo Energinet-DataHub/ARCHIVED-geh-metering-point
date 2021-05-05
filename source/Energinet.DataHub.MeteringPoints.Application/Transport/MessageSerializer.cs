@@ -14,15 +14,20 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Application.Transport
 {
-    public class CreateMeteringPointHandler : IRequestHandler<CreateMeteringPoint, CreateMeteringPointResult>
+    /// <summary>
+    /// Abstract class for serializing outgoing messages.
+    /// </summary>
+    public abstract class MessageSerializer
     {
-        public Task<CreateMeteringPointResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(new CreateMeteringPointResult());
-        }
+        /// <summary>
+        /// Serialize a message
+        /// </summary>
+        /// <param name="message">Message to serialize</param>
+        /// <param name="cancellationToken">Cancellation token for the request</param>
+        /// <returns><see cref="byte"/> sequence for the message</returns>
+        public abstract Task<byte[]> ToBytesAsync(IOutboundMessage message, CancellationToken cancellationToken = default);
     }
 }

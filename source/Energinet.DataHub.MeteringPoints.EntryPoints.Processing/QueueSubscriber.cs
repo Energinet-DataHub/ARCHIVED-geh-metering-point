@@ -14,7 +14,10 @@
 
 using System;
 using System.Text;
+using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.Transport;
+using MediatR;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
@@ -24,29 +27,33 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
     {
         private readonly ILogger _logger;
         private readonly ICorrelationContext _correlationContext;
+        private readonly MessageExtractor _messageExtractor;
+        private readonly IMediator _mediator;
 
         public QueueSubscriber(
             ILogger logger,
-            ICorrelationContext correlationContext)
+            ICorrelationContext correlationContext,
+            MessageExtractor messageExtractor,
+            IMediator mediator)
         {
             _logger = logger;
             _correlationContext = correlationContext;
+            _messageExtractor = messageExtractor;
+            _mediator = mediator;
         }
 
         [Function("QueueSubscriber")]
-        public void Run(
-            [ServiceBusTrigger("%METERINGPOINT_QUEUE_TOPIC_NAME%", Connection = "METERINGPOINT_QUEUE_CONNECTION_STRING")] byte[] item,
+        public async Task RunAsync(
+            [ServiceBusTrigger("%METERINGPOINT_QUEUE_TOPIC_NAME%", Connection = "METERINGPOINT_QUEUE_CONNECTION_STRING")] byte[] data,
             FunctionContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
-            var content = Encoding.UTF8.GetString(item);
+            var message = await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
 
-            _logger.LogInformation(content);
-            _logger.LogInformation("InvocationId: {invocationId}", context.InvocationId);
-            _logger.LogInformation("With correlation id: {correlationId}", _correlationContext.GetCorrelationId());
+            var result = await _mediator.Send(message).ConfigureAwait(false);
 
-            var message = $"Output message created at {DateTime.Now}";
+            _logger.LogInformation("Dequeued with correlation id: {correlationId}", _correlationContext.GetCorrelationId());
         }
     }
 }

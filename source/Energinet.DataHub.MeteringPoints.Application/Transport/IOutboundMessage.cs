@@ -12,16 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Application.Transport
 {
     /// <summary>
-    /// User identity
+    /// Marker interface for outgoing messages
     /// </summary>
-    public interface IUserIdentity
+    #pragma warning disable CA1040 // Marker interface
+    public interface IOutboundMessage
     {
-        /// <summary>
-        /// Id for the given user
-        /// </summary>
-        public string Id { get; set; }
     }
 }

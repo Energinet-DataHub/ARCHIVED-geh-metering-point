@@ -12,16 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Xunit;
+using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Energinet.DataHub.MeteringPoints.Contracts;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 
-namespace Energinet.DataHub.MeteringPoints.Tests
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
 {
-    public class UnitTest1
+    public class CreateMeteringPointMapper : ProtobufInboundMapper<CreateMeteringPoint>
     {
-        [Fact]
-        public void Test1()
+        protected override IInboundMessage Convert(CreateMeteringPoint obj)
         {
+            return new Application.CreateMeteringPoint
+            {
+                GsrnNumber = obj.GsrnNumber,
+            };
         }
     }
 }

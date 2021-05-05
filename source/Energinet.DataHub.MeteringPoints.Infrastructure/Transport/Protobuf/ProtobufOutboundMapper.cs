@@ -12,17 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Google.Protobuf;
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf
 {
-    public class CreateMeteringPointHandler : IRequestHandler<CreateMeteringPoint, CreateMeteringPointResult>
+    /// <summary>
+    /// Maps an object to proto buf <see cref="IMessage"/>
+    /// </summary>
+    public abstract class ProtobufOutboundMapper
     {
-        public Task<CreateMeteringPointResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(new CreateMeteringPointResult());
-        }
+        /// <summary>
+        /// Map application message to protobuf
+        /// </summary>
+        /// <param name="obj">Object to map</param>
+        /// <returns>Proto buf message</returns>
+        public abstract IMessage Convert(IOutboundMessage obj);
     }
 }
