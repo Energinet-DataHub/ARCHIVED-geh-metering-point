@@ -15,6 +15,7 @@
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Contracts;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
@@ -47,8 +48,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                         ServiceLifetime.Singleton);
                     services.Replace(descriptor); // Replace existing activator
 
-                    services.AddMediatR(typeof(CreateMeteringPoint).Assembly);
-
                     services.AddLogging();
                     services.AddSimpleInjector(container, options =>
                     {
@@ -68,14 +67,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<ServiceBusCorrelationIdMiddleware>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
 
-            // Setup pipeline behaviors
-            container.Collection.Register(
-                typeof(IPipelineBehavior<,>),
-                new[]
-                {
-                    typeof(UnitOfWorkBehavior<,>),
-                },
-                Lifestyle.Scoped);
+            container.BuildMediator(
+                new[] { typeof(CreateMeteringPoint).Assembly },
+                new[] { typeof(UnitOfWorkBehavior<,>) });
 
             container.Verify();
 

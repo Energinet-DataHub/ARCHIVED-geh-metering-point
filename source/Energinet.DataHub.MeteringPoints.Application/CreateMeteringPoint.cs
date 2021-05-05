@@ -17,7 +17,7 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application
 {
-    public class CreateMeteringPoint : IRequest<Unit>, IRequest<CreateMeteringPointResult>, IOutboundMessage, IInboundMessage
+    public class CreateMeteringPoint : IRequest<CreateMeteringPointResult>, IOutboundMessage, IInboundMessage
     {
         public string GsrnNumber { get; set; }
 
