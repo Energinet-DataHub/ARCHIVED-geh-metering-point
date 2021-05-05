@@ -14,7 +14,7 @@ After the SQL server has been deployed this tool can be run and will then ensure
 
 The tool can be run manually on any SQL server database using the following command:
 
-`Energinet.DataHub.MarketData.ApplyDBMigrationsApp.exe <connection string>`
+`Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.exe <connection string>`
 
 `<connection string>` must be replaced with the correct connection string for the database, possibly encapsulated with `"`
 
