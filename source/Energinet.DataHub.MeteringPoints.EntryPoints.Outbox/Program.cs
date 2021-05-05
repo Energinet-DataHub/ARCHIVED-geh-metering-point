@@ -13,6 +13,9 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataBaseAccess.Write;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 [assembly: CLSCompliant(false)]
@@ -24,6 +27,15 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
         public static void Main()
         {
             var host = new HostBuilder()
+                .ConfigureServices(service =>
+                {
+                    service.AddScoped<IWriteDatabaseContext>(s =>
+                    {
+                        var configuration = s.GetService<IConfiguration>();
+                        var connectionString = configuration.GetValue<string>("METERING_POINT_DB_CONNECTION_STRING");
+                        return new WriteDatabaseContext(connectionString);
+                    });
+                })
                 .ConfigureFunctionsWorkerDefaults()
                 .Build();
 
