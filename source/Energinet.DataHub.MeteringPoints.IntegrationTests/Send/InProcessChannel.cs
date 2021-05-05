@@ -13,15 +13,22 @@
 // limitations under the License.
 
 using System;
-using Xunit;
+using System.Threading;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Transport;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Send
 {
-    public class UnitTest1
+    public class InProcessChannel : Channel
     {
-        [Fact]
-        public void Test1()
+        private byte[] _writtenBytes;
+
+        public byte[] GetWrittenBytes() => _writtenBytes ?? throw new InvalidOperationException("Write bytes before getting them.");
+
+        protected override async Task WriteAsync(byte[] data, CancellationToken cancellationToken = default)
         {
+            _writtenBytes = data;
+            await Task.CompletedTask.ConfigureAwait(false);
         }
     }
 }

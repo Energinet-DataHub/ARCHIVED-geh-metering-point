@@ -32,10 +32,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
                 {
                     GsrnNumber = obj.GsrnNumber,
                 },
-                UserIdentity = new UserIdentity
-                {
-                    Foo = "foobar",
-                },
             };
         }
     }

@@ -34,13 +34,8 @@ message CreateMeteringPoint {
   // Address InstallationLocationAddress = 12;
 }
 
-message UserIdentity {
-  string foo = 1;
-}
-
 message MeteringPointEnvelope {
-  UserIdentity userIdentity = 1;
   oneof MeteringPointMessages {
-    CreateMeteringPoint createMeteringPoint = 2;
+    CreateMeteringPoint createMeteringPoint = 1;
   }
 }
