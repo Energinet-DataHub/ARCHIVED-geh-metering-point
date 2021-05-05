@@ -74,7 +74,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             // Setup pipeline behaviors
             container.BuildMediator(
-                new[] {typeof(CreateMeteringPoint).Assembly },
+                new[]
+                {
+                    typeof(CreateMeteringPoint).Assembly,
+                },
                 new[]
                 {
                     typeof(InputValidationBehavior<,>),
@@ -83,8 +86,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     typeof(IntegrationEventsDispatchBehavior<,>),
                     typeof(ValidationReportsBehavior<,>),
                     typeof(UnitOfWorkBehavior<,>),
-                },
-                Lifestyle.Scoped);
+                });
 
             container.Verify();
 
