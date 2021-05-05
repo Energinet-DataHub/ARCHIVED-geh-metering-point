@@ -12,11 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataBaseAccess.Write;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataPersistence
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataBaseAccess.Write
 {
     public class EntityFrameworkUnitOfWork : IUnitOfWork
     {

@@ -14,7 +14,7 @@
 
 using System.Threading.Tasks;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataPersistence
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataBaseAccess.Write
 {
     /// <summary>
     /// Interact with our datastore
