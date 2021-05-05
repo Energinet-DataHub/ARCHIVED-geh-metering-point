@@ -18,7 +18,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataBaseAccess
 {
-    public class BaseDatabaseContext : DbContext, IBaseDatabseContext
+    #nullable disable
+    public class BaseDatabaseContext : DbContext, IBaseDatabaseContext
     {
         public BaseDatabaseContext() { }
 
@@ -27,7 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataBaseAccess
         {
         }
 
-        public DbSet<OutboxMessagesDataModel> OutboxDataModels { get; set; } = null!;
+        public DbSet<OutboxMessagesDataModel> OutboxDataModels { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

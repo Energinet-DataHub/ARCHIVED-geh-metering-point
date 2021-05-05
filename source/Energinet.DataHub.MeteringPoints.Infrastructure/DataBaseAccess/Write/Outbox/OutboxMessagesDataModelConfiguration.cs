@@ -32,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataBaseAccess.Write.O
                 .IsRequired();
             builder.Property(x => x.ProcessedDate).HasColumnName(@"ProcessedDate").HasColumnType("datetime2(7)");
 
-            builder.HasIndex(x => x.RecordId).HasDatabaseName("CIX_OutboxMessages").IsUnique();
+            builder.HasIndex(x => x.RecordId).HasDatabaseName("CIX_OutboxMessages").IsUnique().IsClustered();
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataBaseAccess
     /// <summary>
     /// EF Core Base Database Context
     /// </summary>
-    public interface IBaseDatabseContext : IDisposable
+    public interface IBaseDatabaseContext : IDisposable
     {
         /// <summary>
         /// Entity Framework DbSet for Outbox

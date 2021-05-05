@@ -17,7 +17,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataBaseAccess.Write
     /// <summary>
     /// Interface
     /// </summary>
-    public interface IWriteDatabaseContext : IBaseDatabseContext
+    public interface IWriteDatabaseContext : IBaseDatabaseContext
     {
     }
 }
