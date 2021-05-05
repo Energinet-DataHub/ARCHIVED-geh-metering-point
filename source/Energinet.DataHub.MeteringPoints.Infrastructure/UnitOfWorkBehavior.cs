@@ -14,6 +14,7 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataPersistence;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure
@@ -21,9 +22,21 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure
     public class UnitOfWorkBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : notnull
     {
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        private readonly IUnitOfWork _unitOfWork;
+
+        public UnitOfWorkBehavior(IUnitOfWork unitOfWork)
         {
-            throw new System.NotImplementedException();
+            _unitOfWork = unitOfWork;
+        }
+
+        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        {
+            // Call next handler in the pipeline and wait for the result
+            var result = await next();
+
+            await _unitOfWork.CommitAsync();
+
+            return result;
         }
     }
 }
