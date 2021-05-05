@@ -12,17 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
+using System;
 using System.Threading.Tasks;
-using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataPersistence
 {
-    public class IntegrationEventBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class EntityFrameworkUnitOfWork : IUnitOfWork
     {
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public Task CommitAsync()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }
