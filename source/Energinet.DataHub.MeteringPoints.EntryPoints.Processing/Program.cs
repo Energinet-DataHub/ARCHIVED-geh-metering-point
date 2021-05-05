@@ -72,9 +72,19 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
             container.Register<UserIdentityFactory>(Lifestyle.Singleton);
 
+            // Setup pipeline behaviors
             container.BuildMediator(
-                new[] { typeof(CreateMeteringPoint).Assembly },
-                new[] { typeof(UnitOfWorkBehavior<,>) });
+                new[] {typeof(CreateMeteringPoint).Assembly },
+                new[]
+                {
+                    typeof(InputValidationBehavior<,>),
+                    typeof(AuthorizationBehavior<,>),
+                    typeof(BusinessProcessResponderBehavior<,>),
+                    typeof(IntegrationEventsDispatchBehavior<,>),
+                    typeof(ValidationReportsBehavior<,>),
+                    typeof(UnitOfWorkBehavior<,>),
+                },
+                Lifestyle.Scoped);
 
             container.Verify();
 
