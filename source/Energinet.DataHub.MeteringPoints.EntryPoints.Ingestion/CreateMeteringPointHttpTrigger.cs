@@ -24,11 +24,14 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 {
     public class CreateMeteringPointHttpTrigger
     {
+        private readonly ICorrelationContext _correlationContext;
         private readonly MessageDispatcher _dispatcher;
 
         public CreateMeteringPointHttpTrigger(
+            ICorrelationContext correlationContext,
             MessageDispatcher dispatcher)
         {
+            _correlationContext = correlationContext;
             _dispatcher = dispatcher;
         }
 
@@ -43,12 +46,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             var response = request.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
 
-            await response.WriteStringAsync("Ready, set, go!").ConfigureAwait(false);
+            await response.WriteStringAsync("Correlation id: " + _correlationContext.GetCorrelationId()).ConfigureAwait(false);
 
             var command = new CreateMeteringPoint
             {
                 GsrnNumber = "1234567",
             };
+
             await _dispatcher.DispatchAsync(command).ConfigureAwait(false);
 
             return response;
