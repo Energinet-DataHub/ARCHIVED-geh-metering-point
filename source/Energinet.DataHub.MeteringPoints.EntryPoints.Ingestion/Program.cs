@@ -14,8 +14,6 @@
 
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
-using MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Microsoft.Azure.Functions.Worker;
