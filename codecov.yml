@@ -1,0 +1,29 @@
+flags:
+  unit:
+    paths:
+      - source/Energinet.DataHub.MeteringPoints.Application/
+      - source/Energinet.DataHub.MeteringPoints.Domain/
+      - source/Energinet.DataHub.MeteringPoints.Tests/
+  integration:
+    paths:
+      - source/Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp/
+      - source/Energinet.DataHub.MeteringPoints.EntryPoints.Common/
+      - source/Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion/
+      - source/Energinet.DataHub.MeteringPoints.EntryPoints.Outbox/
+      - source/Energinet.DataHub.MeteringPoints.EntryPoints.Processing/
+      - source/Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests/
+
+coverage:
+  status:
+    project:
+      default:
+        flags:
+          - unit
+          - integration
+      unit:
+        flags:
+          - unit
+      integration:
+        flags:
+          - integration
+
