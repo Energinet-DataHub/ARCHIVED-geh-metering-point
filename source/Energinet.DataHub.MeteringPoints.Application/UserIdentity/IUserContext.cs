@@ -12,16 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
 {
     /// <summary>
-    /// User identity
+    /// Context for the current scope identified by a correlation id.
     /// </summary>
-    public interface IUserIdentity
+    public interface IUserContext
     {
         /// <summary>
-        /// Id for the given user
+        /// Get the current correlation id.
         /// </summary>
-        public string Id { get; set; }
+        public UserIdentity CurrentUser { get; set; }
+
+        /// <summary>
+        /// Key to be used when storing identity in property collections.
+        /// </summary>
+        public string Key { get; }
     }
 }

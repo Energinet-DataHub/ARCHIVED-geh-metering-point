@@ -17,28 +17,31 @@ using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Energinet.DataHub.MeteringPoints.Application.UserIdentity;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion
 {
     public class InternalServiceBus : Channel
     {
+        private readonly IUserContext _userContext;
         private readonly ICorrelationContext _correlationContext;
         private readonly ServiceBusSender _sender;
 
         public InternalServiceBus(
+            IUserContext userContext,
             ICorrelationContext correlationContext,
             ServiceBusSender sender)
         {
+            _userContext = userContext;
             _correlationContext = correlationContext;
             _sender = sender;
         }
 
         protected override async Task WriteAsync(byte[] data, CancellationToken cancellationToken = default)
         {
-            var message = new ServiceBusMessage(data)
-            {
-                CorrelationId = _correlationContext.GetCorrelationId(),
-            };
+            var message = new ServiceBusMessage(data);
+            message.CorrelationId = _correlationContext.GetCorrelationId();
+            message.ApplicationProperties.Add(_userContext.Key, _userContext.CurrentUser.AsString());
 
             await _sender.SendMessageAsync(message, cancellationToken).ConfigureAwait(false);
         }

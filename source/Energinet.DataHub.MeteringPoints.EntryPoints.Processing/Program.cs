@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.UserIdentity;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
@@ -39,6 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 {
                     options.UseMiddleware<SimpleInjectorScopedRequest>();
                     options.UseMiddleware<ServiceBusCorrelationIdMiddleware>();
+                    options.UseMiddleware<ServiceBusUserContextMiddleware>();
                 })
                 .ConfigureServices(services =>
                 {
@@ -66,6 +68,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<QueueSubscriber>(Lifestyle.Scoped);
             container.Register<ServiceBusCorrelationIdMiddleware>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
+            container.Register<ServiceBusUserContextMiddleware>(Lifestyle.Scoped);
+            container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
+            container.Register<UserIdentityFactory>(Lifestyle.Singleton);
 
             container.BuildMediator(
                 new[] { typeof(CreateMeteringPoint).Assembly },

@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Energinet.DataHub.MeteringPoints.Application.UserIdentity;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
@@ -40,6 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
                 {
                     options.UseMiddleware<SimpleInjectorScopedRequest>();
                     options.UseMiddleware<HttpCorrelationIdMiddleware>();
+                    options.UseMiddleware<HttpUserContextMiddleware>();
                 })
                 .ConfigureServices(services =>
                 {
@@ -64,6 +66,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             container.Register<CreateMeteringPointHttpTrigger>(Lifestyle.Scoped);
             container.Register<HttpCorrelationIdMiddleware>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
+            container.Register<HttpUserContextMiddleware>(Lifestyle.Scoped);
+            container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
 
             container.Register<MessageDispatcher, InternalDispatcher>();
             container.Register<InternalServiceBus>();
