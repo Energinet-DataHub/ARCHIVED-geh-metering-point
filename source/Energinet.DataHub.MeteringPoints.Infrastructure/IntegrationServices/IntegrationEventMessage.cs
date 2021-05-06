@@ -18,12 +18,5 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices
 {
-    public class IntegrationEventMessage : IOutboundMessage, IInboundMessage
-    {
-        public string? Id { get; set; }
-
-        public string? Type { get; set; }
-
-        public string? Data { get; set; }
-    }
+    public record IntegrationEventMessage(string Id, string Type, string Data) : IOutboundMessage;
 }

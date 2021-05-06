@@ -39,11 +39,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             logger.LogInformation($"C# Timer trigger function executed at: {DateTimeOffset.UtcNow} (UTC)");
             logger.LogInformation($"From function timer trigger input: {timerInformation}");
 
-            // TODO: Change this to use a repository when EF is implemented
-            IntegrationEventMessage eventMessage = new()
-            {
-                Id = "122131231", Data = @"something:{Json:true, much: 'it is'}", Type = "CreateMeteringPoint",
-            };
+            // TODO: Change this to use a repository when EF is implemented. This will be orchestrated by an application service
+            IntegrationEventMessage eventMessage =
+                new("122131231", "CreateMeteringPoint", @"something:{Json:true, much: 'it is'}");
 
             await _dispatcher.DispatchAsync(eventMessage).ConfigureAwait(false);
         }
