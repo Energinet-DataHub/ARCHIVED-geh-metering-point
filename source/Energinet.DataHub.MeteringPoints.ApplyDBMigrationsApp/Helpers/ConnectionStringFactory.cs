@@ -12,11 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.Linq;
 
-namespace Energinet.DataHub.MeteringPoints.Domain
+namespace Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.Helpers
 {
-    public class Class1
+    public static class ConnectionStringFactory
     {
+       public static string GetConnectionString(string[] args)
+        {
+            return args.FirstOrDefault();
+        }
     }
 }

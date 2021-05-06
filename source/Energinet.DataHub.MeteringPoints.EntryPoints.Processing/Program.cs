@@ -12,36 +12,87 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
-using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices;
+using Energinet.DataHub.MeteringPoints.Application.UserIdentity;
+using Energinet.DataHub.MeteringPoints.Contracts;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
+using Energinet.DataHub.MeteringPoints.Infrastructure;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using MediatR;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using SimpleInjector;
+using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Application.CreateMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 {
     public static class Program
     {
-        public static void Main()
+        public static async Task Main()
         {
+            var container = new Container();
             var host = new HostBuilder()
-                .ConfigureServices(x =>
+                .ConfigureFunctionsWorkerDefaults(options =>
                 {
-                    x.AddMediatR(typeof(CreateMeteringPointHandler).Assembly);
-
-                    // x.AddTransient(typeof(IPipelineBehavior<,>), typeof(InputValidationBehavior<,>));
-                    // x.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
-                    // x.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkBehavior<,>));
-                    x.AddTransient(typeof(IPipelineBehavior<,>), typeof(IntegrationEventBehavior<,>));
-                    x.AddSingleton(new AzureEventHubConfig(Environment.GetEnvironmentVariable("METERINGPOINTEVENTHUB_HUB_NAME"), Environment.GetEnvironmentVariable("METERINGPOINTEVENTHUB_CONNECTION_STRING")));
-                    x.AddTransient<IAzureEventHubService, AzureEventHubService>();
+                    options.UseMiddleware<SimpleInjectorScopedRequest>();
+                    options.UseMiddleware<ServiceBusCorrelationIdMiddleware>();
+                    options.UseMiddleware<ServiceBusUserContextMiddleware>();
                 })
-                .ConfigureFunctionsWorkerDefaults()
-                .Build();
+                .ConfigureServices(services =>
+                {
+                    var descriptor = new ServiceDescriptor(
+                        typeof(IFunctionActivator),
+                        typeof(SimpleInjectorActivator),
+                        ServiceLifetime.Singleton);
+                    services.Replace(descriptor); // Replace existing activator
 
-            host.Run();
+                    services.AddLogging();
+                    services.AddSimpleInjector(container, options =>
+                    {
+                        options.AddLogging();
+                    });
+
+                    services.ReceiveProtobuf<MeteringPointEnvelope>(
+                        config => config
+                            .FromOneOf(envelope => envelope.MeteringPointMessagesCase)
+                            .WithParser(() => MeteringPointEnvelope.Parser));
+                })
+                .Build()
+                .UseSimpleInjector(container);
+
+            // Register application components.
+            container.Register<QueueSubscriber>(Lifestyle.Scoped);
+            container.Register<ServiceBusCorrelationIdMiddleware>(Lifestyle.Scoped);
+            container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
+            container.Register<ServiceBusUserContextMiddleware>(Lifestyle.Scoped);
+            container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
+            container.Register<UserIdentityFactory>(Lifestyle.Singleton);
+
+            // Setup pipeline behaviors
+            container.BuildMediator(
+                new[]
+                {
+                    typeof(CreateMeteringPoint).Assembly,
+                },
+                new[]
+                {
+                    typeof(InputValidationBehavior<,>),
+                    typeof(AuthorizationBehavior<,>),
+                    typeof(BusinessProcessResponderBehavior<,>),
+                    typeof(IntegrationEventsDispatchBehavior<,>),
+                    typeof(ValidationReportsBehavior<,>),
+                    typeof(UnitOfWorkBehavior<,>),
+                });
+
+            container.Verify();
+
+            await host.RunAsync().ConfigureAwait(false);
+
+            await container.DisposeAsync().ConfigureAwait(false);
         }
     }
 }

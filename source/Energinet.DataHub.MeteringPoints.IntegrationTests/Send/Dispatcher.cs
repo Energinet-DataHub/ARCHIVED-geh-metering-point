@@ -12,17 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+using Energinet.DataHub.MeteringPoints.Application.Transport;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Send
 {
-    public class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class Dispatcher : MessageDispatcher
     {
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public Dispatcher(MessageSerializer serializer, InProcessChannel channel)
+            : base(serializer, channel)
         {
-            throw new System.NotImplementedException();
         }
     }
 }

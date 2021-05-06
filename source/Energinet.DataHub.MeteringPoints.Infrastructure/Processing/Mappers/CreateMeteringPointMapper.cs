@@ -12,18 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application;
-using MediatR;
+using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Energinet.DataHub.MeteringPoints.Contracts;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
 {
-    public class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class CreateMeteringPointMapper : ProtobufInboundMapper<CreateMeteringPoint>
     {
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        protected override IInboundMessage Convert(CreateMeteringPoint obj)
         {
-            throw new System.NotImplementedException();
+            return new Application.CreateMeteringPoint
+            {
+                GsrnNumber = obj.GsrnNumber,
+            };
         }
     }
 }

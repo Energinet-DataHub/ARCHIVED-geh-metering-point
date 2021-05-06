@@ -1,4 +1,5 @@
 ﻿DataHub
+codecov
 github
 Energinet
 IaC
@@ -50,3 +51,7 @@ GSRN
 Dxx
 MeteringPointCreated
 CoS
+ie
+sql
+yyyyMMddHHmm
+ApplyDBMigrationsApp

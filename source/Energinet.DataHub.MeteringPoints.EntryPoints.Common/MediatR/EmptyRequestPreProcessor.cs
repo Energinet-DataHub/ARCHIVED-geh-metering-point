@@ -14,16 +14,16 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application;
-using MediatR;
+using MediatR.Pipeline;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR
 {
-    public class InputValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class EmptyRequestPreProcessor<TRequest> : IRequestPreProcessor<TRequest>
+        where TRequest : notnull
     {
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public Task Process(TRequest request, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return Task.CompletedTask;
         }
     }
 }

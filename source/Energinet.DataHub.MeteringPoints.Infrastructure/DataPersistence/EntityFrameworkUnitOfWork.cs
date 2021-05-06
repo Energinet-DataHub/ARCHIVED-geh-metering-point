@@ -13,15 +13,15 @@
 // limitations under the License.
 
 using System;
-using Xunit;
+using System.Threading.Tasks;
 
-namespace Energinet.DataHub.MeteringPoints.Tests
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataPersistence
 {
-    public class UnitTest1
+    public class EntityFrameworkUnitOfWork : IUnitOfWork
     {
-        [Fact]
-        public void Test1()
+        public Task CommitAsync()
         {
+            throw new NotImplementedException();
         }
     }
 }

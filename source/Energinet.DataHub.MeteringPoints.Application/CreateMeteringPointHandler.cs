@@ -20,11 +20,11 @@ namespace Energinet.DataHub.MeteringPoints.Application
 {
     public class CreateMeteringPointHandler : IRequestHandler<CreateMeteringPoint, CreateMeteringPointResult>
     {
-        public async Task<CreateMeteringPointResult> Handle(
+        public Task<CreateMeteringPointResult> Handle(
             CreateMeteringPoint request,
             CancellationToken cancellationToken)
         {
-            return new CreateMeteringPointResult();
+            return Task.FromResult(new CreateMeteringPointResult());
         }
     }
 }

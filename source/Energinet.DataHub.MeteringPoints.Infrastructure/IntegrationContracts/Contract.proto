@@ -15,12 +15,27 @@
 
 syntax = "proto3";
 
+// import "google/protobuf/timestamp.proto";
+
 option csharp_namespace = "Energinet.DataHub.MeteringPoints.Contracts";
 
-message EventContract {
-  string gsrn = 1;
-  string mpType = 2;
-  string gridAccessProvider = 3;
-  bool child = 4;
-  string energySupplierCurrent = 5;
+message CreateMeteringPoint {
+  string gsrnNumber = 1;
+  string typeOfMeteringPoint = 2;
+  string subTypeOfMeteringPoint = 3;
+  string meterReadingOccurrence = 4;
+  int32 maximumCurrent = 5;
+  int32 maximumPower = 6;
+  string meteringGridAreaUsedDomainLocation = 7;
+  string powerPlantDomainLocation = 8;
+  string locationDescription = 9;
+  string includedProductCharacteristic = 10;
+  string parentRelatedMeteringPoint = 11;
+  // Address InstallationLocationAddress = 12;
+}
+
+message MeteringPointEnvelope {
+  oneof MeteringPointMessages {
+    CreateMeteringPoint createMeteringPoint = 1;
+  }
 }

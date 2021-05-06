@@ -12,16 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application;
-
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 {
     public class MessageQueueItem
     {
-        public IUserIdentity UserIdentity { get; set; }
-
-        public string CommandType { get; set; }
-
-        public ICommand Command { get; set; }
+        // public IUserIdentity UserIdentity { get; set; }
+        //
+        // public string CommandType { get; set; }
+        //
+        // public ICommand Command { get; set; }
     }
 }

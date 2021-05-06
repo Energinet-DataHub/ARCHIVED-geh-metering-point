@@ -15,13 +15,18 @@
 namespace Energinet.DataHub.MeteringPoints.Application
 {
     /// <summary>
-    /// User identity
+    /// Context for the current scope identified by a correlation id.
     /// </summary>
-    public interface IUserIdentity
+    public interface ICorrelationContext
     {
         /// <summary>
-        /// Id for the given user
+        /// Get the current correlation id.
         /// </summary>
-        public string Id { get; set; }
+        string GetCorrelationId();
+
+        /// <summary>
+        /// Set the current correlation id.
+        /// </summary>
+        void SetCorrelationId(string correlationId);
     }
 }

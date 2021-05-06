@@ -12,16 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Xunit;
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests
+namespace Energinet.DataHub.MeteringPoints.Infrastructure
 {
-    public class UnitTest1
+    public class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : notnull
     {
-        [Fact]
-        public void Test1()
+        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
+            throw new System.NotImplementedException();
         }
     }
 }

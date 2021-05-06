@@ -12,31 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application;
-using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataPersistence;
 using MediatR;
-using Microsoft.Extensions.Logging;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
+namespace Energinet.DataHub.MeteringPoints.Infrastructure
 {
-    public class IntegrationEventBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public class UnitOfWorkBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : notnull
     {
-        private readonly IAzureEventHubService _azureEventHubService;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public IntegrationEventBehavior(IAzureEventHubService azureEventHubService)
+        public UnitOfWorkBehavior(IUnitOfWork unitOfWork)
         {
-            _azureEventHubService = azureEventHubService;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            if (request == null) throw new ArgumentNullException(nameof(request));
-            if (next == null) throw new ArgumentNullException(nameof(next));
+            // Call next handler in the pipeline and wait for the result
+            var result = await next();
 
-            var result = await next().ConfigureAwait(false);
+            await _unitOfWork.CommitAsync();
 
             return result;
         }
