@@ -27,13 +27,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 {
     public class HttpTrigger
     {
-        private readonly IMediator _mediator;
-
-        public HttpTrigger(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         [Function("CreateMeteringPoint")]
         public async Task<HttpResponseData> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData request,
@@ -45,9 +38,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             var response = request.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
 
-            await response.WriteStringAsync("Ready, set, go!").ConfigureAwait(false);
-            var createMeteringPointCommand = new CreateMeteringPoint { GsrnNumber = "Gsrn" };
-            await _mediator.Send(createMeteringPointCommand, CancellationToken.None).ConfigureAwait(false);
+            await response.WriteStringAsync("Ready, set, go!");
+
             return response;
         }
     }
