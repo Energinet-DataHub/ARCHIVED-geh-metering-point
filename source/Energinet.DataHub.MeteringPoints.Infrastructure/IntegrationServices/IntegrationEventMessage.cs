@@ -13,10 +13,17 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Application.Transport;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices
 {
-    public record AzureEventData(string Gsrn, Type MpType, string GridAccessProvider, bool Child,
-        string EnergySupplierCurrent) : IRequest<AzureEventDataResult>;
+    public class IntegrationEventMessage : IOutboundMessage, IInboundMessage
+    {
+        public string? Id { get; set; }
+
+        public string? Type { get; set; }
+
+        public string? Data { get; set; }
+    }
 }

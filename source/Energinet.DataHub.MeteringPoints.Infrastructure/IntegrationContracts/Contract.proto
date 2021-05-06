@@ -39,3 +39,15 @@ message MeteringPointEnvelope {
     CreateMeteringPoint createMeteringPoint = 1;
   }
 }
+
+message IntegrationEventMessage {
+  string id = 1;
+  string type = 2;
+  string data = 3;
+}
+
+message IntegrationEventEnvelope {
+  oneof IntegrationEventMessages {
+    IntegrationEventMessage integrationEventMessage = 1;
+  }
+}

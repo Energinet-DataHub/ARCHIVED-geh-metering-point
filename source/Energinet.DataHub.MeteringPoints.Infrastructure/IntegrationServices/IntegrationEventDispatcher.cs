@@ -12,23 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.EventServices;
+using Energinet.DataHub.MeteringPoints.Application.Transport;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Services
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices
 {
-    public class EventService : IEventService
+    public class IntegrationEventDispatcher : MessageDispatcher
     {
-        private readonly IEventRepository _eventRepository;
-
-        public EventService(IEventRepository eventRepository)
+        public IntegrationEventDispatcher(MessageSerializer serializer, AzureEventHubChannel channel)
+            : base(serializer, channel)
         {
-            _eventRepository = eventRepository;
-        }
-
-        public Task ProcessMessagesAsync()
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

@@ -13,10 +13,18 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.EventServices;
-using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Services;
+using System.Threading.Tasks;
+using Azure.Messaging.EventHubs.Producer;
+using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Energinet.DataHub.MeteringPoints.Contracts;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using SimpleInjector;
 
 [assembly: CLSCompliant(false)]
 
@@ -24,18 +32,48 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
 {
     public static class Program
     {
-        public static void Main()
+        public static async Task Main()
         {
+            var container = new Container();
             var host = new HostBuilder()
-                .ConfigureServices(service =>
+                .ConfigureFunctionsWorkerDefaults(options =>
                 {
-                    service.AddTransient<IEventService, EventService>();
-                    service.AddTransient<IEventRepository, EventRepository>();
+                    options.UseMiddleware<SimpleInjectorScopedRequest>();
                 })
-                .ConfigureFunctionsWorkerDefaults()
-                .Build();
+                .ConfigureServices(services =>
+                {
+                    var descriptor = new ServiceDescriptor(
+                        typeof(IFunctionActivator),
+                        typeof(SimpleInjectorActivator),
+                        ServiceLifetime.Singleton);
+                    services.Replace(descriptor); // Replace existing activator
 
-            host.Run();
+                    services.AddLogging();
+                    services.AddSimpleInjector(container, options =>
+                    {
+                        options.AddLogging();
+                    });
+
+                    services.SendProtobuf<IntegrationEventEnvelope>();
+                })
+                .Build()
+                .UseSimpleInjector(container);
+
+            // Register application components.
+            container.Register<EventMessageDispatcher>();
+            container.Register<MessageDispatcher, IntegrationEventDispatcher>();
+            container.Register<AzureEventHubChannel>();
+
+            var connectionString = Environment.GetEnvironmentVariable("METERINGPOINTEVENTHUB_CONNECTION_STRING");
+            var hubName = Environment.GetEnvironmentVariable("METERINGPOINTEVENTHUB_HUB_NAME");
+            container.Register<EventHubProducerClient>(
+                () => new EventHubProducerClient(connectionString, hubName),
+                Lifestyle.Singleton);
+            container.Verify();
+
+            await host.RunAsync().ConfigureAwait(false);
+
+            await container.DisposeAsync().ConfigureAwait(false);
         }
     }
 }

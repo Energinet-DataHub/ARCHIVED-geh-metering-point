@@ -15,31 +15,16 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application;
-using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices;
 using MediatR;
-using Microsoft.Extensions.Logging;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure
 {
     public class BusinessProcessResponderBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : notnull
     {
-        private readonly IAzureEventHubService _azureEventHubService;
-
-        public IntegrationEventBehavior(IAzureEventHubService azureEventHubService)
+        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            _azureEventHubService = azureEventHubService;
-        }
-
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
-        {
-            if (request == null) throw new ArgumentNullException(nameof(request));
-            if (next == null) throw new ArgumentNullException(nameof(next));
-
-            var result = await next().ConfigureAwait(false);
-
-            return result;
+            throw new System.NotImplementedException();
         }
     }
 }
