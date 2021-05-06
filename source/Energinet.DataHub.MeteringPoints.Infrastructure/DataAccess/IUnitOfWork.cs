@@ -14,20 +14,17 @@
 
 using System.Threading.Tasks;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataBaseAccess.Write
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
 {
-    public class EntityFrameworkUnitOfWork : IUnitOfWork
+    /// <summary>
+    /// Unit of work for handling database transactions
+    /// </summary>
+    public interface IUnitOfWork
     {
-        private readonly WriteDatabaseContext _databaseContext;
-
-        public EntityFrameworkUnitOfWork(WriteDatabaseContext databaseContext)
-        {
-            _databaseContext = databaseContext;
-        }
-
-        public async Task CommitAsync()
-        {
-            await _databaseContext.SaveChangesAsync();
-        }
+        /// <summary>
+        /// Commits the transaction
+        /// </summary>
+        /// <returns><see cref="Task"/></returns>
+        Task CommitAsync();
     }
 }

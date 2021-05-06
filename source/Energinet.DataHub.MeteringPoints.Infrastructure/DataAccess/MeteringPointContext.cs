@@ -12,27 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataBaseAccess.Write.Outbox;
+using System;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Microsoft.EntityFrameworkCore;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataBaseAccess
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
 {
-    #nullable disable
-    public class BaseDatabaseContext : DbContext, IBaseDatabaseContext
+    public class MeteringPointContext : DbContext
     {
-        public BaseDatabaseContext() { }
-
-        public BaseDatabaseContext(DbContextOptions<BaseDatabaseContext> options)
+        #nullable disable
+        public MeteringPointContext(DbContextOptions<MeteringPointContext> options)
             : base(options)
         {
         }
 
-        public DbSet<OutboxMessagesDataModel> OutboxDataModels { get; set; }
+        public MeteringPointContext()
+        {
+        }
+
+        public DbSet<OutboxMessage> OutboxMessages { get; private set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfiguration(new OutboxMessagesDataModelConfiguration());
+            if (modelBuilder == null) throw new ArgumentNullException(nameof(modelBuilder));
+
+            modelBuilder.ApplyConfiguration(new OutboxMessageEntityConfiguration());
         }
     }
 }

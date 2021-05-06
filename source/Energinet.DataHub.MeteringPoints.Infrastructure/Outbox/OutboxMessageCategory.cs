@@ -12,20 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataBaseAccess.Write.Outbox;
-using Microsoft.EntityFrameworkCore;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataBaseAccess
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
 {
-    /// <summary>
-    /// EF Core Base Database Context
-    /// </summary>
-    public interface IBaseDatabaseContext : IDisposable
+    public class OutboxMessageCategory : EnumerationType
     {
-        /// <summary>
-        /// Entity Framework DbSet for Outbox
-        /// </summary>
-        DbSet<OutboxMessagesDataModel> OutboxDataModels { get; set; }
+        public static readonly OutboxMessageCategory IntegrationEvent = new OutboxMessageCategory(0, nameof(IntegrationEvent));
+        public static readonly OutboxMessageCategory ActorMessage = new OutboxMessageCategory(1, nameof(ActorMessage));
+
+        public OutboxMessageCategory(int id, string name)
+            : base(id, name)
+        {
+        }
     }
 }

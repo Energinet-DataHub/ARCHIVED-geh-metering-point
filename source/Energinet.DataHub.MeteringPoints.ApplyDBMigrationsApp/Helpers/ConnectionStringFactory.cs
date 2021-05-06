@@ -18,9 +18,11 @@ namespace Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.Helpers
 {
     public static class ConnectionStringFactory
     {
-       public static string GetConnectionString(string[] args)
+        private const string DefaultConnectionString = "Server=(local); Database=MeteringPointData; Trusted_connection=true";
+
+        public static string GetConnectionString(string[] args)
         {
-            return args.FirstOrDefault();
+            return args.FirstOrDefault() ?? DefaultConnectionString;
         }
     }
 }
