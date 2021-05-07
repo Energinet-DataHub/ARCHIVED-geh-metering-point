@@ -18,6 +18,12 @@ namespace Energinet.DataHub.MeteringPoints.Application
     {
         public string StreetName { get; set; }
 
+        public string PostCode { get; set; }
+
+        public string CityName { get; set; }
+
+        public string CountryCode { get; set; }
+
         public bool IsWashable { get; set; }
     }
 }
