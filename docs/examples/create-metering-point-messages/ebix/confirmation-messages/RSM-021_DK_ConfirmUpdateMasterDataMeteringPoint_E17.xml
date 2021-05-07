@@ -1,0 +1,45 @@
+<SOAP-ENV:Body xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+    <ns0:PeekMessageResponse xmlns:ns0="urn:www:datahub:dk:b2b:v01">
+        <ns0:MessageContainer>
+            <ns0:MessageReference>8adc6e5c7c694e5ea4626f282f0d819e</ns0:MessageReference>
+            <ns0:DocumentType>ConfirmUpdateMasterDataMeteringPoint</ns0:DocumentType>
+            <ns0:MessageType>XML</ns0:MessageType>
+            <ns0:Payload>
+                <ns0:DK_ConfirmUpdateMasterDataMeteringPoint xmlns:ns0="un:unece:260:data:EEM-DK_ConfirmUpdateMasterDataMeteringPoint:v2">
+                    <ns0:HeaderEnergyDocument>
+                        <ns0:Identification>5b958c9fcc354ce6b7c12099544dd44b</ns0:Identification>
+                        <ns0:DocumentType listAgencyIdentifier="260">E59</ns0:DocumentType>
+                        <ns0:Creation>2019-09-26T09:50:37Z</ns0:Creation>
+                        <ns0:SenderEnergyParty>
+                            <ns0:Identification schemeAgencyIdentifier="9">579000133xxxx</ns0:Identification>
+                        </ns0:SenderEnergyParty>
+                        <ns0:RecipientEnergyParty>
+                            <ns0:Identification schemeAgencyIdentifier="9">810000000xxxx</ns0:Identification>
+                        </ns0:RecipientEnergyParty>
+                    </ns0:HeaderEnergyDocument>
+                    <ns0:ProcessEnergyContext>
+                        <ns0:EnergyBusinessProcess listAgencyIdentifier="260">E02</ns0:EnergyBusinessProcess>
+                        <ns0:EnergyBusinessProcessRole listAgencyIdentifier="260" listIdentifier="DK">DDM</ns0:EnergyBusinessProcessRole>
+                        <ns0:EnergyIndustryClassification listAgencyIdentifier="6">23</ns0:EnergyIndustryClassification>
+                    </ns0:ProcessEnergyContext>
+                    <ns0:PayloadChargeEvent>
+                        <ns0:Identification>56f9a5fc8e0a46fab1059586eb45a257</ns0:Identification>
+                        <ns0:OriginalBusinessDocument>LW-TransID-2019-09-26-11-48-13-570</ns0:OriginalBusinessDocument>
+                        <ns0:StatusType listAgencyIdentifier="6">39</ns0:StatusType>
+                        <ns0:MeteringPointDomainLocation>
+                            <ns0:Identification schemeAgencyIdentifier="9">57803297138189xxxx</ns0:Identification>
+                        </ns0:MeteringPointDomainLocation>
+                    </ns0:PayloadChargeEvent>
+                    <ns0:PayloadChargeEvent>
+                        <ns0:Identification>a8294e4bed614b8797c02d9462062865</ns0:Identification>
+                        <ns0:OriginalBusinessDocument>LW-TransID-2019-09-26-11-48-39-817</ns0:OriginalBusinessDocument>
+                        <ns0:StatusType listAgencyIdentifier="6">39</ns0:StatusType>
+                        <ns0:MeteringPointDomainLocation>
+                            <ns0:Identification schemeAgencyIdentifier="9">57803297138189xxxx</ns0:Identification>
+                        </ns0:MeteringPointDomainLocation>
+                    </ns0:PayloadChargeEvent>
+                </ns0:DK_ConfirmUpdateMasterDataMeteringPoint>
+            </ns0:Payload>
+        </ns0:MessageContainer>
+    </ns0:PeekMessageResponse>
+</SOAP-ENV:Body>
