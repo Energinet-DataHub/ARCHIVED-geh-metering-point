@@ -15,6 +15,7 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
+using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using Google.Protobuf;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Mappers
@@ -26,7 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Ma
             if (obj == null) throw new ArgumentNullException(nameof(obj));
             return new IntegrationEventEnvelope()
             {
-                IntegrationEventMessage = new Contracts.IntegrationEventMessage
+                IntegrationEventMessage = new IntegrationEventContracts.IntegrationEventMessage
                 {
                     Id = obj.Id, Type = obj.Type, Data = obj.Data,
                 },
