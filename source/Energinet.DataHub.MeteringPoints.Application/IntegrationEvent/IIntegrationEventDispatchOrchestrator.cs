@@ -12,11 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Application.Transport;
-using MediatR;
+using System.Threading.Tasks;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices
+namespace Energinet.DataHub.MeteringPoints.Application.IntegrationEvent
 {
-    public record IntegrationEventMessage(string Id, string Type, string Data) : IOutboundMessage;
+    /// <summary>
+    /// Interface for the integration event dispatch orchestrator
+    /// </summary>
+    public interface IIntegrationEventDispatchOrchestrator
+    {
+        /// <summary>
+        /// Orchestrate the events to be dispatched
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        Task ProcessEventOrchestratorAsync();
+    }
 }

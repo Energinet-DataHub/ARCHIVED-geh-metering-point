@@ -15,9 +15,12 @@
 using System;
 using System.Threading.Tasks;
 using Azure.Messaging.EventHubs.Producer;
+using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Services;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using Microsoft.Azure.Functions.Worker;
@@ -25,6 +28,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using SimpleInjector;
+using CreateMeteringPointEventMessage = Energinet.DataHub.MeteringPoints.Application.CreateMeteringPointEventMessage;
 
 [assembly: CLSCompliant(false)]
 
@@ -63,6 +67,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             container.Register<EventMessageDispatcher>();
             container.Register<MessageDispatcher, IntegrationEventDispatcher>();
             container.Register<AzureEventHubChannel>();
+            container.Register<IIntegrationEventDispatchOrchestrator, IntegrationEventDispatchOrchestrator>();
+
+            // TODO Register new integration event class/Handlers
+            container.BuildMediator(
+                new[] { typeof(CreateMeteringPointEventMessage).Assembly }, Array.Empty<Type>());
 
             var connectionString = Environment.GetEnvironmentVariable("METERINGPOINTEVENTHUB_CONNECTION_STRING");
             var hubName = Environment.GetEnvironmentVariable("METERINGPOINTEVENTHUB_HUB_NAME");

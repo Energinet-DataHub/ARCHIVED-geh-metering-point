@@ -13,23 +13,23 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Contracts;
+using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using Google.Protobuf;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Mappers
 {
-    public class IntegrationEventMessageMapper : ProtobufOutboundMapper<IntegrationEventMessage>
+    public class CreateMeteringPointEventMessageMapper : ProtobufOutboundMapper<Application.CreateMeteringPointEventMessage>
     {
-        protected override IMessage Convert(IntegrationEventMessage obj)
+        protected override IMessage Convert(Application.CreateMeteringPointEventMessage obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
             return new IntegrationEventEnvelope()
             {
-                IntegrationEventMessage = new IntegrationEventContracts.IntegrationEventMessage
+                CreateMeteringPointEventMessage = new IntegrationEventContracts.CreateMeteringPointEventMessage
                 {
-                    Id = obj.Id, Type = obj.Type, Data = obj.Data,
+                    Gsrn = obj.Gsrn, MpType = obj.MpType, GridAccessProvider = obj.GridAccessProvider, Child = obj.Child, EnergySupplierCurrent = obj.EnergySupplierCurrent,
                 },
             };
         }

@@ -14,6 +14,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices;
 using Microsoft.Azure.Functions.Worker;
@@ -23,11 +24,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
 {
     public class EventMessageDispatcher
     {
-        private readonly MessageDispatcher _dispatcher;
+        private readonly IIntegrationEventDispatchOrchestrator _integrationEventDispatchOrchestrator;
 
-        public EventMessageDispatcher(MessageDispatcher dispatcher)
+        public EventMessageDispatcher(IIntegrationEventDispatchOrchestrator integrationEventDispatchOrchestrator)
         {
-            _dispatcher = dispatcher;
+            _integrationEventDispatchOrchestrator = integrationEventDispatchOrchestrator;
         }
 
         [Function("EventMessageDispatcher")]
@@ -38,12 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             var logger = context.GetLogger("EventMessageDispatcher");
             logger.LogInformation($"C# Timer trigger function executed at: {DateTimeOffset.UtcNow} (UTC)");
             logger.LogInformation($"From function timer trigger input: {timerInformation}");
-
-            // TODO: Change this to use a repository when EF is implemented. This will be orchestrated by an application service
-            IntegrationEventMessage eventMessage =
-                new("122131231", "CreateMeteringPoint", @"something:{Json:true, much: 'it is'}");
-
-            await _dispatcher.DispatchAsync(eventMessage).ConfigureAwait(false);
+            await _integrationEventDispatchOrchestrator.ProcessEventOrchestratorAsync();
         }
     }
 }
