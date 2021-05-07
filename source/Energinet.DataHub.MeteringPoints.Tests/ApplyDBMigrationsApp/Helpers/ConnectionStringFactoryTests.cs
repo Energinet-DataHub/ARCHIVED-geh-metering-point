@@ -31,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.ApplyDBMigrationsApp.Helpers
             var result = ConnectionStringFactory.GetConnectionString(args);
 
             // Assert
-            Assert.True(string.IsNullOrWhiteSpace(result));
+            Assert.False(string.IsNullOrWhiteSpace(result));
         }
 
         [Fact]
