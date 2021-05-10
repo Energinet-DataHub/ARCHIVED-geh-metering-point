@@ -14,7 +14,7 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataPersistence;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure

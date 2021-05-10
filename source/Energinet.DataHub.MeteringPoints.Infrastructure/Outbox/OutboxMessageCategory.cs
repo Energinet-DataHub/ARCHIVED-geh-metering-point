@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.Helpers
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
 {
-    public static class ConnectionStringFactory
+    public class OutboxMessageCategory : EnumerationType
     {
-        private const string DefaultConnectionString = "Server=(local); Database=MeteringPointData; Trusted_connection=true";
+        public static readonly OutboxMessageCategory IntegrationEvent = new OutboxMessageCategory(0, nameof(IntegrationEvent));
+        public static readonly OutboxMessageCategory ActorMessage = new OutboxMessageCategory(1, nameof(ActorMessage));
 
-        public static string GetConnectionString(string[] args)
+        public OutboxMessageCategory(int id, string name)
+            : base(id, name)
         {
-            return args.FirstOrDefault() ?? DefaultConnectionString;
         }
     }
 }

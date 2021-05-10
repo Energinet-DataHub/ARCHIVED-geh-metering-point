@@ -15,13 +15,20 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataPersistence
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
 {
-    public class EntityFrameworkUnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
+        private readonly MeteringPointContext _context;
+
+        public UnitOfWork(MeteringPointContext context)
+        {
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+        }
+
         public Task CommitAsync()
         {
-            throw new NotImplementedException();
+            return _context.SaveChangesAsync();
         }
     }
 }
