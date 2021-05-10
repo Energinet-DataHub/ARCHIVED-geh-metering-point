@@ -50,5 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
         public string DisconnectionType { get; set; }
 
         public string OccurenceDate { get; set; }
+
+        public string MeterNumber { get; set; }
     }
 }
