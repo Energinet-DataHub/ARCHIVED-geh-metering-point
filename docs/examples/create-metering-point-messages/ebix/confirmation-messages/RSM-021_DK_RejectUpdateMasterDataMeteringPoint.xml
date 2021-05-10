@@ -1,0 +1,50 @@
+﻿<!--
+Copyright 2020 Energinet DataHub A/S
+Licensed under the Apache License, Version 2.0 (the "License2");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<SOAP-ENV:Body xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+    <ns0:PeekMessageResponse xmlns:ns0="urn:www:datahub:dk:b2b:v01">
+        <ns0:MessageContainer>
+            <ns0:MessageReference>8a8afd6a74034dddafff99bc3ebeb137</ns0:MessageReference>
+            <ns0:DocumentType>RejectUpdateMasterDataMeteringPoint</ns0:DocumentType>
+            <ns0:MessageType>XML</ns0:MessageType>
+            <ns0:Payload>
+                <ns0:DK_RejectUpdateMasterDataMeteringPoint xmlns:ns0="un:unece:260:data:EEM-DK_RejectUpdateMasterDataMeteringPoint:v2">
+                    <ns0:HeaderEnergyDocument>
+                        <ns0:Identification>078659d174bb4fe0a22f3ddd4d0a820b</ns0:Identification>
+                        <ns0:DocumentType listAgencyIdentifier="260">E59</ns0:DocumentType>
+                        <ns0:Creation>2019-10-25T12:55:37Z</ns0:Creation>
+                        <ns0:SenderEnergyParty>
+                            <ns0:Identification schemeAgencyIdentifier="9">579000133xxxx</ns0:Identification>
+                        </ns0:SenderEnergyParty>
+                        <ns0:RecipientEnergyParty>
+                            <ns0:Identification schemeAgencyIdentifier="9">810000000xxxx</ns0:Identification>
+                        </ns0:RecipientEnergyParty>
+                    </ns0:HeaderEnergyDocument>
+                    <ns0:ProcessEnergyContext>
+                        <ns0:EnergyBusinessProcess listAgencyIdentifier="260">E02</ns0:EnergyBusinessProcess>
+                        <ns0:EnergyBusinessProcessRole listAgencyIdentifier="260" listIdentifier="DK">DDM</ns0:EnergyBusinessProcessRole>
+                        <ns0:EnergyIndustryClassification listAgencyIdentifier="6">23</ns0:EnergyIndustryClassification>
+                    </ns0:ProcessEnergyContext>
+                    <ns0:PayloadResponseEvent>
+                        <ns0:Identification>376287a3e10047a1a1a42974efc47def</ns0:Identification>
+                        <ns0:StatusType listAgencyIdentifier="6">41</ns0:StatusType>
+                        <ns0:ResponseReasonType listAgencyIdentifier="260" listIdentifier="DK">D57</ns0:ResponseReasonType>
+                        <ns0:MeteringPointDomainLocation>
+                            <ns0:Identification schemeAgencyIdentifier="9">57803297138189xxxx</ns0:Identification>
+                        </ns0:MeteringPointDomainLocation>
+                        <ns0:OriginalBusinessDocument>LW-TransID-2019-10-25-14-50-53-575</ns0:OriginalBusinessDocument>
+                    </ns0:PayloadResponseEvent>
+                </ns0:DK_RejectUpdateMasterDataMeteringPoint>
+            </ns0:Payload>
+        </ns0:MessageContainer>
+    </ns0:PeekMessageResponse>
+</SOAP-ENV:Body>

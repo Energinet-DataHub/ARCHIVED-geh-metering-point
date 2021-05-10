@@ -14,16 +14,17 @@
 
 using System.Threading.Tasks;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataPersistence
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
 {
     /// <summary>
-    /// Interact with our datastore
+    /// Unit of work for handling database transactions
     /// </summary>
     public interface IUnitOfWork
     {
         /// <summary>
-        /// Commit transaction and persist data in datastore
+        /// Commits the transaction
         /// </summary>
+        /// <returns><see cref="Task"/></returns>
         Task CommitAsync();
     }
 }

@@ -1,0 +1,128 @@
+﻿<!--
+Copyright 2020 Energinet DataHub A/S
+Licensed under the Apache License, Version 2.0 (the "License2");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+    <s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <SendMessageRequest xmlns="urn:www:datahub:dk:b2b:v01">
+            <MessageContainer>
+                <MessageReference>52e54eb9540446fcbddd1fdc2e367876</MessageReference>
+                <DocumentType>RequestUpdateMasterDataMeteringPoint</DocumentType>
+                <MessageType>XML</MessageType>
+                <Payload>
+                    <DK_RequestUpdateMasterDataMeteringPoint xmlns="un:unece:260:data:EEM-DK_RequestUpdateMasterDataMeteringPoint:v3">
+                        <HeaderEnergyDocument>
+                            <Identification>b6153e5246704f1e9445d46669ba02dd</Identification>
+                            <DocumentType listAgencyIdentifier="260">E58</DocumentType>
+                            <Creation>2021-05-06T07:55:31.9174513Z</Creation>
+                            <SenderEnergyParty>
+                                <Identification schemeAgencyIdentifier="9">8200000004677</Identification>
+                            </SenderEnergyParty>
+                            <RecipientEnergyParty>
+                                <Identification schemeAgencyIdentifier="9">5790001330552</Identification>
+                            </RecipientEnergyParty>
+                        </HeaderEnergyDocument>
+                        <ProcessEnergyContext>
+                            <EnergyBusinessProcess listAgencyIdentifier="260">E32</EnergyBusinessProcess>
+                            <EnergyBusinessProcessRole listAgencyIdentifier="260">DDM</EnergyBusinessProcessRole>
+                            <EnergyIndustryClassification listAgencyIdentifier="6">23</EnergyIndustryClassification>
+                        </ProcessEnergyContext>
+                        <PayloadMasterDataMPEvent>
+                            <MeteringPointDomainLocation>
+                                <Identification schemeAgencyIdentifier="9">571313192700006713</Identification>
+                            </MeteringPointDomainLocation>
+                            <Identification>d5508277af444afdbeb4823c5ede26ca</Identification>
+                            <DetailMeteringPointCharacteristic>
+                                <PhysicalStatusOfMeteringPoint listIdentifier="DK" listAgencyIdentifier="260">D03</PhysicalStatusOfMeteringPoint>
+                                <TypeOfMeteringPoint listAgencyIdentifier="260">E18</TypeOfMeteringPoint>
+                                <SubTypeOfMeteringPoint listIdentifier="DK" listAgencyIdentifier="260">D02</SubTypeOfMeteringPoint>
+                                <MeterReadingOccurrence>PT15M</MeterReadingOccurrence>
+                                <NetSettlementGroup>6</NetSettlementGroup>
+                                <MeteringGridAreaUsedDomainLocation>
+                                    <Identification schemeIdentifier="DK" schemeAgencyIdentifier="260">927</Identification>
+                                </MeteringGridAreaUsedDomainLocation>
+                                <PowerPlantDomainLocation>
+                                    <Identification schemeAgencyIdentifier="9">571313192700006669</Identification>
+                                </PowerPlantDomainLocation>
+                                <IncludedProductCharacteristic>
+                                    <Identification listAgencyIdentifier="9">8716867000030</Identification>
+                                    <UnitType listAgencyIdentifier="260">KWH</UnitType>
+                                </IncludedProductCharacteristic>
+                                <DisconnectionType listIdentifier="DK" listAgencyIdentifier="260">D02</DisconnectionType>
+                                <MPConnectionType listIdentifier="DK" listAgencyIdentifier="260">D02</MPConnectionType>
+                                <MPCapacity>34</MPCapacity>
+                                <AssetType listIdentifier="DK" listAgencyIdentifier="260">D01</AssetType>
+                            </DetailMeteringPointCharacteristic>
+                            <Occurrence>2021-05-05T22:00:00Z</Occurrence>
+                            <InstallationLocationAddress>
+                                <StreetName>Testbjørmensvej</StreetName>
+                                <StreetCode>0011</StreetCode>
+                                <BuildingNumber>944</BuildingNumber>
+                                <FloorIdentification />
+                                <RoomIdentification />
+                                <CitySubDivisionName />
+                                <Postcode>6000</Postcode>
+                                <CityName>Kolding</CityName>
+                                <MunicipalityCode>123</MunicipalityCode>
+                                <CountryName>DK</CountryName>
+                                <MPAddressWashInstructions listIdentifier="DK" listAgencyIdentifier="260">D02</MPAddressWashInstructions>
+                                <DARReference>00000000-0000-0000-0000-000000000000</DARReference>
+                            </InstallationLocationAddress>
+                        </PayloadMasterDataMPEvent>
+                        <PayloadMasterDataMPEvent>
+                            <MeteringPointDomainLocation>
+                                <Identification schemeAgencyIdentifier="9">571313192700006669</Identification>
+                            </MeteringPointDomainLocation>
+                            <Identification>863ae451e605488d8c7273c932b96589</Identification>
+                            <DetailMeteringPointCharacteristic>
+                                <SettlementMethod listIdentifier="DK" listAgencyIdentifier="260">D01</SettlementMethod>
+                                <PhysicalStatusOfMeteringPoint listIdentifier="DK" listAgencyIdentifier="260">D03</PhysicalStatusOfMeteringPoint>
+                                <TypeOfMeteringPoint listAgencyIdentifier="260">E17</TypeOfMeteringPoint>
+                                <SubTypeOfMeteringPoint listIdentifier="DK" listAgencyIdentifier="260">D02</SubTypeOfMeteringPoint>
+                                <MeterReadingOccurrence>PT1H</MeterReadingOccurrence>
+                                <NetSettlementGroup>6</NetSettlementGroup>
+                                <MeteringGridAreaUsedDomainLocation>
+                                    <Identification schemeIdentifier="DK" schemeAgencyIdentifier="260">927</Identification>
+                                </MeteringGridAreaUsedDomainLocation>
+                                <PowerPlantDomainLocation>
+                                    <Identification schemeAgencyIdentifier="9">571313192700006669</Identification>
+                                </PowerPlantDomainLocation>
+                                <IncludedProductCharacteristic>
+                                    <Identification listAgencyIdentifier="9">8716867000030</Identification>
+                                    <UnitType listAgencyIdentifier="260">KWH</UnitType>
+                                </IncludedProductCharacteristic>
+                                <DisconnectionType listIdentifier="DK" listAgencyIdentifier="260">D02</DisconnectionType>
+                                <MPConnectionType listIdentifier="DK" listAgencyIdentifier="260">D02</MPConnectionType>
+                                <MPCapacity>34</MPCapacity>
+                                <AssetType listIdentifier="DK" listAgencyIdentifier="260">D01</AssetType>
+                            </DetailMeteringPointCharacteristic>
+                            <Occurrence>2021-05-05T22:00:00Z</Occurrence>
+                            <InstallationLocationAddress>
+                                <StreetName>Testbjørmensvej</StreetName>
+                                <StreetCode>0011</StreetCode>
+                                <BuildingNumber>944</BuildingNumber>
+                                <FloorIdentification />
+                                <RoomIdentification />
+                                <CitySubDivisionName />
+                                <Postcode>6000</Postcode>
+                                <CityName>Kolding</CityName>
+                                <MunicipalityCode>123</MunicipalityCode>
+                                <CountryName>DK</CountryName>
+                                <MPAddressWashInstructions listIdentifier="DK" listAgencyIdentifier="260">D02</MPAddressWashInstructions>
+                                <DARReference>00000000-0000-0000-0000-000000000000</DARReference>
+                            </InstallationLocationAddress>
+                        </PayloadMasterDataMPEvent>
+                    </DK_RequestUpdateMasterDataMeteringPoint>
+                </Payload>
+            </MessageContainer>
+        </SendMessageRequest>
+    </s:Body>
+</s:Envelope>

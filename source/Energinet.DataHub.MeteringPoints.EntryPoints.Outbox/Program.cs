@@ -13,7 +13,16 @@
 // limitations under the License.
 
 using System;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using SimpleInjector;
 
 [assembly: CLSCompliant(false)]
 
@@ -21,13 +30,48 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
 {
     public static class Program
     {
-        public static void Main()
+        public static async Task Main()
         {
+            var container = new Container();
             var host = new HostBuilder()
-                .ConfigureFunctionsWorkerDefaults()
-                .Build();
+                .ConfigureFunctionsWorkerDefaults(options =>
+                {
+                    options.UseMiddleware<SimpleInjectorScopedRequest>();
+                })
+                .ConfigureServices(services =>
+                {
+                    var descriptor = new ServiceDescriptor(
+                        typeof(IFunctionActivator),
+                        typeof(SimpleInjectorActivator),
+                        ServiceLifetime.Singleton);
+                    services.Replace(descriptor); // Replace existing activator
 
-            host.Run();
+                    services.AddLogging();
+
+                    services.AddDbContext<MeteringPointContext>(x =>
+                    {
+                        var connectionString = Environment.GetEnvironmentVariable("METERING_POINT_DB_CONNECTION_STRING")
+                                               ?? throw new InvalidOperationException(
+                                                   "Metering point db connection string not found.");
+
+                        x.UseSqlServer(connectionString, y => y.UseNodaTime());
+                    });
+
+                    services.AddSimpleInjector(container, options =>
+                    {
+                        options.AddLogging();
+                    });
+                })
+                .Build()
+                .UseSimpleInjector(container);
+
+            container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
+
+            container.Verify();
+
+            await host.RunAsync().ConfigureAwait(false);
+
+            await container.DisposeAsync().ConfigureAwait(false);
         }
     }
 }
