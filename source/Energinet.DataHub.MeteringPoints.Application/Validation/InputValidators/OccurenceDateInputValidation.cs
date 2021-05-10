@@ -31,6 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.InputValidator
                 return ValidationResult.Error(nameof(command.OccurenceDate), "Invalid date format");
             }
 
+            // TODO: Add validation which checks that occurence date is within a valid range of dates, which is given by a system configuration not yet defined
             return ValidationResult.Ok();
         }
 
