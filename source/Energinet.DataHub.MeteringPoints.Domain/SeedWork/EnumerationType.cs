@@ -16,11 +16,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
 {
     public abstract class EnumerationType : IComparable
     {
+        private static readonly ReflectionStrategy _reflectionStrategy = new CheckOnInvocationReflectionStrategy();
+
         protected EnumerationType(int id, string name)
         {
             Id = id;
@@ -66,14 +69,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
             return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0;
         }
 
-        public static IEnumerable<T> GetAll<T>()
-                   where T : EnumerationType
-        {
-            var fields = typeof(T).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
-
-            return fields.Select(f => f.GetValue(null)).Cast<T>();
-        }
-
         public static int AbsoluteDifference(EnumerationType firstValue, EnumerationType secondValue)
         {
             if (firstValue is null)
@@ -90,19 +85,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
             return absoluteDifference;
         }
 
+        public static IEnumerable<T> GetAll<T>()
+            where T : EnumerationType => _reflectionStrategy.GetAll<T>();
+
         public static T FromValue<T>(int value)
-            where T : EnumerationType
-        {
-            var matchingItem = Parse<T, int>(value, "value", item => item.Id == value);
-            return matchingItem;
-        }
+            where T : EnumerationType => _reflectionStrategy.FromValue<T>(value);
 
         public static T FromName<T>(string name)
-            where T : EnumerationType
-        {
-            var matchingItem = Parse<T, string>(name, "name", item => item.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-            return matchingItem;
-        }
+            where T : EnumerationType => _reflectionStrategy.FromName<T>(name);
 
         public override string ToString() => Name;
 
@@ -134,14 +124,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
             }
 
             return Id.CompareTo(((EnumerationType)other).Id);
-        }
-
-        private static T Parse<T, TValue>(TValue value, string description, Func<T, bool> predicate)
-            where T : EnumerationType
-        {
-            var matchingItem = GetAll<T>().FirstOrDefault(predicate);
-
-            return matchingItem ?? throw new InvalidOperationException($"'{value}' is not a valid {description} in {typeof(T)}");
         }
     }
 }
