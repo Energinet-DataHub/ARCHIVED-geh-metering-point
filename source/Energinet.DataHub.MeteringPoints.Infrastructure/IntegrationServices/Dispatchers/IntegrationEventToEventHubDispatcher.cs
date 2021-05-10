@@ -12,7 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers
+using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Channels;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers
 {
-    public record OutboxMessage(string Id, string Data, string Type);
+    public class IntegrationEventToEventHubDispatcher : MessageDispatcher
+    {
+        public IntegrationEventToEventHubDispatcher(MessageSerializer serializer, AzureEventHubChannel channel)
+            : base(serializer, channel)
+        {
+        }
+    }
 }

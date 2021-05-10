@@ -20,6 +20,9 @@ using Energinet.DataHub.MeteringPoints.Application.Transport;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Channels;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Handlers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Services;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
@@ -65,11 +68,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
 
             // Register application components.
             container.Register<EventMessageDispatcher>();
-            container.Register<MessageDispatcher, IntegrationEventDispatcher>();
+            container.Register<IntegrationEventToEventHubDispatcher>();
             container.Register<AzureEventHubChannel>();
             container.Register<IIntegrationEventDispatchOrchestrator, IntegrationEventDispatchOrchestrator>();
+            container.Register<CreateMeteringPointEventHandler>();
 
-            // TODO Register new integration event class/Handlers
             container.BuildMediator(
                 new[] { typeof(CreateMeteringPointEventMessage).Assembly }, Array.Empty<Type>());
 

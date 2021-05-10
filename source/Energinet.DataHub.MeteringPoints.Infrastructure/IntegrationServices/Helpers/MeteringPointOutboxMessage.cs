@@ -12,15 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Transport;
+using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers
 {
-    public class IntegrationEventDispatcher : MessageDispatcher
-    {
-        public IntegrationEventDispatcher(MessageSerializer serializer, AzureEventHubChannel channel)
-            : base(serializer, channel)
-        {
-        }
-    }
+    public record MeteringPointOutboxMessage(string Id, string Data, string Type, string Category, Instant CreationDate, Instant ProcessedDate);
 }

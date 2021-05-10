@@ -12,17 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Text;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.EventHubs;
 using Azure.Messaging.EventHubs.Producer;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
-using Energinet.DataHub.MeteringPoints.Contracts;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Channels
 {
     public sealed class AzureEventHubChannel : Channel
     {

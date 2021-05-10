@@ -15,16 +15,16 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
-using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Handlers
 {
     public class CreateMeteringPointEventHandler : IRequestHandler<CreateMeteringPointEventMessage>
     {
-        private readonly MessageDispatcher _dispatcher;
+        private readonly IntegrationEventToEventHubDispatcher _dispatcher;
 
-        public CreateMeteringPointEventHandler(MessageDispatcher dispatcher)
+        public CreateMeteringPointEventHandler(IntegrationEventToEventHubDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
         }
