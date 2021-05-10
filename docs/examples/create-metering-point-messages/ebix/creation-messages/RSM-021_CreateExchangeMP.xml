@@ -1,0 +1,92 @@
+﻿<!--
+Copyright 2020 Energinet DataHub A/S
+Licensed under the Apache License, Version 2.0 (the "License2");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+    <s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <SendMessageRequest xmlns="urn:www:datahub:dk:b2b:v01">
+            <MessageContainer>
+                <MessageReference>ddc24d0fd6284129958913478fc21a2d</MessageReference>
+                <DocumentType>RequestUpdateMasterDataMeteringPoint</DocumentType>
+                <MessageType>XML</MessageType>
+                <Payload>
+                    <DK_RequestUpdateMasterDataMeteringPoint xmlns="un:unece:260:data:EEM-DK_RequestUpdateMasterDataMeteringPoint:v3">
+                        <HeaderEnergyDocument>
+                            <Identification>ddc24d0fd6284129958913478fc21a2d</Identification>
+                            <DocumentType listAgencyIdentifier="260">E58</DocumentType>
+                            <Creation>2021-04-08T12:53:41.1520765Z</Creation>
+                            <SenderEnergyParty>
+                                <Identification schemeAgencyIdentifier="9">5790000428687</Identification>
+                            </SenderEnergyParty>
+                            <RecipientEnergyParty>
+                                <Identification schemeAgencyIdentifier="9">5790001330552</Identification>
+                            </RecipientEnergyParty>
+                        </HeaderEnergyDocument>
+                        <ProcessEnergyContext>
+                            <EnergyBusinessProcess listIdentifier="DK" listAgencyIdentifier="260">D15</EnergyBusinessProcess>
+                            <EnergyBusinessProcessRole listAgencyIdentifier="260">DDM</EnergyBusinessProcessRole>
+                            <EnergyIndustryClassification listAgencyIdentifier="6">23</EnergyIndustryClassification>
+                        </ProcessEnergyContext>
+                        <PayloadMasterDataMPEvent>
+                            <MeteringPointDomainLocation>
+                                <Identification schemeAgencyIdentifier="9">571313193000003204</Identification>
+                            </MeteringPointDomainLocation>
+                            <Identification>ddc24d0fd6284129958913478fc21a2d</Identification>
+                            <DetailMeteringPointCharacteristic>
+                                <PhysicalStatusOfMeteringPoint listAgencyIdentifier="260">E22</PhysicalStatusOfMeteringPoint>
+                                <TypeOfMeteringPoint listAgencyIdentifier="260">E20</TypeOfMeteringPoint>
+                                <SubTypeOfMeteringPoint listIdentifier="DK" listAgencyIdentifier="260">D01</SubTypeOfMeteringPoint>
+                                <MeterReadingOccurrence>PT15M</MeterReadingOccurrence>
+                                <NetSettlementGroup />
+                                <MeteringGridAreaUsedDomainLocation>
+                                    <Identification schemeIdentifier="DK" schemeAgencyIdentifier="260">930</Identification>
+                                </MeteringGridAreaUsedDomainLocation>
+                                <ToGridDomainLocation>
+                                    <Identification schemeIdentifier="DK" schemeAgencyIdentifier="260">930</Identification>
+                                </ToGridDomainLocation>
+                                <FromGridDomainLocation>
+                                    <Identification schemeIdentifier="DK" schemeAgencyIdentifier="260">939</Identification>
+                                </FromGridDomainLocation>
+                                <IncludedProductCharacteristic>
+                                    <Identification listAgencyIdentifier="9">8716867000030</Identification>
+                                    <UnitType listAgencyIdentifier="260">KWH</UnitType>
+                                </IncludedProductCharacteristic>
+                            </DetailMeteringPointCharacteristic>
+                            <Occurrence>2021-04-06T22:00:00Z</Occurrence>
+                            <InstallationLocationAddress>
+                                <StreetName>Havkærvej</StreetName>
+                                <StreetCode>3062</StreetCode>
+                                <BuildingNumber>3</BuildingNumber>
+                                <FloorIdentification />
+                                <RoomIdentification />
+                                <CitySubDivisionName />
+                                <Postcode>8381</Postcode>
+                                <CityName>Tilst</CityName>
+                                <MunicipalityCode>751</MunicipalityCode>
+                                <CountryName>DK</CountryName>
+                                <DARReference>0a3f50c3-13bf-32b8-e044-0003ba298018</DARReference>
+                            </InstallationLocationAddress>
+                            <MeteringInstallationMeterFacility>
+                                <MeterIdentification>HAV003</MeterIdentification>
+                            </MeteringInstallationMeterFacility>
+                            <MeterInstallationMeterCharacteristic>
+                                <NumberOfDigits>7</NumberOfDigits>
+                                <ConversionFactor>1.0000</ConversionFactor>
+                                <UnitType listAgencyIdentifier="260">KWH</UnitType>
+                                <MeterReadingType listIdentifier="DK" listAgencyIdentifier="260">D01</MeterReadingType>
+                            </MeterInstallationMeterCharacteristic>
+                        </PayloadMasterDataMPEvent>
+                    </DK_RequestUpdateMasterDataMeteringPoint>
+                </Payload>
+            </MessageContainer>
+        </SendMessageRequest>
+    </s:Body>
+</s:Envelope>

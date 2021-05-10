@@ -1,0 +1,118 @@
+﻿<!--
+Copyright 2020 Energinet DataHub A/S
+Licensed under the Apache License, Version 2.0 (the "License2");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+    <SOAP-ENV:Body>
+        <ns0:PeekMessageResponse xmlns:ns0="urn:www:datahub:dk:b2b:v01">
+            <ns0:MessageContainer>
+                <ns0:MessageReference>1aabe4f03cf54ef2b1a0674056412a46</ns0:MessageReference>
+                <ns0:DocumentType>NotifyMasterDataMeteringPoint</ns0:DocumentType>
+                <ns0:MessageType>XML</ns0:MessageType>
+                <ns0:Payload>
+                    <ns0:DK_NotifyMasterDataMeteringPoint xmlns:ns0="un:unece:260:data:EEM-DK_NotifyMasterDataMeteringPoint:v3">
+                        <ns0:HeaderEnergyDocument>
+                            <ns0:Identification>7d0a8d5f8d284b19badc2b08d3122671</ns0:Identification>
+                            <ns0:DocumentType listAgencyIdentifier="260">E07</ns0:DocumentType>
+                            <ns0:Creation>2021-05-04T21:05:37Z</ns0:Creation>
+                            <ns0:SenderEnergyParty>
+                                <ns0:Identification schemeAgencyIdentifier="9">5790001330552</ns0:Identification>
+                            </ns0:SenderEnergyParty>
+                            <ns0:RecipientEnergyParty>
+                                <ns0:Identification schemeAgencyIdentifier="9">8200000007111</ns0:Identification>
+                            </ns0:RecipientEnergyParty>
+                        </ns0:HeaderEnergyDocument>
+                        <ns0:ProcessEnergyContext>
+                            <ns0:EnergyBusinessProcess listAgencyIdentifier="260">E32</ns0:EnergyBusinessProcess>
+                            <ns0:EnergyBusinessProcessRole listAgencyIdentifier="260" listIdentifier="DK">DDQ</ns0:EnergyBusinessProcessRole>
+                            <ns0:EnergyIndustryClassification listAgencyIdentifier="6">23</ns0:EnergyIndustryClassification>
+                        </ns0:ProcessEnergyContext>
+                        <ns0:PayloadMasterDataMPEvent>
+                            <ns0:MeteringPointDomainLocation>
+                                <ns0:Identification schemeAgencyIdentifier="9">571313135100020644</ns0:Identification>
+                            </ns0:MeteringPointDomainLocation>
+                            <ns0:Identification>026337f938734b7da602e4de2d46ceb1</ns0:Identification>
+                            <ns0:DetailMeteringPointCharacteristic>
+                                <ns0:EstimatedAnnualVolume>0</ns0:EstimatedAnnualVolume>
+                                <ns0:SettlementMethod listAgencyIdentifier="260" listIdentifier="DK">D01</ns0:SettlementMethod>
+                                <ns0:PhysicalStatusOfMeteringPoint listAgencyIdentifier="260" listIdentifier="DK">D03</ns0:PhysicalStatusOfMeteringPoint>
+                                <ns0:ScheduledMeterReadingDate />
+                                <ns0:ScheduledMeterReadingDate />
+                                <ns0:ScheduledMeterReadingDate />
+                                <ns0:ScheduledMeterReadingDate />
+                                <ns0:ScheduledMeterReadingDate />
+                                <ns0:ScheduledMeterReadingDate />
+                                <ns0:ScheduledMeterReadingDate />
+                                <ns0:ScheduledMeterReadingDate />
+                                <ns0:ScheduledMeterReadingDate />
+                                <ns0:ScheduledMeterReadingDate />
+                                <ns0:ScheduledMeterReadingDate />
+                                <ns0:ScheduledMeterReadingDate />
+                                <ns0:TypeOfMeteringPoint listAgencyIdentifier="260">E17</ns0:TypeOfMeteringPoint>
+                                <ns0:SubTypeOfMeteringPoint listAgencyIdentifier="260" listIdentifier="DK">D01</ns0:SubTypeOfMeteringPoint>
+                                <ns0:MeterReadingOccurrence>PT1H</ns0:MeterReadingOccurrence>
+                                <ns0:NetSettlementGroup>0</ns0:NetSettlementGroup>
+                                <ns0:SupplyStart>2021-05-02T22:00:00Z</ns0:SupplyStart>
+                                <ns0:LimitationContractedCapacityCharacteristics>
+                                    <ns0:MaximumCurrent>14</ns0:MaximumCurrent>
+                                    <ns0:MaximumPower>11</ns0:MaximumPower>
+                                </ns0:LimitationContractedCapacityCharacteristics>
+                                <ns0:MeteringGridAreaUsedDomainLocation>
+                                    <ns0:Identification schemeAgencyIdentifier="260">351</ns0:Identification>
+                                </ns0:MeteringGridAreaUsedDomainLocation>
+                                <ns0:PowerPlantDomainLocation>
+                                    <ns0:Identification schemeAgencyIdentifier="9" />
+                                </ns0:PowerPlantDomainLocation>
+                                <ns0:LocationDescription />
+                                <ns0:BalanceResponsibleEnergyParty>
+                                    <ns0:Identification schemeAgencyIdentifier="9">8200000007227</ns0:Identification>
+                                </ns0:BalanceResponsibleEnergyParty>
+                                <ns0:BalanceSupplierEnergyParty>
+                                    <ns0:Identification schemeAgencyIdentifier="9">8200000007111</ns0:Identification>
+                                </ns0:BalanceSupplierEnergyParty>
+                                <ns0:IncludedProductCharacteristic>
+                                    <ns0:Identification listAgencyIdentifier="9">8716867000030</ns0:Identification>
+                                    <ns0:UnitType listAgencyIdentifier="260">KWH</ns0:UnitType>
+                                </ns0:IncludedProductCharacteristic>
+                                <ns0:DisconnectionType listAgencyIdentifier="260" listIdentifier="DK">D02</ns0:DisconnectionType>
+                                <ns0:MPCapacity />
+                            </ns0:DetailMeteringPointCharacteristic>
+                            <ns0:Occurrence>2021-05-03T22:00:00Z</ns0:Occurrence>
+                            <ns0:InstallationLocationAddress>
+                                <ns0:StreetName>Akaciepark</ns0:StreetName>
+                                <ns0:StreetCode>0002</ns0:StreetCode>
+                                <ns0:BuildingNumber>58</ns0:BuildingNumber>
+                                <ns0:FloorIdentification />
+                                <ns0:RoomIdentification />
+                                <ns0:CitySubDivisionName />
+                                <ns0:Postcode>3520</ns0:Postcode>
+                                <ns0:CityName>Farum</ns0:CityName>
+                                <ns0:MunicipalityCode>190</ns0:MunicipalityCode>
+                                <ns0:CountryName>DK</ns0:CountryName>
+                                <ns0:MPAddressWashInstructions listAgencyIdentifier="260" listIdentifier="DK">D01</ns0:MPAddressWashInstructions>
+                                <ns0:DARReference>0a3f50a8-033b-32b8-e044-0003ba298018</ns0:DARReference>
+                            </ns0:InstallationLocationAddress>
+                            <ns0:MeteringInstallationMeterFacility>
+                                <ns0:MeterIdentification>00110048</ns0:MeterIdentification>
+                            </ns0:MeteringInstallationMeterFacility>
+                            <ns0:MeterInstallationMeterCharacteristic>
+                                <ns0:NumberOfDigits>7.1</ns0:NumberOfDigits>
+                                <ns0:ConversionFactor>1</ns0:ConversionFactor>
+                                <ns0:UnitType listAgencyIdentifier="260">KWH</ns0:UnitType>
+                                <ns0:MeterReadingType listAgencyIdentifier="260" listIdentifier="DK">D01</ns0:MeterReadingType>
+                            </ns0:MeterInstallationMeterCharacteristic>
+                        </ns0:PayloadMasterDataMPEvent>
+                    </ns0:DK_NotifyMasterDataMeteringPoint>
+                </ns0:Payload>
+            </ns0:MessageContainer>
+        </ns0:PeekMessageResponse>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
