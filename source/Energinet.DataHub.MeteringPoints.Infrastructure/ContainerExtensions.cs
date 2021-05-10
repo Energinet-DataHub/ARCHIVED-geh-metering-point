@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure
             container.Register(typeof(IValidator<,>), typeof(InputValidator<,>));
             container.Collection.Register(typeof(IValidator<,>), new[]
             {
-                typeof(GsrnInputValidator),
+                typeof(OccurenceDateInputValidation),
             });
         }
     }

@@ -45,17 +45,17 @@ namespace Energinet.DataHub.MeteringPoints.Tests.InputValidation
         }
 
         [Theory]
-        [InlineData("571313131313131313", true)]
-        [InlineData("5713131313131313134", false)]
-        [InlineData("CreateMeteringPoint32423", false)]
-        public void GsrnInputValidation(string gsrn, bool expectToSucceed)
+        [InlineData("YYYY-MM-DD HH:MI:SS", false)]
+        [InlineData("2021-10-21 12:12:12", true)]
+        [InlineData("1550-10-21 25:12:12", false)]
+        public void OccurenceDate(string occurenceDate, bool expectToSucceed)
         {
             var createMeteringPoint = new CreateMeteringPoint
             {
-                GsrnNumber = gsrn,
+                OccurenceDate = occurenceDate,
             };
 
-            var validator = new GsrnInputValidator();
+            var validator = new OccurenceDateInputValidation();
             var validationResult = validator.Validate(createMeteringPoint);
 
             validationResult.Success.Should().Be(expectToSucceed);
