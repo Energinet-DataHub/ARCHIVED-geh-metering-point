@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
+using System.Threading.Tasks;
 
-namespace Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.Helpers
+namespace Energinet.DataHub.MeteringPoints.Application.IntegrationEvent
 {
-    public static class ConnectionStringFactory
+    /// <summary>
+    /// Interface for the event repository
+    /// </summary>
+    public interface IIntegrationEventRepository
     {
-        private const string DefaultConnectionString = "Server=(local); Database=MeteringPointData; Trusted_connection=true";
-
-        public static string GetConnectionString(string[] args)
-        {
-            return args.FirstOrDefault() ?? DefaultConnectionString;
-        }
+        /// <summary>
+        /// Gets unprocessed integration events messages from the outbox sql table
+        /// </summary>
+        Task<OutBo GetUnProcessedIntegrationEventMessageAsync();
     }
 }

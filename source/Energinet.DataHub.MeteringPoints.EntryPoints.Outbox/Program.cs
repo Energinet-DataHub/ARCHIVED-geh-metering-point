@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Channels;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers;
@@ -26,12 +27,13 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Handle
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Services;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
+using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using SimpleInjector;
-using CreateMeteringPointEventMessage = Energinet.DataHub.MeteringPoints.Application.CreateMeteringPointEventMessage;
 
 [assembly: CLSCompliant(false)]
 
@@ -56,6 +58,16 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                     services.Replace(descriptor); // Replace existing activator
 
                     services.AddLogging();
+
+                    services.AddDbContext<MeteringPointContext>(x =>
+                    {
+                        var connectionString = Environment.GetEnvironmentVariable("METERING_POINT_DB_CONNECTION_STRING")
+                                               ?? throw new InvalidOperationException(
+                                                   "Metering point db connection string not found.");
+
+                        x.UseSqlServer(connectionString, y => y.UseNodaTime());
+                    });
+
                     services.AddSimpleInjector(container, options =>
                     {
                         options.AddLogging();
@@ -72,6 +84,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             container.Register<AzureEventHubChannel>();
             container.Register<IIntegrationEventDispatchOrchestrator, IntegrationEventDispatchOrchestrator>();
             container.Register<CreateMeteringPointEventHandler>();
+            container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
 
             container.BuildMediator(
                 new[] { typeof(CreateMeteringPointEventMessage).Assembly }, Array.Empty<Type>());
