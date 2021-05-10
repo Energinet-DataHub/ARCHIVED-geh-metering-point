@@ -26,7 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.InputValidator
                 return ValidationResult.Error(nameof(command.OccurenceDate), "Field is mandatory");
             }
 
-            if (!IsValidOccurenceDate(command.OccurenceDate))
+            if (!IsValidFormat(command.OccurenceDate))
             {
                 return ValidationResult.Error(nameof(command.OccurenceDate), "Invalid date format");
             }
@@ -34,7 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.InputValidator
             return ValidationResult.Ok();
         }
 
-        private static bool IsValidOccurenceDate(string value)
+        private static bool IsValidFormat(string value)
         {
             return DateTime.TryParseExact(value, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
         }
