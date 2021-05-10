@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp", "Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp\Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.csproj", "{9028F8A2-D06C-42AC-9085-EC51061D57AB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.Benchmarks", "Energinet.DataHub.MeteringPoints.Benchmarks\Energinet.DataHub.MeteringPoints.Benchmarks.csproj", "{59EA4350-50A9-4091-A7DB-281E9498A286}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,10 @@ Global
 		{9028F8A2-D06C-42AC-9085-EC51061D57AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9028F8A2-D06C-42AC-9085-EC51061D57AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9028F8A2-D06C-42AC-9085-EC51061D57AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59EA4350-50A9-4091-A7DB-281E9498A286}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59EA4350-50A9-4091-A7DB-281E9498A286}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59EA4350-50A9-4091-A7DB-281E9498A286}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59EA4350-50A9-4091-A7DB-281E9498A286}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{9E85728F-B8F0-49EE-AAC6-922AD394CFBA} = {251113C8-9673-45D2-AFA6-2D53AF6E8756}
@@ -91,5 +97,6 @@ Global
 		{5FF039DF-D923-4C6D-84CB-AA615B62532E} = {698CCD74-174C-493E-BDC4-69A0E3EA3F82}
 		{FC5B53CC-AFFD-4B5E-9CF5-4E23510A5791} = {698CCD74-174C-493E-BDC4-69A0E3EA3F82}
 		{4C501166-76F4-4A6F-A4DF-07CC4B41BE2E} = {698CCD74-174C-493E-BDC4-69A0E3EA3F82}
+		{59EA4350-50A9-4091-A7DB-281E9498A286} = {251113C8-9673-45D2-AFA6-2D53AF6E8756}
 	EndGlobalSection
 EndGlobal
