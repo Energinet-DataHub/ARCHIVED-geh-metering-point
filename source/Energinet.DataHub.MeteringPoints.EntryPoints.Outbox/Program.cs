@@ -16,14 +16,13 @@ using System;
 using System.Threading.Tasks;
 using Azure.Messaging.EventHubs.Producer;
 using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
-using Energinet.DataHub.MeteringPoints.Application.Transport;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
-using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Channels;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Handlers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Services;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
@@ -79,21 +78,22 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                 .UseSimpleInjector(container);
 
             // Register application components.
-            container.Register<EventMessageDispatcher>();
-            container.Register<IntegrationEventToEventHubDispatcher>();
-            container.Register<AzureEventHubChannel>();
-            container.Register<IIntegrationEventDispatchOrchestrator, IntegrationEventDispatchOrchestrator>();
-            container.Register<CreateMeteringPointEventHandler>();
+            var eventHubConnectionString = Environment.GetEnvironmentVariable("METERINGPOINTEVENTHUB_CONNECTION_STRING");
+            var hubName = Environment.GetEnvironmentVariable("METERINGPOINTEVENTHUB_HUB_NAME");
+            container.Register<EventHubProducerClient>(
+                () => new EventHubProducerClient(eventHubConnectionString, hubName),
+                Lifestyle.Singleton);
+            container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
+            container.Register<EventMessageDispatcher>(Lifestyle.Transient);
+            container.Register<IntegrationEventToEventHubDispatcher>(Lifestyle.Transient);
+            container.Register<AzureEventHubChannel>(Lifestyle.Transient);
+            container.Register<IIntegrationEventDispatchOrchestrator, IntegrationEventDispatchOrchestrator>(Lifestyle.Transient);
+            container.Register<CreateMeteringPointEventHandler>(Lifestyle.Transient);
             container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
 
             container.BuildMediator(
                 new[] { typeof(CreateMeteringPointEventMessage).Assembly }, Array.Empty<Type>());
 
-            var connectionString = Environment.GetEnvironmentVariable("METERINGPOINTEVENTHUB_CONNECTION_STRING");
-            var hubName = Environment.GetEnvironmentVariable("METERINGPOINTEVENTHUB_HUB_NAME");
-            container.Register<EventHubProducerClient>(
-                () => new EventHubProducerClient(connectionString, hubName),
-                Lifestyle.Singleton);
             container.Verify();
 
             await host.RunAsync().ConfigureAwait(false);

@@ -28,6 +28,15 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
             CreationDate = creationDate;
         }
 
+        public OutboxMessage(Guid id, string type, string data, OutboxMessageCategory category, Instant creationDate)
+        {
+            Id = id;
+            Type = type;
+            Data = data;
+            Category = category;
+            CreationDate = creationDate;
+        }
+
         public Guid Id { get; }
 
         public string Type { get; }
@@ -38,6 +47,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
 
         public Instant CreationDate { get; }
 
-        public Instant? ProcessedDate { get; }
+        public Instant? ProcessedDate { get; set; }
     }
 }

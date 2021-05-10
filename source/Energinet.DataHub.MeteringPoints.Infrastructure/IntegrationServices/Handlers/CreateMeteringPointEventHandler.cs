@@ -32,7 +32,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Ha
         public async Task<Unit> Handle(CreateMeteringPointEventMessage request, CancellationToken cancellationToken)
         {
             await _dispatcher.DispatchAsync(request, CancellationToken.None).ConfigureAwait(false);
-            throw new System.NotImplementedException();
+
+            return default;
         }
     }
 }

@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
-namespace Energinet.DataHub.MeteringPoints.Application.IntegrationEvent
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Repository
 {
     /// <summary>
     /// Interface for the event repository
@@ -24,6 +26,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.IntegrationEvent
         /// <summary>
         /// Gets unprocessed integration events messages from the outbox sql table
         /// </summary>
-        Task<OutBo GetUnProcessedIntegrationEventMessageAsync();
+        Task<OutboxMessage> GetUnProcessedIntegrationEventMessageAsync();
+
+        /// <summary>
+        /// Updates the message in the database to processed
+        /// </summary>
+        Task MarkIntegrationEventMessageAsProcessedAsync(Guid id);
     }
 }

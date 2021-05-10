@@ -16,5 +16,5 @@ using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers
 {
-    public record MeteringPointOutboxMessage(string Id, string Data, string Type, string Category, Instant CreationDate, Instant ProcessedDate);
+    // public record MeteringPointOutboxMessage(string Id, string Data, string Type, string Category, Instant CreationDate, Instant ProcessedDate);
 }

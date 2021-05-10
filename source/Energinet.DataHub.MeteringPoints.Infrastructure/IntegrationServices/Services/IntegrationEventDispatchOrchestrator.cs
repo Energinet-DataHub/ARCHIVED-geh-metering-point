@@ -14,10 +14,9 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
-using Energinet.DataHub.MeteringPoints.Application.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using MediatR;
 using NodaTime;
 
@@ -37,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Se
         public async Task ProcessEventOrchestratorAsync()
         {
             // Fetch the first message to process
-            MeteringPointOutboxMessage outboxMessage = FetchEventFromOutbox();
+            OutboxMessage outboxMessage = FetchEventFromOutbox();
 
             // Keep iterating as long as we have a message
             while (outboxMessage != null)
@@ -50,10 +49,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Se
             }
         }
 
-        private MeteringPointOutboxMessage FetchEventFromOutbox()
+        private OutboxMessage FetchEventFromOutbox()
         {
-            return new("987654321", "{\"Gsrn\":\"987654321\",\"MpType\":\"CreateMeteringPointEventMessage\",\"GridAccessProvider\":\"GridAccessProvider\",\"Child\":true,\"EnergySupplierCurrent\":\"EnergySupplierCurrent\"}",
-                "CreateMeteringPointEventMessage", "IntegrationEvent", SystemClock.Instance.GetCurrentInstant(), SystemClock.Instance.GetCurrentInstant());
+            return new("CreateMeteringPointEventMessage", "{\"Gsrn\":\"987654321\",\"MpType\":\"CreateMeteringPointEventMessage\",\"GridAccessProvider\":\"GridAccessProvider\",\"Child\":true,\"EnergySupplierCurrent\":\"EnergySupplierCurrent\"}",
+                OutboxMessageCategory.IntegrationEvent, SystemClock.Instance.GetCurrentInstant());
         }
     }
 }
