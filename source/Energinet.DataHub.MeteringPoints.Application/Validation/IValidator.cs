@@ -12,18 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.InputValidation
+using System.ComponentModel.DataAnnotations;
+
+namespace Energinet.DataHub.MeteringPoints.Application.Validation
 {
-    public class ValidationError
+    /// <summary>
+    /// Validator interface
+    /// </summary>
+    public interface IValidator<in TCommand, out TResponse>
     {
-        public ValidationError(string key, string message)
-        {
-            Key = key;
-            Message = message;
-        }
-
-        public string Key { get; }
-
-        public string Message { get; }
+        /// <summary>
+        /// Perform validation
+        /// </summary>
+        /// <returns>A <see cref="Application.Validation.ValidationResult"/> representing the result of the asynchronous operation.</returns>
+        ValidationResult Validate(TCommand command);
     }
 }

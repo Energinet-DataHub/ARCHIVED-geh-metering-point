@@ -15,28 +15,28 @@
 using System;
 using System.Globalization;
 
-namespace Energinet.DataHub.MeteringPoints.Application.InputValidation.Validators
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.InputValidators
 {
     public class OccurenceDateInputValidation : IValidator<CreateMeteringPoint, CreateMeteringPointResult>
     {
-        public InputValidationResult Validate(CreateMeteringPoint command)
+        public ValidationResult Validate(CreateMeteringPoint command)
         {
             if (string.IsNullOrWhiteSpace(command.OccurenceDate))
             {
-                return InputValidationResult.Error(nameof(command.OccurenceDate), "Field is mandatory");
+                return ValidationResult.Error(nameof(command.OccurenceDate), "Field is mandatory");
             }
 
             if (!IsValidOccurenceDate(command.OccurenceDate))
             {
-                return InputValidationResult.Error(nameof(command.OccurenceDate), "Invalid date format");
+                return ValidationResult.Error(nameof(command.OccurenceDate), "Invalid date format");
             }
 
-            return InputValidationResult.Ok();
+            return ValidationResult.Ok();
         }
 
         private static bool IsValidOccurenceDate(string value)
         {
-            return DateTime.TryParseExact(value, "yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
+            return DateTime.TryParseExact(value, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
         }
     }
 }

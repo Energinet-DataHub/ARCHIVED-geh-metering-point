@@ -14,8 +14,8 @@
 
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application;
-using Energinet.DataHub.MeteringPoints.Application.InputValidation;
-using Energinet.DataHub.MeteringPoints.Application.InputValidation.Validators;
+using Energinet.DataHub.MeteringPoints.Application.Validation;
+using Energinet.DataHub.MeteringPoints.Application.Validation.InputValidators;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
 using FluentAssertions;
 using SimpleInjector;

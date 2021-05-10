@@ -14,29 +14,36 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Application.InputValidation
+namespace Energinet.DataHub.MeteringPoints.Application.Validation
 {
-    public class InputValidator<TCommand, TResult> : IValidator<TCommand, TResult>
-        where TCommand : IRequest<TResult>
+    public class ValidationResult
     {
-        private readonly List<IValidator<TCommand, TResult>> _validators;
-
-        public InputValidator(List<IValidator<TCommand, TResult>> validators)
+        public ValidationResult(List<ValidationError> errors)
         {
-            _validators = validators;
+            Errors = errors;
         }
 
-        public InputValidationResult Validate(TCommand command)
+        public ValidationResult()
         {
-            var validationErrors = _validators.SelectMany(x =>
-            {
-                var validationResult = x.Validate(command);
-                return validationResult.Errors;
-            }).ToList();
+            Errors = new List<ValidationError>();
+        }
 
-            return new InputValidationResult(validationErrors);
+        public List<ValidationError> Errors { get; }
+
+        public bool Success => !Errors.Any();
+
+        public static ValidationResult Ok()
+        {
+            return new();
+        }
+
+        public static ValidationResult Error(string key, string description)
+        {
+            return new(new List<ValidationError>
+            {
+                new(key, description),
+            });
         }
     }
 }

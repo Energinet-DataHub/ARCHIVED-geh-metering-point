@@ -14,7 +14,7 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.InputValidation;
+using Energinet.DataHub.MeteringPoints.Application.Validation;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure
