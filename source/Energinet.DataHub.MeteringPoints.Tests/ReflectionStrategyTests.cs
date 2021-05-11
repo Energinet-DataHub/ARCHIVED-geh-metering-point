@@ -86,7 +86,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public class CachePerMethodReflectionStrategyTests : ReflectionStrategyTests
         {
-            protected override ReflectionStrategy CreateStrategy() => new CachePerMethodReflectionStrategy();
+            protected override ReflectionStrategy CreateStrategy() => new ExpressionCacheReflectionStrategy();
         }
     }
 }

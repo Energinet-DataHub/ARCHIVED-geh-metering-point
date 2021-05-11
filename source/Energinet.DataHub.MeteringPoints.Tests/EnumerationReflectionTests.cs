@@ -12,25 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals;
+using Energinet.DataHub.MeteringPoints.Tests.Assets;
+using Xunit;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals
+namespace Energinet.DataHub.MeteringPoints.Tests
 {
-    public class CachePerMethodReflectionStrategy : ReflectionStrategy
+    public class EnumerationReflectionTests
     {
-        internal override IEnumerable<T> GetAll<T>()
+        [Fact]
+        public void M1()
         {
-            throw new System.NotImplementedException();
-        }
-
-        internal override T FromName<T>(string name)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        internal override T FromValue<T>(int value)
-        {
-            throw new System.NotImplementedException();
+            var obj = EnumerationReflection.Create<DocumentTypes>();
         }
     }
 }
