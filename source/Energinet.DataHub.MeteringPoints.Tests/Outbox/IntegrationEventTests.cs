@@ -124,7 +124,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Outbox
             Assert.IsType<Guid>(_outboxMessage.Id);
             Assert.IsType<Instant>(_outboxMessage.CreationDate);
             Assert.IsType<Instant>(_outboxMessage.ProcessedDate);
-            Assert.Equal(_outboxMessage.Category, OutboxMessageCategory.IntegrationEvent);
+            Assert.Equal(OutboxMessageCategory.IntegrationEvent, _outboxMessage.Category);
         }
     }
 }
