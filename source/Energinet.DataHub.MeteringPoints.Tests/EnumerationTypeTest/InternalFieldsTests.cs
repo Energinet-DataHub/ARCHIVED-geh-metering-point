@@ -12,18 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals;
+using System.Linq;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Tests.Assets;
 using Xunit;
+using Xunit.Categories;
 
-namespace Energinet.DataHub.MeteringPoints.Tests
+namespace Energinet.DataHub.MeteringPoints.Tests.EnumerationTypeTest
 {
-    public class EnumerationReflectionTests
+    [UnitTest]
+    public class InternalFieldsTests
     {
         [Fact]
-        public void M1()
+        public void Given_internal_enumeration_When_lookup_by_name_Then_value_is_returned()
         {
-            var obj = EnumerationReflection.Create<DocumentTypes>();
+            var fields = EnumerationType.GetAll<DocumentTypes>().ToArray();
+
+            Assert.NotEmpty(fields);
+            Assert.Contains(DocumentTypes.Lens, fields);
         }
     }
 }

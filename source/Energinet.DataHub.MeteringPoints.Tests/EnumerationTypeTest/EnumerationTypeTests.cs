@@ -18,7 +18,7 @@ using Energinet.DataHub.MeteringPoints.Tests.Assets;
 using Xunit;
 using Xunit.Categories;
 
-namespace Energinet.DataHub.MeteringPoints.Tests
+namespace Energinet.DataHub.MeteringPoints.Tests.EnumerationTypeTest
 {
     [UnitTest]
     public class EnumerationTypeTests
