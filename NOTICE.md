@@ -11,6 +11,7 @@ The Green Energy Hub repository relies on open source libraries and tools. We re
 | Name                                | Version | Url                                                                | License                    |
 | ----------------------------------- | ------- | ------------------------------------------------------------------ | -------------------------- |
 | `.NET Core`                         | 3.1     | <https://dotnet.microsoft.com/download/dotnet/3.1>                 | MIT                        |
+| `BenchmarkDotnet`                   | 0.12.1  | <https://www.nuget.org/packages/BenchmarkDotNet/>                  | MIT                        |
 | `coverlet.collector`                | 1.2.0   | <https://www.nuget.org/packages/coverlet.collector/1.2.0>          | MIT                        |
 | `dotnet-reportgenerator-globaltool` | Current | <https://www.nuget.org/packages/dotnet-reportgenerator-globaltool> | Apache-2.0                 |
 | `FluentAssertions`                  | 5.10.3  | <https://www.nuget.org/packages/FluentAssertions/5.10.3>           | Apache-2.0                 |
