@@ -18,7 +18,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using NodaTime.Serialization.SystemTextJson;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Helpers
 {
     /// <summary>
     /// JSON serializer that specifically support NodaTime's <see cref="NodaTime.Instant"/>.

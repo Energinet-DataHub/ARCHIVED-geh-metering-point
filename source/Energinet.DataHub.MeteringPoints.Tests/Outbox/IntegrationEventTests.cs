@@ -13,13 +13,29 @@
 // limitations under the License.
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
+using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Energinet.DataHub.MeteringPoints.Contracts;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Handlers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Repository;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Services;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
+using Energinet.DataHub.MeteringPoints.Tests.Send;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
+using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Application.CreateMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Outbox
 {
@@ -28,11 +44,25 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Outbox
     {
         private readonly Mock<IIntegrationEventDispatchOrchestrator> _integrationEventDispatchOrchestratorMock;
         private readonly Mock<IIntegrationEventRepository> _integrationEventRepositoryMock;
+        private readonly Mock<IMediator> _mediatorMock;
+        private readonly Mock<IJsonSerializer> _jsonSerializerMock;
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        private readonly OutboxMessage _outboxMessage;
 
         public IntegrationEventTests()
         {
             _integrationEventRepositoryMock = new Mock<IIntegrationEventRepository>();
             _integrationEventDispatchOrchestratorMock = new Mock<IIntegrationEventDispatchOrchestrator>();
+            _mediatorMock = new Mock<IMediator>();
+            _jsonSerializerMock = new Mock<IJsonSerializer>();
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+
+            _outboxMessage = new(
+                "CreateMeteringPointEventMessage",
+                "{\"Gsrn\":\"98271293\",\"MpType\":\"CreateMeteringPointEventMessage\",\"GridAccessProvider\":\"GridAccessProvider\",\"Child\":true,\"EnergySupplierCurrent\":\"EnergySupplierCurrent\"}",
+                OutboxMessageCategory.IntegrationEvent,
+                SystemClock.Instance.GetCurrentInstant());
+
             _integrationEventRepositoryMock.SetupSequence(x => x.GetUnProcessedIntegrationEventMessageAsync())
                 .ReturnsAsync(new OutboxMessage(
                     "CreateMeteringPointEventMessage",
@@ -47,6 +77,54 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Outbox
                     SystemClock.Instance.GetCurrentInstant(),
                     Guid.NewGuid()))
                 .ReturnsAsync((OutboxMessage)null);
+
+            _integrationEventRepositoryMock.Setup(m => m.MarkIntegrationEventMessageAsProcessedAsync(It.IsAny<Guid>()))
+                .Returns(Task.FromResult(typeof(void)));
+        }
+
+        [Fact]
+        public async Task IntegrationEventDispatcherOrchestratorTest()
+        {
+            var sut = new IntegrationEventDispatchOrchestrator(
+                _mediatorMock.Object,
+                _jsonSerializerMock.Object,
+                _integrationEventRepositoryMock.Object,
+                _unitOfWorkMock.Object);
+            await sut.ProcessEventOrchestratorAsync().ConfigureAwait(false);
+
+            _integrationEventRepositoryMock.Verify(x => x.GetUnProcessedIntegrationEventMessageAsync(), Times.Exactly(3));
+            _integrationEventRepositoryMock.Verify(x => x.MarkIntegrationEventMessageAsProcessedAsync(It.IsAny<Guid>()), Times.Exactly(2));
+        }
+
+        [Fact]
+        public void IntegrationEventTypeFactorySuccessTest()
+        {
+            IJsonSerializer jsonSerializer = new JsonSerializer();
+            var parsedCommand = jsonSerializer.Deserialize(
+                                    _outboxMessage.Data,
+                                    IntegrationEventTypeFactory.GetType(_outboxMessage.Type));
+
+            Assert.IsType<CreateMeteringPointEventMessage>(parsedCommand);
+        }
+
+        [Fact]
+        public void IntegrationEventTypeFactoryFailTest()
+        {
+            IJsonSerializer jsonSerializer = new JsonSerializer();
+            Assert.Throws<ArgumentException>(() => jsonSerializer.Deserialize(
+                _outboxMessage.Data,
+                IntegrationEventTypeFactory.GetType(typeof(CreateMeteringPoint).ToString())));
+        }
+
+        [Fact]
+        public void OutBoxMessageGettersSettersTest()
+        {
+            _outboxMessage.ProcessedDate = SystemClock.Instance.GetCurrentInstant();
+
+            Assert.IsType<Guid>(_outboxMessage.Id);
+            Assert.IsType<Instant>(_outboxMessage.CreationDate);
+            Assert.IsType<Instant>(_outboxMessage.ProcessedDate);
+            Assert.Equal(_outboxMessage.Category, OutboxMessageCategory.IntegrationEvent);
         }
     }
 }

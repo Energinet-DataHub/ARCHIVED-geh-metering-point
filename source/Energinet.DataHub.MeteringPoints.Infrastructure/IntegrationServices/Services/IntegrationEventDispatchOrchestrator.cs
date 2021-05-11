@@ -17,6 +17,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Repository;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
@@ -47,29 +48,19 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Se
             // Keep iterating as long as we have a message
             while (outboxMessage != null)
             {
-                try
-                {
-                    object parsedCommand = _jsonSerializer.Deserialize(
+                object parsedCommand = _jsonSerializer.Deserialize(
                         outboxMessage.Data,
                         IntegrationEventTypeFactory.GetType(outboxMessage.Type));
-                    await _mediator.Send(parsedCommand, CancellationToken.None).ConfigureAwait(false);
-                    await MarkEventAsProcessedAsync(outboxMessage.Id).ConfigureAwait(false);
-                    await _unitOfWork.CommitAsync().ConfigureAwait(false);
-                    outboxMessage = await FetchEventFromOutboxAsync().ConfigureAwait(false);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
+                await _mediator.Send(parsedCommand, CancellationToken.None).ConfigureAwait(false);
+                await MarkEventAsProcessedAsync(outboxMessage.Id).ConfigureAwait(false);
+                await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                outboxMessage = await FetchEventFromOutboxAsync().ConfigureAwait(false);
             }
         }
 
         private async Task<OutboxMessage> FetchEventFromOutboxAsync()
         {
             return await _integrationEventRepository.GetUnProcessedIntegrationEventMessageAsync().ConfigureAwait(false);
-            // return new("CreateMeteringPointEventMessage", "{\"Gsrn\":\"000000000\",\"MpType\":\"CreateMeteringPointEventMessage\",\"GridAccessProvider\":\"GridAccessProvider\",\"Child\":true,\"EnergySupplierCurrent\":\"EnergySupplierCurrent\"}",
-            //    OutboxMessageCategory.IntegrationEvent, SystemClock.Instance.GetCurrentInstant());
         }
 
         private async Task MarkEventAsProcessedAsync(Guid id)

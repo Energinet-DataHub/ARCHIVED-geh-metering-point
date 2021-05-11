@@ -17,7 +17,7 @@ using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Helpers
 {
     /// <summary>
     /// Contract serialization and deserialization of JSON.
