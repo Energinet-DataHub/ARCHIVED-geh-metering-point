@@ -24,23 +24,19 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals
 {
     internal class EnumerationReflection
     {
-        private readonly List<EnumerationType> _enumerationTypes;
         private readonly Dictionary<string, EnumerationType> _nameLookup;
         private readonly Dictionary<int, EnumerationType> _valueLookup;
 
         private EnumerationReflection(
-            List<EnumerationType> enumerationTypes,
-            Dictionary<string, EnumerationType> nameLookup,
             Dictionary<int, EnumerationType> valueLookup)
         {
-            _enumerationTypes = enumerationTypes;
-            _nameLookup = nameLookup;
+            _nameLookup = valueLookup.Values.ToDictionary(f => f.Name.ToLowerInvariant());
             _valueLookup = valueLookup;
         }
 
         public IEnumerable<EnumerationType> GetAll()
         {
-            return _enumerationTypes;
+            return _valueLookup.Values;
         }
 
         public EnumerationType FromName(string name)
@@ -60,12 +56,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals
         internal static EnumerationReflection Create<T>()
             where T : EnumerationType
         {
-            var fieldInfos = typeof(T).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
+            var fieldInfos = typeof(T).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
             var fields = fieldInfos.Select(f => f.GetValue(null)).Cast<EnumerationType>().ToList();
 
             return new EnumerationReflection(
-                fields,
-                fields.ToDictionary(f => f.Name.ToLowerInvariant()),
                 fields.ToDictionary(f => f.Id));
         }
     }

@@ -23,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals
     {
         internal override IEnumerable<T> GetAll<T>()
         {
-            var fields = typeof(T).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
+            var fields = typeof(T).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
 
             return fields.Select(f => f.GetValue(null)).Cast<T>();
         }

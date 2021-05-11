@@ -16,13 +16,13 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Assets
 {
-    public sealed class DocumentTypes : EnumerationType
+    internal sealed class DocumentTypes : EnumerationType
     {
-        public static readonly DocumentTypes Word = new(1, nameof(Word));
-        public static readonly DocumentTypes Excel = new(2, nameof(Excel));
-        public static readonly DocumentTypes PowerPoint = new(3, nameof(PowerPoint));
-        public static readonly DocumentTypes OneNote = new(4, nameof(OneNote));
-        public static readonly DocumentTypes Lens = new(5, nameof(Lens));
+        internal static readonly DocumentTypes Word = new(1, nameof(Word));
+        internal static readonly DocumentTypes Excel = new(2, nameof(Excel));
+        internal static readonly DocumentTypes PowerPoint = new(3, nameof(PowerPoint));
+        internal static readonly DocumentTypes OneNote = new(4, nameof(OneNote));
+        internal static readonly DocumentTypes Lens = new(5, nameof(Lens));
 
         private DocumentTypes(int id, string name)
             : base(id, name)
