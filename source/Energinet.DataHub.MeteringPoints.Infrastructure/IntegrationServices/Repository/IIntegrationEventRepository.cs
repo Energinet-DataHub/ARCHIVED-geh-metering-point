@@ -32,5 +32,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Re
         /// Updates the message in the database to processed
         /// </summary>
         Task MarkIntegrationEventMessageAsProcessedAsync(Guid id);
+
+        /// <summary>
+        /// Saves a new integration event message to the outbox
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        Task SaveIntegrationEventMessageToOutboxAsync<TMessage>(TMessage message);
     }
 }

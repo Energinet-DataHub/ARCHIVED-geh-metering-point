@@ -19,7 +19,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.IntegrationEvent
     /// <summary>
     /// Service to deliver events to the outbox following the outbox pattern
     /// </summary>
-    public interface IIntegrastionEventOutboxService
+    public interface IIntegrationEventOutboxService
     {
         /// <summary>
         /// Sends the event to the outbox

@@ -12,13 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Repository;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using MediatR;
-using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Services
 {
@@ -26,33 +28,53 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Se
     {
         private readonly IMediator _mediator;
         private readonly IJsonSerializer _jsonSerializer;
+        private readonly IIntegrationEventRepository _integrationEventRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public IntegrationEventDispatchOrchestrator(IMediator mediator, IJsonSerializer jsonSerializer)
+        public IntegrationEventDispatchOrchestrator(IMediator mediator, IJsonSerializer jsonSerializer, IIntegrationEventRepository integrationEventRepository, IUnitOfWork unitOfWork)
         {
             _mediator = mediator;
             _jsonSerializer = jsonSerializer;
+            _integrationEventRepository = integrationEventRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task ProcessEventOrchestratorAsync()
         {
             // Fetch the first message to process
-            OutboxMessage outboxMessage = FetchEventFromOutbox();
+            OutboxMessage outboxMessage = await FetchEventFromOutboxAsync().ConfigureAwait(false);
 
             // Keep iterating as long as we have a message
             while (outboxMessage != null)
             {
-                object parsedCommand = _jsonSerializer.Deserialize(
-                    outboxMessage.Data,
-                    IntegrationEventTypeFactory.GetType(outboxMessage.Type));
-                await _mediator.Send(parsedCommand, CancellationToken.None).ConfigureAwait(false);
-                outboxMessage = FetchEventFromOutbox();
+                try
+                {
+                    object parsedCommand = _jsonSerializer.Deserialize(
+                        outboxMessage.Data,
+                        IntegrationEventTypeFactory.GetType(outboxMessage.Type));
+                    await _mediator.Send(parsedCommand, CancellationToken.None).ConfigureAwait(false);
+                    await MarkEventAsProcessedAsync(outboxMessage.Id).ConfigureAwait(false);
+                    await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                    outboxMessage = await FetchEventFromOutboxAsync().ConfigureAwait(false);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
             }
         }
 
-        private OutboxMessage FetchEventFromOutbox()
+        private async Task<OutboxMessage> FetchEventFromOutboxAsync()
         {
-            return new("CreateMeteringPointEventMessage", "{\"Gsrn\":\"987654321\",\"MpType\":\"CreateMeteringPointEventMessage\",\"GridAccessProvider\":\"GridAccessProvider\",\"Child\":true,\"EnergySupplierCurrent\":\"EnergySupplierCurrent\"}",
-                OutboxMessageCategory.IntegrationEvent, SystemClock.Instance.GetCurrentInstant());
+            return await _integrationEventRepository.GetUnProcessedIntegrationEventMessageAsync().ConfigureAwait(false);
+            // return new("CreateMeteringPointEventMessage", "{\"Gsrn\":\"000000000\",\"MpType\":\"CreateMeteringPointEventMessage\",\"GridAccessProvider\":\"GridAccessProvider\",\"Child\":true,\"EnergySupplierCurrent\":\"EnergySupplierCurrent\"}",
+            //    OutboxMessageCategory.IntegrationEvent, SystemClock.Instance.GetCurrentInstant());
+        }
+
+        private async Task MarkEventAsProcessedAsync(Guid id)
+        {
+            await _integrationEventRepository.MarkIntegrationEventMessageAsProcessedAsync(id).ConfigureAwait(false);
         }
     }
 }

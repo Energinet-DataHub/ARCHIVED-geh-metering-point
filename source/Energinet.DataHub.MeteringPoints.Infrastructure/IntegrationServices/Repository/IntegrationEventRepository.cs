@@ -16,27 +16,29 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
-using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Repository;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Services
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Repository
 {
     public class IntegrationEventRepository : IIntegrationEventRepository
     {
         private readonly MeteringPointContext _meteringPointContext;
+        private readonly IJsonSerializer _jsonSerializer;
 
-        public IntegrationEventRepository(MeteringPointContext meteringPointContext)
+        public IntegrationEventRepository(MeteringPointContext meteringPointContext, IJsonSerializer jsonSerializer)
         {
             _meteringPointContext = meteringPointContext;
+            _jsonSerializer = jsonSerializer;
         }
 
         public async Task<OutboxMessage> GetUnProcessedIntegrationEventMessageAsync()
         {
             return await _meteringPointContext.OutboxMessages
                 .Where(x => x.ProcessedDate == null)
-                .Select(x => new OutboxMessage(x.Id, x.Type, x.Data, x.Category, x.CreationDate))
+                .Select(x => new OutboxMessage(x.Type, x.Data, x.Category, x.CreationDate, x.Id))
                 .FirstOrDefaultAsync().ConfigureAwait(false);
         }
 
@@ -47,6 +49,20 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Se
                 .ConfigureAwait(false);
 
             if (eventToBeMarkedAsProcessed != null) eventToBeMarkedAsProcessed.ProcessedDate = SystemClock.Instance.GetCurrentInstant();
+        }
+
+        public async Task SaveIntegrationEventMessageToOutboxAsync<TMessage>(TMessage message)
+        {
+            if (message is null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            var messageType = message.GetType().Name;
+            var data = _jsonSerializer.Serialize(message);
+
+            var outboxMessage = new OutboxMessage(messageType, data, OutboxMessageCategory.IntegrationEvent, SystemClock.Instance.GetCurrentInstant());
+            await _meteringPointContext.OutboxMessages.AddAsync(outboxMessage);
         }
     }
 }
