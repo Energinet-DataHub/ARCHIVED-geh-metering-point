@@ -25,13 +25,13 @@ namespace Energinet.DataHub.MeteringPoints.Benchmarks
     {
         private readonly CacheAllReflectionStrategy _cacheAll;
         private readonly CheckOnInvocationReflectionStrategy _checkOnInvocation;
-        private readonly ExpressionCacheReflectionStrategy _expressionCache;
+        private readonly DictionaryCacheReflectionStrategy _dictionaryCache;
 
         public ReflectionStrategyBenchmarks()
         {
             _checkOnInvocation = new CheckOnInvocationReflectionStrategy();
             _cacheAll = new CacheAllReflectionStrategy();
-            _expressionCache = new ExpressionCacheReflectionStrategy();
+            _dictionaryCache = new DictionaryCacheReflectionStrategy();
         }
 
         [Benchmark(Baseline = true, Description = nameof(CheckOnInvocationReflectionStrategy))]
@@ -42,9 +42,9 @@ namespace Energinet.DataHub.MeteringPoints.Benchmarks
         [BenchmarkCategory("GetAll")]
         public void CacheAll_GetAll() => _cacheAll.GetAll<DocumentTypes>();
 
-        [Benchmark(Description = nameof(ExpressionCacheReflectionStrategy))]
+        [Benchmark(Description = nameof(DictionaryCacheReflectionStrategy))]
         [BenchmarkCategory("GetAll")]
-        public void ExpressionCache_GetAll() => _expressionCache.GetAll<DocumentTypes>();
+        public void ExpressionCache_GetAll() => _dictionaryCache.GetAll<DocumentTypes>();
 
         [Benchmark(Baseline = true, Description = nameof(CheckOnInvocationReflectionStrategy))]
         [BenchmarkCategory("FromName")]
@@ -54,9 +54,9 @@ namespace Energinet.DataHub.MeteringPoints.Benchmarks
         [BenchmarkCategory("FromName")]
         public void CacheAll_FromName() => _cacheAll.FromName<DocumentTypes>("Lens");
 
-        [Benchmark(Description = nameof(ExpressionCacheReflectionStrategy))]
+        [Benchmark(Description = nameof(DictionaryCacheReflectionStrategy))]
         [BenchmarkCategory("FromName")]
-        public void ExpressionCache_FromName() => _expressionCache.FromName<DocumentTypes>("Lens");
+        public void ExpressionCache_FromName() => _dictionaryCache.FromName<DocumentTypes>("Lens");
 
         [Benchmark(Baseline = true, Description = nameof(CheckOnInvocationReflectionStrategy))]
         [BenchmarkCategory("FromValue")]
@@ -66,8 +66,8 @@ namespace Energinet.DataHub.MeteringPoints.Benchmarks
         [BenchmarkCategory("FromValue")]
         public void CacheAll_FromValue() => _cacheAll.FromValue<DocumentTypes>(5);
 
-        [Benchmark(Description = nameof(ExpressionCacheReflectionStrategy))]
+        [Benchmark(Description = nameof(DictionaryCacheReflectionStrategy))]
         [BenchmarkCategory("FromValue")]
-        public void ExpressionCache_FromValue() => _expressionCache.FromValue<DocumentTypes>(5);
+        public void ExpressionCache_FromValue() => _dictionaryCache.FromValue<DocumentTypes>(5);
     }
 }

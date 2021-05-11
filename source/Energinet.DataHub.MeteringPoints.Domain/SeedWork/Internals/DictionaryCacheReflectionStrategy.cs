@@ -19,11 +19,32 @@ using System.Threading;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals
 {
-    public class ExpressionCacheReflectionStrategy : ReflectionStrategy
+    internal class DictionaryCacheReflectionStrategy : ReflectionStrategy
     {
-        private static int _typeIndex;
+        private static int _typeIndex = -1;
+        private readonly int _cacheSizeIncrement;
         private readonly object _resizeLock = new();
-        private EnumerationReflection[] _cache = new EnumerationReflection[64];
+        private EnumerationReflection[] _cache;
+
+        /// <summary>
+        /// Create a <see cref="DictionaryCacheReflectionStrategy"/> with a default cache size increment of 64
+        /// </summary>
+        internal DictionaryCacheReflectionStrategy()
+            : this(64) { }
+
+        /// <summary>
+        /// Create a <see cref="DictionaryCacheReflectionStrategy"/> with a custom cache size
+        /// </summary>
+        /// <param name="cacheSizeIncrement">custom cache size increment</param>
+        /// <exception cref="ArgumentOutOfRangeException">if cache is less then 1</exception>
+        internal DictionaryCacheReflectionStrategy(int cacheSizeIncrement)
+        {
+            if (cacheSizeIncrement <= 0) throw new ArgumentOutOfRangeException(nameof(cacheSizeIncrement));
+            _cacheSizeIncrement = cacheSizeIncrement;
+            _cache = new EnumerationReflection[cacheSizeIncrement];
+        }
+
+        internal int CacheSize => _cache.Length;
 
         internal override IEnumerable<T> GetAll<T>()
         {
@@ -48,7 +69,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals
 
             lock (_resizeLock)
             {
-                if (index >= _cache.Length) Array.Resize(ref _cache, index + 64);
+                if (index >= _cache.Length) Array.Resize(ref _cache, index + _cacheSizeIncrement);
             }
 
             return _cache[index] ??= EnumerationReflection.Create<T>();

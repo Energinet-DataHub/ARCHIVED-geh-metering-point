@@ -84,9 +84,46 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EnumerationTypeTest
             protected override ReflectionStrategy CreateStrategy() => new CacheAllReflectionStrategy();
         }
 
-        public class CachePerMethodReflectionStrategyTests : ReflectionStrategyTests
+        public class ExpressionCacheReflectionStrategyTests : ReflectionStrategyTests
         {
-            protected override ReflectionStrategy CreateStrategy() => new ExpressionCacheReflectionStrategy();
+            private const int DefaultCacheSize = 64;
+            private const int CustomCacheSize = 1;
+
+            [Fact]
+            public void Given_cache_size_When_size_is_less_then_one_Then_argument_out_of_range_exception_is_thrown()
+            {
+                Assert.Throws<ArgumentOutOfRangeException>(() => new DictionaryCacheReflectionStrategy(0));
+            }
+
+            [Fact]
+            public void Given_created_strategy_When_default_cache_size_Then_size_is_64()
+            {
+                var sut = new DictionaryCacheReflectionStrategy();
+
+                Assert.Equal(DefaultCacheSize, sut.CacheSize);
+            }
+
+            [Fact]
+            public void Given_created_strategy_When_custom_cache_size_Then_size_is_1()
+            {
+                var sut = new DictionaryCacheReflectionStrategy(CustomCacheSize);
+
+                Assert.Equal(CustomCacheSize, sut.CacheSize);
+            }
+
+            [Fact]
+            public void Given_multiple_enums_When_cache_size_is_exceed_Then_cache_is_resized()
+            {
+                var sut = new DictionaryCacheReflectionStrategy(CustomCacheSize);
+
+                _ = sut.GetAll<DocumentTypes>();
+                _ = sut.GetAll<OperationSystems>();
+
+                // cache size incremented by the default value set in the constructor
+                Assert.Equal(CustomCacheSize * 2, sut.CacheSize);
+            }
+
+            protected override ReflectionStrategy CreateStrategy() => new DictionaryCacheReflectionStrategy();
         }
     }
 }

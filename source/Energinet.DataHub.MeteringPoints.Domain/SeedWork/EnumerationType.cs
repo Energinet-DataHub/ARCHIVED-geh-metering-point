@@ -14,15 +14,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
 {
     public abstract class EnumerationType : IComparable
     {
-        private static readonly ReflectionStrategy _reflectionStrategy = new CheckOnInvocationReflectionStrategy();
+        private static readonly ReflectionStrategy _reflectionStrategy = new DictionaryCacheReflectionStrategy();
 
         protected EnumerationType(int id, string name)
         {
