@@ -122,8 +122,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Repositories
         }
 
         [Fact]
-        public void IntegrationEventRepositorySaveIntegrationEventMessageToOutboxAsyncWhenNullTest()
+        public async Task IntegrationEventRepositorySaveIntegrationEventMessageToOutboxAsyncWhenNullTest()
         {
+            await using var context = new MeteringPointContext(_options);
+
+            CreateMeteringPointEventMessage message = null;
+
+            _integrationEventRepository = new IntegrationEventRepository(context, _jsonSerializer);
+
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _integrationEventRepository.SaveIntegrationEventMessageToOutboxAsync(message).ConfigureAwait(false));
         }
     }
 }
