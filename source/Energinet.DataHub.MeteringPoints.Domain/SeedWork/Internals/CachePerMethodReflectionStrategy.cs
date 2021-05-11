@@ -16,15 +16,21 @@ using System.Collections.Generic;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals
 {
-    public abstract class ReflectionStrategy
+    public class CachePerMethodReflectionStrategy : ReflectionStrategy
     {
-        internal abstract IEnumerable<T> GetAll<T>()
-            where T : EnumerationType;
+        internal override IEnumerable<T> GetAll<T>()
+        {
+            throw new System.NotImplementedException();
+        }
 
-        internal abstract T FromName<T>(string name)
-            where T : EnumerationType;
+        internal override T FromName<T>(string name)
+        {
+            throw new System.NotImplementedException();
+        }
 
-        internal abstract T FromValue<T>(int value)
-            where T : EnumerationType;
+        internal override T FromValue<T>(int value)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

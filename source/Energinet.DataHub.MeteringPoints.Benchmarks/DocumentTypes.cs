@@ -12,16 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using BenchmarkDotNet.Running;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Benchmarks
 {
-    internal static class Program
+    public sealed class DocumentTypes : EnumerationType
     {
-        private static void Main(string[] args)
+        public static readonly DocumentTypes Word = new(1, nameof(Word));
+        public static readonly DocumentTypes Excel = new(2, nameof(Excel));
+        public static readonly DocumentTypes PowerPoint = new(3, nameof(PowerPoint));
+        public static readonly DocumentTypes OneNote = new(4, nameof(OneNote));
+        public static readonly DocumentTypes Lens = new(5, nameof(Lens));
+
+        private DocumentTypes(int id, string name)
+            : base(id, name)
         {
-            _ = BenchmarkRunner.Run<ReflectionStrategyBenchmarks>();
         }
     }
 }
