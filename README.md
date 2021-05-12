@@ -23,7 +23,7 @@ These are the processes maintained by this domain.
 
 ## Architecture
 
-![design](ARCHITECTURE.drawio.png)
+<img width="615" alt="MP domain Architecture" src="https://user-images.githubusercontent.com/25637982/117973312-87033780-b32c-11eb-9232-32c90cdb0fdb.PNG">
 
 ## Context Streams
 
