@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Application.Validation
 {
-    public class Address
+    /// <summary>
+    /// Validator interface
+    /// </summary>
+    public interface IValidator<in TCommand, out TResponse>
     {
-        public string StreetName { get; set; }
-
-        public string PostCode { get; set; }
-
-        public string CityName { get; set; }
-
-        public string CountryCode { get; set; }
-
-        public bool IsWashable { get; set; }
+        /// <summary>
+        /// Perform validation
+        /// </summary>
+        /// <returns>A <see cref="Application.Validation.ValidationResult"/> representing the result of the asynchronous operation.</returns>
+        ValidationResult Validate(TCommand command);
     }
 }

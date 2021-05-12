@@ -20,7 +20,6 @@ using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
-using MediatR;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -87,6 +86,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     typeof(ValidationReportsBehavior<,>),
                     typeof(UnitOfWorkBehavior<,>),
                 });
+
+            container.AddInputValidation();
 
             container.Verify();
 

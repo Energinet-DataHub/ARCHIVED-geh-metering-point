@@ -22,7 +22,9 @@ limitations under the License.
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="FluentAssertions" Version="5.10.3" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+        <PackageReference Include="SimpleInjector" Version="5.3.0" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="xunit.categories" Version="2.0.4" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
@@ -37,6 +39,7 @@ limitations under the License.
 
     <ItemGroup>
       <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp\Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.csproj" />
+      <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Infrastructure\Energinet.DataHub.MeteringPoints.Infrastructure.csproj" />
       <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Benchmarks\Energinet.DataHub.MeteringPoints.Benchmarks.csproj" />
       <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Domain\Energinet.DataHub.MeteringPoints.Domain.csproj" />
     </ItemGroup>

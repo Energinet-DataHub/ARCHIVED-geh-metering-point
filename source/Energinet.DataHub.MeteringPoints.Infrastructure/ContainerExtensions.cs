@@ -12,18 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application
+using Energinet.DataHub.MeteringPoints.Application.Validation;
+using Energinet.DataHub.MeteringPoints.Application.Validation.InputValidators;
+using SimpleInjector;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure
 {
-    public class Address
+    public static class ContainerExtensions
     {
-        public string StreetName { get; set; }
-
-        public string PostCode { get; set; }
-
-        public string CityName { get; set; }
-
-        public string CountryCode { get; set; }
-
-        public bool IsWashable { get; set; }
+        public static void AddInputValidation(this Container container)
+        {
+            container.Register(typeof(IValidator<,>), typeof(InputValidator<,>));
+            container.Collection.Register(typeof(IValidator<,>), new[]
+            {
+                typeof(OccurenceDateInputValidation),
+            });
+        }
     }
 }
