@@ -16,16 +16,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals
+namespace Energinet.DataHub.MeteringPoints.Benchmarks.ReflectionStrategies
 {
-    internal class CheckOnInvocationReflectionStrategy : ReflectionStrategy
+    public class CacheAllReflectionStrategy : ReflectionStrategy
     {
+        private static int _typeIndex;
+        private readonly object _resizeLock = new();
+        private IEnumerable<EnumerationType>[] _cache = new IEnumerable<EnumerationType>[64];
+
         internal override IEnumerable<T> GetAll<T>()
         {
-            var fields = typeof(T).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
-
-            return fields.Select(f => f.GetValue(null)).Cast<T>();
+            var index = KeyType<T>.Index;
+            return (_cache[index] ??= GetFieldsFrom<T>(index)).Cast<T>();
         }
 
         internal override T FromName<T>(string name)
@@ -42,12 +48,28 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals
             return matchingItem;
         }
 
+        private IEnumerable<T> GetFieldsFrom<T>(int index)
+        {
+            lock (_resizeLock)
+            {
+                if (index >= _cache.Length) Array.Resize(ref _cache, index + 64);
+            }
+
+            var fields = typeof(T).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
+            return fields.Select(f => f.GetValue(null)).Cast<T>();
+        }
+
         private T Parse<T, TValue>(TValue value, string description, Func<T, bool> predicate)
             where T : EnumerationType
         {
             var matchingItem = GetAll<T>().FirstOrDefault(predicate);
 
             return matchingItem ?? throw new InvalidOperationException($"'{value}' is not a valid {description} in {typeof(T)}");
+        }
+
+        private static class KeyType<T>
+        {
+            internal static readonly int Index = Interlocked.Increment(ref _typeIndex);
         }
     }
 }

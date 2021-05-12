@@ -14,6 +14,7 @@
 
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Configs;
+using Energinet.DataHub.MeteringPoints.Benchmarks.ReflectionStrategies;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals;
 
 namespace Energinet.DataHub.MeteringPoints.Benchmarks

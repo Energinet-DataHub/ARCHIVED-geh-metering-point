@@ -37,6 +37,7 @@ limitations under the License.
 
     <ItemGroup>
       <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp\Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.csproj" />
+      <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Benchmarks\Energinet.DataHub.MeteringPoints.Benchmarks.csproj" />
       <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Domain\Energinet.DataHub.MeteringPoints.Domain.csproj" />
     </ItemGroup>
 

@@ -14,6 +14,7 @@
 
 using System;
 using System.Linq;
+using Energinet.DataHub.MeteringPoints.Benchmarks.ReflectionStrategies;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals;
 using Energinet.DataHub.MeteringPoints.Tests.Assets;
 using Xunit;
