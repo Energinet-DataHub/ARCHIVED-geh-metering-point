@@ -1,0 +1,90 @@
+<!--
+Copyright 2020 Energinet DataHub A/S
+Licensed under the Apache License, Version 2.0 (the "License2");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<SOAP-ENV:Body xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <SendMessageRequest xmlns="urn:www:datahub:dk:b2b:v01">
+        <MessageContainer>
+            <MessageReference>LW-MsgRef-2019-09-24-15-1-13-664</MessageReference>
+            <DocumentType>RequestUpdateMasterDataMeteringPoint</DocumentType>
+            <MessageType>XML</MessageType>
+            <Payload>
+                <DK_RequestUpdateMasterDataMeteringPoint xmlns="un:unece:260:data:EEM-DK_RequestUpdateMasterDataMeteringPoint:v2">
+                    <HeaderEnergyDocument>
+                        <Identification>LW-MsgID-2019-09-24-15-1-13-664</Identification>
+                        <DocumentType listAgencyIdentifier="260">E58</DocumentType>
+                        <Creation>2019-09-24T11:41:00.00Z</Creation>
+                        <SenderEnergyParty>
+                            <Identification schemeAgencyIdentifier="9">8100000000030</Identification>
+                        </SenderEnergyParty>
+                        <RecipientEnergyParty>
+                            <Identification schemeAgencyIdentifier="9">5790001330552</Identification>
+                        </RecipientEnergyParty>
+                    </HeaderEnergyDocument>
+                    <ProcessEnergyContext>
+                        <EnergyBusinessProcess listAgencyIdentifier="260">E02</EnergyBusinessProcess>
+                        <EnergyBusinessProcessRole listAgencyIdentifier="260">DDM</EnergyBusinessProcessRole>
+                        <EnergyIndustryClassification listAgencyIdentifier="6">23</EnergyIndustryClassification>
+                    </ProcessEnergyContext>
+                    <PayloadMasterDataMPEvent>
+                        <MeteringPointDomainLocation>
+                            <Identification schemeAgencyIdentifier="9">578032971381891385</Identification>
+                        </MeteringPointDomainLocation>
+                        <Identification>LW-TransID-2019-09-24-15-1-13-664</Identification>
+                        <DetailMeteringPointCharacteristic>
+                            <SettlementMethod listAgencyIdentifier="260">E02</SettlementMethod>
+<!--Either E01 - Profiled or E02 - Non Profiled-->
+                            <PhysicalStatusOfMeteringPoint listIdentifier="DK" listAgencyIdentifier="260">D03</PhysicalStatusOfMeteringPoint>
+<!--Either D03 = New or E22 - Connected-->
+                            <TypeOfMeteringPoint listAgencyIdentifier="260">E17</TypeOfMeteringPoint>
+<!--E17 = Consumption, E18 = Production-->
+                            <SubTypeOfMeteringPoint listAgencyIdentifier="260" listIdentifier="DK">D02</SubTypeOfMeteringPoint>
+                            <MeterReadingOccurrence>PT1H</MeterReadingOccurrence>
+<!--PT1H = Hourly, P1M = Monthly, P1Y = Yearly, PT15M = Quarterly, ANDET = Other-->
+                            <NetSettlementGroup>0</NetSettlementGroup>
+<!--0 = No Settlement group, 1 - 6 = Settlement group 1 ... 6-->
+                            <LimitationContractedCapacityCharacteristics>
+                                <MaximumCurrent />
+                                <MaximumPower />
+                            </LimitationContractedCapacityCharacteristics>
+                            <MeteringGridAreaUsedDomainLocation>
+                                <Identification schemeAgencyIdentifier="260" schemeIdentifier="DK">803</Identification>
+                            </MeteringGridAreaUsedDomainLocation>
+                            <LocationDescription>      </LocationDescription>
+                            <IncludedProductCharacteristic>
+                                <Identification listAgencyIdentifier="9">8716867000030</Identification>
+                                <UnitType listAgencyIdentifier="260">KWH</UnitType>
+                            </IncludedProductCharacteristic>
+                            <DisconnectionType listAgencyIdentifier="260" listIdentifier="DK">D01</DisconnectionType>
+                        </DetailMeteringPointCharacteristic>
+                        <Occurrence>2019-09-23T22:00:00.00Z</Occurrence>
+<!--Effective Date of the BRS-->
+                        <InstallationLocationAddress>
+                            <StreetName>LeapWorkB2BStreet</StreetName>
+                            <StreetCode />
+                            <BuildingNumber>1337</BuildingNumber>
+                            <FloorIdentification />
+                            <RoomIdentification />
+                            <CitySubDivisionName>      </CitySubDivisionName>
+                            <Postcode>8000</Postcode>
+                            <CityName>Aarhus</CityName>
+                            <MunicipalityCode />
+                            <CountryName>DK</CountryName>
+                            <MPAddressWashInstructions listAgencyIdentifier="260" listIdentifier="DK">D01</MPAddressWashInstructions>
+                        </InstallationLocationAddress>
+<!-- Can only have Parent MP if MP is in Group 2 or MP Type is D02 -->
+<!--ParentRelatedMeteringPoint> <IdentificationDomainLocation> <Identification schemeAgencyIdentifier="9" schemeIdentifier="DK"></Identification> </IdentificationDomainLocation> </ParentRelatedMeteringPoint-->
+                    </PayloadMasterDataMPEvent>
+                </DK_RequestUpdateMasterDataMeteringPoint>
+            </Payload>
+        </MessageContainer>
+    </SendMessageRequest>
+</SOAP-ENV:Body>

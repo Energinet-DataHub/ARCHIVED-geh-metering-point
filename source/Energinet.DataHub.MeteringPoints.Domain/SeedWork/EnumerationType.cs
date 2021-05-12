@@ -69,7 +69,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
         public static IEnumerable<T> GetAll<T>()
                    where T : EnumerationType
         {
-            var fields = typeof(T).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
+            var fields = typeof(T).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly);
 
             return fields.Select(f => f.GetValue(null)).Cast<T>();
         }
