@@ -45,12 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Repositories
         public async Task IntegrationEventRepositoryGetUnProcessedIntegrationEventMessageAsyncTest()
         {
             await using var context = new MeteringPointContext(_options);
-            context.Add(new OutboxMessage(
-                "CreateMeteringPointEventMessage",
-                "{\"Gsrn\":\"000000000\",\"MpType\":\"CreateMeteringPointEventMessage\",\"GridAccessProvider\":\"GridAccessProvider\",\"Child\":true,\"EnergySupplierCurrent\":\"EnergySupplierCurrent\"}",
-                OutboxMessageCategory.IntegrationEvent,
-                SystemClock.Instance.GetCurrentInstant(),
-                Guid.NewGuid()));
+            context.Add(CreateOutBoxMessage(Guid.NewGuid()));
 
             await context.SaveChangesAsync().ConfigureAwait(false);
 
@@ -66,13 +61,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Repositories
         {
             var guid = Guid.NewGuid();
             await using var context = new MeteringPointContext(_options);
-            context.Add(new OutboxMessage(
-                "CreateMeteringPointEventMessage",
-                "{\"Gsrn\":\"000000000\",\"MpType\":\"CreateMeteringPointEventMessage\",\"GridAccessProvider\":\"GridAccessProvider\",\"Child\":true,\"EnergySupplierCurrent\":\"EnergySupplierCurrent\"}",
-                OutboxMessageCategory.IntegrationEvent,
-                SystemClock.Instance.GetCurrentInstant(),
-                guid));
 
+            context.Add(CreateOutBoxMessage(guid));
             await context.SaveChangesAsync().ConfigureAwait(false);
 
             _integrationEventRepository = new IntegrationEventRepository(context, _jsonSerializer);
@@ -126,11 +116,19 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Repositories
         {
             await using var context = new MeteringPointContext(_options);
 
-            CreateMeteringPointEventMessage message = null;
-
             _integrationEventRepository = new IntegrationEventRepository(context, _jsonSerializer);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _integrationEventRepository.SaveIntegrationEventMessageToOutboxAsync(message).ConfigureAwait(false));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _integrationEventRepository.SaveIntegrationEventMessageToOutboxAsync((CreateMeteringPointEventMessage)null).ConfigureAwait(false));
+        }
+
+        private OutboxMessage CreateOutBoxMessage(Guid id)
+        {
+            return new OutboxMessage(
+                "CreateMeteringPointEventMessage",
+                "{\"Gsrn\":\"000000000\",\"MpType\":\"CreateMeteringPointEventMessage\",\"GridAccessProvider\":\"GridAccessProvider\",\"Child\":true,\"EnergySupplierCurrent\":\"EnergySupplierCurrent\"}",
+                OutboxMessageCategory.IntegrationEvent,
+                SystemClock.Instance.GetCurrentInstant(),
+                id);
         }
     }
 }

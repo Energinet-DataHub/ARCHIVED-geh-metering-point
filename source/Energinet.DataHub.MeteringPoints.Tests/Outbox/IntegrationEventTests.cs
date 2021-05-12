@@ -47,7 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Outbox
         private readonly Mock<IMediator> _mediatorMock;
         private readonly Mock<IJsonSerializer> _jsonSerializerMock;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-        private readonly OutboxMessage _outboxMessage;
+        private readonly OutboxMessage _outboxMessageNoIdCTOR;
 
         public IntegrationEventTests()
         {
@@ -57,7 +57,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Outbox
             _jsonSerializerMock = new Mock<IJsonSerializer>();
             _unitOfWorkMock = new Mock<IUnitOfWork>();
 
-            _outboxMessage = new(
+            _outboxMessageNoIdCTOR = new(
                 "CreateMeteringPointEventMessage",
                 "{\"Gsrn\":\"98271293\",\"MpType\":\"CreateMeteringPointEventMessage\",\"GridAccessProvider\":\"GridAccessProvider\",\"Child\":true,\"EnergySupplierCurrent\":\"EnergySupplierCurrent\"}",
                 OutboxMessageCategory.IntegrationEvent,
@@ -97,12 +97,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Outbox
         }
 
         [Fact]
+        public async Task GetUnProcessedIntegrationEventMessageAsyncTest()
+        {
+            var x = await _integrationEventRepositoryMock.Object.GetUnProcessedIntegrationEventMessageAsync().ConfigureAwait(false);
+
+            Assert.Equal("CreateMeteringPointEventMessage", x.Type);
+        }
+
+        [Fact]
         public void IntegrationEventTypeFactorySuccessTest()
         {
             IJsonSerializer jsonSerializer = new JsonSerializer();
             var parsedCommand = jsonSerializer.Deserialize(
-                                    _outboxMessage.Data,
-                                    IntegrationEventTypeFactory.GetType(_outboxMessage.Type));
+                                    _outboxMessageNoIdCTOR.Data,
+                                    IntegrationEventTypeFactory.GetType(_outboxMessageNoIdCTOR.Type));
 
             Assert.IsType<CreateMeteringPointEventMessage>(parsedCommand);
         }
@@ -112,19 +120,19 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Outbox
         {
             IJsonSerializer jsonSerializer = new JsonSerializer();
             Assert.Throws<ArgumentException>(() => jsonSerializer.Deserialize(
-                _outboxMessage.Data,
+                _outboxMessageNoIdCTOR.Data,
                 IntegrationEventTypeFactory.GetType(typeof(CreateMeteringPoint).ToString())));
         }
 
         [Fact]
         public void OutBoxMessageGettersSettersTest()
         {
-            _outboxMessage.ProcessedDate = SystemClock.Instance.GetCurrentInstant();
+            _outboxMessageNoIdCTOR.ProcessedDate = SystemClock.Instance.GetCurrentInstant();
 
-            Assert.IsType<Guid>(_outboxMessage.Id);
-            Assert.IsType<Instant>(_outboxMessage.CreationDate);
-            Assert.IsType<Instant>(_outboxMessage.ProcessedDate);
-            Assert.Equal(OutboxMessageCategory.IntegrationEvent, _outboxMessage.Category);
+            Assert.IsType<Guid>(_outboxMessageNoIdCTOR.Id);
+            Assert.IsType<Instant>(_outboxMessageNoIdCTOR.CreationDate);
+            Assert.IsType<Instant>(_outboxMessageNoIdCTOR.ProcessedDate);
+            Assert.Equal(OutboxMessageCategory.IntegrationEvent, _outboxMessageNoIdCTOR.Category);
         }
     }
 }
