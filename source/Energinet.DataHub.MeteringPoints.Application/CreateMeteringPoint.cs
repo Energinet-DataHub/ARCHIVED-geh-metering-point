@@ -31,16 +31,26 @@ namespace Energinet.DataHub.MeteringPoints.Application
 
         public int MaximumPower { get; set; }
 
-        public string MeteringGridAreaUsedDomainLocation { get; set; }
+        public string MeteringGridArea { get; set; }
 
-        public string PowerPlantDomainLocation { get; set; }
+        public string PowerPlant { get; set; }
 
         public string LocationDescription { get; set; }
 
-        public string IncludedProductCharacteristic { get; set; }
+        public string ProductType { get; set; }
 
         public Address InstallationLocationAddress { get; set; }
 
         public string ParentRelatedMeteringPoint { get; set; }
+
+        public string SettlementMethod { get; set; }
+
+        public string UnitType { get; set; }
+
+        public string DisconnectionType { get; set; }
+
+        public string OccurenceDate { get; set; }
+
+        public string MeterNumber { get; set; }
     }
 }
