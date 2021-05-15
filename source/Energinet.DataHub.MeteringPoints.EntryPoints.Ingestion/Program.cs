@@ -27,6 +27,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Polly;
 using SimpleInjector;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
@@ -71,6 +72,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 
             container.Register<MessageDispatcher, InternalDispatcher>();
             container.Register<InternalServiceBus>();
+            container.Register<IAsyncPolicy>(() => Policy.Handle<ServiceBusException>().RetryAsync(3));
+            container.Register<ServiceBusRetryDecorator>();
 
             var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING");
             var topic = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME");

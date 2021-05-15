@@ -23,6 +23,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Transport
     public abstract class Channel
     {
         /// <summary>
+        /// Write the <paramref name="data"/> to the channel
+        /// </summary>
+        /// <param name="data">data to write</param>
+        /// <param name="cancellationToken">cancellation token</param>
+        public abstract Task WriteAsync(byte[] data, CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Handle the flow of how the data is written to the channel
         /// This can be extended to handle lifetime events for a channel, Open, Close etc.
         /// </summary>
@@ -32,12 +39,5 @@ namespace Energinet.DataHub.MeteringPoints.Application.Transport
         {
             return WriteAsync(data, cancellationToken);
         }
-
-        /// <summary>
-        /// Write the <paramref name="data"/> to the channel
-        /// </summary>
-        /// <param name="data">data to write</param>
-        /// <param name="cancellationToken">cancellation token</param>
-        protected abstract Task WriteAsync(byte[] data, CancellationToken cancellationToken = default);
     }
 }
