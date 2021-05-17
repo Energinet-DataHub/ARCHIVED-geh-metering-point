@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Validation;
-using Energinet.DataHub.MeteringPoints.Application.Validation.InputValidators;
+using Energinet.DataHub.MeteringPoints.Application.Authorization;
+using Energinet.DataHub.MeteringPoints.Application.Authorization.AuthorizationHandlers;
 using SimpleInjector;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure
@@ -22,10 +22,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure
     {
         public static void AddInputValidation(this Container container)
         {
-            container.Register(typeof(IValidator<,>), typeof(InputValidator<,>));
-            container.Collection.Register(typeof(IValidator<,>), new[]
+            container.Register(typeof(IAuthorizationHandler<,>), typeof(InputAuthorizationHandler<,>));
+            container.Collection.Register(typeof(IAuthorizationHandler<,>), new[]
             {
-                typeof(OccurenceDateInputValidation),
+                typeof(ExampleAuthorizationHandler),
             });
         }
     }
