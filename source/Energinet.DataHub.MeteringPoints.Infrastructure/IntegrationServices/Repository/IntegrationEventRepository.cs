@@ -59,10 +59,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Re
                 throw new ArgumentNullException(nameof(message));
             }
 
-            var messageType = message.GetType().Name;
+            var messageType = message.GetType().FullName;
             var data = _jsonSerializer.Serialize(message);
 
-            var outboxMessage = new OutboxMessage(messageType, data, OutboxMessageCategory.IntegrationEvent, SystemClock.Instance.GetCurrentInstant());
+            var outboxMessage = new OutboxMessage(messageType!, data, OutboxMessageCategory.IntegrationEvent, SystemClock.Instance.GetCurrentInstant());
             await _meteringPointContext.OutboxMessages.AddAsync(outboxMessage);
         }
     }
