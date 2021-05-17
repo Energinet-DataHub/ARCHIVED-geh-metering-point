@@ -25,7 +25,7 @@ on:
 env:
   ORGANISATION_NAME: endk
   PROJECT_NAME: 'mpoint${{ github.event.number }}'
-  RESOURCE_GROUP_NAME: rg-DataHub-SharedResources-U
+  RESOURCE_GROUP_NAME: rg-DataHub-Testing-U
   ENVIRONMENT_SHORT: u
 
 jobs:
