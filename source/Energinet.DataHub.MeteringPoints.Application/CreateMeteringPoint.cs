@@ -17,6 +17,7 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application
 {
+    #nullable disable // TODO: Once we re-visit the model, consider this disable again.
     public class CreateMeteringPoint : IRequest<CreateMeteringPointResult>, IOutboundMessage, IInboundMessage
     {
         public string GsrnNumber { get; set; }
@@ -53,4 +54,5 @@ namespace Energinet.DataHub.MeteringPoints.Application
 
         public string MeterNumber { get; set; }
     }
+    #nullable restore
 }
