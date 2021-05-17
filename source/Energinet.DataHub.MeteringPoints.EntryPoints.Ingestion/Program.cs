@@ -72,7 +72,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 
             container.Register<MessageDispatcher, InternalDispatcher>(Lifestyle.Scoped);
             container.Register<Channel, InternalServiceBus>(Lifestyle.Scoped);
-            container.Register<IChannelResiliencePolicy, RetryPolicyThreeTimes>(Lifestyle.Scoped);
+
+            var policyRetryCount = int.TryParse(Environment.GetEnvironmentVariable("INTERNAL_SERVICEBUS_RETRY_COUNT"), out var parsedRetryCount) ? parsedRetryCount : 0;
+            container.Register<IChannelResiliencePolicy>(() => new RetryNTimesPolicy(policyRetryCount), Lifestyle.Scoped);
             container.RegisterDecorator<Channel, ChannelResilienceDecorator>(Lifestyle.Scoped);
 
             var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING");

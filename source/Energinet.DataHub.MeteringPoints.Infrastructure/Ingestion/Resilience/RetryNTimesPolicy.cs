@@ -16,11 +16,11 @@ using Polly;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Resilience
 {
-    public class RetryPolicyThreeTimes : IChannelResiliencePolicy
+    public class RetryNTimesPolicy : IChannelResiliencePolicy
     {
-        public RetryPolicyThreeTimes()
+        public RetryNTimesPolicy(int retries)
         {
-            AsyncPolicy = Policy.Handle<Azure.Messaging.ServiceBus.ServiceBusException>().RetryAsync(3);
+            AsyncPolicy = Policy.Handle<Azure.Messaging.ServiceBus.ServiceBusException>().RetryAsync(retries);
         }
 
         public IAsyncPolicy AsyncPolicy { get; }
