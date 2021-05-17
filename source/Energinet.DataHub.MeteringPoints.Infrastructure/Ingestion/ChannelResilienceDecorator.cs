@@ -15,26 +15,26 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
-using Polly;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Resilience;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion
 {
-    public class ServiceBusRetryDecorator : Channel
+    public class ChannelResilienceDecorator : Channel
     {
-        private readonly InternalServiceBus _internalServiceBus;
-        private readonly IAsyncPolicy _retryPolicy;
+        private readonly Channel _channel;
+        private readonly IChannelResiliencePolicy _policy;
 
-        public ServiceBusRetryDecorator(InternalServiceBus internalServiceBus, IAsyncPolicy retryPolicy)
+        public ChannelResilienceDecorator(Channel internalServiceBus, IChannelResiliencePolicy policy)
         {
-            _internalServiceBus = internalServiceBus;
-            _retryPolicy = retryPolicy;
+            _channel = internalServiceBus;
+            _policy = policy;
         }
 
         public override async Task WriteAsync(byte[] data, CancellationToken cancellationToken = default)
         {
-            await _retryPolicy.ExecuteAsync(async () =>
+            await _policy.AsyncPolicy.ExecuteAsync(async () =>
             {
-                await _internalServiceBus.WriteAsync(data, cancellationToken);
+                await _channel.WriteAsync(data, cancellationToken);
             });
         }
     }

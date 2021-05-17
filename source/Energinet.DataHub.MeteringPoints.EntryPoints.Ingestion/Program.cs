@@ -22,12 +22,12 @@ using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Resilience;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using Polly;
 using SimpleInjector;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
@@ -70,10 +70,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             container.Register<HttpUserContextMiddleware>(Lifestyle.Scoped);
             container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
 
-            container.Register<MessageDispatcher, InternalDispatcher>();
-            container.Register<InternalServiceBus>();
-            container.Register<IAsyncPolicy>(() => Policy.Handle<ServiceBusException>().RetryAsync(3));
-            container.Register<ServiceBusRetryDecorator>();
+            container.Register<MessageDispatcher, InternalDispatcher>(Lifestyle.Scoped);
+            container.Register<Channel, InternalServiceBus>(Lifestyle.Scoped);
+            container.Register<IChannelResiliencePolicy, RetryPolicyThreeTimes>(Lifestyle.Scoped);
+            container.RegisterDecorator<Channel, ChannelResilienceDecorator>(Lifestyle.Scoped);
 
             var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING");
             var topic = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME");
