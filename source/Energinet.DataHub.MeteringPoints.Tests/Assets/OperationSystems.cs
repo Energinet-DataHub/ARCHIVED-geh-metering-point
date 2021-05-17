@@ -12,18 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+
+namespace Energinet.DataHub.MeteringPoints.Tests.Assets
 {
-    public class Address
+    internal sealed class OperationSystems : EnumerationType
     {
-        public string StreetName { get; set; }
+        public static readonly OperationSystems Windows = new(1, nameof(Windows));
+        public static readonly OperationSystems Linux = new(2, nameof(Linux));
+        public static readonly OperationSystems MacOs = new(3, nameof(MacOs));
 
-        public string PostCode { get; set; }
-
-        public string CityName { get; set; }
-
-        public string CountryCode { get; set; }
-
-        public bool IsWashable { get; set; }
+        private OperationSystems(int id, string name)
+            : base(id, name)
+        {
+        }
     }
 }

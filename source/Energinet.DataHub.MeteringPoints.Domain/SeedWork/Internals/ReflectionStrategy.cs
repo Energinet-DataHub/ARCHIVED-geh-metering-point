@@ -12,18 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application
+using System.Collections.Generic;
+
+namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals
 {
-    public class Address
+    public abstract class ReflectionStrategy
     {
-        public string StreetName { get; set; }
+        internal abstract IEnumerable<T> GetAll<T>()
+            where T : EnumerationType;
 
-        public string PostCode { get; set; }
+        internal abstract T FromName<T>(string name)
+            where T : EnumerationType;
 
-        public string CityName { get; set; }
-
-        public string CountryCode { get; set; }
-
-        public bool IsWashable { get; set; }
+        internal abstract T FromValue<T>(int value)
+            where T : EnumerationType;
     }
 }

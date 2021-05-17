@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Application.Validation
 {
-    public class Address
+    public class ValidationError
     {
-        public string StreetName { get; set; }
+        public ValidationError(string key, string message)
+        {
+            Key = key;
+            Message = message;
+        }
 
-        public string PostCode { get; set; }
+        public string Key { get; }
 
-        public string CityName { get; set; }
-
-        public string CountryCode { get; set; }
-
-        public bool IsWashable { get; set; }
+        public string Message { get; }
     }
 }

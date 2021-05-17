@@ -12,18 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application
+using System;
+using BenchmarkDotNet.Running;
+
+namespace Energinet.DataHub.MeteringPoints.Benchmarks
 {
-    public class Address
+    internal static class Program
     {
-        public string StreetName { get; set; }
-
-        public string PostCode { get; set; }
-
-        public string CityName { get; set; }
-
-        public string CountryCode { get; set; }
-
-        public bool IsWashable { get; set; }
+        private static void Main(string[] args)
+        {
+            _ = BenchmarkRunner.Run<ReflectionStrategyBenchmarks>();
+        }
     }
 }

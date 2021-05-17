@@ -12,18 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application
+using System.Linq;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Tests.Assets;
+using Xunit;
+using Xunit.Categories;
+
+namespace Energinet.DataHub.MeteringPoints.Tests.EnumerationTypeTest
 {
-    public class Address
+    [UnitTest]
+    public class InternalFieldsTests
     {
-        public string StreetName { get; set; }
+        [Fact]
+        public void Given_internal_enumeration_When_lookup_by_name_Then_value_is_returned()
+        {
+            var fields = EnumerationType.GetAll<DocumentTypes>().ToArray();
 
-        public string PostCode { get; set; }
-
-        public string CityName { get; set; }
-
-        public string CountryCode { get; set; }
-
-        public bool IsWashable { get; set; }
+            Assert.NotEmpty(fields);
+            Assert.Contains(DocumentTypes.Lens, fields);
+        }
     }
 }

@@ -14,16 +14,35 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Validation;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure
 {
     public class InputValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : notnull
+        where TResponse : new()
     {
+        private readonly IValidator<TRequest, TResponse> _validator;
+
+        public InputValidationBehavior(IValidator<TRequest, TResponse> validator)
+        {
+            _validator = validator;
+        }
+
         public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            throw new System.NotImplementedException();
+            var validationResult = _validator.Validate(request);
+
+            if (validationResult.Success)
+            {
+                return next();
+            }
+
+            // TODO: Must be finalized when BusinessProcessResponder is implemented
+            // var result = BusinessProcessResult.Failed(new List<string>() {"Validation errors."}) as TResponse;
+            // _businessProcessResponder.RespondAsync(request, result);
+            return Task.FromResult(new TResponse());
         }
     }
 }
