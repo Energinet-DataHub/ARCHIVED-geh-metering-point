@@ -12,19 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Transport;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure
+namespace Energinet.DataHub.MeteringPoints.Application
 {
-    public class BusinessProcessResponderBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : notnull
-    {
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
+    public record CreateMeteringPointEventMessage(string Gsrn, string MpType, string GridAccessProvider, bool Child,
+        string EnergySupplierCurrent) : IOutboundMessage, IRequest;
 }

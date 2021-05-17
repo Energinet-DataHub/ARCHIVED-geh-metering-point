@@ -12,19 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers
 {
-    public class BusinessProcessResponderBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : notnull
-    {
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
+    // public record MeteringPointOutboxMessage(string Id, string Data, string Type, string Category, Instant CreationDate, Instant ProcessedDate);
 }

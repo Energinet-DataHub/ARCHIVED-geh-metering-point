@@ -13,18 +13,20 @@
 // limitations under the License.
 
 using System;
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+using Energinet.DataHub.MeteringPoints.Application;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers
 {
-    public class BusinessProcessResponderBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : notnull
+    public class IntegrationEventTypeFactory
     {
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public static Type GetType(string type)
         {
-            throw new System.NotImplementedException();
+            switch (type)
+            {
+                case nameof(CreateMeteringPointEventMessage):
+                    return typeof(CreateMeteringPointEventMessage);
+                default: throw new ArgumentException();
+            }
         }
     }
 }

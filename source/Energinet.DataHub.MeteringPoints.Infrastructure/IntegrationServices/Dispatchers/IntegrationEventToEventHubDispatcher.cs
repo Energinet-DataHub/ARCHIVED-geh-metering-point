@@ -12,19 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Channels;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers
 {
-    public class BusinessProcessResponderBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : notnull
+    public class IntegrationEventToEventHubDispatcher : MessageDispatcher
     {
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public IntegrationEventToEventHubDispatcher(MessageSerializer serializer, AzureEventHubChannel channel)
+            : base(serializer, channel)
         {
-            throw new System.NotImplementedException();
         }
     }
 }

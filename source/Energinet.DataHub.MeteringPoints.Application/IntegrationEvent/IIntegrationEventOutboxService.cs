@@ -12,19 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure
+namespace Energinet.DataHub.MeteringPoints.Application.IntegrationEvent
 {
-    public class BusinessProcessResponderBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : notnull
+    /// <summary>
+    /// Service to deliver events to the outbox following the outbox pattern
+    /// </summary>
+    public interface IIntegrationEventOutboxService
     {
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
-        {
-            throw new System.NotImplementedException();
-        }
+        /// <summary>
+        /// Sends the event to the outbox
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        Task SendEventToOutboxAsync();
     }
 }

@@ -15,16 +15,20 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
+using Energinet.DataHub.MeteringPoints.Application.Transport;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure
+namespace Energinet.DataHub.MeteringPoints.Tests.Send
 {
-    public class BusinessProcessResponderBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : notnull
+    public class InProcessChannel : Channel
     {
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        private byte[] _writtenBytes;
+
+        public byte[] GetWrittenBytes() => _writtenBytes ?? throw new InvalidOperationException("Write bytes before getting them.");
+
+        protected override async Task WriteAsync(byte[] data, CancellationToken cancellationToken = default)
         {
-            throw new System.NotImplementedException();
+            _writtenBytes = data;
+            await Task.CompletedTask.ConfigureAwait(false);
         }
     }
 }
