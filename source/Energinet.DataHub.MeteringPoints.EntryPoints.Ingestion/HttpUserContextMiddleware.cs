@@ -35,11 +35,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
-            _userContext.CurrentUser = new UserIdentity
-            {
-                // TODO: Update with a proper identity once we know how/what/when.
-                Id = "Replace me with an identity of the current user",
-            };
+            // TODO: Update with a proper identity once we know how/what/when.
+            _userContext.CurrentUser = new UserIdentity(Id: "Replace me with an identity of the current user");
 
             await next(context).ConfigureAwait(false);
         }

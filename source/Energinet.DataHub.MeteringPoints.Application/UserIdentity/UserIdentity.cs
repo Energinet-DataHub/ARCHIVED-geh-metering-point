@@ -17,11 +17,5 @@ namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
     /// <summary>
     /// User identity
     /// </summary>
-    public record UserIdentity
-    {
-        /// <summary>
-        /// Id for the given user
-        /// </summary>
-        public string Id { get; set; }
-    }
+    public record UserIdentity(string Id);
 }

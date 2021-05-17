@@ -41,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion
         {
             var message = new ServiceBusMessage(data);
             message.CorrelationId = _correlationContext.GetCorrelationId();
-            message.ApplicationProperties.Add(_userContext.Key, _userContext.CurrentUser.AsString());
+            message.ApplicationProperties.Add(_userContext.Key, _userContext.CurrentUser?.AsString() ?? string.Empty);
 
             await _sender.SendMessageAsync(message, cancellationToken).ConfigureAwait(false);
         }
