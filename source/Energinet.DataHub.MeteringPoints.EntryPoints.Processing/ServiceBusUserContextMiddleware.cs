@@ -56,10 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
                 // TODO: Consider throwing if UserIdentity is not found
                 // throw new InvalidOperationException();
-                var userIdentity = new UserIdentity
-                {
-                    Id = "Who?",
-                };
+                var userIdentity = new UserIdentity(Id: "Who?");
                 _userContext.CurrentUser = userIdentity;
             }
 

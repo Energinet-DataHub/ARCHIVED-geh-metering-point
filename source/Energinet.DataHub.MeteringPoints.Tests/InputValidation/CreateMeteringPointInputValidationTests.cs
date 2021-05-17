@@ -14,8 +14,8 @@
 
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application;
-using Energinet.DataHub.MeteringPoints.Application.Validation;
-using Energinet.DataHub.MeteringPoints.Application.Validation.InputValidators;
+using Energinet.DataHub.MeteringPoints.Application.Authorization;
+using Energinet.DataHub.MeteringPoints.Application.Authorization.AuthorizationHandlers;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
 using FluentAssertions;
 using SimpleInjector;
@@ -34,9 +34,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.InputValidation
 
             container.AddInputValidation();
 
-            var validators = container.GetAllInstances<IValidator<CreateMeteringPoint, CreateMeteringPointResult>>().Select(x => x.GetType());
+            var validators = container.GetAllInstances<IAuthorizationHandler<CreateMeteringPoint, CreateMeteringPointResult>>().Select(x => x.GetType());
 
-            var type = typeof(IValidator<CreateMeteringPoint, CreateMeteringPointResult>);
+            var type = typeof(IAuthorizationHandler<CreateMeteringPoint, CreateMeteringPointResult>);
             var types = type.Assembly
                 .GetTypes()
                 .Where(p => type.IsAssignableFrom(p));
@@ -55,7 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.InputValidation
                 OccurenceDate = occurenceDate,
             };
 
-            var validator = new OccurenceDateInputValidation();
+            var validator = new ExampleAuthorizationHandler();
             var validationResult = validator.Validate(createMeteringPoint);
 
             validationResult.Success.Should().Be(expectToSucceed);
