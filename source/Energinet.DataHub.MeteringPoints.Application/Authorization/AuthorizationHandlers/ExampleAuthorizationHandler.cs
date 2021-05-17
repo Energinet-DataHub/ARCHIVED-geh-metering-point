@@ -15,24 +15,24 @@
 using System;
 using System.Globalization;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.InputValidators
+namespace Energinet.DataHub.MeteringPoints.Application.Authorization.AuthorizationHandlers
 {
-    public class OccurenceDateInputValidation : IValidator<CreateMeteringPoint, CreateMeteringPointResult>
+    public class ExampleAuthorizationHandler : IAuthorizationHandler<CreateMeteringPoint, CreateMeteringPointResult>
     {
-        public ValidationResult Validate(CreateMeteringPoint command)
+        public AuthorizationResult Validate(CreateMeteringPoint command)
         {
             if (string.IsNullOrWhiteSpace(command.OccurenceDate))
             {
-                return ValidationResult.Error(nameof(command.OccurenceDate), "Field is mandatory");
+                return AuthorizationResult.Error(nameof(command.OccurenceDate), "Field is mandatory");
             }
 
             if (!IsValidFormat(command.OccurenceDate))
             {
-                return ValidationResult.Error(nameof(command.OccurenceDate), "Invalid date format");
+                return AuthorizationResult.Error(nameof(command.OccurenceDate), "Invalid date format");
             }
 
             // TODO: Add validation which checks that occurence date is within a valid range of dates, which is given by a system configuration not yet defined
-            return ValidationResult.Ok();
+            return AuthorizationResult.Ok();
         }
 
         private static bool IsValidFormat(string value)

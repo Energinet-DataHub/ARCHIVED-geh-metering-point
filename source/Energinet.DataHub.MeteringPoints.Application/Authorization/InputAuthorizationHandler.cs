@@ -16,19 +16,19 @@ using System.Collections.Generic;
 using System.Linq;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation
+namespace Energinet.DataHub.MeteringPoints.Application.Authorization
 {
-    public class InputValidator<TCommand, TResult> : IValidator<TCommand, TResult>
+    public class InputAuthorizationHandler<TCommand, TResult> : IAuthorizationHandler<TCommand, TResult>
         where TCommand : IRequest<TResult>
     {
-        private readonly List<IValidator<TCommand, TResult>> _validators;
+        private readonly List<IAuthorizationHandler<TCommand, TResult>> _validators;
 
-        public InputValidator(List<IValidator<TCommand, TResult>> validators)
+        public InputAuthorizationHandler(List<IAuthorizationHandler<TCommand, TResult>> validators)
         {
             _validators = validators;
         }
 
-        public ValidationResult Validate(TCommand command)
+        public AuthorizationResult Validate(TCommand command)
         {
             var validationErrors = _validators.SelectMany(x =>
             {
@@ -36,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation
                 return validationResult.Errors;
             }).ToList();
 
-            return new ValidationResult(validationErrors);
+            return new AuthorizationResult(validationErrors);
         }
     }
 }
