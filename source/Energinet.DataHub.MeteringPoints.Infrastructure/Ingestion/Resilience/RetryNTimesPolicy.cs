@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.Authorization
+using Polly;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Resilience
 {
-    public class ValidationError
+    public class RetryNTimesPolicy : IChannelResiliencePolicy
     {
-        public ValidationError(string key, string message)
+        public RetryNTimesPolicy(int retries)
         {
-            Key = key;
-            Message = message;
+            AsyncPolicy = Policy.Handle<Azure.Messaging.ServiceBus.ServiceBusException>().RetryAsync(retries);
         }
 
-        public string Key { get; }
-
-        public string Message { get; }
+        public IAsyncPolicy AsyncPolicy { get; }
     }
 }

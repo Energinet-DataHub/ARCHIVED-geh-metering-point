@@ -32,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure
 
         public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            var validationResult = _authorizationHandler.Validate(request);
+            var validationResult = _authorizationHandler.Authorize(request);
 
             if (validationResult.Success)
             {

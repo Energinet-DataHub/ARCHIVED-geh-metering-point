@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.Authorization
+using Polly;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Resilience
 {
     /// <summary>
-    /// Validator interface
+    /// Interface for Polly policies
     /// </summary>
-    public interface IAuthorizationHandler<in TCommand, out TResponse>
+    public interface IChannelResiliencePolicy
     {
         /// <summary>
-        /// Perform validation
+        /// Returns async policy
         /// </summary>
-        /// <returns>A <see cref="AuthorizationResult"/> representing the result of the asynchronous operation.</returns>
-        AuthorizationResult Authorize(TCommand command);
+        IAsyncPolicy AsyncPolicy { get; }
     }
 }

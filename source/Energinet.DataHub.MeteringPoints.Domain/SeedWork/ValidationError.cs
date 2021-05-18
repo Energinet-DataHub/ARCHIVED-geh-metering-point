@@ -12,17 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.Authorization
+using System;
+
+namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
 {
-    /// <summary>
-    /// Validator interface
-    /// </summary>
-    public interface IAuthorizationHandler<in TCommand, out TResponse>
+    public class ValidationError
     {
-        /// <summary>
-        /// Perform validation
-        /// </summary>
-        /// <returns>A <see cref="AuthorizationResult"/> representing the result of the asynchronous operation.</returns>
-        AuthorizationResult Authorize(TCommand command);
+        public ValidationError(string reason, Type rule)
+        {
+            Reason = reason;
+            Rule = rule;
+        }
+
+        public string Reason { get; }
+
+        public Type Rule { get; }
     }
 }

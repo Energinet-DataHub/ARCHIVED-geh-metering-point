@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Authorization
 {
@@ -38,11 +40,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Authorization
             return new();
         }
 
-        public static AuthorizationResult Error(string key, string description)
+        public static AuthorizationResult Error(string reason, Type type)
         {
             return new(new List<ValidationError>
             {
-                new(key, description),
+                new(reason, type),
             });
         }
     }

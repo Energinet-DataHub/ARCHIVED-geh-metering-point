@@ -12,17 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.Authorization
+using System;
+using System.Runtime.Serialization;
+
+namespace Energinet.DataHub.MeteringPoints.Domain
 {
-    /// <summary>
-    /// Validator interface
-    /// </summary>
-    public interface IAuthorizationHandler<in TCommand, out TResponse>
+    public class BusinessRuleException : Exception
     {
-        /// <summary>
-        /// Perform validation
-        /// </summary>
-        /// <returns>A <see cref="AuthorizationResult"/> representing the result of the asynchronous operation.</returns>
-        AuthorizationResult Authorize(TCommand command);
+        public BusinessRuleException()
+        {
+        }
+
+        public BusinessRuleException(string? message)
+            : base(message)
+        {
+        }
+
+        public BusinessRuleException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+
+        protected BusinessRuleException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
     }
 }

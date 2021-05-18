@@ -12,18 +12,50 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using FluentValidation;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure
 {
     public class InputValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : notnull
+        where TRequest : IBusinessRequest
+        where TResponse : BusinessProcessResult
     {
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        private readonly IValidator<TRequest> _validator;
+        private readonly IBusinessProcessResponder<TRequest> _businessProcessResponder;
+
+        public InputValidationBehavior(IValidator<TRequest> validator, IBusinessProcessResponder<TRequest> businessProcessResponder)
         {
-            throw new System.NotImplementedException();
+            _validator = validator;
+            _businessProcessResponder = businessProcessResponder ?? throw new ArgumentNullException(nameof(businessProcessResponder));
+        }
+
+        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (next == null) throw new ArgumentNullException(nameof(next));
+
+            var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+            if (!validationResult.IsValid)
+            {
+                var validationErrors = validationResult
+                    .Errors
+                    .Select(error => (ValidationError)error.CustomState)
+                    .ToList()
+                    .AsReadOnly();
+
+                var result = new BusinessProcessResult(request.TransactionId, validationErrors);
+                await _businessProcessResponder.RespondAsync(request, result).ConfigureAwait(false);
+                return (TResponse)result;
+            }
+
+            return await next().ConfigureAwait(false);
         }
     }
 }

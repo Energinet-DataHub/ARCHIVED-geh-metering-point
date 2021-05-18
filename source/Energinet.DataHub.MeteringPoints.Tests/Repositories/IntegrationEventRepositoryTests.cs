@@ -83,7 +83,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Repositories
             await using var context = new MeteringPointContext(_options);
 
             CreateMeteringPointEventMessage message = new(
-                "12345678",
+                "571234567891234605",
                 "CreateMeteringPointEventMessage",
                 "GridAccessProvider",
                 true,

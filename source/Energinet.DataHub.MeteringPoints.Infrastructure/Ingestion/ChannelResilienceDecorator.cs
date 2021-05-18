@@ -12,23 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Resilience;
 
-namespace Energinet.DataHub.MeteringPoints.Tests.Send
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion
 {
-    public class InProcessChannel : Channel
+    public class ChannelResilienceDecorator : Channel
     {
-        private byte[] _writtenBytes;
+        private readonly Channel _channel;
+        private readonly IChannelResiliencePolicy _policy;
 
-        public byte[] GetWrittenBytes() => _writtenBytes ?? throw new InvalidOperationException("Write bytes before getting them.");
+        public ChannelResilienceDecorator(Channel internalServiceBus, IChannelResiliencePolicy policy)
+        {
+            _channel = internalServiceBus;
+            _policy = policy;
+        }
 
         public override async Task WriteAsync(byte[] data, CancellationToken cancellationToken = default)
         {
-            _writtenBytes = data;
-            await Task.CompletedTask.ConfigureAwait(false);
+            await _policy.AsyncPolicy.ExecuteAsync(async () =>
+            {
+                await _channel.WriteAsync(data, cancellationToken);
+            });
         }
     }
 }

@@ -13,22 +13,29 @@
 // limitations under the License.
 
 using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Transport;
+using System.Runtime.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Tests.Send
+namespace Energinet.DataHub.MeteringPoints.Domain
 {
-    public class InProcessChannel : Channel
+    public class InvalidMeteringPointIdRuleException : BusinessRuleException
     {
-        private byte[] _writtenBytes;
-
-        public byte[] GetWrittenBytes() => _writtenBytes ?? throw new InvalidOperationException("Write bytes before getting them.");
-
-        public override async Task WriteAsync(byte[] data, CancellationToken cancellationToken = default)
+        public InvalidMeteringPointIdRuleException()
         {
-            _writtenBytes = data;
-            await Task.CompletedTask.ConfigureAwait(false);
+        }
+
+        public InvalidMeteringPointIdRuleException(string? message)
+            : base(message)
+        {
+        }
+
+        public InvalidMeteringPointIdRuleException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+
+        protected InvalidMeteringPointIdRuleException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
         }
     }
 }
