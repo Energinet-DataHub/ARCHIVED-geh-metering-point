@@ -15,16 +15,16 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation
+namespace Energinet.DataHub.MeteringPoints.Application.Authorization
 {
-    public class ValidationResult
+    public class AuthorizationResult
     {
-        public ValidationResult(List<ValidationError> errors)
+        public AuthorizationResult(List<ValidationError> errors)
         {
             Errors = errors;
         }
 
-        public ValidationResult()
+        public AuthorizationResult()
         {
             Errors = new List<ValidationError>();
         }
@@ -33,12 +33,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation
 
         public bool Success => !Errors.Any();
 
-        public static ValidationResult Ok()
+        public static AuthorizationResult Ok()
         {
             return new();
         }
 
-        public static ValidationResult Error(string key, string description)
+        public static AuthorizationResult Error(string key, string description)
         {
             return new(new List<ValidationError>
             {
