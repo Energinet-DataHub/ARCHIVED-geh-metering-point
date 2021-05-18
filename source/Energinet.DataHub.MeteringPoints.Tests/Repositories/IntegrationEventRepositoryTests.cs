@@ -24,9 +24,11 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;
+using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Repositories
 {
+    [UnitTest]
     public class IntegrationEventRepositoryTests
     {
         private readonly DbContextOptions<MeteringPointContext> _options;
