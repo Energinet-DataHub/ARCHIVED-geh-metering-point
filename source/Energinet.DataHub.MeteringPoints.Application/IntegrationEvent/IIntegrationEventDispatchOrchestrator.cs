@@ -12,19 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Application.IntegrationEvent
 {
-    public class CreateMeteringPointHandler : IRequestHandler<CreateMeteringPoint, CreateMeteringPointResult>
+    /// <summary>
+    /// Interface for the integration event dispatch orchestrator
+    /// </summary>
+    public interface IIntegrationEventDispatchOrchestrator
     {
-        public Task<CreateMeteringPointResult> Handle(
-            CreateMeteringPoint request,
-            CancellationToken cancellationToken)
-        {
-            return Task.FromResult(new CreateMeteringPointResult());
-        }
+        /// <summary>
+        /// Orchestrate the events to be dispatched
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        Task ProcessEventOrchestratorAsync();
     }
 }

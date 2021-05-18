@@ -12,19 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+using Polly;
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Resilience
 {
-    public class CreateMeteringPointHandler : IRequestHandler<CreateMeteringPoint, CreateMeteringPointResult>
+    public class RetryNTimesPolicy : IChannelResiliencePolicy
     {
-        public Task<CreateMeteringPointResult> Handle(
-            CreateMeteringPoint request,
-            CancellationToken cancellationToken)
+        public RetryNTimesPolicy(int retries)
         {
-            return Task.FromResult(new CreateMeteringPointResult());
+            AsyncPolicy = Policy.Handle<Azure.Messaging.ServiceBus.ServiceBusException>().RetryAsync(retries);
         }
+
+        public IAsyncPolicy AsyncPolicy { get; }
     }
 }

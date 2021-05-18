@@ -12,19 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
+using Energinet.DataHub.MeteringPoints.Application.Transport;
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Tests.Send
 {
-    public class CreateMeteringPointHandler : IRequestHandler<CreateMeteringPoint, CreateMeteringPointResult>
+    public class InProcessChannel : Channel
     {
-        public Task<CreateMeteringPointResult> Handle(
-            CreateMeteringPoint request,
-            CancellationToken cancellationToken)
+        private byte[] _writtenBytes;
+
+        public byte[] GetWrittenBytes() => _writtenBytes ?? throw new InvalidOperationException("Write bytes before getting them.");
+
+        public override async Task WriteAsync(byte[] data, CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(new CreateMeteringPointResult());
+            _writtenBytes = data;
+            await Task.CompletedTask.ConfigureAwait(false);
         }
     }
 }

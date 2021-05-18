@@ -42,20 +42,14 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
-            // TODO: Fetch actual user identity from context
-            if (context.BindingContext.BindingData.TryGetValue("ThisKeyDoesntExist", out var userPropertiesObject))
+            if (context.BindingContext.BindingData.TryGetValue("UserProperties", out var userPropertiesObject) && userPropertiesObject != null)
             {
-                // TODO: Set via factory
-                // _userContext.CurrentUser = _userIdentityFactory.FromString(...);
+                _userContext.CurrentUser = _userIdentityFactory.FromDictionaryString(userPropertiesObject as string ?? string.Empty, _userContext.Key);
             }
             else
             {
                 _logger.LogWarning("UserIdentity not found for invocation: {invocationId}", context.InvocationId);
-
-                // TODO: Consider throwing if UserIdentity is not found
-                // throw new InvalidOperationException();
-                var userIdentity = new UserIdentity(Id: "Who?");
-                _userContext.CurrentUser = userIdentity;
+                throw new InvalidOperationException();
             }
 
             await next(context).ConfigureAwait(false);

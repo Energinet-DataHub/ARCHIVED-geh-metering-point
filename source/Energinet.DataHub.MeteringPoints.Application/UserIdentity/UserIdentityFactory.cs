@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 
 namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
 {
@@ -20,8 +21,21 @@ namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
     {
         public UserIdentity FromString(string userIdentity)
         {
-            if (userIdentity == null) throw new ArgumentNullException(nameof(userIdentity));
-            return System.Text.Json.JsonSerializer.Deserialize<UserIdentity>(userIdentity)!;
+            if (string.IsNullOrWhiteSpace(userIdentity)) throw new ArgumentNullException(nameof(userIdentity));
+            return System.Text.Json.JsonSerializer.Deserialize<UserIdentity>(userIdentity) ?? throw new System.Text.Json.JsonException(nameof(userIdentity));
+        }
+
+        public UserIdentity FromDictionaryString(string inputText, string propertyKey)
+        {
+            if (string.IsNullOrWhiteSpace(inputText)) throw new ArgumentNullException(nameof(inputText));
+            if (string.IsNullOrWhiteSpace(propertyKey)) throw new ArgumentNullException(nameof(propertyKey));
+
+            var inputJsonDocument = System.Text.Json.JsonDocument.Parse(inputText);
+            var resultJsonProperty = inputJsonDocument.RootElement
+                .EnumerateObject()
+                .FirstOrDefault(e => e.Name.Equals(propertyKey));
+
+            return FromString(resultJsonProperty.Value.ToString() ?? string.Empty);
         }
     }
 }

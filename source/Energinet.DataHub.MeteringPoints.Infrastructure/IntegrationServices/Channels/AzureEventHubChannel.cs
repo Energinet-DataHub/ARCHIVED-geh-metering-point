@@ -12,23 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Azure.Messaging.EventHubs;
+using Azure.Messaging.EventHubs.Producer;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Send
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Channels
 {
-    public class InProcessChannel : Channel
+    public sealed class AzureEventHubChannel : Channel
     {
-        private byte[] _writtenBytes;
+        private readonly EventHubProducerClient _client;
 
-        public byte[] GetWrittenBytes() => _writtenBytes ?? throw new InvalidOperationException("Write bytes before getting them.");
+        public AzureEventHubChannel(EventHubProducerClient eventHubProducerClient)
+        {
+            _client = eventHubProducerClient;
+        }
 
         public override async Task WriteAsync(byte[] data, CancellationToken cancellationToken = default)
         {
-            _writtenBytes = data;
-            await Task.CompletedTask.ConfigureAwait(false);
+            using var eventBatch = await _client.CreateBatchAsync(cancellationToken).ConfigureAwait(false);
+            eventBatch.TryAdd(new EventData(data));
+            await _client.SendAsync(eventBatch, cancellationToken).ConfigureAwait(false);
         }
     }
 }

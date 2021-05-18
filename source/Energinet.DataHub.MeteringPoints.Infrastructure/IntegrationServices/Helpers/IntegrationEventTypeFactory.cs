@@ -12,19 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+using System;
+using Energinet.DataHub.MeteringPoints.Application;
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers
 {
-    public class CreateMeteringPointHandler : IRequestHandler<CreateMeteringPoint, CreateMeteringPointResult>
+    public class IntegrationEventTypeFactory
     {
-        public Task<CreateMeteringPointResult> Handle(
-            CreateMeteringPoint request,
-            CancellationToken cancellationToken)
+        public static Type GetType(string type)
         {
-            return Task.FromResult(new CreateMeteringPointResult());
+            switch (type)
+            {
+                case nameof(CreateMeteringPointEventMessage):
+                    return typeof(CreateMeteringPointEventMessage);
+                default: throw new ArgumentException();
+            }
         }
     }
 }
