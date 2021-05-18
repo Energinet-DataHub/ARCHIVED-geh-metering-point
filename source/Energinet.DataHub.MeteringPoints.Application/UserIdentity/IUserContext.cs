@@ -15,14 +15,14 @@
 namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
 {
     /// <summary>
-    /// Context for the current scope identified by a correlation id.
+    /// Context for the current user.
     /// </summary>
     public interface IUserContext
     {
         /// <summary>
-        /// Get the current correlation id.
+        /// Get the current user.
         /// </summary>
-        public UserIdentity CurrentUser { get; set; }
+        public UserIdentity? CurrentUser { get; set; }
 
         /// <summary>
         /// Key to be used when storing identity in property collections.
