@@ -28,11 +28,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Authorization
             _validators = validators;
         }
 
-        public AuthorizationResult Validate(TCommand command)
+        public AuthorizationResult Authorize(TCommand command)
         {
             var validationErrors = _validators.SelectMany(x =>
             {
-                var validationResult = x.Validate(command);
+                var validationResult = x.Authorize(command);
                 return validationResult.Errors;
             }).ToList();
 

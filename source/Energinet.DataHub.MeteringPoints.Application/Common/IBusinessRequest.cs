@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.Authorization
+using MediatR;
+
+namespace Energinet.DataHub.MeteringPoints.Application.Common
 {
     /// <summary>
-    /// Validator interface
+    /// Request for starting a business process
     /// </summary>
-    public interface IAuthorizationHandler<in TCommand, out TResponse>
+    public interface IBusinessRequest : IRequest<BusinessProcessResult>
     {
         /// <summary>
-        /// Perform validation
+        /// Business process transaction id
         /// </summary>
-        /// <returns>A <see cref="AuthorizationResult"/> representing the result of the asynchronous operation.</returns>
-        AuthorizationResult Authorize(TCommand command);
+        string TransactionId { get; }
     }
 }

@@ -12,17 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.Authorization
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
+using FluentValidation;
+
+namespace Energinet.DataHub.MeteringPoints.Application.Validation
 {
-    /// <summary>
-    /// Validator interface
-    /// </summary>
-    public interface IAuthorizationHandler<in TCommand, out TResponse>
+    public class CreateMeteringPointRuleSet : AbstractValidator<CreateMeteringPoint>
     {
-        /// <summary>
-        /// Perform validation
-        /// </summary>
-        /// <returns>A <see cref="AuthorizationResult"/> representing the result of the asynchronous operation.</returns>
-        AuthorizationResult Authorize(TCommand command);
+        public CreateMeteringPointRuleSet()
+        {
+            RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberMustBeValidRule());
+        }
     }
 }

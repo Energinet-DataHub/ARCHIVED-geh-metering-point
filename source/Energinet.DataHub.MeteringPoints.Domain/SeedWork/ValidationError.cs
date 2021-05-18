@@ -12,18 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.Authorization
+using System;
+
+namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
 {
     public class ValidationError
     {
-        public ValidationError(string key, string message)
+        public ValidationError(string reason, Type rule)
         {
-            Key = key;
-            Message = message;
+            Reason = reason;
+            Rule = rule;
         }
 
-        public string Key { get; }
+        public string Reason { get; }
 
-        public string Message { get; }
+        public Type Rule { get; }
     }
 }
