@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 
 namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
 {

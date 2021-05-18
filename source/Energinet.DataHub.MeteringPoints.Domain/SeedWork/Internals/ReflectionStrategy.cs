@@ -12,12 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
-{
-    public class UserContext : IUserContext
-    {
-        public UserIdentity? CurrentUser { get; set; }
+using System.Collections.Generic;
 
-        public string Key => "geh_userIdentity";
+namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals
+{
+    public abstract class ReflectionStrategy
+    {
+        internal abstract IEnumerable<T> GetAll<T>()
+            where T : EnumerationType;
+
+        internal abstract T FromName<T>(string name)
+            where T : EnumerationType;
+
+        internal abstract T FromValue<T>(int value)
+            where T : EnumerationType;
     }
 }

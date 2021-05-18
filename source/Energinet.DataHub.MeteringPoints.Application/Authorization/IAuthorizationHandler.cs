@@ -12,12 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
+namespace Energinet.DataHub.MeteringPoints.Application.Authorization
 {
-    public class UserContext : IUserContext
+    /// <summary>
+    /// Validator interface
+    /// </summary>
+    public interface IAuthorizationHandler<in TCommand, out TResponse>
     {
-        public UserIdentity? CurrentUser { get; set; }
-
-        public string Key => "geh_userIdentity";
+        /// <summary>
+        /// Perform validation
+        /// </summary>
+        /// <returns>A <see cref="AuthorizationResult"/> representing the result of the asynchronous operation.</returns>
+        AuthorizationResult Validate(TCommand command);
     }
 }

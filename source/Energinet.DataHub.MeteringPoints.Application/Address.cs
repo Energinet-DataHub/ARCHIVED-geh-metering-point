@@ -14,10 +14,18 @@
 
 namespace Energinet.DataHub.MeteringPoints.Application
 {
+    #nullable disable // TODO: Once we re-visit the model, consider this disable again.
     public class Address
     {
         public string StreetName { get; set; }
 
+        public string PostCode { get; set; }
+
+        public string CityName { get; set; }
+
+        public string CountryCode { get; set; }
+
         public bool IsWashable { get; set; }
     }
+    #nullable restore
 }

@@ -12,12 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
+namespace Energinet.DataHub.MeteringPoints.Application.Authorization
 {
-    public class UserContext : IUserContext
+    public class ValidationError
     {
-        public UserIdentity? CurrentUser { get; set; }
+        public ValidationError(string key, string message)
+        {
+            Key = key;
+            Message = message;
+        }
 
-        public string Key => "geh_userIdentity";
+        public string Key { get; }
+
+        public string Message { get; }
     }
 }

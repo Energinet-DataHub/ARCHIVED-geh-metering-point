@@ -14,16 +14,35 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Authorization;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure
 {
     public class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : notnull
+        where TResponse : new()
     {
+        private readonly IAuthorizationHandler<TRequest, TResponse> _authorizationHandler;
+
+        public AuthorizationBehavior(IAuthorizationHandler<TRequest, TResponse> authorizationHandler)
+        {
+            _authorizationHandler = authorizationHandler;
+        }
+
         public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            throw new System.NotImplementedException();
+            var validationResult = _authorizationHandler.Validate(request);
+
+            if (validationResult.Success)
+            {
+                return next();
+            }
+
+            // TODO: Must be finalized when BusinessProcessResponder is implemented
+            // var result = BusinessProcessResult.Failed(new List<string>() {"Validation errors."}) as TResponse;
+            // _businessProcessResponder.RespondAsync(request, result);
+            return Task.FromResult(new TResponse());
         }
     }
 }

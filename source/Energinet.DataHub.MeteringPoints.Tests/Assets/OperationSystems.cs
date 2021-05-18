@@ -12,12 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
-{
-    public class UserContext : IUserContext
-    {
-        public UserIdentity? CurrentUser { get; set; }
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-        public string Key => "geh_userIdentity";
+namespace Energinet.DataHub.MeteringPoints.Tests.Assets
+{
+    internal sealed class OperationSystems : EnumerationType
+    {
+        public static readonly OperationSystems Windows = new(1, nameof(Windows));
+        public static readonly OperationSystems Linux = new(2, nameof(Linux));
+        public static readonly OperationSystems MacOs = new(3, nameof(MacOs));
+
+        private OperationSystems(int id, string name)
+            : base(id, name)
+        {
+        }
     }
 }

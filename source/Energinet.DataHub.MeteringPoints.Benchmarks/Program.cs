@@ -12,12 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
-{
-    public class UserContext : IUserContext
-    {
-        public UserIdentity? CurrentUser { get; set; }
+using System;
+using BenchmarkDotNet.Running;
 
-        public string Key => "geh_userIdentity";
+namespace Energinet.DataHub.MeteringPoints.Benchmarks
+{
+    internal static class Program
+    {
+        private static void Main(string[] args)
+        {
+            _ = BenchmarkRunner.Run<ReflectionStrategyBenchmarks>();
+        }
     }
 }
