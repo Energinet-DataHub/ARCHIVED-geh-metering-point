@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 
 namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
 {
@@ -21,7 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
         public UserIdentity FromString(string userIdentity)
         {
             if (string.IsNullOrWhiteSpace(userIdentity)) throw new ArgumentNullException(nameof(userIdentity));
-            return System.Text.Json.JsonSerializer.Deserialize<UserIdentity>(userIdentity);
+            return System.Text.Json.JsonSerializer.Deserialize<UserIdentity>(userIdentity) ?? throw new Exception("Parse error");
         }
 
         public UserIdentity FromDictionaryString(string inputText, string propertyKey)
@@ -34,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
                 .EnumerateObject()
                 .FirstOrDefault(e => e.Name.Equals(propertyKey));
 
-            return FromString(resultJsonProperty.Value.ToString());
+            return FromString(resultJsonProperty.Value.ToString() ?? string.Empty);
         }
     }
 }
