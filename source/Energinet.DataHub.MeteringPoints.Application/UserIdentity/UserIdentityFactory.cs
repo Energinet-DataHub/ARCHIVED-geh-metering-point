@@ -22,7 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
         public UserIdentity FromString(string userIdentity)
         {
             if (string.IsNullOrWhiteSpace(userIdentity)) throw new ArgumentNullException(nameof(userIdentity));
-            return System.Text.Json.JsonSerializer.Deserialize<UserIdentity>(userIdentity) ?? throw new Exception("Parse error");
+            return System.Text.Json.JsonSerializer.Deserialize<UserIdentity>(userIdentity) ?? throw new System.Text.Json.JsonException(nameof(userIdentity));
         }
 
         public UserIdentity FromDictionaryString(string inputText, string propertyKey)
