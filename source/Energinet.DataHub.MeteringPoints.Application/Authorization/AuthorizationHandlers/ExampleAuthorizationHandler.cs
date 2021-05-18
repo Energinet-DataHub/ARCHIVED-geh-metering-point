@@ -19,25 +19,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Authorization.Authorizati
 {
     public class ExampleAuthorizationHandler : IAuthorizationHandler<CreateMeteringPoint, CreateMeteringPointResult>
     {
-        public AuthorizationResult Validate(CreateMeteringPoint command)
+        public AuthorizationResult Authorize(CreateMeteringPoint command)
         {
-            if (string.IsNullOrWhiteSpace(command.OccurenceDate))
-            {
-                return AuthorizationResult.Error(nameof(command.OccurenceDate), "Field is mandatory");
-            }
-
-            if (!IsValidFormat(command.OccurenceDate))
-            {
-                return AuthorizationResult.Error(nameof(command.OccurenceDate), "Invalid date format");
-            }
-
-            // TODO: Add validation which checks that occurence date is within a valid range of dates, which is given by a system configuration not yet defined
+            // if (!IsValidFormat(command.OccurenceDate))
+            // {
+            //     return AuthorizationResult.Error(nameof(command.OccurenceDate), GetType());
+            // }
             return AuthorizationResult.Ok();
-        }
-
-        private static bool IsValidFormat(string value)
-        {
-            return DateTime.TryParseExact(value, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
         }
     }
 }
