@@ -29,7 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Ch
             _client = eventHubProducerClient;
         }
 
-        protected override async Task WriteAsync(byte[] data, CancellationToken cancellationToken = default)
+        public override async Task WriteAsync(byte[] data, CancellationToken cancellationToken = default)
         {
             using var eventBatch = await _client.CreateBatchAsync(cancellationToken).ConfigureAwait(false);
             eventBatch.TryAdd(new EventData(data));
