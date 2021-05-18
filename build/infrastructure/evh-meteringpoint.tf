@@ -14,18 +14,18 @@
 module "evhnm_meteringpoint" {
   source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git///event-hub-namespace"
   name                      = "evhnm-meteringpoint-${var.organisation}-${var.environment}"
-  resource_group_name       = data.azurerm_resource_group.greenenergyhub.name
-  location                  = data.azurerm_resource_group.greenenergyhub.location
+  resource_group_name       = data.azurerm_resource_group.main.name
+  location                  = data.azurerm_resource_group.main.location
   sku                       = "Standard"
   capacity                  = 1
-  tags                      = data.azurerm_resource_group.greenenergyhub.tags
+  tags                      = data.azurerm_resource_group.main.tags
 }
 
 module "evh_meteringpoint" {
   source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git///event-hub"
   name                      = "evh-meteringpoint"
   namespace_name            = module.evhnm_meteringpoint.name
-  resource_group_name       = data.azurerm_resource_group.greenenergyhub.name
+  resource_group_name       = data.azurerm_resource_group.main.name
   partition_count           = 32
   message_retention         = 1
   dependencies              = [module.evhnm_meteringpoint]
@@ -36,7 +36,7 @@ module "evhar_meteringpoint_sender" {
   name                      = "evhar-request-sender"
   namespace_name            = module.evhnm_meteringpoint.name
   eventhub_name             = module.evh_meteringpoint.name
-  resource_group_name       = data.azurerm_resource_group.greenenergyhub.name
+  resource_group_name       = data.azurerm_resource_group.main.name
   send                      = true
   dependencies              = [module.evh_meteringpoint]
 }
@@ -46,7 +46,7 @@ module "evhar_meteringpoint_listener" {
   name                      = "evhar-request-listener"
   namespace_name            = module.evhnm_meteringpoint.name
   eventhub_name             = module.evh_meteringpoint.name
-  resource_group_name       = data.azurerm_resource_group.greenenergyhub.name
+  resource_group_name       = data.azurerm_resource_group.main.name
   listen                    = true
   dependencies              = [module.evh_meteringpoint]
 }
