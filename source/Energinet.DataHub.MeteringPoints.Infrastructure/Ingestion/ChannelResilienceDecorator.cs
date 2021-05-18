@@ -12,17 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading;
+using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Resilience;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion
 {
-    public class InternalDispatcher : MessageDispatcher
+    public class ChannelResilienceDecorator : Channel
     {
-        public InternalDispatcher(
-            MessageSerializer serializer,
-            Channel channel)
-            : base(serializer, channel)
+        private readonly Channel _channel;
+        private readonly IChannelResiliencePolicy _policy;
+
+        public ChannelResilienceDecorator(Channel internalServiceBus, IChannelResiliencePolicy policy)
         {
+            _channel = internalServiceBus;
+            _policy = policy;
+        }
+
+        public override async Task WriteAsync(byte[] data, CancellationToken cancellationToken = default)
+        {
+            await _policy.AsyncPolicy.ExecuteAsync(async () =>
+            {
+                await _channel.WriteAsync(data, cancellationToken);
+            });
         }
     }
 }

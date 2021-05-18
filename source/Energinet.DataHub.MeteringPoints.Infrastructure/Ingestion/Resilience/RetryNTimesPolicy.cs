@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Polly;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Resilience
 {
-    public class InternalDispatcher : MessageDispatcher
+    public class RetryNTimesPolicy : IChannelResiliencePolicy
     {
-        public InternalDispatcher(
-            MessageSerializer serializer,
-            Channel channel)
-            : base(serializer, channel)
+        public RetryNTimesPolicy(int retries)
         {
+            AsyncPolicy = Policy.Handle<Azure.Messaging.ServiceBus.ServiceBusException>().RetryAsync(retries);
         }
+
+        public IAsyncPolicy AsyncPolicy { get; }
     }
 }
