@@ -12,21 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Authorization;
-using Energinet.DataHub.MeteringPoints.Application.Authorization.AuthorizationHandlers;
-using SimpleInjector;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public static class ContainerExtensions
+    public class GsrnNumberMustBeValidValidationError : ValidationError
     {
-        public static void AddInputValidation(this Container container)
+        public GsrnNumberMustBeValidValidationError(string gsrnNumber)
         {
-            container.Register(typeof(IAuthorizationHandler<,>), typeof(InputAuthorizationHandler<,>));
-            container.Collection.Register(typeof(IAuthorizationHandler<,>), new[]
-            {
-                typeof(ExampleAuthorizationHandler),
-            });
+            GsrnNumber = gsrnNumber;
         }
+
+        public string GsrnNumber { get; }
     }
 }

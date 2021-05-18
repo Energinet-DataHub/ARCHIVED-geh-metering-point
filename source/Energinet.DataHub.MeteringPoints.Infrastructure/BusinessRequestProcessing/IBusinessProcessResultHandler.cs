@@ -15,13 +15,12 @@
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing
 {
     /// <summary>
-    /// Generates a client response for completed a business process request
+    /// Generates result for a completed business process request.
     /// </summary>
-    /// <typeparam name="TBusinessProcessRequest"><see cref="IBusinessRequest"/></typeparam>
-    public interface IBusinessProcessResponder<in TBusinessProcessRequest>
+    public interface IBusinessProcessResultHandler<in TBusinessProcessRequest>
         where TBusinessProcessRequest : IBusinessRequest
     {
         /// <summary>
@@ -30,6 +29,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure
         /// <param name="request"></param>
         /// <param name="result"></param>
         /// <returns><see cref="Task"/></returns>
-        Task RespondAsync(TBusinessProcessRequest request, BusinessProcessResult result);
+        Task HandleAsync(TBusinessProcessRequest request, BusinessProcessResult result);
     }
 }

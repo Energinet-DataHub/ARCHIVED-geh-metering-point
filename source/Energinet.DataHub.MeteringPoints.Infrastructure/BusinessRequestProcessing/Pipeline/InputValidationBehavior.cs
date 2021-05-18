@@ -21,19 +21,19 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline
 {
     public class InputValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IBusinessRequest
         where TResponse : BusinessProcessResult
     {
         private readonly IValidator<TRequest> _validator;
-        private readonly IBusinessProcessResponder<TRequest> _businessProcessResponder;
+        private readonly IBusinessProcessResultHandler<TRequest> _businessProcessResultHandler;
 
-        public InputValidationBehavior(IValidator<TRequest> validator, IBusinessProcessResponder<TRequest> businessProcessResponder)
+        public InputValidationBehavior(IValidator<TRequest> validator, IBusinessProcessResultHandler<TRequest> businessProcessResponder)
         {
             _validator = validator;
-            _businessProcessResponder = businessProcessResponder ?? throw new ArgumentNullException(nameof(businessProcessResponder));
+            _businessProcessResultHandler = businessProcessResponder ?? throw new ArgumentNullException(nameof(businessProcessResponder));
         }
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
@@ -51,7 +51,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure
                     .AsReadOnly();
 
                 var result = new BusinessProcessResult(request.TransactionId, validationErrors);
-                await _businessProcessResponder.RespondAsync(request, result).ConfigureAwait(false);
+                await _businessProcessResultHandler.HandleAsync(request, result).ConfigureAwait(false);
                 return (TResponse)result;
             }
 

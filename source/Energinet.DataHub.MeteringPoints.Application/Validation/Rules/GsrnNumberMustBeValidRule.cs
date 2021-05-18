@@ -26,16 +26,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
             RuleFor(gsrn => gsrn)
                 .NotEmpty()
-                .WithState(x => CreateValidationError("GSRN number cannot be empty."));
+                .WithState(CreateValidationError);
 
             RuleFor(gsrn => GsrnNumber.CheckRules(gsrn))
                 .Must(x => x.Success)
-                .WithState(x => CreateValidationError("Invalid GSRN number"));
+                .WithState(CreateValidationError);
         }
 
-        private static ValidationError CreateValidationError(string message)
+        private static ValidationError CreateValidationError(string gsrn)
         {
-            return new ValidationError(message, typeof(GsrnNumberMustBeValidRule));
+            return new GsrnNumberMustBeValidValidationError(gsrn);
         }
     }
 }

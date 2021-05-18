@@ -31,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 
             var errors = GetValidationErrors(businessRequest);
 
-            Assert.Contains(errors, error => error.Rule == typeof(GsrnNumberMustBeValidRule));
+            Assert.Contains(errors, error => error is GsrnNumberMustBeValidValidationError);
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 
             var errors = GetValidationErrors(businessRequest);
 
-            Assert.Contains(errors, error => error.Rule == typeof(GsrnNumberMustBeValidRule));
+            Assert.Contains(errors, error => error is GsrnNumberMustBeValidValidationError);
         }
 
         private CreateMeteringPoint CreateRequest(
