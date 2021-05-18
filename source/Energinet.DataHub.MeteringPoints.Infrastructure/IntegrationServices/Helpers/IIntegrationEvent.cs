@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using NodaTime;
-
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers
 {
-    // public record MeteringPointOutboxMessage(string Id, string Data, string Type, string Category, Instant CreationDate, Instant ProcessedDate);
+    public class IIntegrationEvent
+    {
+    }
 }

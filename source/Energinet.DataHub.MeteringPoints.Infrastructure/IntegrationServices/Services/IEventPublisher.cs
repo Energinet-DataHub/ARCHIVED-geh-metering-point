@@ -13,18 +13,21 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers;
 
-namespace Energinet.DataHub.MeteringPoints.Application.IntegrationEvent
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Services
 {
     /// <summary>
-    /// Service to deliver events to the outbox following the outbox pattern
+    /// Service for publishing integration events
     /// </summary>
-    public interface IIntegrationEventOutboxService
+    public interface IEventPublisher
     {
         /// <summary>
-        /// Sends the event to the outbox
+        /// Publishes an integration event
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task SendEventToOutboxAsync();
+        /// <param name="integrationEvent"></param>
+        /// <returns><see cref="Task"/></returns>
+        Task<Task> PublishAsync<TIntegrationEvent>(TIntegrationEvent integrationEvent)
+            where TIntegrationEvent : IIntegrationEvent;
     }
 }

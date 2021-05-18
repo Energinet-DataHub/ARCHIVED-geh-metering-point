@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Services;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
@@ -70,6 +71,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<ServiceBusUserContextMiddleware>(Lifestyle.Scoped);
             container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
             container.Register<UserIdentityFactory>(Lifestyle.Singleton);
+            container.Register<IEventPublisher, EventPublisher>();
 
             // Setup pipeline behaviors
             container.BuildMediator(
