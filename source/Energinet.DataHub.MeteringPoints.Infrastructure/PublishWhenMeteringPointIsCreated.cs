@@ -15,34 +15,28 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Repository;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Services;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure
 {
-    public class IntegrationEventsDispatchBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : IIntegrationEvent
+    public class PublishWhenMeteringPointIsCreated : INotificationHandler<MeteringPointCreated>
     {
-        private readonly IEventPublisher _eventPublisher;
+        private readonly IIntegrationEventRepository _integrationEventRepository;
 
-        public IntegrationEventsDispatchBehavior(IEventPublisher eventPublisher)
+        public PublishWhenMeteringPointIsCreated(IIntegrationEventRepository integrationEventRepository)
         {
-            _eventPublisher = eventPublisher;
+            _integrationEventRepository = integrationEventRepository;
         }
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public async Task Handle(MeteringPointCreated notification, CancellationToken cancellationToken)
         {
-            if (next is null)
-            {
-                throw new ArgumentNullException(nameof(next));
-            }
+            if (notification == null) throw new ArgumentNullException(nameof(notification));
 
-            var result = await next().ConfigureAwait(false);
-
-            await _eventPublisher.PublishAsync(request).ConfigureAwait(false);
-
-            return result;
+            await _integrationEventRepository.SaveIntegrationEventMessageToOutboxAsync(notification).ConfigureAwait(false);
         }
     }
 }
