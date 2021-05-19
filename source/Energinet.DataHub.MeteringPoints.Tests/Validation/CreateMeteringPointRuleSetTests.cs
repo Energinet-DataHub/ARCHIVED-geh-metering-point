@@ -44,6 +44,21 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             Assert.Contains(errors, error => error is GsrnNumberMustBeValidValidationError);
         }
 
+        [Theory]
+        [InlineData("Consumption", "Flex", false)]
+        [InlineData("NetLossCorrection", "Flex", false)]
+        [InlineData("Consumption", "", true)]
+        [InlineData("NetLossCorrection", "", true)]
+        public void Validate_MandatorySettlementMethodForConsumptionAndNetLossCorrectionMeteringType(string meteringPointType, string settlementMethod, bool expectedError)
+        {
+            var businessRequest = CreateRequest(string.Empty, meteringPointType, string.Empty, string.Empty, 0, 0, string.Empty, string.Empty, string.Empty, string.Empty, new Address(), string.Empty, settlementMethod, string.Empty, string.Empty, string.Empty, string.Empty);
+
+            var errors = GetValidationErrors(businessRequest)
+                .Where(error => error is SettlementMethodNotAllowedValidationError or SettlementMethodRequiredValidationError or SettlementMethodMissingRequiredDomainValuesValidationError);
+
+            Assert.Equal(errors.Any(), expectedError);
+        }
+
         private CreateMeteringPoint CreateRequest(
             string gsrnNumber,
             string typeOfMeteringPoint,
