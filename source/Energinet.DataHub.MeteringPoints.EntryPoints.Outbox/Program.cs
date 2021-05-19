@@ -14,8 +14,20 @@
 
 using System;
 using System.Threading.Tasks;
+using Azure.Messaging.EventHubs.Producer;
+using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Channels;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Handlers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Repository;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Services;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
+using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
@@ -61,11 +73,29 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                     {
                         options.AddLogging();
                     });
+
+                    services.SendProtobuf<IntegrationEventEnvelope>();
                 })
                 .Build()
                 .UseSimpleInjector(container);
 
+            // Register application components.
+            var eventHubConnectionString = Environment.GetEnvironmentVariable("METERINGPOINTEVENTHUB_CONNECTION_STRING");
+            var hubName = Environment.GetEnvironmentVariable("METERINGPOINTEVENTHUB_HUB_NAME");
+            container.Register<EventHubProducerClient>(
+                () => new EventHubProducerClient(eventHubConnectionString, hubName),
+                Lifestyle.Singleton);
+            container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
+            container.Register<IIntegrationEventRepository, IntegrationEventRepository>();
+            container.Register<EventMessageDispatcher>(Lifestyle.Transient);
+            container.Register<IntegrationEventToEventHubDispatcher>(Lifestyle.Transient);
+            container.Register<AzureEventHubChannel>(Lifestyle.Transient);
+            container.Register<IIntegrationEventDispatchOrchestrator, IntegrationEventDispatchOrchestrator>(Lifestyle.Transient);
+            container.Register<CreateMeteringPointEventHandler>(Lifestyle.Transient);
             container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
+
+            container.BuildMediator(
+                new[] { typeof(CreateMeteringPointEventMessage).Assembly }, Array.Empty<Type>());
 
             container.Verify();
 

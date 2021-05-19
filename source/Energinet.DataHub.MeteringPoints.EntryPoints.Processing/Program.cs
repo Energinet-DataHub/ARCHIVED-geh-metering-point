@@ -19,6 +19,8 @@ using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
+using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
+using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
@@ -81,7 +83,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 {
                     typeof(InputValidationBehavior<,>),
                     typeof(AuthorizationBehavior<,>),
-                    typeof(BusinessProcessResponderBehavior<,>),
+                    typeof(BusinessProcessResultBehavior<,>),
                     typeof(IntegrationEventsDispatchBehavior<,>),
                     typeof(ValidationReportsBehavior<,>),
                     typeof(UnitOfWorkBehavior<,>),

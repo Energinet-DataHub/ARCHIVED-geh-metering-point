@@ -23,6 +23,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Authorization
         /// Perform validation
         /// </summary>
         /// <returns>A <see cref="AuthorizationResult"/> representing the result of the asynchronous operation.</returns>
-        AuthorizationResult Validate(TCommand command);
+        AuthorizationResult Authorize(TCommand command);
     }
 }

@@ -15,7 +15,7 @@
 namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
 {
     /// <summary>
-    /// Defition of a business rule
+    /// Definition of a business rule
     /// </summary>
     public interface IBusinessRule
     {
@@ -27,6 +27,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
         /// <summary>
         /// Validation details
         /// </summary>
-        string Message { get; }
+        ValidationError Error { get; }
     }
 }

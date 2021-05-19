@@ -62,7 +62,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
             }
 
             return GetProperties().All(p => PropertiesAreEqual(obj, p))
-                && GetFields().All(f => FieldsAreEqual(obj, f));
+                   && GetFields().All(f => FieldsAreEqual(obj, f));
         }
 
         public override int GetHashCode()

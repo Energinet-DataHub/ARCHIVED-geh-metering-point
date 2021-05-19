@@ -17,23 +17,23 @@ using System.Linq;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
 {
-    public class BusinessRulesValidationResult
-    {
-        public BusinessRulesValidationResult(List<IBusinessRule> rules)
+        public class BusinessRulesValidationResult
         {
-            SetValidationErrors(rules);
+            public BusinessRulesValidationResult(IEnumerable<IBusinessRule> rules)
+            {
+                SetValidationErrors(rules);
+            }
+
+            public bool Success => Errors.Count == 0;
+
+            public List<ValidationError> Errors { get; private set; } = new();
+
+            private void SetValidationErrors(IEnumerable<IBusinessRule> rules)
+            {
+                Errors = rules
+                    .Where(r => r.IsBroken)
+                    .Select(r => r.Error)
+                    .ToList();
+            }
         }
-
-        public bool Success => Errors.Count == 0;
-
-        public List<ValidationError> Errors { get; private set; } = new List<ValidationError>();
-
-        private void SetValidationErrors(List<IBusinessRule> rules)
-        {
-            Errors = rules
-                .Where(r => r.IsBroken)
-                .Select(r => new ValidationError(r.Message, r.GetType()))
-                .ToList();
-        }
-    }
 }

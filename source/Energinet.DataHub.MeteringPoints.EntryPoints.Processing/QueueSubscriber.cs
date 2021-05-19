@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Text;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Transport;

@@ -20,7 +20,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion
     {
         public InternalDispatcher(
             MessageSerializer serializer,
-            InternalServiceBus channel)
+            Channel channel)
             : base(serializer, channel)
         {
         }
