@@ -12,16 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application
 {
     public class CreateMeteringPointHandler : IRequestHandler<CreateMeteringPoint, CreateMeteringPointResult>
     {
+        private readonly IMeteringPointRepository _meteringPointRepository;
+
+        public CreateMeteringPointHandler(IMeteringPointRepository meteringPointRepository)
+        {
+            _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
+        }
+
         public Task<CreateMeteringPointResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
         {
+            var meteringPoint = new MeteringPoint(GsrnNumber.Create(request.GsrnNumber));
+            _meteringPointRepository.Add(meteringPoint);
             return Task.FromResult(new CreateMeteringPointResult());
         }
     }
