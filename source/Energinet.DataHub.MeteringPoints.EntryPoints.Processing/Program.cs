@@ -71,13 +71,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<ServiceBusUserContextMiddleware>(Lifestyle.Scoped);
             container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
             container.Register<UserIdentityFactory>(Lifestyle.Singleton);
-            container.Register<IEventPublisher, EventPublisher>();
 
             // Setup pipeline behaviors
             container.BuildMediator(
                 new[]
                 {
                     typeof(CreateMeteringPoint).Assembly,
+                    typeof(PublishWhenMeteringPointIsCreated).Assembly,
                 },
                 new[]
                 {
