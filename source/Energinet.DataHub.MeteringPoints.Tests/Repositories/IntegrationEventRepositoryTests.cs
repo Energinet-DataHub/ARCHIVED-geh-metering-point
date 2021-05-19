@@ -91,7 +91,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Repositories
 
             _integrationEventRepository = new IntegrationEventRepository(context, _jsonSerializer);
 
-            await _integrationEventRepository.SaveIntegrationEventMessageToOutboxAsync(message).ConfigureAwait(false);
+            await _integrationEventRepository.SaveIntegrationEventMessageToOutboxAsync(message, OutboxMessageCategory.IntegrationEvent).ConfigureAwait(false);
             await context.SaveChangesAsync().ConfigureAwait(false);
 
             var entity = await context.OutboxMessages.
@@ -120,7 +120,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Repositories
 
             _integrationEventRepository = new IntegrationEventRepository(context, _jsonSerializer);
 
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _integrationEventRepository.SaveIntegrationEventMessageToOutboxAsync((CreateMeteringPointEventMessage)null).ConfigureAwait(false));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _integrationEventRepository.SaveIntegrationEventMessageToOutboxAsync((CreateMeteringPointEventMessage)null, OutboxMessageCategory.IntegrationEvent).ConfigureAwait(false));
         }
 
         private OutboxMessage CreateOutBoxMessage(Guid id)
