@@ -16,7 +16,7 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Domain
 {
-    // Dummy class until domain base events are implemented.
+    // TODO: Dummy class until domain base events are implemented.
     public class MeteringPointCreated : INotification
     {
     }

@@ -24,11 +24,11 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure
 {
-    public class PublishWhenMeteringPointIsCreated : INotificationHandler<MeteringPointCreated>
+    public class MeteringPointCreatedNotificationHandler : INotificationHandler<MeteringPointCreated>
     {
         private readonly IIntegrationEventRepository _integrationEventRepository;
 
-        public PublishWhenMeteringPointIsCreated(IIntegrationEventRepository integrationEventRepository)
+        public MeteringPointCreatedNotificationHandler(IIntegrationEventRepository integrationEventRepository)
         {
             _integrationEventRepository = integrationEventRepository;
         }

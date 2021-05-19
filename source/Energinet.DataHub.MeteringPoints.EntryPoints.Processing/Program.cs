@@ -77,7 +77,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 new[]
                 {
                     typeof(CreateMeteringPoint).Assembly,
-                    typeof(PublishWhenMeteringPointIsCreated).Assembly,
+                    typeof(MeteringPointCreatedNotificationHandler).Assembly,
                 },
                 new[]
                 {
