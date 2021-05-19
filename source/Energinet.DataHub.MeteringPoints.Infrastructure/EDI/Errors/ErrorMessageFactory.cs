@@ -17,27 +17,20 @@ using System.Collections.Generic;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Authorization
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors
 {
-    public class AuthorizationResult
+    public record ErrorConverterRegistration(Type Error, Func<ErrorConverter> Func);
+
+    public class ErrorMessageFactory
     {
-        public AuthorizationResult(List<ValidationError> errors)
+        private readonly Dictionary<Type, Func<ErrorConverter>> _converters;
+
+        public ErrorMessageFactory(IEnumerable<ErrorConverterRegistration> registrations)
         {
-            Errors = errors;
+            _converters = registrations.ToDictionary(x => x.Error, x => x.Func);
         }
 
-        public AuthorizationResult()
-        {
-            Errors = new List<ValidationError>();
-        }
-
-        public List<ValidationError> Errors { get; }
-
-        public bool Success => !Errors.Any();
-
-        public static AuthorizationResult Ok()
-        {
-            return new();
-        }
+        public Error GetErrorMessage(ValidationError error)
+            => _converters[error.GetType()]().Convert(error);
     }
 }

@@ -12,29 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline
 {
-    public class UnitOfWorkBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : notnull
+    public class BusinessProcessResultBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : IBusinessRequest
+        where TResponse : BusinessProcessResult
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IBusinessProcessResultHandler<TRequest> _resultHandler;
 
-        public UnitOfWorkBehavior(IUnitOfWork unitOfWork)
+        public BusinessProcessResultBehavior(
+            IBusinessProcessResultHandler<TRequest> resultHandler)
         {
-            _unitOfWork = unitOfWork;
+            _resultHandler = resultHandler;
         }
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            // Call next handler in the pipeline and wait for the result
-            var result = await next();
+            if (next == null) throw new ArgumentNullException(nameof(next));
 
-            await _unitOfWork.CommitAsync();
+            var result = await next().ConfigureAwait(false);
+
+            await _resultHandler.HandleAsync(request, result).ConfigureAwait(false);
 
             return result;
         }

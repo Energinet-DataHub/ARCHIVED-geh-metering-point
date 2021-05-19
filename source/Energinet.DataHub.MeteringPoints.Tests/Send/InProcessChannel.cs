@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Send
 
         public byte[] GetWrittenBytes() => _writtenBytes ?? throw new InvalidOperationException("Write bytes before getting them.");
 
-        protected override async Task WriteAsync(byte[] data, CancellationToken cancellationToken = default)
+        public override async Task WriteAsync(byte[] data, CancellationToken cancellationToken = default)
         {
             _writtenBytes = data;
             await Task.CompletedTask.ConfigureAwait(false);

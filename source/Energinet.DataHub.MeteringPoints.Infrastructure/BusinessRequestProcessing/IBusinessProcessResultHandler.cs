@@ -12,21 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Common;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing
 {
     /// <summary>
-    /// Definition of a business rule
+    /// Generates result for a completed business process request.
     /// </summary>
-    public interface IBusinessRule
+    public interface IBusinessProcessResultHandler<in TBusinessProcessRequest>
+        where TBusinessProcessRequest : IBusinessRequest
     {
         /// <summary>
-        /// Indicates if rule is broken
+        /// Generates a response
         /// </summary>
-        bool IsBroken { get; }
-
-        /// <summary>
-        /// Validation details
-        /// </summary>
-        ValidationError Error { get; }
+        /// <param name="request"></param>
+        /// <param name="result"></param>
+        /// <returns><see cref="Task"/></returns>
+        Task HandleAsync(TBusinessProcessRequest request, BusinessProcessResult result);
     }
 }
