@@ -32,4 +32,9 @@ limitations under the License.
     </AssemblyAttribute>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="9.0.0" />
+    <PackageReference Include="NodaTime" Version="3.0.1" />
+  </ItemGroup>
+
 </Project>
