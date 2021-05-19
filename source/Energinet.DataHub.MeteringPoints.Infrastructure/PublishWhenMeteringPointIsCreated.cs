@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Repository;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Services;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure
@@ -36,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
 
-            await _integrationEventRepository.SaveIntegrationEventMessageToOutboxAsync(notification).ConfigureAwait(false);
+            await _integrationEventRepository.SaveIntegrationEventMessageToOutboxAsync(notification, OutboxMessageCategory.IntegrationEvent).ConfigureAwait(false);
         }
     }
 }

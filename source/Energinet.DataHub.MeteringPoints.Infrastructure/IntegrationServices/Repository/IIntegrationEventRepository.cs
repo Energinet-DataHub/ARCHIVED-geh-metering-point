@@ -37,7 +37,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Re
         /// Saves a new integration event message to the outbox
         /// </summary>
         /// <param name="message"></param>
+        /// <param name="category"></param>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task SaveIntegrationEventMessageToOutboxAsync<TMessage>(TMessage message);
+        Task SaveIntegrationEventMessageToOutboxAsync<TMessage>(TMessage message, OutboxMessageCategory category);
     }
 }
