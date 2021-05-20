@@ -35,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task Create_WhenNoValidationErrors_IsSuccessful()
+        public async Task CreateMeteringPoint_WithNoValidationErrors_ShouldBeRetrievableFromRepository()
         {
             var request = new CreateMeteringPoint(
                 new Address(),
@@ -62,6 +62,41 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             var gsrnNumber = GsrnNumber.Create(request.GsrnNumber);
             var found = await _meteringPointRepository.GetByGsrnNumberAsync(gsrnNumber);
             Assert.NotNull(found);
+        }
+
+        [Fact(Skip = "Not implemented yet")]
+        public void CreateMeteringPoint_WithNoValidationErrors_ShouldGenerateConfirmMessageInOutbox()
+        {
+        }
+
+        [Fact(Skip = "Not implemented yet")]
+        public void CreateMeteringPoint_WithNoValidationErrors_ShouldGenerateIntegrationEventInOutbox()
+        {
+        }
+
+        [Fact(Skip = "Not implemented yet")]
+        public void CreateMeteringPoint_WithValidationErrors_ShouldGenerateRejectMessageInOutbox()
+        {
+        }
+
+        [Fact(Skip = "Not implemented yet")]
+        public void CreateMeteringPoint_WithAlreadyExistingGsrnNumber_ShouldGenerateRejectMessageInOutbox()
+        {
+        }
+
+        [Fact(Skip = "Not implemented yet")]
+        public void CreateMeteringPoint_WithUnknownActor_ShouldGenerateRejectMessageInOutbox()
+        {
+        }
+
+        [Fact(Skip = "Not implemented yet")]
+        public void CreateMeteringPoint_WithUnknownGridArea_ShouldGenerateRejectMessageInOutbox()
+        {
+        }
+
+        [Fact(Skip = "Not implemented yet")]
+        public void CreateMeteringPoint_WithGridAreaNotBelongingToGridOperator_ShouldGenerateRejectMessageInOutbox()
+        {
         }
     }
 }
