@@ -12,21 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Globalization;
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Authorization.AuthorizationHandlers
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public class ExampleAuthorizationHandler : IAuthorizationHandler<CreateMeteringPoint, BusinessProcessResult>
+    public class PhysicalState : EnumerationType
     {
-        public AuthorizationResult Authorize(CreateMeteringPoint command)
+        public static readonly PhysicalState New = new PhysicalState(0, nameof(New));
+        public static readonly PhysicalState Connected = new PhysicalState(1, nameof(Connected));
+        public static readonly PhysicalState Disconnected = new PhysicalState(2, nameof(Disconnected));
+        public static readonly PhysicalState ClosedDown = new PhysicalState(3, nameof(ClosedDown));
+
+        private PhysicalState(int id, string name)
+            : base(id, name)
         {
-            // if (!IsValidFormat(command.OccurenceDate))
-            // {
-            //     return AuthorizationResult.Error(nameof(command.OccurenceDate), GetType());
-            // }
-            return AuthorizationResult.Ok();
         }
     }
 }

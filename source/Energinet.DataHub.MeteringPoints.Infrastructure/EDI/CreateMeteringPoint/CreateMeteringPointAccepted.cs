@@ -12,18 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint
 {
-    public static class SampleData
-    {
-        public static string GsrnNumber => "571234567891234568";
+    public record CreateMeteringPointAccepted(
+        string TransactionId,
+        string Status, // TODO: Is status implicit in Accepted from type?
+        string GsrnNumber);
 
-        public static string TypeOfMeteringPoint => "Consumption";
-
-        public static string Transaction => Guid.NewGuid().ToString();
-
-        public static string SubTypeOfMeteringPoint => "Physical";
-    }
+    // TODO: Reference to original document?
 }

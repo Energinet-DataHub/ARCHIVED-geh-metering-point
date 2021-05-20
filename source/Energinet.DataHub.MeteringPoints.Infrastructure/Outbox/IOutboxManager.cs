@@ -12,18 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
 {
-    public static class SampleData
+    /// <summary>
+    /// Transactional outbox manipulation
+    /// </summary>
+    public interface IOutboxManager
     {
-        public static string GsrnNumber => "571234567891234568";
+        /// <summary>
+        /// Get next unprocessed message based on category
+        /// </summary>
+        OutboxMessage? GetNext(OutboxMessageCategory category);
 
-        public static string TypeOfMeteringPoint => "Consumption";
-
-        public static string Transaction => Guid.NewGuid().ToString();
-
-        public static string SubTypeOfMeteringPoint => "Physical";
+        /// <summary>
+        /// Mark message as processed
+        /// </summary>
+        /// <param name="message"></param>
+        void MarkProcessed(OutboxMessage message);
     }
 }

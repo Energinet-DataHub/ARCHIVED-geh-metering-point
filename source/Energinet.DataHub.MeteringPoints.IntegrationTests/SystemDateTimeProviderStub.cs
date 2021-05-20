@@ -12,21 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Globalization;
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Authorization.AuthorizationHandlers
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
-    public class ExampleAuthorizationHandler : IAuthorizationHandler<CreateMeteringPoint, BusinessProcessResult>
+    public class SystemDateTimeProviderStub : ISystemDateTimeProvider
     {
-        public AuthorizationResult Authorize(CreateMeteringPoint command)
+        private Instant _now = SystemClock.Instance.GetCurrentInstant();
+
+        public void SetNow(Instant now)
         {
-            // if (!IsValidFormat(command.OccurenceDate))
-            // {
-            //     return AuthorizationResult.Error(nameof(command.OccurenceDate), GetType());
-            // }
-            return AuthorizationResult.Ok();
+            _now = now;
+        }
+
+        public Instant Now()
+        {
+            return _now;
         }
     }
 }

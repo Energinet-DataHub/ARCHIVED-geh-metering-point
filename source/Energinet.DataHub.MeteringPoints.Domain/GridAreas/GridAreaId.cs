@@ -13,20 +13,22 @@
 // limitations under the License.
 
 using System;
-using System.Globalization;
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Authorization.AuthorizationHandlers
+namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 {
-    public class ExampleAuthorizationHandler : IAuthorizationHandler<CreateMeteringPoint, BusinessProcessResult>
+    public class GridAreaId : ValueObject
     {
-        public AuthorizationResult Authorize(CreateMeteringPoint command)
+        public GridAreaId(Guid value)
         {
-            // if (!IsValidFormat(command.OccurenceDate))
-            // {
-            //     return AuthorizationResult.Error(nameof(command.OccurenceDate), GetType());
-            // }
-            return AuthorizationResult.Ok();
+            Value = value;
+        }
+
+        public Guid Value { get; }
+
+        public static GridAreaId New()
+        {
+            return new GridAreaId(Guid.NewGuid());
         }
     }
 }
