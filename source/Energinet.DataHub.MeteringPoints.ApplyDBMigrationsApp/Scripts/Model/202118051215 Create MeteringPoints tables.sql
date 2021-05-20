@@ -27,12 +27,8 @@ CREATE TABLE [dbo].[MeteringPoints]
     CONSTRAINT [PK_MeteringPoints] PRIMARY KEY NONCLUSTERED ([Id])
 )
     
-GO
 CREATE UNIQUE CLUSTERED INDEX CIX_MeteringPoints ON MeteringPoints([RecordId])
-GO
-
 CREATE UNIQUE INDEX CIX_MeteringPoints_GsrnNumber ON MeteringPoints([GsrnNumber])
-GO
 
 CREATE TABLE [dbo].[ConsumptionMeteringPoints]
 (
@@ -49,16 +45,14 @@ CREATE TABLE [dbo].[ConsumptionMeteringPoints]
     CONSTRAINT [FK_ConsumptionMeteringPoints_MeteringPoints_Id] FOREIGN KEY ([Id]) REFERENCES [MeteringPoints] ([Id])
 )
     
-GO
 CREATE UNIQUE CLUSTERED INDEX CIX_ConsumptionMeteringPoints ON dbo.ConsumptionMeteringPoints([RecordId])
-GO
 
 CREATE TABLE [dbo].[ProductionMeteringPoints]
 (
     [Id] UNIQUEIDENTIFIER NOT NULL,
     [RecordId] INT IDENTITY(1,1) NOT NULL,
-    [ProductionObligation] NVARCHAR(255) NULL,
     
+    [ProductionObligation] NVARCHAR(255) NULL,
     [NetSettlementGroup] NVARCHAR(255) NULL,
     [DisconnectionType] NVARCHAR(255) NULL,
     [ConnectionType] NVARCHAR(255) NULL,
@@ -67,9 +61,7 @@ CREATE TABLE [dbo].[ProductionMeteringPoints]
     CONSTRAINT [FK_ProductionMeteringPoints_MeteringPoints_Id] FOREIGN KEY ([Id]) REFERENCES [MeteringPoints] ([Id])
 )
     
-GO
 CREATE UNIQUE CLUSTERED INDEX CIX_ProductionMeteringPoints ON dbo.ProductionMeteringPoints([RecordId])
-GO
 
 CREATE TABLE [dbo].[ExchangeMeteringPoints]
 (
@@ -82,6 +74,4 @@ CREATE TABLE [dbo].[ExchangeMeteringPoints]
     CONSTRAINT [FK_ExchangeMeteringPoints_MeteringPoints_Id] FOREIGN KEY ([Id]) REFERENCES [MeteringPoints] ([Id])
 )
 
-GO
 CREATE UNIQUE CLUSTERED INDEX CIX_ExchangeMeteringPoints ON dbo.ExchangeMeteringPoints([RecordId])
-GO
