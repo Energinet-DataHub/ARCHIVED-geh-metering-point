@@ -13,15 +13,22 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests
+namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 {
-    public static class SampleData
+    public class GridAreaId : ValueObject
     {
-        public static string GsrnNumber => "571234567891234568";
+        public GridAreaId(Guid value)
+        {
+            Value = value;
+        }
 
-        public static string TypeOfMeteringPoint => "Consumption";
+        public Guid Value { get; }
 
-        public static string Transaction => Guid.NewGuid().ToString();
+        public static GridAreaId New()
+        {
+            return new GridAreaId(Guid.NewGuid());
+        }
     }
 }
