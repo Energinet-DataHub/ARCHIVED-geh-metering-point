@@ -27,7 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         [Fact]
         public void Validate_WhenGsrnNumberIsEmpty_IsFailure()
         {
-            var businessRequest = CreateRequest(string.Empty, string.Empty, string.Empty, string.Empty, 0, 0, string.Empty, string.Empty, string.Empty, string.Empty, new Address(), string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty);
+            var businessRequest = CreateRequest();
 
             var errors = GetValidationErrors(businessRequest);
 
@@ -37,50 +37,19 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         [Fact]
         public void Validate_WhenGsrnNumberIsNotFormattedCorrectly_IsFailure()
         {
-            var businessRequest = CreateRequest("Not_Valid_Gsrn_Number", string.Empty, string.Empty, string.Empty, 0, 0, string.Empty, string.Empty, string.Empty, string.Empty, new Address(), string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty);
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = "Not_Valid_Gsrn_Number",
+            };
 
             var errors = GetValidationErrors(businessRequest);
 
             Assert.Contains(errors, error => error is GsrnNumberMustBeValidValidationError);
         }
 
-        private CreateMeteringPoint CreateRequest(
-            string gsrnNumber,
-            string typeOfMeteringPoint,
-            string subTypeOfMeteringPoint,
-            string meterReadingOccurrence,
-            int maximumCurrent,
-            int maximumPower,
-            string meteringGridArea,
-            string powerPlant,
-            string locationDescription,
-            string productType,
-            Address installationLocationAddress,
-            string parentRelatedMeteringPoint,
-            string settlementMethod,
-            string unitType,
-            string disconnectionType,
-            string occurenceDate,
-            string meterNumber)
+        private CreateMeteringPoint CreateRequest()
         {
-            return new CreateMeteringPoint(
-                gsrnNumber,
-                typeOfMeteringPoint,
-                subTypeOfMeteringPoint,
-                meterReadingOccurrence,
-                maximumCurrent,
-                maximumPower,
-                meteringGridArea,
-                powerPlant,
-                locationDescription,
-                productType,
-                installationLocationAddress,
-                parentRelatedMeteringPoint,
-                settlementMethod,
-                unitType,
-                disconnectionType,
-                occurenceDate,
-                meterNumber);
+            return new CreateMeteringPoint(new Address());
         }
 
         private List<ValidationError> GetValidationErrors(CreateMeteringPoint request)
