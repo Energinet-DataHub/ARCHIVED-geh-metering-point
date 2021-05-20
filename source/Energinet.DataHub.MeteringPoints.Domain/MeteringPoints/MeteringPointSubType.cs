@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public static class SampleData
+    public class MeteringPointSubType : EnumerationType
     {
-        public static string GsrnNumber => "571234567891234568";
+        public static readonly MeteringPointSubType Physical = new MeteringPointSubType(0, nameof(Physical));
 
-        public static string TypeOfMeteringPoint => "Consumption";
-
-        public static string Transaction => Guid.NewGuid().ToString();
-
-        public static string SubTypeOfMeteringPoint => "Physical";
+        private MeteringPointSubType(int id, string name)
+            : base(id, name)
+        {
+        }
     }
 }

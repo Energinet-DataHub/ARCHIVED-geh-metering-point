@@ -20,6 +20,7 @@ using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 {
+    #pragma warning disable
     [UnitTest]
     public class MeteringPointTests
     {
@@ -31,7 +32,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 gridAreaId,
-                MeteringPointType.Consumption);
+                MeteringPointType.Consumption,
+                MeteringPointSubType.Physical);
 
             var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MeteringPointCreated);
             Assert.NotNull(createdEvent);
