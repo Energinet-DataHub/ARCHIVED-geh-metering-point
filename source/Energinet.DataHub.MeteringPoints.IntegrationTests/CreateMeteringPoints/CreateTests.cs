@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
@@ -37,10 +39,28 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task Create_WhenNoValidationErrors_IsSuccessful()
         {
-            var request = new CreateMeteringPoint(new Address())
+            var request = new CreateMeteringPoint(new Address("", "", "", ""))
             {
                 GsrnNumber = SampleData.GsrnNumber,
                 MaximumCurrent = 1,
+                AssetType = "",
+                ConnectionType = "",
+                DisconnectionType = "",
+                LocationDescription = "",
+                MaximumPower = 1,
+                MeterNumber = "",
+                OccurenceDate = DateTime.Now.ToString(CultureInfo.CurrentCulture),
+                PowerPlant = "",
+                ProductType = "",
+                SettlementMethod = "",
+                UnitType = "",
+                MeteringGridArea = "",
+                MeterReadingOccurrence = DateTime.Now.ToString(CultureInfo.CurrentCulture),
+                NetSettlementGroup = "",
+                ParentRelatedMeteringPoint = "",
+                TypeOfMeteringPoint = "",
+                PhysicalStatusOfMeteringPoint = "",
+                SubTypeOfMeteringPoint = "",
             };
 
             await _mediator.Send(request, CancellationToken.None);

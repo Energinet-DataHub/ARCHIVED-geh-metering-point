@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Text;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
@@ -40,17 +41,18 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         protected TestHost()
         {
-            CleanupDatabase();
-
             _container = new Container();
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddDbContext<MeteringPointContext>(x =>
                 x.UseSqlServer(ConnectionString, y => y.UseNodaTime()));
+
             serviceCollection.AddSimpleInjector(_container);
             _serviceProvider = serviceCollection.BuildServiceProvider().UseSimpleInjector(_container);
 
             _container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
             _container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
+
+            CleanupDatabase(_serviceProvider.GetService<MeteringPointContext>());
 
             _container.BuildMediator(
                 new[]
@@ -70,8 +72,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _scope = AsyncScopedLifestyle.BeginScope(_container);
         }
 
-        private string ConnectionString =>
-            Environment.GetEnvironmentVariable("MeteringPoints_IntegrationTests_ConnectionString");
+        private string ConnectionString => Environment.GetEnvironmentVariable("MeteringPoints_IntegrationTests_ConnectionString");
 
         public void Dispose()
         {
@@ -79,14 +80,14 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
+        protected void Dispose(bool disposing)
         {
             if (_disposed == true)
             {
                 return;
             }
 
-            CleanupDatabase();
+            CleanupDatabase(_serviceProvider.GetService<MeteringPointContext>());
             _scope.Dispose();
             ((ServiceProvider)_serviceProvider).Dispose();
             _container.Dispose();
@@ -99,10 +100,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             return _container.GetInstance<TService>();
         }
 
-        private void CleanupDatabase()
+        private static void CleanupDatabase(DbContext meteringPointContext)
         {
-            // new SqlCommand(cleanupStatement, GetSqlDbConnection()).ExecuteNonQuery();
-            var cleanupStatement = $"";
+            var cleanupStatement = new StringBuilder();
+
+            cleanupStatement.AppendLine($"DELETE FROM ConsumptionMeteringPoints");
+            cleanupStatement.AppendLine($"DELETE FROM ProductionMeteringPoints");
+            cleanupStatement.AppendLine($"DELETE FROM ExchangeMeteringPoints");
+            cleanupStatement.AppendLine($"DELETE FROM MeteringPoints");
+
+            meteringPointContext.Database.ExecuteSqlRaw(cleanupStatement.ToString());
         }
     }
 }
