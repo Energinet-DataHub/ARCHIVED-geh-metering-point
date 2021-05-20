@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
@@ -20,6 +21,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
     {
         /*The settlement method of a metering point is mandatory if the MP is E17 (consumption) or D13, otherwise it is not allowed
           The settlement method of a metering point has domain values E02 (Non profiled), D01 (Flex)*/
+        private readonly List<string> _allowedDomainValuesForConsumptionAndNetLossCorrection = new() { "NonProfiled", "Flex" };
+
         public SettlementMethodMustBeValidRule()
         {
             When(point => point.TypeOfMeteringPoint.Equals("Consumption") || point.TypeOfMeteringPoint.Equals("NetLossCorrection"), () =>
@@ -28,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                     .NotEmpty()
                     .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError(createMeteringPoint.TypeOfMeteringPoint));
                 RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
-                    .Must(settlementMethod => settlementMethod.Contains("NonProfiled") || settlementMethod.Contains("Flex"))
+                    .Must(settlementMethod => _allowedDomainValuesForConsumptionAndNetLossCorrection.Contains(settlementMethod))
                     .WithState(createMeteringPoint => new SettlementMethodMissingRequiredDomainValuesValidationError(createMeteringPoint.SettlementMethod));
             }).Otherwise(() =>
             {

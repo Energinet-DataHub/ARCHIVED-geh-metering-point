@@ -14,6 +14,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
@@ -45,18 +46,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         }
 
         [Theory]
-        [InlineData("Consumption", "Flex", false)]
-        [InlineData("NetLossCorrection", "Flex", false)]
-        [InlineData("Consumption", "", true)]
-        [InlineData("NetLossCorrection", "", true)]
-        public void Validate_MandatorySettlementMethodForConsumptionAndNetLossCorrectionMeteringType(string meteringPointType, string settlementMethod, bool expectedError)
+        [InlineData("Consumption", "Flex", (SettlementMethodRequiredValidationError)null)]
+        [InlineData("NetLossCorrection", "Flex", (SettlementMethodRequiredValidationError)null)]
+        [InlineData("Consumption", "", typeof(SettlementMethodRequiredValidationError))]
+        [InlineData("NetLossCorrection", "", typeof(SettlementMethodRequiredValidationError))]
+        [InlineData("SettlementMethodNotAllowedForMP", "Flex", typeof(SettlementMethodNotAllowedValidationError))]
+        [InlineData("SettlementMethodNotAllowedForMPEmpty", "", (SettlementMethodNotAllowedValidationError)null)]
+        [InlineData("Consumption", "WrongDomainName", typeof(SettlementMethodMissingRequiredDomainValuesValidationError))]
+        public void Validate_MandatorySettlementMethodForConsumptionAndNetLossCorrectionMeteringType(string meteringPointType, string settlementMethod, System.Type expectedError)
         {
             var businessRequest = CreateRequest(string.Empty, meteringPointType, string.Empty, string.Empty, 0, 0, string.Empty, string.Empty, string.Empty, string.Empty, new Address(), string.Empty, settlementMethod, string.Empty, string.Empty, string.Empty, string.Empty);
 
-            var errors = GetValidationErrors(businessRequest)
-                .Where(error => error is SettlementMethodNotAllowedValidationError or SettlementMethodRequiredValidationError or SettlementMethodMissingRequiredDomainValuesValidationError);
+            var errorType = GetValidationErrors(businessRequest).FirstOrDefault(error => error.GetType() == expectedError);
 
-            Assert.Equal(errors.Any(), expectedError);
+            Assert.Equal(expectedError, errorType?.GetType());
         }
 
         private CreateMeteringPoint CreateRequest(
