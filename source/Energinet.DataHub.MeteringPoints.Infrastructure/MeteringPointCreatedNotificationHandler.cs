@@ -15,16 +15,14 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Domain;
-using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers;
+using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Repository;
-using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Services;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure
 {
-    public class MeteringPointCreatedNotificationHandler : INotificationHandler<MeteringPointCreated>
+    public class MeteringPointCreatedNotificationHandler : INotificationHandler<CreateMeteringPointEventMessage>
     {
         private readonly IIntegrationEventRepository _integrationEventRepository;
 
@@ -33,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure
             _integrationEventRepository = integrationEventRepository;
         }
 
-        public async Task Handle(MeteringPointCreated notification, CancellationToken cancellationToken)
+        public async Task Handle(CreateMeteringPointEventMessage notification, CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
 

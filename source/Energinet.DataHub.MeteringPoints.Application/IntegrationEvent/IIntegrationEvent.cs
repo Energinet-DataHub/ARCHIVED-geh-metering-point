@@ -12,9 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers
+using MediatR;
+
+namespace Energinet.DataHub.MeteringPoints.Application.IntegrationEvent
 {
-    public class IIntegrationEvent
+    /// <summary>
+    /// IntegrationEvent interface
+    /// </summary>
+    public interface IIntegrationEvent : INotification
     {
     }
 }
