@@ -58,7 +58,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         [InlineData("Consumption", "WrongDomainName", typeof(SettlementMethodMissingRequiredDomainValuesValidationError))]
         public void Validate_MandatorySettlementMethodForConsumptionAndNetLossCorrectionMeteringType(string meteringPointType, string settlementMethod, System.Type expectedError)
         {
-            var businessRequest = CreateRequest(string.Empty, meteringPointType, string.Empty, string.Empty, 0, 0, string.Empty, string.Empty, string.Empty, string.Empty, new Address(), string.Empty, settlementMethod, string.Empty, string.Empty, string.Empty, string.Empty);
+            var businessRequest = CreateRequest() with
+            {
+                TypeOfMeteringPoint = meteringPointType,
+                SettlementMethod = settlementMethod,
+            };
 
             var errorType = GetValidationErrors(businessRequest).FirstOrDefault(error => error.GetType() == expectedError);
 
