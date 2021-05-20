@@ -14,6 +14,8 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.Validation;
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
@@ -23,9 +25,11 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleInjector;
@@ -63,8 +67,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
             _container.Register<ISystemDateTimeProvider, SystemDateTimeProviderStub>(Lifestyle.Singleton);
             _container.Register(typeof(IBusinessProcessResultHandler<>), typeof(CreateMeteringPointResultHandler), Lifestyle.Scoped);
+            _container.Register<IValidator<CreateMeteringPoint>, CreateMeteringPointRuleSet>(Lifestyle.Scoped);
             _container.AddValidationErrorConversion(
-                validateRegistrations: true);
+                validateRegistrations: true,
+                typeof(CreateMeteringPoint).Assembly, // Application
+                typeof(GsrnNumberMustBeValidValidationError).Assembly, // Domain
+                typeof(ErrorMessageFactory).Assembly); // Infrastructure
 
             _container.BuildMediator(
                 new[]
@@ -73,12 +81,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 },
                 new[]
                 {
-                    // typeof(InputValidationBehavior<,>),
+                    typeof(UnitOfWorkBehavior<,>),
+                    typeof(InputValidationBehavior<,>),
                     // typeof(AuthorizationBehavior<,>),
                     typeof(BusinessProcessResultBehavior<,>),
                     // typeof(IntegrationEventsDispatchBehavior<,>),
                     // typeof(ValidationReportsBehavior<,>),
-                    typeof(UnitOfWorkBehavior<,>),
                 });
 
             _container.Verify();
