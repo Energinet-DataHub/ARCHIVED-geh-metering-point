@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
@@ -22,7 +23,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
     public class MeteringPoint : AggregateRootBase
     {
         //TODO: Implement relevant value objects
+        private readonly GridAreaId _gridAreaId;
         private MeteringPointType _typeOfMeteringPoint;
+        private PhysicalState _physicalState;
+
         private string _subTypeOfMeteringPoint;
         private string _meterReadingOccurrence;
         private int _maximumCurrent;
@@ -38,10 +42,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private string _occurenceDate;
         private string _meterNumber;
 
-        public MeteringPoint(MeteringPointId meteringPointId, GsrnNumber gsrnNumber, MeteringPointType typeOfMeteringPoint)
+        public MeteringPoint(MeteringPointId meteringPointId, GsrnNumber gsrnNumber, GridAreaId gridAreaId, MeteringPointType typeOfMeteringPoint)
         {
             Id = meteringPointId ?? throw new ArgumentNullException(nameof(meteringPointId));
             GsrnNumber = gsrnNumber ?? throw new ArgumentNullException(nameof(gsrnNumber));
+            _physicalState = PhysicalState.New;
+            _gridAreaId = gridAreaId ?? throw new ArgumentNullException(nameof(gridAreaId));
             _typeOfMeteringPoint = typeOfMeteringPoint ?? throw new ArgumentNullException(nameof(typeOfMeteringPoint));
             AddDomainEvent(new MeteringPointCreated(meteringPointId, GsrnNumber));
         }
