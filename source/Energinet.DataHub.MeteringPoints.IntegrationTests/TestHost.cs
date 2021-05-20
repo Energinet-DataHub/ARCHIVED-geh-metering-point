@@ -15,10 +15,16 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
+using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
+using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,6 +57,14 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             _container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
             _container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
+            _container.Register<IOutbox, InMemoryOutbox>(Lifestyle.Scoped);
+            _container.Register<IOutboxManager, InMemoryOutbox>(Lifestyle.Scoped);
+            _container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Singleton);
+            _container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
+            _container.Register<ISystemDateTimeProvider, SystemDateTimeProviderStub>(Lifestyle.Singleton);
+            _container.Register(typeof(IBusinessProcessResultHandler<>), typeof(CreateMeteringPointResultHandler), Lifestyle.Scoped);
+            _container.AddValidationErrorConversion(
+                validateRegistrations: true);
 
             _container.BuildMediator(
                 new[]
@@ -61,11 +75,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 {
                     // typeof(InputValidationBehavior<,>),
                     // typeof(AuthorizationBehavior<,>),
-                    // typeof(BusinessProcessResultBehavior<,>),
+                    typeof(BusinessProcessResultBehavior<,>),
                     // typeof(IntegrationEventsDispatchBehavior<,>),
                     // typeof(ValidationReportsBehavior<,>),
                     typeof(UnitOfWorkBehavior<,>),
                 });
+
+            _container.Verify();
 
             _scope = AsyncScopedLifestyle.BeginScope(_container);
         }

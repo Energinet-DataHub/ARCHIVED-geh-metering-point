@@ -12,9 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
 {
-    public class CreateMeteringPointResult
+    /// <summary>
+    /// Transactional outbox
+    /// </summary>
+    public interface IOutbox
     {
+        /// <summary>
+        /// Add message to outbox
+        /// </summary>
+        /// <param name="message"></param>
+        void Add(OutboxMessage message);
     }
 }
