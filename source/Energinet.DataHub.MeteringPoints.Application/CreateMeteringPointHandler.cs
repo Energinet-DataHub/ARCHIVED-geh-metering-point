@@ -15,6 +15,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -22,7 +23,7 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application
 {
-    public class CreateMeteringPointHandler : IRequestHandler<CreateMeteringPoint, CreateMeteringPointResult>
+    public class CreateMeteringPointHandler : IRequestHandler<CreateMeteringPoint, BusinessProcessResult>
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
 
@@ -31,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
         }
 
-        public Task<CreateMeteringPointResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
+        public Task<BusinessProcessResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
         {
             var meteringPoint = new MeteringPoint(
                 MeteringPointId.New(),
@@ -40,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint),
                 EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint));
             _meteringPointRepository.Add(meteringPoint);
-            return Task.FromResult(new CreateMeteringPointResult());
+            return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
         }
     }
 }

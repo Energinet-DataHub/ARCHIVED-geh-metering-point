@@ -37,8 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
             string OccurenceDate = "",
             string MeterNumber = "",
             string TransactionId = "")
-        : IRequest<CreateMeteringPointResult>,
-            IBusinessRequest,
+        : IBusinessRequest,
             IOutboundMessage,
             IInboundMessage;
 }

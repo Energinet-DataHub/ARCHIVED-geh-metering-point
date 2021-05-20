@@ -13,20 +13,23 @@
 // limitations under the License.
 
 using System;
-using System.Globalization;
-using Energinet.DataHub.MeteringPoints.Application.Common;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Authorization.AuthorizationHandlers
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
 {
-    public class ExampleAuthorizationHandler : IAuthorizationHandler<CreateMeteringPoint, BusinessProcessResult>
+    public class OutboxMessageException : Exception
     {
-        public AuthorizationResult Authorize(CreateMeteringPoint command)
+        public OutboxMessageException()
         {
-            // if (!IsValidFormat(command.OccurenceDate))
-            // {
-            //     return AuthorizationResult.Error(nameof(command.OccurenceDate), GetType());
-            // }
-            return AuthorizationResult.Ok();
+        }
+
+        public OutboxMessageException(string? message)
+            : base(message)
+        {
+        }
+
+        public OutboxMessageException(string message, Exception innerException)
+            : base(message, innerException)
+        {
         }
     }
 }
