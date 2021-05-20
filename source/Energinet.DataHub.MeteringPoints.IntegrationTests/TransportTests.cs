@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
@@ -38,7 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             var sendingServiceProvider = sendingServiceCollection.BuildServiceProvider();
 
             var messageDispatcher = sendingServiceProvider.GetRequiredService<Dispatcher>();
-            var outboundMessage = new Application.CreateMeteringPoint
+            var outboundMessage = new Application.CreateMeteringPoint(new Address())
             {
                 GsrnNumber = expectedGsrnNumber,
             };
