@@ -17,6 +17,7 @@ limitations under the License.
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
@@ -50,7 +51,7 @@ limitations under the License.
       <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
       <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.0.0" />
     </ItemGroup>
-    
+
     <ItemGroup>
       <Protobuf Include="**/*.proto">
         <GrpcServices>None</GrpcServices>
@@ -61,7 +62,7 @@ limitations under the License.
         <Generator>MSBuild:Compile</Generator>
       </Protobuf>
     </ItemGroup>
-    
+
     <ItemGroup>
       <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Application\Energinet.DataHub.MeteringPoints.Application.csproj" />
     </ItemGroup>
