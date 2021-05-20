@@ -13,15 +13,40 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public class MeteringPoint
+    //TODO:REMEMBER REMOVE THIS WHEN VALUE OBJECTS ARE IMPLEMENTED
+    #pragma warning disable
+    public class MeteringPoint : AggregateRootBase
     {
-        public MeteringPoint(GsrnNumber gsrnNumber)
+        //TODO: Implement relevant value objects
+        private MeteringPointType _typeOfMeteringPoint;
+        private string _subTypeOfMeteringPoint;
+        private string _meterReadingOccurrence;
+        private int _maximumCurrent;
+        private int _maximumPower;
+        private string _meteringGridArea;
+        private string _powerPlant;
+        private string _locationDescription;
+        private string _productType;
+        private string _parentRelatedMeteringPoint;
+        private string _settlementMethod;
+        private string _unitType;
+        private string _disconnectionType;
+        private string _occurenceDate;
+        private string _meterNumber;
+
+        public MeteringPoint(MeteringPointId meteringPointId, GsrnNumber gsrnNumber, MeteringPointType typeOfMeteringPoint)
         {
+            Id = meteringPointId ?? throw new ArgumentNullException(nameof(meteringPointId));
             GsrnNumber = gsrnNumber ?? throw new ArgumentNullException(nameof(gsrnNumber));
+            _typeOfMeteringPoint = typeOfMeteringPoint ?? throw new ArgumentNullException(nameof(typeOfMeteringPoint));
+            AddDomainEvent(new MeteringPointCreated(meteringPointId, GsrnNumber));
         }
+
+        public MeteringPointId Id { get; }
 
         public GsrnNumber GsrnNumber { get; }
     }

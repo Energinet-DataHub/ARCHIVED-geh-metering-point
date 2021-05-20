@@ -12,16 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public static class SampleData
+    public class MeteringPointCreated : DomainEventBase
     {
-        public static string GsrnNumber => "571234567891234568";
+        public MeteringPointCreated(MeteringPointId meteringPointId, GsrnNumber gsrnNumber)
+        {
+            MeteringPointId = meteringPointId;
+            GsrnNumber = gsrnNumber;
+        }
 
-        public static string TypeOfMeteringPoint => "Consumption";
+        public MeteringPointId MeteringPointId { get; }
 
-        public static string Transaction => Guid.NewGuid().ToString();
+        public GsrnNumber GsrnNumber { get; }
     }
 }

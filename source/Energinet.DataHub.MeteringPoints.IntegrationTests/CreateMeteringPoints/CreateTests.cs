@@ -37,11 +37,25 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task Create_WhenNoValidationErrors_IsSuccessful()
         {
-            var request = new CreateMeteringPoint(new Address())
-            {
-                GsrnNumber = SampleData.GsrnNumber,
-                MaximumCurrent = 1,
-            };
+            var request = new CreateMeteringPoint(
+                new Address(),
+                SampleData.GsrnNumber,
+                SampleData.TypeOfMeteringPoint,
+                "Fake",
+                "Fake",
+                0,
+                1,
+                "Fake",
+                "FAke",
+                "FAke",
+                "Fake",
+
+                "Fake",
+                "Fake",
+                "Fake",
+                "Fake",
+                "Fake",
+                "Fake");
 
             await _mediator.Send(request, CancellationToken.None);
 

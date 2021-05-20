@@ -14,14 +14,10 @@
 
 using System;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests
+namespace Energinet.DataHub.MeteringPoints.Tests
 {
     public static class SampleData
     {
         public static string GsrnNumber => "571234567891234568";
-
-        public static string TypeOfMeteringPoint => "Consumption";
-
-        public static string Transaction => Guid.NewGuid().ToString();
     }
 }
