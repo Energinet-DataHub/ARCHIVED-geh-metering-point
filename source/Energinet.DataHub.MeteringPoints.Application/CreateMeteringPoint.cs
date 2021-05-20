@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application
 {
     #nullable disable // TODO: Once we re-visit the model, consider this disable again.
-    public class CreateMeteringPoint : IRequest<CreateMeteringPointResult>, IOutboundMessage, IInboundMessage
+    public class CreateMeteringPoint : IRequest<CreateMeteringPointResult>, IBusinessRequest, IOutboundMessage, IInboundMessage
     {
         public CreateMeteringPoint() { }
 
@@ -93,6 +94,8 @@ namespace Energinet.DataHub.MeteringPoints.Application
         public string OccurenceDate { get; }
 
         public string MeterNumber { get; }
+
+        public string TransactionId { get; }
     }
     #nullable restore
 }

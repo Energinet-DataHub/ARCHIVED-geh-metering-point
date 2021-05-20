@@ -12,21 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
-{
-    /// <summary>
-    /// Definition of a business rule
-    /// </summary>
-    public interface IBusinessRule
-    {
-        /// <summary>
-        /// Indicates if rule is broken
-        /// </summary>
-        bool IsBroken { get; }
+using System;
 
-        /// <summary>
-        /// Validation details
-        /// </summary>
-        ValidationError Error { get; }
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+{
+    public class MeteringPoint
+    {
+        public MeteringPoint(GsrnNumber gsrnNumber)
+        {
+            GsrnNumber = gsrnNumber ?? throw new ArgumentNullException(nameof(gsrnNumber));
+        }
+
+        public GsrnNumber GsrnNumber { get; }
     }
 }

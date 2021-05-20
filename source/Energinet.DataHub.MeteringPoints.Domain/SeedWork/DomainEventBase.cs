@@ -12,21 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Authorization;
-using Energinet.DataHub.MeteringPoints.Application.Authorization.AuthorizationHandlers;
-using SimpleInjector;
+using System;
+using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure
+namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
 {
-    public static class ContainerExtensions
+    public class DomainEventBase : IDomainEvent
     {
-        public static void AddInputValidation(this Container container)
+        public DomainEventBase()
         {
-            container.Register(typeof(IAuthorizationHandler<,>), typeof(InputAuthorizationHandler<,>));
-            container.Collection.Register(typeof(IAuthorizationHandler<,>), new[]
-            {
-                typeof(ExampleAuthorizationHandler),
-            });
+            Id = Guid.NewGuid();
+            OccurredOn = SystemClock.Instance.GetCurrentInstant();
         }
+
+        public Guid Id { get; }
+
+        public Instant OccurredOn { get; }
     }
 }

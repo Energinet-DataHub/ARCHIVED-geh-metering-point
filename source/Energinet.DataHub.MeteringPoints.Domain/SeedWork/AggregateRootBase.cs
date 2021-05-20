@@ -14,19 +14,7 @@
 
 namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
 {
-    /// <summary>
-    /// Definition of a business rule
-    /// </summary>
-    public interface IBusinessRule
+    public class AggregateRootBase : Entity
     {
-        /// <summary>
-        /// Indicates if rule is broken
-        /// </summary>
-        bool IsBroken { get; }
-
-        /// <summary>
-        /// Validation details
-        /// </summary>
-        ValidationError Error { get; }
     }
 }

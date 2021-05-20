@@ -12,21 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
-{
-    /// <summary>
-    /// Definition of a business rule
-    /// </summary>
-    public interface IBusinessRule
-    {
-        /// <summary>
-        /// Indicates if rule is broken
-        /// </summary>
-        bool IsBroken { get; }
+using System;
 
-        /// <summary>
-        /// Validation details
-        /// </summary>
-        ValidationError Error { get; }
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests
+{
+    public static class SampleData
+    {
+        public static string GsrnNumber => "571234567891234568";
+
+        public static string ConsumerId => "2601211234";
+
+        public static string GlnNumber => "5790000555550";
+
+        public static string Transaction => Guid.NewGuid().ToString();
     }
 }

@@ -12,21 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Runtime.Serialization;
+
 namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
 {
-    /// <summary>
-    /// Definition of a business rule
-    /// </summary>
-    public interface IBusinessRule
+    public class BusinessRuleException : Exception
     {
-        /// <summary>
-        /// Indicates if rule is broken
-        /// </summary>
-        bool IsBroken { get; }
+        public BusinessRuleException()
+        {
+        }
 
-        /// <summary>
-        /// Validation details
-        /// </summary>
-        ValidationError Error { get; }
+        public BusinessRuleException(string? message)
+            : base(message)
+        {
+        }
+
+        public BusinessRuleException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+
+        protected BusinessRuleException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
     }
 }

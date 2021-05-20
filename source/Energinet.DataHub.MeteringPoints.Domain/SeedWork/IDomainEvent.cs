@@ -12,21 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using MediatR;
+using NodaTime;
+
 namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
 {
     /// <summary>
-    /// Definition of a business rule
+    /// Interface for domain events
     /// </summary>
-    public interface IBusinessRule
+    public interface IDomainEvent : INotification
     {
         /// <summary>
-        /// Indicates if rule is broken
+        /// Correlation id of event
         /// </summary>
-        bool IsBroken { get; }
+        Guid Id { get; }
 
         /// <summary>
-        /// Validation details
+        /// Date and time of occurence
         /// </summary>
-        ValidationError Error { get; }
+        Instant OccurredOn { get; }
     }
 }

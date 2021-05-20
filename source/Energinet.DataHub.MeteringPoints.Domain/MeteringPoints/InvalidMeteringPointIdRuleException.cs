@@ -13,31 +13,30 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Runtime.Serialization;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Authorization
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public class AuthorizationResult
+    public class InvalidMeteringPointIdRuleException : BusinessRuleException
     {
-        public AuthorizationResult(List<ValidationError> errors)
+        public InvalidMeteringPointIdRuleException()
         {
-            Errors = errors;
         }
 
-        public AuthorizationResult()
+        public InvalidMeteringPointIdRuleException(string? message)
+            : base(message)
         {
-            Errors = new List<ValidationError>();
         }
 
-        public List<ValidationError> Errors { get; }
-
-        public bool Success => !Errors.Any();
-
-        public static AuthorizationResult Ok()
+        public InvalidMeteringPointIdRuleException(string message, Exception innerException)
+            : base(message, innerException)
         {
-            return new();
+        }
+
+        protected InvalidMeteringPointIdRuleException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
         }
     }
 }

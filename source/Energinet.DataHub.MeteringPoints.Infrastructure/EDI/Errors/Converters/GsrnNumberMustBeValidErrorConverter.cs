@@ -12,21 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
-{
-    /// <summary>
-    /// Definition of a business rule
-    /// </summary>
-    public interface IBusinessRule
-    {
-        /// <summary>
-        /// Indicates if rule is broken
-        /// </summary>
-        bool IsBroken { get; }
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 
-        /// <summary>
-        /// Validation details
-        /// </summary>
-        ValidationError Error { get; }
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+{
+    public class GsrnNumberMustBeValidErrorConverter : ErrorConverter<GsrnNumberMustBeValidValidationError>
+    {
+        // TODO: This is an example, redo when we know what/how etc.
+        protected override Error Convert(GsrnNumberMustBeValidValidationError error)
+        {
+            return new("TODO", $"This might not be a gsrn number: {error.GsrnNumber}");
+        }
     }
 }

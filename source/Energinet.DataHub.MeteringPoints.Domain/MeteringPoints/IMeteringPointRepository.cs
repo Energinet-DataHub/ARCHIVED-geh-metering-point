@@ -12,21 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
+using System.Threading.Tasks;
+
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     /// <summary>
-    /// Definition of a business rule
+    /// Repository for metering points
     /// </summary>
-    public interface IBusinessRule
+    public interface IMeteringPointRepository
     {
         /// <summary>
-        /// Indicates if rule is broken
+        /// Retrieves a metering point by GSRN number
         /// </summary>
-        bool IsBroken { get; }
+        /// <param name="gsrnNumber"></param>
+        /// <returns><see cref="MeteringPoint"/></returns>
+        Task<MeteringPoint?> GetByGsrnNumberAsync(GsrnNumber gsrnNumber);
 
         /// <summary>
-        /// Validation details
+        /// Add new metering point to repository
         /// </summary>
-        ValidationError Error { get; }
+        /// <param name="meteringPoint"></param>
+        void Add(MeteringPoint meteringPoint);
     }
 }

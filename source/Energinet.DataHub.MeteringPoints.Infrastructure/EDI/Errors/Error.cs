@@ -12,18 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
-
-namespace Energinet.DataHub.MeteringPoints.Infrastructure
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors
 {
-    public class ValidationReportsBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : notnull
-    {
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
+    public record Error(string Code, string Description);
 }
