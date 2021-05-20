@@ -17,6 +17,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using MediatR;
+using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Application
 {
@@ -31,8 +32,35 @@ namespace Energinet.DataHub.MeteringPoints.Application
 
         public Task<CreateMeteringPointResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
         {
-            var meteringPoint = new MeteringPoint(GsrnNumber.Create(request.GsrnNumber));
+            var meteringPoint = new ConsumptionMeteringPoint(
+                GsrnNumber.Create(request.GsrnNumber),
+                request.InstallationLocationAddress.StreetName,
+                request.InstallationLocationAddress.PostCode,
+                request.InstallationLocationAddress.CityName,
+                request.InstallationLocationAddress.CountryCode,
+                request.InstallationLocationAddress.IsWashable,
+                request.PhysicalStatusOfMeteringPoint,
+                request.SubTypeOfMeteringPoint,
+                request.TypeOfMeteringPoint,
+                request.MeteringGridArea,
+                request.PowerPlant,
+                request.LocationDescription,
+                request.ProductType,
+                request.ParentRelatedMeteringPoint,
+                request.UnitType,
+                request.MeterNumber,
+                SystemClock.Instance.GetCurrentInstant(), // TODO: how to handle string to Instant conversion?
+                request.MaximumCurrent,
+                request.MaximumPower,
+                SystemClock.Instance.GetCurrentInstant(), // TODO: how to handle string to Instant conversion?
+                request.SettlementMethod,
+                request.NetSettlementGroup,
+                request.DisconnectionType,
+                request.ConnectionType,
+                request.AssetType);
+
             _meteringPointRepository.Add(meteringPoint);
+
             return Task.FromResult(new CreateMeteringPointResult());
         }
     }
