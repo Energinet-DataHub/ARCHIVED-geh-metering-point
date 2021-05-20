@@ -41,21 +41,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 new Address(),
                 SampleData.GsrnNumber,
                 SampleData.TypeOfMeteringPoint,
-                "Fake",
-                "Fake",
-                0,
-                1,
-                "Fake",
-                "FAke",
-                "FAke",
-                "Fake",
-
-                "Fake",
-                "Fake",
-                "Fake",
-                "Fake",
-                "Fake",
-                "Fake");
+                SampleData.SubTypeOfMeteringPoint
+                );
 
             await _mediator.Send(request, CancellationToken.None);
 
