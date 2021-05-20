@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Linq;
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Xunit;
 using Xunit.Categories;
@@ -25,7 +26,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         [Fact]
         public void ShouldRaiseEventWhenCreated()
         {
-            var meteringPoint = new MeteringPoint(MeteringPointId.New(), GsrnNumber.Create(SampleData.GsrnNumber), MeteringPointType.Consumption);
+            var gridAreaId = GridAreaId.New();
+            var meteringPoint = new MeteringPoint(
+                MeteringPointId.New(),
+                GsrnNumber.Create(SampleData.GsrnNumber),
+                gridAreaId,
+                MeteringPointType.Consumption);
 
             var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MeteringPointCreated);
             Assert.NotNull(createdEvent);
