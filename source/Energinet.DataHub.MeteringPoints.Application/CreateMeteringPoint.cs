@@ -36,7 +36,11 @@ namespace Energinet.DataHub.MeteringPoints.Application
             string DisconnectionType = "",
             string OccurenceDate = "",
             string MeterNumber = "",
-            string TransactionId = "")
+            string TransactionId = "",
+            string PhysicalStatusOfMeteringPoint = "",
+            string NetSettlementGroup = "",
+            string ConnectionType = "",
+            string AssetType = "")
         : IRequest<CreateMeteringPointResult>,
             IBusinessRequest,
             IOutboundMessage,
