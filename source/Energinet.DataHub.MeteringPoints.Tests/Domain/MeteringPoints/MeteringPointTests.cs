@@ -12,16 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.Linq;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Xunit;
+using Xunit.Categories;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests
+namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 {
-    public static class SampleData
+    [UnitTest]
+    public class MeteringPointTests
     {
-        public static string GsrnNumber => "571234567891234568";
+        [Fact]
+        public void ShouldRaiseEventWhenCreated()
+        {
+            var meteringPoint = new MeteringPoint(MeteringPointId.New(), GsrnNumber.Create(SampleData.GsrnNumber), MeteringPointType.Consumption);
 
-        public static string TypeOfMeteringPoint => "Consumption";
-
-        public static string Transaction => Guid.NewGuid().ToString();
+            var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MeteringPointCreated);
+            Assert.NotNull(createdEvent);
+        }
     }
 }

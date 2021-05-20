@@ -39,7 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         {
             var request = new CreateMeteringPoint(
                 SampleData.GsrnNumber,
-                "Fake",
+                SampleData.TypeOfMeteringPoint,
                 "Fake",
                 "Fake",
                 0,

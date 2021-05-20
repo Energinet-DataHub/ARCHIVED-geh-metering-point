@@ -16,6 +16,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application
@@ -31,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
 
         public Task<CreateMeteringPointResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
         {
-            var meteringPoint = new MeteringPoint(GsrnNumber.Create(request.GsrnNumber));
+            var meteringPoint = new MeteringPoint(MeteringPointId.New(), GsrnNumber.Create(request.GsrnNumber), EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint));
             _meteringPointRepository.Add(meteringPoint);
             return Task.FromResult(new CreateMeteringPointResult());
         }
