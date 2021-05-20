@@ -15,14 +15,14 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Repository;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers
 {
-    public class MeteringPointCreatedNotificationHandler : INotificationHandler<CreateMeteringPointEventMessage>
+    public class
+        MeteringPointCreatedNotificationHandler : INotificationHandler<Domain.Events.CreateMeteringPointEventMessage>
     {
         private readonly IIntegrationEventRepository _integrationEventRepository;
 
@@ -31,11 +31,21 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure
             _integrationEventRepository = integrationEventRepository;
         }
 
-        public async Task Handle(CreateMeteringPointEventMessage notification, CancellationToken cancellationToken)
+        public async Task Handle(
+            Domain.Events.CreateMeteringPointEventMessage notification,
+            CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
+            var message = new CreateMeteringPointEventMessage(
+                notification.Gsrn,
+                notification.MpType,
+                notification.GridAccessProvider,
+                notification.Child,
+                notification.EnergySupplierCurrent);
 
-            await _integrationEventRepository.SaveIntegrationEventMessageToOutboxAsync(notification, OutboxMessageCategory.IntegrationEvent).ConfigureAwait(false);
+            await _integrationEventRepository
+                .SaveIntegrationEventMessageToOutboxAsync(notification, OutboxMessageCategory.IntegrationEvent)
+                .ConfigureAwait(false);
         }
     }
 }

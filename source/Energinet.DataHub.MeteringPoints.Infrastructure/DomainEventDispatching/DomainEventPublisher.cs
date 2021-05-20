@@ -13,20 +13,25 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching
 {
-    public class IntegrationEventTypeFactory
+    public class DomainEventPublisher : IDomainEventPublisher
     {
-        public static Type GetType(string type)
+        private readonly IMediator _mediator;
+
+        public DomainEventPublisher(IMediator mediator)
         {
-            switch (type)
-            {
-                case nameof(CreateMeteringPointEventMessage):
-                    return typeof(CreateMeteringPointEventMessage);
-                default: throw new ArgumentException();
-            }
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        }
+
+        public Task PublishAsync(IDomainEvent domainEvent)
+        {
+            return _mediator.Publish(domainEvent);
         }
     }
 }

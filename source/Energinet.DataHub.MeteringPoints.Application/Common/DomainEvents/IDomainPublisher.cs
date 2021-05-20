@@ -12,21 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers
+namespace Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents
 {
-    public class IntegrationEventTypeFactory
+    /// <summary>
+    /// Service for publishing domain events
+    /// </summary>
+    public interface IDomainEventPublisher
     {
-        public static Type GetType(string type)
-        {
-            switch (type)
-            {
-                case nameof(CreateMeteringPointEventMessage):
-                    return typeof(CreateMeteringPointEventMessage);
-                default: throw new ArgumentException();
-            }
-        }
+        /// <summary>
+        /// Publishes a domain event
+        /// </summary>
+        /// <param name="domainEvent"></param>
+        /// <returns><see cref="Task"/></returns>
+        Task PublishAsync(IDomainEvent @domainEvent);
     }
 }

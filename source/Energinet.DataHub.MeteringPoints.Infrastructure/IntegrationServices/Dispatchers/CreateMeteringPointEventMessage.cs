@@ -14,10 +14,11 @@
 
 using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Energinet.DataHub.MeteringPoints.Domain;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers
 {
-    public record CreateMeteringPointEventMessage(string Gsrn, string MpType, string GridAccessProvider, bool Child,
+    public record CreateMeteringPointEventMessage(GsrnNumber Gsrn, string MpType, string GridAccessProvider, bool Child,
         string EnergySupplierCurrent) : IOutboundMessage, IRequest, IIntegrationEvent;
 }

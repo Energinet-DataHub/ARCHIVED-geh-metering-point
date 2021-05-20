@@ -23,7 +23,6 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Channels;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Handlers;
-using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Repository;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Services;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
@@ -95,7 +94,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
 
             container.BuildMediator(
-                new[] { typeof(CreateMeteringPointEventMessage).Assembly }, Array.Empty<Type>());
+                new[] { typeof(Infrastructure.IntegrationServices.Dispatchers.CreateMeteringPointEventMessage).Assembly }, Array.Empty<Type>());
 
             container.Verify();
 

@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Repository;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;

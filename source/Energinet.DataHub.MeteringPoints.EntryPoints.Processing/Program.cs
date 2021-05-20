@@ -81,11 +81,12 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 },
                 new[]
                 {
+                    typeof(UnitOfWorkBehavior<,>),
                     typeof(InputValidationBehavior<,>),
                     typeof(AuthorizationBehavior<,>),
-                    typeof(BusinessProcessResponderBehavior<,>),
+                    typeof(BusinessProcessResultBehavior<,>),
                     typeof(ValidationReportsBehavior<,>),
-                    typeof(UnitOfWorkBehavior<,>),
+                    typeof(DomainEventsDispatcherBehaviour<,>),
                 });
 
             container.AddInputValidation();
