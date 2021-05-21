@@ -13,28 +13,16 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class GsrnNumberMustBeValidRule : AbstractValidator<string>
+    public class SettlementMethodNotAllowedValidationError : ValidationError
     {
-        public GsrnNumberMustBeValidRule()
+        public SettlementMethodNotAllowedValidationError(string typeOfMeteringPoint)
         {
-            CascadeMode = CascadeMode.Stop;
-
-            RuleFor(gsrn => gsrn)
-                .NotEmpty()
-                .WithState(CreateValidationError);
-
-            RuleFor(gsrn => Domain.MeteringPoints.GsrnNumber.CheckRules(gsrn))
-                .Must(x => x.Success)
-                .WithState(CreateValidationError);
+            TypeOfMeteringPoint = typeOfMeteringPoint;
         }
 
-        private static ValidationError CreateValidationError(string gsrn)
-        {
-            return new GsrnNumberMustBeValidValidationError(gsrn);
-        }
+        public string TypeOfMeteringPoint { get; }
     }
 }

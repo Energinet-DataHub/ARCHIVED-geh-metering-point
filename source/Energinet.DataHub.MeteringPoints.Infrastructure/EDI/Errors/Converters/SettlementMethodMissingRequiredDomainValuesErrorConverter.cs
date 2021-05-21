@@ -13,16 +13,15 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
-using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class CreateMeteringPointRuleSet : AbstractValidator<CreateMeteringPoint>
+    public class SettlementMethodMissingRequiredDomainValuesErrorConverter : ErrorConverter<SettlementMethodMissingRequiredDomainValuesValidationError>
     {
-        public CreateMeteringPointRuleSet()
+        // TODO: This is an example, redo when we know what/how etc.
+        protected override Error Convert(SettlementMethodMissingRequiredDomainValuesValidationError error)
         {
-            RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberMustBeValidRule());
-            RuleFor(request => request).SetValidator(new SettlementMethodMustBeValidRule());
+            return new("TODO", $"Missing required domain values in settlementmethod: {error.SettlementMethod}");
         }
     }
 }

@@ -13,16 +13,15 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
-using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class CreateMeteringPointRuleSet : AbstractValidator<CreateMeteringPoint>
+    public class SettlementMethodRequiredErrorConverter : ErrorConverter<SettlementMethodRequiredValidationError>
     {
-        public CreateMeteringPointRuleSet()
+        // TODO: This is an example, redo when we know what/how etc.
+        protected override Error Convert(SettlementMethodRequiredValidationError error)
         {
-            RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberMustBeValidRule());
-            RuleFor(request => request).SetValidator(new SettlementMethodMustBeValidRule());
+            return new("TODO", $"Settlementmethod required for meteringpoint type: {error.TypeOfMeteringPoint}");
         }
     }
 }
