@@ -13,67 +13,85 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Reflection;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.Validation;
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Infrastructure;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
+using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
+using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
-using MediatR;
-using MediatR.Pipeline;
-using Microsoft.Data.SqlClient;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using NodaTime;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Xunit;
+using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
     [Collection("IntegrationTest")]
+    [IntegrationTest]
     public class TestHost : IDisposable
     {
-        private readonly ServiceProvider _serviceProvider;
+        private readonly Scope _scope;
+        private readonly Container _container;
+        private readonly IServiceProvider _serviceProvider;
         private bool _disposed;
 
         protected TestHost()
         {
             CleanupDatabase();
 
-            var services = new ServiceCollection();
-
-            services.AddDbContext<MeteringPointContext>(x =>
+            _container = new Container();
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddDbContext<MeteringPointContext>(x =>
                 x.UseSqlServer(ConnectionString, y => y.UseNodaTime()));
+            serviceCollection.AddSimpleInjector(_container);
+            _serviceProvider = serviceCollection.BuildServiceProvider().UseSimpleInjector(_container);
 
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IMeteringPointRepository, MeteringPointRepository>();
+            _container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
+            _container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
+            _container.Register<IOutbox, InMemoryOutbox>(Lifestyle.Scoped);
+            _container.Register<IOutboxManager, InMemoryOutbox>(Lifestyle.Scoped);
+            _container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Singleton);
+            _container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
+            _container.Register<ISystemDateTimeProvider, SystemDateTimeProviderStub>(Lifestyle.Singleton);
+            _container.Register(typeof(IBusinessProcessResultHandler<>), typeof(CreateMeteringPointResultHandler), Lifestyle.Scoped);
+            _container.Register<IValidator<CreateMeteringPoint>, CreateMeteringPointRuleSet>(Lifestyle.Scoped);
+            _container.AddValidationErrorConversion(
+                validateRegistrations: true,
+                typeof(CreateMeteringPoint).Assembly, // Application
+                typeof(GsrnNumberMustBeValidValidationError).Assembly, // Domain
+                typeof(ErrorMessageFactory).Assembly); // Infrastructure
 
-            services.AddMediatR(new[]
-            {
-                typeof(CreateMeteringPoint).Assembly,
-                //typeof(PublishWhenEnergySupplierHasChanged).Assembly,
-            });
+            _container.BuildMediator(
+                new[]
+                {
+                    typeof(CreateMeteringPoint).Assembly,
+                },
+                new[]
+                {
+                    typeof(UnitOfWorkBehavior<,>),
+                    typeof(InputValidationBehavior<,>),
+                    // typeof(AuthorizationBehavior<,>),
+                    typeof(BusinessProcessResultBehavior<,>),
+                    // typeof(IntegrationEventsDispatchBehavior<,>),
+                    // typeof(ValidationReportsBehavior<,>),
+                });
 
-            // Busines process responders
-            //services.AddScoped<IBusinessProcessResponder<RequestChangeOfSupplier>, RequestChangeOfSupplierResponder>();
+            _container.Verify();
 
-            // Input validation
-            //services.AddScoped<IValidator<RequestChangeOfSupplier>, RequestChangeOfSupplierRuleSet>();
-
-            // Business process pipeline
-            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkBehavior<,>));
-            //services.AddScoped(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
-            //services.AddScoped(typeof(IPipelineBehavior<,>), typeof(InputValidationBehavior<,>));
-            //services.AddScoped(typeof(IPipelineBehavior<,>), typeof(DomainEventsDispatcherBehavior<,>));
-            //services.AddScoped(typeof(IPipelineBehavior<,>), typeof(BusinessProcessResponderBehavior<,>));
-            _serviceProvider = services.BuildServiceProvider();
+            _scope = AsyncScopedLifestyle.BeginScope(_container);
         }
 
         private string ConnectionString =>
@@ -93,19 +111,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             }
 
             CleanupDatabase();
-            _serviceProvider.Dispose();
+            _scope.Dispose();
+            ((ServiceProvider)_serviceProvider).Dispose();
+            _container.Dispose();
             _disposed = true;
         }
 
         protected TService GetService<TService>()
+            where TService : class
         {
-            return _serviceProvider.GetRequiredService<TService>();
+            return _container.GetInstance<TService>();
         }
 
         private void CleanupDatabase()
         {
+            // new SqlCommand(cleanupStatement, GetSqlDbConnection()).ExecuteNonQuery();
             var cleanupStatement = $"";
-            //new SqlCommand(cleanupStatement, GetSqlDbConnection()).ExecuteNonQuery();
         }
     }
 }

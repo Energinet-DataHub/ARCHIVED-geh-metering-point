@@ -13,20 +13,11 @@
 // limitations under the License.
 
 using System;
-using System.Globalization;
-using Energinet.DataHub.MeteringPoints.Application.Common;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Authorization.AuthorizationHandlers
+namespace Energinet.DataHub.MeteringPoints.Tests
 {
-    public class ExampleAuthorizationHandler : IAuthorizationHandler<CreateMeteringPoint, BusinessProcessResult>
+    public static class SampleData
     {
-        public AuthorizationResult Authorize(CreateMeteringPoint command)
-        {
-            // if (!IsValidFormat(command.OccurenceDate))
-            // {
-            //     return AuthorizationResult.Error(nameof(command.OccurenceDate), GetType());
-            // }
-            return AuthorizationResult.Ok();
-        }
+        public static string GsrnNumber => "571234567891234568";
     }
 }

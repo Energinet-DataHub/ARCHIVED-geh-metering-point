@@ -12,18 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint
 {
-    public static class SampleData
-    {
-        public static string GsrnNumber => "571234567891234568";
+    public record CreateMeteringPointRejected(
+        string TransactionId,
+        string GsrnNumber,
+        string Status, // TODO: Is status implicit in Rejected from type?
+        string Reason,
+        Error[] Errors);
 
-        public static string TypeOfMeteringPoint => "Consumption";
-
-        public static string Transaction => Guid.NewGuid().ToString();
-
-        public static string SubTypeOfMeteringPoint => "Physical";
-    }
+    // TODO: Reference to original document?
 }

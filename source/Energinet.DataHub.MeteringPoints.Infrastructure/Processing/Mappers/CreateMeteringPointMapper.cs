@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
-using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
+using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Contracts.CreateMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
 {
@@ -22,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
     {
         protected override IInboundMessage Convert(CreateMeteringPoint obj)
         {
-            return new Application.CreateMeteringPoint
+            return new Application.CreateMeteringPoint(new Address())
             {
                 GsrnNumber = obj.GsrnNumber,
             };

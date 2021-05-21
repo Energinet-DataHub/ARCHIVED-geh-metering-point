@@ -62,7 +62,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 
             await response.WriteStringAsync("Correlation id: " + _correlationContext.GetCorrelationId()).ConfigureAwait(false);
 
-            var command = new CreateMeteringPoint
+            var command = new CreateMeteringPoint(new Address())
             {
                 GsrnNumber = "1234567",
             };
