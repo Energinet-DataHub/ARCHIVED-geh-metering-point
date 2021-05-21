@@ -15,12 +15,22 @@
 using System;
 using System.Text;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.Validation;
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
+using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
+using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleInjector;
@@ -51,6 +61,18 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             _container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
             _container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
+            _container.Register<IOutbox, InMemoryOutbox>(Lifestyle.Scoped);
+            _container.Register<IOutboxManager, InMemoryOutbox>(Lifestyle.Scoped);
+            _container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Singleton);
+            _container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
+            _container.Register<ISystemDateTimeProvider, SystemDateTimeProviderStub>(Lifestyle.Singleton);
+            _container.Register(typeof(IBusinessProcessResultHandler<>), typeof(CreateMeteringPointResultHandler), Lifestyle.Scoped);
+            _container.Register<IValidator<CreateMeteringPoint>, CreateMeteringPointRuleSet>(Lifestyle.Scoped);
+            _container.AddValidationErrorConversion(
+                validateRegistrations: true,
+                typeof(CreateMeteringPoint).Assembly, // Application
+                typeof(GsrnNumberMustBeValidValidationError).Assembly, // Domain
+                typeof(ErrorMessageFactory).Assembly); // Infrastructure
 
             CleanupDatabase(_serviceProvider.GetService<MeteringPointContext>());
 
@@ -61,18 +83,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 },
                 new[]
                 {
-                    // typeof(InputValidationBehavior<,>),
+                    typeof(UnitOfWorkBehavior<,>),
+                    typeof(InputValidationBehavior<,>),
                     // typeof(AuthorizationBehavior<,>),
-                    // typeof(BusinessProcessResultBehavior<,>),
+                    typeof(BusinessProcessResultBehavior<,>),
                     // typeof(IntegrationEventsDispatchBehavior<,>),
                     // typeof(ValidationReportsBehavior<,>),
-                    typeof(UnitOfWorkBehavior<,>),
                 });
+
+            _container.Verify();
 
             _scope = AsyncScopedLifestyle.BeginScope(_container);
         }
 
-        private string ConnectionString => Environment.GetEnvironmentVariable("MeteringPoints_IntegrationTests_ConnectionString");
+        // private string ConnectionString => Environment.GetEnvironmentVariable("MeteringPoints_IntegrationTests_ConnectionString");
+        private string ConnectionString => "Server=(local); Database=MeteringPointData; Trusted_connection=true";
 
         public void Dispose()
         {

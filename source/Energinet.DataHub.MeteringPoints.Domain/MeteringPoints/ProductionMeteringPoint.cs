@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
@@ -20,23 +20,24 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
     public class ProductionMeteringPoint : MeteringPoint
     {
         public ProductionMeteringPoint(
+            MeteringPointId id,
             GsrnNumber gsrnNumber,
             string streetName,
             string postCode,
             string cityName,
             string countryCode,
             bool isAddressWashable,
-            string physicalStatusOfMeteringPoint,
-            string meteringPointSubType,
-            string typeOfMeteringPoint,
-            string meteringGridArea,
+            PhysicalState physicalState,
+            MeteringPointSubType meteringPointSubType,
+            MeteringPointType meteringPointType,
+            GridAreaId gridAreaId,
             string powerPlant,
             string locationDescription,
             string productType,
             string parentRelatedMeteringPoint,
             string unitType,
             string meterNumber,
-            Instant? meterReadingOccurrence,
+            string meterReadingOccurrence,
             int maximumCurrent,
             int maximumPower,
             Instant? occurenceDate,
@@ -45,16 +46,17 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             int disconnectionType,
             int connectionType)
             : base(
+                id,
                 gsrnNumber,
                 streetName,
                 postCode,
                 cityName,
                 countryCode,
                 isAddressWashable,
-                physicalStatusOfMeteringPoint,
+                physicalState,
                 meteringPointSubType,
-                typeOfMeteringPoint,
-                meteringGridArea,
+                meteringPointType,
+                gridAreaId,
                 powerPlant,
                 locationDescription,
                 productType,
@@ -62,61 +64,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 unitType,
                 meterNumber,
                 meterReadingOccurrence,
-                maximumCurrent,
-                maximumPower,
-                occurenceDate)
-        {
-            ProductionObligation = productionObligation;
-            NetSettlementGroup = netSettlementGroup;
-            DisconnectionType = disconnectionType;
-            ConnectionType = connectionType;
-        }
-
-        public ProductionMeteringPoint(
-            GsrnNumber gsrnNumber,
-            Guid id,
-            string streetName,
-            string postCode,
-            string cityName,
-            string countryCode,
-            bool isAddressWashable,
-            string physicalStatusOfMeteringPoint,
-            string meteringPointSubType,
-            string typeOfMeteringPoint,
-            string meteringGridArea,
-            string powerPlant,
-            string locationDescription,
-            string productType,
-            string parentRelatedMeteringPoint,
-            string unitType,
-            string meterNumber,
-            Instant? meterReadingOccurence,
-            int maximumCurrent,
-            int maximumPower,
-            Instant? occurenceDate,
-            int productionObligation,
-            int netSettlementGroup,
-            int disconnectionType,
-            int connectionType)
-            : base(
-                gsrnNumber,
-                id,
-                streetName,
-                postCode,
-                cityName,
-                countryCode,
-                isAddressWashable,
-                physicalStatusOfMeteringPoint,
-                meteringPointSubType,
-                typeOfMeteringPoint,
-                meteringGridArea,
-                powerPlant,
-                locationDescription,
-                productType,
-                parentRelatedMeteringPoint,
-                unitType,
-                meterNumber,
-                meterReadingOccurence,
                 maximumCurrent,
                 maximumPower,
                 occurenceDate)

@@ -15,13 +15,16 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using MediatR;
 using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Application
 {
-    public class CreateMeteringPointHandler : IRequestHandler<CreateMeteringPoint, CreateMeteringPointResult>
+    public class CreateMeteringPointHandler : IRequestHandler<CreateMeteringPoint, BusinessProcessResult>
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
 
@@ -30,29 +33,30 @@ namespace Energinet.DataHub.MeteringPoints.Application
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
         }
 
-        public Task<CreateMeteringPointResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
+        public Task<BusinessProcessResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
         {
             var meteringPoint = new ConsumptionMeteringPoint(
+                MeteringPointId.New(),
                 GsrnNumber.Create(request.GsrnNumber),
                 request.InstallationLocationAddress.StreetName,
                 request.InstallationLocationAddress.PostCode,
                 request.InstallationLocationAddress.CityName,
                 request.InstallationLocationAddress.CountryCode,
                 request.InstallationLocationAddress.IsWashable,
-                request.PhysicalStatusOfMeteringPoint,
-                request.SubTypeOfMeteringPoint,
-                request.TypeOfMeteringPoint,
-                request.MeteringGridArea,
+                EnumerationType.FromName<PhysicalState>(request.PhysicalStatusOfMeteringPoint),
+                EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
+                EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint),
+                new GridAreaId(Guid.NewGuid()),
                 request.PowerPlant,
                 request.LocationDescription,
                 request.ProductType,
                 request.ParentRelatedMeteringPoint,
                 request.UnitType,
                 request.MeterNumber,
-                SystemClock.Instance.GetCurrentInstant(), // TODO: how to handle string to Instant conversion?
+                request.MeterReadingOccurrence,
                 request.MaximumCurrent,
                 request.MaximumPower,
-                SystemClock.Instance.GetCurrentInstant(), // TODO: how to handle string to Instant conversion?
+                Instant.MaxValue, // TODO: Parse date in correct format when implemented in Input Validation
                 request.SettlementMethod,
                 request.NetSettlementGroup,
                 request.DisconnectionType,
@@ -61,7 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
 
             _meteringPointRepository.Add(meteringPoint);
 
-            return Task.FromResult(new CreateMeteringPointResult());
+            return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
         }
     }
 }

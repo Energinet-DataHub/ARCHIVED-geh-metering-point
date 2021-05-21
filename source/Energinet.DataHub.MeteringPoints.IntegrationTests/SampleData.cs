@@ -20,10 +20,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
     {
         public static string GsrnNumber => "571234567891234568";
 
-        public static string ConsumerId => "2601211234";
-
-        public static string GlnNumber => "5790000555550";
+        public static string TypeOfMeteringPoint => "Consumption";
 
         public static string Transaction => Guid.NewGuid().ToString();
+
+        public static string SubTypeOfMeteringPoint => "Physical";
     }
 }

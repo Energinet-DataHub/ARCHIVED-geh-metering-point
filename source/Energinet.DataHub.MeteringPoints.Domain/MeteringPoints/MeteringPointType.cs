@@ -12,9 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public class CreateMeteringPointResult
+    public class MeteringPointType : EnumerationType
     {
+        public static readonly MeteringPointType Consumption = new MeteringPointType(0, nameof(Consumption));
+        public static readonly MeteringPointType Production = new MeteringPointType(1, nameof(Production));
+        public static readonly MeteringPointType Exchange = new MeteringPointType(2, nameof(Exchange));
+
+        private MeteringPointType(int id, string name)
+            : base(id, name)
+        {
+        }
     }
 }

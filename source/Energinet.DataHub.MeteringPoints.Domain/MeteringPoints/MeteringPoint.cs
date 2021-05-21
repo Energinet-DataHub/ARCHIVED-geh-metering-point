@@ -12,46 +12,47 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public abstract class MeteringPoint
     {
-        public MeteringPoint(
+        protected MeteringPoint(
+            MeteringPointId id,
             GsrnNumber gsrnNumber,
             string streetName,
             string postCode,
             string cityName,
             string countryCode,
             bool isAddressWashable,
-            string physicalStatusOfMeteringPoint,
-            string meteringPointSubType,
-            string typeOfMeteringPoint,
-            string meteringGridArea,
+            PhysicalState physicalState,
+            MeteringPointSubType meteringPointSubType,
+            MeteringPointType meteringPointType,
+            GridAreaId gridAreaId,
             string powerPlant,
             string locationDescription,
             string productType,
             string parentRelatedMeteringPoint,
             string unitType,
             string meterNumber,
-            Instant? meterReadingOccurrence,
+            string meterReadingOccurrence,
             int maximumCurrent,
             int maximumPower,
             Instant? occurenceDate)
         {
+            Id = id;
             GsrnNumber = gsrnNumber;
-            Id = Guid.NewGuid();
             StreetName = streetName;
             PostCode = postCode;
             CityName = cityName;
             CountryCode = countryCode;
             IsAddressWashable = isAddressWashable;
-            PhysicalStatusOfMeteringPoint = physicalStatusOfMeteringPoint;
+            PhysicalState = physicalState;
             MeteringPointSubType = meteringPointSubType;
-            TypeOfMeteringPoint = typeOfMeteringPoint;
-            MeteringGridArea = meteringGridArea;
+            MeteringPointType = meteringPointType;
+            GridAreaId = gridAreaId;
             PowerPlant = powerPlant;
             LocationDescription = locationDescription;
             ProductType = productType;
@@ -64,56 +65,17 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             OccurenceDate = occurenceDate;
         }
 
-        public MeteringPoint(
-            GsrnNumber gsrnNumber,
-            Guid id,
-            string streetName,
-            string postCode,
-            string cityName,
-            string countryCode,
-            bool isAddressWashable,
-            string physicalStatusOfMeteringPoint,
-            string meteringPointSubType,
-            string typeOfMeteringPoint,
-            string meteringGridArea,
-            string powerPlant,
-            string locationDescription,
-            string productType,
-            string parentRelatedMeteringPoint,
-            string unitType,
-            string meterNumber,
-            Instant? meterReadingOccurence,
-            int maximumCurrent,
-            int maximumPower,
-            Instant? occurenceDate)
-            : this(
-                gsrnNumber,
-                streetName,
-                postCode,
-                cityName,
-                countryCode,
-                isAddressWashable,
-                physicalStatusOfMeteringPoint,
-                meteringPointSubType,
-                typeOfMeteringPoint,
-                meteringGridArea,
-                powerPlant,
-                locationDescription,
-                productType,
-                parentRelatedMeteringPoint,
-                unitType,
-                meterNumber,
-                meterReadingOccurence,
-                maximumCurrent,
-                maximumPower,
-                occurenceDate)
-        {
-            Id = id;
-        }
+        public GridAreaId GridAreaId { get; }
+
+        public MeteringPointType MeteringPointType { get; }
+
+        public MeteringPointSubType MeteringPointSubType { get; }
+
+        public PhysicalState PhysicalState { get; }
 
         public GsrnNumber GsrnNumber { get; }
 
-        public Guid Id { get; }
+        public MeteringPointId Id { get; }
 
         public string StreetName { get; }
 
@@ -125,19 +87,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public bool IsAddressWashable { get; }
 
-        public string PhysicalStatusOfMeteringPoint { get; }
-
-        public string MeteringPointSubType { get; }
-
-        public Instant? MeterReadingOccurrence { get; }
-
-        public string TypeOfMeteringPoint { get; }
+        public string MeterReadingOccurrence { get; }
 
         public int MaximumCurrent { get; }
 
         public int MaximumPower { get; }
-
-        public string MeteringGridArea { get; }
 
         public string PowerPlant { get; }
 

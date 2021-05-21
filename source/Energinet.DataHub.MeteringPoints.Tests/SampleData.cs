@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
+namespace Energinet.DataHub.MeteringPoints.Tests
 {
-    public abstract class ValidationError
+    public static class SampleData
     {
+        public static string GsrnNumber => "571234567891234568";
     }
 }

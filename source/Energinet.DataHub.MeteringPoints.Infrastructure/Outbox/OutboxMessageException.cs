@@ -12,9 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
+using System;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
 {
-    public abstract class ValidationError
+    public class OutboxMessageException : Exception
     {
+        public OutboxMessageException()
+        {
+        }
+
+        public OutboxMessageException(string? message)
+            : base(message)
+        {
+        }
+
+        public OutboxMessageException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
     }
 }

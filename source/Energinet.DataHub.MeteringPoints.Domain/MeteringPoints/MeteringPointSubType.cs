@@ -12,9 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public abstract class ValidationError
+    public class MeteringPointSubType : EnumerationType
     {
+        public static readonly MeteringPointSubType Physical = new MeteringPointSubType(0, nameof(Physical));
+
+        private MeteringPointSubType(int id, string name)
+            : base(id, name)
+        {
+        }
     }
 }

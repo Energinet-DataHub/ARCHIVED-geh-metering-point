@@ -12,9 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public abstract class ValidationError
+    public class MeteringPointCreated : DomainEventBase
     {
+        public MeteringPointCreated(MeteringPointId meteringPointId, GsrnNumber gsrnNumber)
+        {
+            MeteringPointId = meteringPointId;
+            GsrnNumber = gsrnNumber;
+        }
+
+        public MeteringPointId MeteringPointId { get; }
+
+        public GsrnNumber GsrnNumber { get; }
     }
 }

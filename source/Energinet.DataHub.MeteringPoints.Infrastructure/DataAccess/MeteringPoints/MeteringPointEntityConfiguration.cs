@@ -13,7 +13,9 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -32,20 +34,46 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             builder.ToTable("MeteringPoints", "dbo");
 
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id)
+                .HasConversion(
+                    toDbValue => toDbValue.Value,
+                    fromDbValue => new MeteringPointId(fromDbValue));
+
             builder.Property(x => x.GsrnNumber)
                 .HasConversion(
                     toDbValue => toDbValue.Value,
                     fromDbValue => GsrnNumber.Create(fromDbValue));
-            builder.HasKey(x => x.Id);
+
             builder.Property(x => x.StreetName);
             builder.Property(x => x.PostCode);
             builder.Property(x => x.CityName);
             builder.Property(x => x.CountryCode);
             builder.Property(x => x.IsAddressWashable);
-            builder.Property(x => x.PhysicalStatusOfMeteringPoint);
-            builder.Property(x => x.MeteringPointSubType);
-            builder.Property(x => x.TypeOfMeteringPoint);
-            builder.Property(x => x.MeteringGridArea);
+
+            builder.Property(x => x.PhysicalState)
+                .HasColumnName("PhysicalStatusOfMeteringPoint")
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<PhysicalState>(fromDbValue));
+
+            builder.Property(x => x.MeteringPointSubType)
+                .HasColumnName("MeteringPointSubType")
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<MeteringPointSubType>(fromDbValue));
+
+            builder.Property(x => x.MeteringPointType)
+                .HasColumnName("TypeOfMeteringPoint")
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<MeteringPointType>(fromDbValue));
+
+            builder.Property(x => x.GridAreaId)
+                .HasColumnName("MeteringGridArea")
+                .HasConversion(
+                    toDbValue => toDbValue.Value,
+                    fromDbValue => new GridAreaId(fromDbValue));
+
             builder.Property(x => x.PowerPlant);
             builder.Property(x => x.LocationDescription);
             builder.Property(x => x.ProductType);
