@@ -12,21 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Globalization;
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Authorization.AuthorizationHandlers
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
 {
-    public class ExampleAuthorizationHandler : IAuthorizationHandler<CreateMeteringPoint, BusinessProcessResult>
+    public class InMemoryOutbox : IOutbox, IOutboxManager
     {
-        public AuthorizationResult Authorize(CreateMeteringPoint command)
+        private readonly List<OutboxMessage> _messages = new();
+
+        public void Add(OutboxMessage message)
         {
-            // if (!IsValidFormat(command.OccurenceDate))
-            // {
-            //     return AuthorizationResult.Error(nameof(command.OccurenceDate), GetType());
-            // }
-            return AuthorizationResult.Ok();
+            _messages.Add(message);
+        }
+
+        public OutboxMessage? GetNext(OutboxMessageCategory category)
+        {
+            return _messages.FirstOrDefault(message => message.Category == category);
+        }
+
+        public void MarkProcessed(OutboxMessage message)
+        {
+            _messages.Remove(message);
         }
     }
 }
