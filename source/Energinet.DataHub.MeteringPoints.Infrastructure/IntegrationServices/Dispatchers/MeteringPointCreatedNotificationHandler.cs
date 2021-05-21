@@ -22,7 +22,7 @@ using MediatR;
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers
 {
     public class
-        MeteringPointCreatedNotificationHandler : INotificationHandler<Domain.Events.CreateMeteringPointEventMessage>
+        MeteringPointCreatedNotificationHandler : INotificationHandler<Domain.MeteringPoints.MeteringPointCreated>
     {
         private readonly IOutbox _outbox;
         private readonly IOutboxMessageFactory _outboxMessageFactory;
@@ -34,16 +34,16 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Di
         }
 
         public Task Handle(
-            Domain.Events.CreateMeteringPointEventMessage notification,
+            Domain.MeteringPoints.MeteringPointCreated notification,
             CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
             var message = new CreateMeteringPointEventMessage(
-                notification.Gsrn,
-                notification.MpType,
-                notification.GridAccessProvider,
-                notification.Child,
-                notification.EnergySupplierCurrent);
+                notification.GsrnNumber,
+                "notification.mptype",
+                "notification.GridAccessProvider",
+                true,
+                "notification.EnergySupplierCurrent");
 
             var outboxMessage = _outboxMessageFactory.CreateFrom(message, OutboxMessageCategory.IntegrationEvent);
             _outbox.Add(outboxMessage);
