@@ -12,8 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.IO;
+using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
 using Microsoft.Azure.Functions.Worker;
@@ -43,7 +47,17 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             var logger = executionContext.GetLogger("CreateMeteringPointHttpTrigger");
             logger.LogInformation("Received CreateMeteringPoint request");
 
+            using var r = new StreamReader(request.Body, Encoding.UTF8);
+            var bodyStr = await r.ReadToEndAsync();
+            var root = XDocument.Parse(bodyStr);
+            XNamespace ns = "urn:ediel:org:requestchangeofapcharacteristics:0:1";
+
             var response = request.CreateResponse(HttpStatusCode.OK);
+            var testElement = root
+                .Descendants(ns + "mRID")
+                .Where(el => el.Parent?.Name == ns + "MktActivityRecord")
+                .Select(el => el).ToList();
+
             response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
 
             await response.WriteStringAsync("Correlation id: " + _correlationContext.GetCorrelationId()).ConfigureAwait(false);
