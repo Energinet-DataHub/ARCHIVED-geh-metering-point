@@ -13,11 +13,12 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public abstract class MeteringPoint
+    public abstract class MeteringPoint : Entity
     {
         protected MeteringPoint(
             MeteringPointId id,

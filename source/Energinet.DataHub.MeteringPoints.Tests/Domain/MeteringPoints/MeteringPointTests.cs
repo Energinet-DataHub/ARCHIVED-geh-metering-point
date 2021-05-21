@@ -1,48 +1,63 @@
-﻿// // Copyright 2020 Energinet DataHub A/S
-// //
-// // Licensed under the Apache License, Version 2.0 (the "License2");
-// // you may not use this file except in compliance with the License.
-// // You may obtain a copy of the License at
-// //
-// //     http://www.apache.org/licenses/LICENSE-2.0
-// //
-// // Unless required by applicable law or agreed to in writing, software
-// // distributed under the License is distributed on an "AS IS" BASIS,
-// // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// // See the License for the specific language governing permissions and
-// // limitations under the License.
+﻿// Copyright 2020 Energinet DataHub A/S
 //
-// using System.Linq;
-// using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
-// using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-// using Xunit;
-// using Xunit.Categories;
+// Licensed under the Apache License, Version 2.0 (the "License2");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
-// {
-//     #pragma warning disable
-//     [UnitTest]
-//     public class MeteringPointTests
-//     {
-//         [Fact]
-//         public void ShouldRaiseEventWhenCreated()
-//         {
-//             var gridAreaId = GridAreaId.New();
-//             var meteringPoint = new ConsumptionMeteringPoint(
-//                 MeteringPointId.New(),
-//                 GsrnNumber.Create(SampleData.GsrnNumber),
-//                 gridAreaId,
-//                 MeteringPointType.Consumption,
-//                 MeteringPointSubType.Physical,
-//                 "",
-//                 false,
-//                 PhysicalState.Connected,
-//                 MeteringPointSubType.Physical,
-//                 MeteringPointType.Consumption,
-//                 );
+//     http://www.apache.org/licenses/LICENSE-2.0
 //
-//             var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MeteringPointCreated);
-//             Assert.NotNull(createdEvent);
-//         }
-//     }
-// }
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+using System.Linq;
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Xunit;
+using Xunit.Categories;
+
+namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
+{
+    #pragma warning disable
+    [UnitTest]
+    public class MeteringPointTests
+    {
+        [Fact]
+        public void ShouldRaiseEventWhenCreated()
+        {
+            var meteringPoint = new ConsumptionMeteringPoint(
+                MeteringPointId.New(),
+                GsrnNumber.Create(SampleData.GsrnNumber),
+                SampleData.StreetName,
+                SampleData.PostCode,
+                SampleData.CityName,
+                SampleData.CountryCode,
+                SampleData.IsAddressWashable,
+                EnumerationType.FromName<PhysicalState>(SampleData.PhysicalStateName),
+                EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
+                EnumerationType.FromName<MeteringPointType>(SampleData.TypeName),
+                GridAreaId.New(),
+                SampleData.PowerPlant,
+                SampleData.LocationDescription,
+                SampleData.ProductType,
+                SampleData.ParentRelatedMeteringPoint,
+                SampleData.UnitType,
+                SampleData.MeterNumber,
+                SampleData.MeterReadingOccurence,
+                SampleData.MaximumCurrent,
+                SampleData.MaximumPower,
+                SampleData.OccurenceDate,
+                SampleData.SettlementMethod,
+                SampleData.NetSettlementGroup,
+                SampleData.DisconnectionType,
+                SampleData.ConnectionType,
+                SampleData.AssetType);
+
+            var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MeteringPointCreated);
+            Assert.NotNull(createdEvent);
+        }
+    }
+}

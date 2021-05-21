@@ -119,7 +119,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Outbox
         [Fact]
         public void OutBoxMessageGettersSettersTest()
         {
-            _outboxMessageNoIdCTOR.ProcessedDate = SystemClock.Instance.GetCurrentInstant();
+            _outboxMessageNoIdCTOR.SetProcessed(SystemClock.Instance.GetCurrentInstant());
 
             Assert.IsType<Guid>(_outboxMessageNoIdCTOR.Id);
             Assert.IsType<Instant>(_outboxMessageNoIdCTOR.CreationDate);

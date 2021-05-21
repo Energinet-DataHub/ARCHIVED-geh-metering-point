@@ -12,20 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public static class SampleData
+    public class SettlementMethodRequiredErrorConverter : ErrorConverter<SettlementMethodRequiredValidationError>
     {
-        public static string GsrnNumber => "571234567891234568";
-
-        public static string TypeOfMeteringPoint => "Consumption";
-
-        public static string Transaction => Guid.NewGuid().ToString();
-
-        public static string SubTypeOfMeteringPoint => "Physical";
-
-        public static string SettlementMethod => "NonProfiled";
+        // TODO: This is an example, redo when we know what/how etc.
+        protected override Error Convert(SettlementMethodRequiredValidationError error)
+        {
+            return new("TODO", $"Settlementmethod required for meteringpoint type: {error.TypeOfMeteringPoint}");
+        }
     }
 }

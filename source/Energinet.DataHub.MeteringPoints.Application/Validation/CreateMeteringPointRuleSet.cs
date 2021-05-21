@@ -22,6 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation
         public CreateMeteringPointRuleSet()
         {
             RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberMustBeValidRule());
+            RuleFor(request => request).SetValidator(new SettlementMethodMustBeValidRule());
         }
     }
 }

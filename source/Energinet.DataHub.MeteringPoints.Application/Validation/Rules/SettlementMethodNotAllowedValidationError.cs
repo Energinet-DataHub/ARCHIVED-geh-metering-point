@@ -12,20 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public static class SampleData
+    public class SettlementMethodNotAllowedValidationError : ValidationError
     {
-        public static string GsrnNumber => "571234567891234568";
+        public SettlementMethodNotAllowedValidationError(string typeOfMeteringPoint)
+        {
+            TypeOfMeteringPoint = typeOfMeteringPoint;
+        }
 
-        public static string TypeOfMeteringPoint => "Consumption";
-
-        public static string Transaction => Guid.NewGuid().ToString();
-
-        public static string SubTypeOfMeteringPoint => "Physical";
-
-        public static string SettlementMethod => "NonProfiled";
+        public string TypeOfMeteringPoint { get; }
     }
 }

@@ -12,28 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Linq;
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class InMemoryOutbox : IOutbox, IOutboxManager
+    public class SettlementMethodMissingRequiredDomainValuesErrorConverter : ErrorConverter<SettlementMethodMissingRequiredDomainValuesValidationError>
     {
-        private readonly List<OutboxMessage> _messages = new();
-
-        public void Add(OutboxMessage message)
+        // TODO: This is an example, redo when we know what/how etc.
+        protected override Error Convert(SettlementMethodMissingRequiredDomainValuesValidationError error)
         {
-            _messages.Add(message);
-        }
-
-        public OutboxMessage? GetNext(OutboxMessageCategory category)
-        {
-            return _messages.FirstOrDefault(message => message.Category == category);
-        }
-
-        public void MarkProcessed(OutboxMessage message)
-        {
-            _messages.Remove(message);
+            return new("TODO", $"Missing required domain values in settlementmethod: {error.SettlementMethod}");
         }
     }
 }

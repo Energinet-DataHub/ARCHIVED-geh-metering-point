@@ -27,7 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
         /// <summary>
         /// Mark message as processed
         /// </summary>
-        /// <param name="message"></param>
-        void MarkProcessed(OutboxMessage message);
+        /// <param name="outboxMessage"></param>
+        void MarkProcessed(OutboxMessage outboxMessage);
     }
 }

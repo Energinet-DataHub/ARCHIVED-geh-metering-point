@@ -55,14 +55,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddDbContext<MeteringPointContext>(x =>
                 x.UseSqlServer(ConnectionString, y => y.UseNodaTime()));
-
             serviceCollection.AddSimpleInjector(_container);
             _serviceProvider = serviceCollection.BuildServiceProvider().UseSimpleInjector(_container);
 
             _container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
             _container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
-            _container.Register<IOutbox, InMemoryOutbox>(Lifestyle.Scoped);
-            _container.Register<IOutboxManager, InMemoryOutbox>(Lifestyle.Scoped);
+            _container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
+            _container.Register<IOutboxManager, OutboxManager>(Lifestyle.Scoped);
             _container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Singleton);
             _container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
             _container.Register<ISystemDateTimeProvider, SystemDateTimeProviderStub>(Lifestyle.Singleton);
@@ -73,8 +72,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 typeof(CreateMeteringPoint).Assembly, // Application
                 typeof(GsrnNumberMustBeValidValidationError).Assembly, // Domain
                 typeof(ErrorMessageFactory).Assembly); // Infrastructure
-
-            CleanupDatabase(_serviceProvider.GetService<MeteringPointContext>());
 
             _container.BuildMediator(
                 new[]
@@ -94,10 +91,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Verify();
 
             _scope = AsyncScopedLifestyle.BeginScope(_container);
+
+            CleanupDatabase();
         }
 
-        // private string ConnectionString => Environment.GetEnvironmentVariable("MeteringPoints_IntegrationTests_ConnectionString");
-        private string ConnectionString => "Server=(local); Database=MeteringPointData; Trusted_connection=true";
+        private string ConnectionString => Environment.GetEnvironmentVariable("MeteringPoints_IntegrationTests_ConnectionString");
 
         public void Dispose()
         {
@@ -105,14 +103,14 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             GC.SuppressFinalize(this);
         }
 
-        protected void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (_disposed == true)
             {
                 return;
             }
 
-            CleanupDatabase(_serviceProvider.GetService<MeteringPointContext>());
+            CleanupDatabase();
             _scope.Dispose();
             ((ServiceProvider)_serviceProvider).Dispose();
             _container.Dispose();
@@ -125,7 +123,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             return _container.GetInstance<TService>();
         }
 
-        private static void CleanupDatabase(DbContext meteringPointContext)
+        private void CleanupDatabase()
         {
             var cleanupStatement = new StringBuilder();
 
@@ -133,8 +131,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             cleanupStatement.AppendLine($"DELETE FROM ProductionMeteringPoints");
             cleanupStatement.AppendLine($"DELETE FROM ExchangeMeteringPoints");
             cleanupStatement.AppendLine($"DELETE FROM MeteringPoints");
+            cleanupStatement.AppendLine($"DELETE FROM OutboxMessages");
 
-            meteringPointContext.Database.ExecuteSqlRaw(cleanupStatement.ToString());
+            _container.GetInstance<MeteringPointContext>()
+                .Database.ExecuteSqlRaw(cleanupStatement.ToString());
         }
     }
 }
