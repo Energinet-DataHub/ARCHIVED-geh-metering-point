@@ -24,7 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
     {
         //TODO: Implement relevant value objects
         private readonly GridAreaId _gridAreaId;
-        private MeteringPointType _typeOfMeteringPoint;
+        // private MeteringPointType _typeOfMeteringPoint;
         private readonly MeteringPointSubType _subTypeOfMeteringPoint;
         private PhysicalState _physicalState;
 
@@ -48,7 +48,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GsrnNumber = gsrnNumber ?? throw new ArgumentNullException(nameof(gsrnNumber));
             _physicalState = PhysicalState.New;
             _gridAreaId = gridAreaId ?? throw new ArgumentNullException(nameof(gridAreaId));
-            _typeOfMeteringPoint = typeOfMeteringPoint ?? throw new ArgumentNullException(nameof(typeOfMeteringPoint));
+            TypeOfMeteringPoint = typeOfMeteringPoint ?? throw new ArgumentNullException(nameof(typeOfMeteringPoint));
             _subTypeOfMeteringPoint = subTypeOfMeteringPoint ?? throw new ArgumentNullException(nameof(subTypeOfMeteringPoint));
             AddDomainEvent(new MeteringPointCreated(meteringPointId, GsrnNumber));
         }
@@ -56,5 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public MeteringPointId Id { get; }
 
         public GsrnNumber GsrnNumber { get; }
+
+        public MeteringPointType TypeOfMeteringPoint { get; }
     }
 }
