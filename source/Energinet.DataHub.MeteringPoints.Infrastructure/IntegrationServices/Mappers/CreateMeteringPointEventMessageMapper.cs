@@ -30,7 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Ma
             {
                 CreateMeteringPointEventMessage = new IntegrationEventContracts.CreateMeteringPointEventMessage
                 {
-                    Gsrn = obj.Gsrn,
+                    Gsrn = obj.Gsrn.Value,
                     MpType = obj.MpType,
                     GridAccessProvider = obj.GridAccessProvider,
                     Child = obj.Child,

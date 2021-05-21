@@ -16,6 +16,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers;
@@ -84,7 +85,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Repositories
             await using var context = new MeteringPointContext(_options);
 
             CreateMeteringPointEventMessage message = new(
-                "571234567891234605",
+                GsrnNumber.Create("571234567891234605"),
                 "CreateMeteringPointEventMessage",
                 "GridAccessProvider",
                 true,

@@ -15,6 +15,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Domain.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
@@ -71,9 +72,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             outboxMessage.Type.Should().Be(typeof(CreateMeteringPointAccepted).FullName);
         }
 
-        [Fact(Skip = "Not implemented yet")]
-        public void CreateMeteringPoint_WithNoValidationErrors_ShouldGenerateIntegrationEventInOutbox()
+        [Fact]
+        public async void CreateMeteringPoint_WithNoValidationErrors_ShouldGenerateIntegrationEventInOutbox()
         {
+            CreateMeteringPointEventMessage message = new(Domain.GsrnNumber.Create("571234567891234605"), SampleData.TypeOfMeteringPoint, "gridAccessProvider", true, "energySupplierCurrent");
+
+            await _mediator.Publish(message, CancellationToken.None);
+
+            var outboxMessage = _outbox.GetNext(OutboxMessageCategory.IntegrationEvent);
+            outboxMessage.Should().NotBeNull();
+            outboxMessage.Type.Should().Be(typeof(Infrastructure.IntegrationServices.Dispatchers.CreateMeteringPointEventMessage).FullName);
         }
 
         [Fact(Skip = "Not implemented yet")]

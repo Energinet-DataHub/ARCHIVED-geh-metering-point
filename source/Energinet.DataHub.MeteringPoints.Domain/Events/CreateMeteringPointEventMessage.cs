@@ -18,10 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Events
 {
     public class CreateMeteringPointEventMessage : DomainEventBase
     {
-        public CreateMeteringPointEventMessage(GsrnNumber gsrn, string mpType, string gridAccessProvider, bool child, string energySupplierCurrent)
+        public CreateMeteringPointEventMessage(GsrnNumber gsrn, string meteringPointType, string gridAccessProvider, bool child, string energySupplierCurrent)
         {
             Gsrn = gsrn;
-            MpType = mpType;
+            MpType = meteringPointType;
             GridAccessProvider = gridAccessProvider;
             Child = child;
             EnergySupplierCurrent = energySupplierCurrent;

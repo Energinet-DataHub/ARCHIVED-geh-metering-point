@@ -14,6 +14,7 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.Transport;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
@@ -24,7 +25,10 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -63,6 +67,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
             _container.Register<ISystemDateTimeProvider, SystemDateTimeProviderStub>(Lifestyle.Singleton);
             _container.Register(typeof(IBusinessProcessResultHandler<>), typeof(CreateMeteringPointResultHandler), Lifestyle.Scoped);
+            _container.Register<ProtobufOutboundMapperFactory>();
+            _container.Register<MessageDispatcher, InternalDispatcher>(Lifestyle.Scoped);
+            _container.Register<MessageSerializer, ProtobufMessageSerializer>();
+            _container.Register<IntegrationEventToEventHubDispatcher>(Lifestyle.Transient);
             _container.AddValidationErrorConversion(
                 validateRegistrations: true);
 
@@ -70,13 +78,14 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 new[]
                 {
                     typeof(CreateMeteringPoint).Assembly,
+                    typeof(MeteringPointCreatedNotificationHandler).Assembly,
                 },
                 new[]
                 {
                     // typeof(InputValidationBehavior<,>),
                     // typeof(AuthorizationBehavior<,>),
                     typeof(BusinessProcessResultBehavior<,>),
-                    // typeof(IntegrationEventsDispatchBehavior<,>),
+                    typeof(DomainEventsDispatcherBehaviour<,>),
                     // typeof(ValidationReportsBehavior<,>),
                     typeof(UnitOfWorkBehavior<,>),
                 });

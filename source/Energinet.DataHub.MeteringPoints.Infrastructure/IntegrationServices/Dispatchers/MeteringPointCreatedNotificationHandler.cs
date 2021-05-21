@@ -24,14 +24,16 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Di
     public class
         MeteringPointCreatedNotificationHandler : INotificationHandler<Domain.Events.CreateMeteringPointEventMessage>
     {
-        private readonly IIntegrationEventRepository _integrationEventRepository;
+        private readonly IOutbox _outbox;
+        private readonly IOutboxMessageFactory _outboxMessageFactory;
 
-        public MeteringPointCreatedNotificationHandler(IIntegrationEventRepository integrationEventRepository)
+        public MeteringPointCreatedNotificationHandler(IOutbox outbox, IOutboxMessageFactory outboxMessageFactory)
         {
-            _integrationEventRepository = integrationEventRepository;
+            _outbox = outbox;
+            _outboxMessageFactory = outboxMessageFactory;
         }
 
-        public async Task Handle(
+        public Task Handle(
             Domain.Events.CreateMeteringPointEventMessage notification,
             CancellationToken cancellationToken)
         {
@@ -43,9 +45,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Di
                 notification.Child,
                 notification.EnergySupplierCurrent);
 
-            await _integrationEventRepository
-                .SaveIntegrationEventMessageToOutboxAsync(notification, OutboxMessageCategory.IntegrationEvent)
-                .ConfigureAwait(false);
+            var outboxMessage = _outboxMessageFactory.CreateFrom(message, OutboxMessageCategory.IntegrationEvent);
+            _outbox.Add(outboxMessage);
+
+            return Task.CompletedTask;
         }
     }
 }
