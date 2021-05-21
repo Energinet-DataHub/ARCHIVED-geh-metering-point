@@ -14,8 +14,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
 {
     public class InMemoryOutbox : IOutbox, IOutboxManager
     {
@@ -31,9 +32,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
             return _messages.FirstOrDefault(message => message.Category == category);
         }
 
-        public void MarkProcessed(OutboxMessage message)
+        public void MarkProcessed(OutboxMessage outboxMessage)
         {
-            _messages.Remove(message);
+            _messages.Remove(outboxMessage);
         }
     }
 }
