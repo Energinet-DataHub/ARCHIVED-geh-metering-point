@@ -14,22 +14,33 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application;
-using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
+using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
+using Energinet.DataHub.MeteringPoints.Application.Validation;
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
 using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Channels;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Handlers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Repository;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Services;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleInjector;
@@ -67,12 +78,15 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
             _container.Register<ISystemDateTimeProvider, SystemDateTimeProviderStub>(Lifestyle.Singleton);
             _container.Register(typeof(IBusinessProcessResultHandler<>), typeof(CreateMeteringPointResultHandler), Lifestyle.Scoped);
-            _container.Register<ProtobufOutboundMapperFactory>();
-            _container.Register<MessageDispatcher, InternalDispatcher>(Lifestyle.Scoped);
-            _container.Register<MessageSerializer, ProtobufMessageSerializer>();
-            _container.Register<IntegrationEventToEventHubDispatcher>(Lifestyle.Transient);
+            _container.Register<IValidator<CreateMeteringPoint>, CreateMeteringPointRuleSet>(Lifestyle.Scoped);
+            _container.Register<IDomainEventsAccessor, DomainEventsAccessor>();
+            _container.Register<IDomainEventsDispatcher, DomainEventsDispatcher>();
+            _container.Register<IDomainEventPublisher, DomainEventPublisher>();
             _container.AddValidationErrorConversion(
-                validateRegistrations: true);
+                validateRegistrations: true,
+                typeof(CreateMeteringPoint).Assembly, // Application
+                typeof(GsrnNumberMustBeValidValidationError).Assembly, // Domain
+                typeof(ErrorMessageFactory).Assembly); // Infrastructure
 
             _container.BuildMediator(
                 new[]
@@ -82,16 +96,15 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 },
                 new[]
                 {
-                    // typeof(InputValidationBehavior<,>),
+                    typeof(UnitOfWorkBehavior<,>),
+                    typeof(InputValidationBehavior<,>),
                     // typeof(AuthorizationBehavior<,>),
                     typeof(BusinessProcessResultBehavior<,>),
                     typeof(DomainEventsDispatcherBehaviour<,>),
                     // typeof(ValidationReportsBehavior<,>),
-                    typeof(UnitOfWorkBehavior<,>),
                 });
 
-            _container.Verify();
-
+            // _container.Verify();
             _scope = AsyncScopedLifestyle.BeginScope(_container);
         }
 

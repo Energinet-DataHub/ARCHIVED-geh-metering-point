@@ -15,6 +15,7 @@
 using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
 using Energinet.DataHub.MeteringPoints.Domain;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers

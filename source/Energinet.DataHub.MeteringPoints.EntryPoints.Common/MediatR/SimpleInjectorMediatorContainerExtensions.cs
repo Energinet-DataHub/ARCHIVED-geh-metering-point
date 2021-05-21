@@ -52,8 +52,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR
 
             container.Register(() => new ServiceFactory(container.GetInstance), Lifestyle.Singleton);
 
-            container.Verify();
-
             var mediator = container.GetInstance<IMediator>();
 
             return mediator;

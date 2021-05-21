@@ -43,12 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task CreateMeteringPoint_WithNoValidationErrors_ShouldBeRetrievableFromRepository()
         {
-            var request = new CreateMeteringPoint(
-                new Address(),
-                SampleData.GsrnNumber,
-                SampleData.TypeOfMeteringPoint,
-                SampleData.SubTypeOfMeteringPoint
-                );
+            var request = CreateRequest();
 
             await _mediator.Send(request, CancellationToken.None);
 
@@ -60,10 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task CreateMeteringPoint_WithNoValidationErrors_ShouldGenerateConfirmMessageInOutbox()
         {
-            var request = new CreateMeteringPoint(
-                new Address(),
-                SampleData.GsrnNumber,
-                SampleData.TypeOfMeteringPoint);
+            var request = CreateRequest();
 
             await _mediator.Send(request, CancellationToken.None);
 
@@ -75,18 +67,29 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async void CreateMeteringPoint_WithNoValidationErrors_ShouldGenerateIntegrationEventInOutbox()
         {
-            CreateMeteringPointEventMessage message = new(Domain.GsrnNumber.Create("571234567891234605"), SampleData.TypeOfMeteringPoint, "gridAccessProvider", true, "energySupplierCurrent");
+            var request = CreateRequest();
 
-            await _mediator.Publish(message, CancellationToken.None);
+            await _mediator.Send(request, CancellationToken.None);
 
             var outboxMessage = _outbox.GetNext(OutboxMessageCategory.IntegrationEvent);
             outboxMessage.Should().NotBeNull();
-            outboxMessage.Type.Should().Be(typeof(Infrastructure.IntegrationServices.Dispatchers.CreateMeteringPointEventMessage).FullName);
+            outboxMessage.Type.Should()
+                .Be(typeof(Infrastructure.IntegrationServices.Dispatchers.CreateMeteringPointEventMessage).FullName);
         }
 
-        [Fact(Skip = "Not implemented yet")]
-        public void CreateMeteringPoint_WithValidationErrors_ShouldGenerateRejectMessageInOutbox()
+        [Fact]
+        public async Task CreateMeteringPoint_WithValidationErrors_ShouldGenerateRejectMessageInOutbox()
         {
+            var request = CreateRequest() with
+            {
+                GsrnNumber = "This is not a valid GSRN number",
+            };
+
+            await _mediator.Send(request, CancellationToken.None);
+
+            var outboxMessage = _outbox.GetNext(OutboxMessageCategory.ActorMessage);
+            outboxMessage.Should().NotBeNull();
+            outboxMessage.Type.Should().Be(typeof(CreateMeteringPointRejected).FullName);
         }
 
         [Fact(Skip = "Not implemented yet")]
@@ -107,6 +110,15 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact(Skip = "Not implemented yet")]
         public void CreateMeteringPoint_WithGridAreaNotBelongingToGridOperator_ShouldGenerateRejectMessageInOutbox()
         {
+        }
+
+        private static CreateMeteringPoint CreateRequest()
+        {
+            return new CreateMeteringPoint(
+                new Address(),
+                SampleData.GsrnNumber,
+                SampleData.TypeOfMeteringPoint,
+                SampleData.SubTypeOfMeteringPoint);
         }
     }
 }
