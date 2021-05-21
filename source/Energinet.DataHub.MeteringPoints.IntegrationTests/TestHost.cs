@@ -90,12 +90,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             _container.Verify();
 
-            _scope = AsyncScopedLifestyle.BeginScope(_container);
-
             CleanupDatabase();
+
+            _scope = AsyncScopedLifestyle.BeginScope(_container);
         }
 
-        private string ConnectionString => Environment.GetEnvironmentVariable("MeteringPoints_IntegrationTests_ConnectionString");
+        private string ConnectionString =>
+            Environment.GetEnvironmentVariable("MeteringPoints_IntegrationTests_ConnectionString");
 
         public void Dispose()
         {

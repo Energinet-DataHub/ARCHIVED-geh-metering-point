@@ -18,7 +18,7 @@ using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public abstract class MeteringPoint : Entity
+    public abstract class MeteringPoint : AggregateRootBase
     {
         protected MeteringPoint(
             MeteringPointId id,
@@ -64,6 +64,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MaximumCurrent = maximumCurrent;
             MaximumPower = maximumPower;
             OccurenceDate = occurenceDate;
+
+            AddDomainEvent(new MeteringPointCreated(id, GsrnNumber));
         }
 
         public GridAreaId GridAreaId { get; }
