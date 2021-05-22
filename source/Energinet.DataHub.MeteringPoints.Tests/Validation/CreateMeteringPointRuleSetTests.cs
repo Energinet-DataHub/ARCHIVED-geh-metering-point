@@ -84,6 +84,22 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
         }
 
+        [Theory]
+        [InlineData("", typeof(OccurenceRequiredValidationError), true)]
+        [InlineData("2021-11-12 12:12:12", typeof(OccurenceDateWrongFormatValidationError), false)]
+        [InlineData("12-12-2021 12:12:12", typeof(OccurenceDateWrongFormatValidationError), true)]
+        [InlineData("YYYY-12-12 12:12:12", typeof(OccurenceDateWrongFormatValidationError), true)]
+        public void Validate_OccurenceDateMandatoryAndFormat(string occurenceDate, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                OccurenceDate = occurenceDate,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
         private void ValidateCreateMeteringPoint(CreateMeteringPoint businessRequest, System.Type validationError, bool expectedError)
         {
             var errors = GetValidationErrors(businessRequest);
