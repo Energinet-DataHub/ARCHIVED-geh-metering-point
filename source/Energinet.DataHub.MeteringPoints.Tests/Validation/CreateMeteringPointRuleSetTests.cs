@@ -14,7 +14,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
@@ -51,24 +50,53 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         }
 
         [Theory]
-        [InlineData("Consumption", "Flex", (SettlementMethodRequiredValidationError)null)]
-        [InlineData("NetLossCorrection", "Flex", (SettlementMethodRequiredValidationError)null)]
-        [InlineData("Consumption", "", typeof(SettlementMethodRequiredValidationError))]
-        [InlineData("NetLossCorrection", "", typeof(SettlementMethodRequiredValidationError))]
-        [InlineData("SettlementMethodNotAllowedForMP", "Flex", typeof(SettlementMethodNotAllowedValidationError))]
-        [InlineData("SettlementMethodNotAllowedForMPEmpty", "", (SettlementMethodNotAllowedValidationError)null)]
-        [InlineData("Consumption", "WrongDomainName", typeof(SettlementMethodMissingRequiredDomainValuesValidationError))]
-        public void Validate_MandatorySettlementMethodForConsumptionAndNetLossCorrectionMeteringType(string meteringPointType, string settlementMethod, System.Type expectedError)
+        [InlineData("Consumption", "Flex", typeof(SettlementMethodRequiredValidationError), false)]
+        [InlineData("NetLossCorrection", "Flex", typeof(SettlementMethodRequiredValidationError), false)]
+        [InlineData("Consumption", "", typeof(SettlementMethodRequiredValidationError), true)]
+        [InlineData("NetLossCorrection", "", typeof(SettlementMethodRequiredValidationError), true)]
+        [InlineData("SettlementMethodNotAllowedForMP", "Flex", typeof(SettlementMethodNotAllowedValidationError), true)]
+        [InlineData("SettlementMethodNotAllowedForMPEmpty", "", typeof(SettlementMethodNotAllowedValidationError), false)]
+        [InlineData("Consumption", "WrongDomainName", typeof(SettlementMethodMissingRequiredDomainValuesValidationError), true)]
+        public void Validate_MandatorySettlementMethodForConsumptionAndNetLossCorrectionMeteringType(string meteringPointType, string settlementMethod, System.Type errorType, bool expectedError)
         {
             var businessRequest = CreateRequest() with
             {
+                GsrnNumber = SampleData.GsrnNumber,
                 TypeOfMeteringPoint = meteringPointType,
                 SettlementMethod = settlementMethod,
             };
 
-            var errorType = GetValidationErrors(businessRequest).FirstOrDefault(error => error.GetType() == expectedError);
+            ValidateCreateMeteringPoint(businessRequest, errorType, expectedError);
+        }
 
-            Assert.Equal(expectedError, errorType?.GetType());
+        [Theory]
+        [InlineData("***", typeof(MeteringGridAreaMandatoryValidationError), false)]
+        [InlineData("", typeof(MeteringGridAreaMandatoryValidationError), true)]
+        [InlineData("****", typeof(MeteringGridAreaLengthValidationError), true)]
+        public void Validate_MeteringGridArea(string meteringGridArea, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                MeteringGridArea = meteringGridArea,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        private void ValidateCreateMeteringPoint(CreateMeteringPoint businessRequest, System.Type validationError, bool expectedError)
+        {
+            var errors = GetValidationErrors(businessRequest);
+            var errorType = errors.Find(error => error.GetType() == validationError);
+
+            if (!expectedError)
+            {
+                Assert.True(errorType == null);
+            }
+            else
+            {
+                Assert.Equal(validationError, errorType?.GetType());
+            }
         }
 
         private CreateMeteringPoint CreateRequest()

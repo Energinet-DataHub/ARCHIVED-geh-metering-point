@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
-using FluentValidation;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class CreateMeteringPointRuleSet : AbstractValidator<CreateMeteringPoint>
+    public class MeteringGridAreaLengthValidationError : ValidationError
     {
-        public CreateMeteringPointRuleSet()
+        public MeteringGridAreaLengthValidationError(string meteringGridArea)
         {
-            RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberMustBeValidRule());
-            RuleFor(request => request).SetValidator(new SettlementMethodMustBeValidRule());
-            RuleFor(request => request).SetValidator(new MeteringGridAreaValidRule());
+            MeteringGridArea = meteringGridArea;
         }
+
+        public string MeteringGridArea { get; }
     }
 }
