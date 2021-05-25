@@ -17,6 +17,7 @@ using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Categories;
@@ -96,6 +97,23 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             {
                 GsrnNumber = SampleData.GsrnNumber,
                 OccurenceDate = occurenceDate,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData("", typeof(MeteringPointTypeRequiredValidationError), true)]
+        [InlineData("Consumption", typeof(MeteringPointTypeValidationError), false)]
+        [InlineData("Production", typeof(MeteringPointTypeValidationError), false)]
+        [InlineData("Exchange", typeof(MeteringPointTypeValidationError), false)]
+        [InlineData("Unknown", typeof(MeteringPointTypeValidationError), true)]
+        public void Validate_TypeOfMeteringPointRequiredAndInKnownType(string typeOfMeteringPoint, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                TypeOfMeteringPoint = typeOfMeteringPoint,
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
