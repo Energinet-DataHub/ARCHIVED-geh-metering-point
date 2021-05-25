@@ -14,15 +14,9 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class SettlementMethodNotAllowedValidationError : ValidationError
+    public class MeteringGridAreaMandatoryValidationError : ValidationError
     {
-        public SettlementMethodNotAllowedValidationError(string typeOfMeteringPoint)
-        {
-            TypeOfMeteringPoint = typeOfMeteringPoint;
-        }
-
-        public string TypeOfMeteringPoint { get; }
     }
 }

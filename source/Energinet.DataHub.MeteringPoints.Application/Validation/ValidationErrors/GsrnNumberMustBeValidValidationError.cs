@@ -14,9 +14,15 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class OccurenceRequiredValidationError : ValidationError
+    public class GsrnNumberMustBeValidValidationError : ValidationError
     {
+        public GsrnNumberMustBeValidValidationError(string gsrnNumber)
+        {
+            GsrnNumber = gsrnNumber;
+        }
+
+        public string GsrnNumber { get; }
     }
 }

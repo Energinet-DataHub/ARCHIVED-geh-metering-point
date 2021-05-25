@@ -14,15 +14,15 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class OccurenceDateWrongFormatValidationError : ValidationError
+    public class MeteringPointTypeRequiredValidationError : ValidationError
     {
-        public OccurenceDateWrongFormatValidationError(string occurenceDate)
+        public MeteringPointTypeRequiredValidationError(string meteringPointType)
         {
-            OccurenceDate = occurenceDate;
+            MeteringPointType = meteringPointType;
         }
 
-        public string OccurenceDate { get; }
+        public string MeteringPointType { get; }
     }
 }

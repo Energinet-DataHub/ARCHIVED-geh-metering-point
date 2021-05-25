@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules

@@ -12,16 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class SettlementMethodNotAllowedErrorConverter : ErrorConverter<SettlementMethodNotAllowedValidationError>
+    public class MeteringGridAreaLengthValidationError : ValidationError
     {
-        // TODO: This is an example, redo when we know what/how etc.
-        protected override Error Convert(SettlementMethodNotAllowedValidationError error)
+        public MeteringGridAreaLengthValidationError(string meteringGridArea)
         {
-            return new("TODO", $"Settlementmethod not allowed for meteringpoint type: {error.TypeOfMeteringPoint}");
+            MeteringGridArea = meteringGridArea;
         }
+
+        public string MeteringGridArea { get; }
     }
 }

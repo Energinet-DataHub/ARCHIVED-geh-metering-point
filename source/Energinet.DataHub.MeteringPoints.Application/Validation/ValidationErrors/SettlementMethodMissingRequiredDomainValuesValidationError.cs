@@ -14,7 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
     public class SettlementMethodMissingRequiredDomainValuesValidationError : ValidationError
     {
