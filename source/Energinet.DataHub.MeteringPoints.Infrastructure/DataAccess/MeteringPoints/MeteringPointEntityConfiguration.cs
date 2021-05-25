@@ -74,7 +74,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     toDbValue => toDbValue.Value,
                     fromDbValue => new GridAreaId(fromDbValue));
 
-            builder.Property(x => x.PowerPlant);
+            builder.Property(x => x.PowerPlant)
+                .HasConversion(toDbValue => toDbValue.Value, fromDbValue => GsrnNumber.Create(fromDbValue));
             builder.Property(x => x.LocationDescription);
             builder.Property(x => x.ProductType);
             builder.Property(x => x.ParentRelatedMeteringPoint);
