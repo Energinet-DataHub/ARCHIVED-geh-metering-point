@@ -10,7 +10,7 @@ CREATE TABLE [dbo].[MeteringPoints]
     [IsAddressWashable] BIT NOT NULL DEFAULT(0),
     [PhysicalStatusOfMeteringPoint] NVARCHAR(255) NOT NULL,
     [MeteringPointSubType] NVARCHAR(50) NULL,
-    [MeterReadingOccurence] DATETIME2(7) NULL,
+    [MeterReadingOccurence] NVARCHAR(50) NULL,
     [TypeOfMeteringPoint] NVARCHAR(50) NOT NULL,
     [MeterReadingOccurrence] DATETIME2(7) NULL,
     [MaximumCurrent] INT NOT NULL DEFAULT(0),

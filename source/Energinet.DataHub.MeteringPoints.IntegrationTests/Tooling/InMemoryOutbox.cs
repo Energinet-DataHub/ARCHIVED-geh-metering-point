@@ -12,30 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Runtime.Serialization;
+using System.Collections.Generic;
+using System.Linq;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
 {
-    public class InvalidMeteringPointIdRuleException : BusinessRuleException
+    public class InMemoryOutbox : IOutbox, IOutboxManager
     {
-        public InvalidMeteringPointIdRuleException()
+        private readonly List<OutboxMessage> _messages = new();
+
+        public void Add(OutboxMessage message)
         {
+            _messages.Add(message);
         }
 
-        public InvalidMeteringPointIdRuleException(string? message)
-            : base(message)
+        public OutboxMessage? GetNext(OutboxMessageCategory category)
         {
+            return _messages.FirstOrDefault(message => message.Category == category);
         }
 
-        public InvalidMeteringPointIdRuleException(string message, Exception innerException)
-            : base(message, innerException)
+        public void MarkProcessed(OutboxMessage outboxMessage)
         {
-        }
-
-        protected InvalidMeteringPointIdRuleException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
+            _messages.Remove(outboxMessage);
         }
     }
 }

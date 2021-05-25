@@ -12,30 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class GsrnNumberMustBeValidRule : AbstractValidator<string>
+    public class SettlementMethodMissingRequiredDomainValuesValidationError : ValidationError
     {
-        public GsrnNumberMustBeValidRule()
+        public SettlementMethodMissingRequiredDomainValuesValidationError(string settlementMethod)
         {
-            CascadeMode = CascadeMode.Stop;
-
-            RuleFor(gsrn => gsrn)
-                .NotEmpty()
-                .WithState(CreateValidationError);
-
-            RuleFor(gsrn => GsrnNumber.CheckRules(gsrn))
-                .Must(x => x.Success)
-                .WithState(CreateValidationError);
+            SettlementMethod = settlementMethod;
         }
 
-        private static ValidationError CreateValidationError(string gsrn)
-        {
-            return new GsrnNumberMustBeValidValidationError(gsrn);
-        }
+        public string SettlementMethod { get; }
     }
 }

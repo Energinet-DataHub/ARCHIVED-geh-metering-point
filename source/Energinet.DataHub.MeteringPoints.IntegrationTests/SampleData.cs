@@ -25,5 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         public static string Transaction => Guid.NewGuid().ToString();
 
         public static string SubTypeOfMeteringPoint => "Physical";
+
+        public static string SettlementMethod => "NonProfiled";
     }
 }
