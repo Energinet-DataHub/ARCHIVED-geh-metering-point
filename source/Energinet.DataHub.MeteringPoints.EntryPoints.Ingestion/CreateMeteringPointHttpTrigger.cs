@@ -51,12 +51,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             var logger = executionContext.GetLogger("CreateMeteringPointHttpTrigger");
             logger.LogInformation("Received CreateMeteringPoint request");
 
-            using var r = new StreamReader(request.Body, Encoding.UTF8);
-            var bodyStr = await r.ReadToEndAsync();
-
             // TODO: Currently we assume that we will have a function for each metering point event. This might change if we're not able to handle the routing in the API Gateway.
             // TODO: In that case we would need to make a switch case or something like that to look at the value in the "process.processType" element.
-            var commands = CreateMeteringPointXmlDeserializer.Deserialize(bodyStr);
+            var commands = CreateMeteringPointXmlDeserializer.Deserialize(request.Body);
 
             var response = request.CreateResponse(HttpStatusCode.OK);
 

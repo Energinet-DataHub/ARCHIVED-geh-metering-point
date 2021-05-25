@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using Energinet.DataHub.MeteringPoints.Application;
@@ -22,9 +23,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
 {
     public static class CreateMeteringPointXmlDeserializer
     {
-        public static IEnumerable<Application.CreateMeteringPoint> Deserialize(string bodyStr)
+        public static IEnumerable<Application.CreateMeteringPoint> Deserialize(Stream data)
         {
-            var root = XElement.Parse(bodyStr);
+            var root = XElement.Load(data);
             XNamespace ns = "urn:ediel:org:requestchangeofapcharacteristics:0:1";
 
             var marketActivityRecords = root
