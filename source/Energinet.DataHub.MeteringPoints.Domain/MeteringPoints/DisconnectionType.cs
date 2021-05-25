@@ -12,24 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public static class SampleData
+    public class DisconnectionType : EnumerationType
     {
-        public static string GsrnNumber => "571234567891234568";
+        public static readonly DisconnectionType Remote = new DisconnectionType(0, nameof(Remote));
+        public static readonly DisconnectionType Manual = new DisconnectionType(1, nameof(Manual));
 
-        public static string TypeOfMeteringPoint => "Consumption";
-
-        public static string Transaction => Guid.NewGuid().ToString();
-
-        public static string SubTypeOfMeteringPoint => "Physical";
-
-        public static string SettlementMethod => "Flex";
-
-        public static string DisconnectionType => "Manual";
-
-        public static string ConnectionType => "Installation";
+        private DisconnectionType(int id, string name)
+            : base(id, name)
+        {
+        }
     }
 }

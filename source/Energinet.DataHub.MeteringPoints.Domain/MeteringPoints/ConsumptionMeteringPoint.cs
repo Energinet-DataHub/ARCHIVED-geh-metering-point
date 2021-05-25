@@ -43,8 +43,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             Instant? occurenceDate,
             string settlementMethod,
             string netSettlementGroup,
-            string disconnectionType,
-            string connectionType,
+            DisconnectionType disconnectionType,
+            ConnectionType connectionType,
             string assetType)
             : base(
                 id,
@@ -80,9 +80,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public string NetSettlementGroup { get; }
 
-        public string DisconnectionType { get; }
+        public DisconnectionType DisconnectionType { get; }
 
-        public string ConnectionType { get; }
+        public ConnectionType ConnectionType { get; }
 
         public string AssetType { get; }
     }

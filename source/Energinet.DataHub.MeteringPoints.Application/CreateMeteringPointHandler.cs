@@ -43,7 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 request.InstallationLocationAddress.CityName,
                 request.InstallationLocationAddress.CountryCode,
                 request.InstallationLocationAddress.IsWashable,
-                EnumerationType.FromName<PhysicalState>(request.PhysicalStatusOfMeteringPoint),
+                PhysicalState.New,
                 EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
                 EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint),
                 new GridAreaId(Guid.NewGuid()),
@@ -59,8 +59,8 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 Instant.MaxValue, // TODO: Parse date in correct format when implemented in Input Validation
                 request.SettlementMethod,
                 request.NetSettlementGroup,
-                request.DisconnectionType,
-                request.ConnectionType,
+                EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
+                EnumerationType.FromName<ConnectionType>(request.ConnectionType),
                 request.AssetType);
 
             _meteringPointRepository.Add(meteringPoint);

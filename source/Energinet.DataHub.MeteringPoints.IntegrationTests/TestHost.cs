@@ -92,11 +92,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             _scope = AsyncScopedLifestyle.BeginScope(_container);
 
-            // CleanupDatabase();
+            CleanupDatabase();
         }
 
-        private string ConnectionString =>
-            Environment.GetEnvironmentVariable("MeteringPoints_IntegrationTests_ConnectionString");
+        private string ConnectionString => Environment.GetEnvironmentVariable("MeteringPoints_IntegrationTests_ConnectionString");
 
         public void Dispose()
         {
@@ -111,7 +110,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 return;
             }
 
-            // CleanupDatabase();
+            CleanupDatabase();
             _scope.Dispose();
             ((ServiceProvider)_serviceProvider).Dispose();
             _container.Dispose();

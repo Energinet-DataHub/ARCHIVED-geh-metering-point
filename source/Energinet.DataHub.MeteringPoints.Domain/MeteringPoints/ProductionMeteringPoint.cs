@@ -43,8 +43,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             Instant? occurenceDate,
             int productionObligation,
             int netSettlementGroup,
-            int disconnectionType,
-            int connectionType)
+            DisconnectionType disconnectionType,
+            ConnectionType connectionType)
             : base(
                 id,
                 gsrnNumber,
@@ -78,8 +78,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public int NetSettlementGroup { get; }
 
-        public int DisconnectionType { get; }
+        public DisconnectionType DisconnectionType { get; }
 
-        public int ConnectionType { get; }
+        public ConnectionType ConnectionType { get; }
     }
 }
