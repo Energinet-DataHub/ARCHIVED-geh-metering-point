@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
     {
         public MeteringPointTypeValidRule()
         {
-            RuleFor_TypeOgMeteringPointRequired();
+            RuleFor_TypeOfMeteringPointRequired();
             RuleFor_TypeOfMeteringPointShouldBeKnown();
         }
 
@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 .WithState(createMeteringPoint => new MeteringPointTypeValidationError(createMeteringPoint.TypeOfMeteringPoint));
         }
 
-        private void RuleFor_TypeOgMeteringPointRequired()
+        private void RuleFor_TypeOfMeteringPointRequired()
         {
             RuleFor(createMeteringPoint => createMeteringPoint.TypeOfMeteringPoint)
                 .NotEmpty()
