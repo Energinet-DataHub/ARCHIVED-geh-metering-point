@@ -75,20 +75,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Outbox
         }
 
         [Fact]
-        public async Task IntegrationEventDispatcherOrchestratorTest()
-        {
-            var sut = new IntegrationEventDispatchOrchestrator(
-                _mediatorMock.Object,
-                _jsonSerializerMock.Object,
-                _integrationEventRepositoryMock.Object,
-                _unitOfWorkMock.Object);
-            await sut.ProcessEventOrchestratorAsync().ConfigureAwait(false);
-
-            _integrationEventRepositoryMock.Verify(x => x.GetUnProcessedIntegrationEventMessageAsync(), Times.Exactly(3));
-            _integrationEventRepositoryMock.Verify(x => x.MarkIntegrationEventMessageAsProcessedAsync(It.IsAny<Guid>()), Times.Exactly(2));
-        }
-
-        [Fact]
         public async Task GetUnProcessedIntegrationEventMessageAsyncTest()
         {
             var x = await _integrationEventRepositoryMock.Object.GetUnProcessedIntegrationEventMessageAsync().ConfigureAwait(false);

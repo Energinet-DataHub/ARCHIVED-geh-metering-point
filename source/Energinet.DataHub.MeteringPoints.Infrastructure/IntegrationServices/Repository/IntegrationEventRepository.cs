@@ -50,19 +50,5 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Re
 
             if (eventToBeMarkedAsProcessed != null) eventToBeMarkedAsProcessed.ProcessedDate = SystemClock.Instance.GetCurrentInstant();
         }
-
-        public async Task SaveIntegrationEventMessageToOutboxAsync<TMessage>(TMessage message, OutboxMessageCategory category)
-        {
-            if (message is null)
-            {
-                throw new ArgumentNullException(nameof(message));
-            }
-
-            var messageType = message.GetType().FullName;
-            var data = _jsonSerializer.Serialize(message);
-
-            var outboxMessage = new OutboxMessage(messageType!, data, category, SystemClock.Instance.GetCurrentInstant());
-            await _meteringPointContext.OutboxMessages.AddAsync(outboxMessage);
-        }
     }
 }

@@ -18,12 +18,14 @@ using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.UserIdentity;
 using Energinet.DataHub.MeteringPoints.Contracts;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
 using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
@@ -58,7 +60,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     services.Replace(descriptor); // Replace existing activator
 
                     services.AddLogging();
-
                     services.AddDbContext<MeteringPointContext>(x =>
                     {
                         var connectionString = Environment.GetEnvironmentVariable("METERING_POINT_DB_CONNECTION_STRING")
@@ -82,12 +83,15 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             // Register application components.
             container.Register<QueueSubscriber>(Lifestyle.Scoped);
+            container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
             container.Register<ServiceBusCorrelationIdMiddleware>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
             container.Register<ServiceBusUserContextMiddleware>(Lifestyle.Scoped);
             container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
             container.Register<UserIdentityFactory>(Lifestyle.Singleton);
             container.Register<IDomainEventPublisher, DomainEventPublisher>();
+
+            container.AddInputValidation();
 
             // Setup pipeline behaviors
             container.BuildMediator(
@@ -104,8 +108,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     typeof(ValidationReportsBehavior<,>),
                     typeof(DomainEventsDispatcherBehaviour<,>),
                 });
-
-            container.AddInputValidation();
 
             container.Verify();
 

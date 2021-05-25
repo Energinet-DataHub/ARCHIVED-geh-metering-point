@@ -15,6 +15,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
 using Energinet.DataHub.MeteringPoints.Domain.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
@@ -32,12 +33,14 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         private readonly IMediator _mediator;
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly IOutboxManager _outbox;
+        private readonly IIntegrationEventDispatchOrchestrator _integrationEventDispatchOrchestrator;
 
         public CreateTests()
         {
             _mediator = GetService<IMediator>();
             _meteringPointRepository = GetService<IMeteringPointRepository>();
             _outbox = GetService<IOutboxManager>();
+            _integrationEventDispatchOrchestrator = GetService<IIntegrationEventDispatchOrchestrator>();
         }
 
         [Fact]
@@ -76,6 +79,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             var request = CreateRequest();
 
             await _mediator.Send(request, CancellationToken.None);
+
+            var outboxMessage = _outbox.GetNext(OutboxMessageCategory.IntegrationEvent);
+            outboxMessage.Should().NotBeNull();
+            outboxMessage.Type.Should()
+                .Be(typeof(Infrastructure.IntegrationServices.Dispatchers.CreateMeteringPointEventMessage).FullName);
+        }
+
+        [Fact]
+        public async void CreateMeteringPoint_ProcessIntegrationEvent_ShouldMarkAsProcessedIntegrationEventInOutbox()
+        {
+            var request = CreateRequest();
+
+            await _mediator.Send(request, CancellationToken.None);
+
+            await _integrationEventDispatchOrchestrator.ProcessEventOrchestratorAsync().ConfigureAwait(false);
 
             var outboxMessage = _outbox.GetNext(OutboxMessageCategory.IntegrationEvent);
             outboxMessage.Should().NotBeNull();
