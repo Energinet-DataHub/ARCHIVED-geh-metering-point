@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             string parentRelatedMeteringPoint,
             string unitType,
             string meterNumber,
-            string meterReadingOccurrence,
+            ReadingOccurrence meterReadingOccurrence,
             int maximumCurrent,
             int maximumPower,
             Instant? occurenceDate)
@@ -90,7 +90,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public bool IsAddressWashable { get; }
 
-        public string MeterReadingOccurrence { get; }
+        public ReadingOccurrence MeterReadingOccurrence { get; }
 
         public int MaximumCurrent { get; }
 
