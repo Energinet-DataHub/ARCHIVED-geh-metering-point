@@ -11,26 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-variable "resource_group_name" {
-  type = string
+
+data "azurerm_sql_server" "sqlsrv" {
+  name                = "sqlsrv-sharedres-${var.organisation}-${var.environment}"
+  resource_group_name = var.sharedresources_resource_group_name
 }
 
-variable "environment" {
-  type          = string
-  description   = "Enviroment that the infrastructure code is deployed into"
-}
-
-variable "project" {
-  type          = string
-  description   = "Project that is running the infrastructure code"
-}
-
-variable "organisation" {
-  type          = string
-  description   = "Organisation that is running the infrastructure code"
-}
-
-variable "database_password" {
-    type        = string
-    description = "Metering Point database password"
+resource "azurerm_mssql_database" "sqldb_meteteringpoint" {
+  name                = "sqldb-meteringpoint"
+  server_id           = data.azurerm_sql_server.sqlsrv.id
 }
