@@ -90,9 +90,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             _container.Verify();
 
-            CleanupDatabase();
-
             _scope = AsyncScopedLifestyle.BeginScope(_container);
+
+            CleanupDatabase();
         }
 
         private string ConnectionString =>

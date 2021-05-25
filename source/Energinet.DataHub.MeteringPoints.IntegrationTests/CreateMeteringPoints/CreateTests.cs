@@ -80,6 +80,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             var request = CreateRequest() with
             {
                 GsrnNumber = "This is not a valid GSRN number",
+                SettlementMethod = "WrongSettlementMethod",
             };
 
             await _mediator.Send(request, CancellationToken.None);
@@ -111,13 +112,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
         private static CreateMeteringPoint CreateRequest()
         {
-            return new(
-                new Address(),
-                SampleData.GsrnNumber,
-                SampleData.TypeOfMeteringPoint,
-                SampleData.SubTypeOfMeteringPoint,
-                SettlementMethod: SampleData.SettlementMethod
-                );
+            return new CreateMeteringPoint(
+                InstallationLocationAddress: new Address(),
+                GsrnNumber: SampleData.GsrnNumber,
+                TypeOfMeteringPoint: SampleData.TypeOfMeteringPoint,
+                SubTypeOfMeteringPoint: SampleData.SubTypeOfMeteringPoint,
+                SettlementMethod: SampleData.SettlementMethod);
         }
     }
 }
