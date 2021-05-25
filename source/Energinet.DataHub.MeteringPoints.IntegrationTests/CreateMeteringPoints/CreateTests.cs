@@ -106,10 +106,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         private static CreateMeteringPoint CreateRequest()
         {
             return new CreateMeteringPoint(
-                new Address(),
-                SampleData.GsrnNumber,
-                SampleData.TypeOfMeteringPoint,
-                SampleData.SubTypeOfMeteringPoint);
+                InstallationLocationAddress: new Address(),
+                GsrnNumber: SampleData.GsrnNumber,
+                TypeOfMeteringPoint: SampleData.TypeOfMeteringPoint,
+                SubTypeOfMeteringPoint: SampleData.SubTypeOfMeteringPoint,
+                SettlementMethod: SampleData.SettlementMethod);
         }
     }
 }
