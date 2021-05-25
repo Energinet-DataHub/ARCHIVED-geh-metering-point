@@ -26,6 +26,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation
             RuleFor(request => request).SetValidator(new MeteringGridAreaValidRule());
             RuleFor(request => request).SetValidator(new OccurenceDateValidRule());
             RuleFor(request => request).SetValidator(new MeteringPointTypeValidRule());
+            RuleFor(request => request).SetValidator(new StreetNameMustBeValidRule());
+            RuleFor(request => request).SetValidator(new PostCodeMustBeValidRule());
+            RuleFor(request => request).SetValidator(new CityNameMustBeValidRule());
         }
     }
 }

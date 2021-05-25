@@ -17,7 +17,7 @@ using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Categories;
@@ -114,6 +114,65 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             {
                 GsrnNumber = SampleData.GsrnNumber,
                 TypeOfMeteringPoint = typeOfMeteringPoint,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData("Tester 1", "Consumption", typeof(MandatoryFieldForMeteringPointTypeValidationError), false)]
+        [InlineData("Tester 1", "Production", typeof(MandatoryFieldForMeteringPointTypeValidationError), false)]
+        [InlineData("", "Production", typeof(MandatoryFieldForMeteringPointTypeValidationError), true)]
+        [InlineData("", "OtherType", typeof(MandatoryFieldForMeteringPointTypeValidationError), false)]
+        [InlineData("VeryLongAddressNameThatWillReturnValidationErrorForMaxLength", "Consumption", typeof(MaximumLengthValidationError), true)]
+        [InlineData("VeryLongAddressNameThatWillReturnValidationErrorForMaxLength", "OtherType", typeof(MaximumLengthValidationError), true)]
+        [InlineData("Tester 1", "OtherType", typeof(MaximumLengthValidationError), false)]
+        public void Validate_StreetNameRequiredAndMaximumLength(string streetName, string typeOfMeteringPoint, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                TypeOfMeteringPoint = typeOfMeteringPoint,
+                InstallationLocationAddress = new Address(streetName, SampleData.PostCode, SampleData.CityName, string.Empty),
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData("8000", "Consumption", "DK", typeof(WrongFormatValidationError), false)]
+        [InlineData("800", "Consumption", "DK", typeof(WrongFormatValidationError), true)]
+        [InlineData("", "OtherType", "DK", typeof(MandatoryFieldForMeteringPointTypeValidationError), false)]
+        [InlineData("", "Consumption", "DK", typeof(MandatoryFieldForMeteringPointTypeValidationError), true)]
+        [InlineData("LONGPOSTCODE", "Consumption", "SE", typeof(MaximumLengthValidationError), true)]
+        [InlineData("POSTCODE", "Consumption", "SE", typeof(MaximumLengthValidationError), false)]
+        public void Validate_PostCodeRequiredAndFormat(string postCode, string typeOfMeteringPoint, string countryCode, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                TypeOfMeteringPoint = typeOfMeteringPoint,
+                InstallationLocationAddress = new Address(SampleData.StreetName, postCode, SampleData.CityName, countryCode),
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData("Aarhus C", "Consumption", typeof(MandatoryFieldForMeteringPointTypeValidationError), false)]
+        [InlineData("København", "Production", typeof(MandatoryFieldForMeteringPointTypeValidationError), false)]
+        [InlineData("", "Production", typeof(MandatoryFieldForMeteringPointTypeValidationError), true)]
+        [InlineData("", "OtherType", typeof(MandatoryFieldForMeteringPointTypeValidationError), false)]
+        [InlineData("Azpilicuetagaraycosaroyarenberecolarrea", "Consumption", typeof(MaximumLengthValidationError), true)]
+        [InlineData("Azpilicuetagaraycosaroyarenberecolarrea", "OtherType", typeof(MaximumLengthValidationError), true)]
+        [InlineData("Aarhus C", "OtherType", typeof(MaximumLengthValidationError), false)]
+        public void Validate_CityNameRequiredAndMaximumLength(string cityNameName, string typeOfMeteringPoint, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                TypeOfMeteringPoint = typeOfMeteringPoint,
+                InstallationLocationAddress = new Address(SampleData.StreetName, SampleData.PostCode, cityNameName, string.Empty),
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
