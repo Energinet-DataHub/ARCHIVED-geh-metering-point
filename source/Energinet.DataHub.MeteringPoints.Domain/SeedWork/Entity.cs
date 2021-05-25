@@ -18,7 +18,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
 {
     public abstract class Entity
     {
-        private List<IDomainEvent> _domainEvents = new List<IDomainEvent>();
+        private List<IDomainEvent> _domainEvents = new();
 
         /// <summary>
         /// Domain events occurred.

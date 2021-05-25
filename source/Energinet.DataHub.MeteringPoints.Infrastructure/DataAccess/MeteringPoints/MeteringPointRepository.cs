@@ -13,27 +13,30 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Microsoft.EntityFrameworkCore;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints
 {
-    //TODO: Implement EF Core
     public class MeteringPointRepository : IMeteringPointRepository
     {
-        private readonly List<MeteringPoint> _meteringPoints = new List<MeteringPoint>();
+        private readonly MeteringPointContext _meteringPointContext;
+
+        public MeteringPointRepository(MeteringPointContext meteringPointContext)
+        {
+            _meteringPointContext = meteringPointContext;
+        }
 
         public Task<MeteringPoint?> GetByGsrnNumberAsync(GsrnNumber gsrnNumber)
         {
             if (gsrnNumber is null) throw new ArgumentNullException(nameof(gsrnNumber));
-            return Task.FromResult(_meteringPoints.FirstOrDefault(meteringPoint => meteringPoint.GsrnNumber.Equals(gsrnNumber)));
+            return _meteringPointContext.MeteringPoints.SingleOrDefaultAsync(meteringPoint => meteringPoint.GsrnNumber.Equals(gsrnNumber));
         }
 
         public void Add(MeteringPoint meteringPoint)
         {
-            _meteringPoints.Add(meteringPoint);
+            _meteringPointContext.MeteringPoints.Add(meteringPoint);
         }
     }
 }
