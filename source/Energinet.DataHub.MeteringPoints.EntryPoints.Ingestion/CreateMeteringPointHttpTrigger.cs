@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -52,7 +54,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 
             using var r = new StreamReader(request.Body, Encoding.UTF8);
             var bodyStr = await r.ReadToEndAsync();
-            DeserializeCreateMeteringPointXml(bodyStr);
+
+            // TODO: Currently we assume that we will have a function for each metering point event. This might change if we're not able to handle the routing in the API Gateway.
+            // TODO: In that case we would need to make a switch case or something like that to look at the value in the "process.processType" element.
+            var commands = DeserializeCreateMeteringPointXml(bodyStr);
 
             var response = request.CreateResponse(HttpStatusCode.OK);
 
@@ -61,27 +66,35 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             await response.WriteStringAsync("Correlation id: " + _correlationContext.GetCorrelationId())
                 .ConfigureAwait(false);
 
-            var command = new CreateMeteringPoint(new Address()) {GsrnNumber = "1234567",};
-
-            await _dispatcher.DispatchAsync(command).ConfigureAwait(false);
+            foreach (var command in commands)
+            {
+                await _dispatcher.DispatchAsync(command).ConfigureAwait(false);
+            }
 
             return response;
         }
 
-        private static void DeserializeCreateMeteringPointXml(string bodyStr)
+        private static IEnumerable<CreateMeteringPoint> DeserializeCreateMeteringPointXml(string bodyStr)
         {
             var root = XElement.Parse(bodyStr);
             XNamespace ns = "urn:ediel:org:requestchangeofapcharacteristics:0:1";
 
-            // var occurenceDate = root.Element(ns + "MktActivityRecord")?.Element(ns + "start_DateAndOrTime.dateTime")?.Value;
             var marketActivityRecords = root
                 .Elements(ns + "MktActivityRecord");
 
-            marketActivityRecords.Select(record =>
+            return marketActivityRecords.Select(record =>
             {
-                var mainAddress = record.Element(ns + "usagePointLocation.mainAddress");
+                var marketEvaluationPoint = record.Element(ns + "MarketEvaluationPoint");
+                var mainAddress = marketEvaluationPoint?.Element(ns + "usagePointLocation.mainAddress");
                 var streetDetail = mainAddress?.Element(ns + "streetDetail");
                 var townDetail = mainAddress?.Element(ns + "townDetail");
+                var contractedConnectionCapacity =
+                    marketEvaluationPoint?.Element(ns +
+                                                   "marketAgreement.contractedConnectionCapacity"); // TODO: Make this use partial match instead since "marketAgreement" isn't certain
+                var series = marketEvaluationPoint?.Element(ns + "Series");
+
+                // Power plant
+                var linkedMarketEvaluationPoint = marketEvaluationPoint?.Element(ns + "Linked_MarketEvaluationPoint");
 
                 var address = new Address(
                     ExtractElementValue(streetDetail, ns + "name"),
@@ -89,12 +102,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
                     ExtractElementValue(townDetail, ns + "name"),
                     ExtractElementValue(townDetail, ns + "country"),
                     ExtractElementValue(mainAddress, ns + "usagePointLocation.remark") == "D01");
-
-                var marketEvaluationPoint = record.Element(ns + "MarketEvaluationPoint");
-                var contractedConnectionCapacity = marketEvaluationPoint?.Element(ns + "marketAgreement.contractedConnectionCapacity"); // TODO: Make this use partial match instead since "marketAgreement" isn't certain
-
-                // Power plant
-                var linkedMarketEvaluationPoint = record.Element(ns + "Linked_MarketEvaluationPoint");
 
                 return new CreateMeteringPoint(
                     address,
@@ -106,22 +113,16 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
                     Convert.ToInt32(ExtractElementValue(contractedConnectionCapacity, ns + "value")),
                     ExtractElementValue(marketEvaluationPoint, ns + "meteringGridArea_Domain.mRID"),
                     ExtractElementValue(linkedMarketEvaluationPoint, ns + "mRID"),
-
-
-
-                    ExtractElementValue(marketEvaluationPoint, ns + "name"),
-                    ExtractElementValue(marketEvaluationPoint, ns + "name"),
-                    ExtractElementValue(marketEvaluationPoint, ns + "name"),
-                    ExtractElementValue(marketEvaluationPoint, ns + "name"),
-                    ExtractElementValue(marketEvaluationPoint, ns + "name"),
-                    ExtractElementValue(marketEvaluationPoint, ns + "name"),
-                    ExtractElementValue(marketEvaluationPoint, ns + "name"),
-                    ExtractElementValue(marketEvaluationPoint, ns + "name"),
-                    ExtractElementValue(marketEvaluationPoint, ns + "name")
-                );
-            })
-            // .Where(el => el.Parent?.Name == ns + "MktActivityRecord")
-            // .Select(el => el).ToList();
+                    ExtractElementValue(marketEvaluationPoint, ns + "usagePointLocation.remark"),
+                    ExtractElementValue(marketEvaluationPoint, ns + "product"),
+                    ExtractElementValue(marketEvaluationPoint, ns + "parent_MarketEvaluationPoint.mRID"),
+                    ExtractElementValue(marketEvaluationPoint, ns + "settlementMethod"),
+                    ExtractElementValue(series, ns + "quantity_Measure_Unit.name"),
+                    ExtractElementValue(marketEvaluationPoint, ns + "disconnectionMethod"),
+                    ExtractElementValue(record, ns + "start_DateAndOrTime.dateTime"),
+                    ExtractElementValue(marketEvaluationPoint, ns + "meter.mRID"),
+                    ExtractElementValue(record, ns + "mRID"));
+            });
         }
 
         private static string ExtractElementValue(XElement? element, XName name)
