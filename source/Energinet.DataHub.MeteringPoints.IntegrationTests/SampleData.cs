@@ -26,6 +26,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string SubTypeOfMeteringPoint => "Physical";
 
-        public static string SettlementMethod => "NonProfiled";
+        public static string SettlementMethod => "Flex";
     }
 }

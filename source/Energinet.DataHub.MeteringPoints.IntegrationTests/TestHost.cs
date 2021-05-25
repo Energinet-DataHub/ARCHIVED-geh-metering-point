@@ -127,7 +127,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 return;
             }
 
-            CleanupDatabase();
+            // CleanupDatabase();
             _scope.Dispose();
             ((ServiceProvider)_serviceProvider).Dispose();
             _container.Dispose();
