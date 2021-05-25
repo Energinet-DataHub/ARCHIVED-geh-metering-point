@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 variable "resource_group_name" {
   type = string
 }
@@ -30,7 +31,17 @@ variable "organisation" {
   description   = "Organisation that is running the infrastructure code"
 }
 
-variable "database_password" {
-    type        = string
-    description = "Metering Point database password"
+variable "sharedresources_keyvault_name" {
+  type          = string
+  description   = "Name of the Core keyvault, that contains shared secrets"
+}
+
+variable "sharedresources_resource_group_name" {
+  type          = string
+  description   = "Resource group name of the Core keyvaults location"
+}
+
+variable "sharedresources_sql_server_name" {
+  type          = string
+  description   = "Name of the SQL server"
 }

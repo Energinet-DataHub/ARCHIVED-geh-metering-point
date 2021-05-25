@@ -13,11 +13,14 @@
 # limitations under the License.
 
 data "azurerm_sql_server" "sqlsrv" {
-  name                = "sqlsrv-sharedres-${var.organisation}-${var.environment}"
+  name                = var.sharedresources_sql_server_name
   resource_group_name = var.sharedresources_resource_group_name
 }
 
-resource "azurerm_mssql_database" "sqldb_meteteringpoint" {
-  name                = "sqldb-meteringpoint"
-  server_id           = data.azurerm_sql_server.sqlsrv.id
+module "sqldb_meteringpoint" {
+  source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//sql-database?ref=1.2.0"
+  name                      = "sqldb-meteringpoint"
+  resource_group_name       = data.azurerm_resource_group.main.name
+  location                  = data.azurerm_resource_group.main.location
+  server_name               = var.sharedresources_sql_server_name
 }
