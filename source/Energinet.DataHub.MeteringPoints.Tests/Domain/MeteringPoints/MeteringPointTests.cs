@@ -33,7 +33,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 gridAreaId,
                 MeteringPointType.Consumption,
-                MeteringPointSubType.Physical);
+                MeteringPointSubType.Physical,
+                DisconnectionType.Manual
+            );
 
             var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MeteringPointCreated);
             Assert.NotNull(createdEvent);

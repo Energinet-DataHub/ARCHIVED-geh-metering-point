@@ -38,7 +38,9 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 GsrnNumber.Create(request.GsrnNumber),
                 new GridAreaId(Guid.NewGuid()),
                 EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint),
-                EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint));
+                EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
+                EnumerationType.FromName<DisconnectionType>(request.DisconnectionType));
+
             _meteringPointRepository.Add(meteringPoint);
             return Task.FromResult(new CreateMeteringPointResult());
         }

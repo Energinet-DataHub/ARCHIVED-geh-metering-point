@@ -18,6 +18,7 @@ using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using MediatR;
 using Xunit;
+using Address = Energinet.DataHub.MeteringPoints.Application.Address;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 {
@@ -41,8 +42,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 new Address(),
                 SampleData.GsrnNumber,
                 SampleData.TypeOfMeteringPoint,
-                SampleData.SubTypeOfMeteringPoint
-                );
+                SampleData.SubTypeOfMeteringPoint,
+                "",
+                0,
+                0,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                SampleData.DisconnectionType,
+                "",
+                "",
+                ""
+            );
 
             await _mediator.Send(request, CancellationToken.None);
 
@@ -83,6 +98,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
         [Fact(Skip = "Not implemented yet")]
         public void CreateMeteringPoint_WithGridAreaNotBelongingToGridOperator_ShouldGenerateRejectMessageInOutbox()
+        {
+        }
+
+        [Fact(Skip = "Not implemented yet")]
+        public void CreateMeteringPoint_WhenEffectiveDateIsOutOfScope_ShouldGenerateRejectMessageInOutbox()
         {
         }
     }

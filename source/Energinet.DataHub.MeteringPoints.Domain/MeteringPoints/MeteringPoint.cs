@@ -27,22 +27,21 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private MeteringPointType _typeOfMeteringPoint;
         private readonly MeteringPointSubType _subTypeOfMeteringPoint;
         private PhysicalState _physicalState;
+        private DisconnectionType _disconnectionType;
 
         private string _meterReadingOccurrence;
         private int _maximumCurrent;
         private int _maximumPower;
-        private string _meteringGridArea;
         private string _powerPlant;
         private string _locationDescription;
         private string _productType;
         private string _parentRelatedMeteringPoint;
         private string _settlementMethod;
         private string _unitType;
-        private string _disconnectionType;
         private string _occurenceDate;
         private string _meterNumber;
 
-        public MeteringPoint(MeteringPointId meteringPointId, GsrnNumber gsrnNumber, GridAreaId gridAreaId, MeteringPointType typeOfMeteringPoint, MeteringPointSubType subTypeOfMeteringPoint)
+        public MeteringPoint(MeteringPointId meteringPointId, GsrnNumber gsrnNumber, GridAreaId gridAreaId, MeteringPointType typeOfMeteringPoint, MeteringPointSubType subTypeOfMeteringPoint, DisconnectionType disconnectionType)
         {
             Id = meteringPointId ?? throw new ArgumentNullException(nameof(meteringPointId));
             GsrnNumber = gsrnNumber ?? throw new ArgumentNullException(nameof(gsrnNumber));
@@ -50,11 +49,22 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _gridAreaId = gridAreaId ?? throw new ArgumentNullException(nameof(gridAreaId));
             _typeOfMeteringPoint = typeOfMeteringPoint ?? throw new ArgumentNullException(nameof(typeOfMeteringPoint));
             _subTypeOfMeteringPoint = subTypeOfMeteringPoint ?? throw new ArgumentNullException(nameof(subTypeOfMeteringPoint));
+            _disconnectionType = disconnectionType ?? throw new ArgumentNullException(nameof(disconnectionType));
             AddDomainEvent(new MeteringPointCreated(meteringPointId, GsrnNumber));
         }
 
         public MeteringPointId Id { get; }
 
         public GsrnNumber GsrnNumber { get; }
+    }
+
+    public class DisconnectionType : EnumerationType
+    {
+        public readonly static DisconnectionType Remote = new DisconnectionType(0, nameof(Remote));
+        public readonly static DisconnectionType Manual = new DisconnectionType(1, nameof(Manual));
+
+        private DisconnectionType(int id, string name) : base(id, name)
+        {
+        }
     }
 }
