@@ -14,15 +14,14 @@
 
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
-using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application
 {
     public record CreateMeteringPoint(
             Address InstallationLocationAddress,
             string GsrnNumber = "",
-            string TypeOfMeteringPoint = "",
-            string SubTypeOfMeteringPoint = "",
+            string TypeOfMeteringPoint = "Consumption",
+            string SubTypeOfMeteringPoint = "Physical",
             string MeterReadingOccurrence = "",
             int MaximumCurrent = 0,
             int MaximumPower = 0,
@@ -36,7 +35,11 @@ namespace Energinet.DataHub.MeteringPoints.Application
             string DisconnectionType = "",
             string OccurenceDate = "",
             string MeterNumber = "",
-            string TransactionId = "")
+            string TransactionId = "",
+            string PhysicalStatusOfMeteringPoint = "New",
+            string NetSettlementGroup = "",
+            string ConnectionType = "",
+            string AssetType = "")
         : IBusinessRequest,
             IOutboundMessage,
             IInboundMessage;

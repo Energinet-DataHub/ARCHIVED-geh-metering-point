@@ -42,7 +42,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task CreateMeteringPoint_WithNoValidationErrors_ShouldBeRetrievableFromRepository()
         {
-            var request = CreateRequest();
+            var request = new CreateMeteringPoint(new Address())
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                MaximumCurrent = 1,
+                TypeOfMeteringPoint = MeteringPointType.Consumption.Name,
+                SettlementMethod = SampleData.SettlementMethod
+            };
 
             await _mediator.Send(request, CancellationToken.None);
 
@@ -105,11 +111,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
         private static CreateMeteringPoint CreateRequest()
         {
-            return new CreateMeteringPoint(
+            return new(
                 new Address(),
                 SampleData.GsrnNumber,
                 SampleData.TypeOfMeteringPoint,
-                SampleData.SubTypeOfMeteringPoint);
+                SampleData.SubTypeOfMeteringPoint,
+                SettlementMethod: SampleData.SettlementMethod
+                );
         }
     }
 }

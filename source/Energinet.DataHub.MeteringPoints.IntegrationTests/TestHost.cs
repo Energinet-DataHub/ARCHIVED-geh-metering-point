@@ -90,9 +90,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             _container.Verify();
 
-            _scope = AsyncScopedLifestyle.BeginScope(_container);
-
             CleanupDatabase();
+
+            _scope = AsyncScopedLifestyle.BeginScope(_container);
         }
 
         private string ConnectionString =>
@@ -128,6 +128,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         {
             var cleanupStatement = new StringBuilder();
 
+            cleanupStatement.AppendLine($"DELETE FROM ConsumptionMeteringPoints");
+            cleanupStatement.AppendLine($"DELETE FROM ProductionMeteringPoints");
+            cleanupStatement.AppendLine($"DELETE FROM ExchangeMeteringPoints");
+            cleanupStatement.AppendLine($"DELETE FROM MeteringPoints");
             cleanupStatement.AppendLine($"DELETE FROM OutboxMessages");
 
             _container.GetInstance<MeteringPointContext>()
