@@ -19,7 +19,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
     public class OccurenceDateValidRule : AbstractValidator<CreateMeteringPoint>
     {
-        private const string OccurenceDateFormatRexEx = @"^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$";
+        private const string OccurenceDateFormatRexEx = @"^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})Z$";
 
         public OccurenceDateValidRule()
         {

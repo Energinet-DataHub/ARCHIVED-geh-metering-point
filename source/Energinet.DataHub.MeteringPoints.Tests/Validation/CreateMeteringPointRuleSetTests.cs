@@ -86,9 +86,10 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 
         [Theory]
         [InlineData("", typeof(OccurenceRequiredValidationError), true)]
-        [InlineData("2021-11-12 12:12:12", typeof(OccurenceDateWrongFormatValidationError), false)]
+        [InlineData("2021-11-12 12:12:12Z", typeof(OccurenceDateWrongFormatValidationError), false)]
+        [InlineData("12-12-2021 12:12:12Z", typeof(OccurenceDateWrongFormatValidationError), true)]
         [InlineData("12-12-2021 12:12:12", typeof(OccurenceDateWrongFormatValidationError), true)]
-        [InlineData("YYYY-12-12 12:12:12", typeof(OccurenceDateWrongFormatValidationError), true)]
+        [InlineData("YYYY-12-12 12:12:12Z", typeof(OccurenceDateWrongFormatValidationError), true)]
         public void Validate_OccurenceDateMandatoryAndFormat(string occurenceDate, System.Type validationError, bool expectedError)
         {
             var businessRequest = CreateRequest() with
