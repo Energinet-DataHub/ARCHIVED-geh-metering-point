@@ -14,7 +14,6 @@
 
 using System;
 using System.Runtime.Serialization;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
