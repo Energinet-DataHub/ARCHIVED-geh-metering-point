@@ -15,7 +15,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Repository;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using MediatR;
 

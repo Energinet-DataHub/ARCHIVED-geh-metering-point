@@ -16,7 +16,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
-using Energinet.DataHub.MeteringPoints.Domain.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
@@ -92,7 +91,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             var request = CreateRequest();
 
             await _mediator.Send(request, CancellationToken.None);
-
             await _integrationEventDispatchOrchestrator.ProcessEventOrchestratorAsync().ConfigureAwait(false);
 
             var outboxMessage = _outbox.GetNext(OutboxMessageCategory.IntegrationEvent);

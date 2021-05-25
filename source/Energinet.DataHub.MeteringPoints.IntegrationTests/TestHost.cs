@@ -35,7 +35,6 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Channels;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers;
-using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Repository;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Services;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
@@ -83,7 +82,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IDomainEventPublisher, DomainEventPublisher>();
             _container.Register<IIntegrationEventDispatchOrchestrator, IntegrationEventDispatchOrchestrator>();
 
-            // _container.Register<CreateMeteringPointEventMessageHandlerTestDispatcher>(Lifestyle.Scoped);
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
                 typeof(CreateMeteringPoint).Assembly, // Application

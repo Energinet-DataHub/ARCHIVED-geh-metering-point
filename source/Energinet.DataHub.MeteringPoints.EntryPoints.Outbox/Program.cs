@@ -23,7 +23,6 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Channels;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers;
-using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Repository;
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Services;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
@@ -85,7 +84,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                 () => new EventHubProducerClient(eventHubConnectionString, hubName),
                 Lifestyle.Singleton);
             container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
-            container.Register<IIntegrationEventRepository, IntegrationEventRepository>();
             container.Register<EventMessageDispatcher>(Lifestyle.Transient);
             container.Register<IntegrationEventToEventHubDispatcher>(Lifestyle.Transient);
             container.Register<AzureEventHubChannel>(Lifestyle.Transient);
