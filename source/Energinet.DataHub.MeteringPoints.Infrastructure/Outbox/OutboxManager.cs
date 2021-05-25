@@ -38,7 +38,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
 
         public OutboxMessage? GetNext(OutboxMessageCategory category)
         {
-            return _context.OutboxMessages.FirstOrDefault(message => message.Category == category);
+            return _context.OutboxMessages
+                .OrderBy(message => message.CreationDate)
+                .Where(message => !message.ProcessedDate.HasValue)
+                .FirstOrDefault(message => message.Category == category);
         }
 
         public void MarkProcessed(OutboxMessage outboxMessage)
