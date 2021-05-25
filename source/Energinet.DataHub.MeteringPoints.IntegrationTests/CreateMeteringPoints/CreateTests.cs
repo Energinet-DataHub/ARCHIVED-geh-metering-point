@@ -130,7 +130,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SampleData.DisconnectionType,
                 "",
                 "",
-                "");
+                "",
+                "",
+                "",
+                SampleData.ConnectionType,
+                ""
+            );
         }
     }
 }

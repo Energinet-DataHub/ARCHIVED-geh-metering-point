@@ -43,7 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 request.InstallationLocationAddress.CityName,
                 request.InstallationLocationAddress.CountryCode,
                 request.InstallationLocationAddress.IsWashable,
-                EnumerationType.FromName<PhysicalState>(request.PhysicalStatusOfMeteringPoint),
+                PhysicalState.New,
                 EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
                 EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint),
                 new GridAreaId(Guid.NewGuid()),
@@ -60,7 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 request.SettlementMethod,
                 request.NetSettlementGroup,
                 EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
-                request.ConnectionType,
+                EnumerationType.FromName<ConnectionType>(request.ConnectionType),
                 request.AssetType);
 
             _meteringPointRepository.Add(meteringPoint);

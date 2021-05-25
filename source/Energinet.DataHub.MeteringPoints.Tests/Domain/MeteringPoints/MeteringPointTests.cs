@@ -53,7 +53,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 SampleData.SettlementMethod,
                 SampleData.NetSettlementGroup,
                 DisconnectionType.Manual,
-                SampleData.ConnectionType,
+                ConnectionType.Direct,
                 SampleData.AssetType);
 
             var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MeteringPointCreated);

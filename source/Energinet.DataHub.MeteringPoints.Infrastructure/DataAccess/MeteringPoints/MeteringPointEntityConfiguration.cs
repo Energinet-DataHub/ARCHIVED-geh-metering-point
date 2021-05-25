@@ -104,6 +104,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<DisconnectionType>(fromDbValue));
+            builder.Property(x => x.ConnectionType)
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<ConnectionType>(fromDbValue));
             builder.Property(x => x.SettlementMethod);
             builder.Property(x => x.NetSettlementGroup);
         }
@@ -126,7 +130,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<DisconnectionType>(fromDbValue));
-            builder.Property(x => x.ConnectionType);
+            builder.Property(x => x.ConnectionType)
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<ConnectionType>(fromDbValue));
         }
     }
 

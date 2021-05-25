@@ -44,7 +44,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             int productionObligation,
             int netSettlementGroup,
             DisconnectionType disconnectionType,
-            int connectionType)
+            ConnectionType connectionType)
             : base(
                 id,
                 gsrnNumber,
@@ -80,6 +80,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public DisconnectionType DisconnectionType { get; }
 
-        public int ConnectionType { get; }
+        public ConnectionType ConnectionType { get; }
     }
 }
