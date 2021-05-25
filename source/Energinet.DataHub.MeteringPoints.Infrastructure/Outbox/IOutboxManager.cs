@@ -12,9 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
 {
-    public abstract class ValidationError
+    /// <summary>
+    /// Transactional outbox manipulation
+    /// </summary>
+    public interface IOutboxManager
     {
+        /// <summary>
+        /// Get next unprocessed message based on category
+        /// </summary>
+        OutboxMessage? GetNext(OutboxMessageCategory category);
+
+        /// <summary>
+        /// Mark message as processed
+        /// </summary>
+        /// <param name="outboxMessage"></param>
+        void MarkProcessed(OutboxMessage outboxMessage);
     }
 }

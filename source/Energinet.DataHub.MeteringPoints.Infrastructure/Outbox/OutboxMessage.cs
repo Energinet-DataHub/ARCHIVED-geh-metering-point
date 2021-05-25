@@ -47,6 +47,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
 
         public Instant CreationDate { get; }
 
-        public Instant? ProcessedDate { get; set; }
+        public Instant? ProcessedDate { get; internal set; } // TODO: Make private
+
+        public void SetProcessed(Instant when)
+        {
+            ProcessedDate = when;
+        }
     }
 }

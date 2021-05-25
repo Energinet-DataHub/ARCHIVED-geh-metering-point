@@ -17,7 +17,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
-using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;

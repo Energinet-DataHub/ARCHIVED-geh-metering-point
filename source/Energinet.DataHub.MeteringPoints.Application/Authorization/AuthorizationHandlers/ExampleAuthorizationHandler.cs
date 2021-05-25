@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Globalization;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Authorization.AuthorizationHandlers
 {
-    public class ExampleAuthorizationHandler : IAuthorizationHandler<CreateMeteringPoint, CreateMeteringPointResult>
+    public class ExampleAuthorizationHandler : IAuthorizationHandler<CreateMeteringPoint, BusinessProcessResult>
     {
         public AuthorizationResult Authorize(CreateMeteringPoint command)
         {

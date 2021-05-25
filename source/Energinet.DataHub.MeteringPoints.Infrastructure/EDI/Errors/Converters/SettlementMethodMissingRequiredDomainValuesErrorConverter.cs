@@ -12,9 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public abstract class ValidationError
+    public class SettlementMethodMissingRequiredDomainValuesErrorConverter : ErrorConverter<SettlementMethodMissingRequiredDomainValuesValidationError>
     {
+        // TODO: This is an example, redo when we know what/how etc.
+        protected override Error Convert(SettlementMethodMissingRequiredDomainValuesValidationError error)
+        {
+            return new("TODO", $"Missing required domain values in settlementmethod: {error.SettlementMethod}");
+        }
     }
 }

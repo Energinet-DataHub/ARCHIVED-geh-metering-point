@@ -12,9 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint
 {
-    public abstract class ValidationError
-    {
-    }
+    public record CreateMeteringPointRejected(
+        string TransactionId,
+        string GsrnNumber,
+        string Status, // TODO: Is status implicit in Rejected from type?
+        string Reason,
+        Error[] Errors);
+
+    // TODO: Reference to original document?
 }

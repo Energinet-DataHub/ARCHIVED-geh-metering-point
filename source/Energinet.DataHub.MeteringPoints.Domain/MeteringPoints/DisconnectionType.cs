@@ -12,9 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public class CreateMeteringPointResult
+    public class DisconnectionType : EnumerationType
     {
+        public static readonly DisconnectionType Remote = new DisconnectionType(0, nameof(Remote));
+        public static readonly DisconnectionType Manual = new DisconnectionType(1, nameof(Manual));
+
+        private DisconnectionType(int id, string name)
+            : base(id, name)
+        {
+        }
     }
 }

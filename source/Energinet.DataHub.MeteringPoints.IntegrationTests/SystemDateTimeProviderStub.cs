@@ -12,9 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using NodaTime;
+
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
-    public abstract class ValidationError
+    public class SystemDateTimeProviderStub : ISystemDateTimeProvider
     {
+        private Instant _now = SystemClock.Instance.GetCurrentInstant();
+
+        public void SetNow(Instant now)
+        {
+            _now = now;
+        }
+
+        public Instant Now()
+        {
+            return _now;
+        }
     }
 }

@@ -12,9 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using NodaTime;
+
 namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
 {
-    public abstract class ValidationError
+    /// <summary>
+    /// System time provider
+    /// </summary>
+    public interface ISystemDateTimeProvider
     {
+        /// <summary>
+        /// Return current date and time
+        /// </summary>
+        /// <returns><see cref="Instant"/></returns>
+        Instant Now();
     }
 }
