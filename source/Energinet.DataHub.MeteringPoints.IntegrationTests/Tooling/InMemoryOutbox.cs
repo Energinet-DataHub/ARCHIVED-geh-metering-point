@@ -27,7 +27,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
             _messages.Add(message);
         }
 
+#pragma warning disable 8632 // Nullable not enabled in test project
         public OutboxMessage? GetNext(OutboxMessageCategory category)
+#pragma warning restore 8632
         {
             return _messages.FirstOrDefault(message => message.Category == category);
         }
