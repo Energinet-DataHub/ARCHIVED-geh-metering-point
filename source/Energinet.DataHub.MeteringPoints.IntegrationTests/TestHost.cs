@@ -39,6 +39,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Reposi
 using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Services;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
+using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -82,6 +83,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IDomainEventPublisher, DomainEventPublisher>();
             _container.Register<IIntegrationEventDispatchOrchestrator, IntegrationEventDispatchOrchestrator>();
 
+            // _container.Register<CreateMeteringPointEventMessageHandlerTestDispatcher>(Lifestyle.Scoped);
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
                 typeof(CreateMeteringPoint).Assembly, // Application
@@ -93,6 +95,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 {
                     typeof(CreateMeteringPoint).Assembly,
                     typeof(MeteringPointCreatedNotificationHandler).Assembly,
+                    typeof(CreateMeteringPointEventMessageHandlerTestDispatcher).Assembly,
                 },
                 new[]
                 {

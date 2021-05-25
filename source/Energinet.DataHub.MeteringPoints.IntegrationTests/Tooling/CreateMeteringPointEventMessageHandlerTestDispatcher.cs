@@ -12,14 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
-using Energinet.DataHub.MeteringPoints.Application.Transport;
-using Energinet.DataHub.MeteringPoints.Domain;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using System.Threading;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
 {
-    public record CreateMeteringPointEventMessage(string Gsrn, string MpType, string GridAccessProvider, bool Child,
-        string EnergySupplierCurrent) : IOutboundMessage, IRequest, IIntegrationEvent;
+    public class CreateMeteringPointEventMessageHandlerTestDispatcher : IRequestHandler<CreateMeteringPointEventMessage>
+    {
+        public Task<Unit> Handle(CreateMeteringPointEventMessage request, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(Unit.Value);
+        }
+    }
 }

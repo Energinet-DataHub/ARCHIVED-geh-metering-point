@@ -96,9 +96,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await _integrationEventDispatchOrchestrator.ProcessEventOrchestratorAsync().ConfigureAwait(false);
 
             var outboxMessage = _outbox.GetNext(OutboxMessageCategory.IntegrationEvent);
-            outboxMessage.Should().NotBeNull();
-            outboxMessage.Type.Should()
-                .Be(typeof(Infrastructure.IntegrationServices.Dispatchers.CreateMeteringPointEventMessage).FullName);
+            outboxMessage.Should().BeNull();
+
         }
 
         [Fact]

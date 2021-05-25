@@ -51,10 +51,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Se
                 object parsedCommand = _jsonSerializer.Deserialize(
                         outboxMessage.Data,
                         IntegrationEventTypeFactory.GetType(outboxMessage.Type));
+
                 await _mediator.Send(parsedCommand, CancellationToken.None).ConfigureAwait(false);
                 _outbox.MarkProcessed(outboxMessage);
 
-                // await MarkEventAsProcessedAsync(outboxMessage.Id).ConfigureAwait(false);
                 await _unitOfWork.CommitAsync().ConfigureAwait(false);
                 outboxMessage = FetchEventFromOutbox();
             }

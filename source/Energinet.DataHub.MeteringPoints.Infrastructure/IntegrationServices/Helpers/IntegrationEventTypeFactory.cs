@@ -21,12 +21,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.He
     {
         public static Type GetType(string type)
         {
-            switch (type)
+            if (typeof(CreateMeteringPointEventMessage).FullName == type)
             {
-                case nameof(CreateMeteringPointEventMessage):
-                    return typeof(CreateMeteringPointEventMessage);
-                default: throw new ArgumentException();
+                return typeof(CreateMeteringPointEventMessage);
             }
+
+            throw new ArgumentException("Integration Event type is not implemented.");
         }
     }
 }

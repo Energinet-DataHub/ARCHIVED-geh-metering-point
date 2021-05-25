@@ -39,7 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Di
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
             var message = new CreateMeteringPointEventMessage(
-                notification.GsrnNumber,
+                notification.GsrnNumber.Value,
                 "notification.mptype",
                 "notification.GridAccessProvider",
                 true,
