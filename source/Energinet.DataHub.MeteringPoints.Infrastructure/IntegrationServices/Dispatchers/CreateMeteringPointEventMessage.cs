@@ -20,6 +20,5 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers
 {
-    public record CreateMeteringPointEventMessage(string Gsrn, string MpType, string GridAccessProvider, bool Child,
-        string EnergySupplierCurrent) : IOutboundMessage, IRequest, IIntegrationEvent;
+    public record CreateMeteringPointEventMessage(string Gsrn, string MpType, string GridAreaId, bool Child) : IOutboundMessage, IRequest, IIntegrationEvent;
 }

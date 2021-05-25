@@ -40,11 +40,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Di
             if (notification == null) throw new ArgumentNullException(nameof(notification));
             var message = new CreateMeteringPointEventMessage(
                 notification.GsrnNumber.Value,
-                "notification.mptype",
-                "notification.GridAccessProvider",
-                true,
-                "notification.EnergySupplierCurrent");
+                notification.MeteringPointType.Name,
+                notification.GridAreaId.Value.ToString(),
+                false);
 
+            // TODO: When parent_MarketEvaluationPoint.mRID is implemented update child property
             var outboxMessage = _outboxMessageFactory.CreateFrom(message, OutboxMessageCategory.IntegrationEvent);
             _outbox.Add(outboxMessage);
 

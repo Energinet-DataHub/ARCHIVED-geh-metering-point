@@ -31,9 +31,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Ma
                 {
                     Gsrn = obj.Gsrn,
                     MpType = obj.MpType,
-                    GridAccessProvider = obj.GridAccessProvider,
+                    GridAccessProvider = obj.GridAreaId,
                     Child = obj.Child,
-                    EnergySupplierCurrent = obj.EnergySupplierCurrent,
                 },
             };
         }

@@ -111,7 +111,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             _scope = AsyncScopedLifestyle.BeginScope(_container);
 
-            // CleanupDatabase();
+            CleanupDatabase();
         }
 
         private string ConnectionString =>
