@@ -22,6 +22,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using FluentAssertions;
 using MediatR;
 using Xunit;
+using Address = Energinet.DataHub.MeteringPoints.Application.Address;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 {
@@ -45,13 +46,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task CreateMeteringPoint_WithNoValidationErrors_ShouldBeRetrievableFromRepository()
         {
-            var request = new CreateMeteringPoint(new Address())
-            {
-                GsrnNumber = SampleData.GsrnNumber,
-                MaximumCurrent = 1,
-                TypeOfMeteringPoint = MeteringPointType.Consumption.Name,
-                SettlementMethod = SampleData.SettlementMethod
-            };
+            var request = CreateRequest();
 
             await _mediator.Send(request, CancellationToken.None);
 
@@ -134,14 +129,37 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         {
         }
 
+        [Fact(Skip = "Not implemented yet")]
+        public void CreateMeteringPoint_WhenEffectiveDateIsOutOfScope_ShouldGenerateRejectMessageInOutbox()
+        {
+        }
+
         private static CreateMeteringPoint CreateRequest()
         {
             return new CreateMeteringPoint(
-                InstallationLocationAddress: new Address(),
-                GsrnNumber: SampleData.GsrnNumber,
-                TypeOfMeteringPoint: SampleData.TypeOfMeteringPoint,
-                SubTypeOfMeteringPoint: SampleData.SubTypeOfMeteringPoint,
-                SettlementMethod: SampleData.SettlementMethod);
+                new Address(),
+                SampleData.GsrnNumber,
+                SampleData.TypeOfMeteringPoint,
+                SampleData.SubTypeOfMeteringPoint,
+                "",
+                0,
+                0,
+                "",
+                "",
+                "",
+                "",
+                "",
+                SampleData.SettlementMethod,
+                "",
+                SampleData.DisconnectionType,
+                "",
+                "",
+                "",
+                "",
+                "",
+                SampleData.ConnectionType,
+                ""
+            );
         }
     }
 }

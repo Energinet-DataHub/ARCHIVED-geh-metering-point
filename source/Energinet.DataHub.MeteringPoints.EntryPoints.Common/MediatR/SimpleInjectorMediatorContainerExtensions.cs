@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR
     // Note: https://github.com/jbogard/MediatR/tree/master/samples/MediatR.Examples.SimpleInjector
     public static class SimpleInjectorMediatorContainerExtensions
     {
-        public static IMediator BuildMediator(this Container container, Assembly[] applicationAssemblies, Type[] pipelineBehaviors)
+        public static void BuildMediator(this Container container, Assembly[] applicationAssemblies, Type[] pipelineBehaviors)
         {
             var assemblies = GetMediatorAssemblies().Union(applicationAssemblies).ToArray();
             container.RegisterSingleton<IMediator, Mediator>();
@@ -51,10 +51,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR
             container.Collection.Register(typeof(IRequestPostProcessor<,>), new[] { typeof(EmptyRequestPostProcessor<,>) });
 
             container.Register(() => new ServiceFactory(container.GetInstance), Lifestyle.Singleton);
-
-            var mediator = container.GetInstance<IMediator>();
-
-            return mediator;
         }
 
         private static void RegisterHandlers(Container container, Type collectionType, Assembly[] assemblies)
