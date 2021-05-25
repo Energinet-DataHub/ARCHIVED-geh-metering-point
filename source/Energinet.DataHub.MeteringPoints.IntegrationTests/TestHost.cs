@@ -102,8 +102,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                     // typeof(ValidationReportsBehavior<,>),
                 });
 
-            // _container.Verify();CleanupDatabase();
+            _container.Verify();
+
             _scope = AsyncScopedLifestyle.BeginScope(_container);
+
+            CleanupDatabase();
         }
 
         private string ConnectionString =>

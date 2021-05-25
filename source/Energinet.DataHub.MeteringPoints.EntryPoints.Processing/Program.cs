@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
@@ -22,9 +23,12 @@ using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
 using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
+using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
@@ -54,6 +58,15 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     services.Replace(descriptor); // Replace existing activator
 
                     services.AddLogging();
+
+                    services.AddDbContext<MeteringPointContext>(x =>
+                    {
+                        var connectionString = Environment.GetEnvironmentVariable("METERING_POINT_DB_CONNECTION_STRING")
+                                               ?? throw new InvalidOperationException(
+                                                   "Metering point db connection string not found.");
+
+                        x.UseSqlServer(connectionString, y => y.UseNodaTime());
+                    });
                     services.AddSimpleInjector(container, options =>
                     {
                         options.AddLogging();
