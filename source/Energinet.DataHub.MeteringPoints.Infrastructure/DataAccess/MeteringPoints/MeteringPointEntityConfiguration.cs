@@ -76,7 +76,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.Property(x => x.PowerPlant);
             builder.Property(x => x.LocationDescription);
-            builder.Property(x => x.ProductType);
+            builder.Property(x => x.ProductType)
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<ProductType>(fromDbValue));
             builder.Property(x => x.ParentRelatedMeteringPoint);
             builder.Property(x => x.UnitType);
             builder.Property(x => x.MeterNumber);

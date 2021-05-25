@@ -42,7 +42,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 GridAreaId.New(),
                 SampleData.PowerPlant,
                 SampleData.LocationDescription,
-                SampleData.ProductType,
                 SampleData.ParentRelatedMeteringPoint,
                 SampleData.UnitType,
                 SampleData.MeterNumber,

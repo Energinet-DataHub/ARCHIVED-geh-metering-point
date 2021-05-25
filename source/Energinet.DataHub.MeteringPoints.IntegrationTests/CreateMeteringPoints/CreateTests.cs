@@ -124,7 +124,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 "",
                 "",
                 "",
-                "",
                 SampleData.SettlementMethod,
                 "",
                 SampleData.DisconnectionType,

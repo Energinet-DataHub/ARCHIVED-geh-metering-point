@@ -33,7 +33,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GridAreaId gridAreaId,
             string powerPlant,
             string locationDescription,
-            string productType,
             string parentRelatedMeteringPoint,
             string unitType,
             string meterNumber,
@@ -60,7 +59,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 gridAreaId,
                 powerPlant,
                 locationDescription,
-                productType,
                 parentRelatedMeteringPoint,
                 unitType,
                 meterNumber,
@@ -74,6 +72,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             DisconnectionType = disconnectionType;
             ConnectionType = connectionType;
             AssetType = assetType;
+            ProductType = ProductType.EnergyActive;
         }
 
         public string SettlementMethod { get; }
