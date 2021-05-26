@@ -16,12 +16,12 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class PostCodeWrongFormatErrorConverter : ErrorConverter<PostCodeWrongFormatValidationError>
+    public class PostCodeMandatoryForMeteringPointTypeErrorConverter : ErrorConverter<PostCodeMandatoryForMeteringPointTypeValidationError>
     {
         // TODO: This is an example, redo when we know what/how etc.
-        protected override Error Convert(PostCodeWrongFormatValidationError error)
+        protected override Error Convert(PostCodeMandatoryForMeteringPointTypeValidationError error)
         {
-            return new("TODO", $"PostCode is in wrong format");
+            return new("TODO", $"{error.FieldName} is mandatory");
         }
     }
 }
