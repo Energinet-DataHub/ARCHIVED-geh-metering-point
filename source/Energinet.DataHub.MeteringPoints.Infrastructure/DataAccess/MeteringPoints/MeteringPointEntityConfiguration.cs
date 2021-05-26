@@ -141,13 +141,17 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.ToTable("ProductionMeteringPoints", "dbo");
 
-            builder.Property(x => x.ProductionObligation);
-            builder.Property(x => x.NetSettlementGroup);
-            builder.Property(x => x.DisconnectionType)
+            builder.Property("_productionObligation")
+                .HasColumnName("ProductionObligation");
+            builder.Property("_netSettlementGroup")
+                .HasColumnName("NetSettlementGroup");
+            builder.Property<DisconnectionType>("_disconnectionType")
+                .HasColumnName("DisconnectionType")
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<DisconnectionType>(fromDbValue));
-            builder.Property(x => x.ConnectionType)
+            builder.Property<ConnectionType>("_connectionType")
+                .HasColumnName("ConnectionType")
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<ConnectionType>(fromDbValue));
