@@ -46,7 +46,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 SampleData.ParentRelatedMeteringPoint,
                 SampleData.UnitType,
                 SampleData.MeterNumber,
-                SampleData.MeterReadingOccurence,
+                ReadingOccurrence.Hourly,
                 SampleData.MaximumCurrent,
                 SampleData.MaximumPower,
                 SampleData.OccurenceDate,

@@ -54,10 +54,10 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 request.ParentRelatedMeteringPoint,
                 request.UnitType,
                 request.MeterNumber,
-                request.MeterReadingOccurrence,
+                EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
                 request.MaximumCurrent,
                 request.MaximumPower,
-                Instant.MaxValue, // TODO: Parse date in correct format when implemented in Input Validation
+                SystemClock.Instance.GetCurrentInstant(), // TODO: Parse date in correct format when implemented in Input Validation
                 request.SettlementMethod,
                 request.NetSettlementGroup,
                 EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),

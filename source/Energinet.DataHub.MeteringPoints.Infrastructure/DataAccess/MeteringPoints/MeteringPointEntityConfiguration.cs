@@ -81,7 +81,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             builder.Property(x => x.ParentRelatedMeteringPoint);
             builder.Property(x => x.UnitType);
             builder.Property(x => x.MeterNumber);
-            builder.Property(x => x.MeterReadingOccurrence);
+            builder.Property(x => x.MeterReadingOccurrence)
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<ReadingOccurrence>(fromDbValue));
             builder.Property(x => x.MaximumCurrent);
             builder.Property(x => x.MaximumPower);
             builder.Property(x => x.OccurenceDate);

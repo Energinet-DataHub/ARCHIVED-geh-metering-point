@@ -140,7 +140,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SampleData.GsrnNumber,
                 SampleData.TypeOfMeteringPoint,
                 SampleData.SubTypeOfMeteringPoint,
-                string.Empty,
+                SampleData.ReadingOccurrence,
                 0,
                 0,
                 string.Empty,
