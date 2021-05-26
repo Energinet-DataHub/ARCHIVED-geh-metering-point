@@ -14,6 +14,7 @@
 
 namespace Energinet.DataHub.MeteringPoints.Application
 {
+    // TODO: Add all the remaining address fields
     public record Address(
         string StreetName = "",
         string PostCode = "",

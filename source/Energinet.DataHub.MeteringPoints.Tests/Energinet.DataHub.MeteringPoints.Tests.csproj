@@ -47,4 +47,9 @@ limitations under the License.
       <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Domain\Energinet.DataHub.MeteringPoints.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="EDI\CreateMeteringPoint\CreateMeteringPointCimXml.xml" />
+      <EmbeddedResource Include="EDI\CreateMeteringPoint\CreateMeteringPointCimXml.xml" />
+    </ItemGroup>
+
 </Project>
