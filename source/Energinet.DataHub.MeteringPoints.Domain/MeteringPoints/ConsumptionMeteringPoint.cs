@@ -69,11 +69,53 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             ProductType = ProductType.EnergyActive;
         }
 
-       #pragma warning disable CS8618 // Disable non-nullable check
-       private ConsumptionMeteringPoint()
-       {
-           //EF core only
-       }
+       private ConsumptionMeteringPoint(
+                  MeteringPointId id,
+                  GsrnNumber gsrnNumber,
+                  bool isAddressWashable,
+                  PhysicalState physicalState,
+                  MeteringPointSubType meteringPointSubType,
+                  MeteringPointType meteringPointType,
+                  GridAreaId gridAreaId,
+                  GsrnNumber powerPlant,
+                  string locationDescription,
+                  string parentRelatedMeteringPoint,
+                  MeasurementUnitType unitType,
+                  string meterNumber,
+                  ReadingOccurrence meterReadingOccurrence,
+                  int maximumCurrent,
+                  int maximumPower,
+                  Instant? occurenceDate,
+                  SettlementMethod settlementMethod,
+                  string netSettlementGroup,
+                  DisconnectionType disconnectionType,
+                  ConnectionType connectionType,
+                  AssetType assetType)
+                  : base(
+                      id,
+                      gsrnNumber,
+                      isAddressWashable,
+                      physicalState,
+                      meteringPointSubType,
+                      meteringPointType,
+                      gridAreaId,
+                      powerPlant,
+                      locationDescription,
+                      parentRelatedMeteringPoint,
+                      unitType,
+                      meterNumber,
+                      meterReadingOccurrence,
+                      maximumCurrent,
+                      maximumPower,
+                      occurenceDate)
+              {
+                  SettlementMethod = settlementMethod;
+                  NetSettlementGroup = netSettlementGroup;
+                  DisconnectionType = disconnectionType;
+                  ConnectionType = connectionType;
+                  AssetType = assetType;
+                  ProductType = ProductType.EnergyActive;
+              }
 
        public SettlementMethod SettlementMethod { get; }
 

@@ -67,10 +67,50 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             ProductType = ProductType.EnergyActive;
         }
 
-        #pragma warning disable CS8618 // Disable non-nullable check
-        private ProductionMeteringPoint()
+        public ProductionMeteringPoint(
+            MeteringPointId id,
+            GsrnNumber gsrnNumber,
+            bool isAddressWashable,
+            PhysicalState physicalState,
+            MeteringPointSubType meteringPointSubType,
+            MeteringPointType meteringPointType,
+            GridAreaId gridAreaId,
+            GsrnNumber powerPlant,
+            string locationDescription,
+            string parentRelatedMeteringPoint,
+            MeasurementUnitType unitType,
+            string meterNumber,
+            ReadingOccurrence meterReadingOccurrence,
+            int maximumCurrent,
+            int maximumPower,
+            Instant? occurenceDate,
+            int productionObligation,
+            int netSettlementGroup,
+            DisconnectionType disconnectionType,
+            ConnectionType connectionType)
+            : base(
+                id,
+                gsrnNumber,
+                isAddressWashable,
+                physicalState,
+                meteringPointSubType,
+                meteringPointType,
+                gridAreaId,
+                powerPlant,
+                locationDescription,
+                parentRelatedMeteringPoint,
+                unitType,
+                meterNumber,
+                meterReadingOccurrence,
+                maximumCurrent,
+                maximumPower,
+                occurenceDate)
         {
-            //EF core only
+            ProductionObligation = productionObligation;
+            NetSettlementGroup = netSettlementGroup;
+            DisconnectionType = disconnectionType;
+            ConnectionType = connectionType;
+            ProductType = ProductType.EnergyActive;
         }
 
         public int ProductionObligation { get; }

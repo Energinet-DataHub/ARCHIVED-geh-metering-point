@@ -63,10 +63,46 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             ProductType = ProductType.EnergyReactive;
         }
 
-        #pragma warning disable CS8618 // Disable non-nullable check
-        private ExchangeMeteringPoint()
+        private ExchangeMeteringPoint(
+            MeteringPointId id,
+            GsrnNumber gsrnNumber,
+            bool isAddressWashable,
+            PhysicalState physicalState,
+            MeteringPointSubType meteringPointSubType,
+            MeteringPointType meteringPointType,
+            GridAreaId gridAreaId,
+            GsrnNumber powerPlant,
+            string locationDescription,
+            string parentRelatedMeteringPoint,
+            MeasurementUnitType unitType,
+            string meterNumber,
+            ReadingOccurrence meterReadingOccurrence,
+            int maximumCurrent,
+            int maximumPower,
+            Instant? occurenceDate,
+            string toGrid,
+            string fromGrid)
+            : base(
+                id,
+                gsrnNumber,
+                isAddressWashable,
+                physicalState,
+                meteringPointSubType,
+                meteringPointType,
+                gridAreaId,
+                powerPlant,
+                locationDescription,
+                parentRelatedMeteringPoint,
+                unitType,
+                meterNumber,
+                meterReadingOccurrence,
+                maximumCurrent,
+                maximumPower,
+                occurenceDate)
         {
-            // EF core only
+            ToGrid = toGrid;
+            FromGrid = fromGrid;
+            ProductType = ProductType.EnergyReactive;
         }
 
         public string FromGrid { get; }

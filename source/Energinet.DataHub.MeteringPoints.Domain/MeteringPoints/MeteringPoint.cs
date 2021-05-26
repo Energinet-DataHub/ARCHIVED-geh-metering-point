@@ -20,11 +20,41 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public abstract class MeteringPoint : AggregateRootBase
     {
-        //Disable nullable check
-        #pragma warning disable CS8618
-        protected MeteringPoint()
+        #pragma warning disable CS8618 // Disable non-nullable check
+        protected MeteringPoint(
+            MeteringPointId id,
+            GsrnNumber gsrnNumber,
+            bool isAddressWashable,
+            PhysicalState physicalState,
+            MeteringPointSubType meteringPointSubType,
+            MeteringPointType meteringPointType,
+            GridAreaId gridAreaId,
+            GsrnNumber powerPlant,
+            string locationDescription,
+            string parentRelatedMeteringPoint,
+            MeasurementUnitType unitType,
+            string meterNumber,
+            ReadingOccurrence meterReadingOccurrence,
+            int maximumCurrent,
+            int maximumPower,
+            Instant? occurenceDate)
         {
-            //For EF core only
+            Id = id;
+            GsrnNumber = gsrnNumber;
+            IsAddressWashable = isAddressWashable;
+            PhysicalState = physicalState;
+            MeteringPointSubType = meteringPointSubType;
+            MeteringPointType = meteringPointType;
+            GridAreaId = gridAreaId;
+            PowerPlant = powerPlant;
+            LocationDescription = locationDescription;
+            ParentRelatedMeteringPoint = parentRelatedMeteringPoint;
+            UnitType = unitType;
+            MeterNumber = meterNumber;
+            MeterReadingOccurrence = meterReadingOccurrence;
+            MaximumCurrent = maximumCurrent;
+            MaximumPower = maximumPower;
+            OccurenceDate = occurenceDate;
         }
 
         protected MeteringPoint(
