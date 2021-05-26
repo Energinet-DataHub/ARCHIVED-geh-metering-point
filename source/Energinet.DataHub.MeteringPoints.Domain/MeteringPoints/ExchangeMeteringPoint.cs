@@ -33,7 +33,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GridAreaId gridAreaId,
             GsrnNumber powerPlant,
             string locationDescription,
-            string productType,
             string parentRelatedMeteringPoint,
             MeasurementUnitType unitType,
             string meterNumber,
@@ -57,7 +56,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 gridAreaId,
                 powerPlant,
                 locationDescription,
-                productType,
                 parentRelatedMeteringPoint,
                 unitType,
                 meterNumber,
@@ -68,6 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             ToGrid = toGrid;
             FromGrid = fromGrid;
+            ProductType = ProductType.EnergyReactive;
         }
 
         public string FromGrid { get; }

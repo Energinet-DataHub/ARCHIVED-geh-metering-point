@@ -50,7 +50,6 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 new GridAreaId(Guid.NewGuid()),
                 GsrnNumber.Create(request.PowerPlant),
                 request.LocationDescription,
-                request.ProductType,
                 request.ParentRelatedMeteringPoint,
                 EnumerationType.FromName<MeasurementUnitType>(request.UnitType),
                 request.MeterNumber,
@@ -58,11 +57,11 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 request.MaximumCurrent,
                 request.MaximumPower,
                 SystemClock.Instance.GetCurrentInstant(), // TODO: Parse date in correct format when implemented in Input Validation
-                request.SettlementMethod,
+                EnumerationType.FromName<SettlementMethod>(request.SettlementMethod),
                 request.NetSettlementGroup,
                 EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
                 EnumerationType.FromName<ConnectionType>(request.ConnectionType),
-                request.AssetType);
+                EnumerationType.FromName<AssetType>(request.AssetType));
 
             _meteringPointRepository.Add(meteringPoint);
 

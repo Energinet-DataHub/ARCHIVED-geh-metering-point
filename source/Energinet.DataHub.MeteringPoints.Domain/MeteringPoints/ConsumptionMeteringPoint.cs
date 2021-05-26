@@ -33,7 +33,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GridAreaId gridAreaId,
             GsrnNumber powerPlant,
             string locationDescription,
-            string productType,
             string parentRelatedMeteringPoint,
             MeasurementUnitType unitType,
             string meterNumber,
@@ -41,11 +40,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             int maximumCurrent,
             int maximumPower,
             Instant? occurenceDate,
-            string settlementMethod,
+            SettlementMethod settlementMethod,
             string netSettlementGroup,
             DisconnectionType disconnectionType,
             ConnectionType connectionType,
-            string assetType)
+            AssetType assetType)
             : base(
                 id,
                 gsrnNumber,
@@ -60,7 +59,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 gridAreaId,
                 powerPlant,
                 locationDescription,
-                productType,
                 parentRelatedMeteringPoint,
                 unitType,
                 meterNumber,
@@ -74,9 +72,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             DisconnectionType = disconnectionType;
             ConnectionType = connectionType;
             AssetType = assetType;
+            ProductType = ProductType.EnergyActive;
         }
 
-        public string SettlementMethod { get; }
+        public SettlementMethod SettlementMethod { get; }
 
         public string NetSettlementGroup { get; }
 
@@ -84,6 +83,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public ConnectionType ConnectionType { get; }
 
-        public string AssetType { get; }
+        public AssetType AssetType { get; }
     }
 }

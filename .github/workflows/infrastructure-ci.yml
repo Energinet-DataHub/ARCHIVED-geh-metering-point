@@ -45,7 +45,7 @@ jobs:
           echo "ARM_CLIENT_OBJECT_ID=${{ secrets.SPN_OBJECT_ID_TESTING }}" >> $GITHUB_ENV
           echo "ARM_CLIENT_SECRET=${{ secrets.SPN_SECRET_TESTING }}" >> $GITHUB_ENV
           echo "ARM_SUBSCRIPTION_ID=${{ secrets.SUBSCRIPTION_ID }}" >> $GITHUB_ENV
-
+          
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1.2.1
         with:
@@ -88,6 +88,9 @@ jobs:
           echo "TF_VAR_organisation=${{ env.ORGANISATION_NAME }}" >> $GITHUB_ENV
           echo "TF_VAR_project=${{ env.PROJECT_NAME }}" >> $GITHUB_ENV
           echo "TF_VAR_resource_group_name=${{ env.RESOURCE_GROUP_NAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_sharedresources_keyvault_name=${{ secrets.SHARED_RESOURCES_KEYVAULT_NAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_sharedresources_resource_group_name=${{ secrets.SHARED_RESOURCES_RESOURCE_GROUP_NAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_sharedresources_sql_server_name=${{ secrets.SHARED_RESOURCES_SQL_SERVER_NAME }}" >> $GITHUB_ENV
 
       - name: Configure Terraform Backend
         uses: ./.github/actions/configure-terraform-backend
