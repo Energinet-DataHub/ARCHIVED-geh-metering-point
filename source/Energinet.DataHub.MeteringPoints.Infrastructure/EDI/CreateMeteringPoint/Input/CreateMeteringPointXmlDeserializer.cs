@@ -79,66 +79,66 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
 
         private static string GetMeteringPointType(string id)
         {
-            switch (id)
+            return id switch
             {
-                case MeteringPointType.Consumption: return "Consumption";
-                default: return string.Empty;
-            }
+                MeteringPointType.Consumption => nameof(MeteringPointType.Consumption),
+                _ => string.Empty,
+            };
         }
 
         private static string GetMeteringPointSubType(string id)
         {
-            switch (id)
+            return id switch
             {
-                case MeteringPointSubType.Physical: return "Physical";
-                default: return string.Empty;
-            }
+                MeteringPointSubType.Physical => nameof(MeteringPointSubType.Physical),
+                _ => string.Empty,
+            };
         }
 
         private static string GetConnectionState(string id)
         {
-            switch (id)
+            return id switch
             {
-                case ConnectionState.New: return "New";
-                default: return string.Empty;
-            }
+                ConnectionState.New => nameof(ConnectionState.New),
+                _ => string.Empty,
+            };
         }
 
         private static string GetConnectionType(string id)
         {
-            switch (id)
+            return id switch
             {
-                case ConnectionType.DirectConnected: return "DirectConnected";
-                default: return string.Empty;
-            }
+                ConnectionType.DirectConnected => nameof(ConnectionType.DirectConnected),
+                _ => string.Empty,
+            };
         }
 
         private static string GetAssetType(string id)
         {
-            switch (id)
+            return id switch
             {
-                case AssetType.WindTurbines: return "WindTurbines";
-                default: return string.Empty;
-            }
+                AssetType.WindTurbines => nameof(AssetType.WindTurbines),
+                _ => string.Empty,
+            };
         }
 
         private static string GetDisconnectionType(string id)
         {
-            switch (id)
+            return id switch
             {
-                case DisconnectionType.RemoteDisconnection: return "RemoteDisconnection";
-                default: return string.Empty;
-            }
+                DisconnectionType.RemoteDisconnection => nameof(DisconnectionType.RemoteDisconnection),
+                _ => string.Empty,
+            };
         }
 
         private static string GetSettlementMethod(string id)
         {
-            switch (id)
+            return id switch
             {
-                case SettlementMethod.Flex: return "Flex";
-                case SettlementMethod.NonProfiled: return "NonProfiled";
-                default: return string.Empty;
-            }
+                SettlementMethod.Flex => nameof(SettlementMethod.Flex),
+                SettlementMethod.NonProfiled => nameof(SettlementMethod.NonProfiled),
+                _ => string.Empty,
+            };
         }
 
         private static string ExtractElementValue(XElement? element, XName name)
