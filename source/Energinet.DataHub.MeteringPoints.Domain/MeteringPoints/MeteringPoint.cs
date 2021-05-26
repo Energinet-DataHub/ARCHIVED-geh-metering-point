@@ -34,12 +34,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
             GridAreaId gridAreaId,
-            string powerPlant,
+            GsrnNumber powerPlant,
             string locationDescription,
             string parentRelatedMeteringPoint,
             string unitType,
             string meterNumber,
-            string meterReadingOccurrence,
+            ReadingOccurrence meterReadingOccurrence,
             int maximumCurrent,
             int maximumPower,
             Instant? occurenceDate)
@@ -90,13 +90,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public bool IsAddressWashable { get; }
 
-        public string MeterReadingOccurrence { get; }
+        public ReadingOccurrence MeterReadingOccurrence { get; }
 
         public int MaximumCurrent { get; }
 
         public int MaximumPower { get; }
 
-        public string PowerPlant { get; }
+        public GsrnNumber PowerPlant { get; }
 
         public string LocationDescription { get; }
 

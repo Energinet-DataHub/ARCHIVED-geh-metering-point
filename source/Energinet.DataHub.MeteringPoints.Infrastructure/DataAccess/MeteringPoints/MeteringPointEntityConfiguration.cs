@@ -74,7 +74,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     toDbValue => toDbValue.Value,
                     fromDbValue => new GridAreaId(fromDbValue));
 
-            builder.Property(x => x.PowerPlant);
+            builder.Property(x => x.PowerPlant)
+                .HasConversion(toDbValue => toDbValue.Value, fromDbValue => GsrnNumber.Create(fromDbValue));
             builder.Property(x => x.LocationDescription);
             builder.Property(x => x.ProductType)
                 .HasConversion(
@@ -83,7 +84,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             builder.Property(x => x.ParentRelatedMeteringPoint);
             builder.Property(x => x.UnitType);
             builder.Property(x => x.MeterNumber);
-            builder.Property(x => x.MeterReadingOccurrence);
+            builder.Property(x => x.MeterReadingOccurrence)
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<ReadingOccurrence>(fromDbValue));
             builder.Property(x => x.MaximumCurrent);
             builder.Property(x => x.MaximumPower);
             builder.Property(x => x.OccurenceDate);

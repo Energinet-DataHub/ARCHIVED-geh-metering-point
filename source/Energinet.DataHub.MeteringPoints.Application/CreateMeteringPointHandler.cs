@@ -47,15 +47,15 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
                 EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint),
                 new GridAreaId(Guid.NewGuid()),
-                request.PowerPlant,
+                GsrnNumber.Create(request.PowerPlant),
                 request.LocationDescription,
                 request.ParentRelatedMeteringPoint,
                 request.UnitType,
                 request.MeterNumber,
-                request.MeterReadingOccurrence,
+                EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
                 request.MaximumCurrent,
                 request.MaximumPower,
-                Instant.MaxValue, // TODO: Parse date in correct format when implemented in Input Validation
+                SystemClock.Instance.GetCurrentInstant(), // TODO: Parse date in correct format when implemented in Input Validation
                 request.SettlementMethod,
                 request.NetSettlementGroup,
                 EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
