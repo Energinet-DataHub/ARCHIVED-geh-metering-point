@@ -13,13 +13,13 @@
 # limitations under the License.
 
 data "azurerm_sql_server" "sqlsrv" {
-  name                = var.sharedresources_resource_group_name
+  name                = var.sharedresources_sql_server_name
   resource_group_name = data.azurerm_resource_group.shared_resources.name
 }
 
 module "sqldb_meteringpoint" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//sql-database?ref=1.2.0"
-  name                = "sqldb-meteringpoint"
+  name                = "sqldb-${var.project}-${var.organisation}"
   resource_group_name = data.azurerm_resource_group.shared_resources.name
   location            = data.azurerm_resource_group.shared_resources.location
   tags                = data.azurerm_resource_group.shared_resources.tags
