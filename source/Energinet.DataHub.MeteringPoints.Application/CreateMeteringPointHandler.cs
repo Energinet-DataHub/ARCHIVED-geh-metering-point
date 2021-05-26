@@ -51,7 +51,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 GsrnNumber.Create(request.PowerPlant),
                 request.LocationDescription,
                 request.ParentRelatedMeteringPoint,
-                request.UnitType,
+                EnumerationType.FromName<MeasurementUnitType>(request.UnitType),
                 request.MeterNumber,
                 EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
                 request.MaximumCurrent,
