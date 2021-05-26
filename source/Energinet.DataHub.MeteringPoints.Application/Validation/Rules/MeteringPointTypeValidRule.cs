@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Data;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -25,11 +24,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
     {
         public MeteringPointTypeValidRule()
         {
-            RuleFor_TypeOfMeteringPointRequired();
-            RuleFor_TypeOfMeteringPointShouldBeKnown();
+            TypeOfMeteringPointRequired();
+            TypeOfMeteringPointShouldBeKnown();
         }
 
-        private void RuleFor_TypeOfMeteringPointShouldBeKnown()
+        private void TypeOfMeteringPointShouldBeKnown()
         {
             var meteringPointTypeNames = EnumerationType.GetAll<MeteringPointType>().Select(typeMe => typeMe.Name).ToList();
 
@@ -38,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 .WithState(createMeteringPoint => new MeteringPointTypeValidationError(createMeteringPoint.TypeOfMeteringPoint));
         }
 
-        private void RuleFor_TypeOfMeteringPointRequired()
+        private void TypeOfMeteringPointRequired()
         {
             RuleFor(createMeteringPoint => createMeteringPoint.TypeOfMeteringPoint)
                 .NotEmpty()

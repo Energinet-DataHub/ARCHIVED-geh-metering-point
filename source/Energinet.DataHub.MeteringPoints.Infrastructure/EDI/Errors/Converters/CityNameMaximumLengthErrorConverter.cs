@@ -12,20 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class MandatoryFieldForMeteringPointTypeValidationError : ValidationError
+    public class CityNameMaximumLengthErrorConverter : ErrorConverter<CityNameMaximumLengthValidationError>
     {
-        public MandatoryFieldForMeteringPointTypeValidationError(string fieldName, string createMeteringPointType)
+        // TODO: This is an example, redo when we know what/how etc.
+        protected override Error Convert(CityNameMaximumLengthValidationError error)
         {
-            CreateMeteringPointType = createMeteringPointType;
-            FieldName = fieldName;
+            return new("TODO", $"Maximum length exceeded for field {error.FieldName}, maximum length is: {error.MaxLength}");
         }
-
-        public string FieldName { get; }
-
-        public string CreateMeteringPointType { get; }
     }
 }

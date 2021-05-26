@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class WrongFormatValidationError : ValidationError
+    public class CityNameMandatoryForMeteringPointTypeMustBeValidRule : AbstractValidator<Address>
     {
-        public WrongFormatValidationError(string fieldName)
+        public CityNameMandatoryForMeteringPointTypeMustBeValidRule()
         {
-            FieldName = fieldName;
+            RuleFor(installationLocationAddress => installationLocationAddress.CityName)
+                .NotEmpty()
+                .WithState(installationLocationAddress => new CityNameMandatoryForMeteringPointTypeValidationError(nameof(installationLocationAddress.CityName)));
         }
-
-        public string FieldName { get; }
     }
 }

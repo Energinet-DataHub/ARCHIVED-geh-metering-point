@@ -12,16 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class MandatoryFieldForMeteringPointTypeErrorConverter : ErrorConverter<MandatoryFieldForMeteringPointTypeValidationError>
+    public class StreetNameMandatoryForMeteringPointTypeValidationError : ValidationError
     {
-        // TODO: This is an example, redo when we know what/how etc.
-        protected override Error Convert(MandatoryFieldForMeteringPointTypeValidationError error)
+        public StreetNameMandatoryForMeteringPointTypeValidationError(string fieldName)
         {
-            return new("TODO", $"{error.FieldName} required for meteringpoint type: {error.CreateMeteringPointType}");
+            FieldName = fieldName;
         }
+
+        public string FieldName { get; }
     }
 }

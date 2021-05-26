@@ -12,16 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class WrongFormatErrorConverter : ErrorConverter<WrongFormatValidationError>
+    public class PostCodeMandatoryForMeteringPointTypeValidationError : ValidationError
     {
-        // TODO: This is an example, redo when we know what/how etc.
-        protected override Error Convert(WrongFormatValidationError error)
+        public PostCodeMandatoryForMeteringPointTypeValidationError(string fieldName)
         {
-            return new("TODO", $"Field with name: {error.FieldName} is in wrong format");
+            FieldName = fieldName;
         }
+
+        public string FieldName { get; }
     }
 }

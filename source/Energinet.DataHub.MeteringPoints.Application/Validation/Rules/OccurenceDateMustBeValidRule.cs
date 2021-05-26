@@ -17,27 +17,27 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class OccurenceDateValidRule : AbstractValidator<CreateMeteringPoint>
+    public class OccurenceDateMustBeValidRule : AbstractValidator<CreateMeteringPoint>
     {
-        private const string OccurenceDateFormatRexEx = @"^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})Z$";
+        private const string OccurenceDateFormatRegEx = @"^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})Z$";
 
-        public OccurenceDateValidRule()
+        public OccurenceDateMustBeValidRule()
         {
-            RuleFor_OccurenceDateRequired();
-            RuleFor_OccurenceDateFormat();
+            OccurenceDateRequired();
+            OccurenceDateFormat();
         }
 
-        private void RuleFor_OccurenceDateRequired()
+        private void OccurenceDateRequired()
         {
             RuleFor(createMeteringPoint => createMeteringPoint.OccurenceDate)
                 .NotEmpty()
                 .WithState((createMeteringPoint) => new OccurenceRequiredValidationError());
         }
 
-        private void RuleFor_OccurenceDateFormat()
+        private void OccurenceDateFormat()
         {
             RuleFor(createMeteringPoint => createMeteringPoint.OccurenceDate)
-                .Matches(OccurenceDateFormatRexEx)
+                .Matches(OccurenceDateFormatRegEx)
                 .WithState((createMeteringPoint) => new OccurenceDateWrongFormatValidationError(createMeteringPoint.OccurenceDate));
         }
     }

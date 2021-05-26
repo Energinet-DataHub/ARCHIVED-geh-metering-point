@@ -1,0 +1,36 @@
+﻿// Copyright 2020 Energinet DataHub A/S
+//
+// Licensed under the Apache License, Version 2.0 (the "License2");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using FluentValidation;
+
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+{
+    public class AddressMustBeValidRule : AbstractValidator<CreateMeteringPoint>
+    {
+        public AddressMustBeValidRule()
+        {
+            When(createMeteringPoint => createMeteringPoint.TypeOfMeteringPoint.Equals(MeteringPointType.Consumption.Name) || createMeteringPoint.TypeOfMeteringPoint.Equals(MeteringPointType.Production.Name), () =>
+            {
+                RuleFor(request => request.InstallationLocationAddress).SetValidator(new StreetNameMandatoryForMeteringPointTypeMustBeValidRule());
+                RuleFor(request => request.InstallationLocationAddress).SetValidator(new PostCodeMandatoryForMeteringPointTypeMustBeValidRuleMustBeValidRule());
+                RuleFor(request => request.InstallationLocationAddress).SetValidator(new CityNameMandatoryForMeteringPointTypeMustBeValidRule());
+            });
+
+            RuleFor(request => request.InstallationLocationAddress).SetValidator(new PostCodeFormatMustBeValidRule());
+            RuleFor(request => request.InstallationLocationAddress).SetValidator(new StreetNameMaximumLengthMustBeValidRule());
+            RuleFor(request => request.InstallationLocationAddress).SetValidator(new CityNameMaximumLengthMustBeValidRule());
+        }
+    }
+}

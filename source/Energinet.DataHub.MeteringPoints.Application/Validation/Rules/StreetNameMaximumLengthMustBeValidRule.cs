@@ -17,26 +17,15 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class MeteringGridAreaValidRule : AbstractValidator<CreateMeteringPoint>
+    public class StreetNameMaximumLengthMustBeValidRule : AbstractValidator<Address>
     {
-        public MeteringGridAreaValidRule()
-        {
-            MandatoryMeteringGridArea();
-            MeteringGridAreaLengthOf3Digits();
-        }
+        private const int MaxStreetNameLength = 40;
 
-        private void MandatoryMeteringGridArea()
+        public StreetNameMaximumLengthMustBeValidRule()
         {
-            RuleFor(meteringGridArea => meteringGridArea.MeteringGridArea)
-                .NotEmpty()
-                .WithState((meteringGridArea) => new MeteringGridAreaMandatoryValidationError());
-        }
-
-        private void MeteringGridAreaLengthOf3Digits()
-        {
-            RuleFor(meteringGridArea => meteringGridArea.MeteringGridArea)
-                .Length(3)
-                .WithState((meteringGridArea) => new MeteringGridAreaLengthValidationError(meteringGridArea.MeteringGridArea));
+            RuleFor(installationLocationAddress => installationLocationAddress.StreetName)
+                .MaximumLength(MaxStreetNameLength)
+                .WithState(installationLocationAddress => new StreetNameMaximumLengthValidationError(nameof(installationLocationAddress.StreetName), MaxStreetNameLength));
         }
     }
 }

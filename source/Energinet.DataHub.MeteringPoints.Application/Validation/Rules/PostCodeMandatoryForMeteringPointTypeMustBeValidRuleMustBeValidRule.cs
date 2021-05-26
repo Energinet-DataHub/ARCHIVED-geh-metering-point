@@ -13,16 +13,17 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class MaximumLengthErrorConverter : ErrorConverter<MaximumLengthValidationError>
+    public class PostCodeMandatoryForMeteringPointTypeMustBeValidRuleMustBeValidRule : AbstractValidator<Address>
     {
-        // TODO: This is an example, redo when we know what/how etc.
-        protected override Error Convert(MaximumLengthValidationError error)
+        public PostCodeMandatoryForMeteringPointTypeMustBeValidRuleMustBeValidRule()
         {
-            return new("TODO", $"Maximum length exceeded for field {error.FieldName}, maximum length is: {error.MaxLength}");
+            RuleFor(installationLocationAddress => installationLocationAddress.PostCode)
+                .NotEmpty()
+                .WithState(installationLocationAddress => new PostCodeMandatoryForMeteringPointTypeValidationError(nameof(installationLocationAddress.PostCode)));
         }
     }
 }
