@@ -13,7 +13,7 @@
 # limitations under the License.
 
 data "azurerm_sql_server" "sqlsrv" {
-  name                = var.sharedresources_sql_server_name
+  name                = "sqlsrv-sharedres-${var.organisation}-${var.environment}"
   resource_group_name = var.sharedresources_resource_group_name
 }
 
