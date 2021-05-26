@@ -12,10 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint.Input;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
@@ -37,23 +44,28 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 
         [Function("CreateMeteringPoint")]
         public async Task<HttpResponseData> RunAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData request,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")]
+            HttpRequestData request,
             FunctionContext executionContext)
         {
             var logger = executionContext.GetLogger("CreateMeteringPointHttpTrigger");
             logger.LogInformation("Received CreateMeteringPoint request");
 
+            // TODO: Currently we assume that we will have a function for each metering point event. This might change if we're not able to handle the routing in the API Gateway.
+            // TODO: In that case we would need to make a switch case or something like that to look at the value in the "process.processType" element.
+            var commands = CreateMeteringPointXmlDeserializer.Deserialize(request.Body);
+
             var response = request.CreateResponse(HttpStatusCode.OK);
+
             response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
 
-            await response.WriteStringAsync("Correlation id: " + _correlationContext.GetCorrelationId()).ConfigureAwait(false);
+            await response.WriteStringAsync("Correlation id: " + _correlationContext.GetCorrelationId())
+                .ConfigureAwait(false);
 
-            var command = new CreateMeteringPoint(new Address())
+            foreach (var command in commands)
             {
-                GsrnNumber = "1234567",
-            };
-
-            await _dispatcher.DispatchAsync(command).ConfigureAwait(false);
+                await _dispatcher.DispatchAsync(command).ConfigureAwait(false);
+            }
 
             return response;
         }

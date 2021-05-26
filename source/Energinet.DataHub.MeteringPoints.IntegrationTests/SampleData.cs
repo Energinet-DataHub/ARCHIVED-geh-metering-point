@@ -37,5 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         public static string ReadingOccurrence => "Hourly";
 
         public static string AssetType => "GasTurbine";
+
+        public static string MeasurementUnitType => "KWh";
     }
 }
