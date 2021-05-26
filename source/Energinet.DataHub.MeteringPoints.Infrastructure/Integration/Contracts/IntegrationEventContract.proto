@@ -21,7 +21,7 @@ option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEventCont
 
 message CreateMeteringPointEventMessage {
   string gsrn = 1;
-  string mpType = 2;
+  string meteringPointType = 2;
   string gridAccessProvider = 3;
   bool child = 4;
   string energySupplierCurrent = 5;
