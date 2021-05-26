@@ -37,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public static string TypeName => MeteringPointType.Consumption.Name;
 
-        public static string PowerPlant => string.Empty;
+        public static string PowerPlant => "571234567891234568";
 
         public static string LocationDescription => string.Empty;
 

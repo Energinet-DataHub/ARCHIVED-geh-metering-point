@@ -40,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
                 EnumerationType.FromName<MeteringPointType>(SampleData.TypeName),
                 GridAreaId.New(),
-                SampleData.PowerPlant,
+                GsrnNumber.Create(SampleData.PowerPlant),
                 SampleData.LocationDescription,
                 SampleData.ProductType,
                 SampleData.ParentRelatedMeteringPoint,
