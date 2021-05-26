@@ -109,24 +109,31 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.ToTable("ConsumptionMeteringPoints", "dbo");
 
-            builder.Property(x => x.AssetType)
+            builder.Property<AssetType>("_assetType")
+                .HasColumnName("AssetType")
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<AssetType>(fromDbValue));
-            builder.Property(x => x.ConnectionType);
-            builder.Property(x => x.DisconnectionType)
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<DisconnectionType>(fromDbValue));
-            builder.Property(x => x.ConnectionType)
+            builder.Property<ConnectionType>("_connectionType")
+                .HasColumnName("ConnectionType")
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<ConnectionType>(fromDbValue));
-            builder.Property(x => x.SettlementMethod)
+
+            builder.Property<DisconnectionType>("_disconnectionType")
+                .HasColumnName("DisconnectionType")
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<DisconnectionType>(fromDbValue));
+
+            builder.Property<SettlementMethod>("_settlementMethod")
+                .HasColumnName("SettlementMethod")
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<SettlementMethod>(fromDbValue));
-            builder.Property(x => x.NetSettlementGroup);
+
+            builder.Property("_netSettlementGroup")
+                .HasColumnName("NetSettlementGroup");
         }
     }
 
