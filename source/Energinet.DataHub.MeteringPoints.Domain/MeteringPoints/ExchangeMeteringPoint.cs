@@ -19,6 +19,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class ExchangeMeteringPoint : MeteringPoint
     {
+        private string _fromGrid;
+        private string _toGrid;
+
         public ExchangeMeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
@@ -64,13 +67,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 maximumPower,
                 occurenceDate)
         {
-            ToGrid = toGrid;
-            FromGrid = fromGrid;
+            _toGrid = toGrid;
+            _fromGrid = fromGrid;
             ProductType = ProductType.EnergyReactive;
         }
-
-        public string FromGrid { get; }
-
-        public string ToGrid { get; }
     }
 }

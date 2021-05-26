@@ -169,8 +169,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.ToTable("ExchangeMeteringPoints", "dbo");
 
-            builder.Property(x => x.ToGrid);
-            builder.Property(x => x.FromGrid);
+            builder.Property("_toGrid")
+                .HasColumnName("ToGrid");
+            builder.Property("_fromGrid")
+                .HasColumnName("FromGrid");
         }
     }
 }
