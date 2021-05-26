@@ -20,6 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public abstract class MeteringPoint : AggregateRootBase
     {
+        //Disable nullable check
+        #pragma warning disable CS8618
         protected MeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
@@ -32,13 +34,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
             GridAreaId gridAreaId,
-            string powerPlant,
+            GsrnNumber powerPlant,
             string locationDescription,
-            string productType,
             string parentRelatedMeteringPoint,
-            string unitType,
+            MeasurementUnitType unitType,
             string meterNumber,
-            string meterReadingOccurrence,
+            ReadingOccurrence meterReadingOccurrence,
             int maximumCurrent,
             int maximumPower,
             Instant? occurenceDate)
@@ -56,7 +57,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GridAreaId = gridAreaId;
             PowerPlant = powerPlant;
             LocationDescription = locationDescription;
-            ProductType = productType;
             ParentRelatedMeteringPoint = parentRelatedMeteringPoint;
             UnitType = unitType;
             MeterNumber = meterNumber;
@@ -65,7 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MaximumPower = maximumPower;
             OccurenceDate = occurenceDate;
 
-            AddDomainEvent(new MeteringPointCreated(id, GsrnNumber));
+            AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaId));
         }
 
         public GridAreaId GridAreaId { get; }
@@ -90,21 +90,21 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public bool IsAddressWashable { get; }
 
-        public string MeterReadingOccurrence { get; }
+        public ReadingOccurrence MeterReadingOccurrence { get; }
 
         public int MaximumCurrent { get; }
 
         public int MaximumPower { get; }
 
-        public string PowerPlant { get; }
+        public GsrnNumber PowerPlant { get; }
 
         public string LocationDescription { get; }
 
-        public string ProductType { get; }
+        public ProductType ProductType { get; protected set; }
 
         public string ParentRelatedMeteringPoint { get; }
 
-        public string UnitType { get; }
+        public MeasurementUnitType UnitType { get; }
 
         public Instant? OccurenceDate { get; }
 

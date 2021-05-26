@@ -16,6 +16,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -47,21 +48,20 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
                 EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint),
                 new GridAreaId(Guid.NewGuid()),
-                request.PowerPlant,
+                GsrnNumber.Create(request.PowerPlant),
                 request.LocationDescription,
-                request.ProductType,
                 request.ParentRelatedMeteringPoint,
-                request.UnitType,
+                EnumerationType.FromName<MeasurementUnitType>(request.UnitType),
                 request.MeterNumber,
-                request.MeterReadingOccurrence,
+                EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
                 request.MaximumCurrent,
                 request.MaximumPower,
-                Instant.MaxValue, // TODO: Parse date in correct format when implemented in Input Validation
-                request.SettlementMethod,
+                SystemClock.Instance.GetCurrentInstant(), // TODO: Parse date in correct format when implemented in Input Validation
+                EnumerationType.FromName<SettlementMethod>(request.SettlementMethod),
                 request.NetSettlementGroup,
                 EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
                 EnumerationType.FromName<ConnectionType>(request.ConnectionType),
-                request.AssetType);
+                EnumerationType.FromName<AssetType>(request.AssetType));
 
             _meteringPointRepository.Add(meteringPoint);
 

@@ -74,13 +74,24 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     toDbValue => toDbValue.Value,
                     fromDbValue => new GridAreaId(fromDbValue));
 
-            builder.Property(x => x.PowerPlant);
+            builder.Property(x => x.PowerPlant)
+                .HasConversion(toDbValue => toDbValue.Value, fromDbValue => GsrnNumber.Create(fromDbValue));
             builder.Property(x => x.LocationDescription);
-            builder.Property(x => x.ProductType);
+            builder.Property(x => x.ProductType)
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<ProductType>(fromDbValue));
             builder.Property(x => x.ParentRelatedMeteringPoint);
-            builder.Property(x => x.UnitType);
+            builder.Property(x => x.UnitType)
+                .HasColumnName("UnitType")
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<MeasurementUnitType>(fromDbValue));
             builder.Property(x => x.MeterNumber);
-            builder.Property(x => x.MeterReadingOccurrence);
+            builder.Property(x => x.MeterReadingOccurrence)
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<ReadingOccurrence>(fromDbValue));
             builder.Property(x => x.MaximumCurrent);
             builder.Property(x => x.MaximumPower);
             builder.Property(x => x.OccurenceDate);
@@ -98,7 +109,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.ToTable("ConsumptionMeteringPoints", "dbo");
 
-            builder.Property(x => x.AssetType);
+            builder.Property(x => x.AssetType)
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<AssetType>(fromDbValue));
             builder.Property(x => x.ConnectionType);
             builder.Property(x => x.DisconnectionType)
                 .HasConversion(
@@ -108,7 +122,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<ConnectionType>(fromDbValue));
-            builder.Property(x => x.SettlementMethod);
+            builder.Property(x => x.SettlementMethod)
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<SettlementMethod>(fromDbValue));
             builder.Property(x => x.NetSettlementGroup);
         }
     }

@@ -31,13 +31,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
             GridAreaId gridAreaId,
-            string powerPlant,
+            GsrnNumber powerPlant,
             string locationDescription,
-            string productType,
             string parentRelatedMeteringPoint,
-            string unitType,
+            MeasurementUnitType unitType,
             string meterNumber,
-            string meterReadingOccurrence,
+            ReadingOccurrence meterReadingOccurrence,
             int maximumCurrent,
             int maximumPower,
             Instant? occurenceDate,
@@ -57,7 +56,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 gridAreaId,
                 powerPlant,
                 locationDescription,
-                productType,
                 parentRelatedMeteringPoint,
                 unitType,
                 meterNumber,
@@ -68,6 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             ToGrid = toGrid;
             FromGrid = fromGrid;
+            ProductType = ProductType.EnergyReactive;
         }
 
         public string FromGrid { get; }

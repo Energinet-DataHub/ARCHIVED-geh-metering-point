@@ -20,6 +20,7 @@ on:
     paths:
       - build/infrastructure/**
       - build/modules/**
+      - .github/actions/meteringpoint-apply-db-migrations/**
       - .github/workflows/infrastructure-cd.yml
   workflow_dispatch: {}
 env:
@@ -111,6 +112,9 @@ jobs:
           echo "TF_VAR_organisation=${{ env.ORGANISATION_NAME }}" >> $GITHUB_ENV
           echo "TF_VAR_project=${{ env.PROJECT_NAME }}" >> $GITHUB_ENV
           echo "TF_VAR_resource_group_name=${{ matrix.environment.long }}" >> $GITHUB_ENV
+          echo "TF_VAR_sharedresources_keyvault_name=${{ secrets.SHARED_RESOURCES_KEYVAULT_NAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_sharedresources_resource_group_name=${{ secrets.SHARED_RESOURCES_RESOURCE_GROUP_NAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_sharedresources_sql_server_name=${{ secrets.SHARED_RESOURCES_SQL_SERVER_NAME }}" >> $GITHUB_ENV
 
       - name: Configure Terraform Backend
         uses: ./.github/actions/configure-terraform-backend
@@ -131,3 +135,13 @@ jobs:
         working-directory: ./build/infrastructure
         run: terraform apply -no-color -auto-approve
         continue-on-error: false
+
+      - name: Applying meteringpoint migrations
+        uses: ./.github/actions/meteringpoint-apply-db-migrations
+        with:
+          sql-server-url: ${{ steps.terraform-apply.outputs.sql-server-url }}
+          sql-database-name: ${{ steps.terraform-apply.outputs.meteringpoint-sql-database-name }}
+          user-keyvaultname: ${{ steps.terraform-apply.outputs.meteringpoint-user-keyvaultname }}
+          password-keyvaultname: ${{ steps.terraform-apply.outputs.meteringpoint-password-keyvaultname }}
+          keyvault-name: ${{ steps.terraform-apply.outputs.kv-meteringpoint-name }}
+          environment-name: ${{ matrix.environment.name }}
