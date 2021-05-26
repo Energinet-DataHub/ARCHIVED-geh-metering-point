@@ -12,12 +12,59 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Tests
 {
     public static class SampleData
     {
         public static string GsrnNumber => "571234567891234568";
+
+        public static string StreetName => "Test Road 1";
+
+        public static string PostCode => "8000";
+
+        public static string CityName => "Aarhus";
+
+        public static string CountryCode => "DK";
+
+        public static bool IsAddressWashable => true;
+
+        public static string PhysicalStateName => PhysicalState.Connected.Name;
+
+        public static string SubTypeName => MeteringPointSubType.Physical.Name;
+
+        public static string TypeName => MeteringPointType.Consumption.Name;
+
+        public static string PowerPlant => "571234567891234568";
+
+        public static string LocationDescription => string.Empty;
+
+        public static string ProductType => string.Empty;
+
+        public static string ParentRelatedMeteringPoint => null;
+
+        public static string UnitType => string.Empty;
+
+        public static string MeterNumber => string.Empty;
+
+        public static string MeterReadingOccurence => string.Empty;
+
+        public static int MaximumCurrent => 0;
+
+        public static int MaximumPower => 230;
+
+        public static Instant? OccurenceDate => SystemClock.Instance.GetCurrentInstant();
+
+        public static string SettlementMethod => string.Empty;
+
+        public static string NetSettlementGroup => string.Empty;
+
+        public static string DisconnectionType => string.Empty;
+
+        public static string ConnectionType => string.Empty;
+
+        public static string AssetType => string.Empty;
     }
 }

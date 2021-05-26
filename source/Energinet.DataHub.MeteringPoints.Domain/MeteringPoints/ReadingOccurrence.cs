@@ -12,29 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Runtime.Serialization;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public class InvalidMeteringPointIdRuleException : BusinessRuleException
+    public class ReadingOccurrence : EnumerationType
     {
-        public InvalidMeteringPointIdRuleException()
-        {
-        }
+        public static readonly ReadingOccurrence Yearly = new ReadingOccurrence(0, nameof(Yearly));
+        public static readonly ReadingOccurrence Mothly = new ReadingOccurrence(1, nameof(Mothly));
+        public static readonly ReadingOccurrence Hourly = new ReadingOccurrence(2, nameof(Hourly));
+        public static readonly ReadingOccurrence Quarterly = new ReadingOccurrence(3, nameof(Quarterly));
 
-        public InvalidMeteringPointIdRuleException(string? message)
-            : base(message)
-        {
-        }
-
-        public InvalidMeteringPointIdRuleException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
-
-        protected InvalidMeteringPointIdRuleException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
+        private ReadingOccurrence(int id, string name)
+            : base(id, name)
         {
         }
     }

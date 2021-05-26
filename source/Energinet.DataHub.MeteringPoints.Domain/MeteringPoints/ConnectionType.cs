@@ -12,9 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public abstract class ValidationError
+    public class ConnectionType : EnumerationType
     {
+        public static readonly ConnectionType Direct = new ConnectionType(0, nameof(Direct));
+        public static readonly ConnectionType Installation = new ConnectionType(1, nameof(Installation));
+
+        private ConnectionType(int id, string name)
+            : base(id, name)
+        {
+        }
     }
 }

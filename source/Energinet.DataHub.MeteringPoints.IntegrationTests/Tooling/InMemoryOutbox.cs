@@ -14,29 +14,29 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Authorization
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
 {
-    public class AuthorizationResult
+    public class InMemoryOutbox : IOutbox, IOutboxManager
     {
-        public AuthorizationResult(List<ValidationError> errors)
+        private readonly List<OutboxMessage> _messages = new();
+
+        public void Add(OutboxMessage message)
         {
-            Errors = errors;
+            _messages.Add(message);
         }
 
-        public AuthorizationResult()
+#pragma warning disable 8632 // Nullable not enabled in test project
+        public OutboxMessage? GetNext(OutboxMessageCategory category)
+#pragma warning restore 8632
         {
-            Errors = new List<ValidationError>();
+            return _messages.FirstOrDefault(message => message.Category == category);
         }
 
-        public List<ValidationError> Errors { get; }
-
-        public bool Success => !Errors.Any();
-
-        public static AuthorizationResult Ok()
+        public void MarkProcessed(OutboxMessage outboxMessage)
         {
-            return new();
+            _messages.Remove(outboxMessage);
         }
     }
 }

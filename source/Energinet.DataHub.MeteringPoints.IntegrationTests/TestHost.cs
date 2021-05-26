@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Text;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
@@ -50,8 +51,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         protected TestHost()
         {
-            CleanupDatabase();
-
             _container = new Container();
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddDbContext<MeteringPointContext>(x =>
@@ -61,8 +60,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             _container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
             _container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
-            _container.Register<IOutbox, InMemoryOutbox>(Lifestyle.Scoped);
-            _container.Register<IOutboxManager, InMemoryOutbox>(Lifestyle.Scoped);
+            _container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
+            _container.Register<IOutboxManager, OutboxManager>(Lifestyle.Scoped);
             _container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Singleton);
             _container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
             _container.Register<ISystemDateTimeProvider, SystemDateTimeProviderStub>(Lifestyle.Singleton);
@@ -92,10 +91,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Verify();
 
             _scope = AsyncScopedLifestyle.BeginScope(_container);
+
+            CleanupDatabase();
         }
 
-        private string ConnectionString =>
-            Environment.GetEnvironmentVariable("MeteringPoints_IntegrationTests_ConnectionString");
+        private string ConnectionString => Environment.GetEnvironmentVariable("MeteringPoints_IntegrationTests_ConnectionString");
 
         public void Dispose()
         {
@@ -125,8 +125,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         private void CleanupDatabase()
         {
-            // new SqlCommand(cleanupStatement, GetSqlDbConnection()).ExecuteNonQuery();
-            var cleanupStatement = $"";
+            var cleanupStatement = new StringBuilder();
+
+            cleanupStatement.AppendLine($"DELETE FROM ConsumptionMeteringPoints");
+            cleanupStatement.AppendLine($"DELETE FROM ProductionMeteringPoints");
+            cleanupStatement.AppendLine($"DELETE FROM ExchangeMeteringPoints");
+            cleanupStatement.AppendLine($"DELETE FROM MeteringPoints");
+            cleanupStatement.AppendLine($"DELETE FROM OutboxMessages");
+
+            _container.GetInstance<MeteringPointContext>()
+                .Database.ExecuteSqlRaw(cleanupStatement.ToString());
         }
     }
 }

@@ -20,6 +20,7 @@ using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using MediatR;
+using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Application
 {
@@ -34,13 +35,36 @@ namespace Energinet.DataHub.MeteringPoints.Application
 
         public Task<BusinessProcessResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
         {
-            var meteringPoint = new MeteringPoint(
+            var meteringPoint = new ConsumptionMeteringPoint(
                 MeteringPointId.New(),
                 GsrnNumber.Create(request.GsrnNumber),
-                new GridAreaId(Guid.NewGuid()),
+                request.InstallationLocationAddress.StreetName,
+                request.InstallationLocationAddress.PostCode,
+                request.InstallationLocationAddress.CityName,
+                request.InstallationLocationAddress.CountryCode,
+                request.InstallationLocationAddress.IsWashable,
+                PhysicalState.New,
+                EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
                 EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint),
-                EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint));
+                new GridAreaId(Guid.NewGuid()),
+                GsrnNumber.Create(request.PowerPlant),
+                request.LocationDescription,
+                request.ProductType,
+                request.ParentRelatedMeteringPoint,
+                request.UnitType,
+                request.MeterNumber,
+                EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
+                request.MaximumCurrent,
+                request.MaximumPower,
+                SystemClock.Instance.GetCurrentInstant(), // TODO: Parse date in correct format when implemented in Input Validation
+                request.SettlementMethod,
+                request.NetSettlementGroup,
+                EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
+                EnumerationType.FromName<ConnectionType>(request.ConnectionType),
+                request.AssetType);
+
             _meteringPointRepository.Add(meteringPoint);
+
             return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
         }
     }

@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,11 +34,23 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
 
         public DbSet<OutboxMessage> OutboxMessages { get; private set; }
 
+        public DbSet<MeteringPoint> MeteringPoints { get; private set; }
+
+        public DbSet<ConsumptionMeteringPoint> ConsumptionMeteringPoints { get; private set; }
+
+        public DbSet<ProductionMeteringPoint> ProductionMeteringPoints { get; private set; }
+
+        public DbSet<ExchangeMeteringPoint> ExchangeMeteringPoints { get; private set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             if (modelBuilder == null) throw new ArgumentNullException(nameof(modelBuilder));
 
             modelBuilder.ApplyConfiguration(new OutboxMessageEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new MeteringPointEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new ConsumptionMeteringPointEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new ProductionMeteringPointEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new ExchangeMeteringPointEntityConfiguration());
         }
     }
 }

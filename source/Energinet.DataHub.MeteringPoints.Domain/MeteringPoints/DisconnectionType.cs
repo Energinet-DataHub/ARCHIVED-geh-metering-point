@@ -12,28 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Linq;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public class InMemoryOutbox : IOutbox, IOutboxManager
+    public class DisconnectionType : EnumerationType
     {
-        private readonly List<OutboxMessage> _messages = new();
+        public static readonly DisconnectionType Remote = new DisconnectionType(0, nameof(Remote));
+        public static readonly DisconnectionType Manual = new DisconnectionType(1, nameof(Manual));
 
-        public void Add(OutboxMessage message)
+        private DisconnectionType(int id, string name)
+            : base(id, name)
         {
-            _messages.Add(message);
-        }
-
-        public OutboxMessage? GetNext(OutboxMessageCategory category)
-        {
-            return _messages.FirstOrDefault(message => message.Category == category);
-        }
-
-        public void MarkProcessed(OutboxMessage message)
-        {
-            _messages.Remove(message);
         }
     }
 }

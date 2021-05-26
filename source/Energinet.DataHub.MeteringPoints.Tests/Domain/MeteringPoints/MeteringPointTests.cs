@@ -15,6 +15,7 @@
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Categories;
 
@@ -27,13 +28,33 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         [Fact]
         public void ShouldRaiseEventWhenCreated()
         {
-            var gridAreaId = GridAreaId.New();
-            var meteringPoint = new MeteringPoint(
+            var meteringPoint = new ConsumptionMeteringPoint(
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
-                gridAreaId,
-                MeteringPointType.Consumption,
-                MeteringPointSubType.Physical);
+                SampleData.StreetName,
+                SampleData.PostCode,
+                SampleData.CityName,
+                SampleData.CountryCode,
+                SampleData.IsAddressWashable,
+                EnumerationType.FromName<PhysicalState>(SampleData.PhysicalStateName),
+                EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
+                EnumerationType.FromName<MeteringPointType>(SampleData.TypeName),
+                GridAreaId.New(),
+                GsrnNumber.Create(SampleData.PowerPlant),
+                SampleData.LocationDescription,
+                SampleData.ProductType,
+                SampleData.ParentRelatedMeteringPoint,
+                SampleData.UnitType,
+                SampleData.MeterNumber,
+                ReadingOccurrence.Hourly,
+                SampleData.MaximumCurrent,
+                SampleData.MaximumPower,
+                SampleData.OccurenceDate,
+                SampleData.SettlementMethod,
+                SampleData.NetSettlementGroup,
+                DisconnectionType.Manual,
+                ConnectionType.Direct,
+                SampleData.AssetType);
 
             var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MeteringPointCreated);
             Assert.NotNull(createdEvent);

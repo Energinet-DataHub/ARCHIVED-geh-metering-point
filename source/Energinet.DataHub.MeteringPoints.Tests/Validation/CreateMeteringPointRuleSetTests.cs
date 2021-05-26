@@ -14,14 +14,17 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
+using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 {
+    [UnitTest]
     public class CreateMeteringPointRuleSetTests
     {
         [Fact]
@@ -45,6 +48,27 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             var errors = GetValidationErrors(businessRequest);
 
             Assert.Contains(errors, error => error is GsrnNumberMustBeValidValidationError);
+        }
+
+        [Theory]
+        [InlineData("Consumption", "Flex", (SettlementMethodRequiredValidationError)null)]
+        [InlineData("NetLossCorrection", "Flex", (SettlementMethodRequiredValidationError)null)]
+        [InlineData("Consumption", "", typeof(SettlementMethodRequiredValidationError))]
+        [InlineData("NetLossCorrection", "", typeof(SettlementMethodRequiredValidationError))]
+        [InlineData("SettlementMethodNotAllowedForMP", "Flex", typeof(SettlementMethodNotAllowedValidationError))]
+        [InlineData("SettlementMethodNotAllowedForMPEmpty", "", (SettlementMethodNotAllowedValidationError)null)]
+        [InlineData("Consumption", "WrongDomainName", typeof(SettlementMethodMissingRequiredDomainValuesValidationError))]
+        public void Validate_MandatorySettlementMethodForConsumptionAndNetLossCorrectionMeteringType(string meteringPointType, string settlementMethod, System.Type expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                TypeOfMeteringPoint = meteringPointType,
+                SettlementMethod = settlementMethod,
+            };
+
+            var errorType = GetValidationErrors(businessRequest).FirstOrDefault(error => error.GetType() == expectedError);
+
+            Assert.Equal(expectedError, errorType?.GetType());
         }
 
         private CreateMeteringPoint CreateRequest()
