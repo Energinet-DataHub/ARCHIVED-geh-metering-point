@@ -12,15 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Transport;
-using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Channels;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public class IntegrationEventToEventHubDispatcher : MessageDispatcher
+    public class SettlementMethod : EnumerationType
     {
-        public IntegrationEventToEventHubDispatcher(MessageSerializer serializer, AzureEventHubChannel channel)
-            : base(serializer, channel)
+        public static readonly SettlementMethod Flex = new SettlementMethod(0, nameof(Flex));
+        public static readonly SettlementMethod Profiled = new SettlementMethod(1, nameof(Profiled));
+        public static readonly SettlementMethod NonProfiled = new SettlementMethod(2, nameof(NonProfiled));
+
+        public SettlementMethod(int id, string name)
+            : base(id, name)
         {
         }
     }

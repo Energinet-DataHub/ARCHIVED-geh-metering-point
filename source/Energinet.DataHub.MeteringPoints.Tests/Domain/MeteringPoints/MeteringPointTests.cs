@@ -42,7 +42,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 GridAreaId.New(),
                 GsrnNumber.Create(SampleData.PowerPlant),
                 SampleData.LocationDescription,
-                SampleData.ProductType,
                 SampleData.ParentRelatedMeteringPoint,
                 SampleData.UnitType,
                 SampleData.MeterNumber,
@@ -50,11 +49,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 SampleData.MaximumCurrent,
                 SampleData.MaximumPower,
                 SampleData.OccurenceDate,
-                SampleData.SettlementMethod,
+                SettlementMethod.Flex,
                 SampleData.NetSettlementGroup,
                 DisconnectionType.Manual,
                 ConnectionType.Direct,
-                SampleData.AssetType);
+                AssetType.Boiler);
 
             var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MeteringPointCreated);
             Assert.NotNull(createdEvent);

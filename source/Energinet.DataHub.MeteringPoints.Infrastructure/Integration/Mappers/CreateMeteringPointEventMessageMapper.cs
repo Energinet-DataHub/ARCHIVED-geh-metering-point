@@ -16,12 +16,13 @@ using System;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using Google.Protobuf;
+using CreateMeteringPointEventMessage = Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Messages.CreateMeteringPointEventMessage;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Mappers
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Mappers
 {
-    public class CreateMeteringPointEventMessageMapper : ProtobufOutboundMapper<Application.CreateMeteringPointEventMessage>
+    public class CreateMeteringPointEventMessageMapper : ProtobufOutboundMapper<Messages.CreateMeteringPointEventMessage>
     {
-        protected override IMessage Convert(Application.CreateMeteringPointEventMessage obj)
+        protected override IMessage Convert(CreateMeteringPointEventMessage obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
             return new IntegrationEventEnvelope()
@@ -29,10 +30,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Ma
                 CreateMeteringPointEventMessage = new IntegrationEventContracts.CreateMeteringPointEventMessage
                 {
                     Gsrn = obj.Gsrn,
-                    MpType = obj.MpType,
-                    GridAccessProvider = obj.GridAccessProvider,
+                    MeteringPointType = obj.MeteringPointType,
+                    GridAccessProvider = obj.GridAreaId,
                     Child = obj.Child,
-                    EnergySupplierCurrent = obj.EnergySupplierCurrent,
                 },
             };
         }
