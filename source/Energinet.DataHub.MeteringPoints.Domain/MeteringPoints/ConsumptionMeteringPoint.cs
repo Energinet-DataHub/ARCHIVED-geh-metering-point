@@ -19,13 +19,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class ConsumptionMeteringPoint : MeteringPoint
     {
-        public ConsumptionMeteringPoint(
+       public ConsumptionMeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
-            string streetName,
-            string postCode,
-            string cityName,
-            string countryCode,
+            Address address,
             bool isAddressWashable,
             PhysicalState physicalState,
             MeteringPointSubType meteringPointSubType,
@@ -48,10 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             : base(
                 id,
                 gsrnNumber,
-                streetName,
-                postCode,
-                cityName,
-                countryCode,
+                address,
                 isAddressWashable,
                 physicalState,
                 meteringPointSubType,
@@ -75,14 +69,20 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             ProductType = ProductType.EnergyActive;
         }
 
-        public SettlementMethod SettlementMethod { get; }
+       #pragma warning disable CS8618 // Disable non-nullable check
+       private ConsumptionMeteringPoint()
+       {
+           //EF core only
+       }
 
-        public string NetSettlementGroup { get; }
+       public SettlementMethod SettlementMethod { get; }
 
-        public DisconnectionType DisconnectionType { get; }
+       public string NetSettlementGroup { get; }
 
-        public ConnectionType ConnectionType { get; }
+       public DisconnectionType DisconnectionType { get; }
 
-        public AssetType AssetType { get; }
+       public ConnectionType ConnectionType { get; }
+
+       public AssetType AssetType { get; }
     }
 }

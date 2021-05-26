@@ -31,10 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             var meteringPoint = new ConsumptionMeteringPoint(
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
-                SampleData.StreetName,
-                SampleData.PostCode,
-                SampleData.CityName,
-                SampleData.CountryCode,
+                Address.Create(SampleData.StreetName, SampleData.PostCode, SampleData.CityName, SampleData.CountryCode),
                 SampleData.IsAddressWashable,
                 EnumerationType.FromName<PhysicalState>(SampleData.PhysicalStateName),
                 EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),

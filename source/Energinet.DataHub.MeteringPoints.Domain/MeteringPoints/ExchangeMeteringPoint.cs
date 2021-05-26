@@ -22,10 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public ExchangeMeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
-            string streetName,
-            string postCode,
-            string cityName,
-            string countryCode,
+            Address address,
             bool isAddressWashable,
             PhysicalState physicalState,
             MeteringPointSubType meteringPointSubType,
@@ -45,10 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             : base(
                 id,
                 gsrnNumber,
-                streetName,
-                postCode,
-                cityName,
-                countryCode,
+                address,
                 isAddressWashable,
                 physicalState,
                 meteringPointSubType,
@@ -67,6 +61,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             ToGrid = toGrid;
             FromGrid = fromGrid;
             ProductType = ProductType.EnergyReactive;
+        }
+
+        #pragma warning disable CS8618 // Disable non-nullable check
+        private ExchangeMeteringPoint()
+        {
+            // EF core only
         }
 
         public string FromGrid { get; }

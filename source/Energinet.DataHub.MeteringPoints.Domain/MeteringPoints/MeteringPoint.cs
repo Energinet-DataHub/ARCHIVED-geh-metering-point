@@ -22,13 +22,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
     {
         //Disable nullable check
         #pragma warning disable CS8618
+        protected MeteringPoint()
+        {
+            //For EF core only
+        }
+
         protected MeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
-            string streetName,
-            string postCode,
-            string cityName,
-            string countryCode,
+            Address address,
             bool isAddressWashable,
             PhysicalState physicalState,
             MeteringPointSubType meteringPointSubType,
@@ -46,10 +48,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             Id = id;
             GsrnNumber = gsrnNumber;
-            StreetName = streetName;
-            PostCode = postCode;
-            CityName = cityName;
-            CountryCode = countryCode;
+            Address = address;
             IsAddressWashable = isAddressWashable;
             PhysicalState = physicalState;
             MeteringPointSubType = meteringPointSubType;
@@ -80,14 +79,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public MeteringPointId Id { get; }
 
-        public string StreetName { get; }
-
-        public string PostCode { get; }
-
-        public string CityName { get; }
-
-        public string CountryCode { get; }
-
         public bool IsAddressWashable { get; }
 
         public ReadingOccurrence MeterReadingOccurrence { get; }
@@ -109,5 +100,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public Instant? OccurenceDate { get; }
 
         public string MeterNumber { get; }
+
+        public Address Address { get; }
     }
 }
