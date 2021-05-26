@@ -48,7 +48,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
                 EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint),
                 new GridAreaId(Guid.NewGuid()),
-                request.PowerPlant,
+                GsrnNumber.Create(request.PowerPlant),
                 request.LocationDescription,
                 request.ProductType,
                 request.ParentRelatedMeteringPoint,

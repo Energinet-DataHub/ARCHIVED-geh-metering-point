@@ -32,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
             GridAreaId gridAreaId,
-            string powerPlant,
+            GsrnNumber powerPlant,
             string locationDescription,
             string productType,
             string parentRelatedMeteringPoint,
@@ -96,7 +96,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public int MaximumPower { get; }
 
-        public string PowerPlant { get; }
+        public GsrnNumber PowerPlant { get; }
 
         public string LocationDescription { get; }
 

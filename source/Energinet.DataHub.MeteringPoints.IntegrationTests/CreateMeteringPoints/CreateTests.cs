@@ -144,7 +144,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 0,
                 0,
                 string.Empty,
-                string.Empty,
+                SampleData.PowerPlantGsrnNumber,
                 string.Empty,
                 string.Empty,
                 string.Empty,
