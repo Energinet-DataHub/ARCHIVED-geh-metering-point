@@ -12,20 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class MeteringPointCreated : DomainEventBase
     {
-        public MeteringPointCreated(MeteringPointId meteringPointId, GsrnNumber gsrnNumber)
+        public MeteringPointCreated(MeteringPointId meteringPointId, GsrnNumber gsrnNumber, MeteringPointType meteringPointType, GridAreaId gridAreaId)
         {
             MeteringPointId = meteringPointId;
             GsrnNumber = gsrnNumber;
+            MeteringPointType = meteringPointType;
+            GridAreaId = gridAreaId;
         }
 
         public MeteringPointId MeteringPointId { get; }
 
         public GsrnNumber GsrnNumber { get; }
+
+        public MeteringPointType MeteringPointType { get; }
+
+        public GridAreaId GridAreaId { get; }
     }
 }

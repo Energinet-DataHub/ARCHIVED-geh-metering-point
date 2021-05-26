@@ -12,19 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.IntegrationEvent
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching
 {
     /// <summary>
-    /// Service to deliver events to the outbox following the outbox pattern
+    /// Provides access to all generated domain events in the current business process scope
     /// </summary>
-    public interface IIntegrationEventOutboxService
+    public interface IDomainEventsAccessor
     {
         /// <summary>
-        /// Sends the event to the outbox
+        /// Returns all generated domain events
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task SendEventToOutboxAsync();
+        /// <returns><see cref="IReadOnlyCollection{T}"/></returns>
+        IReadOnlyCollection<IDomainEvent> GetAllDomainEvents();
+
+        /// <summary>
+        /// Clears all generated domain events
+        /// </summary>
+        void ClearAllDomainEvents();
     }
 }

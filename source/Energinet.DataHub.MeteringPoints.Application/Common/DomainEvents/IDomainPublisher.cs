@@ -12,16 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Transport;
-using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Channels;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers
+namespace Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents
 {
-    public class IntegrationEventToEventHubDispatcher : MessageDispatcher
+    /// <summary>
+    /// Service for publishing domain events
+    /// </summary>
+    public interface IDomainEventPublisher
     {
-        public IntegrationEventToEventHubDispatcher(MessageSerializer serializer, AzureEventHubChannel channel)
-            : base(serializer, channel)
-        {
-        }
+        /// <summary>
+        /// Publishes a domain event
+        /// </summary>
+        /// <param name="domainEvent"></param>
+        /// <returns><see cref="Task"/></returns>
+        Task PublishAsync(IDomainEvent @domainEvent);
     }
 }

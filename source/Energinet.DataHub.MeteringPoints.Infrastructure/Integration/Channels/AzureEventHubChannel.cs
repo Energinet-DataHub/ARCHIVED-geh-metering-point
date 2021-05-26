@@ -18,7 +18,7 @@ using Azure.Messaging.EventHubs;
 using Azure.Messaging.EventHubs.Producer;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Channels
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Channels
 {
     public sealed class AzureEventHubChannel : Channel
     {
