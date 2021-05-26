@@ -62,7 +62,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 request.NetSettlementGroup,
                 EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
                 EnumerationType.FromName<ConnectionType>(request.ConnectionType),
-                request.AssetType);
+                EnumerationType.FromName<AssetType>(request.AssetType));
 
             _meteringPointRepository.Add(meteringPoint);
 

@@ -102,7 +102,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.ToTable("ConsumptionMeteringPoints", "dbo");
 
-            builder.Property(x => x.AssetType);
+            builder.Property(x => x.AssetType)
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<AssetType>(fromDbValue));
             builder.Property(x => x.ConnectionType);
             builder.Property(x => x.DisconnectionType)
                 .HasConversion(

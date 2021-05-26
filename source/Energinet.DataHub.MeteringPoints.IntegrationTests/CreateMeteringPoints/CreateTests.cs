@@ -157,7 +157,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 string.Empty,
                 string.Empty,
                 SampleData.ConnectionType,
-                string.Empty);
+                SampleData.AssetType);
         }
     }
 }

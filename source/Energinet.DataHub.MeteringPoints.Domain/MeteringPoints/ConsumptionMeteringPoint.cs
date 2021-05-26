@@ -45,7 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             string netSettlementGroup,
             DisconnectionType disconnectionType,
             ConnectionType connectionType,
-            string assetType)
+            AssetType assetType)
             : base(
                 id,
                 gsrnNumber,
@@ -84,6 +84,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public ConnectionType ConnectionType { get; }
 
-        public string AssetType { get; }
+        public AssetType AssetType { get; }
     }
 }
