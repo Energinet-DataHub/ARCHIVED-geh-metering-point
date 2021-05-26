@@ -22,5 +22,5 @@ module "sqldb_meteringpoint" {
   name                      = "sqldb-meteringpoint"
   resource_group_name       = data.azurerm_resource_group.main.name
   location                  = data.azurerm_resource_group.main.location
-  server_name               = var.sharedresources_sql_server_name
+  server_name               = data.azurerm_sql_server.sqlsrv.name
 }
