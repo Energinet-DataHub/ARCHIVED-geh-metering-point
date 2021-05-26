@@ -56,7 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
             Assert.Equal("571234567891234636", command.PowerPlant);
 
             // Main address
-            Assert.Equal("6001", command.InstallationLocationAddress.PostCode);
+            Assert.Equal("6000", command.InstallationLocationAddress.PostCode);
         }
 
         [Fact]
