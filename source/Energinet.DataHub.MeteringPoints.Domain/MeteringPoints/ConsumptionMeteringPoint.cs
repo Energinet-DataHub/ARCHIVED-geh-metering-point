@@ -37,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             string parentRelatedMeteringPoint,
             string unitType,
             string meterNumber,
-            string meterReadingOccurrence,
+            ReadingOccurrence meterReadingOccurrence,
             int maximumCurrent,
             int maximumPower,
             Instant? occurenceDate,

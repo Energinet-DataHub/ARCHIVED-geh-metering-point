@@ -33,5 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         public static string ConnectionType => "Installation";
 
         public static string PowerPlantGsrnNumber => "571234567891234568";
+
+        public static string ReadingOccurrence => "Hourly";
     }
 }
