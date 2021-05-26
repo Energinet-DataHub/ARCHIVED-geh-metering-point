@@ -38,7 +38,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
                 var streetDetail = mainAddress?.Element(ns + "streetDetail");
                 var townDetail = mainAddress?.Element(ns + "townDetail");
                 var contractedConnectionCapacity =
-                    marketEvaluationPoint?.Element(ns + "marketAgreement.contractedConnectionCapacity"); // TODO: MarketAgreement prefix isn't 100% set in stone. Update at a later point.
+                    marketEvaluationPoint?.Element(ns +
+                                                   "marketAgreement.contractedConnectionCapacity"); // TODO: MarketAgreement prefix isn't 100% set in stone. Update at a later point.
                 var series = marketEvaluationPoint?.Element(ns + "Series");
 
                 // Power plant
@@ -54,8 +55,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
                 return new Application.CreateMeteringPoint(
                     address,
                     ExtractElementValue(marketEvaluationPoint, ns + "mRID"),
-                    ExtractElementValue(marketEvaluationPoint, ns + "type"),
-                    ExtractElementValue(marketEvaluationPoint, ns + "meteringMethod"),
+                    GetMeteringPointType(ExtractElementValue(marketEvaluationPoint, ns + "type")),
+                    GetMeteringPointSubType(ExtractElementValue(marketEvaluationPoint, ns + "meteringMethod")),
                     ExtractElementValue(marketEvaluationPoint, ns + "readCycle"),
                     Convert.ToInt32(ExtractElementValue(marketEvaluationPoint, ns + "ratedCurrent")),
                     Convert.ToInt32(ExtractElementValue(contractedConnectionCapacity, ns + "value")),
@@ -64,18 +65,122 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
                     ExtractElementValue(marketEvaluationPoint, ns + "usagePointLocation.remark"),
                     ExtractElementValue(marketEvaluationPoint, ns + "product"),
                     ExtractElementValue(marketEvaluationPoint, ns + "parent_MarketEvaluationPoint.mRID"),
-                    ExtractElementValue(marketEvaluationPoint, ns + "settlementMethod"),
+                    GetSettlementMethod(ExtractElementValue(marketEvaluationPoint, ns + "settlementMethod")),
                     ExtractElementValue(series, ns + "quantity_Measure_Unit.name"),
-                    ExtractElementValue(marketEvaluationPoint, ns + "disconnectionMethod"),
+                    GetDisconnectionType(ExtractElementValue(marketEvaluationPoint, ns + "disconnectionMethod")),
                     ExtractElementValue(record, ns + "start_DateAndOrTime.dateTime"),
                     ExtractElementValue(marketEvaluationPoint, ns + "meter.mRID"),
-                    ExtractElementValue(record, ns + "mRID"));
+                    ExtractElementValue(record, ns + "mRID"),
+                    GetConnectionState(ExtractElementValue(marketEvaluationPoint, ns + "connectionState")),
+                    ExtractElementValue(marketEvaluationPoint, ns + "netSettlementGroup"),
+                    GetConnectionType(ExtractElementValue(marketEvaluationPoint, ns + "mPConnectionType")),
+                    GetAssetType(ExtractElementValue(marketEvaluationPoint, ns + "energyLabel_EnergyTechnologyAndFuel.technology")));
             });
+        }
+
+        private static string GetMeteringPointType(string id)
+        {
+            switch (id)
+            {
+                case MeteringPointType.Consumption: return "Consumption";
+                default: return string.Empty;
+            }
+        }
+
+        private static string GetMeteringPointSubType(string id)
+        {
+            switch (id)
+            {
+                case MeteringPointSubType.Physical: return "Physical";
+                default: return string.Empty;
+            }
+        }
+
+        private static string GetConnectionState(string id)
+        {
+            switch (id)
+            {
+                case ConnectionState.New: return "New";
+                default: return string.Empty;
+            }
+        }
+
+        private static string GetConnectionType(string id)
+        {
+            switch (id)
+            {
+                case ConnectionType.DirectConnected: return "DirectConnected";
+                default: return string.Empty;
+            }
+        }
+
+        private static string GetAssetType(string id)
+        {
+            switch (id)
+            {
+                case AssetType.WindTurbines: return "WindTurbines";
+                default: return string.Empty;
+            }
+        }
+
+        private static string GetDisconnectionType(string id)
+        {
+            switch (id)
+            {
+                case DisconnectionType.RemoteDisconnection: return "RemoteDisconnection";
+                default: return string.Empty;
+            }
+        }
+
+        private static string GetSettlementMethod(string id)
+        {
+            switch (id)
+            {
+                case SettlementMethod.Flex: return "Flex";
+                case SettlementMethod.NonProfiled: return "NonProfiled";
+                default: return string.Empty;
+            }
         }
 
         private static string ExtractElementValue(XElement? element, XName name)
         {
             return element?.Element(name)?.Value ?? string.Empty;
+        }
+
+        private static class MeteringPointType
+        {
+            public const string Consumption = "E17";
+        }
+
+        private static class SettlementMethod
+        {
+            public const string Flex = "D01";
+            public const string NonProfiled = "E02";
+        }
+
+        private static class MeteringPointSubType
+        {
+            public const string Physical = "D01";
+        }
+
+        private static class ConnectionState
+        {
+            public const string New = "D03";
+        }
+
+        private static class ConnectionType
+        {
+            public const string DirectConnected = "D01";
+        }
+
+        private static class AssetType
+        {
+            public const string WindTurbines = "D12";
+        }
+
+        private static class DisconnectionType
+        {
+            public const string RemoteDisconnection = "D01";
         }
     }
 }

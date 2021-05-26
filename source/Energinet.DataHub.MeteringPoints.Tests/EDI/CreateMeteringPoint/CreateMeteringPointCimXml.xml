@@ -1,6 +1,6 @@
 ﻿<urn:RequestChangeAccountingPointCharacteristics_MarketDocument
         xmlns:urn="urn:ediel:org:requestchangeofapcharacteristics:0:1">
-    <urn:mRID>stringMRID</urn:mRID>
+    <urn:mRID>string</urn:mRID>
     <urn:type>E17</urn:type>
     <urn:process.processType>E02</urn:process.processType>
     <!--Optional:-->
@@ -28,11 +28,11 @@
             <!--Optional:-->
             <urn:meteredDataCollectionMethod>D01</urn:meteredDataCollectionMethod>
             <!--Optional:-->
-            <urn:netSettlementGroup>0</urn:netSettlementGroup>
+            <urn:netSettlementGroup>99</urn:netSettlementGroup>
             <!--Optional:-->
             <urn:mPConnectionType>D01</urn:mPConnectionType>
             <!--Optional:-->
-            <urn:readCycle>P1Y6M4DT22H35M59S</urn:readCycle>
+            <urn:readCycle>PT1H</urn:readCycle>
             <!--Optional:-->
             <urn:disconnectionMethod>D01</urn:disconnectionMethod>
             <!--Optional:-->
@@ -58,7 +58,7 @@
             <!--Optional:-->
             <urn:secondCustomer_MarketParticipant.name>string</urn:secondCustomer_MarketParticipant.name>
             <!--Optional:-->
-            <urn:energyLabel_EnergyTechnologyAndFuel.technology>D01</urn:energyLabel_EnergyTechnologyAndFuel.technology>
+            <urn:energyLabel_EnergyTechnologyAndFuel.technology>D12</urn:energyLabel_EnergyTechnologyAndFuel.technology>
             <!--Optional:-->
             <urn:marketAgreement.contractedConnectionCapacity>
                 <!--Optional:-->
@@ -77,7 +77,7 @@
                 <!--Optional:-->
                 <urn:estimatedAnnualVolume_Quantity.quantity>1000.00</urn:estimatedAnnualVolume_Quantity.quantity>
                 <!--Optional:-->
-                <urn:quantity_Measure_Unit.name>P1</urn:quantity_Measure_Unit.name>
+                <urn:quantity_Measure_Unit.name>kWh</urn:quantity_Measure_Unit.name>
             </urn:Series>
             <urn:Linked_MarketEvaluationPoint>
                 <urn:mRID>571234567891234636</urn:mRID>
@@ -143,7 +143,7 @@
                 <urn:language>DK</urn:language>
             </urn:usagePointLocation.mainAddress>
             <!--Optional:-->
-            <urn:usagePointLocation.remark>D01</urn:usagePointLocation.remark>
+            <urn:usagePointLocation.remark>3. Gadelygte fra højre</urn:usagePointLocation.remark>
             <!--Optional:-->
             <urn:usagePointLocation.geoInfoReference>string</urn:usagePointLocation.geoInfoReference>
             <!--Optional:-->

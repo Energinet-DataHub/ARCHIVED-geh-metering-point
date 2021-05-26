@@ -50,13 +50,22 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
             Assert.Equal(666, command.MaximumPower);
 
             // Series
-            Assert.Equal("P1", command.UnitType);
+            Assert.Equal("kWh", command.UnitType);
 
             // Linked Market EvaluationPoint aka Power Plant
             Assert.Equal("571234567891234636", command.PowerPlant);
 
             // Main address
             Assert.Equal("6000", command.InstallationLocationAddress.PostCode);
+        }
+
+        [Fact]
+        public void ValidateTranslateSettlementMethodTest()
+        {
+            var command = CreateMeteringPointXmlDeserializer.Deserialize(_xmlStream).First();
+
+            // Validate that we translate "D01" to "Flex"
+            Assert.Equal("Flex", command.SettlementMethod);
         }
 
         private static Stream GetResourceStream(string resourcePath)

@@ -20,8 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Application
     public record CreateMeteringPoint(
             Address InstallationLocationAddress,
             string GsrnNumber = "",
-            string TypeOfMeteringPoint = "Consumption",
-            string SubTypeOfMeteringPoint = "Physical",
+            string TypeOfMeteringPoint = "",
+            string SubTypeOfMeteringPoint = "",
             string MeterReadingOccurrence = "",
             int MaximumCurrent = 0,
             int MaximumPower = 0,
@@ -36,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
             string OccurenceDate = "",
             string MeterNumber = "",
             string TransactionId = "",
-            string PhysicalStatusOfMeteringPoint = "New",
+            string PhysicalStatusOfMeteringPoint = "",
             string NetSettlementGroup = "",
             string ConnectionType = "",
             string AssetType = "")
