@@ -41,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             int maximumCurrent,
             int maximumPower,
             Instant? occurenceDate,
-            string settlementMethod,
+            SettlementMethod settlementMethod,
             string netSettlementGroup,
             DisconnectionType disconnectionType,
             ConnectionType connectionType,
@@ -76,7 +76,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             AssetType = assetType;
         }
 
-        public string SettlementMethod { get; }
+        public SettlementMethod SettlementMethod { get; }
 
         public string NetSettlementGroup { get; }
 

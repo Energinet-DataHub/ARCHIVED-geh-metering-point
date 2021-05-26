@@ -50,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 SampleData.MaximumCurrent,
                 SampleData.MaximumPower,
                 SampleData.OccurenceDate,
-                SampleData.SettlementMethod,
+                SettlementMethod.Flex,
                 SampleData.NetSettlementGroup,
                 DisconnectionType.Manual,
                 ConnectionType.Direct,

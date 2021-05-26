@@ -58,7 +58,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 request.MaximumCurrent,
                 request.MaximumPower,
                 SystemClock.Instance.GetCurrentInstant(), // TODO: Parse date in correct format when implemented in Input Validation
-                request.SettlementMethod,
+                EnumerationType.FromName<SettlementMethod>(request.SettlementMethod),
                 request.NetSettlementGroup,
                 EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
                 EnumerationType.FromName<ConnectionType>(request.ConnectionType),
