@@ -18,6 +18,7 @@ using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Messages;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using FluentAssertions;
 using MediatR;
@@ -26,7 +27,6 @@ using Address = Energinet.DataHub.MeteringPoints.Application.Address;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 {
-    #pragma warning disable
     public class CreateTests
         : TestHost
     {
@@ -64,11 +64,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             var outboxMessage = _outbox.GetNext(OutboxMessageCategory.ActorMessage);
             outboxMessage.Should().NotBeNull();
-            outboxMessage.Type.Should().Be(typeof(CreateMeteringPointAccepted).FullName);
+            outboxMessage?.Type.Should().Be(typeof(CreateMeteringPointAccepted).FullName);
         }
 
         [Fact]
-        public async void CreateMeteringPoint_WithNoValidationErrors_ShouldGenerateIntegrationEventInOutbox()
+        public async Task CreateMeteringPoint_WithNoValidationErrors_ShouldGenerateIntegrationEventInOutbox()
         {
             var request = CreateRequest();
 
@@ -76,12 +76,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             var outboxMessage = _outbox.GetNext(OutboxMessageCategory.IntegrationEvent);
             outboxMessage.Should().NotBeNull();
-            outboxMessage.Type.Should()
-                .Be(typeof(Infrastructure.IntegrationServices.Dispatchers.CreateMeteringPointEventMessage).FullName);
+            outboxMessage?.Type.Should()
+                .Be(typeof(CreateMeteringPointEventMessage).FullName);
         }
 
         [Fact]
-        public async void CreateMeteringPoint_ProcessIntegrationEvent_ShouldMarkAsProcessedIntegrationEventInOutbox()
+        public async Task CreateMeteringPoint_ProcessIntegrationEvent_ShouldMarkAsProcessedIntegrationEventInOutbox()
         {
             var request = CreateRequest();
 
@@ -90,7 +90,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             var outboxMessage = _outbox.GetNext(OutboxMessageCategory.IntegrationEvent);
             outboxMessage.Should().BeNull();
-
         }
 
         [Fact]
@@ -106,7 +105,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             var outboxMessage = _outbox.GetNext(OutboxMessageCategory.ActorMessage);
             outboxMessage.Should().NotBeNull();
-            outboxMessage.Type.Should().Be(typeof(CreateMeteringPointRejected).FullName);
+            outboxMessage?.Type.Should().Be(typeof(CreateMeteringPointRejected).FullName);
         }
 
         [Fact(Skip = "Not implemented yet")]
@@ -141,25 +140,24 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SampleData.GsrnNumber,
                 SampleData.TypeOfMeteringPoint,
                 SampleData.SubTypeOfMeteringPoint,
-                "",
+                string.Empty,
                 0,
                 0,
-                "",
-                "",
-                "",
-                "",
-                "",
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
                 SampleData.SettlementMethod,
-                "",
+                string.Empty,
                 SampleData.DisconnectionType,
-                "",
-                "",
-                "",
-                "",
-                "",
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
                 SampleData.ConnectionType,
-                ""
-            );
+                string.Empty);
         }
     }
 }

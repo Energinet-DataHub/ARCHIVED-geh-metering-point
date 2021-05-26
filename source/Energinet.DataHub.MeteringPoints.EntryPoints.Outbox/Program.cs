@@ -21,9 +21,9 @@ using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.RequestHandlers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
-using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Channels;
-using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers;
-using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Services;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Channels;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Dispatchers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Services;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
@@ -33,6 +33,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using SimpleInjector;
+using CreateMeteringPointEventMessage = Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Messages.CreateMeteringPointEventMessage;
 
 [assembly: CLSCompliant(false)]
 
@@ -92,7 +93,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
 
             container.BuildMediator(
-                new[] { typeof(Infrastructure.IntegrationServices.Dispatchers.CreateMeteringPointEventMessage).Assembly }, Array.Empty<Type>());
+                new[] { typeof(CreateMeteringPointEventMessage).Assembly }, Array.Empty<Type>());
 
             container.Verify();
 

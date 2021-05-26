@@ -14,7 +14,7 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Messages;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling

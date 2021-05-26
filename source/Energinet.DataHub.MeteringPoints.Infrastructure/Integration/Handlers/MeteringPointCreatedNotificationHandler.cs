@@ -15,10 +15,11 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Messages;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Handlers
 {
     public class
         MeteringPointCreatedNotificationHandler : INotificationHandler<Domain.MeteringPoints.MeteringPointCreated>

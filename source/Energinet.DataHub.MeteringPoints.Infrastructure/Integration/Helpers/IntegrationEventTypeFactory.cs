@@ -12,16 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Transport;
-using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Channels;
+using System;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Messages;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Dispatchers
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
 {
-    public class IntegrationEventToEventHubDispatcher : MessageDispatcher
+    public class IntegrationEventTypeFactory
     {
-        public IntegrationEventToEventHubDispatcher(MessageSerializer serializer, AzureEventHubChannel channel)
-            : base(serializer, channel)
+        public static Type GetType(string type)
         {
+            if (typeof(CreateMeteringPointEventMessage).FullName == type)
+            {
+                return typeof(CreateMeteringPointEventMessage);
+            }
+
+            throw new ArgumentException("Integration Event type is not implemented.");
         }
     }
 }
