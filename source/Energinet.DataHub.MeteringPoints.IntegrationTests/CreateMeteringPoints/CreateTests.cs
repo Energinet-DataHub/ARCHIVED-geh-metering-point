@@ -15,8 +15,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Messages;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using FluentAssertions;
 using MediatR;
@@ -25,19 +27,20 @@ using Address = Energinet.DataHub.MeteringPoints.Application.Address;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 {
-    #pragma warning disable
     public class CreateTests
         : TestHost
     {
         private readonly IMediator _mediator;
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly IOutboxManager _outbox;
+        private readonly IIntegrationEventDispatchOrchestrator _integrationEventDispatchOrchestrator;
 
         public CreateTests()
         {
             _mediator = GetService<IMediator>();
             _meteringPointRepository = GetService<IMeteringPointRepository>();
             _outbox = GetService<IOutboxManager>();
+            _integrationEventDispatchOrchestrator = GetService<IIntegrationEventDispatchOrchestrator>();
         }
 
         [Fact]
@@ -61,12 +64,32 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             var outboxMessage = _outbox.GetNext(OutboxMessageCategory.ActorMessage);
             outboxMessage.Should().NotBeNull();
-            outboxMessage.Type.Should().Be(typeof(CreateMeteringPointAccepted).FullName);
+            outboxMessage?.Type.Should().Be(typeof(CreateMeteringPointAccepted).FullName);
         }
 
-        [Fact(Skip = "Not implemented yet")]
-        public void CreateMeteringPoint_WithNoValidationErrors_ShouldGenerateIntegrationEventInOutbox()
+        [Fact]
+        public async Task CreateMeteringPoint_WithNoValidationErrors_ShouldGenerateIntegrationEventInOutbox()
         {
+            var request = CreateRequest();
+
+            await _mediator.Send(request, CancellationToken.None);
+
+            var outboxMessage = _outbox.GetNext(OutboxMessageCategory.IntegrationEvent);
+            outboxMessage.Should().NotBeNull();
+            outboxMessage?.Type.Should()
+                .Be(typeof(CreateMeteringPointEventMessage).FullName);
+        }
+
+        [Fact]
+        public async Task CreateMeteringPoint_ProcessIntegrationEvent_ShouldMarkAsProcessedIntegrationEventInOutbox()
+        {
+            var request = CreateRequest();
+
+            await _mediator.Send(request, CancellationToken.None);
+            await _integrationEventDispatchOrchestrator.ProcessEventOrchestratorAsync().ConfigureAwait(false);
+
+            var outboxMessage = _outbox.GetNext(OutboxMessageCategory.IntegrationEvent);
+            outboxMessage.Should().BeNull();
         }
 
         [Fact]
@@ -82,7 +105,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             var outboxMessage = _outbox.GetNext(OutboxMessageCategory.ActorMessage);
             outboxMessage.Should().NotBeNull();
-            outboxMessage.Type.Should().Be(typeof(CreateMeteringPointRejected).FullName);
+            outboxMessage?.Type.Should().Be(typeof(CreateMeteringPointRejected).FullName);
         }
 
         [Fact(Skip = "Not implemented yet")]
@@ -120,22 +143,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SampleData.ReadingOccurrence,
                 0,
                 0,
-                "",
+                string.Empty,
                 SampleData.PowerPlantGsrnNumber,
-                "",
-                "",
-                "",
+                string.Empty,
+                string.Empty,
+                string.Empty,
                 SampleData.SettlementMethod,
-                "",
+                string.Empty,
                 SampleData.DisconnectionType,
-                "",
-                "",
-                "",
-                "",
-                "",
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
                 SampleData.ConnectionType,
-                ""
-            );
+                string.Empty);
         }
     }
 }

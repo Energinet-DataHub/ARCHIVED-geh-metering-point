@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Transport;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Application.IntegrationEvent
 {
-    public record CreateMeteringPointEventMessage(string Gsrn, string MpType, string GridAccessProvider, bool Child,
-        string EnergySupplierCurrent) : IOutboundMessage, IRequest;
+    /// <summary>
+    /// IntegrationEvent interface
+    /// </summary>
+    public interface IIntegrationEvent : INotification
+    {
+    }
 }

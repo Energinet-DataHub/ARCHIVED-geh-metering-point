@@ -12,38 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
-using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Helpers;
-using Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Repository;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Services
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Services
 {
     public class IntegrationEventDispatchOrchestrator : IIntegrationEventDispatchOrchestrator
     {
         private readonly IMediator _mediator;
         private readonly IJsonSerializer _jsonSerializer;
-        private readonly IIntegrationEventRepository _integrationEventRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IOutboxManager _outbox;
 
-        public IntegrationEventDispatchOrchestrator(IMediator mediator, IJsonSerializer jsonSerializer, IIntegrationEventRepository integrationEventRepository, IUnitOfWork unitOfWork)
+        public IntegrationEventDispatchOrchestrator(IMediator mediator, IJsonSerializer jsonSerializer, IUnitOfWork unitOfWork, IOutboxManager outbox)
         {
             _mediator = mediator;
             _jsonSerializer = jsonSerializer;
-            _integrationEventRepository = integrationEventRepository;
             _unitOfWork = unitOfWork;
+            _outbox = outbox;
         }
 
         public async Task ProcessEventOrchestratorAsync()
         {
             // Fetch the first message to process
-            OutboxMessage outboxMessage = await FetchEventFromOutboxAsync().ConfigureAwait(false);
+            var outboxMessage = FetchEventFromOutbox();
 
             // Keep iterating as long as we have a message
             while (outboxMessage != null)
@@ -51,21 +49,18 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.IntegrationServices.Se
                 object parsedCommand = _jsonSerializer.Deserialize(
                         outboxMessage.Data,
                         IntegrationEventTypeFactory.GetType(outboxMessage.Type));
+
                 await _mediator.Send(parsedCommand, CancellationToken.None).ConfigureAwait(false);
-                await MarkEventAsProcessedAsync(outboxMessage.Id).ConfigureAwait(false);
+                _outbox.MarkProcessed(outboxMessage);
+
                 await _unitOfWork.CommitAsync().ConfigureAwait(false);
-                outboxMessage = await FetchEventFromOutboxAsync().ConfigureAwait(false);
+                outboxMessage = FetchEventFromOutbox();
             }
         }
 
-        private async Task<OutboxMessage> FetchEventFromOutboxAsync()
+        private OutboxMessage? FetchEventFromOutbox()
         {
-            return await _integrationEventRepository.GetUnProcessedIntegrationEventMessageAsync().ConfigureAwait(false);
-        }
-
-        private async Task MarkEventAsProcessedAsync(Guid id)
-        {
-            await _integrationEventRepository.MarkIntegrationEventMessageAsProcessedAsync(id).ConfigureAwait(false);
+            return _outbox.GetNext(OutboxMessageCategory.IntegrationEvent);
         }
     }
 }
