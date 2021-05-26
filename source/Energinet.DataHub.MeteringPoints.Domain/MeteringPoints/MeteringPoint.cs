@@ -20,6 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public abstract class MeteringPoint : AggregateRootBase
     {
+        //Disable nullable check
+        #pragma warning disable CS8618
         protected MeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
@@ -34,7 +36,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GridAreaId gridAreaId,
             GsrnNumber powerPlant,
             string locationDescription,
-            string productType,
             string parentRelatedMeteringPoint,
             string unitType,
             string meterNumber,
@@ -56,7 +57,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GridAreaId = gridAreaId;
             PowerPlant = powerPlant;
             LocationDescription = locationDescription;
-            ProductType = productType;
             ParentRelatedMeteringPoint = parentRelatedMeteringPoint;
             UnitType = unitType;
             MeterNumber = meterNumber;
@@ -100,7 +100,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public string LocationDescription { get; }
 
-        public string ProductType { get; }
+        public ProductType ProductType { get; protected set; }
 
         public string ParentRelatedMeteringPoint { get; }
 

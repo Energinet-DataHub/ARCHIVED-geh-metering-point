@@ -50,7 +50,6 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 new GridAreaId(Guid.NewGuid()),
                 GsrnNumber.Create(request.PowerPlant),
                 request.LocationDescription,
-                request.ProductType,
                 request.ParentRelatedMeteringPoint,
                 request.UnitType,
                 request.MeterNumber,
