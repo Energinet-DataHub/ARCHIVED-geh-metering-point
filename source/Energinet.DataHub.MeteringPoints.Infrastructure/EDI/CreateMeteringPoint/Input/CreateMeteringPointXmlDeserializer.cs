@@ -63,7 +63,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
                     ExtractElementValue(marketEvaluationPoint, ns + "meteringGridArea_Domain.mRID"),
                     ExtractElementValue(linkedMarketEvaluationPoint, ns + "mRID"),
                     ExtractElementValue(marketEvaluationPoint, ns + "usagePointLocation.remark"),
-                    ExtractElementValue(marketEvaluationPoint, ns + "product"),
                     ExtractElementValue(marketEvaluationPoint, ns + "parent_MarketEvaluationPoint.mRID"),
                     GetSettlementMethod(ExtractElementValue(marketEvaluationPoint, ns + "settlementMethod")),
                     ExtractElementValue(series, ns + "quantity_Measure_Unit.name"),
