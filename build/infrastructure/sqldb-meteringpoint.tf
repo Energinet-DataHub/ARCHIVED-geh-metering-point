@@ -14,7 +14,7 @@
 
 data "azurerm_sql_server" "sqlsrv" {
   name                = "sqlsrv-sharedres-${var.organisation}-${var.environment}"
-  resource_group_name = var.sharedresources_resource_group_name
+  resource_group_name = "rg-DataHub-SharedResources-U"
 }
 
 module "sqldb_meteringpoint" {
