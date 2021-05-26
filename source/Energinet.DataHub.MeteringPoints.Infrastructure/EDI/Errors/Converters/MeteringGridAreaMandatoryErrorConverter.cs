@@ -21,7 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         // TODO: This is an example, redo when we know what/how etc.
         protected override Error Convert(MeteringGridAreaMandatoryValidationError error)
         {
-            return new("TODO", $"The metering grid area of a metering point is mandatory");
+            return new("TODO", $"The metering grid area is mandatory");
         }
     }
 }

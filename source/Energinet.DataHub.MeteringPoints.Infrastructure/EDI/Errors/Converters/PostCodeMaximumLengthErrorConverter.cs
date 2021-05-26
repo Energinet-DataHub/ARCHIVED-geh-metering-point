@@ -16,12 +16,12 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class PostCodeWrongFormatErrorConverter : ErrorConverter<PostCodeWrongFormatValidationError>
+    public class PostCodeMaximumLengthErrorConverter : ErrorConverter<PostCodeMaximumLengthValidationError>
     {
         // TODO: This is an example, redo when we know what/how etc.
-        protected override Error Convert(PostCodeWrongFormatValidationError error)
+        protected override Error Convert(PostCodeMaximumLengthValidationError error)
         {
-            return new("TODO", $"PostCode is on wrong format");
+            return new("TODO", $"Maximum length exceeded for field {error.FieldName}, maximum length is: {error.MaxLength}");
         }
     }
 }
