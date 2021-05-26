@@ -37,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
             GridAreaId gridAreaId,
-            GsrnNumber powerPlant,
+            GsrnNumber powerPlantGsrnNumber,
             string locationDescription,
             string parentRelatedMeteringPoint,
             MeasurementUnitType unitType,
@@ -63,7 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 meteringPointSubType,
                 meteringPointType,
                 gridAreaId,
-                powerPlant,
+                powerPlantGsrnNumber,
                 locationDescription,
                 parentRelatedMeteringPoint,
                 unitType,
@@ -78,7 +78,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _disconnectionType = disconnectionType;
             _connectionType = connectionType;
             _assetType = assetType;
-            ProductType = ProductType.EnergyActive;
+            _productType = ProductType.EnergyActive;
         }
     }
 }
