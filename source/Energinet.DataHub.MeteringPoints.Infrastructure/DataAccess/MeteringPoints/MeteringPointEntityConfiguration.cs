@@ -44,64 +44,80 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     toDbValue => toDbValue.Value,
                     fromDbValue => GsrnNumber.Create(fromDbValue));
 
-            builder.OwnsOne(x => x.Address, y =>
+            builder.OwnsOne<Address>("_address", y =>
             {
                 y.Property(x => x.StreetName).HasColumnName("StreetName");
                 y.Property(x => x.CityName).HasColumnName("CityName");
                 y.Property(x => x.CountryCode).HasColumnName("CountryCode");
                 y.Property(x => x.PostCode).HasColumnName("PostCode");
             });
-            // builder.Property(x => x.Address.StreetName);
-            // builder.Property(x => x.Address.PostCode);
-            // builder.Property(x => x.Address.CityName);
-            // builder.Property(x => x.Address.CountryCode);
-            builder.Property(x => x.IsAddressWashable);
 
-            builder.Property(x => x.PhysicalState)
+            builder.Property<bool>("_isAddressWashable")
+                .HasColumnName("IsAddressWashable");
+
+            builder.Property<PhysicalState>("_physicalState")
                 .HasColumnName("PhysicalStatusOfMeteringPoint")
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<PhysicalState>(fromDbValue));
 
-            builder.Property(x => x.MeteringPointSubType)
+            builder.Property<MeteringPointSubType>("_meteringPointSubType")
                 .HasColumnName("MeteringPointSubType")
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<MeteringPointSubType>(fromDbValue));
 
-            builder.Property(x => x.MeteringPointType)
+            builder.Property<MeteringPointType>("_meteringPointType")
                 .HasColumnName("TypeOfMeteringPoint")
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<MeteringPointType>(fromDbValue));
 
-            builder.Property(x => x.GridAreaId)
+            builder.Property<GridAreaId>("_gridAreaId")
                 .HasColumnName("MeteringGridArea")
                 .HasConversion(
                     toDbValue => toDbValue.Value,
                     fromDbValue => new GridAreaId(fromDbValue));
 
-            builder.Property(x => x.PowerPlant)
+            builder.Property<GsrnNumber>("_powerPlantGsrnNumber")
+                .HasColumnName("PowerPlant")
                 .HasConversion(toDbValue => toDbValue.Value, fromDbValue => GsrnNumber.Create(fromDbValue));
-            builder.Property(x => x.LocationDescription);
-            builder.Property(x => x.ProductType)
+
+            builder.Property<string>("_locationDescription")
+                .HasColumnName("LocationDescription");
+
+            builder.Property<ProductType>("_productType")
+                .HasColumnName("ProductType")
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<ProductType>(fromDbValue));
-            builder.Property(x => x.ParentRelatedMeteringPoint);
-            builder.Property(x => x.UnitType)
+
+            builder.Property("_parentRelatedMeteringPoint")
+                .HasColumnName("ParentRelatedMeteringPoint");
+
+            builder.Property<MeasurementUnitType>("_unitType")
                 .HasColumnName("UnitType")
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<MeasurementUnitType>(fromDbValue));
-            builder.Property(x => x.MeterNumber);
-            builder.Property(x => x.MeterReadingOccurrence)
+
+            builder.Property("_meterNumber")
+                .HasColumnName("MeterNumber");
+
+            builder.Property<ReadingOccurrence>("_meterReadingOccurrence")
+                .HasColumnName("MeterReadingOccurrence")
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<ReadingOccurrence>(fromDbValue));
-            builder.Property(x => x.MaximumCurrent);
-            builder.Property(x => x.MaximumPower);
-            builder.Property(x => x.OccurenceDate);
+
+            builder.Property("_maximumCurrent")
+                .HasColumnName("MaximumCurrent");
+
+            builder.Property("_maximumPower")
+                .HasColumnName("MaximumPower");
+
+            builder.Property("_occurenceDate")
+                .HasColumnName("OccurenceDate");
         }
     }
 
@@ -116,24 +132,31 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.ToTable("ConsumptionMeteringPoints", "dbo");
 
-            builder.Property(x => x.AssetType)
+            builder.Property<AssetType>("_assetType")
+                .HasColumnName("AssetType")
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<AssetType>(fromDbValue));
-            builder.Property(x => x.ConnectionType);
-            builder.Property(x => x.DisconnectionType)
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<DisconnectionType>(fromDbValue));
-            builder.Property(x => x.ConnectionType)
+            builder.Property<ConnectionType>("_connectionType")
+                .HasColumnName("ConnectionType")
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<ConnectionType>(fromDbValue));
-            builder.Property(x => x.SettlementMethod)
+
+            builder.Property<DisconnectionType>("_disconnectionType")
+                .HasColumnName("DisconnectionType")
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<DisconnectionType>(fromDbValue));
+
+            builder.Property<SettlementMethod>("_settlementMethod")
+                .HasColumnName("SettlementMethod")
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<SettlementMethod>(fromDbValue));
-            builder.Property(x => x.NetSettlementGroup);
+
+            builder.Property("_netSettlementGroup")
+                .HasColumnName("NetSettlementGroup");
         }
     }
 
@@ -148,13 +171,17 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.ToTable("ProductionMeteringPoints", "dbo");
 
-            builder.Property(x => x.ProductionObligation);
-            builder.Property(x => x.NetSettlementGroup);
-            builder.Property(x => x.DisconnectionType)
+            builder.Property("_productionObligation")
+                .HasColumnName("ProductionObligation");
+            builder.Property("_netSettlementGroup")
+                .HasColumnName("NetSettlementGroup");
+            builder.Property<DisconnectionType>("_disconnectionType")
+                .HasColumnName("DisconnectionType")
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<DisconnectionType>(fromDbValue));
-            builder.Property(x => x.ConnectionType)
+            builder.Property<ConnectionType>("_connectionType")
+                .HasColumnName("ConnectionType")
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<ConnectionType>(fromDbValue));
@@ -172,8 +199,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.ToTable("ExchangeMeteringPoints", "dbo");
 
-            builder.Property(x => x.ToGrid);
-            builder.Property(x => x.FromGrid);
+            builder.Property("_toGrid")
+                .HasColumnName("ToGrid");
+            builder.Property("_fromGrid")
+                .HasColumnName("FromGrid");
         }
     }
 }

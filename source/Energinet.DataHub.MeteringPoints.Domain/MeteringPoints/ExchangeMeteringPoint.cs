@@ -19,6 +19,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class ExchangeMeteringPoint : MeteringPoint
     {
+        private string _fromGrid;
+        private string _toGrid;
+
         public ExchangeMeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
@@ -58,9 +61,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 maximumPower,
                 occurenceDate)
         {
-            ToGrid = toGrid;
-            FromGrid = fromGrid;
-            ProductType = ProductType.EnergyReactive;
+            _toGrid = toGrid;
+            _fromGrid = fromGrid;
+            _productType = ProductType.EnergyReactive;
         }
 
         private ExchangeMeteringPoint(
@@ -71,7 +74,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
             GridAreaId gridAreaId,
-            GsrnNumber powerPlant,
+            GsrnNumber powerPlantGsrnNumber,
             string locationDescription,
             string parentRelatedMeteringPoint,
             MeasurementUnitType unitType,
@@ -90,7 +93,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 meteringPointSubType,
                 meteringPointType,
                 gridAreaId,
-                powerPlant,
+                powerPlantGsrnNumber,
                 locationDescription,
                 parentRelatedMeteringPoint,
                 unitType,
@@ -100,13 +103,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 maximumPower,
                 occurenceDate)
         {
-            ToGrid = toGrid;
-            FromGrid = fromGrid;
-            ProductType = ProductType.EnergyReactive;
+            _toGrid = toGrid;
+            _fromGrid = fromGrid;
+            _productType = ProductType.EnergyReactive;
         }
-
-        public string FromGrid { get; }
-
-        public string ToGrid { get; }
     }
 }

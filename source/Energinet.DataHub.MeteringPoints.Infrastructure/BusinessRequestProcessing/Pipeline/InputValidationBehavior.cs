@@ -30,10 +30,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcess
         private readonly IValidator<TRequest> _validator;
         private readonly IBusinessProcessResultHandler<TRequest> _businessProcessResultHandler;
 
-        public InputValidationBehavior(IValidator<TRequest> validator, IBusinessProcessResultHandler<TRequest> businessProcessResponder)
+        public InputValidationBehavior(IValidator<TRequest> validator, IBusinessProcessResultHandler<TRequest> businessProcessResultHandler)
         {
             _validator = validator;
-            _businessProcessResultHandler = businessProcessResponder ?? throw new ArgumentNullException(nameof(businessProcessResponder));
+            _businessProcessResultHandler = businessProcessResultHandler ?? throw new ArgumentNullException(nameof(businessProcessResultHandler));
         }
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
