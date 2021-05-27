@@ -19,6 +19,14 @@ syntax = "proto3";
 
 option csharp_namespace = "Energinet.DataHub.MeteringPoints.Contracts";
 
+message Address {
+  string streetName = 1;
+  string postCode = 2;
+  string cityName = 3;
+  string countryCode = 4;
+  bool isWashable = 5;
+}
+
 message CreateMeteringPoint {
   string gsrnNumber = 1;
   string typeOfMeteringPoint = 2;
@@ -26,12 +34,21 @@ message CreateMeteringPoint {
   string meterReadingOccurrence = 4;
   int32 maximumCurrent = 5;
   int32 maximumPower = 6;
-  string meteringGridAreaUsedDomainLocation = 7;
-  string powerPlantDomainLocation = 8;
+  string meteringGridArea = 7;
+  string powerPlant = 8;
   string locationDescription = 9;
-  string includedProductCharacteristic = 10;
-  string parentRelatedMeteringPoint = 11;
-  // Address InstallationLocationAddress = 12;
+  string parentRelatedMeteringPoint = 10;
+  Address installationLocationAddress = 11;
+  string settlementMethod = 12;
+  string unitType = 13;
+  string disconnectionType = 14;
+  string occurenceDate = 15;
+  string meterNumber = 16;
+  string transactionId = 17;
+  string physicalStatusOfMeteringPoint = 18;
+  string netSettlementGroup = 19;
+  string connectionType = 20;
+  string assetType = 21;
 }
 
 message MeteringPointEnvelope {

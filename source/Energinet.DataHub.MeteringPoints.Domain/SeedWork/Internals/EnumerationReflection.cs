@@ -42,7 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals
         {
             if (_nameLookup.TryGetValue(name, out var type)) return type;
 
-            throw new InvalidOperationException();
+            throw new InvalidOperationException($"EnumerationType not found for: {name}, actually available values: {string.Join(", ", _nameLookup.Values)}");
         }
 
         public EnumerationType FromValue(int value)
