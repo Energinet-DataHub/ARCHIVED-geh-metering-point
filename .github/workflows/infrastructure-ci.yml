@@ -21,6 +21,8 @@ on:
       - build/infrastructure/**
       - build/modules/**
       - .github/workflows/infrastructure-ci.yml
+      - .github/workflows/infrastructure-cd.yml
+      - .github/actions/meteringpoint-apply-db-migrations/**
   workflow_dispatch: {}
 env:
   ORGANISATION_NAME: endk
@@ -108,9 +110,18 @@ jobs:
         run: terraform plan
 
       - name: Terraform Apply
+        id: terraform-apply
         working-directory: ./build/infrastructure
-        run: terraform apply -no-color -auto-approve
+        run: |
+          terraform apply -no-color -auto-approve
+          echo "::set-output name=sql-server-connectionstring::$(terraform output metering_point_connection_string)"
         continue-on-error: false
+        
+      - name: Applying meteringpoint migrations
+        uses: ./.github/actions/meteringpoint-apply-db-migrations
+        with:
+          sql-server-connectionstring: ${{ steps.terraform-apply.outputs.sql-server-connectionstring }}
+          environment-name: ${{ matrix.environment.name }}
 
       - name: comment PR
         uses: unsplash/comment-on-pr@master
