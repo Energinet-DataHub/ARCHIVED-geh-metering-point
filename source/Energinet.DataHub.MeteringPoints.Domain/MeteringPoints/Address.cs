@@ -16,16 +16,27 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public class ReadingOccurrence : EnumerationType
+    public class Address : ValueObject
     {
-        public static readonly ReadingOccurrence Yearly = new ReadingOccurrence(0, nameof(Yearly));
-        public static readonly ReadingOccurrence Monthly = new ReadingOccurrence(1, nameof(Monthly));
-        public static readonly ReadingOccurrence Hourly = new ReadingOccurrence(2, nameof(Hourly));
-        public static readonly ReadingOccurrence Quarterly = new ReadingOccurrence(3, nameof(Quarterly));
-
-        private ReadingOccurrence(int id, string name)
-            : base(id, name)
+        private Address(string streetName, string postCode, string cityName, string countryCode)
         {
+            StreetName = streetName;
+            PostCode = postCode;
+            CityName = cityName;
+            CountryCode = countryCode;
+        }
+
+        public string StreetName { get; }
+
+        public string PostCode { get; }
+
+        public string CityName { get; }
+
+        public string CountryCode { get; }
+
+        public static Address Create(string streetName, string postCode, string cityName, string countryCode)
+        {
+            return new Address(streetName, postCode, cityName, countryCode);
         }
     }
 }

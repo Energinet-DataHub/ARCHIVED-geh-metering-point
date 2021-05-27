@@ -28,10 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public ConsumptionMeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
-            string streetName,
-            string postCode,
-            string cityName,
-            string countryCode,
+            Address address,
             bool isAddressWashable,
             PhysicalState physicalState,
             MeteringPointSubType meteringPointSubType,
@@ -54,10 +51,55 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             : base(
                 id,
                 gsrnNumber,
-                streetName,
-                postCode,
-                cityName,
-                countryCode,
+                address,
+                isAddressWashable,
+                physicalState,
+                meteringPointSubType,
+                meteringPointType,
+                gridAreaId,
+                powerPlantGsrnNumber,
+                locationDescription,
+                parentRelatedMeteringPoint,
+                unitType,
+                meterNumber,
+                meterReadingOccurrence,
+                maximumCurrent,
+                maximumPower,
+                occurenceDate)
+        {
+            _settlementMethod = settlementMethod;
+            _netSettlementGroup = netSettlementGroup;
+            _disconnectionType = disconnectionType;
+            _connectionType = connectionType;
+            _assetType = assetType;
+            _productType = ProductType.EnergyActive;
+        }
+
+        private ConsumptionMeteringPoint(
+            MeteringPointId id,
+            GsrnNumber gsrnNumber,
+            bool isAddressWashable,
+            PhysicalState physicalState,
+            MeteringPointSubType meteringPointSubType,
+            MeteringPointType meteringPointType,
+            GridAreaId gridAreaId,
+            GsrnNumber powerPlantGsrnNumber,
+            string locationDescription,
+            string parentRelatedMeteringPoint,
+            MeasurementUnitType unitType,
+            string meterNumber,
+            ReadingOccurrence meterReadingOccurrence,
+            int maximumCurrent,
+            int maximumPower,
+            Instant? occurenceDate,
+            SettlementMethod settlementMethod,
+            string netSettlementGroup,
+            DisconnectionType disconnectionType,
+            ConnectionType connectionType,
+            AssetType assetType)
+            : base(
+                id,
+                gsrnNumber,
                 isAddressWashable,
                 physicalState,
                 meteringPointSubType,

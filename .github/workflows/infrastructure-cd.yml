@@ -132,16 +132,15 @@ jobs:
         run: terraform plan
 
       - name: Terraform Apply
+        id: terraform-apply
         working-directory: ./build/infrastructure
-        run: terraform apply -no-color -auto-approve
+        run: | 
+          terraform apply -no-color -auto-approve
+          echo "::set-output name=sql-server-connectionstring::$(terraform output metering_point_connection_string)"
         continue-on-error: false
 
       - name: Applying meteringpoint migrations
         uses: ./.github/actions/meteringpoint-apply-db-migrations
         with:
-          sql-server-url: ${{ steps.terraform-apply.outputs.sql-server-url }}
-          sql-database-name: ${{ steps.terraform-apply.outputs.meteringpoint-sql-database-name }}
-          user-keyvaultname: ${{ steps.terraform-apply.outputs.meteringpoint-user-keyvaultname }}
-          password-keyvaultname: ${{ steps.terraform-apply.outputs.meteringpoint-password-keyvaultname }}
-          keyvault-name: ${{ steps.terraform-apply.outputs.kv-meteringpoint-name }}
+          sql-server-connectionstring: ${{ steps.terraform-apply.outputs.sql-server-connectionstring }}
           environment-name: ${{ matrix.environment.name }}

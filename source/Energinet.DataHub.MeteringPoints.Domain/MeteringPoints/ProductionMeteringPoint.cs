@@ -27,10 +27,54 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public ProductionMeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
-            string streetName,
-            string postCode,
-            string cityName,
-            string countryCode,
+            Address address,
+            bool isAddressWashable,
+            PhysicalState physicalState,
+            MeteringPointSubType meteringPointSubType,
+            MeteringPointType meteringPointType,
+            GridAreaId gridAreaId,
+            GsrnNumber powerPlant,
+            string locationDescription,
+            string parentRelatedMeteringPoint,
+            MeasurementUnitType unitType,
+            string meterNumber,
+            ReadingOccurrence meterReadingOccurrence,
+            int maximumCurrent,
+            int maximumPower,
+            Instant? occurenceDate,
+            int productionObligation,
+            int netSettlementGroup,
+            DisconnectionType disconnectionType,
+            ConnectionType connectionType)
+            : base(
+                id,
+                gsrnNumber,
+                address,
+                isAddressWashable,
+                physicalState,
+                meteringPointSubType,
+                meteringPointType,
+                gridAreaId,
+                powerPlant,
+                locationDescription,
+                parentRelatedMeteringPoint,
+                unitType,
+                meterNumber,
+                meterReadingOccurrence,
+                maximumCurrent,
+                maximumPower,
+                occurenceDate)
+        {
+            _productionObligation = productionObligation;
+            _netSettlementGroup = netSettlementGroup;
+            _disconnectionType = disconnectionType;
+            _connectionType = connectionType;
+            _productType = ProductType.EnergyActive;
+        }
+
+        public ProductionMeteringPoint(
+            MeteringPointId id,
+            GsrnNumber gsrnNumber,
             bool isAddressWashable,
             PhysicalState physicalState,
             MeteringPointSubType meteringPointSubType,
@@ -52,10 +96,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             : base(
                 id,
                 gsrnNumber,
-                streetName,
-                postCode,
-                cityName,
-                countryCode,
                 isAddressWashable,
                 physicalState,
                 meteringPointSubType,
