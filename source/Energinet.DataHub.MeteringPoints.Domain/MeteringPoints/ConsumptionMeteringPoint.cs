@@ -19,6 +19,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class ConsumptionMeteringPoint : MeteringPoint
     {
+        private SettlementMethod _settlementMethod;
+        private string _netSettlementGroup;
+        private DisconnectionType _disconnectionType;
+        private ConnectionType _connectionType;
+        private AssetType _assetType;
+
         public ConsumptionMeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
@@ -31,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
             GridAreaId gridAreaId,
-            GsrnNumber powerPlant,
+            GsrnNumber powerPlantGsrnNumber,
             string locationDescription,
             string parentRelatedMeteringPoint,
             MeasurementUnitType unitType,
@@ -57,7 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 meteringPointSubType,
                 meteringPointType,
                 gridAreaId,
-                powerPlant,
+                powerPlantGsrnNumber,
                 locationDescription,
                 parentRelatedMeteringPoint,
                 unitType,
@@ -67,22 +73,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 maximumPower,
                 occurenceDate)
         {
-            SettlementMethod = settlementMethod;
-            NetSettlementGroup = netSettlementGroup;
-            DisconnectionType = disconnectionType;
-            ConnectionType = connectionType;
-            AssetType = assetType;
-            ProductType = ProductType.EnergyActive;
+            _settlementMethod = settlementMethod;
+            _netSettlementGroup = netSettlementGroup;
+            _disconnectionType = disconnectionType;
+            _connectionType = connectionType;
+            _assetType = assetType;
+            _productType = ProductType.EnergyActive;
         }
-
-        public SettlementMethod SettlementMethod { get; }
-
-        public string NetSettlementGroup { get; }
-
-        public DisconnectionType DisconnectionType { get; }
-
-        public ConnectionType ConnectionType { get; }
-
-        public AssetType AssetType { get; }
     }
 }

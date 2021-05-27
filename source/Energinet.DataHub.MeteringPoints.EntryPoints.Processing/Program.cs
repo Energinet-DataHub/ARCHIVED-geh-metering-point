@@ -17,18 +17,27 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.UserIdentity;
+using Energinet.DataHub.MeteringPoints.Application.Validation;
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
+using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
 using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
+using FluentValidation;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -90,8 +99,21 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
             container.Register<UserIdentityFactory>(Lifestyle.Singleton);
             container.Register<IDomainEventPublisher, DomainEventPublisher>();
+            container.Register<IUnitOfWork, UnitOfWork>();
+            container.Register<IValidator<CreateMeteringPoint>, CreateMeteringPointRuleSet>(Lifestyle.Scoped);
+            container.Register(typeof(IBusinessProcessResultHandler<>), typeof(CreateMeteringPointResultHandler), Lifestyle.Scoped);
+            container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
+            container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Singleton);
+            container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
+            container.Register<ISystemDateTimeProvider, SystemDateTimeProvider>(Lifestyle.Singleton);
+            container.Register<IDomainEventsAccessor, DomainEventsAccessor>();
+            container.Register<IDomainEventsDispatcher, DomainEventsDispatcher>();
 
-            container.AddInputValidation();
+            container.AddValidationErrorConversion(
+                validateRegistrations: true,
+                typeof(CreateMeteringPoint).Assembly, // Application
+                typeof(GsrnNumberMustBeValidValidationError).Assembly, // Domain
+                typeof(ErrorMessageFactory).Assembly); // Infrastructure
 
             // Setup pipeline behaviors
             container.BuildMediator(
@@ -105,7 +127,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     typeof(InputValidationBehavior<,>),
                     typeof(AuthorizationBehavior<,>),
                     typeof(BusinessProcessResultBehavior<,>),
-                    typeof(ValidationReportsBehavior<,>),
+                    // TODO: NotImplementedException -> typeof(ValidationReportsBehavior<,>),
                     typeof(DomainEventsDispatcherBehaviour<,>),
                 });
 
