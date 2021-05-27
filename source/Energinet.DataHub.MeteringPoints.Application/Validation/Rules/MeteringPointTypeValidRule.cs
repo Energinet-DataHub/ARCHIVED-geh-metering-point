@@ -34,14 +34,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
             RuleFor(createMeteringPoint => createMeteringPoint.TypeOfMeteringPoint)
                 .Must(meteringPointType => meteringPointTypeNames.Contains(meteringPointType))
-                .WithState(createMeteringPoint => new MeteringPointTypeValidationError(createMeteringPoint.TypeOfMeteringPoint));
+                .WithState(createMeteringPoint => new MeteringPointTypeValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.TypeOfMeteringPoint));
         }
 
         private void TypeOfMeteringPointRequired()
         {
             RuleFor(createMeteringPoint => createMeteringPoint.TypeOfMeteringPoint)
                 .NotEmpty()
-                .WithState(createMeteringPoint => new MeteringPointTypeRequiredValidationError(createMeteringPoint.TypeOfMeteringPoint));
+                .WithState(createMeteringPoint => new MeteringPointTypeRequiredValidationError(createMeteringPoint.GsrnNumber));
         }
     }
 }

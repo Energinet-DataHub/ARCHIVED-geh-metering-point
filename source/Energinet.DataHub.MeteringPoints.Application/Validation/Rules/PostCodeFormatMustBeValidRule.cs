@@ -21,9 +21,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
     {
         private const string PostCodeDkFormatRegEx = @"^([0-9]{4})$";
         private const int MaxPostCodeLength = 10;
+        private readonly string _gsrnNumber;
 
-        public PostCodeFormatMustBeValidRule()
+        public PostCodeFormatMustBeValidRule(string gsrnNumber)
         {
+            _gsrnNumber = gsrnNumber;
             When(address => address.CountryCode.Equals("DK"), PostCodeDenmarkFormat).Otherwise(PostCodeFormatMaxLength);
         }
 
@@ -31,14 +33,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         {
             RuleFor(installationLocationAddress => installationLocationAddress.PostCode)
                 .Matches(PostCodeDkFormatRegEx)
-                .WithState(installationLocationAddress => new PostCodeWrongFormatValidationError(nameof(installationLocationAddress.PostCode)));
+                .WithState(installationLocationAddress => new PostCodeWrongFormatValidationError(_gsrnNumber, installationLocationAddress.PostCode));
         }
 
         private void PostCodeFormatMaxLength()
         {
             RuleFor(installationLocationAddress => installationLocationAddress.PostCode)
                 .MaximumLength(MaxPostCodeLength)
-                .WithState(installationLocationAddress => new PostCodeMaximumLengthValidationError(nameof(installationLocationAddress.PostCode), MaxPostCodeLength));
+                .WithState(installationLocationAddress => new PostCodeMaximumLengthValidationError(_gsrnNumber, installationLocationAddress.PostCode, MaxPostCodeLength));
         }
     }
 }

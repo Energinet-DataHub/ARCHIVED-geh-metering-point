@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using FluentValidation;
 
@@ -21,16 +22,21 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
     {
         public AddressMustBeValidRule()
         {
-            When(createMeteringPoint => createMeteringPoint.TypeOfMeteringPoint.Equals(MeteringPointType.Consumption.Name) || createMeteringPoint.TypeOfMeteringPoint.Equals(MeteringPointType.Production.Name), () =>
+            When(MeteringPointTypeIsProductionOrConsumption, () =>
             {
-                RuleFor(request => request.InstallationLocationAddress).SetValidator(new StreetNameMandatoryForMeteringPointTypeMustBeValidRule());
-                RuleFor(request => request.InstallationLocationAddress).SetValidator(new PostCodeMandatoryForMeteringPointTypeMustBeValidRuleMustBeValidRule());
-                RuleFor(request => request.InstallationLocationAddress).SetValidator(new CityNameMandatoryForMeteringPointTypeMustBeValidRule());
+                RuleFor(request => request.InstallationLocationAddress).SetValidator(request => new StreetNameMandatoryForMeteringPointTypeMustBeValidRule(request.GsrnNumber));
+                RuleFor(request => request.InstallationLocationAddress).SetValidator(request => new PostCodeMandatoryForMeteringPointTypeMustBeValidRuleMustBeValidRule(request.GsrnNumber));
+                RuleFor(request => request.InstallationLocationAddress).SetValidator(request => new CityNameMandatoryForMeteringPointTypeMustBeValidRule(request.GsrnNumber));
             });
 
-            RuleFor(request => request.InstallationLocationAddress).SetValidator(new PostCodeFormatMustBeValidRule());
-            RuleFor(request => request.InstallationLocationAddress).SetValidator(new StreetNameMaximumLengthMustBeValidRule());
-            RuleFor(request => request.InstallationLocationAddress).SetValidator(new CityNameMaximumLengthMustBeValidRule());
+            RuleFor(request => request.InstallationLocationAddress).SetValidator(request => new PostCodeFormatMustBeValidRule(request.GsrnNumber));
+            RuleFor(request => request.InstallationLocationAddress).SetValidator(request => new StreetNameMaximumLengthMustBeValidRule(request.GsrnNumber));
+            RuleFor(request => request.InstallationLocationAddress).SetValidator(request => new CityNameMaximumLengthMustBeValidRule(request.GsrnNumber));
+        }
+
+        private static bool MeteringPointTypeIsProductionOrConsumption(CreateMeteringPoint createMeteringPoint)
+        {
+            return createMeteringPoint.TypeOfMeteringPoint.Equals(MeteringPointType.Consumption.Name) || createMeteringPoint.TypeOfMeteringPoint.Equals(MeteringPointType.Production.Name);
         }
     }
 }

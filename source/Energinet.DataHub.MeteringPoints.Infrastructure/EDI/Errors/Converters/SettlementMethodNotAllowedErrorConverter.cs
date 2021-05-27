@@ -21,7 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         // TODO: This is an example, redo when we know what/how etc.
         protected override Error Convert(SettlementMethodNotAllowedValidationError error)
         {
-            return new("TODO", $"Settlementmethod not allowed for meteringpoint type: {error.TypeOfMeteringPoint}");
+            return new("TODO", $"Settlementmethod {error.SettlementMethod} not allowed for meteringpoint {error.GsrnNumber} with type {error.TypeOfMeteringPoint}");
         }
     }
 }

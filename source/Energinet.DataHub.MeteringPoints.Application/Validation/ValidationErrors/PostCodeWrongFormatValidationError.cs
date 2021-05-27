@@ -18,11 +18,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class PostCodeWrongFormatValidationError : ValidationError
     {
-        public PostCodeWrongFormatValidationError(string fieldName)
+        public PostCodeWrongFormatValidationError(string gsrnNumber, string postCode)
         {
-            FieldName = fieldName;
+            GsrnNumber = gsrnNumber;
+            PostCode = postCode;
         }
 
-        public string FieldName { get; }
+        public string GsrnNumber { get; }
+
+        public string PostCode { get; }
     }
 }

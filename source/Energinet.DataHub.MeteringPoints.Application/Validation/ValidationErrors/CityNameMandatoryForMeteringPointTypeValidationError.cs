@@ -18,11 +18,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class CityNameMandatoryForMeteringPointTypeValidationError : ValidationError
     {
-        public CityNameMandatoryForMeteringPointTypeValidationError(string fieldName)
+        public CityNameMandatoryForMeteringPointTypeValidationError(string gsrnNumber)
         {
-            FieldName = fieldName;
+            GsrnNumber = gsrnNumber;
         }
 
-        public string FieldName { get; }
+        public string GsrnNumber { get; }
     }
 }

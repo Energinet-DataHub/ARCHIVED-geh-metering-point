@@ -13,12 +13,15 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
     public class MeteringGridAreaValidRule : AbstractValidator<CreateMeteringPoint>
     {
+        private const int ExactGridAreaLengthAllowed = 3;
+
         public MeteringGridAreaValidRule()
         {
             MandatoryMeteringGridArea();
@@ -27,16 +30,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
         private void MandatoryMeteringGridArea()
         {
-            RuleFor(meteringGridArea => meteringGridArea.MeteringGridArea)
+            RuleFor(createMeteringPoint => createMeteringPoint.MeteringGridArea)
                 .NotEmpty()
-                .WithState((meteringGridArea) => new MeteringGridAreaMandatoryValidationError());
+                .WithState(createMeteringPoint => new MeteringGridAreaMandatoryValidationError(createMeteringPoint.GsrnNumber));
         }
 
         private void MeteringGridAreaLengthOf3Digits()
         {
-            RuleFor(meteringGridArea => meteringGridArea.MeteringGridArea)
-                .Length(3)
-                .WithState((meteringGridArea) => new MeteringGridAreaLengthValidationError(meteringGridArea.MeteringGridArea));
+            RuleFor(createMeteringPoint => createMeteringPoint.MeteringGridArea)
+                .Length(ExactGridAreaLengthAllowed)
+                .WithState((createMeteringPoint) => new MeteringGridAreaLengthValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.MeteringGridArea, ExactGridAreaLengthAllowed));
         }
     }
 }

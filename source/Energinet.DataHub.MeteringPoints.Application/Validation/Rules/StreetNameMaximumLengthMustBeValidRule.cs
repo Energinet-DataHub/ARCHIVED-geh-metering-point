@@ -21,11 +21,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
     {
         private const int MaxStreetNameLength = 40;
 
-        public StreetNameMaximumLengthMustBeValidRule()
+        public StreetNameMaximumLengthMustBeValidRule(string gsrnNumber)
         {
             RuleFor(installationLocationAddress => installationLocationAddress.StreetName)
                 .MaximumLength(MaxStreetNameLength)
-                .WithState(installationLocationAddress => new StreetNameMaximumLengthValidationError(nameof(installationLocationAddress.StreetName), MaxStreetNameLength));
+                .WithState(installationLocationAddress => new StreetNameMaximumLengthValidationError(gsrnNumber, installationLocationAddress.StreetName, MaxStreetNameLength));
         }
     }
 }

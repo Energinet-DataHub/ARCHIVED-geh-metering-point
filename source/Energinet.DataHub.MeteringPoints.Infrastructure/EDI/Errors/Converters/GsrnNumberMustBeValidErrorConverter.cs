@@ -21,7 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         // TODO: This is an example, redo when we know what/how etc.
         protected override Error Convert(GsrnNumberMustBeValidValidationError error)
         {
-            return new("TODO", $"This might not be a gsrn number: {error.GsrnNumber}");
+            return new("TODO", $"A metering point cannot be registered in CCR without a valid identification");
         }
     }
 }

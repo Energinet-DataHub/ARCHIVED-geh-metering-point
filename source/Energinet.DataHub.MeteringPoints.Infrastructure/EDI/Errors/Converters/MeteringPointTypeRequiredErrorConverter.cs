@@ -21,7 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         // TODO: This is an example, redo when we know what/how etc.
         protected override Error Convert(MeteringPointTypeRequiredValidationError error)
         {
-            return new("TODO", $"The type of a metering point is mandatory");
+            return new("TODO", $"Metering point type is missing for metering point {error.GsrnNumber}");
         }
     }
 }

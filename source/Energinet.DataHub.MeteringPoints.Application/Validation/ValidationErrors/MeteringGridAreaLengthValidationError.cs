@@ -18,11 +18,17 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class MeteringGridAreaLengthValidationError : ValidationError
     {
-        public MeteringGridAreaLengthValidationError(string meteringGridArea)
+        public MeteringGridAreaLengthValidationError(string gsrnNumber, string meteringGridArea, int exactLengthAllowed)
         {
             MeteringGridArea = meteringGridArea;
+            ExactLengthAllowed = exactLengthAllowed;
+            GsrnNumber = gsrnNumber;
         }
 
+        public string GsrnNumber { get; }
+
         public string MeteringGridArea { get; }
+
+        public int ExactLengthAllowed { get; }
     }
 }

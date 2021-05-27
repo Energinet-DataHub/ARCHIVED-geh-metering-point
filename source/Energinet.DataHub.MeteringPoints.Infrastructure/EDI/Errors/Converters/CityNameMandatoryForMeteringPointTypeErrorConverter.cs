@@ -21,7 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         // TODO: This is an example, redo when we know what/how etc.
         protected override Error Convert(CityNameMandatoryForMeteringPointTypeValidationError error)
         {
-            return new("TODO", $"{error.FieldName} is mandatory");
+            return new("TODO", $"City name is missing for metering point {error.GsrnNumber}");
         }
     }
 }

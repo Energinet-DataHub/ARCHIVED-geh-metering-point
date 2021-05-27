@@ -18,5 +18,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class MeteringGridAreaMandatoryValidationError : ValidationError
     {
+        public MeteringGridAreaMandatoryValidationError(string gsrnNumber)
+        {
+            GsrnNumber = gsrnNumber;
+        }
+
+        public string GsrnNumber { get; }
     }
 }

@@ -14,6 +14,7 @@
 
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
@@ -24,19 +25,19 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
         public SettlementMethodMustBeValidRule()
         {
-            When(point => point.TypeOfMeteringPoint.Equals("Consumption") || point.TypeOfMeteringPoint.Equals("NetLossCorrection"), () =>
+            When(point => point.TypeOfMeteringPoint.Equals(MeteringPointType.Consumption.Name) || point.TypeOfMeteringPoint.Equals("NetLossCorrection"), () =>
             {
                 RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
                     .NotEmpty()
-                    .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError(createMeteringPoint.TypeOfMeteringPoint));
+                    .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SettlementMethod));
                 RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
                     .Must(settlementMethod => _allowedDomainValuesForConsumptionAndNetLossCorrection.Contains(settlementMethod))
-                    .WithState(createMeteringPoint => new SettlementMethodMissingRequiredDomainValuesValidationError(createMeteringPoint.SettlementMethod));
+                    .WithState(createMeteringPoint => new SettlementMethodMissingRequiredDomainValuesValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SettlementMethod));
             }).Otherwise(() =>
             {
                 RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
                     .Empty()
-                    .WithState(createMeteringPoint => new SettlementMethodNotAllowedValidationError(createMeteringPoint.TypeOfMeteringPoint));
+                    .WithState(createMeteringPoint => new SettlementMethodNotAllowedValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SettlementMethod, createMeteringPoint.TypeOfMeteringPoint));
             });
         }
     }

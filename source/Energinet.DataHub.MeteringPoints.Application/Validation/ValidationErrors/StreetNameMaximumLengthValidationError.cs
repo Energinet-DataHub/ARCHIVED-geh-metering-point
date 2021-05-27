@@ -18,13 +18,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class StreetNameMaximumLengthValidationError : ValidationError
     {
-        public StreetNameMaximumLengthValidationError(string fieldName, int maxLength)
+        public StreetNameMaximumLengthValidationError(string gsrnNumber, string streetName, int maxLength)
         {
-            FieldName = fieldName;
+            GsrnNumber = gsrnNumber;
+            StreetName = streetName;
             MaxLength = maxLength;
         }
 
-        public string FieldName { get; }
+        public string GsrnNumber { get; }
+
+        public string StreetName { get; }
 
         public int MaxLength { get; }
     }

@@ -21,7 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         // TODO: This is an example, redo when we know what/how etc.
         protected override Error Convert(PostCodeMaximumLengthValidationError error)
         {
-            return new("TODO", $"Maximum length exceeded for field {error.FieldName}, maximum length is: {error.MaxLength}");
+            return new("TODO", $"Post code {error.PostCode} for metering point {error.GsrnNumber} is out of range maximum length is {error.MaxLength}.");
         }
     }
 }

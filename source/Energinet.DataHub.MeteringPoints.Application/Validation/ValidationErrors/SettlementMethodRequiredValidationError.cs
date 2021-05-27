@@ -18,11 +18,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class SettlementMethodRequiredValidationError : ValidationError
     {
-        public SettlementMethodRequiredValidationError(string typeOfMeteringPoint)
+        public SettlementMethodRequiredValidationError(string gsrnNumber, string settlementMethod)
         {
-            TypeOfMeteringPoint = typeOfMeteringPoint;
+            GsrnNumber = gsrnNumber;
+            SettlementMethod = settlementMethod;
         }
 
-        public string TypeOfMeteringPoint { get; }
+        public string GsrnNumber { get; }
+
+        public string SettlementMethod { get; }
     }
 }

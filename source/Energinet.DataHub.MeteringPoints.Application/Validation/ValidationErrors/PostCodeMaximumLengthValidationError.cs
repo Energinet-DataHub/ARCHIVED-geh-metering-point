@@ -18,13 +18,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class PostCodeMaximumLengthValidationError : ValidationError
     {
-        public PostCodeMaximumLengthValidationError(string fieldName, int maxLength)
+        public PostCodeMaximumLengthValidationError(string gsrnNumber, string postCode, int maxLength)
         {
-            FieldName = fieldName;
+            PostCode = postCode;
+            GsrnNumber = gsrnNumber;
             MaxLength = maxLength;
         }
 
-        public string FieldName { get; }
+        public string GsrnNumber { get; }
+
+        public string PostCode { get; }
 
         public int MaxLength { get; }
     }

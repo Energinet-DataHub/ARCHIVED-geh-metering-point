@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Microsoft.VisualBasic;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
@@ -21,7 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         // TODO: This is an example, redo when we know what/how etc.
         protected override Error Convert(OccurenceDateWrongFormatValidationError error)
         {
-            return new("TODO", $"Occurrence date is in wrong format");
+            return new("TODO", $"Date time {error.OccurenceDate} for metering point {error.GsrnNumber} must have UTC+0 format 'YYYY-MM-DD HH:MI:SS'");
         }
     }
 }

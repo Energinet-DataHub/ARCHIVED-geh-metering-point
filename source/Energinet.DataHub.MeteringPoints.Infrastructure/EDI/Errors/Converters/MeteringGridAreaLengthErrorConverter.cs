@@ -21,7 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         // TODO: This is an example, redo when we know what/how etc.
         protected override Error Convert(MeteringGridAreaLengthValidationError error)
         {
-            return new("TODO", $"The metering grid area of a metering point should consist of exactly 3 digits");
+            return new("TODO", $"Metering grid area {error.MeteringGridArea} for metering point {error.GsrnNumber} contains a non-digit character or has a length that does not equal {error.ExactLengthAllowed}");
         }
     }
 }

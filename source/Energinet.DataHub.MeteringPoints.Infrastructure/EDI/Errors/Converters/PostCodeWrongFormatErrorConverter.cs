@@ -21,7 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         // TODO: This is an example, redo when we know what/how etc.
         protected override Error Convert(PostCodeWrongFormatValidationError error)
         {
-            return new("TODO", $"PostCode is in wrong format");
+            return new("TODO", $"Post code {error.PostCode} for metering point {error.GsrnNumber} is not in correct format it should be equal 4 (if country code is DK) or maximum 10.");
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         // TODO: This is an example, redo when we know what/how etc.
         protected override Error Convert(OccurenceRequiredValidationError error)
         {
-            return new("TODO", $"The occurrence of a metering point is mandatory");
+            return new("TODO", $"Occurrence date is missing for metering point {error.GsrnNumber}");
         }
     }
 }

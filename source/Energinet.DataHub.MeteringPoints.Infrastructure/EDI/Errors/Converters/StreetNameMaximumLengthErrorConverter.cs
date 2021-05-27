@@ -22,7 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         // TODO: This is an example, redo when we know what/how etc.
         protected override Error Convert(StreetNameMaximumLengthValidationError error)
         {
-            return new("TODO", $"Maximum length exceeded for field {error.FieldName}, maximum length is: {error.MaxLength}");
+            return new("TODO", $"Street name {error.StreetName} for metering point {error.GsrnNumber} has a length that exceeds {error.MaxLength}");
         }
     }
 }

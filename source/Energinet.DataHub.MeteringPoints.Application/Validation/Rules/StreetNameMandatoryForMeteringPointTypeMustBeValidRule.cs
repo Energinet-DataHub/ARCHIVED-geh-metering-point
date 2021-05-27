@@ -19,11 +19,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
     public class StreetNameMandatoryForMeteringPointTypeMustBeValidRule : AbstractValidator<Address>
     {
-        public StreetNameMandatoryForMeteringPointTypeMustBeValidRule()
+        public StreetNameMandatoryForMeteringPointTypeMustBeValidRule(string gsrnNumber)
         {
             RuleFor(installationLocationAddress => installationLocationAddress.StreetName)
                 .NotEmpty()
-                .WithState(installationLocationAddress => new StreetNameMandatoryForMeteringPointTypeValidationError(nameof(installationLocationAddress.StreetName)));
+                .WithState(_ => new StreetNameMandatoryForMeteringPointTypeValidationError(gsrnNumber));
         }
     }
 }

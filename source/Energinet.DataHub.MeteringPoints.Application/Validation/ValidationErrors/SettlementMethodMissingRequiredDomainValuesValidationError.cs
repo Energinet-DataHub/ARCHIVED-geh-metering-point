@@ -18,10 +18,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class SettlementMethodMissingRequiredDomainValuesValidationError : ValidationError
     {
-        public SettlementMethodMissingRequiredDomainValuesValidationError(string settlementMethod)
+        public SettlementMethodMissingRequiredDomainValuesValidationError(string gsrnNumber, string settlementMethod)
         {
+            GsrnNumber = gsrnNumber;
             SettlementMethod = settlementMethod;
         }
+
+        public string GsrnNumber { get; }
 
         public string SettlementMethod { get; }
     }
