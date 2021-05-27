@@ -19,10 +19,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
     public class StreetNameMaximumLengthErrorConverter : ErrorConverter<StreetNameMaximumLengthValidationError>
     {
-        // TODO: This is an example, redo when we know what/how etc.
         protected override Error Convert(StreetNameMaximumLengthValidationError error)
         {
-            return new("TODO", $"Street name {error.StreetName} for metering point {error.GsrnNumber} has a length that exceeds {error.MaxLength}");
+            return new("E86", $"Street name {error.StreetName} for metering point {error.GsrnNumber} has a length that exceeds {error.MaxLength}");
         }
     }
 }

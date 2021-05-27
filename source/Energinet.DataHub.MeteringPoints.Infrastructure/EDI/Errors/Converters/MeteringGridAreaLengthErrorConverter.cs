@@ -18,10 +18,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
     public class MeteringGridAreaLengthErrorConverter : ErrorConverter<MeteringGridAreaLengthValidationError>
     {
-        // TODO: This is an example, redo when we know what/how etc.
         protected override Error Convert(MeteringGridAreaLengthValidationError error)
         {
-            return new("TODO", $"Metering grid area {error.MeteringGridArea} for metering point {error.GsrnNumber} contains a non-digit character or has a length that does not equal {error.ExactLengthAllowed}");
+            return new("E86", $"Metering grid area {error.MeteringGridArea} for metering point {error.GsrnNumber} contains a non-digit character or has a length that does not equal {error.ExactLengthAllowed}");
         }
     }
 }

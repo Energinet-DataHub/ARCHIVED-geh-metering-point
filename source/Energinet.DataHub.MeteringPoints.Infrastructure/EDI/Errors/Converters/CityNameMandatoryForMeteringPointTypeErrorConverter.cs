@@ -18,10 +18,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
     public class CityNameMandatoryForMeteringPointTypeErrorConverter : ErrorConverter<CityNameMandatoryForMeteringPointTypeValidationError>
     {
-        // TODO: This is an example, redo when we know what/how etc.
         protected override Error Convert(CityNameMandatoryForMeteringPointTypeValidationError error)
         {
-            return new("TODO", $"City name is missing for metering point {error.GsrnNumber}");
+            return new("E86", $"City name is missing for metering point {error.GsrnNumber}");
         }
     }
 }

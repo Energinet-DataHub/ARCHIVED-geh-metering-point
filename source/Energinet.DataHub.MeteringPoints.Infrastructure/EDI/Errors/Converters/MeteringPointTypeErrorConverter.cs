@@ -18,10 +18,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
     public class MeteringPointTypeErrorConverter : ErrorConverter<MeteringPointTypeValidationError>
     {
-        // TODO: This is an example, redo when we know what/how etc.
         protected override Error Convert(MeteringPointTypeValidationError error)
         {
-            return new("TODO", $"Metering point type {error.MeteringPointType} for metering point {error.GsrnNumber} has wrong value (outside domain)");
+            return new("D18", $"Metering point type {error.MeteringPointType} for metering point {error.GsrnNumber} has wrong value (outside domain)");
         }
     }
 }

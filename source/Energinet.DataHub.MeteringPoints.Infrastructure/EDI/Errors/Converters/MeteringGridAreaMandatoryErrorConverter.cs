@@ -18,10 +18,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
     public class MeteringGridAreaMandatoryErrorConverter : ErrorConverter<MeteringGridAreaMandatoryValidationError>
     {
-        // TODO: This is an example, redo when we know what/how etc.
         protected override Error Convert(MeteringGridAreaMandatoryValidationError error)
         {
-            return new("TODO", $"Metering grid area is missing for metering point {error.GsrnNumber}");
+            return new("E10", $"Metering grid area is missing for metering point {error.GsrnNumber}");
         }
     }
 }

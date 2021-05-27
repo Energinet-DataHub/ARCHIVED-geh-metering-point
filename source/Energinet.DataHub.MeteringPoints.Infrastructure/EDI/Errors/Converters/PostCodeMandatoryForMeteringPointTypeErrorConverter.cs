@@ -18,10 +18,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
     public class PostCodeMandatoryForMeteringPointTypeErrorConverter : ErrorConverter<PostCodeMandatoryForMeteringPointTypeValidationError>
     {
-        // TODO: This is an example, redo when we know what/how etc.
         protected override Error Convert(PostCodeMandatoryForMeteringPointTypeValidationError error)
         {
-            return new("TODO", $"Post code is missing for metering point {error.GsrnNumber}");
+            return new("E86", $"Post code is missing for metering point {error.GsrnNumber}");
         }
     }
 }
