@@ -71,7 +71,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     services.AddLogging();
                     services.AddDbContext<MeteringPointContext>(x =>
                     {
-                        var connectionString = Environment.GetEnvironmentVariable("METERING_POINT_DB_CONNECTION_STRING")
+                        var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")
                                                ?? throw new InvalidOperationException(
                                                    "Metering point db connection string not found.");
 
