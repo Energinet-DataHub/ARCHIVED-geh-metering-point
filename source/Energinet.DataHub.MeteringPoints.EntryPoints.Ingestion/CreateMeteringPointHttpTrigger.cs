@@ -59,8 +59,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
                 // TODO: In that case we would need to make a switch case or something like that to look at the value in the "process.processType" element.
                 commands = CreateMeteringPointXmlDeserializer.Deserialize(request.Body);
             }
-            catch
+            catch (Exception exception)
             {
+                logger.LogError(exception, "Unable to deserialize request");
                 return request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
