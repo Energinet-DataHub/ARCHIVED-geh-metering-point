@@ -44,10 +44,13 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     toDbValue => toDbValue.Value,
                     fromDbValue => GsrnNumber.Create(fromDbValue));
 
-            builder.Property(x => x.StreetName);
-            builder.Property(x => x.PostCode);
-            builder.Property(x => x.CityName);
-            builder.Property(x => x.CountryCode);
+            builder.OwnsOne<Address>("_address", y =>
+            {
+                y.Property(x => x.StreetName).HasColumnName("StreetName");
+                y.Property(x => x.CityName).HasColumnName("CityName");
+                y.Property(x => x.CountryCode).HasColumnName("CountryCode");
+                y.Property(x => x.PostCode).HasColumnName("PostCode");
+            });
 
             builder.Property<bool>("_isAddressWashable")
                 .HasColumnName("IsAddressWashable");

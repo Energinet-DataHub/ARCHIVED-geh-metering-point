@@ -25,10 +25,50 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public ExchangeMeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
-            string streetName,
-            string postCode,
-            string cityName,
-            string countryCode,
+            Address address,
+            bool isAddressWashable,
+            PhysicalState physicalState,
+            MeteringPointSubType meteringPointSubType,
+            MeteringPointType meteringPointType,
+            GridAreaId gridAreaId,
+            GsrnNumber powerPlant,
+            string locationDescription,
+            string parentRelatedMeteringPoint,
+            MeasurementUnitType unitType,
+            string meterNumber,
+            ReadingOccurrence meterReadingOccurrence,
+            int maximumCurrent,
+            int maximumPower,
+            Instant? occurenceDate,
+            string toGrid,
+            string fromGrid)
+            : base(
+                id,
+                gsrnNumber,
+                address,
+                isAddressWashable,
+                physicalState,
+                meteringPointSubType,
+                meteringPointType,
+                gridAreaId,
+                powerPlant,
+                locationDescription,
+                parentRelatedMeteringPoint,
+                unitType,
+                meterNumber,
+                meterReadingOccurrence,
+                maximumCurrent,
+                maximumPower,
+                occurenceDate)
+        {
+            _toGrid = toGrid;
+            _fromGrid = fromGrid;
+            _productType = ProductType.EnergyReactive;
+        }
+
+        private ExchangeMeteringPoint(
+            MeteringPointId id,
+            GsrnNumber gsrnNumber,
             bool isAddressWashable,
             PhysicalState physicalState,
             MeteringPointSubType meteringPointSubType,
@@ -48,10 +88,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             : base(
                 id,
                 gsrnNumber,
-                streetName,
-                postCode,
-                cityName,
-                countryCode,
                 isAddressWashable,
                 physicalState,
                 meteringPointSubType,
