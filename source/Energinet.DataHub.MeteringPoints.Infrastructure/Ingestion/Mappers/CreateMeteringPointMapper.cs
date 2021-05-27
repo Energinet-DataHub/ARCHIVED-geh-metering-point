@@ -31,6 +31,33 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
                 CreateMeteringPoint = new Contracts.CreateMeteringPoint
                 {
                     GsrnNumber = obj.GsrnNumber,
+                    TypeOfMeteringPoint = obj.TypeOfMeteringPoint,
+                    SubTypeOfMeteringPoint = obj.SubTypeOfMeteringPoint,
+                    MeterReadingOccurrence = obj.MeterReadingOccurrence,
+                    MaximumCurrent = obj.MaximumCurrent,
+                    MaximumPower = obj.MaximumPower,
+                    MeteringGridArea = obj.MeteringGridArea,
+                    PowerPlant = obj.PowerPlant,
+                    LocationDescription = obj.LocationDescription,
+                    ParentRelatedMeteringPoint = obj.ParentRelatedMeteringPoint,
+                    InstallationLocationAddress = new Address
+                    {
+                        StreetName = obj.InstallationLocationAddress.StreetName,
+                        PostCode = obj.InstallationLocationAddress.PostCode,
+                        CityName = obj.InstallationLocationAddress.CityName,
+                        CountryCode = obj.InstallationLocationAddress.CountryCode,
+                        IsWashable = obj.InstallationLocationAddress.IsWashable,
+                    },
+                    SettlementMethod = obj.SettlementMethod,
+                    UnitType = obj.UnitType,
+                    DisconnectionType = obj.DisconnectionType,
+                    OccurenceDate = obj.OccurenceDate,
+                    MeterNumber = obj.MeterNumber,
+                    TransactionId = obj.TransactionId,
+                    PhysicalStatusOfMeteringPoint = obj.PhysicalStatusOfMeteringPoint,
+                    NetSettlementGroup = obj.NetSettlementGroup,
+                    ConnectionType = obj.ConnectionType,
+                    AssetType = obj.AssetType,
                 },
             };
         }

@@ -13,19 +13,12 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Infrastructure
 {
-    public class ReadingOccurrence : EnumerationType
+    public class SystemDateTimeProvider : ISystemDateTimeProvider
     {
-        public static readonly ReadingOccurrence Yearly = new ReadingOccurrence(0, nameof(Yearly));
-        public static readonly ReadingOccurrence Monthly = new ReadingOccurrence(1, nameof(Monthly));
-        public static readonly ReadingOccurrence Hourly = new ReadingOccurrence(2, nameof(Hourly));
-        public static readonly ReadingOccurrence Quarterly = new ReadingOccurrence(3, nameof(Quarterly));
-
-        private ReadingOccurrence(int id, string name)
-            : base(id, name)
-        {
-        }
+        public Instant Now() => SystemClock.Instance.GetCurrentInstant();
     }
 }

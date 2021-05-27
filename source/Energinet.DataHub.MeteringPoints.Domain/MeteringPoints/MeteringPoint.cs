@@ -20,21 +20,36 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public abstract class MeteringPoint : AggregateRootBase
     {
-        //Disable nullable check
-        #pragma warning disable CS8618
+        #pragma warning disable SA1401 // Field cannot be private since it is set by derivatives
+        protected ProductType _productType;
+        #pragma warning restore
+        private Address _address;
+        private GridAreaId _gridAreaId;
+        private MeteringPointType _meteringPointType;
+        private MeteringPointSubType _meteringPointSubType;
+        private PhysicalState _physicalState;
+        private bool _isAddressWashable;
+        private ReadingOccurrence _meterReadingOccurrence;
+        private int _maximumCurrent;
+        private int _maximumPower;
+        private GsrnNumber _powerPlantGsrnNumber;
+        private string _locationDescription;
+        private string _parentRelatedMeteringPoint;
+        private MeasurementUnitType _unitType;
+        private Instant? _occurenceDate;
+        private string _meterNumber;
+
+        #pragma warning disable CS8618 //Disable nullable check
         protected MeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
-            string streetName,
-            string postCode,
-            string cityName,
-            string countryCode,
+            Address address,
             bool isAddressWashable,
             PhysicalState physicalState,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
             GridAreaId gridAreaId,
-            GsrnNumber powerPlant,
+            GsrnNumber powerPlantGsrnNumber,
             string locationDescription,
             string parentRelatedMeteringPoint,
             MeasurementUnitType unitType,
@@ -46,68 +61,63 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             Id = id;
             GsrnNumber = gsrnNumber;
-            StreetName = streetName;
-            PostCode = postCode;
-            CityName = cityName;
-            CountryCode = countryCode;
-            IsAddressWashable = isAddressWashable;
-            PhysicalState = physicalState;
-            MeteringPointSubType = meteringPointSubType;
-            MeteringPointType = meteringPointType;
-            GridAreaId = gridAreaId;
-            PowerPlant = powerPlant;
-            LocationDescription = locationDescription;
-            ParentRelatedMeteringPoint = parentRelatedMeteringPoint;
-            UnitType = unitType;
-            MeterNumber = meterNumber;
-            MeterReadingOccurrence = meterReadingOccurrence;
-            MaximumCurrent = maximumCurrent;
-            MaximumPower = maximumPower;
-            OccurenceDate = occurenceDate;
+            _address = address;
+            _isAddressWashable = isAddressWashable;
+            _physicalState = physicalState;
+            _meteringPointSubType = meteringPointSubType;
+            _meteringPointType = meteringPointType;
+            _gridAreaId = gridAreaId;
+            _powerPlantGsrnNumber = powerPlantGsrnNumber;
+            _locationDescription = locationDescription;
+            _parentRelatedMeteringPoint = parentRelatedMeteringPoint;
+            _unitType = unitType;
+            _meterNumber = meterNumber;
+            _meterReadingOccurrence = meterReadingOccurrence;
+            _maximumCurrent = maximumCurrent;
+            _maximumPower = maximumPower;
+            _occurenceDate = occurenceDate;
 
             AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaId));
         }
 
-        public GridAreaId GridAreaId { get; }
-
-        public MeteringPointType MeteringPointType { get; }
-
-        public MeteringPointSubType MeteringPointSubType { get; }
-
-        public PhysicalState PhysicalState { get; }
-
-        public GsrnNumber GsrnNumber { get; }
+        protected MeteringPoint(
+            MeteringPointId id,
+            GsrnNumber gsrnNumber,
+            bool isAddressWashable,
+            PhysicalState physicalState,
+            MeteringPointSubType meteringPointSubType,
+            MeteringPointType meteringPointType,
+            GridAreaId gridAreaId,
+            GsrnNumber powerPlantGsrnNumber,
+            string locationDescription,
+            string parentRelatedMeteringPoint,
+            MeasurementUnitType unitType,
+            string meterNumber,
+            ReadingOccurrence meterReadingOccurrence,
+            int maximumCurrent,
+            int maximumPower,
+            Instant? occurenceDate)
+        {
+            Id = id;
+            GsrnNumber = gsrnNumber;
+            _isAddressWashable = isAddressWashable;
+            _physicalState = physicalState;
+            _meteringPointSubType = meteringPointSubType;
+            _meteringPointType = meteringPointType;
+            _gridAreaId = gridAreaId;
+            _powerPlantGsrnNumber = powerPlantGsrnNumber;
+            _locationDescription = locationDescription;
+            _parentRelatedMeteringPoint = parentRelatedMeteringPoint;
+            _unitType = unitType;
+            _meterNumber = meterNumber;
+            _meterReadingOccurrence = meterReadingOccurrence;
+            _maximumCurrent = maximumCurrent;
+            _maximumPower = maximumPower;
+            _occurenceDate = occurenceDate;
+        }
 
         public MeteringPointId Id { get; }
 
-        public string StreetName { get; }
-
-        public string PostCode { get; }
-
-        public string CityName { get; }
-
-        public string CountryCode { get; }
-
-        public bool IsAddressWashable { get; }
-
-        public ReadingOccurrence MeterReadingOccurrence { get; }
-
-        public int MaximumCurrent { get; }
-
-        public int MaximumPower { get; }
-
-        public GsrnNumber PowerPlant { get; }
-
-        public string LocationDescription { get; }
-
-        public ProductType ProductType { get; protected set; }
-
-        public string ParentRelatedMeteringPoint { get; }
-
-        public MeasurementUnitType UnitType { get; }
-
-        public Instant? OccurenceDate { get; }
-
-        public string MeterNumber { get; }
+        public GsrnNumber GsrnNumber { get; }
     }
 }

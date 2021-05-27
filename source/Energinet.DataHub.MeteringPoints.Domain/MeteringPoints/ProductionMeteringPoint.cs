@@ -19,13 +19,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class ProductionMeteringPoint : MeteringPoint
     {
+        private int _productionObligation;
+        private int _netSettlementGroup;
+        private DisconnectionType _disconnectionType;
+        private ConnectionType _connectionType;
+
         public ProductionMeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
-            string streetName,
-            string postCode,
-            string cityName,
-            string countryCode,
+            Address address,
             bool isAddressWashable,
             PhysicalState physicalState,
             MeteringPointSubType meteringPointSubType,
@@ -47,10 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             : base(
                 id,
                 gsrnNumber,
-                streetName,
-                postCode,
-                cityName,
-                countryCode,
+                address,
                 isAddressWashable,
                 physicalState,
                 meteringPointSubType,
@@ -66,19 +65,57 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 maximumPower,
                 occurenceDate)
         {
-            ProductionObligation = productionObligation;
-            NetSettlementGroup = netSettlementGroup;
-            DisconnectionType = disconnectionType;
-            ConnectionType = connectionType;
-            ProductType = ProductType.EnergyActive;
+            _productionObligation = productionObligation;
+            _netSettlementGroup = netSettlementGroup;
+            _disconnectionType = disconnectionType;
+            _connectionType = connectionType;
+            _productType = ProductType.EnergyActive;
         }
 
-        public int ProductionObligation { get; }
-
-        public int NetSettlementGroup { get; }
-
-        public DisconnectionType DisconnectionType { get; }
-
-        public ConnectionType ConnectionType { get; }
+        public ProductionMeteringPoint(
+            MeteringPointId id,
+            GsrnNumber gsrnNumber,
+            bool isAddressWashable,
+            PhysicalState physicalState,
+            MeteringPointSubType meteringPointSubType,
+            MeteringPointType meteringPointType,
+            GridAreaId gridAreaId,
+            GsrnNumber powerPlantGsrnNumber,
+            string locationDescription,
+            string parentRelatedMeteringPoint,
+            MeasurementUnitType unitType,
+            string meterNumber,
+            ReadingOccurrence meterReadingOccurrence,
+            int maximumCurrent,
+            int maximumPower,
+            Instant? occurenceDate,
+            int productionObligation,
+            int netSettlementGroup,
+            DisconnectionType disconnectionType,
+            ConnectionType connectionType)
+            : base(
+                id,
+                gsrnNumber,
+                isAddressWashable,
+                physicalState,
+                meteringPointSubType,
+                meteringPointType,
+                gridAreaId,
+                powerPlantGsrnNumber,
+                locationDescription,
+                parentRelatedMeteringPoint,
+                unitType,
+                meterNumber,
+                meterReadingOccurrence,
+                maximumCurrent,
+                maximumPower,
+                occurenceDate)
+        {
+            _productionObligation = productionObligation;
+            _netSettlementGroup = netSettlementGroup;
+            _disconnectionType = disconnectionType;
+            _connectionType = connectionType;
+            _productType = ProductType.EnergyActive;
+        }
     }
 }

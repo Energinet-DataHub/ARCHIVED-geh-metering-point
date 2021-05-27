@@ -57,7 +57,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
                     ExtractElementValue(marketEvaluationPoint, ns + "mRID"),
                     GetMeteringPointType(ExtractElementValue(marketEvaluationPoint, ns + "type")),
                     GetMeteringPointSubType(ExtractElementValue(marketEvaluationPoint, ns + "meteringMethod")),
-                    ExtractElementValue(marketEvaluationPoint, ns + "readCycle"),
+                    GetMeterReadingOccurrence(ExtractElementValue(marketEvaluationPoint, ns + "readCycle")),
                     Convert.ToInt32(ExtractElementValue(marketEvaluationPoint, ns + "ratedCurrent")),
                     Convert.ToInt32(ExtractElementValue(contractedConnectionCapacity, ns + "value")),
                     ExtractElementValue(marketEvaluationPoint, ns + "meteringGridArea_Domain.mRID"),
@@ -108,7 +108,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
         {
             return id switch
             {
-                ConnectionType.DirectConnected => nameof(ConnectionType.DirectConnected),
+                ConnectionType.Direct => nameof(ConnectionType.Direct),
+                ConnectionType.Installation => nameof(ConnectionType.Installation),
                 _ => string.Empty,
             };
         }
@@ -126,7 +127,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
         {
             return id switch
             {
-                DisconnectionType.RemoteDisconnection => nameof(DisconnectionType.RemoteDisconnection),
+                DisconnectionType.Remote => nameof(DisconnectionType.Remote),
+                DisconnectionType.Manual => nameof(DisconnectionType.Manual),
                 _ => string.Empty,
             };
         }
@@ -137,6 +139,18 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
             {
                 SettlementMethod.Flex => nameof(SettlementMethod.Flex),
                 SettlementMethod.NonProfiled => nameof(SettlementMethod.NonProfiled),
+                _ => string.Empty,
+            };
+        }
+
+        private static string GetMeterReadingOccurrence(string value)
+        {
+            return value switch
+            {
+                ReadingOccurrence.Yearly => nameof(ReadingOccurrence.Yearly),
+                ReadingOccurrence.Monthly => nameof(ReadingOccurrence.Monthly),
+                ReadingOccurrence.Hourly => nameof(ReadingOccurrence.Hourly),
+                ReadingOccurrence.Quarterly => nameof(ReadingOccurrence.Quarterly),
                 _ => string.Empty,
             };
         }
@@ -157,6 +171,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
             public const string NonProfiled = "E02";
         }
 
+        private static class ReadingOccurrence
+        {
+            public const string Yearly = "P1Y";
+            public const string Monthly = "P1M";
+            public const string Hourly = "PT1H";
+            public const string Quarterly = "PT15M";
+        }
+
         private static class MeteringPointSubType
         {
             public const string Physical = "D01";
@@ -169,7 +191,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
 
         private static class ConnectionType
         {
-            public const string DirectConnected = "D01";
+            public const string Direct = "D01";
+            public const string Installation = "D02";
         }
 
         private static class AssetType
@@ -179,7 +202,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
 
         private static class DisconnectionType
         {
-            public const string RemoteDisconnection = "D01";
+            public const string Remote = "D01";
+            public const string Manual = "D02";
         }
     }
 }

@@ -19,13 +19,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class ExchangeMeteringPoint : MeteringPoint
     {
+        private string _fromGrid;
+        private string _toGrid;
+
         public ExchangeMeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
-            string streetName,
-            string postCode,
-            string cityName,
-            string countryCode,
+            Address address,
             bool isAddressWashable,
             PhysicalState physicalState,
             MeteringPointSubType meteringPointSubType,
@@ -45,10 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             : base(
                 id,
                 gsrnNumber,
-                streetName,
-                postCode,
-                cityName,
-                countryCode,
+                address,
                 isAddressWashable,
                 physicalState,
                 meteringPointSubType,
@@ -64,13 +61,51 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 maximumPower,
                 occurenceDate)
         {
-            ToGrid = toGrid;
-            FromGrid = fromGrid;
-            ProductType = ProductType.EnergyReactive;
+            _toGrid = toGrid;
+            _fromGrid = fromGrid;
+            _productType = ProductType.EnergyReactive;
         }
 
-        public string FromGrid { get; }
-
-        public string ToGrid { get; }
+        private ExchangeMeteringPoint(
+            MeteringPointId id,
+            GsrnNumber gsrnNumber,
+            bool isAddressWashable,
+            PhysicalState physicalState,
+            MeteringPointSubType meteringPointSubType,
+            MeteringPointType meteringPointType,
+            GridAreaId gridAreaId,
+            GsrnNumber powerPlantGsrnNumber,
+            string locationDescription,
+            string parentRelatedMeteringPoint,
+            MeasurementUnitType unitType,
+            string meterNumber,
+            ReadingOccurrence meterReadingOccurrence,
+            int maximumCurrent,
+            int maximumPower,
+            Instant? occurenceDate,
+            string toGrid,
+            string fromGrid)
+            : base(
+                id,
+                gsrnNumber,
+                isAddressWashable,
+                physicalState,
+                meteringPointSubType,
+                meteringPointType,
+                gridAreaId,
+                powerPlantGsrnNumber,
+                locationDescription,
+                parentRelatedMeteringPoint,
+                unitType,
+                meterNumber,
+                meterReadingOccurrence,
+                maximumCurrent,
+                maximumPower,
+                occurenceDate)
+        {
+            _toGrid = toGrid;
+            _fromGrid = fromGrid;
+            _productType = ProductType.EnergyReactive;
+        }
     }
 }

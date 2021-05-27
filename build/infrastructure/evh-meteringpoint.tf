@@ -13,7 +13,7 @@
 # limitations under the License.
 module "evhnm_meteringpoint" {
   source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git///event-hub-namespace"
-  name                      = "evhnm-meteringpoint-${var.organisation}-${var.environment}"
+  name                      = "evhnm-meteringpoint-${var.project}-${var.organisation}-${var.environment}"
   resource_group_name       = data.azurerm_resource_group.main.name
   location                  = data.azurerm_resource_group.main.location
   sku                       = "Standard"

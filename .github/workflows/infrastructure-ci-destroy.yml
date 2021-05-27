@@ -25,7 +25,7 @@ on:
 env:
   ORGANISATION_NAME: endk
   PROJECT_NAME: 'mpoint${{ github.event.number }}'
-  RESOURCE_GROUP_NAME: rg-DataHub-SharedResources-U
+  RESOURCE_GROUP_NAME: rg-DataHub-Testing-U
   ENVIRONMENT_SHORT: u
 
 jobs:
@@ -33,7 +33,7 @@ jobs:
     name: Destroying infrastructure, PR closed
     runs-on: ubuntu-latest
     environment:
-      name: rg-DataHub-MeteringPoint-U
+      name: rg-DataHub-Testing-U
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -41,9 +41,9 @@ jobs:
       - name: Set Environment Secrets
         run: |  
           echo "ARM_TENANT_ID=${{ secrets.TENANT_ID }}" >> $GITHUB_ENV
-          echo "ARM_CLIENT_ID=${{ secrets.SPN_ID_TESTING }}" >> $GITHUB_ENV
-          echo "ARM_CLIENT_OBJECT_ID=${{ secrets.SPN_OBJECT_ID_TESTING }}" >> $GITHUB_ENV
-          echo "ARM_CLIENT_SECRET=${{ secrets.SPN_SECRET_TESTING }}" >> $GITHUB_ENV
+          echo "ARM_CLIENT_ID=${{ secrets.SPN_ID }}" >> $GITHUB_ENV
+          echo "ARM_CLIENT_OBJECT_ID=${{ secrets.SPN_OBJECT_ID }}" >> $GITHUB_ENV
+          echo "ARM_CLIENT_SECRET=${{ secrets.SPN_SECRET }}" >> $GITHUB_ENV
           echo "ARM_SUBSCRIPTION_ID=${{ secrets.SUBSCRIPTION_ID }}" >> $GITHUB_ENV
 
       - name: Setup Terraform
