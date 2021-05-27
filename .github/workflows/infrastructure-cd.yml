@@ -135,11 +135,7 @@ jobs:
         working-directory: ./build/infrastructure
         run: | 
           terraform apply -no-color -auto-approve
-          echo "::set-output name=sql-server-url::$(terraform output sql_server_url)"
-          echo "::set-output name=meteringpoint-sql-database-name::$(terraform output meteringpoint-sql-database-name)"
-          echo "::set-output name=meteringpoint-user-keyvaultname::$(terraform output meteringpoint-user-keyvaultname)"
-          echo "::set-output name=meteringpoint-password-keyvaultname::$(terraform output meteringpoint-password-keyvaultname)"
-          echo "::set-output name=kv-meteringpoint-name::$(terraform output kv-meteringpoint-name)"
+          echo "::set-output name=sql-server-connectionstring::$(terraform output metering_point_connection_string)"
         continue-on-error: false
 
       - name: Applying meteringpoint migrations

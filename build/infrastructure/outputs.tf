@@ -11,32 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-output "sql_server_url" {
-  description = "URL for the shared sql server"
-  value = module.sqlsrv_meteringpoint.fully_qualified_domain_name
-  sensitive = true
-}
 
-output "meteringpoint_sql_database_name" {
-  description = "Name of the meteringpoint database in the shared sql server"
-  value = module.sqldb_meteringpoint.name
-  sensitive = true
-}
-
-output "meteringpoint_user_keyvaultname" {
-  description = "Name of the meteringpoint in the keyvault containing the username for the meteringpoint sql database"
-  value = module.sqlsrv_admin_username.name
-  sensitive = true
-}
-
-output "meteringpoint_password_keyvaultname" {
-  description = "Name of the secret in the keyvault containing the password for the meteringpoint sql database"
-  value = module.sqlsrv_admin_password.name
-  sensitive = true
-}
-
-output "kv_meteringpoint_name" {
-  description = "Name of the keyvault"
-  value = module.kv_meteringpoint.name
+output "metering_point_connection_string" {
+  description = "Name of the charges database in the shared sql server"
+  value = local.METERING_POINT_CONNECTION_STRING
   sensitive = true
 }
