@@ -21,6 +21,8 @@ on:
       - build/infrastructure/**
       - build/modules/**
       - .github/workflows/infrastructure-ci.yml
+      - .github/workflows/infrastructure-cd.yml
+      - .github/actions/meteringpoint-apply-db-migrations/**
   workflow_dispatch: {}
 env:
   ORGANISATION_NAME: endk
@@ -111,6 +113,16 @@ jobs:
         working-directory: ./build/infrastructure
         run: terraform apply -no-color -auto-approve
         continue-on-error: false
+        
+      - name: Applying meteringpoint migrations
+        uses: ./.github/actions/meteringpoint-apply-db-migrations
+        with:
+          sql-server-url: ${{ steps.terraform-apply.outputs.sql-server-url }}
+          sql-database-name: ${{ steps.terraform-apply.outputs.meteringpoint-sql-database-name }}
+          user-keyvaultname: ${{ steps.terraform-apply.outputs.meteringpoint-user-keyvaultname }}
+          password-keyvaultname: ${{ steps.terraform-apply.outputs.meteringpoint-password-keyvaultname }}
+          keyvault-name: ${{ steps.terraform-apply.outputs.kv-meteringpoint-name }}
+          environment-name: ${{ matrix.environment.name }}
 
       - name: comment PR
         uses: unsplash/comment-on-pr@master
