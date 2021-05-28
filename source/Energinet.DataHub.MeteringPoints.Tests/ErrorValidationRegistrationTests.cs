@@ -49,8 +49,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
             var validationError = validationErrors.First();
             var errorMessage = sut.GetErrorMessage(validationError);
-            errorMessage.Code.Should().Be("TODO");
-            errorMessage.Description.Should().Be("This might not be a gsrn number: 123");
+            errorMessage.Code.Should().Be("E10");
+            errorMessage.Description.Should().Be("A metering point cannot be registered in CCR without a valid identification");
         }
 
         [Fact]
