@@ -34,6 +34,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Handlers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
@@ -120,6 +121,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 new[]
                 {
                     typeof(CreateMeteringPoint).Assembly,
+                    typeof(MeteringPointCreatedNotificationHandler).Assembly,
                 },
                 new[]
                 {
