@@ -36,8 +36,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string ReadingOccurrence => "Hourly";
 
+        public static string Occurrence => "2021-05-05T10:10:10Z";
+
         public static string AssetType => "GasTurbine";
 
         public static string MeasurementUnitType => "KWh";
+
+        public static string MeteringGridArea => "990";
+
+        public static string StreetName => "Test Road 1";
+
+        public static string PostCode => "8000";
+
+        public static string CityName => "Aarhus";
+
+        public static string CountryCode => "DK";
     }
 }
