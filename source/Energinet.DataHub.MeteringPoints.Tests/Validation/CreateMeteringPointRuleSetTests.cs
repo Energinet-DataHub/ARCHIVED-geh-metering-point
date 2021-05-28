@@ -52,9 +52,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 
         [Theory]
         [InlineData("Consumption", "Flex", typeof(SettlementMethodRequiredValidationError), false)]
-        [InlineData("NetLossCorrection", "Flex", typeof(SettlementMethodRequiredValidationError), false)]
+        [InlineData("GridLossCorrection", "Flex", typeof(SettlementMethodRequiredValidationError), false)]
         [InlineData("Consumption", "", typeof(SettlementMethodRequiredValidationError), true)]
-        [InlineData("NetLossCorrection", "", typeof(SettlementMethodRequiredValidationError), true)]
+        [InlineData("GridLossCorrection", "", typeof(SettlementMethodRequiredValidationError), true)]
         [InlineData("SettlementMethodNotAllowedForMP", "Flex", typeof(SettlementMethodNotAllowedValidationError), true)]
         [InlineData("SettlementMethodNotAllowedForMPEmpty", "", typeof(SettlementMethodNotAllowedValidationError), false)]
         [InlineData("Consumption", "WrongDomainName", typeof(SettlementMethodMissingRequiredDomainValuesValidationError), true)]

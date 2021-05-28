@@ -31,14 +31,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         {
             RuleFor(createMeteringPoint => createMeteringPoint.OccurenceDate)
                 .NotEmpty()
-                .WithState((createMeteringPoint) => new OccurenceRequiredValidationError(createMeteringPoint.GsrnNumber));
+                .WithState(createMeteringPoint => new OccurenceRequiredValidationError(createMeteringPoint.GsrnNumber));
         }
 
         private void OccurenceDateFormat()
         {
             RuleFor(createMeteringPoint => createMeteringPoint.OccurenceDate)
                 .Matches(OccurenceDateFormatRegEx)
-                .WithState((createMeteringPoint) => new OccurenceDateWrongFormatValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.OccurenceDate));
+                .WithState(createMeteringPoint => new OccurenceDateWrongFormatValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.OccurenceDate));
         }
     }
 }

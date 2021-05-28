@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             When(MeteringPointTypeIsProductionOrConsumption, () =>
             {
                 RuleFor(request => request.InstallationLocationAddress).SetValidator(request => new StreetNameMandatoryForMeteringPointTypeMustBeValidRule(request.GsrnNumber));
-                RuleFor(request => request.InstallationLocationAddress).SetValidator(request => new PostCodeMandatoryForMeteringPointTypeMustBeValidRuleMustBeValidRule(request.GsrnNumber));
+                RuleFor(request => request.InstallationLocationAddress).SetValidator(request => new PostCodeMandatoryForMeteringPointTypeMustBeValidRule(request.GsrnNumber));
                 RuleFor(request => request.InstallationLocationAddress).SetValidator(request => new CityNameMandatoryForMeteringPointTypeMustBeValidRule(request.GsrnNumber));
             });
 

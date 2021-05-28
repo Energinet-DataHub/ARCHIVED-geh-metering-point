@@ -84,7 +84,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
                 typeof(CreateMeteringPoint).Assembly, // Application
-                typeof(GsrnNumberMustBeValidValidationError).Assembly, // Domain
+                typeof(MeteringPoint).Assembly, // Domain
                 typeof(ErrorMessageFactory).Assembly); // Infrastructure
 
             _container.BuildMediator(

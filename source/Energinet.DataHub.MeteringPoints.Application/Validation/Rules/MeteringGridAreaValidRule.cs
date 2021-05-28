@@ -39,7 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         {
             RuleFor(createMeteringPoint => createMeteringPoint.MeteringGridArea)
                 .Length(ExactGridAreaLengthAllowed)
-                .WithState((createMeteringPoint) => new MeteringGridAreaLengthValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.MeteringGridArea, ExactGridAreaLengthAllowed));
+                .WithState(createMeteringPoint => new MeteringGridAreaLengthValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.MeteringGridArea, ExactGridAreaLengthAllowed));
         }
     }
 }

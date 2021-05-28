@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
         public SettlementMethodMustBeValidRule()
         {
-            When(point => point.TypeOfMeteringPoint.Equals(MeteringPointType.Consumption.Name) || point.TypeOfMeteringPoint.Equals("NetLossCorrection"), () =>
+            When(TypeOgMeteringPointIsConsumptionOrGridLossCorrection, () =>
             {
                 RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
                     .NotEmpty()
@@ -39,6 +39,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                     .Empty()
                     .WithState(createMeteringPoint => new SettlementMethodNotAllowedValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SettlementMethod, createMeteringPoint.TypeOfMeteringPoint));
             });
+        }
+
+        private static bool TypeOgMeteringPointIsConsumptionOrGridLossCorrection(CreateMeteringPoint createMeteringPoint)
+        {
+            return createMeteringPoint.TypeOfMeteringPoint.Equals(MeteringPointType.Consumption.Name) || createMeteringPoint.TypeOfMeteringPoint.Equals(MeteringPointType.GridLossCorrection.Name);
         }
     }
 }
