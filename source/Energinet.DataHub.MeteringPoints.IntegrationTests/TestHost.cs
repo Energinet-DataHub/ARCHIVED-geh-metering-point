@@ -111,7 +111,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             CleanupDatabase();
         }
 
-        private string ConnectionString => "Data Source=V0618U45;Initial Catalog=MeteringPointData;Integrated Security=True";
+        private string ConnectionString => Environment.GetEnvironmentVariable("MeteringPoints_IntegrationTests_ConnectionString");
 
         public void Dispose()
         {
