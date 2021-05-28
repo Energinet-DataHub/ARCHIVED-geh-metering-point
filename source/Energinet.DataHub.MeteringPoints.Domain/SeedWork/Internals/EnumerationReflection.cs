@@ -29,7 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals
             EnumerationType[] types)
         {
             _types = types;
-            _nameLookup = types.ToDictionary(f => f.Name);
+            _nameLookup = types.ToDictionary(f => f.Name.ToLowerInvariant());
             _valueLookup = types.ToDictionary(f => f.Id);
         }
 
@@ -40,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals
 
         public EnumerationType FromName(string name)
         {
-            if (_nameLookup.TryGetValue(name, out var type)) return type;
+            if (_nameLookup.TryGetValue(name.ToLowerInvariant(), out var type)) return type;
 
             throw new InvalidOperationException($"EnumerationType not found for: {name}, actually available values: {string.Join(", ", _nameLookup.Values)}");
         }

@@ -12,24 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
     public class SettlementMethodMustBeValidRule : AbstractValidator<CreateMeteringPoint>
     {
-        private readonly List<string> _allowedDomainValuesForConsumptionAndNetLossCorrection = new() { "NonProfiled", "Flex" };
+        private readonly List<string> _allowedDomainValuesForConsumptionAndNetLossCorrection = new() { SettlementMethod.NonProfiled.Name.ToLower(), SettlementMethod.Flex.Name.ToLower() };
 
         public SettlementMethodMustBeValidRule()
         {
-            When(point => point.TypeOfMeteringPoint.Equals("Consumption") || point.TypeOfMeteringPoint.Equals("NetLossCorrection"), () =>
+            When(point => point.TypeOfMeteringPoint.Equals(MeteringPointType.Consumption.Name, StringComparison.OrdinalIgnoreCase) || point.TypeOfMeteringPoint.Equals("NetLossCorrection", StringComparison.OrdinalIgnoreCase), () =>
             {
                 RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
                     .NotEmpty()
                     .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError(createMeteringPoint.TypeOfMeteringPoint));
                 RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
-                    .Must(settlementMethod => _allowedDomainValuesForConsumptionAndNetLossCorrection.Contains(settlementMethod))
+                    .Must(settlementMethod => _allowedDomainValuesForConsumptionAndNetLossCorrection.Contains(settlementMethod.ToLower()))
                     .WithState(createMeteringPoint => new SettlementMethodMissingRequiredDomainValuesValidationError(createMeteringPoint.SettlementMethod));
             }).Otherwise(() =>
             {
