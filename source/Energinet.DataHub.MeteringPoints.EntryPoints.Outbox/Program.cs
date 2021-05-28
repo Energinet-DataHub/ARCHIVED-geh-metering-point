@@ -16,14 +16,17 @@ using System;
 using System.Threading.Tasks;
 using Azure.Messaging.EventHubs.Producer;
 using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.RequestHandlers;
+using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Channels;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Dispatchers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Services;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
@@ -84,16 +87,25 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             container.Register<EventHubProducerClient>(
                 () => new EventHubProducerClient(eventHubConnectionString, hubName),
                 Lifestyle.Singleton);
+            container.Register<ISystemDateTimeProvider, SystemDateTimeProvider>(Lifestyle.Scoped);
             container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
+            container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
+            container.Register<IOutboxManager, OutboxManager>(Lifestyle.Scoped);
+            container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Scoped);
+            container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
             container.Register<EventMessageDispatcher>(Lifestyle.Transient);
             container.Register<IntegrationEventToEventHubDispatcher>(Lifestyle.Transient);
             container.Register<AzureEventHubChannel>(Lifestyle.Transient);
             container.Register<IIntegrationEventDispatchOrchestrator, IntegrationEventDispatchOrchestrator>(Lifestyle.Transient);
             container.Register<CreateMeteringPointEventHandler>(Lifestyle.Transient);
-            container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
 
             container.BuildMediator(
-                new[] { typeof(CreateMeteringPointEventMessage).Assembly }, Array.Empty<Type>());
+                new[]
+                {
+                    typeof(CreateMeteringPointEventMessage).Assembly,
+                    typeof(CreateMeteringPointEventHandler).Assembly,
+                },
+                Array.Empty<Type>());
 
             container.Verify();
 
