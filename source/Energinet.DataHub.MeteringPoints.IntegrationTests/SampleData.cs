@@ -20,27 +20,27 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
     {
         public static string GsrnNumber => "571234567891234568";
 
-        public static string TypeOfMeteringPoint => "Consumption";
+        public static string TypeOfMeteringPoint => "consumption";
 
         public static string Transaction => Guid.NewGuid().ToString();
 
-        public static string SubTypeOfMeteringPoint => "Physical";
+        public static string SubTypeOfMeteringPoint => "physical";
 
-        public static string SettlementMethod => "Flex";
+        public static string SettlementMethod => "flex";
 
-        public static string DisconnectionType => "Manual";
+        public static string DisconnectionType => "manual";
 
-        public static string ConnectionType => "Installation";
+        public static string ConnectionType => "installation";
 
         public static string PowerPlantGsrnNumber => "571234567891234568";
 
-        public static string ReadingOccurrence => "Hourly";
+        public static string ReadingOccurrence => "hourly";
+
+        public static string AssetType => "gasTurbine";
 
         public static string Occurrence => "2021-05-05T10:10:10Z";
 
-        public static string AssetType => "GasTurbine";
-
-        public static string MeasurementUnitType => "KWh";
+        public static string MeasurementUnitType => "kWh";
 
         public static string MeteringGridArea => "990";
 

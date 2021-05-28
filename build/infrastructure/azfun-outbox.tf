@@ -35,9 +35,10 @@ module "azfun_outbox" {
     METERINGPOINT_DB_CONNECTION_STRING      = local.METERING_POINT_CONNECTION_STRING
     METERINGPOINT_QUEUE_TOPIC_NAME          = module.sbq_meteringpoint.name
     ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER  = "*/10 * * * * *"
+    EVENT_MESSAGE_DISPATCH_TRIGGER_TIMER  = "*/10 * * * * *"
     # POST_OFFICE_QUEUE_CONNECTION_STRING   = data.azurerm_key_vault_secret.POST_OFFICE_QUEUE_CONNECTION_STRING.value
     # POST_OFFICE_QUEUE_TOPIC_NAME          = data.azurerm_key_vault_secret.POST_OFFICE_QUEUE_MARKETDATA_TOPIC_NAME.value
-    METERINGPOINTEVENTHUB_CONNECTION_STRING   = module.evhar_meteringpoint_listener.primary_connection_string
+    METERINGPOINTEVENTHUB_CONNECTION_STRING   = module.evhar_meteringpoint_sender.primary_connection_string
     METERINGPOINTEVENTHUB_HUB_NAME = module.evh_meteringpoint.name
   }
   dependencies                              = [

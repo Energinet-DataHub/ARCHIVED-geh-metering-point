@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -21,7 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
     public class SettlementMethodMustBeValidRule : AbstractValidator<CreateMeteringPoint>
     {
-        private readonly List<string> _allowedDomainValuesForConsumptionAndNetLossCorrection = new() { "NonProfiled", "Flex" };
+        private readonly List<string> _allowedDomainValuesForConsumptionAndNetLossCorrection = new() { SettlementMethod.NonProfiled.Name.ToLower(), SettlementMethod.Flex.Name.ToLower() };
 
         public SettlementMethodMustBeValidRule()
         {
@@ -31,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                     .NotEmpty()
                     .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SettlementMethod));
                 RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
-                    .Must(settlementMethod => _allowedDomainValuesForConsumptionAndNetLossCorrection.Contains(settlementMethod))
+                    .Must(settlementMethod => _allowedDomainValuesForConsumptionAndNetLossCorrection.Contains(settlementMethod.ToLower()))
                     .WithState(createMeteringPoint => new SettlementMethodMissingRequiredDomainValuesValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SettlementMethod));
             }).Otherwise(() =>
             {
@@ -43,7 +44,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
         private static bool TypeOgMeteringPointIsConsumptionOrGridLossCorrection(CreateMeteringPoint createMeteringPoint)
         {
-            return createMeteringPoint.TypeOfMeteringPoint.Equals(MeteringPointType.Consumption.Name) || createMeteringPoint.TypeOfMeteringPoint.Equals(MeteringPointType.GridLossCorrection.Name);
+            return createMeteringPoint.TypeOfMeteringPoint.Equals(MeteringPointType.Consumption.Name, StringComparison.OrdinalIgnoreCase) || createMeteringPoint.TypeOfMeteringPoint.Equals(MeteringPointType.GridLossCorrection.Name, StringComparison.OrdinalIgnoreCase);
         }
     }
 }
