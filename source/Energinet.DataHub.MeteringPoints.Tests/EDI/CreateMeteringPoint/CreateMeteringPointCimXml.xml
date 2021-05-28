@@ -165,6 +165,6 @@ limitations under the License.
         <urn:businessProcessReference_MktActivityRecord.mRID>string
         </urn:businessProcessReference_MktActivityRecord.mRID>
         <!--Optional:-->
-        <urn:start_DateAndOrTime.dateTime>2000-08-23T02:34:44Z</urn:start_DateAndOrTime.dateTime>
+        <urn:start_DateAndOrTime.dateTime>2021-05-27T22:00:00.00Z</urn:start_DateAndOrTime.dateTime>
     </urn:MktActivityRecord>
 </urn:RequestChangeAccountingPointCharacteristics_MarketDocument>
