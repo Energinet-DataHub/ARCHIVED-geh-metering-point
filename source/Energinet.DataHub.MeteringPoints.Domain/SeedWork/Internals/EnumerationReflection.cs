@@ -29,7 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals
             EnumerationType[] types)
         {
             _types = types;
-            _nameLookup = types.ToDictionary(f => f.Name.ToLower());
+            _nameLookup = types.ToDictionary(f => f.Name.ToLowerInvariant());
             _valueLookup = types.ToDictionary(f => f.Id);
         }
 
