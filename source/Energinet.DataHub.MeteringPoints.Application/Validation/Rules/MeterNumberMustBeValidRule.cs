@@ -37,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             }).Otherwise(() =>
             {
                 RuleFor(createMeteringPoint => createMeteringPoint.MeterNumber)
-                    .NotEmpty()
+                    .Empty()
                     .WithState(createMeteringPoint => new MeterNumberNotAllowedValidationError(createMeteringPoint.GsrnNumber));
             });
         }
