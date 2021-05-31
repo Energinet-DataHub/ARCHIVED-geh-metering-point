@@ -13,14 +13,15 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class GsrnNumberMustBeValidErrorConverter : ErrorConverter<GsrnNumberMustBeValidValidationError>
+    public class StreetNameMaximumLengthErrorConverter : ErrorConverter<StreetNameMaximumLengthValidationError>
     {
-        protected override Error Convert(GsrnNumberMustBeValidValidationError error)
+        protected override Error Convert(StreetNameMaximumLengthValidationError error)
         {
-            return new("E10", $"A metering point cannot be registered in CCR without a valid identification");
+            return new("E86", $"Street name {error.StreetName} for metering point {error.GsrnNumber} has a length that exceeds {error.MaxLength}");
         }
     }
 }

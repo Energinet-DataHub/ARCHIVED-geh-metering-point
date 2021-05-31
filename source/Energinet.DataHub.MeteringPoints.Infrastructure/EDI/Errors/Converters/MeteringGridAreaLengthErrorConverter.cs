@@ -16,11 +16,11 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class GsrnNumberMustBeValidErrorConverter : ErrorConverter<GsrnNumberMustBeValidValidationError>
+    public class MeteringGridAreaLengthErrorConverter : ErrorConverter<MeteringGridAreaLengthValidationError>
     {
-        protected override Error Convert(GsrnNumberMustBeValidValidationError error)
+        protected override Error Convert(MeteringGridAreaLengthValidationError error)
         {
-            return new("E10", $"A metering point cannot be registered in CCR without a valid identification");
+            return new("E86", $"Metering grid area {error.MeteringGridArea} for metering point {error.GsrnNumber} contains a non-digit character or has a length that does not equal {error.ExactLengthAllowed}");
         }
     }
 }

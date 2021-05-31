@@ -113,7 +113,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.AddValidationErrorConversion(
                 validateRegistrations: true,
                 typeof(CreateMeteringPoint).Assembly, // Application
-                typeof(GsrnNumberMustBeValidValidationError).Assembly, // Domain
+                typeof(MeteringPoint).Assembly, // Domain
                 typeof(ErrorMessageFactory).Assembly); // Infrastructure
 
             // Setup pipeline behaviors

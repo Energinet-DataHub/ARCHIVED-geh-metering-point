@@ -12,16 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
     public class SettlementMethodMissingRequiredDomainValuesErrorConverter : ErrorConverter<SettlementMethodMissingRequiredDomainValuesValidationError>
     {
-        // TODO: This is an example, redo when we know what/how etc.
         protected override Error Convert(SettlementMethodMissingRequiredDomainValuesValidationError error)
         {
-            return new("TODO", $"Missing required domain values in settlementmethod: {error.SettlementMethod}");
+            return new("D15", $"Settlement method {error.SettlementMethod} for metering point {error.GsrnNumber} is missing (type E17) or not allowed (other types)");
         }
     }
 }

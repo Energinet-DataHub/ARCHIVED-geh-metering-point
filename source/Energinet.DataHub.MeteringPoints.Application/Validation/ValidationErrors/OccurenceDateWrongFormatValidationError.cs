@@ -12,15 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class GsrnNumberMustBeValidErrorConverter : ErrorConverter<GsrnNumberMustBeValidValidationError>
+    public class OccurenceDateWrongFormatValidationError : ValidationError
     {
-        protected override Error Convert(GsrnNumberMustBeValidValidationError error)
+        public OccurenceDateWrongFormatValidationError(string gsrnNumber, string occurenceDate)
         {
-            return new("E10", $"A metering point cannot be registered in CCR without a valid identification");
+            GsrnNumber = gsrnNumber;
+            OccurenceDate = occurenceDate;
         }
+
+        public string GsrnNumber { get; }
+
+        public string OccurenceDate { get; }
     }
 }

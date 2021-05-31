@@ -16,11 +16,11 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class GsrnNumberMustBeValidErrorConverter : ErrorConverter<GsrnNumberMustBeValidValidationError>
+    public class PostCodeMaximumLengthErrorConverter : ErrorConverter<PostCodeMaximumLengthValidationError>
     {
-        protected override Error Convert(GsrnNumberMustBeValidValidationError error)
+        protected override Error Convert(PostCodeMaximumLengthValidationError error)
         {
-            return new("E10", $"A metering point cannot be registered in CCR without a valid identification");
+            return new("E86", $"Post code {error.PostCode} for metering point {error.GsrnNumber} is out of range maximum length is {error.MaxLength}.");
         }
     }
 }

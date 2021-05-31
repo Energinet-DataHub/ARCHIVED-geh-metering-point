@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
@@ -48,8 +49,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
             var validationError = validationErrors.First();
             var errorMessage = sut.GetErrorMessage(validationError);
-            errorMessage.Code.Should().Be("TODO");
-            errorMessage.Description.Should().Be("This might not be a gsrn number: 123");
+            errorMessage.Code.Should().Be("E10");
+            errorMessage.Description.Should().Be("A metering point cannot be registered in CCR without a valid identification");
         }
 
         [Fact]

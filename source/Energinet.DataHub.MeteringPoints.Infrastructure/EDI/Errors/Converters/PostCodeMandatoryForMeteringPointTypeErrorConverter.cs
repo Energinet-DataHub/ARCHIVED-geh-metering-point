@@ -16,11 +16,11 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class GsrnNumberMustBeValidErrorConverter : ErrorConverter<GsrnNumberMustBeValidValidationError>
+    public class PostCodeMandatoryForMeteringPointTypeErrorConverter : ErrorConverter<PostCodeMandatoryForMeteringPointTypeValidationError>
     {
-        protected override Error Convert(GsrnNumberMustBeValidValidationError error)
+        protected override Error Convert(PostCodeMandatoryForMeteringPointTypeValidationError error)
         {
-            return new("E10", $"A metering point cannot be registered in CCR without a valid identification");
+            return new("E86", $"Post code is missing for metering point {error.GsrnNumber}");
         }
     }
 }

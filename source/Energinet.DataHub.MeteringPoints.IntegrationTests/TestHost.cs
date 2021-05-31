@@ -18,7 +18,7 @@ using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
-using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
@@ -84,7 +84,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
                 typeof(CreateMeteringPoint).Assembly, // Application
-                typeof(GsrnNumberMustBeValidValidationError).Assembly, // Domain
+                typeof(MeteringPoint).Assembly, // Domain
                 typeof(ErrorMessageFactory).Assembly); // Infrastructure
 
             _container.BuildMediator(

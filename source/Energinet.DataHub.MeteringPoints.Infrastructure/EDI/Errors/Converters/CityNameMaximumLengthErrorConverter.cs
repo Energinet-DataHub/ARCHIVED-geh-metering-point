@@ -16,11 +16,11 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class GsrnNumberMustBeValidErrorConverter : ErrorConverter<GsrnNumberMustBeValidValidationError>
+    public class CityNameMaximumLengthErrorConverter : ErrorConverter<CityNameMaximumLengthValidationError>
     {
-        protected override Error Convert(GsrnNumberMustBeValidValidationError error)
+        protected override Error Convert(CityNameMaximumLengthValidationError error)
         {
-            return new("E10", $"A metering point cannot be registered in CCR without a valid identification");
+            return new("E86", $"City name {error.CityName} for metering point {error.GsrnNumber} has a length that exceeds {error.MaxLength}");
         }
     }
 }

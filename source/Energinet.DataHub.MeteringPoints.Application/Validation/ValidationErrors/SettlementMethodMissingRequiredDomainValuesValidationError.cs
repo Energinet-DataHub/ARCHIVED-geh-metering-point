@@ -14,14 +14,17 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
     public class SettlementMethodMissingRequiredDomainValuesValidationError : ValidationError
     {
-        public SettlementMethodMissingRequiredDomainValuesValidationError(string settlementMethod)
+        public SettlementMethodMissingRequiredDomainValuesValidationError(string gsrnNumber, string settlementMethod)
         {
+            GsrnNumber = gsrnNumber;
             SettlementMethod = settlementMethod;
         }
+
+        public string GsrnNumber { get; }
 
         public string SettlementMethod { get; }
     }

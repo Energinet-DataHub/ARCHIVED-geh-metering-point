@@ -13,14 +13,17 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class GsrnNumberMustBeValidErrorConverter : ErrorConverter<GsrnNumberMustBeValidValidationError>
+    public class StreetNameMandatoryForMeteringPointTypeMustBeValidRule : AbstractValidator<Address>
     {
-        protected override Error Convert(GsrnNumberMustBeValidValidationError error)
+        public StreetNameMandatoryForMeteringPointTypeMustBeValidRule(string gsrnNumber)
         {
-            return new("E10", $"A metering point cannot be registered in CCR without a valid identification");
+            RuleFor(installationLocationAddress => installationLocationAddress.StreetName)
+                .NotEmpty()
+                .WithState(_ => new StreetNameMandatoryForMeteringPointTypeValidationError(gsrnNumber));
         }
     }
 }

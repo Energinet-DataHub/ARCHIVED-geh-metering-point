@@ -16,11 +16,12 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class GsrnNumberMustBeValidErrorConverter : ErrorConverter<GsrnNumberMustBeValidValidationError>
+    public class MeteringPointTypeRequiredErrorConverter : ErrorConverter<MeteringPointTypeRequiredValidationError>
     {
-        protected override Error Convert(GsrnNumberMustBeValidValidationError error)
+        // TODO: This is an example, redo when we know what/how etc.
+        protected override Error Convert(MeteringPointTypeRequiredValidationError error)
         {
-            return new("E10", $"A metering point cannot be registered in CCR without a valid identification");
+            return new("D02", $"Metering point type is missing for metering point {error.GsrnNumber}");
         }
     }
 }

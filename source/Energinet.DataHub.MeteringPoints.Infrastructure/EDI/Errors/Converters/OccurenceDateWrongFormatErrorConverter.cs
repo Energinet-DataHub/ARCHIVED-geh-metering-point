@@ -13,14 +13,16 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Microsoft.VisualBasic;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class GsrnNumberMustBeValidErrorConverter : ErrorConverter<GsrnNumberMustBeValidValidationError>
+    public class OccurenceDateWrongFormatErrorConverter : ErrorConverter<OccurenceDateWrongFormatValidationError>
     {
-        protected override Error Convert(GsrnNumberMustBeValidValidationError error)
+        // TODO: This is an example, redo when we know what/how etc.
+        protected override Error Convert(OccurenceDateWrongFormatValidationError error)
         {
-            return new("E10", $"A metering point cannot be registered in CCR without a valid identification");
+            return new("E86", $"Date time {error.OccurenceDate} for metering point {error.GsrnNumber} must have UTC+0 format 'YYYY-MM-DD HH:MI:SS'");
         }
     }
 }

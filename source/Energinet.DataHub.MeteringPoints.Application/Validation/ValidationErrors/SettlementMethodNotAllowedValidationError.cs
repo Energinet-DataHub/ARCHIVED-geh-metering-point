@@ -12,15 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class GsrnNumberMustBeValidErrorConverter : ErrorConverter<GsrnNumberMustBeValidValidationError>
+    public class SettlementMethodNotAllowedValidationError : ValidationError
     {
-        protected override Error Convert(GsrnNumberMustBeValidValidationError error)
+        public SettlementMethodNotAllowedValidationError(string gsrnNumber, string settlementMethod, string typeOfMeteringPoint)
         {
-            return new("E10", $"A metering point cannot be registered in CCR without a valid identification");
+            GsrnNumber = gsrnNumber;
+            SettlementMethod = settlementMethod;
+            TypeOfMeteringPoint = typeOfMeteringPoint;
         }
+
+        public string GsrnNumber { get; }
+
+        public string SettlementMethod { get; }
+
+        public string TypeOfMeteringPoint { get; }
     }
 }

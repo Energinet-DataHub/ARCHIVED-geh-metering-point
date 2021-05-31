@@ -14,15 +14,15 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class SettlementMethodRequiredValidationError : ValidationError
+    public class MeteringGridAreaMandatoryValidationError : ValidationError
     {
-        public SettlementMethodRequiredValidationError(string typeOfMeteringPoint)
+        public MeteringGridAreaMandatoryValidationError(string gsrnNumber)
         {
-            TypeOfMeteringPoint = typeOfMeteringPoint;
+            GsrnNumber = gsrnNumber;
         }
 
-        public string TypeOfMeteringPoint { get; }
+        public string GsrnNumber { get; }
     }
 }
