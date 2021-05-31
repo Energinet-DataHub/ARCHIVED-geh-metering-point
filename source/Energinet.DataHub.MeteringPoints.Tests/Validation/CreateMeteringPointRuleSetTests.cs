@@ -91,8 +91,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         [InlineData("12-12-2021T12:12:12Z", typeof(OccurenceDateWrongFormatValidationError), true)]
         [InlineData("12-12-2021T12:12:12", typeof(OccurenceDateWrongFormatValidationError), true)]
         [InlineData("YYYY-12-12T12:12:12Z", typeof(OccurenceDateWrongFormatValidationError), true)]
-        [InlineData("2021-12-12T12:12:12:12Z", typeof(OccurenceDateWrongFormatValidationError), false)]
-        [InlineData("2021-12-12T12:12:12:123Z", typeof(OccurenceDateWrongFormatValidationError), false)]
+        [InlineData("2021-12-12T12:12:12.12Z", typeof(OccurenceDateWrongFormatValidationError), false)]
+        [InlineData("2021-12-12T12:12:12.123Z", typeof(OccurenceDateWrongFormatValidationError), false)]
         [InlineData("2021-12-12T12:12:12:1234Z", typeof(OccurenceDateWrongFormatValidationError), true)]
         public void Validate_OccurenceDateMandatoryAndFormat(string occurenceDate, System.Type validationError, bool expectedError)
         {
