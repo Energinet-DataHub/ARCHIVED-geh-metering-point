@@ -38,7 +38,7 @@ jobs:
       name: rg-DataHub-Testing-U
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@master
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1.2.1
