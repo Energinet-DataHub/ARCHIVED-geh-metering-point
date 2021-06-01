@@ -55,8 +55,8 @@ module "azfun_processing_plan" {
   location            = data.azurerm_resource_group.main.location
   kind                = "FunctionApp"
   sku                 = {
-    tier  = "Basic"
-    size  = "B1"
+    tier  = "Free"
+    size  = "F1"
   }
   tags                = data.azurerm_resource_group.main.tags
 }
