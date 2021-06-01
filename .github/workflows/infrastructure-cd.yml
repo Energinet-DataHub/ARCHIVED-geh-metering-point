@@ -41,12 +41,6 @@ jobs:
         uses: hashicorp/setup-terraform@v1.2.1
         with:
           terraform_wrapper: false
-      
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.7' # Version range or exact version of a Python version to use, using SemVer's version range syntax
-          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
 
       - name: Terraform CD
         uses: ./.github/actions/terraform-cd
@@ -81,12 +75,6 @@ jobs:
         uses: hashicorp/setup-terraform@v1.2.1
         with:
           terraform_wrapper: false
-      
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.7' # Version range or exact version of a Python version to use, using SemVer's version range syntax
-          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
 
       - name: Terraform CD
         uses: ./.github/actions/terraform-cd
@@ -121,12 +109,6 @@ jobs:
         uses: hashicorp/setup-terraform@v1.2.1
         with:
           terraform_wrapper: false
-      
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.7' # Version range or exact version of a Python version to use, using SemVer's version range syntax
-          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
 
       - name: Terraform CD
         uses: ./.github/actions/terraform-cd
@@ -162,12 +144,6 @@ jobs:
         with:
           terraform_wrapper: false
       
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.7' # Version range or exact version of a Python version to use, using SemVer's version range syntax
-          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
-
       - name: Terraform CD
         uses: ./.github/actions/terraform-cd
         with:
