@@ -200,7 +200,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 
         [Theory]
         [InlineData("1234", "Physical", typeof(MeterNumberMaximumLengthValidationError), false)]
-        [InlineData("12345678910", "Physical", typeof(MeterNumberMaximumLengthValidationError), true)]
+        [InlineData("1234567890000000", "Physical", typeof(MeterNumberMaximumLengthValidationError), true)]
         public void Validate_MeterNumberMaximumLength(string meterNumber, string subTypeOfMeteringPoint, System.Type validationError, bool expectedError)
         {
             var businessRequest = CreateRequest() with

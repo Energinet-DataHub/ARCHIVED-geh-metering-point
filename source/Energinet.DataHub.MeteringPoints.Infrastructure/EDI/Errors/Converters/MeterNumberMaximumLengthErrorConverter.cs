@@ -12,23 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class MeterNumberMaximumLengthValidationError : ValidationError
+    public class MeterNumberMaximumLengthErrorConverter : ErrorConverter<MeterNumberMaximumLengthValidationError>
     {
-        public MeterNumberMaximumLengthValidationError(string gsrnNumber, string meterNumber, int maximumLength)
+        protected override Error Convert(MeterNumberMaximumLengthValidationError error)
         {
-            GsrnNumber = gsrnNumber;
-            MeterNumber = meterNumber;
-            MaximumLength = maximumLength;
+            return new("E86", $"Meter number {error.MeterNumber} for metering point {error.GsrnNumber} has a length that exceeds {error.MaximumLength}");
         }
-
-        public string GsrnNumber { get; }
-
-        public int MaximumLength { get; }
-
-        public string MeterNumber { get; }
     }
 }

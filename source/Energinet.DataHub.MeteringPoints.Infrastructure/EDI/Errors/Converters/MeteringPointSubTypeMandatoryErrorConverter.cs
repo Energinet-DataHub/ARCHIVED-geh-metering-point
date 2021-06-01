@@ -12,23 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class MeterNumberMaximumLengthValidationError : ValidationError
+    public class MeteringPointSubTypeMandatoryErrorConverter : ErrorConverter<MeteringPointSubTypeMandatoryValidationError>
     {
-        public MeterNumberMaximumLengthValidationError(string gsrnNumber, string meterNumber, int maximumLength)
+        protected override Error Convert(MeteringPointSubTypeMandatoryValidationError error)
         {
-            GsrnNumber = gsrnNumber;
-            MeterNumber = meterNumber;
-            MaximumLength = maximumLength;
+            return new("D02", $"Sub type is missing for metering point {error.GsrnNumber}");
         }
-
-        public string GsrnNumber { get; }
-
-        public int MaximumLength { get; }
-
-        public string MeterNumber { get; }
     }
 }

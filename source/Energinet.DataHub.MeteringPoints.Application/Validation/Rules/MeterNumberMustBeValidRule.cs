@@ -21,7 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
     public class MeterNumberMustBeValidRule : AbstractValidator<CreateMeteringPoint>
     {
-        private const int MeterNumberMaximumLength = 10;
+        private const int MeterNumberMaximumLength = 15;
 
         public MeterNumberMustBeValidRule()
         {
@@ -33,7 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
                 RuleFor(createMeteringPoint => createMeteringPoint.MeterNumber)
                     .MaximumLength(MeterNumberMaximumLength)
-                    .WithState(createMeteringPoint => new MeterNumberMaximumLengthValidationError(createMeteringPoint.GsrnNumber));
+                    .WithState(createMeteringPoint => new MeterNumberMaximumLengthValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.MeterNumber, MeterNumberMaximumLength));
             }).Otherwise(() =>
             {
                 RuleFor(createMeteringPoint => createMeteringPoint.MeterNumber)

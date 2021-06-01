@@ -12,23 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class MeterNumberMaximumLengthValidationError : ValidationError
+    public class MeterNumberNotAllowedErrorConverter : ErrorConverter<MeterNumberNotAllowedValidationError>
     {
-        public MeterNumberMaximumLengthValidationError(string gsrnNumber, string meterNumber, int maximumLength)
+        protected override Error Convert(MeterNumberNotAllowedValidationError error)
         {
-            GsrnNumber = gsrnNumber;
-            MeterNumber = meterNumber;
-            MaximumLength = maximumLength;
+            return new("E86", "Meter number is not allowed for sub types other than physical");
         }
-
-        public string GsrnNumber { get; }
-
-        public int MaximumLength { get; }
-
-        public string MeterNumber { get; }
     }
 }
