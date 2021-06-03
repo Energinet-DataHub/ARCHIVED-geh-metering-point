@@ -36,7 +36,7 @@ jobs:
       name: rg-DataHub-Testing-U
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@master
 
       - name: Set Environment Secrets
         run: |  
