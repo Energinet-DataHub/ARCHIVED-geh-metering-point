@@ -3,7 +3,8 @@
 Following validations are run when creating a metering point.
 A check mark reflects if the validation has been implemented or is awaiting implementation.
 
-**Input Rules**
+## Input Rules
+
 - The identification of a metering point is mandatory
 - The identification of a metering point is a valid GSRN/EAN18 code (checksum) that starts with digits '57'
 - The identification of a metering point is unique within CCR (also historically)
@@ -112,11 +113,13 @@ A check mark reflects if the validation has been implemented or is awaiting impl
 - It is not allowed to provide the target metering grid area if a metering point of type is Exchange - Reactive energy (D20).
 - Handling create or change of an Electrical heating (D14)  metering point is not alloved in the business proces
 
-**Domain Rules**
+## Domain Rules
+
 - Only registered metering grid areas are allowed
 - The metering point cannot already exist
 - The metering grid area of a metering point must be an existing metering grid area
 
-**Authentication Rules**
+## Authentication Rules
+
 - Only registered and active grid operators are allowed
 - The metering grid area of a metering point must belong to the correct grid operator
