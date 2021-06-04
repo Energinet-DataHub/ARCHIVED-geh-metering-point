@@ -4,119 +4,119 @@ Following validations are run when creating a metering point.
 A check mark reflects if the validation has been implemented or is awaiting implementation.
 
 **Input Rules**
-- [x]  The identification of a metering point is mandatory
-- [x]  The identification of a metering point is a valid GSRN/EAN18 code (checksum) that starts with digits '57'
-- [ ]  The identification of a metering point is unique within CCR (also historically)
-- [x]  The metering grid area of a metering point is mandatory
-- [x]  The occurrence of a metering point is mandatory
-- [x]  The occurrence of a metering point has format YYYY-MM-DD HH:MI:SS (UTC+0)
-- [ ]  The energy business process of a metering point is mandatory
-- [x]  The metering grid area of a metering point consists of exactly 3 digits
-- [x]  The type of a metering point is mandatory
-- [x]  The type of a metering point has domain values E17 (Consumption), E18 (Production), E20 (Exchange), D01 (VE production), D04 (Surplus production group 6), D05 (Net production), D06 (Supply to grid), D07 (Consumption from grid), D08 (Wholesale services / information), D09 (Own production), D10 (Net from grid), D11 (Net to grid), D12 (Total consumption), D13 (Grid loss correction), D15 (Net consumption), D17 (Other consumption), D18 (Other production), D20 (Exchange - Reactive energy), D02 (Analysis), D99 (Internal use)
-- [ ]  Production obligation field is mandatory for production MPs and not allowed for all other MP types.
-- [ ]  The physical status of a metering point is mandatory
-- [ ]  The physical status of a metering point has domain values D02 (Closed down), D03 (New), E22 (Connected), E23 (Disconnected)
-- [ ]  The street code of a metering point consists of exactly 4 digits in the range 0001 to 9999
-- [x]  The street name of a metering point consists of maximal 40 characters
-- [ ]  If country code is DK then the building number of a metering point consists of maximal 4 characters (range 1-999, A-Z, Æ, Ø, Å capitals only and no spaces), otherwise the building number consists of maximal 6 characters.
-- [ ]  The floor identification of a metering point consists of maximal 4 characters
-- [ ]  The room identification of a metering point consists of maximal 4 characters
-- [x]  The city name of a Consumption and Production metering point is mandatory. It is optional for all other MP Types
-- [x]  The city name of a metering point consists of maximal 25 characters
-- [x]  The post code of a Consumption or Production metering point is mandatory, it is optional for all other MP Types
-- [x]  If country code is DK then the post code of a metering point consists of exactly 4 digits in the range 0000 to 9999 otherwise the post code consists of maximal 10 characters.
-- [ ]  The city sub division name of a metering point consists of maximal 34 characters
-- [ ]  The municipality code of a metering point consists of exactly 3 digits in the range 100 to 999
-- [ ]  The country name of a metering point has domain values DK (Denmark)
-- [x]  The settlement method of a metering point is mandatory if the MP is E17 (consumption) or D13, otherwise it is not allowed
-- [x]  The settlement method of a metering point has domain values E02 (Non profiled), D01 (Flex)
-- [ ]  The reading characteristics of a metering point is not allowed
-- [ ]  The meter reading occurrence of a metering point is mandatory
-- [ ]  The source metering grid area of a metering point is mandatory - type E20 or - type D20 and metering point is coupled to a parent or - not allowed (D20 standalone and other types)
-- [ ]  The source grid area of a metering point must be an existing metering grid area
-- [ ]  The target metering grid area of a metering point is mandatory - type E20 or - type D20 and metering point is coupled to parent (E20) or - not allowed (D20 standalone and other types)
-- [ ]  The target grid area of a metering point must be an existing metering grid area
-- [ ]  The net settlement group of a metering point is mandatory for Consumption and Production MPs, otherwise not allowed
-- [ ]  The net settlement group of a metering point has domain values 0, 1, 2, 3, 4, 5, 6, 7 and 99
-- [ ]  The power plant of a metering point is mandatory for Consumption and Production MPs if their net settlement group is not 0
-- [ ]  The power plant field is mandatory for MPs: D01, D04-D12, D17-D18
-- [ ]  The power plant field is not allowed for MPs: D20 & D99, D13-D15, D02, E20
-- [ ]  Maximum Current and Maximum power fields are not allowed for MP D13
-- [ ]  The power plant of a metering point is a valid GSRN/EAN18 code (checksum) that starts with digits ´57´
-- [ ]  The product of a metering point is mandatory
-- [ ]  The product of a metering point has domain values 8716867000030 (Active energy), 8716867000047 (Reactive energy), 8716867000016 (Active power), 8716867000023 (Reactive power), 5790001330606 (Fuel quantity), 5790001330590 (Tariff)
-- [ ]  The energy time series measure unit of a metering point is mandatory
-- [x]  The street name of a Consumption and Production metering point is mandatory. It is optional for all other MP types
-- [ ]  The product of a newly established metering point has default value 8716867000030 (Active energy) if metering point type not VE Production (D01), Analysis (D02), Exchange - Reactive energy (D20) or Internal use (D99)
-- [ ]  The energy time series measure unit of a metering point has domain values K3 (kVArh), KWH (kWh), KWT (kW), MAW (MW), MWH (MWh), TNE (Tonne), Z03 (MVAr), Z14 (Danish tariff code)
-- [x]  The occurrence of a metering point has format YYYY-MM-DD 00:00:00 (local time)
-- [ ]  The sender of a message is mandatory (Handled in api gateway?)
-- [ ]  The sender of a message must currently be an existing and active market party (company)
-- [ ]  The recipient of a message is mandatory (Handled in api gateway?)
-- [ ]  The recipient of a message must currently be an existing and active market party (company)
-- [ ]  The sender role of a message must be DDM (Grid access provider)
-- [ ]  The energy business process of a message must be E02 (New metering point) (Handled in API gateway?)
-- [ ]  The data information must be received within the correct time period
-- [ ]  The identification of a transaction is mandatory
-- [ ]  The identification of a transaction is unique for the sending market player (Note this confirms message transaction IDs are not globally unique, but unique per market participant)
-- [ ]  The Metering Point created must become new (connected if metering point type is D04 or D15 when established)
-- [ ]  The meter reading occurrence of a metering point must be PT1H or PT15M for all MPs besides D01 & D02, which can also be P1M
-- [x]  The sub type of a metering point is mandatory
-- [ ]  The document type of a message must be E58 (Request update master data metering point) (In api gateway?)
-- [x]  The meter number of a metering point consists of maximal 15 characters
-- [x]  The meter number is mandatory for all MPs with subtype physical, otherwise not allowed
-- [ ]  The kilowatt power limit of a metering point consists of maximal 6 digits
-- [ ]  The ampere power limit of a metering point consists of maximal 6 digits
-- [ ]  The first consumer party name of a newly established metering point has default value '(ukendt)' (=unknown)
-- [ ]  The electrical heating of a newly established metering point has default value 0 (No)
-- [ ]  The location description of a metering point consists of maximal 60 characters
-- [ ]  The sub type of a metering point has domain values D01 (Physical), D02 (Virtual), D03 (Calculated)
-- [ ]  The Metering Point to which the master data applies must have a registered meter if subtype equals Physical
-- [ ]  The Metering Point to which the master data applies cannot have a registered meter if subtype differs from Physical.
-- [ ]  Only a Metering Point in group 1 and 2 can act as a parent (i.e. have coupled childs).
-- [ ]  Only a Metering Point in group 3 or 4 can act as a child of group 1 (i.e. have a coupled parent).
-- [ ]  Only a Metering Point in group 5 can act as a child of group 2 (i.e. have a coupled parent).
-- [ ]  The Grid Area of a child Metering Point must be the same as its parent
-- [ ]  All mandatory master data attributes must be included for the specific metering point (See reference sheet)
-- [ ]  Disallowed master data cannot be included for the specific metering point (See reference sheet)
-- [ ]  The address wash instructions a metering point has domain values D01 (Washable), D02 (Not washable)
-- [ ]  The capacity of a metering point consists of maximal 8 characters. Only digits and an optional decimal point are allowed.
-- [ ]  The connection type of a metering point has domain values D01 (Direct connected), D02 (Installation connected)
-- [ ]  The disconnection type of a metering point has domain values D01 (Remote disconnection), D02 (Manual disconnection)
-- [ ]  The address wash instructions of a Consumption and Production metering point is mandatory. It is not allowed for all other MP Types
-- [ ]  The capacity of Consumption and Production metering points is mandatory if net settlement group is not 0, else optional
-- [ ]  The capacity field is not allowed for MP Types: E20, D02, D13-D15, D20-D99
-- [ ]  The connection type for consumption and production metering points is mandatory if net settlement group is not 0 (else not allowed)
-- [ ]  The disconnection type For Consumption and Production metering points is mandatory, otherwise not allowed
-- [ ]  The measure unit must be kWh if it is not the following mp types VE Production (D01), Analysis (D02), Other consumption (D17), Other production (D18), Exchange - Reactive energy (D20) or Internal use (D99)
-- [ ]  If a metering point  is in net settlement group 4, 5 or 6 then connection type must be Installation connected (D02).
-- [ ]  If a Consumption (E17) or Production (E18) metering point is not in net settlement group 0 or 99 then sub type must be Virtual (D02) or Calculated (D03).
-- [ ]  For an Own production (D09) child metering point for which the parent metering point is not in net settlement group 0 or 99 the sub type must be Virtual (D02) or Calculated (D03).
-- [ ]  If a Consumption metering point (E17) is not in net settlement group  0 or 99 then a power plant is required.
-- [ ]  Total consumption metering points (D12) must be Virtual (D02) or Calculated (D03).
-- [ ]  If type of metering point is Net consumption (D15) then meter reading occurrence must be Hourly (PT1H).
-- [ ]  If type of metering point is Net consumption (D15) then sub type must be Calculated (D03).
-- [ ]  The AssetType has domain values D01 – D07, D10 - D13, D17, D19, D20 or D99
-- [ ]  For Production metering point (E18) the AssetType is mandatory. For a Consumption metering point (E17) in net settlement group not 0 the AssetType is mandatory, else optional. For other TypeOfMP not allowed.
-- [ ]  The format of the DARReference of the metering point should comply with the generic UUID format
-- [ ]  The DAR reference field is mandatory for Consumption and Production MPs, otherwise not allowed
-- [ ]  The product must be Reactive energy (8716867000047) if the metering point is of type Exchange - Reactive energy (D20)
-- [ ]  The energy time series measure unit must be kWh or MWh if the master data applies to a metering point of type Other consumption (D17) or Other production (D18)
-- [ ]  If type of metering point is Other consumption (D17) or Other production (D18) then sub type must be Physical (D01) or Virtual (D02).
-- [ ]  The meter reading occurrence of a D20 child metering point must be the same as the E20 parent metering point.
-- [ ]  Subtype of a D20 metering point must be Physical (D01)
-- [ ]  The energy time series measure unit of a D20 metering point must be K3 (kVArh)
-- [ ]  If a D20 child metering point is coupled to a parent, the parent (E20) must have subtype Physical (D01)
-- [ ]  It is not allowed to provide the source metering grid area if a metering point of type is Exchange - Reactive energy (D20).
-- [ ]  It is not allowed to provide the target metering grid area if a metering point of type is Exchange - Reactive energy (D20).
-- [ ]  Handling create or change of an Electrical heating (D14)  metering point is not alloved in the business proces
+-  The identification of a metering point is mandatory
+-  The identification of a metering point is a valid GSRN/EAN18 code (checksum) that starts with digits '57'
+-  The identification of a metering point is unique within CCR (also historically)
+-  The metering grid area of a metering point is mandatory
+-  The occurrence of a metering point is mandatory
+-  The occurrence of a metering point has format YYYY-MM-DD HH:MI:SS (UTC+0)
+-  The energy business process of a metering point is mandatory
+-  The metering grid area of a metering point consists of exactly 3 digits
+-  The type of a metering point is mandatory
+-  The type of a metering point has domain values E17 (Consumption), E18 (Production), E20 (Exchange), D01 (VE production), D04 (Surplus production group 6), D05 (Net production), D06 (Supply to grid), D07 (Consumption from grid), D08 (Wholesale services / information), D09 (Own production), D10 (Net from grid), D11 (Net to grid), D12 (Total consumption), D13 (Grid loss correction), D15 (Net consumption), D17 (Other consumption), D18 (Other production), D20 (Exchange - Reactive energy), D02 (Analysis), D99 (Internal use)
+-  Production obligation field is mandatory for production MPs and not allowed for all other MP types.
+-  The physical status of a metering point is mandatory
+-  The physical status of a metering point has domain values D02 (Closed down), D03 (New), E22 (Connected), E23 (Disconnected)
+-  The street code of a metering point consists of exactly 4 digits in the range 0001 to 9999
+-  The street name of a metering point consists of maximal 40 characters
+-  If country code is DK then the building number of a metering point consists of maximal 4 characters (range 1-999, A-Z, Æ, Ø, Å capitals only and no spaces), otherwise the building number consists of maximal 6 characters.
+-  The floor identification of a metering point consists of maximal 4 characters
+-  The room identification of a metering point consists of maximal 4 characters
+-  The city name of a Consumption and Production metering point is mandatory. It is optional for all other MP Types
+-  The city name of a metering point consists of maximal 25 characters
+-  The post code of a Consumption or Production metering point is mandatory, it is optional for all other MP Types
+-  If country code is DK then the post code of a metering point consists of exactly 4 digits in the range 0000 to 9999 otherwise the post code consists of maximal 10 characters.
+-  The city sub division name of a metering point consists of maximal 34 characters
+-  The municipality code of a metering point consists of exactly 3 digits in the range 100 to 999
+-  The country name of a metering point has domain values DK (Denmark)
+-  The settlement method of a metering point is mandatory if the MP is E17 (consumption) or D13, otherwise it is not allowed
+-  The settlement method of a metering point has domain values E02 (Non profiled), D01 (Flex)
+-  The reading characteristics of a metering point is not allowed
+-  The meter reading occurrence of a metering point is mandatory
+-  The source metering grid area of a metering point is mandatory - type E20 or - type D20 and metering point is coupled to a parent or - not allowed (D20 standalone and other types)
+-  The source grid area of a metering point must be an existing metering grid area
+-  The target metering grid area of a metering point is mandatory - type E20 or - type D20 and metering point is coupled to parent (E20) or - not allowed (D20 standalone and other types)
+-  The target grid area of a metering point must be an existing metering grid area
+-  The net settlement group of a metering point is mandatory for Consumption and Production MPs, otherwise not allowed
+-  The net settlement group of a metering point has domain values 0, 1, 2, 3, 4, 5, 6, 7 and 99
+-  The power plant of a metering point is mandatory for Consumption and Production MPs if their net settlement group is not 0
+-  The power plant field is mandatory for MPs: D01, D04-D12, D17-D18
+-  The power plant field is not allowed for MPs: D20 & D99, D13-D15, D02, E20
+-  Maximum Current and Maximum power fields are not allowed for MP D13
+-  The power plant of a metering point is a valid GSRN/EAN18 code (checksum) that starts with digits ´57´
+-  The product of a metering point is mandatory
+-  The product of a metering point has domain values 8716867000030 (Active energy), 8716867000047 (Reactive energy), 8716867000016 (Active power), 8716867000023 (Reactive power), 5790001330606 (Fuel quantity), 5790001330590 (Tariff)
+-  The energy time series measure unit of a metering point is mandatory
+-  The street name of a Consumption and Production metering point is mandatory. It is optional for all other MP types
+-  The product of a newly established metering point has default value 8716867000030 (Active energy) if metering point type not VE Production (D01), Analysis (D02), Exchange - Reactive energy (D20) or Internal use (D99)
+-  The energy time series measure unit of a metering point has domain values K3 (kVArh), KWH (kWh), KWT (kW), MAW (MW), MWH (MWh), TNE (Tonne), Z03 (MVAr), Z14 (Danish tariff code)
+-  The occurrence of a metering point has format YYYY-MM-DD 00:00:00 (local time)
+-  The sender of a message is mandatory (Handled in api gateway?)
+-  The sender of a message must currently be an existing and active market party (company)
+-  The recipient of a message is mandatory (Handled in api gateway?)
+-  The recipient of a message must currently be an existing and active market party (company)
+-  The sender role of a message must be DDM (Grid access provider)
+-  The energy business process of a message must be E02 (New metering point) (Handled in API gateway?)
+-  The data information must be received within the correct time period
+-  The identification of a transaction is mandatory
+-  The identification of a transaction is unique for the sending market player (Note this confirms message transaction IDs are not globally unique, but unique per market participant)
+-  The Metering Point created must become new (connected if metering point type is D04 or D15 when established)
+-  The meter reading occurrence of a metering point must be PT1H or PT15M for all MPs besides D01 & D02, which can also be P1M
+-  The sub type of a metering point is mandatory
+-  The document type of a message must be E58 (Request update master data metering point) (In api gateway?)
+-  The meter number of a metering point consists of maximal 15 characters
+-  The meter number is mandatory for all MPs with subtype physical, otherwise not allowed
+-  The kilowatt power limit of a metering point consists of maximal 6 digits
+-  The ampere power limit of a metering point consists of maximal 6 digits
+-  The first consumer party name of a newly established metering point has default value '(ukendt)' (=unknown)
+-  The electrical heating of a newly established metering point has default value 0 (No)
+-  The location description of a metering point consists of maximal 60 characters
+-  The sub type of a metering point has domain values D01 (Physical), D02 (Virtual), D03 (Calculated)
+-  The Metering Point to which the master data applies must have a registered meter if subtype equals Physical
+-  The Metering Point to which the master data applies cannot have a registered meter if subtype differs from Physical.
+-  Only a Metering Point in group 1 and 2 can act as a parent (i.e. have coupled childs).
+-  Only a Metering Point in group 3 or 4 can act as a child of group 1 (i.e. have a coupled parent).
+-  Only a Metering Point in group 5 can act as a child of group 2 (i.e. have a coupled parent).
+-  The Grid Area of a child Metering Point must be the same as its parent
+-  All mandatory master data attributes must be included for the specific metering point (See reference sheet)
+-  Disallowed master data cannot be included for the specific metering point (See reference sheet)
+-  The address wash instructions a metering point has domain values D01 (Washable), D02 (Not washable)
+-  The capacity of a metering point consists of maximal 8 characters. Only digits and an optional decimal point are allowed.
+-  The connection type of a metering point has domain values D01 (Direct connected), D02 (Installation connected)
+-  The disconnection type of a metering point has domain values D01 (Remote disconnection), D02 (Manual disconnection)
+-  The address wash instructions of a Consumption and Production metering point is mandatory. It is not allowed for all other MP Types
+-  The capacity of Consumption and Production metering points is mandatory if net settlement group is not 0, else optional
+-  The capacity field is not allowed for MP Types: E20, D02, D13-D15, D20-D99
+-  The connection type for consumption and production metering points is mandatory if net settlement group is not 0 (else not allowed)
+-  The disconnection type For Consumption and Production metering points is mandatory, otherwise not allowed
+-  The measure unit must be kWh if it is not the following mp types VE Production (D01), Analysis (D02), Other consumption (D17), Other production (D18), Exchange - Reactive energy (D20) or Internal use (D99)
+-  If a metering point  is in net settlement group 4, 5 or 6 then connection type must be Installation connected (D02).
+-  If a Consumption (E17) or Production (E18) metering point is not in net settlement group 0 or 99 then sub type must be Virtual (D02) or Calculated (D03).
+-  For an Own production (D09) child metering point for which the parent metering point is not in net settlement group 0 or 99 the sub type must be Virtual (D02) or Calculated (D03).
+-  If a Consumption metering point (E17) is not in net settlement group  0 or 99 then a power plant is required.
+-  Total consumption metering points (D12) must be Virtual (D02) or Calculated (D03).
+-  If type of metering point is Net consumption (D15) then meter reading occurrence must be Hourly (PT1H).
+-  If type of metering point is Net consumption (D15) then sub type must be Calculated (D03).
+-  The AssetType has domain values D01 – D07, D10 - D13, D17, D19, D20 or D99
+-  For Production metering point (E18) the AssetType is mandatory. For a Consumption metering point (E17) in net settlement group not 0 the AssetType is mandatory, else optional. For other TypeOfMP not allowed.
+-  The format of the DARReference of the metering point should comply with the generic UUID format
+-  The DAR reference field is mandatory for Consumption and Production MPs, otherwise not allowed
+-  The product must be Reactive energy (8716867000047) if the metering point is of type Exchange - Reactive energy (D20)
+-  The energy time series measure unit must be kWh or MWh if the master data applies to a metering point of type Other consumption (D17) or Other production (D18)
+-  If type of metering point is Other consumption (D17) or Other production (D18) then sub type must be Physical (D01) or Virtual (D02).
+-  The meter reading occurrence of a D20 child metering point must be the same as the E20 parent metering point.
+-  Subtype of a D20 metering point must be Physical (D01)
+-  The energy time series measure unit of a D20 metering point must be K3 (kVArh)
+-  If a D20 child metering point is coupled to a parent, the parent (E20) must have subtype Physical (D01)
+-  It is not allowed to provide the source metering grid area if a metering point of type is Exchange - Reactive energy (D20).
+-  It is not allowed to provide the target metering grid area if a metering point of type is Exchange - Reactive energy (D20).
+-  Handling create or change of an Electrical heating (D14)  metering point is not alloved in the business proces
 
 **Domain Rules**
-- [ ] Only registered metering grid areas are allowed
-- [ ] The metering point cannot already exist
-- [ ] The metering grid area of a metering point must be an existing metering grid area
+- Only registered metering grid areas are allowed
+- The metering point cannot already exist
+- The metering grid area of a metering point must be an existing metering grid area
 
 **Authentication Rules**
-- [ ] Only registered and active grid operators are allowed
-- [ ] The metering grid area of a metering point must belong to the correct grid operator
+- Only registered and active grid operators are allowed
+- The metering grid area of a metering point must belong to the correct grid operator
