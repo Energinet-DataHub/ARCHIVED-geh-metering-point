@@ -18,8 +18,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
 {
     public record CreateMeteringPointRejected(
         string TransactionId,
-        string GsrnNumber,
         string Status, // TODO: Is status implicit in Rejected from type?
+        string GsrnNumber,
         string Reason,
         Error[] Errors);
 

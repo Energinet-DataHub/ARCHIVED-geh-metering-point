@@ -50,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
             var validationError = validationErrors.First();
             var errorMessage = sut.GetErrorMessage(validationError);
             errorMessage.Code.Should().Be("E10");
-            errorMessage.Description.Should().Be("A metering point cannot be registered in CCR without a valid identification");
+            errorMessage.Description.Should().Be("A metering point cannot be registered in GEH without a valid identification");
         }
 
         [Fact]

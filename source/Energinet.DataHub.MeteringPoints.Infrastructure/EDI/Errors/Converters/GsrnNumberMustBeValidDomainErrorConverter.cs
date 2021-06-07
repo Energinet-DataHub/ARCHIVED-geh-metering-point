@@ -18,7 +18,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
     {
         protected override Error Convert(Domain.MeteringPoints.Rules.GsrnNumberMustBeValidRuleError error)
         {
-            return new("E10", $"A metering point cannot be registered in CCR without a valid identification");
+            return new("E10", $"A metering point cannot be registered in GEH without a valid identification");
         }
     }
 }
