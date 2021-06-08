@@ -24,7 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         protected ProductType _productType;
         #pragma warning restore
         private Address _address;
-        private GridAreaId _gridAreaId;
+        private string _gridAreaId;
         private MeteringPointType _meteringPointType;
         private MeteringPointSubType _meteringPointSubType;
         private PhysicalState _physicalState;
@@ -48,7 +48,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             PhysicalState physicalState,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
-            GridAreaId gridAreaId,
+            string gridAreaId,
             GsrnNumber powerPlantGsrnNumber,
             string locationDescription,
             string parentRelatedMeteringPoint,
@@ -87,7 +87,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             PhysicalState physicalState,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
-            GridAreaId gridAreaId,
+            string gridAreaId,
             GsrnNumber powerPlantGsrnNumber,
             string locationDescription,
             string parentRelatedMeteringPoint,

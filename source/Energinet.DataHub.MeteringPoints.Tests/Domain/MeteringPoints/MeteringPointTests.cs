@@ -36,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 EnumerationType.FromName<PhysicalState>(SampleData.PhysicalStateName),
                 EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
                 EnumerationType.FromName<MeteringPointType>(SampleData.TypeName),
-                GridAreaId.New(),
+                SampleData.MeteringGridArea,
                 GsrnNumber.Create(SampleData.PowerPlant),
                 SampleData.LocationDescription,
                 SampleData.ParentRelatedMeteringPoint,

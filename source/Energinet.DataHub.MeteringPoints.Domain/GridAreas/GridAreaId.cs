@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// NOTE: We currently don't know the requirements for a grid area, except that it is a 3 digit code for the Id
+// Currently this class does not reflect a grid area, and is not used.
 using System;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 

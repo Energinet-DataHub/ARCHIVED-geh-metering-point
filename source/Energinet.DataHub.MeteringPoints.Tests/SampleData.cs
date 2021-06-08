@@ -61,6 +61,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public static string NetSettlementGroup => string.Empty;
 
+        public static string MeteringGridArea => "822";
+
         public static string DisconnectionType => string.Empty;
 
         public static string ConnectionType => string.Empty;

@@ -41,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Handlers
             var message = new CreateMeteringPointEventMessage(
                 notification.GsrnNumber.Value,
                 notification.MeteringPointType.Name,
-                notification.GridAreaId.Value.ToString(),
+                notification.GridAreaId,
                 false);
 
             // TODO: When parent_MarketEvaluationPoint.mRID is implemented update child property

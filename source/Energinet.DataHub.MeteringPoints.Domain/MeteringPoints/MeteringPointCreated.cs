@@ -19,7 +19,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class MeteringPointCreated : DomainEventBase
     {
-        public MeteringPointCreated(MeteringPointId meteringPointId, GsrnNumber gsrnNumber, MeteringPointType meteringPointType, GridAreaId gridAreaId)
+        public MeteringPointCreated(MeteringPointId meteringPointId, GsrnNumber gsrnNumber, MeteringPointType meteringPointType, string gridAreaId)
         {
             MeteringPointId = meteringPointId;
             GsrnNumber = gsrnNumber;
@@ -33,6 +33,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public MeteringPointType MeteringPointType { get; }
 
-        public GridAreaId GridAreaId { get; }
+        public string GridAreaId { get; }
     }
 }
