@@ -1,7 +1,6 @@
 ﻿# Create Metering Point Validations
 
 Following validations are run when creating a metering point.
-A check mark reflects if the validation has been implemented or is awaiting implementation.
 
 ## Input Rules
 
