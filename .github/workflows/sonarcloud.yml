@@ -57,7 +57,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          dotnet ".\.sonar\scanner\dotnet-sonarscanner\5.2.1\tools\net5.0\any\SonarScanner.MSBuild.dll" begin /k:"geh-metering-point" /o:"energinet-datahub" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          dotnet ".\.sonar\scanner\.store\dotnet-sonarscanner\5.2.1\tools\net5.0\any\SonarScanner.MSBuild.dll" begin /k:"geh-metering-point" /o:"energinet-datahub" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build ${{ env.SOLUTION_PATH }} --configuration Release
-          dotnet ".\.sonar\scanner\dotnet-sonarscanner\5.2.1\tools\net5.0\any\SonarScanner.MSBuild.dll" end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          dotnet ".\.sonar\scanner\.store\dotnet-sonarscanner\5.2.1\tools\net5.0\any\SonarScanner.MSBuild.dll" end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
               
