@@ -12,6 +12,7 @@ on:
 env:
   SOLUTION_PATH: 'source\Energinet.DataHub.MeteringPoints.sln'
   DOTNET_VERSION: '5.0'
+  SONAR_CLOUD_DIR: '$GITHUB_WORKSPACE\.sonar\scanner'
 jobs:
   build:
     name: Build
@@ -49,8 +50,14 @@ jobs:
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
         shell: powershell
         run: |
-          New-Item -Path .\.sonar\scanner -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+          New-Item -Path ${{env.SONAR_CLOUD_DIR}} -ItemType Directory
+          dotnet tool update dotnet-sonarscanner --tool-path ${{env.SONAR_CLOUD_DIR}}
+      - name: Folder outputs
+        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          cd ${{env.SONAR_CLOUD_DIR}}
+          ls -ahl
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
