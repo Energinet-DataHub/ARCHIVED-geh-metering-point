@@ -22,23 +22,28 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '3.1.x'        
+
       - name: Setup .NET ${{ env.DOTNET_VERSION }} environment
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+
       - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
           java-version: 1.11
+
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
           path: ~\sonar\cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
+
       - name: Cache SonarCloud scanner
         id: cache-sonar-scanner
         uses: actions/cache@v1
@@ -46,18 +51,16 @@ jobs:
           path: .\.sonar\scanner
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
+
       - name: Install SonarCloud scanner
-        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-        shell: powershell
-        run: |
-          New-Item -Path ${{env.SONAR_CLOUD_DIR}} -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path ${{env.SONAR_CLOUD_DIR}}
-      - name: Folder outputs
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
         shell: bash
         run: |
+          mkdir ${{env.SONAR_CLOUD_DIR}}
+          dotnet tool update dotnet-sonarscanner --tool-path ${{env.SONAR_CLOUD_DIR}}
           cd ${{env.SONAR_CLOUD_DIR}}
           ls -ahl
+
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
