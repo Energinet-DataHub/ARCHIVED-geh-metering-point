@@ -33,7 +33,7 @@ message MeteringPointCreatedEventMessage {
   string fromGrid = 5; // If an Exchange MP is created, this field indicates the incoming grid.
   string settlementMethod = 6; // If a Consumption or Net loss correction metering point is created, this field indicates the settlement method.
   string meteringMethod = 7; // This indicates if the metering point created is physical, virtual, or calculated.
-  string meterReadingPeriodicity = 8; // This indicates the reading periodicity. It is either every 15 minutes, or every hour.
+  string meterReadingPeriodicity = 8; // This indicates the reading periodicity.
   string connectionState = 9; // This indicates the connection state upon creation.
   string netSettlementGroup = 10; // This indicates the net settlement group.
   string product = 11; // This indicates the energy product.
@@ -41,47 +41,67 @@ message MeteringPointCreatedEventMessage {
   string parentMeteringPointGsrn = 13; // Unique identifier of associated parent metering point. This field is empty if no parent is set upon creation.
   string EffectiveDate = 14; // The date which the metering point is created.
 }
-
+/**
+ * Represents the update of a metering point.
+ */
 message MeteringPointUpdatedMessage {
   string Gsrn = 1; // Unique metering point identifier.
-  string meteringPointType = 2; // Defines the type of metering point created.
-  string toGrid = 3;  // If an Exchange MP is created, this field indicates the outgoing grid.
-  string fromGrid = 4; // If an Exchange MP is created, this field indicates the incoming grid.
-  string settlementMethod = 5; // If a Consumption or Net loss correction metering point is created, this field indicates the settlement method.
-  string meteringMethod = 6; // This indicates if the metering point created is physical, virtual, or calculated.
-  string meterReadingPeriodicity = 7; // This indicates the reading periodicity. It is either every 15 minutes, or every hour.
-  string netSettlementGroup = 8; // This indicates the net settlement group.
-  string product = 9; // This indicates the energy product.
-  string quantityUnit = 10; // This indicates the quantity unit, eg. kWh.
-  string EffectiveDate = 11; // The date which the metering point is updated.
+  string toGrid = 2;  // This field indicates the outgoing grid.
+  string fromGrid = 3; // This field indicates the incoming grid.
+  string settlementMethod = 4; // This field indicates the settlement method.
+  string meteringMethod = 5; // This indicates if the metering point is physical, virtual, or calculated.
+  string meterReadingPeriodicity = 6; // This indicates the reading periodicity.
+  string netSettlementGroup = 7; // This indicates the net settlement group.
+  string product = 8; // This indicates the energy product.
+  string quantityUnit = 9; // This indicates the quantity unit, eg. kWh.
+  string EffectiveDate = 10; // The date which the metering point is updated.
 }
 
-
+/**
+ * Represents the connection of a metering point.
+ */
 message MeteringPointConnectedMessage {
   string Gsrn = 1; // Unique metering point identifier.
   string EffectiveDate = 2; // The date which the metering point is connected.
 }
 
+/**
+ * Represents the disconnection of a metering point.
+ */
 message MeteringPointDisconnectedMessage {
   string Gsrn = 1; // Unique metering point identifier.
   string EffectiveDate = 2; // The date which the metering point is disconnected.
 }
 
+/**
+ * Represents the closing of a metering point.
+ */
 message MeteringPointClosedMessage {
   string Gsrn = 1; // Unique metering point identifier.
   string EffectiveDate = 2; // The date which the metering point is closed.
 }
 
+/**
+ * Represents the cancellation of a metering point. This can only happen for MPs who have never had a supplier.
+ */
 message MeteringPointCancelledMessage {
   string Gsrn = 1; // Unique metering point identifier.
 }
 
+/**
+ * Represents the coupling of a parent to a eligible metering point.
+ * If a parent is changed, ie. one is removed and another is coupled, both the coupling and the decoupling messages are sent.
+ */
 message ParentCoupledMessage {
   string Gsrn = 1; // Unique metering point identifier of the child metering point.
   string parentMeteringPointGsrn = 2; // Unique identifier of associated parent metering point.
   string EffectiveDate = 3; // The date which the parent is coupled.
 }
 
+/**
+ * Represents the decoupling of a parent to a eligible metering point.
+ * If a parent is changed, ie. one is removed and another is coupled, both the coupling and the decoupling messages are sent.
+ */
 message ParentDecoupledMessage {
   string Gsrn = 1; // Unique metering point identifier og the metering point which has the existing parent decoupled.
   string EffectiveDate = 2; // The date which the parent is decoupled.
