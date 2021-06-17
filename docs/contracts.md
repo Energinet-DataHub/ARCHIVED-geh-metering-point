@@ -4,7 +4,7 @@
 
 ## Table of Contents
 
-- [source/Energinet.DataHub.MeteringPoints.Infrastructure/Integration/Contracts/IntegrationEventContract.proto](#source/Energinet.DataHub.MeteringPoints.Infrastructure/Integration/Contracts/IntegrationEventContract.proto)
+- [Metering Point domain contracts](#Metering Point domain contracts)
     - [IntegrationEventEnvelope](#.IntegrationEventEnvelope)
     - [MeteringPointCancelledMessage](#.MeteringPointCancelledMessage)
     - [MeteringPointClosedMessage](#.MeteringPointClosedMessage)
@@ -14,13 +14,11 @@
     - [MeteringPointUpdatedMessage](#.MeteringPointUpdatedMessage)
     - [ParentCoupledMessage](#.ParentCoupledMessage)
     - [ParentDecoupledMessage](#.ParentDecoupledMessage)
-  
-- [Scalar Value Types](#scalar-value-types)
 
 <a name="source/Energinet.DataHub.MeteringPoints.Infrastructure/Integration/Contracts/IntegrationEventContract.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## source/Energinet.DataHub.MeteringPoints.Infrastructure/Integration/Contracts/IntegrationEventContract.proto
+## Metering Point domain contracts
 
 Metering Point Domain related messages.
 
