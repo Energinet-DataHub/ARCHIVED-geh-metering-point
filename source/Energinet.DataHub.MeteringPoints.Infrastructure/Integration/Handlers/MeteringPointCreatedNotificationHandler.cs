@@ -44,7 +44,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Handlers
                 notification.MeteringPointType.Name,
                 notification.GridAreaId.Value.ToString(),
                 string.Empty,
-                false,
                 notification.MeteringPointSubType.Name,
                 notification.PhysicalState.Name,
                 notification.ReadingOccurrence.Name,

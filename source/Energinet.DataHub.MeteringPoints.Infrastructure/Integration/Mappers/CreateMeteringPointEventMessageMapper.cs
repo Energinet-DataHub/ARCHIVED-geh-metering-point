@@ -44,7 +44,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Mappers
                     Product = obj.Product,
                     QuantityUnit = obj.QuantityUnit,
                     ParentMeteringPointGsrn = obj.ParentGsrn,
-                    ProductionObligation = obj.ProductionObligation,
                     EffectiveDate = obj.EffectiveDate,
                 },
             };

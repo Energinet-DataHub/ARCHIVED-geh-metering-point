@@ -38,9 +38,8 @@ message MeteringPointCreatedEventMessage {
   string netSettlementGroup = 10; // This indicates the net settlement group.
   string product = 11; // This indicates the energy product.
   string quantityUnit = 12; // This indicates the quantity unit, eg. kWh.
-  bool productionObligation = 13; // Production obligation is always false upon creation.
-  string parentMeteringPointGsrn = 14; // Unique identifier of associated parent metering point. This field is empty if no parent is set upon creation.
-  string EffectiveDate = 15; // The date which the metering point is created.
+  string parentMeteringPointGsrn = 13; // Unique identifier of associated parent metering point. This field is empty if no parent is set upon creation.
+  string EffectiveDate = 14; // The date which the metering point is created.
 }
 
 message MeteringPointUpdatedMessage {
