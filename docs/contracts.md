@@ -3,7 +3,6 @@
 ## Table of Contents
 
 - Metering Point domain contracts
-    - [IntegrationEventEnvelope](#.IntegrationEventEnvelope)
     - [MeteringPointCancelledMessage](#.MeteringPointCancelledMessage)
     - [MeteringPointClosedMessage](#.MeteringPointClosedMessage)
     - [MeteringPointConnectedMessage](#.MeteringPointConnectedMessage)
