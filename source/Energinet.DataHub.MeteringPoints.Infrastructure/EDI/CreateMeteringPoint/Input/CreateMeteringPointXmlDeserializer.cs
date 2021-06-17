@@ -53,27 +53,26 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
                     ExtractElementValue(mainAddress, ns + "usagePointLocation.remark") == "D01");
 
                 return new Application.CreateMeteringPoint(
-                    address,
-                    ExtractElementValue(marketEvaluationPoint, ns + "mRID"),
-                    GetMeteringPointType(ExtractElementValue(marketEvaluationPoint, ns + "type")),
-                    GetMeteringPointSubType(ExtractElementValue(marketEvaluationPoint, ns + "meteringMethod")),
-                    GetMeterReadingOccurrence(ExtractElementValue(marketEvaluationPoint, ns + "readCycle")),
-                    Convert.ToInt32(ExtractElementValue(marketEvaluationPoint, ns + "ratedCurrent")),
-                    Convert.ToInt32(ExtractElementValue(contractedConnectionCapacity, ns + "value")),
-                    ExtractElementValue(marketEvaluationPoint, ns + "meteringGridArea_Domain.mRID"),
-                    ExtractElementValue(linkedMarketEvaluationPoint, ns + "mRID"),
-                    ExtractElementValue(marketEvaluationPoint, ns + "usagePointLocation.remark"),
-                    ExtractElementValue(marketEvaluationPoint, ns + "parent_MarketEvaluationPoint.mRID"),
-                    GetSettlementMethod(ExtractElementValue(marketEvaluationPoint, ns + "settlementMethod")),
-                    ExtractElementValue(series, ns + "quantity_Measure_Unit.name"),
-                    GetDisconnectionType(ExtractElementValue(marketEvaluationPoint, ns + "disconnectionMethod")),
-                    ExtractElementValue(record, ns + "start_DateAndOrTime.dateTime"),
-                    ExtractElementValue(marketEvaluationPoint, ns + "meter.mRID"),
-                    ExtractElementValue(record, ns + "mRID"),
-                    GetConnectionState(ExtractElementValue(marketEvaluationPoint, ns + "connectionState")),
-                    ExtractElementValue(marketEvaluationPoint, ns + "netSettlementGroup"),
-                    GetConnectionType(ExtractElementValue(marketEvaluationPoint, ns + "mPConnectionType")),
-                    GetAssetType(ExtractElementValue(marketEvaluationPoint, ns + "energyLabel_EnergyTechnologyAndFuel.technology")));
+                    InstallationLocationAddress: address,
+                    GsrnNumber: ExtractElementValue(marketEvaluationPoint, ns + "mRID"),
+                    TypeOfMeteringPoint: GetMeteringPointType(ExtractElementValue(marketEvaluationPoint, ns + "type")),
+                    SubTypeOfMeteringPoint: GetMeteringPointSubType(ExtractElementValue(marketEvaluationPoint, ns + "meteringMethod")),
+                    MeterReadingOccurrence: GetMeterReadingOccurrence(ExtractElementValue(marketEvaluationPoint, ns + "readCycle")),
+                    MaximumCurrent: Convert.ToInt32(ExtractElementValue(marketEvaluationPoint, ns + "ratedCurrent")),
+                    MaximumPower: Convert.ToInt32(ExtractElementValue(contractedConnectionCapacity, ns + "value")),
+                    MeteringGridArea: ExtractElementValue(marketEvaluationPoint, ns + "MeteringGridArea"),
+                    PowerPlant: ExtractElementValue(linkedMarketEvaluationPoint, ns + "mRID"),
+                    LocationDescription: ExtractElementValue(marketEvaluationPoint, ns + "usagePointLocation.remark"),
+                    SettlementMethod: GetSettlementMethod(ExtractElementValue(marketEvaluationPoint, ns + "settlementMethod")),
+                    UnitType: ExtractElementValue(series, ns + "quantity_Measure_Unit.name"),
+                    DisconnectionType: GetDisconnectionType(ExtractElementValue(marketEvaluationPoint, ns + "disconnectionMethod")),
+                    OccurenceDate: ExtractElementValue(record, ns + "start_DateAndOrTime.dateTime"),
+                    MeterNumber: ExtractElementValue(marketEvaluationPoint, ns + "meter.mRID"),
+                    TransactionId: ExtractElementValue(record, ns + "mRID"),
+                    PhysicalStatusOfMeteringPoint: GetConnectionState(ExtractElementValue(marketEvaluationPoint, ns + "connectionState")),
+                    NetSettlementGroup: ExtractElementValue(marketEvaluationPoint, ns + "NetSettlementGroup"),
+                    ConnectionType: GetConnectionType(ExtractElementValue(marketEvaluationPoint, ns + "mPConnectionType")),
+                    AssetType: GetAssetType(ExtractElementValue(marketEvaluationPoint, ns + "energyLabel_EnergyTechnologyAndFuel.technology")));
             });
         }
 
@@ -90,7 +89,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
         {
             return id switch
             {
-                MeteringPointSubType.Physical => nameof(MeteringPointSubType.Physical),
+                "D01" => nameof(Domain.MeteringPoints.MeteringPointSubType.Physical),
                 _ => string.Empty,
             };
         }
@@ -108,7 +107,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
         {
             return id switch
             {
-                ConnectionType.Direct => nameof(ConnectionType.Direct),
+                ConnectionType.Direct => nameof(Domain.MeteringPoints.ConnectionType.Direct),
                 ConnectionType.Installation => nameof(ConnectionType.Installation),
                 _ => string.Empty,
             };

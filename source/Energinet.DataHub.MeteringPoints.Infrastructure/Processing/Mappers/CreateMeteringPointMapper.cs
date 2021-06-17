@@ -41,7 +41,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
                 MeteringGridArea: obj.MeteringGridArea,
                 PowerPlant: obj.PowerPlant,
                 LocationDescription: obj.LocationDescription,
-                ParentRelatedMeteringPoint: obj.ParentRelatedMeteringPoint,
                 SettlementMethod: obj.SettlementMethod,
                 UnitType: obj.UnitType,
                 DisconnectionType: obj.DisconnectionType,

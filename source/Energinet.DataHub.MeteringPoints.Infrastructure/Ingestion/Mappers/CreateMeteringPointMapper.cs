@@ -39,7 +39,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
                     MeteringGridArea = obj.MeteringGridArea,
                     PowerPlant = obj.PowerPlant,
                     LocationDescription = obj.LocationDescription,
-                    ParentRelatedMeteringPoint = obj.ParentRelatedMeteringPoint,
                     InstallationLocationAddress = new Address
                     {
                         StreetName = obj.InstallationLocationAddress.StreetName,

@@ -146,7 +146,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SampleData.MeteringGridArea,
                 SampleData.PowerPlantGsrnNumber,
                 string.Empty,
-                string.Empty,
                 SampleData.SettlementMethod,
                 SampleData.MeasurementUnitType,
                 SampleData.DisconnectionType,
