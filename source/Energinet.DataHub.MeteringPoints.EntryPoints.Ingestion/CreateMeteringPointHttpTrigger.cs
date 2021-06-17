@@ -14,15 +14,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint.Input;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
@@ -46,7 +42,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
         public async Task<HttpResponseData> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")]
             HttpRequestData request,
-            FunctionContext executionContext)
+            FunctionContext executionContext,
+            IXmlConverter xmlConverter)
         {
             var logger = executionContext.GetLogger("CreateMeteringPointHttpTrigger");
             logger.LogInformation("Received CreateMeteringPoint request");
@@ -55,9 +52,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 
             try
             {
-                // TODO: Currently we assume that we will have a function for each metering point event. This might change if we're not able to handle the routing in the API Gateway.
-                // TODO: In that case we would need to make a switch case or something like that to look at the value in the "process.processType" element.
-                commands = CreateMeteringPointXmlDeserializer.Deserialize(request.Body);
+                // // TODO: Currently we assume that we will have a function for each metering point event. This might change if we're not able to handle the routing in the API Gateway.
+                // // TODO: In that case we would need to make a switch case or something like that to look at the value in the "process.processType" element.
+                commands = (IEnumerable<CreateMeteringPoint>)await xmlConverter.DeserializeAsync(request.Body);
             }
             catch (Exception exception)
             {
