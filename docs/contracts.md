@@ -1,10 +1,8 @@
 ﻿# Protocol Documentation
 
-<a name="top"></a>
-
 ## Table of Contents
 
-- [Metering Point domain contracts](#.Metering Point domain contracts)
+- Metering Point domain contracts
     - [IntegrationEventEnvelope](#.IntegrationEventEnvelope)
     - [MeteringPointCancelledMessage](#.MeteringPointCancelledMessage)
     - [MeteringPointClosedMessage](#.MeteringPointClosedMessage)
@@ -14,9 +12,6 @@
     - [MeteringPointUpdatedMessage](#.MeteringPointUpdatedMessage)
     - [ParentCoupledMessage](#.ParentCoupledMessage)
     - [ParentDecoupledMessage](#.ParentDecoupledMessage)
-
-<a name="source/Energinet.DataHub.MeteringPoints.Infrastructure/Integration/Contracts/IntegrationEventContract.proto"></a>
-<p align="right"><a href="#top">Top</a></p>
 
 ## Metering Point domain contracts
 
