@@ -85,8 +85,8 @@ Represents the disconnection of a metering point.
 <a name=".MeteringPointUpdatedMessage"></a>
 
 ### MeteringPointUpdatedMessage
-Represents the update of a metering 
-point.
+
+Represents the update of a metering point.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -108,7 +108,6 @@ point.
 Represents the coupling of a parent to a eligible metering point.
 If a parent is changed, ie. one is removed and another is coupled, both the coupling and the decoupling messages are sent.
 
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | Gsrn | string |  | Unique metering point identifier of the child metering point. |
@@ -124,5 +123,5 @@ If a parent is changed, ie. one is removed and another is coupled, both the coup
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| Gsrn | string |  | Unique metering point identifier og the metering point which has the existing parent decoupled. |
+| Gsrn | string |  | Unique metering point identifier of the metering point which has the existing parent decoupled. |
 | EffectiveDate | string |  | The date which the parent is decoupled. |
