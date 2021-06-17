@@ -12,12 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.Transport
+using System.Reflection;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 {
-    /// <summary>
-    /// Marker interface for outgoing messages
-    /// </summary>
-    public interface IOutboundMessage
-    {
-    }
+    public record ExtendedPropertyInfo(string XmlPropName, PropertyInfo PropertyInfo);
 }

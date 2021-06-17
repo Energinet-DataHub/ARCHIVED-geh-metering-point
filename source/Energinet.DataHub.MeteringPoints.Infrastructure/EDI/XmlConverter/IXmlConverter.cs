@@ -12,12 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.Transport
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Transport;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 {
     /// <summary>
-    /// Marker interface for outgoing messages
+    /// XML converter
     /// </summary>
-    public interface IOutboundMessage
+    public interface IXmlConverter
     {
+        /// <summary>
+        /// Deserializes an EDI message in XML format to a generic collection
+        /// </summary>
+        /// <param name="body"></param>
+        /// <returns>A generic collection</returns>
+        public Task<IEnumerable<IOutboundMessage>> DeserializeAsync(Stream body);
     }
 }
