@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Messages;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using MediatR;
+using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Handlers
 {
@@ -38,11 +39,22 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Handlers
             CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
-            var message = new CreateMeteringPointEventMessage(
+            var message = new MeteringPointCreatedEventMessage(
                 notification.GsrnNumber.Value,
                 notification.MeteringPointType.Name,
                 notification.GridAreaId.Value.ToString(),
-                false);
+                string.Empty,
+                false,
+                notification.MeteringPointSubType.Name,
+                notification.PhysicalState.Name,
+                notification.ReadingOccurrence.Name,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                notification.ProductType.Name,
+                notification.MeasurementUnitType.Name,
+                string.Empty,
+                SystemClock.Instance.GetCurrentInstant().ToString());  // TODO: Use actual input properties for this and other missing fields
 
             // TODO: When parent_MarketEvaluationPoint.mRID is implemented update child property
             var outboxMessage = _outboxMessageFactory.CreateFrom(message, OutboxMessageCategory.IntegrationEvent);
