@@ -4,7 +4,7 @@
 
 ## Table of Contents
 
-- [Metering Point domain contracts](#Metering Point domain contracts)
+- [Metering Point domain contracts](#.Metering Point domain contracts)
     - [IntegrationEventEnvelope](#.IntegrationEventEnvelope)
     - [MeteringPointCancelledMessage](#.MeteringPointCancelledMessage)
     - [MeteringPointClosedMessage](#.MeteringPointClosedMessage)
@@ -21,21 +21,6 @@
 ## Metering Point domain contracts
 
 Metering Point Domain related messages.
-
-<a name=".IntegrationEventEnvelope"></a>
-
-### IntegrationEventEnvelope
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| meteringPointCreatedEventMessage | [MeteringPointCreatedEventMessage](#MeteringPointCreatedEventMessage) |  |  |
-| meteringPointUpdatedMessage | [MeteringPointUpdatedMessage](#MeteringPointUpdatedMessage) |  |  |
-| meteringPointConnectedMessage | [MeteringPointConnectedMessage](#MeteringPointConnectedMessage) |  |  |
-| meteringPointDisconnectedMessage | [MeteringPointDisconnectedMessage](#MeteringPointDisconnectedMessage) |  |  |
-| meteringPointClosedMessage | [MeteringPointClosedMessage](#MeteringPointClosedMessage) |  |  |
-| meteringPointCancelledMessage | [MeteringPointCancelledMessage](#MeteringPointCancelledMessage) |  |  |
-| parentCoupledMessage | [ParentCoupledMessage](#ParentCoupledMessage) |  |  |
-| parentDecoupledMessage | [ParentDecoupledMessage](#ParentDecoupledMessage) |  |  |
 
 <a name=".MeteringPointCancelledMessage"></a>
 
@@ -57,17 +42,6 @@ Represents the closing of a metering point.
 | ----- | ---- | ----- | ----------- |
 | Gsrn | string |  | Unique metering point identifier. |
 | EffectiveDate | string |  | The date which the metering point is closed. |
-
-<a name=".MeteringPointConnectedMessage"></a>
-
-### MeteringPointConnectedMessage
-
-Represents the connection of a metering point.
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| Gsrn | string |  | Unique metering point identifier. |
-| EffectiveDate | string |  | The date which the metering point is connected. |
 
 <a name=".MeteringPointCreatedEventMessage"></a>
 
@@ -91,6 +65,17 @@ Represents the creation of a metering point.
 | quantityUnit | string |  | This indicates the quantity unit, eg. kWh. |
 | parentMeteringPointGsrn | string |  | Unique identifier of associated parent metering point. This field is empty if no parent is set upon creation. |
 | EffectiveDate | string |  | The date which the metering point is created. |
+
+<a name=".MeteringPointConnectedMessage"></a>
+
+### MeteringPointConnectedMessage
+
+Represents the connection of a metering point.
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| Gsrn | string |  | Unique metering point identifier. |
+| EffectiveDate | string |  | The date which the metering point is connected. |
 
 <a name=".MeteringPointDisconnectedMessage"></a>
 
