@@ -23,9 +23,6 @@ on:
       - .github/actions/meteringpoint-apply-db-migrations/**
       - .github/workflows/infrastructure-cd.yml
   workflow_dispatch: {}
-env:
-  ORGANISATION_NAME: endk
-  PROJECT_NAME: meteringpoint
 
 jobs:
   infra_deploy_development:
@@ -54,8 +51,8 @@ jobs:
           SECRETS_SPN_OBJECT_ID: ${{ secrets.SPN_OBJECT_ID }}
           SECRETS_SPN_SECRET: ${{ secrets.SPN_SECRET }}
           SECRETS_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
-          PROJECT_NAME: ${{ env.PROJECT_NAME }}
-          ORGANISATION_NAME: ${{ env.ORGANISATION_NAME }}
+          PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
+          ORGANISATION_NAME: ${{ secrets.ORGANISATION_NAME }}
           ENVIRONMENT_SHORT: u
           ENVIRONMENT_LONG: rg-DataHub-MeteringPoint-U
           ENVIRONMENT_NAME: Development
@@ -88,8 +85,8 @@ jobs:
           SECRETS_SPN_OBJECT_ID: ${{ secrets.SPN_OBJECT_ID }}
           SECRETS_SPN_SECRET: ${{ secrets.SPN_SECRET }}
           SECRETS_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
-          PROJECT_NAME: ${{ env.PROJECT_NAME }}
-          ORGANISATION_NAME: ${{ env.ORGANISATION_NAME }}
+          PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
+          ORGANISATION_NAME: ${{ secrets.ORGANISATION_NAME }}
           ENVIRONMENT_SHORT: t
           ENVIRONMENT_LONG: rg-DataHub-MeteringPoint-T
           ENVIRONMENT_NAME: Test
@@ -122,8 +119,8 @@ jobs:
           SECRETS_SPN_OBJECT_ID: ${{ secrets.SPN_OBJECT_ID }}
           SECRETS_SPN_SECRET: ${{ secrets.SPN_SECRET }}
           SECRETS_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
-          PROJECT_NAME: ${{ env.PROJECT_NAME }}
-          ORGANISATION_NAME: ${{ env.ORGANISATION_NAME }}
+          PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
+          ORGANISATION_NAME: ${{ secrets.ORGANISATION_NAME }}
           ENVIRONMENT_SHORT: b
           ENVIRONMENT_LONG: rg-DataHub-MeteringPoint-B
           ENVIRONMENT_NAME: Preprod
@@ -156,8 +153,8 @@ jobs:
           SECRETS_SPN_OBJECT_ID: ${{ secrets.SPN_OBJECT_ID }}
           SECRETS_SPN_SECRET: ${{ secrets.SPN_SECRET }}
           SECRETS_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
-          PROJECT_NAME: ${{ env.PROJECT_NAME }}
-          ORGANISATION_NAME: ${{ env.ORGANISATION_NAME }}
+          PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
+          ORGANISATION_NAME: ${{ secrets.ORGANISATION_NAME }}
           ENVIRONMENT_SHORT: p
           ENVIRONMENT_LONG: rg-DataHub-MeteringPoint-P
           ENVIRONMENT_NAME: Prod

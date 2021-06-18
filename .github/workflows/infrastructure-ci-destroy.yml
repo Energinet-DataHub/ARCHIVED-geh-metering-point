@@ -23,7 +23,6 @@ on:
       - .github/workflows/infrastructure-ci-destroy.yml
     types: [closed]
 env:
-  ORGANISATION_NAME: endk
   PROJECT_NAME: 'mpoint${{ github.event.number }}'
   RESOURCE_GROUP_NAME: rg-DataHub-Testing-U
   ENVIRONMENT_SHORT: u
@@ -62,8 +61,8 @@ jobs:
       - name: Set TF Vars
         run: |
           echo "TF_VAR_environment=${{ env.ENVIRONMENT_SHORT }}" >> $GITHUB_ENV
-          echo "TF_VAR_organisation=${{ env.ORGANISATION_NAME }}" >> $GITHUB_ENV
-          echo "TF_VAR_project=${{ env.PROJECT_NAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_organisation=${{ secrets.ORGANISATION_NAME }}" >> $GITHUB_ENV
+          echo "TF_VAR_project=${{ secrets.PROJECT_NAME }}" >> $GITHUB_ENV
           echo "TF_VAR_resource_group_name=${{ env.RESOURCE_GROUP_NAME }}" >> $GITHUB_ENV
 
       - name: Configure Terraform Backend
@@ -71,7 +70,7 @@ jobs:
         with:
           backend-file-path: "./build/infrastructure/backend.tf"
           resource-group-name: "${{ env.RESOURCE_GROUP_NAME }}"
-          storage-account-name: "tfstate${{ env.PROJECT_NAME }}${{ env.ENVIRONMENT_SHORT }}"
+          storage-account-name: "tfstate${{ secrets.PROJECT_NAME }}${{ env.ENVIRONMENT_SHORT }}"
 
       - name: Terraform Init
         working-directory: ./build/infrastructure

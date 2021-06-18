@@ -25,7 +25,6 @@ on:
       - .github/actions/meteringpoint-apply-db-migrations/**
   workflow_dispatch: {}
 env:
-  ORGANISATION_NAME: endk
   PROJECT_NAME: 'mpoint${{ github.event.number }}'
   RESOURCE_GROUP_NAME: rg-DataHub-Testing-U
   ENVIRONMENT_SHORT: u
@@ -52,8 +51,8 @@ jobs:
           SECRETS_SHARED_RESOURCES_RESOURCE_GROUP_NAME: ${{ secrets.SHARED_RESOURCES_RESOURCE_GROUP_NAME }}
           SECRETS_SHARED_RESOURCES_SQL_SERVER_NAME: ${{ secrets.SHARED_RESOURCES_SQL_SERVER_NAME }}
           SECRETS_PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
-          PROJECT_NAME: ${{ env.PROJECT_NAME }}
-          ORGANISATION_NAME: ${{ env.ORGANISATION_NAME }}
+          PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
+          ORGANISATION_NAME: ${{ secrets.ORGANISATION_NAME }}
           ENVIRONMENT_SHORT: u
           ENVIRONMENT_LONG: rg-DataHub-Testing-U
           ENVIRONMENT_NAME: Development

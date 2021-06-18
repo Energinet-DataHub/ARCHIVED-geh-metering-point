@@ -27,10 +27,7 @@ env:
   CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.Outbox/Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.csproj'
   SOLUTION_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.sln'
   DOTNET_VERSION: '5.0.202'
-  ORGANISATION_NAME: 'endk'
   AZURE_FUNCTIONAPP_NAME: 'outbox'
-  PROJECT_NAME: meteringpoint
-  REPOSITORY_NAME: Energinet-DataHub/geh-metering-point
 
 jobs:
   build_outbox:
@@ -111,7 +108,7 @@ jobs:
       - name: Get function publish profile
         id: get-publish-profile
         run: |
-          publish_profile=$(az webapp deployment list-publishing-profiles --name azfun-${{ env.AZURE_FUNCTIONAPP_NAME }}-${{ env.PROJECT_NAME }}-${{ env.ORGANISATION_NAME }}-${{ matrix.environment.short }} --resource-group ${{ matrix.environment.long }} --subscription ${{ secrets.SUBSCRIPTION_ID }} --xml)
+          publish_profile=$(az webapp deployment list-publishing-profiles --name azfun-${{ env.AZURE_FUNCTIONAPP_NAME }}-${{ secrets.PROJECT_NAME }}-${{ secrets.ORGANISATION_NAME }}-${{ matrix.environment.short }} --resource-group ${{ matrix.environment.long }} --subscription ${{ secrets.SUBSCRIPTION_ID }} --xml)
           echo "::set-output name=publish-profile::${publish_profile}"
 
       - name: Deploy function
