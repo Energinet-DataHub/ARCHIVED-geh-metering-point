@@ -36,7 +36,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using SimpleInjector;
-using CreateMeteringPointEventMessage = Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Messages.CreateMeteringPointEventMessage;
+using MeteringPointCreatedEventMessage = Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Messages.MeteringPointCreatedEventMessage;
 
 [assembly: CLSCompliant(false)]
 
@@ -102,7 +102,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             container.BuildMediator(
                 new[]
                 {
-                    typeof(CreateMeteringPointEventMessage).Assembly,
+                    typeof(MeteringPointCreatedEventMessage).Assembly,
                     typeof(CreateMeteringPointEventHandler).Assembly,
                 },
                 Array.Empty<Type>());

@@ -13,26 +13,38 @@
 // limitations under the License.
 
 using System;
+using System.Net;
+using System.Runtime.Remoting;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using Google.Protobuf;
-using CreateMeteringPointEventMessage = Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Messages.CreateMeteringPointEventMessage;
+using MeteringPointCreatedEventMessage = Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Messages.MeteringPointCreatedEventMessage;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Mappers
 {
-    public class CreateMeteringPointEventMessageMapper : ProtobufOutboundMapper<Messages.CreateMeteringPointEventMessage>
+    public class CreateMeteringPointEventMessageMapper : ProtobufOutboundMapper<Messages.MeteringPointCreatedEventMessage>
     {
-        protected override IMessage Convert(CreateMeteringPointEventMessage obj)
+        protected override IMessage Convert(MeteringPointCreatedEventMessage obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
             return new IntegrationEventEnvelope()
             {
-                CreateMeteringPointEventMessage = new IntegrationEventContracts.CreateMeteringPointEventMessage
+                MeteringPointCreatedEventMessage = new IntegrationEventContracts.MeteringPointCreatedEventMessage
                 {
                     Gsrn = obj.Gsrn,
                     MeteringPointType = obj.MeteringPointType,
-                    GridAccessProvider = obj.GridAreaId,
-                    Child = obj.Child,
+                    MeteringGridArea = obj.GridAreaId,
+                    ToGrid = obj.ToGrid,
+                    FromGrid = obj.FromGrid,
+                    SettlementMethod = obj.SettlementMethod,
+                    NetSettlementGroup = obj.NetSettlementGroup,
+                    MeteringMethod = obj.MeteringMethod,
+                    ConnectionState = obj.ConnectionState,
+                    MeterReadingPeriodicity = obj.MeterReadingPeriodicity,
+                    Product = obj.Product,
+                    QuantityUnit = obj.QuantityUnit,
+                    ParentMeteringPointGsrn = obj.ParentGsrn,
+                    EffectiveDate = obj.EffectiveDate,
                 },
             };
         }

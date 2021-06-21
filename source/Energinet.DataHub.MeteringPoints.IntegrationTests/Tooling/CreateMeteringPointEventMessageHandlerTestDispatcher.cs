@@ -19,9 +19,9 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
 {
-    public class CreateMeteringPointEventMessageHandlerTestDispatcher : IRequestHandler<CreateMeteringPointEventMessage>
+    public class CreateMeteringPointEventMessageHandlerTestDispatcher : IRequestHandler<MeteringPointCreatedEventMessage>
     {
-        public Task<Unit> Handle(CreateMeteringPointEventMessage request, CancellationToken cancellationToken)
+        public Task<Unit> Handle(MeteringPointCreatedEventMessage request, CancellationToken cancellationToken)
         {
             return Task.FromResult(Unit.Value);
         }
