@@ -50,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                     break;
                 }
 
-                await _postOfficeStorageClient.WriteAsync("path", message.Data).ConfigureAwait(false);
+                await _postOfficeStorageClient.WriteAsync(message.Correlation, message.Data).ConfigureAwait(false);
                 _outbox.MarkProcessed(message);
 
                 await _unitOfWork.CommitAsync().ConfigureAwait(false);

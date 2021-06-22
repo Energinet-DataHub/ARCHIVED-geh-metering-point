@@ -33,7 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure
         public async Task WriteAsync(string path, string data)
         {
             var shareClient = new ShareClient(_settings.ConnectionString, _settings.ShareName);
-            var shareDirectoryClient = shareClient.GetDirectoryClient("CustomLogs");
+            var shareDirectoryClient = shareClient.GetDirectoryClient(path);
 
             // Create the directory if it doesn't already exist
             await shareDirectoryClient.CreateIfNotExistsAsync();

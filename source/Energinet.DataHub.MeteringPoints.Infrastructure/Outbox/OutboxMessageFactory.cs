@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
 
@@ -22,11 +23,16 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
     {
         private readonly IJsonSerializer _jsonSerializer;
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
+        private readonly ICorrelationContext _correlationContext;
 
-        public OutboxMessageFactory(IJsonSerializer jsonSerializer, ISystemDateTimeProvider systemDateTimeProvider)
+        public OutboxMessageFactory(
+            IJsonSerializer jsonSerializer,
+            ISystemDateTimeProvider systemDateTimeProvider,
+            ICorrelationContext correlationContext)
         {
             _jsonSerializer = jsonSerializer ?? throw new ArgumentNullException(nameof(jsonSerializer));
             _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
+            _correlationContext = correlationContext;
         }
 
         public OutboxMessage CreateFrom<T>(T message, OutboxMessageCategory category)
@@ -41,7 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
 
             var data = _jsonSerializer.Serialize(message);
 
-            return new OutboxMessage(type, data, category, _systemDateTimeProvider.Now());
+            return new OutboxMessage(type, data, _correlationContext.GetCorrelationId(), category, _systemDateTimeProvider.Now());
         }
     }
 }

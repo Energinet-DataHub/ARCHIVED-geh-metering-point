@@ -23,6 +23,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox;
+using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
 using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
@@ -80,6 +81,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IDomainEventsDispatcher, DomainEventsDispatcher>();
             _container.Register<IDomainEventPublisher, DomainEventPublisher>();
             _container.Register<IIntegrationEventDispatchOrchestrator, IntegrationEventDispatchOrchestrator>();
+            _container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Singleton);
 
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
@@ -107,6 +109,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Verify();
 
             _scope = AsyncScopedLifestyle.BeginScope(_container);
+
+            _container.GetInstance<ICorrelationContext>().SetCorrelationId(Guid.NewGuid().ToString());
 
             CleanupDatabase();
         }

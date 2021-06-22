@@ -37,6 +37,7 @@ limitations under the License.
   <ItemGroup>
     <EmbeddedResource Include="Scripts\Model\202105051000 Create OutBoxMessages Table.sql" />
     <EmbeddedResource Include="Scripts\Model\202105251000 Add outbox index.sql" />
+    <EmbeddedResource Include="Scripts\Model\202106221537 Add Correlation to OutboxMessages.sql" />
     <EmbeddedResource Include="Scripts\Model\202118051215 Create MeteringPoints tables.sql" />
   </ItemGroup>
 
