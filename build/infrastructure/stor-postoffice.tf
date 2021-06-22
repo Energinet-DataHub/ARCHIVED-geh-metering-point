@@ -19,7 +19,6 @@ module "stor_postoffice" {
     account_replication_type = "LRS"
     account_tier = "Standard"
     tags = data.azurerm_resource_group.main.tags
-    allow_blob_public_access = true
 }
 
 resource "azurerm_storage_share" "postoffice" {
