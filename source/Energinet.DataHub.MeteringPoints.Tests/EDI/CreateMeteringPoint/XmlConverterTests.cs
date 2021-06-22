@@ -18,6 +18,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappings;
 using Xunit;
@@ -72,23 +73,24 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
             // Assert.Equal("Test city", command.InstallationLocationAddress.CityName);
         }
 
-        // [Fact]
-        // public async Task ValidateTranslateSettlementMethodTest()
-        // {
-        //     var configurations = new List<XmlMappingConfigurationBase>
-        //     {
-        //         new CreateMeteringPointXmlMappingConfiguration(),
-        //     }.ToImmutableList();
-        //
-        //     var xmlConverter = new XmlConverter(configurations);
-        //     var commandsRaw = await xmlConverter.DeserializeAsync(_xmlStream);
-        //     var commands = commandsRaw.Cast<MeteringPoints.Application.CreateMeteringPoint>();
-        //
-        //     var command = commands.First();
-        //
-        //     // Validate that we translate "D01" to "Flex"
-        //     Assert.Equal("Flex", command.SettlementMethod);
-        // }
+        [Fact]
+        public async Task ValidateTranslateSettlementMethodTest()
+        {
+            var configurations = new List<XmlMappingConfigurationBase>
+            {
+                new CreateMeteringPointXmlMappingConfiguration(),
+            }.ToImmutableList();
+
+            var xmlConverter = new XmlConverter(configurations);
+            var commandsRaw = await xmlConverter.DeserializeAsync(_xmlStream);
+            var commands = commandsRaw.Cast<MeteringPoints.Application.CreateMeteringPoint>();
+
+            var command = commands.First();
+
+            // Validate that we translate "D01" to "Flex"
+            Assert.Equal(nameof(SettlementMethod.Flex), command.SettlementMethod);
+        }
+
         private static Stream GetResourceStream(string resourcePath)
         {
             var assembly = Assembly.GetExecutingAssembly();

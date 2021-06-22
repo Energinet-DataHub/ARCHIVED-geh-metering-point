@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappings
 {
     public class CreateMeteringPointXmlMappingConfiguration : XmlMappingConfigurationBase
@@ -29,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 .AddProperty(x => x.MeteringGridArea, "MarketEvaluationPoint", "meteringGridArea_Domain.mRID")
                 .AddProperty(x => x.PowerPlant, "MarketEvaluationPoint", "Linked_MarketEvaluationPoint", "mRID")
                 .AddProperty(x => x.LocationDescription, "MarketEvaluationPoint", "usagePointLocation.remark")
-                .AddProperty(x => x.SettlementMethod, "MarketEvaluationPoint", "settlementMethod")
+                .AddProperty(x => x.SettlementMethod, TranslateSettlementMethod, "MarketEvaluationPoint", "settlementMethod")
                 .AddProperty(x => x.UnitType, "MarketEvaluationPoint", "Series", "quantity_Measure_Unit.name")
                 .AddProperty(x => x.DisconnectionType, "MarketEvaluationPoint", "disconnectionMethod")
                 .AddProperty(x => x.OccurenceDate, "start_DateAndOrTime.dateTime")
@@ -40,6 +43,16 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 .AddProperty(x => x.ConnectionType, "MarketEvaluationPoint", "mPConnectionType")
                 .AddProperty(x => x.ParentRelatedMeteringPoint, "sdf")
                 .AddProperty(x => x.InstallationLocationAddress, "sdf"));
+        }
+
+        private static string TranslateSettlementMethod(string settlementMethod)
+        {
+            return settlementMethod switch
+            {
+                "D01" => nameof(SettlementMethod.Flex),
+                "E02" => nameof(SettlementMethod.NonProfiled),
+                _ => string.Empty,
+            };
         }
     }
 }

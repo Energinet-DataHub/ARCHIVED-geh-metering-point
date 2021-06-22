@@ -109,7 +109,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
                     var xmlHierarchyStack = new Stack<string>(property.Value.XmlHierarchy.Reverse());
                     var correspondingXmlElement = GetXmlElement(element, xmlHierarchyStack, ns);
 
-                    return Convert(correspondingXmlElement?.Value, property.Value.PropertyInfo.PropertyType);
+                    return Convert(correspondingXmlElement?.Value, property.Value.PropertyInfo.PropertyType, property.Value.TranslatorFunc);
                 }).ToArray();
 
                 if (xmlMappingConfigurationBase.CreateInstance(args) is not IOutboundMessage instance)
@@ -123,16 +123,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             return messages;
         }
 
-        private static object? Convert(string? source, Type dest)
+        private static object? Convert(string? source, Type dest, Func<string, object>? valueTranslatorFunc)
         {
-            if (dest == typeof(Nullable<>))
-            {
-                return null;
-            }
+            if (dest == typeof(Nullable<>)) return default;
+            if (source is null) return default;
 
             if (dest == typeof(string))
             {
-                return source;
+                return valueTranslatorFunc != null ? valueTranslatorFunc(source) : source;
             }
 
             return System.Convert.ChangeType(source, dest);

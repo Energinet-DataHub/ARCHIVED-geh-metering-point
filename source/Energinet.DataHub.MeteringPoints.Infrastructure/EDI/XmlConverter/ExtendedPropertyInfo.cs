@@ -20,6 +20,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 {
     public class ExtendedPropertyInfo
     {
+        public ExtendedPropertyInfo(IList<string> xmlHierarchy, PropertyInfo propertyInfo, Func<string, object> translatorFunc)
+            : this(xmlHierarchy, propertyInfo)
+        {
+            XmlHierarchy = xmlHierarchy;
+            PropertyInfo = propertyInfo;
+            TranslatorFunc = translatorFunc;
+        }
+
         public ExtendedPropertyInfo(IEnumerable<string> xmlHierarchy, PropertyInfo propertyInfo)
         {
             XmlHierarchy = xmlHierarchy;
@@ -30,14 +38,16 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 
         public PropertyInfo PropertyInfo { get; }
 
+        public Func<string, object>? TranslatorFunc { get; }
+
         public bool IsComplex()
         {
             return IsComplex(PropertyInfo.PropertyType);
         }
 
-        private static bool IsComplex(Type typeIn)
+        private static bool IsComplex(Type type)
         {
-            return !typeIn.IsSubclassOf(typeof(ValueType)) && typeIn != typeof(string);
+            return !type.IsSubclassOf(typeof(ValueType)) && type != typeof(string);
         }
     }
 }

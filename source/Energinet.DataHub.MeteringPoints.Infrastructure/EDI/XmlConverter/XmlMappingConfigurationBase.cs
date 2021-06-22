@@ -58,8 +58,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             var constructorInfo = _configuration?.GetType().GetConstructors().SingleOrDefault() ?? throw new Exception("No constructor found for type");
             var parameters = constructorInfo.GetParameters().Select(x => x.ParameterType);
             var paramExpr = Expression.Parameter(typeof(object?[]));
-            var constructorParameters = parameters.Select((paramType, index) => Expression.Convert(Expression.ArrayAccess(paramExpr, Expression.Constant(index)), paramType!)).ToArray<Expression>();
-            var body = Expression.New(constructorInfo!, constructorParameters);
+            var constructorParameters = parameters.Select((paramType, index) => Expression.Convert(Expression.ArrayAccess(paramExpr, Expression.Constant(index)), paramType)).ToArray<Expression>();
+            var body = Expression.New(constructorInfo, constructorParameters);
             _cachedConstructor = Expression.Lambda<ConstructorDelegate>(body, paramExpr).Compile();
         }
     }
