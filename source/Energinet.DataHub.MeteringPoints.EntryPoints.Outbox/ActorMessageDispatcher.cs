@@ -13,21 +13,48 @@
 // limitations under the License.
 
 using System;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Infrastructure;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
 {
-    public static class ActorMessageDispatcher
+    public class ActorMessageDispatcher
     {
-        [Function("ActorMessageDispatcher")]
-        public static void Run(
-            [TimerTrigger("%ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER%")] string timerInformation,
-            FunctionContext context)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IOutboxManager _outbox;
+        private readonly IPostOfficeStorageClient _postOfficeStorageClient;
+
+        public ActorMessageDispatcher(
+            IUnitOfWork unitOfWork,
+            IOutboxManager outbox,
+            IPostOfficeStorageClient postOfficeStorageClient)
         {
-            var logger = context.GetLogger("ActorMessageDispatcher");
-            logger.LogInformation($"C# Timer trigger function executed at: {DateTimeOffset.UtcNow} (UTC)");
-            logger.LogInformation($"From function timer trigger input: {timerInformation}");
+            _unitOfWork = unitOfWork;
+            _outbox = outbox;
+            _postOfficeStorageClient = postOfficeStorageClient;
+        }
+
+        [Function("ActorMessageDispatcher")]
+        public async Task RunAsync(
+            [TimerTrigger("%ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER%")] string timerInformation)
+        {
+            while (true)
+            {
+                var message = _outbox.GetNext(OutboxMessageCategory.ActorMessage);
+                if (message == null)
+                {
+                    break;
+                }
+
+                await _postOfficeStorageClient.WriteAsync("path", message.Data).ConfigureAwait(false);
+                _outbox.MarkProcessed(message);
+
+                await _unitOfWork.CommitAsync().ConfigureAwait(false);
+            }
         }
     }
 }

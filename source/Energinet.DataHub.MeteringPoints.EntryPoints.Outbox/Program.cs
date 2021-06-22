@@ -87,6 +87,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             container.Register<EventHubProducerClient>(
                 () => new EventHubProducerClient(eventHubConnectionString, hubName),
                 Lifestyle.Singleton);
+            container.Register(
+                () => new PostOfficeStorageClientSettings(
+                    Environment.GetEnvironmentVariable("TEMP_POST_OFFICE_CONNECTION_STRING")!,
+                    Environment.GetEnvironmentVariable("TEMP_POST_OFFICE_SHARE")!));
             container.Register<ISystemDateTimeProvider, SystemDateTimeProvider>(Lifestyle.Scoped);
             container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
             container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
@@ -98,6 +102,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             container.Register<AzureEventHubChannel>(Lifestyle.Transient);
             container.Register<IIntegrationEventDispatchOrchestrator, IntegrationEventDispatchOrchestrator>(Lifestyle.Transient);
             container.Register<CreateMeteringPointEventHandler>(Lifestyle.Transient);
+            container.Register<IPostOfficeStorageClient, TempPostOfficeStorageClient>(Lifestyle.Scoped);
 
             container.BuildMediator(
                 new[]
