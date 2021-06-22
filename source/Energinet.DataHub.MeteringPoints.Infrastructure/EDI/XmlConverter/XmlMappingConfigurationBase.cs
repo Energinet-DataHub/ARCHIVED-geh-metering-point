@@ -32,6 +32,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             return _configuration?.GetProperties() ?? throw new InvalidOperationException();
         }
 
+        public string GetXmlElementName()
+        {
+            return _configuration?.GetXmlElementName() ?? throw new InvalidOperationException();
+        }
+
         public object CreateInstance(params object[] parameters)
         {
             if (_cachedConstructor is null)
@@ -42,9 +47,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             return _cachedConstructor(parameters);
         }
 
-        protected void CreateMapping<T>(Func<ConverterMapperConfigurationBuilder<T>, ConverterMapperConfigurationBuilder<T>> createFunc)
+        protected void CreateMapping<T>(string xmlElementName, Func<ConverterMapperConfigurationBuilder<T>, ConverterMapperConfigurationBuilder<T>> createFunc)
         {
-            _configuration = createFunc(new ConverterMapperConfigurationBuilder<T>()).Build();
+            _configuration = createFunc(new ConverterMapperConfigurationBuilder<T>(xmlElementName)).Build();
             CreateConstructor();
         }
 

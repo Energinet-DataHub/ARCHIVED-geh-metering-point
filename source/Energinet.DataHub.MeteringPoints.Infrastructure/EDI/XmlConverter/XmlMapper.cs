@@ -50,10 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
                     throw new NotImplementedException(headerData.ProcessType);
             }
 
-            var marketActivityRecords = rootElement
-                .Elements(ns + "MktActivityRecord");
-
-            var elements = InternalMap(currentMappingConfiguration, marketActivityRecords, ns);
+            var elements = InternalMap(currentMappingConfiguration, rootElement, ns);
 
             return elements;
         }
@@ -74,53 +71,45 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             return element.Element(name)?.Value ?? string.Empty;
         }
 
-        private static XElement ElementByName(XContainer parent, XName name)
+        private static XElement GetXmlElement(XContainer container, Stack<string> hierarchy, XNamespace ns)
         {
-            var element = parent.Descendants(name).FirstOrDefault();
-
-            // TODO: find a more suitable way to achieve further investigation in case element is not found
-            if (element == null)
-            {
-                element = parent.Parent?.Descendants(name).FirstOrDefault();
-            }
+            var elementName = hierarchy.Pop();
+            var element = container.Element(ns + elementName);
 
             if (element == null)
             {
-                throw new Exception($"Element not found: {name}");
+                throw new ArgumentOutOfRangeException($"Found no element named {elementName}");
             }
 
-            if (element.HasElements)
-            {
-                return element.Elements().First();
-            }
-
-            return element;
+            return hierarchy.Any() ? GetXmlElement(element, hierarchy, ns) : element;
         }
 
-        private static IEnumerable<IOutboundMessage> InternalMap(XmlMappingConfigurationBase xmlMappingConfigurationBase, IEnumerable<XElement> marketActivityRecords, XNamespace ns)
+        private static IEnumerable<IOutboundMessage> InternalMap(XmlMappingConfigurationBase xmlMappingConfigurationBase, XElement rootElement, XNamespace ns)
         {
             var properties = xmlMappingConfigurationBase.GetProperties();
 
             var messages = new List<IOutboundMessage>();
 
-            foreach (var marketActivityRecord in marketActivityRecords)
+            var elements = rootElement.Elements(ns + xmlMappingConfigurationBase.GetXmlElementName());
+
+            foreach (var element in elements)
             {
-                var args = properties.Select(x =>
+                var args = properties.Select(property =>
                 {
-                    if (x.Key == nameof(Application.CreateMeteringPoint.InstallationLocationAddress))
+                    if (property.Value is null)
                     {
-                        return new Address(); // TODO: mapper must be able to handle complex sub types
+                        throw new ArgumentNullException($"Missing map for property with name: {property.Key}");
                     }
 
-                    if (x.Value is null)
+                    if (property.Value.IsComplex())
                     {
-                        throw new ArgumentNullException($"Missing map for property with name: {x.Key}");
+                        return new Address();
                     }
 
-                    var marketEvaluationPoint = marketActivityRecord.Element(ns + "MarketEvaluationPoint") ?? throw new Exception();
+                    var xmlHierarchyStack = new Stack<string>(property.Value.XmlHierarchy.Reverse());
+                    var correspondingXmlElement = GetXmlElement(element, xmlHierarchyStack, ns);
 
-                    var correspondingXmlElement = ElementByName(marketEvaluationPoint, ns + x.Value.XmlPropName);
-                    return Convert(correspondingXmlElement.Value, x.Value.PropertyInfo.PropertyType);
+                    return Convert(correspondingXmlElement.Value, property.Value.PropertyInfo.PropertyType);
                 }).ToArray();
 
                 if (xmlMappingConfigurationBase.CreateInstance(args) is not IOutboundMessage instance)

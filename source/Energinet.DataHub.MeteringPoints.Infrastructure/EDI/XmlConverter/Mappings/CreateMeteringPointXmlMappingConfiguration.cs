@@ -18,26 +18,26 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
     {
         public CreateMeteringPointXmlMappingConfiguration()
         {
-            CreateMapping<Application.CreateMeteringPoint>(mapper => mapper
-                .AddProperty(x => x.GsrnNumber, "mRID")
-                .AddProperty(x => x.AssetType, "energyLabel_EnergyTechnologyAndFuel.technology")
-                .AddProperty(x => x.MaximumPower, "marketAgreement.contractedConnectionCapacity")
-                .AddProperty(x => x.MaximumCurrent, "ratedCurrent")
-                .AddProperty(x => x.TypeOfMeteringPoint, "type")
-                .AddProperty(x => x.SubTypeOfMeteringPoint, "meteringMethod")
-                .AddProperty(x => x.MeterReadingOccurrence, "readCycle")
-                .AddProperty(x => x.MeteringGridArea, "meteringGridArea_Domain.mRID")
-                .AddProperty(x => x.PowerPlant, "Linked_MarketEvaluationPoint") // ... mRID
-                .AddProperty(x => x.LocationDescription, "usagePointLocation.remark")
-                .AddProperty(x => x.SettlementMethod, "settlementMethod")
-                .AddProperty(x => x.UnitType, "quantity_Measure_Unit.name")
-                .AddProperty(x => x.DisconnectionType, "disconnectionMethod")
+            CreateMapping<Application.CreateMeteringPoint>("MktActivityRecord", mapper => mapper
+                .AddProperty(x => x.GsrnNumber, "MarketEvaluationPoint", "mRID")
+                .AddProperty(x => x.AssetType, "MarketEvaluationPoint", "energyLabel_EnergyTechnologyAndFuel.technology")
+                .AddProperty(x => x.MaximumPower, "MarketEvaluationPoint", "marketAgreement.contractedConnectionCapacity", "value")
+                .AddProperty(x => x.MaximumCurrent, "MarketEvaluationPoint", "ratedCurrent")
+                .AddProperty(x => x.TypeOfMeteringPoint, "MarketEvaluationPoint", "type")
+                .AddProperty(x => x.SubTypeOfMeteringPoint, "MarketEvaluationPoint", "meteringMethod")
+                .AddProperty(x => x.MeterReadingOccurrence, "MarketEvaluationPoint", "readCycle")
+                .AddProperty(x => x.MeteringGridArea, "MarketEvaluationPoint", "meteringGridArea_Domain.mRID")
+                .AddProperty(x => x.PowerPlant, "MarketEvaluationPoint", "Linked_MarketEvaluationPoint", "mRID")
+                .AddProperty(x => x.LocationDescription, "MarketEvaluationPoint", "usagePointLocation.remark")
+                .AddProperty(x => x.SettlementMethod, "MarketEvaluationPoint", "settlementMethod")
+                .AddProperty(x => x.UnitType, "MarketEvaluationPoint", "Series", "quantity_Measure_Unit.name")
+                .AddProperty(x => x.DisconnectionType, "MarketEvaluationPoint", "disconnectionMethod")
                 .AddProperty(x => x.OccurenceDate, "start_DateAndOrTime.dateTime")
-                .AddProperty(x => x.MeterNumber, "meter.mRID")
+                .AddProperty(x => x.MeterNumber, "MarketEvaluationPoint", "meter.mRID")
                 .AddProperty(x => x.TransactionId, "mRID")
-                .AddProperty(x => x.PhysicalStatusOfMeteringPoint, "connectionState")
-                .AddProperty(x => x.NetSettlementGroup, "netSettlementGroup")
-                .AddProperty(x => x.ConnectionType, "mPConnectionType")
+                .AddProperty(x => x.PhysicalStatusOfMeteringPoint, "MarketEvaluationPoint", "connectionState")
+                .AddProperty(x => x.NetSettlementGroup, "MarketEvaluationPoint", "netSettlementGroup")
+                .AddProperty(x => x.ConnectionType, "MarketEvaluationPoint", "mPConnectionType")
                 .AddProperty(x => x.InstallationLocationAddress, "sdf"));
         }
     }

@@ -12,9 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 {
-    public record ExtendedPropertyInfo(string XmlPropName, PropertyInfo PropertyInfo);
+    public class ExtendedPropertyInfo
+    {
+        public ExtendedPropertyInfo(IEnumerable<string> xmlHierarchy, PropertyInfo propertyInfo)
+        {
+            XmlHierarchy = xmlHierarchy;
+            PropertyInfo = propertyInfo;
+        }
+
+        public IEnumerable<string> XmlHierarchy { get; }
+
+        public PropertyInfo PropertyInfo { get; }
+
+        public bool IsComplex()
+        {
+            return IsComplex(PropertyInfo.PropertyType);
+        }
+
+        private static bool IsComplex(Type typeIn)
+        {
+            return !typeIn.IsSubclassOf(typeof(ValueType)) && typeIn != typeof(string);
+        }
+    }
 }

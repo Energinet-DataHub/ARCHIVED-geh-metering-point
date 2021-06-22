@@ -20,17 +20,24 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
     public class ConverterMapperConfiguration
     {
         private readonly Type _type;
+        private readonly string _xmlElementName;
         private readonly Dictionary<string, ExtendedPropertyInfo?> _properties;
 
-        public ConverterMapperConfiguration(Type type, Dictionary<string, ExtendedPropertyInfo?> properties)
+        public ConverterMapperConfiguration(Type type, string xmlElementName, Dictionary<string, ExtendedPropertyInfo?> properties)
         {
             _type = type;
+            _xmlElementName = xmlElementName;
             _properties = properties;
         }
 
         public Dictionary<string, ExtendedPropertyInfo?> GetProperties()
         {
             return _properties;
+        }
+
+        public string GetXmlElementName()
+        {
+            return _xmlElementName;
         }
 
         public new Type GetType()

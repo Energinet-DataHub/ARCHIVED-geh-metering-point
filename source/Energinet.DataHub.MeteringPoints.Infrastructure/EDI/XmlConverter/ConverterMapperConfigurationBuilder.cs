@@ -22,10 +22,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 {
     public class ConverterMapperConfigurationBuilder<T>
     {
+        private readonly string _xmlElementName;
         private readonly Dictionary<string, ExtendedPropertyInfo?> _properties;
 
-        public ConverterMapperConfigurationBuilder()
+        public ConverterMapperConfigurationBuilder(string xmlElementName)
         {
+            _xmlElementName = xmlElementName;
             _properties = new Dictionary<string, ExtendedPropertyInfo?>();
 
             var constructor = typeof(T).GetConstructors().FirstOrDefault() ?? throw new InvalidOperationException("Target type must be a record with a single constructor");
@@ -36,16 +38,16 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             }
         }
 
-        public ConverterMapperConfigurationBuilder<T> AddProperty<TProperty>(Expression<Func<T, TProperty>> selector, string xmlPropertyName)
+        public ConverterMapperConfigurationBuilder<T> AddProperty<TProperty>(Expression<Func<T, TProperty>> selector, params string[] xmlHierarchy)
         {
             var propertyInfo = PropertyInfoHelper.GetPropertyInfo(selector);
-            _properties[propertyInfo.Name] = new ExtendedPropertyInfo(xmlPropertyName, propertyInfo);
+            _properties[propertyInfo.Name] = new ExtendedPropertyInfo(xmlHierarchy, propertyInfo);
             return this;
         }
 
         public ConverterMapperConfiguration Build()
         {
-            return new(typeof(T), _properties);
+            return new(typeof(T), _xmlElementName, _properties);
         }
     }
 }
