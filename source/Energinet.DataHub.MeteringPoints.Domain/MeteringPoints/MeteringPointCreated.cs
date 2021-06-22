@@ -14,20 +14,36 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class MeteringPointCreated : DomainEventBase
     {
-        public MeteringPointCreated(MeteringPointId meteringPointId, GsrnNumber gsrnNumber, MeteringPointType meteringPointType, GridAreaId gridAreaId)
+        public MeteringPointCreated(MeteringPointId meteringPointId, GsrnNumber gsrnNumber, MeteringPointType meteringPointType, GridAreaId gridAreaId, MeteringPointSubType meteringPointSubType, PhysicalState physicalState, ReadingOccurrence readingOccurrence, ProductType productType, MeasurementUnitType measurementUnitType)
         {
             MeteringPointId = meteringPointId;
             GsrnNumber = gsrnNumber;
             MeteringPointType = meteringPointType;
             GridAreaId = gridAreaId;
+            MeteringPointSubType = meteringPointSubType;
+            PhysicalState = physicalState;
+            ReadingOccurrence = readingOccurrence;
+            ProductType = productType;
+            MeasurementUnitType = measurementUnitType;
         }
 
         public MeteringPointId MeteringPointId { get; }
+
+        public PhysicalState PhysicalState { get; }
+
+        public ReadingOccurrence ReadingOccurrence { get; }
+
+        public ProductType ProductType { get; }
+
+        public MeasurementUnitType MeasurementUnitType { get; }
+
+        public MeteringPointSubType MeteringPointSubType { get; }
 
         public GsrnNumber GsrnNumber { get; }
 
