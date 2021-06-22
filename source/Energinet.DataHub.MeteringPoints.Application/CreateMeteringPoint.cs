@@ -37,7 +37,8 @@ namespace Energinet.DataHub.MeteringPoints.Application
             string PhysicalStatusOfMeteringPoint = "",
             string NetSettlementGroup = "",
             string ConnectionType = "",
-            string AssetType = "")
+            string AssetType = "",
+            string ParentRelatedMeteringPoint = "")
         : IBusinessRequest,
             IOutboundMessage,
             IInboundMessage;

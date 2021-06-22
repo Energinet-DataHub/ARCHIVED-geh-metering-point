@@ -71,15 +71,15 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             return element.Element(name)?.Value ?? string.Empty;
         }
 
-        private static XElement GetXmlElement(XContainer container, Stack<string> hierarchy, XNamespace ns)
+        private static XElement? GetXmlElement(XContainer? container, Stack<string> hierarchy, XNamespace ns)
         {
+            if (container is null)
+            {
+                throw new ArgumentNullException();
+            }
+
             var elementName = hierarchy.Pop();
             var element = container.Element(ns + elementName);
-
-            if (element == null)
-            {
-                throw new ArgumentOutOfRangeException($"Found no element named {elementName}");
-            }
 
             return hierarchy.Any() ? GetXmlElement(element, hierarchy, ns) : element;
         }
@@ -109,7 +109,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
                     var xmlHierarchyStack = new Stack<string>(property.Value.XmlHierarchy.Reverse());
                     var correspondingXmlElement = GetXmlElement(element, xmlHierarchyStack, ns);
 
-                    return Convert(correspondingXmlElement.Value, property.Value.PropertyInfo.PropertyType);
+                    return Convert(correspondingXmlElement?.Value, property.Value.PropertyInfo.PropertyType);
                 }).ToArray();
 
                 if (xmlMappingConfigurationBase.CreateInstance(args) is not IOutboundMessage instance)
@@ -123,8 +123,13 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             return messages;
         }
 
-        private static object Convert(string source, Type dest)
+        private static object? Convert(string? source, Type dest)
         {
+            if (dest == typeof(Nullable<>))
+            {
+                return null;
+            }
+
             if (dest == typeof(string))
             {
                 return source;

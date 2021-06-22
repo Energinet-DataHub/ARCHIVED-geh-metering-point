@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 
         private ConstructorDelegate? _cachedConstructor;
 
-        private delegate object ConstructorDelegate(params object[] args);
+        private delegate object ConstructorDelegate(params object?[] args);
 
         public Dictionary<string, ExtendedPropertyInfo?> GetProperties()
         {
@@ -37,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             return _configuration?.GetXmlElementName() ?? throw new InvalidOperationException();
         }
 
-        public object CreateInstance(params object[] parameters)
+        public object CreateInstance(params object?[] parameters)
         {
             if (_cachedConstructor is null)
             {
@@ -57,7 +57,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
         {
             var constructorInfo = _configuration?.GetType().GetConstructors().SingleOrDefault() ?? throw new Exception("No constructor found for type");
             var parameters = constructorInfo.GetParameters().Select(x => x.ParameterType);
-            var paramExpr = Expression.Parameter(typeof(object[]));
+            var paramExpr = Expression.Parameter(typeof(object?[]));
             var constructorParameters = parameters.Select((paramType, index) => Expression.Convert(Expression.ArrayAccess(paramExpr, Expression.Constant(index)), paramType!)).ToArray<Expression>();
             var body = Expression.New(constructorInfo!, constructorParameters);
             _cachedConstructor = Expression.Lambda<ConstructorDelegate>(body, paramExpr).Compile();

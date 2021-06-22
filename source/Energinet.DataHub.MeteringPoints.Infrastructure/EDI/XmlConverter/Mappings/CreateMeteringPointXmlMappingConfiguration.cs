@@ -38,6 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 .AddProperty(x => x.PhysicalStatusOfMeteringPoint, "MarketEvaluationPoint", "connectionState")
                 .AddProperty(x => x.NetSettlementGroup, "MarketEvaluationPoint", "netSettlementGroup")
                 .AddProperty(x => x.ConnectionType, "MarketEvaluationPoint", "mPConnectionType")
+                .AddProperty(x => x.ParentRelatedMeteringPoint, "sdf")
                 .AddProperty(x => x.InstallationLocationAddress, "sdf"));
         }
     }
