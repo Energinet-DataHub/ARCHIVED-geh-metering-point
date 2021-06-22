@@ -31,6 +31,8 @@ resource "azurerm_storage_share" "postoffice" {
 
     access_policy {
       permissions = "rwdl"
+      start       = "2020-01-01T09:38:21.0000000Z"
+      expiry      = "2023-01-01T10:38:21.0000000Z"
     }
   }
 }
