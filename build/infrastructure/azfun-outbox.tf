@@ -41,7 +41,7 @@ module "azfun_outbox" {
     METERINGPOINTEVENTHUB_CONNECTION_STRING   = module.evhar_meteringpoint_sender.primary_connection_string
     METERINGPOINTEVENTHUB_HUB_NAME = module.evh_meteringpoint.name
     TEMP_POST_OFFICE_CONNECTION_STRING = module.stor_postoffice.primary_connection_string
-    TEMP_POST_OFFICE_SHARE = "temppostoffice"
+    TEMP_POST_OFFICE_SHARE = azurerm_storage_share.postoffice.name
   }
   dependencies                              = [
     module.appi.dependent_on,

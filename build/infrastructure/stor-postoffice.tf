@@ -13,7 +13,7 @@
 # limitations under the License.
 module "stor_postoffice" {
     source = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//storage-account?ref=1.2.0"
-    name = "stor${var.project}${var.organisation}${lower(var.environment)}"
+    name = "stor${var.project}${var.organisation}${lower(var.environment)}posttemp"
     resource_group_name = data.azurerm_resource_group.main.name
     location = data.azurerm_resource_group.main.location
     account_replication_type = "LRS"
