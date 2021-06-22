@@ -18,7 +18,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Azure.Storage.Files.Shares;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice
 {
     public class TempPostOfficeStorageClient : IPostOfficeStorageClient
     {

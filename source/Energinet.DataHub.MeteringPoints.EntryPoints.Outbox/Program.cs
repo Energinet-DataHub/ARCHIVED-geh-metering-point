@@ -28,6 +28,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Channels;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Dispatchers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Services;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
