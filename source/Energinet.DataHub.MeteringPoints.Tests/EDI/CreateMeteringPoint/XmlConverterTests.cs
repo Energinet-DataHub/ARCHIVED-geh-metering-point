@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -39,29 +38,38 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
         [Fact]
         public async Task ValidateValuesFromEachElementTest()
         {
-            var configurations = new List<XmlMappingConfigurationBase>
-            {
-                new CreateMeteringPointXmlMappingConfiguration(),
-            }.ToImmutableList();
+            var xmlMapper = new XmlMapper((processType, type) => new CreateMeteringPointXmlMappingConfiguration());
 
-            var xmlConverter = new XmlConverter(configurations);
+            var xmlConverter = new XmlConverter(xmlMapper);
 
             var commandsRaw = await xmlConverter.DeserializeAsync(_xmlStream);
             var commands = commandsRaw.Cast<MeteringPoints.Application.CreateMeteringPoint>();
 
             var command = commands.First();
 
-            // MarketEvaluationPoint
+            Assert.Equal(nameof(MeteringPointType.Consumption), command.TypeOfMeteringPoint);
             Assert.Equal("571234567891234605", command.GsrnNumber);
-
-            // Contracted Connection Capacity
             Assert.Equal(666, command.MaximumPower);
-
-            // Series
-            Assert.Equal("kWh", command.UnitType);
-
-            // Linked Market EvaluationPoint aka Power Plant
+            Assert.Equal(nameof(MeasurementUnitType.KWh).ToLower(), command.UnitType.ToLower());
             Assert.Equal("571234567891234636", command.PowerPlant);
+            Assert.Equal(nameof(SettlementMethod.Flex), command.SettlementMethod);
+            Assert.Equal(nameof(MeteringPointType.Consumption), command.TypeOfMeteringPoint);
+            Assert.Equal(nameof(MeteringPointSubType.Physical), command.SubTypeOfMeteringPoint);
+            Assert.Equal(nameof(PhysicalState.New), command.PhysicalStatusOfMeteringPoint);
+            Assert.Equal(nameof(ConnectionType.Direct), command.ConnectionType);
+            Assert.Equal(nameof(AssetType.WindTurbines), command.AssetType);
+            Assert.Equal(nameof(DisconnectionType.Remote), command.DisconnectionType);
+            Assert.Equal(nameof(ReadingOccurrence.Hourly), command.MeterReadingOccurrence);
+
+            Assert.Equal("3. Gadelygte fra højre", command.LocationDescription);
+            Assert.Equal("1234567890", command.MeterNumber);
+            Assert.Equal("2021-05-27T22:00:00.00Z", command.OccurenceDate);
+            Assert.Equal("822", command.MeteringGridArea);
+            Assert.Equal("99", command.NetSettlementGroup);
+            Assert.Equal(666, command.MaximumCurrent);
+            Assert.Equal("asdasweqweasedGUID", command.TransactionId);
+
+            Assert.Null(command.ParentRelatedMeteringPoint);
 
             // // Main address
             // Assert.Equal("6000", command.InstallationLocationAddress.PostCode);
@@ -74,21 +82,24 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
         }
 
         [Fact]
-        public async Task ValidateTranslateSettlementMethodTest()
+        public async Task ValidateTranslationOfCimXmlValuesToDomainSpecificValuesTest()
         {
-            var configurations = new List<XmlMappingConfigurationBase>
-            {
-                new CreateMeteringPointXmlMappingConfiguration(),
-            }.ToImmutableList();
+            var xmlMapper = new XmlMapper((processType, type) => new CreateMeteringPointXmlMappingConfiguration());
 
-            var xmlConverter = new XmlConverter(configurations);
+            var xmlConverter = new XmlConverter(xmlMapper);
             var commandsRaw = await xmlConverter.DeserializeAsync(_xmlStream);
             var commands = commandsRaw.Cast<MeteringPoints.Application.CreateMeteringPoint>();
 
             var command = commands.First();
 
-            // Validate that we translate "D01" to "Flex"
             Assert.Equal(nameof(SettlementMethod.Flex), command.SettlementMethod);
+            Assert.Equal(nameof(MeteringPointType.Consumption), command.TypeOfMeteringPoint);
+            Assert.Equal(nameof(MeteringPointSubType.Physical), command.SubTypeOfMeteringPoint);
+            Assert.Equal(nameof(PhysicalState.New), command.PhysicalStatusOfMeteringPoint);
+            Assert.Equal(nameof(ConnectionType.Direct), command.ConnectionType);
+            Assert.Equal(nameof(AssetType.WindTurbines), command.AssetType);
+            Assert.Equal(nameof(DisconnectionType.Remote), command.DisconnectionType);
+            Assert.Equal(nameof(ReadingOccurrence.Hourly), command.MeterReadingOccurrence);
         }
 
         private static Stream GetResourceStream(string resourcePath)
