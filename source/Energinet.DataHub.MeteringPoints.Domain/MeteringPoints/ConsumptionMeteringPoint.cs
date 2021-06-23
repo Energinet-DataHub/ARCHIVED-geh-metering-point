@@ -93,7 +93,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             string netSettlementGroup,
             DisconnectionType disconnectionType,
             ConnectionType connectionType,
-            AssetType assetType)
+            AssetType assetType,
+            string? parentRelatedMeteringPoint)
             : base(
                 id,
                 gsrnNumber,
@@ -109,7 +110,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 meterReadingOccurrence,
                 maximumCurrent,
                 maximumPower,
-                occurenceDate)
+                occurenceDate,
+                parentRelatedMeteringPoint)
         {
             _settlementMethod = settlementMethod;
             _netSettlementGroup = netSettlementGroup;

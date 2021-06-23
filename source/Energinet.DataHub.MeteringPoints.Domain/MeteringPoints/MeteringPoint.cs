@@ -36,6 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private string _locationDescription;
         private MeasurementUnitType _unitType;
         private Instant? _occurenceDate;
+        private string? _parentRelatedMeteringPoint;
         private string _meterNumber;
 
         #pragma warning disable CS8618 //Disable nullable check
@@ -92,7 +93,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             ReadingOccurrence meterReadingOccurrence,
             int maximumCurrent,
             int maximumPower,
-            Instant? occurenceDate)
+            Instant? occurenceDate,
+            string? parentRelatedMeteringPoint)
         {
             Id = id;
             GsrnNumber = gsrnNumber;
@@ -109,6 +111,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _maximumCurrent = maximumCurrent;
             _maximumPower = maximumPower;
             _occurenceDate = occurenceDate;
+            _parentRelatedMeteringPoint = parentRelatedMeteringPoint;
         }
 
         public MeteringPointId Id { get; }

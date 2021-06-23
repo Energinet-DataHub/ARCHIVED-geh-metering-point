@@ -81,7 +81,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             int maximumPower,
             Instant? occurenceDate,
             string toGrid,
-            string fromGrid)
+            string fromGrid,
+            string? parentRelatedMeteringPoint)
             : base(
                 id,
                 gsrnNumber,
@@ -97,7 +98,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 meterReadingOccurrence,
                 maximumCurrent,
                 maximumPower,
-                occurenceDate)
+                occurenceDate,
+                parentRelatedMeteringPoint)
         {
             _toGrid = toGrid;
             _fromGrid = fromGrid;

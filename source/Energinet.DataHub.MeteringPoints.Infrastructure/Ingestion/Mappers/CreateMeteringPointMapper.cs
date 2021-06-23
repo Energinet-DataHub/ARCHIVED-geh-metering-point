@@ -57,6 +57,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
                     NetSettlementGroup = obj.NetSettlementGroup,
                     ConnectionType = obj.ConnectionType,
                     AssetType = obj.AssetType,
+                    ParentRelatedMeteringPoint = obj.ParentRelatedMeteringPoint,
                 },
             };
         }

@@ -89,7 +89,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             int productionObligation,
             int netSettlementGroup,
             DisconnectionType disconnectionType,
-            ConnectionType connectionType)
+            ConnectionType connectionType,
+            string? parentRelatedMeteringPoint)
             : base(
                 id,
                 gsrnNumber,
@@ -105,7 +106,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 meterReadingOccurrence,
                 maximumCurrent,
                 maximumPower,
-                occurenceDate)
+                occurenceDate,
+                parentRelatedMeteringPoint)
         {
             _productionObligation = productionObligation;
             _netSettlementGroup = netSettlementGroup;

@@ -50,7 +50,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
                 PhysicalStatusOfMeteringPoint: obj.PhysicalStatusOfMeteringPoint,
                 NetSettlementGroup: obj.NetSettlementGroup,
                 ConnectionType: obj.ConnectionType,
-                AssetType: obj.AssetType);
+                AssetType: obj.AssetType,
+                ParentRelatedMeteringPoint: obj.ParentRelatedMeteringPoint);
         }
     }
 }
