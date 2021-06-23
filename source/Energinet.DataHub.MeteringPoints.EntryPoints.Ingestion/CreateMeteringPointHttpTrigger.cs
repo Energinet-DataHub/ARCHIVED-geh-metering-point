@@ -29,32 +29,32 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
     {
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageDispatcher _dispatcher;
+        private readonly IXmlConverter _xmlConverter;
 
         public CreateMeteringPointHttpTrigger(
             ICorrelationContext correlationContext,
-            MessageDispatcher dispatcher)
+            MessageDispatcher dispatcher,
+            IXmlConverter xmlConverter)
         {
             _correlationContext = correlationContext;
             _dispatcher = dispatcher;
+            _xmlConverter = xmlConverter;
         }
 
         [Function("CreateMeteringPoint")]
         public async Task<HttpResponseData> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")]
             HttpRequestData request,
-            FunctionContext executionContext,
-            IXmlConverter xmlConverter)
+            FunctionContext executionContext)
         {
             var logger = executionContext.GetLogger("CreateMeteringPointHttpTrigger");
             logger.LogInformation("Received CreateMeteringPoint request");
 
-            IEnumerable<CreateMeteringPoint> commands;
+            IEnumerable<IOutboundMessage> commands;
 
             try
             {
-                // // TODO: Currently we assume that we will have a function for each metering point event. This might change if we're not able to handle the routing in the API Gateway.
-                // // TODO: In that case we would need to make a switch case or something like that to look at the value in the "process.processType" element.
-                commands = (IEnumerable<CreateMeteringPoint>)await xmlConverter.DeserializeAsync(request.Body);
+                commands = await _xmlConverter.DeserializeAsync(request.Body);
             }
             catch (Exception exception)
             {
