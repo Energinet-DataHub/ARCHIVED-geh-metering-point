@@ -14,22 +14,20 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Xml.Linq;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappings;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 {
     public class XmlMapper
     {
-        private readonly ImmutableList<XmlMappingConfigurationBase> _configurations;
+        private readonly Func<string, string, XmlMappingConfigurationBase> _mappingConfigurationFactory;
 
-        public XmlMapper(ImmutableList<XmlMappingConfigurationBase> configurations)
+        public XmlMapper(Func<string, string, XmlMappingConfigurationBase> mappingConfigurationFactory)
         {
-            _configurations = configurations;
+            _mappingConfigurationFactory = mappingConfigurationFactory;
         }
 
         public IEnumerable<IOutboundMessage> Map(XElement rootElement)
@@ -38,17 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 
             var headerData = MapHeaderData(rootElement, ns);
 
-            XmlMappingConfigurationBase currentMappingConfiguration;
-
-            switch (headerData.ProcessType)
-            {
-                case "E02":
-                    currentMappingConfiguration = new CreateMeteringPointXmlMappingConfiguration();
-                    break;
-
-                default:
-                    throw new NotImplementedException(headerData.ProcessType);
-            }
+            var currentMappingConfiguration = _mappingConfigurationFactory(headerData.ProcessType, headerData.Type);
 
             var elements = InternalMap(currentMappingConfiguration, rootElement, ns);
 
@@ -71,17 +59,17 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             return element.Element(name)?.Value ?? string.Empty;
         }
 
-        private static XElement? GetXmlElement(XContainer? container, Stack<string> hierarchy, XNamespace ns)
+        private static XElement? GetXmlElement(XContainer? container, Queue<string> hierarchyQueue, XNamespace ns)
         {
             if (container is null)
             {
                 throw new ArgumentNullException();
             }
 
-            var elementName = hierarchy.Pop();
+            var elementName = hierarchyQueue.Dequeue();
             var element = container.Element(ns + elementName);
 
-            return hierarchy.Any() ? GetXmlElement(element, hierarchy, ns) : element;
+            return hierarchyQueue.Any() ? GetXmlElement(element, hierarchyQueue, ns) : element;
         }
 
         private static IEnumerable<IOutboundMessage> InternalMap(XmlMappingConfigurationBase xmlMappingConfigurationBase, XElement rootElement, XNamespace ns)
@@ -106,8 +94,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
                         return new Address();
                     }
 
-                    var xmlHierarchyStack = new Stack<string>(property.Value.XmlHierarchy.Reverse());
-                    var correspondingXmlElement = GetXmlElement(element, xmlHierarchyStack, ns);
+                    var xmlHierarchyQueue = new Queue<string>(property.Value.XmlHierarchy);
+                    var correspondingXmlElement = GetXmlElement(element, xmlHierarchyQueue, ns);
 
                     return Convert(correspondingXmlElement?.Value, property.Value.PropertyInfo.PropertyType, property.Value.TranslatorFunc);
                 }).ToArray();
@@ -126,11 +114,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
         private static object? Convert(string? source, Type dest, Func<string, object>? valueTranslatorFunc)
         {
             if (dest == typeof(Nullable<>)) return default;
-            if (source is null) return default;
 
             if (dest == typeof(string))
             {
-                return valueTranslatorFunc != null ? valueTranslatorFunc(source) : source;
+                return valueTranslatorFunc != null ? valueTranslatorFunc(source ?? string.Empty) : source;
             }
 
             return System.Convert.ChangeType(source, dest);

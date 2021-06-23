@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,18 +23,17 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 {
     public class XmlConverter : IXmlConverter
     {
-        private readonly ImmutableList<XmlMappingConfigurationBase> _mappingConfigurations;
+        private readonly XmlMapper _xmlMapper;
 
-        public XmlConverter(ImmutableList<XmlMappingConfigurationBase> mappingConfigurations)
+        public XmlConverter(XmlMapper xmlMapper)
         {
-            _mappingConfigurations = mappingConfigurations;
+            _xmlMapper = xmlMapper;
         }
 
         public async Task<IEnumerable<IOutboundMessage>> DeserializeAsync(Stream body)
         {
             XElement rootElement = await XElement.LoadAsync(body, LoadOptions.None, CancellationToken.None);
-            var mapper = new XmlMapper(_mappingConfigurations);
-            return mapper.Map(rootElement);
+            return _xmlMapper.Map(rootElement);
         }
     }
 }
