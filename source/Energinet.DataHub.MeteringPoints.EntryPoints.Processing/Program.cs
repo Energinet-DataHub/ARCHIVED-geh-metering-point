@@ -104,7 +104,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IValidator<CreateMeteringPoint>, CreateMeteringPointRuleSet>(Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<>), typeof(CreateMeteringPointResultHandler), Lifestyle.Scoped);
             container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
-            container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Singleton);
+            container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Scoped);
             container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
             container.Register<ISystemDateTimeProvider, SystemDateTimeProvider>(Lifestyle.Singleton);
             container.Register<IDomainEventsAccessor, DomainEventsAccessor>();
