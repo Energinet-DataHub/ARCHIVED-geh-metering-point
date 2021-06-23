@@ -15,6 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using Azure.Messaging.EventHubs.Producer;
+using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
@@ -27,6 +28,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Channels;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Dispatchers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Services;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
@@ -87,6 +89,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             container.Register<EventHubProducerClient>(
                 () => new EventHubProducerClient(eventHubConnectionString, hubName),
                 Lifestyle.Singleton);
+            container.Register(
+                () => new PostOfficeStorageClientSettings(
+                    Environment.GetEnvironmentVariable("TEMP_POST_OFFICE_CONNECTION_STRING")!,
+                    Environment.GetEnvironmentVariable("TEMP_POST_OFFICE_SHARE")!));
             container.Register<ISystemDateTimeProvider, SystemDateTimeProvider>(Lifestyle.Scoped);
             container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
             container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
@@ -98,6 +104,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             container.Register<AzureEventHubChannel>(Lifestyle.Transient);
             container.Register<IIntegrationEventDispatchOrchestrator, IntegrationEventDispatchOrchestrator>(Lifestyle.Transient);
             container.Register<CreateMeteringPointEventHandler>(Lifestyle.Transient);
+            container.Register<IPostOfficeStorageClient, TempPostOfficeStorageClient>(Lifestyle.Scoped);
 
             container.BuildMediator(
                 new[]
