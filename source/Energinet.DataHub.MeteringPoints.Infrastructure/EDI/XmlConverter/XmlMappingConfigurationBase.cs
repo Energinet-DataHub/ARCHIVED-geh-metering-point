@@ -32,6 +32,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             return _configuration?.GetProperties() ?? throw new InvalidOperationException();
         }
 
+        public new Type? GetType()
+        {
+            return _configuration?.GetType();
+        }
+
         public string GetXmlElementName()
         {
             return _configuration?.GetXmlElementName() ?? throw new InvalidOperationException();

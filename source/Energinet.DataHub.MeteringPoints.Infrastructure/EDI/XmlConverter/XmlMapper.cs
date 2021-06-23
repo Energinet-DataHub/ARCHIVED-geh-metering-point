@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Energinet.DataHub.MeteringPoints.Application;
-using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 {
@@ -30,7 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             _mappingConfigurationFactory = mappingConfigurationFactory;
         }
 
-        public IEnumerable<IOutboundMessage> Map(XElement rootElement)
+        public IEnumerable<IBusinessRequest> Map(XElement rootElement)
         {
             XNamespace ns = rootElement.FirstAttribute?.Value ?? throw new Exception("Found no namespace for XML Document");
 
@@ -72,11 +72,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             return hierarchyQueue.Any() ? GetXmlElement(element, hierarchyQueue, ns) : element;
         }
 
-        private static IEnumerable<IOutboundMessage> InternalMap(XmlMappingConfigurationBase xmlMappingConfigurationBase, XElement rootElement, XNamespace ns)
+        private static IEnumerable<IBusinessRequest> InternalMap(XmlMappingConfigurationBase xmlMappingConfigurationBase, XElement rootElement, XNamespace ns)
         {
             var properties = xmlMappingConfigurationBase.GetProperties();
 
-            var messages = new List<IOutboundMessage>();
+            var messages = new List<IBusinessRequest>();
 
             var elements = rootElement.Elements(ns + xmlMappingConfigurationBase.GetXmlElementName());
 
@@ -100,7 +100,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
                     return Convert(correspondingXmlElement?.Value, property.Value.PropertyInfo.PropertyType, property.Value.TranslatorFunc);
                 }).ToArray();
 
-                if (xmlMappingConfigurationBase.CreateInstance(args) is not IOutboundMessage instance)
+                if (xmlMappingConfigurationBase.CreateInstance(args) is not IBusinessRequest instance)
                 {
                     throw new InvalidOperationException("Could not create instance");
                 }

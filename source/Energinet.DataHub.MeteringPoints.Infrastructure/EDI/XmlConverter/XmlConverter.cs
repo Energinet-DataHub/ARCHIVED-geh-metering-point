@@ -17,7 +17,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 {
@@ -30,7 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             _xmlMapper = xmlMapper;
         }
 
-        public async Task<IEnumerable<IOutboundMessage>> DeserializeAsync(Stream body)
+        public async Task<IEnumerable<IBusinessRequest>> DeserializeAsync(Stream body)
         {
             XElement rootElement = await XElement.LoadAsync(body, LoadOptions.None, CancellationToken.None);
             return _xmlMapper.Map(rootElement);

@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter;
 using Microsoft.Azure.Functions.Worker;
@@ -50,7 +51,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             var logger = executionContext.GetLogger("CreateMeteringPointHttpTrigger");
             logger.LogInformation("Received CreateMeteringPoint request");
 
-            IEnumerable<IOutboundMessage> commands;
+            IEnumerable<IBusinessRequest> commands;
 
             try
             {
@@ -71,7 +72,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 
             foreach (var command in commands)
             {
-                await _dispatcher.DispatchAsync(command).ConfigureAwait(false);
+                await _dispatcher.DispatchAsync((IOutboundMessage)command).ConfigureAwait(false);
             }
 
             return response;

@@ -36,6 +36,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
         }
 
         [Fact]
+        public void AssertConfigurationsValid()
+        {
+            ConverterMapperConfigurations.AssertConfigurationValid();
+            Assert.True(true);
+        }
+
+        [Fact]
         public async Task ValidateValuesFromEachElementTest()
         {
             var xmlMapper = new XmlMapper((processType, type) => new CreateMeteringPointXmlMappingConfiguration());
