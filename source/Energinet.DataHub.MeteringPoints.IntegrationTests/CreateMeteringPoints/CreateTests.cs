@@ -151,7 +151,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SampleData.MeasurementUnitType,
                 SampleData.DisconnectionType,
                 SampleData.Occurrence,
-                string.Empty,
+                SampleData.MeterNumber,
                 string.Empty,
                 string.Empty,
                 string.Empty,
