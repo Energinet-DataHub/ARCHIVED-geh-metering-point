@@ -1,127 +1,149 @@
-﻿# Protocol Documentation
+# Protocol Documentation
 
 ## Table of Contents
 
-- Metering Point domain contracts
-    - [MeteringPointCancelledMessage](#.MeteringPointCancelledMessage)
-    - [MeteringPointClosedMessage](#.MeteringPointClosedMessage)
-    - [MeteringPointConnectedMessage](#.MeteringPointConnectedMessage)
-    - [MeteringPointCreatedEventMessage](#.MeteringPointCreatedEventMessage)
-    - [MeteringPointDisconnectedMessage](#.MeteringPointDisconnectedMessage)
-    - [MeteringPointUpdatedMessage](#.MeteringPointUpdatedMessage)
-    - [ParentCoupledMessage](#.ParentCoupledMessage)
-    - [ParentDecoupledMessage](#.ParentDecoupledMessage)
+- [IntegrationEventContract.proto](#IntegrationEventContract.proto)
+    - [MeteringMethodChanged](#.MeteringMethodChanged)
+    - [MeteringPointCancelled](#.MeteringPointCancelled)
+    - [MeteringPointClosed](#.MeteringPointClosed)
+    - [MeteringPointConnected](#.MeteringPointConnected)
+    - [MeteringPointCreated](#.MeteringPointCreated)
+    - [MeteringPointDisconnected](#.MeteringPointDisconnected)
+    - [NetSettlementGroupChanged](#.NetSettlementGroupChanged)
+    - [ParentCoupled](#.ParentCoupled)
+    - [ParentDecoupled](#.ParentDecoupled)
+    - [SettlementDetailsChanged](#.SettlementDetailsChanged)
+    
+<a name="IntegrationEventContract.proto"></a>
 
-## Metering Point domain contracts
+## IntegrationEventContract.proto
 
 Metering Point Domain related messages.
 
-<a name=".MeteringPointCancelledMessage"></a>
+<a name=".MeteringMethodChanged"></a>
 
-### MeteringPointCancelledMessage
+### MeteringMethodChanged
+
+Represents the changing of the Metering Method.
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| Gsrn | [string](#string) |  | Unique metering point identifier of the metering point which has its settlement details changed. |
+| meteringMethod | [string](#string) |  | This indicates if the metering point is now physical, virtual, or calculated. |
+| EffectiveDate | [string](#string) |  | The date on which the metering method is changed. |
+
+<a name=".MeteringPointCancelled"></a>
+
+### MeteringPointCancelled
 
 Represents the cancellation of a metering point. This can only happen for MPs who have never had a supplier.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| Gsrn | string |  | Unique metering point identifier. |
+| Gsrn | [string](#string) |  | Unique metering point identifier. |
 
-<a name=".MeteringPointClosedMessage"></a>
+<a name=".MeteringPointClosed"></a>
 
-### MeteringPointClosedMessage
+### MeteringPointClosed
 
 Represents the closing of a metering point.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| Gsrn | string |  | Unique metering point identifier. |
-| EffectiveDate | string |  | The date which the metering point is closed. |
+| Gsrn | [string](#string) |  | Unique metering point identifier. |
+| EffectiveDate | [string](#string) |  | The date on which the metering point is closed. |
 
-<a name=".MeteringPointCreatedEventMessage"></a>
+<a name=".MeteringPointConnected"></a>
 
-### MeteringPointCreatedEventMessage
-
-Represents the creation of a metering point.
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| Gsrn | string |  | Unique metering point identifier. |
-| meteringPointType | string |  | Defines the type of metering point created. |
-| meteringGridArea | string |  | Indicates the metering grid area in which the metering point is created. |
-| toGrid | string |  | If an Exchange MP is created, this field indicates the outgoing grid. |
-| fromGrid | string |  | If an Exchange MP is created, this field indicates the incoming grid. |
-| settlementMethod | string |  | If a Consumption or Net loss correction metering point is created, this field indicates the settlement method. |
-| meteringMethod | string |  | This indicates if the metering point created is physical, virtual, or calculated. |
-| meterReadingPeriodicity | string |  | This indicates the reading periodicity. |
-| connectionState | string |  | This indicates the connection state upon creation. |
-| netSettlementGroup | string |  | This indicates the net settlement group. |
-| product | string |  | This indicates the energy product. |
-| quantityUnit | string |  | This indicates the quantity unit, eg. kWh. |
-| parentMeteringPointGsrn | string |  | Unique identifier of associated parent metering point. This field is empty if no parent is set upon creation. |
-| EffectiveDate | string |  | The date which the metering point is created. |
-
-<a name=".MeteringPointConnectedMessage"></a>
-
-### MeteringPointConnectedMessage
+### MeteringPointConnected
 
 Represents the connection of a metering point.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| Gsrn | string |  | Unique metering point identifier. |
-| EffectiveDate | string |  | The date which the metering point is connected. |
+| Gsrn | [string](#string) |  | Unique metering point identifier. |
+| EffectiveDate | [string](#string) |  | The date on which the metering point is connected. |
 
-<a name=".MeteringPointDisconnectedMessage"></a>
+<a name=".MeteringPointCreated"></a>
 
-### MeteringPointDisconnectedMessage
+### MeteringPointCreated
+
+Represents the creation of a metering point.
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| Gsrn | [string](#string) |  | Unique metering point identifier. |
+| meteringPointType | [string](#string) |  | Defines the type of metering point created. |
+| meteringGridArea | [string](#string) |  | Indicates the metering grid area in which the metering point is created. |
+| toGrid | [string](#string) |  | If an Exchange MP is created, this field indicates the outgoing grid. |
+| fromGrid | [string](#string) |  | If an Exchange MP is created, this field indicates the incoming grid. |
+| settlementMethod | [string](#string) |  | If a Consumption or Net loss correction metering point is created, this field indicates the settlement method. |
+| meteringMethod | [string](#string) |  | This indicates if the metering point created is physical, virtual, or calculated. |
+| meterReadingPeriodicity | [string](#string) |  | This indicates the reading periodicity. |
+| connectionState | [string](#string) |  | This indicates the connection state upon creation. |
+| netSettlementGroup | [string](#string) |  | This indicates the net settlement group. |
+| product | [string](#string) |  | This indicates the energy product. |
+| quantityUnit | [string](#string) |  | This indicates the quantity unit, eg. kWh. |
+| parentMeteringPointGsrn | [string](#string) |  | Unique identifier of associated parent metering point. This field is empty if no parent is set upon creation. |
+| EffectiveDate | [string](#string) |  | The date on which the metering point is created. |
+
+<a name=".MeteringPointDisconnected"></a>
+
+### MeteringPointDisconnected
 
 Represents the disconnection of a metering point.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| Gsrn | string |  | Unique metering point identifier. |
-| EffectiveDate | string |  | The date which the metering point is disconnected. |
+| Gsrn | [string](#string) |  | Unique metering point identifier. |
+| EffectiveDate | [string](#string) |  | The date on which the metering point is disconnected. |
 
-<a name=".MeteringPointUpdatedMessage"></a>
+<a name=".NetSettlementGroupChanged"></a>
 
-### MeteringPointUpdatedMessage
+### NetSettlementGroupChanged
 
-Represents the update of a metering point.
+Represents the changing of the Net Settlement Group.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| Gsrn | string |  | Unique metering point identifier. |
-| toGrid | string |  | This field indicates the outgoing grid. |
-| fromGrid | string |  | This field indicates the incoming grid. |
-| settlementMethod | string |  | This field indicates the settlement method. |
-| meteringMethod | string |  | This indicates if the metering point is physical, virtual, or calculated. |
-| meterReadingPeriodicity | string |  | This indicates the reading periodicity. |
-| netSettlementGroup | string |  | This indicates the net settlement group. |
-| product | string |  | This indicates the energy product. |
-| quantityUnit | string |  | This indicates the quantity unit, eg. kWh. |
-| EffectiveDate | string |  | The date which the metering point is updated. |
+| Gsrn | [string](#string) |  | Unique metering point identifier of the metering point which has its net settlement group changed. |
+| netSettlementGroup | [string](#string) |  | This indicates if the new net settlement group. |
+| EffectiveDate | [string](#string) |  | The date on which the net settlement group is changed. |
 
-<a name=".ParentCoupledMessage"></a>
+<a name=".ParentCoupled"></a>
 
-### ParentCoupledMessage
+### ParentCoupled
 
-Represents the coupling of a parent to a eligible metering point.
+Represents the coupling of a parent to an eligible metering point.
 If a parent is changed, ie. one is removed and another is coupled, both the coupling and the decoupling messages are sent.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| Gsrn | string |  | Unique metering point identifier of the child metering point. |
-| parentMeteringPointGsrn | string |  | Unique identifier of associated parent metering point. |
-| EffectiveDate | string |  | The date which the parent is coupled. |
+| Gsrn | [string](#string) |  | Unique metering point identifier of the child metering point. |
+| parentMeteringPointGsrn | [string](#string) |  | Unique identifier of associated parent metering point. |
+| EffectiveDate | [string](#string) |  | The date on which the parent is coupled. |
 
-<a name=".ParentDecoupledMessage"></a>
+<a name=".ParentDecoupled"></a>
 
-### ParentDecoupledMessage
+### ParentDecoupled
 
-Represents the decoupling of a parent to a eligible metering point.
+Represents the decoupling of a parent to an eligible metering point.
 If a parent is changed, ie. one is removed and another is coupled, both the coupling and the decoupling messages are sent.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| Gsrn | string |  | Unique metering point identifier of the metering point which has the existing parent decoupled. |
-| EffectiveDate | string |  | The date which the parent is decoupled. |
+| Gsrn | [string](#string) |  | Unique metering point identifier of the metering point which has the existing parent decoupled. |
+| EffectiveDate | [string](#string) |  | The date on which the parent is decoupled. |
+
+<a name=".SettlementDetailsChanged"></a>
+
+### SettlementDetailsChanged
+
+Represents the changing of settlement details. Either the settlement method or the reading periodicity will be changed, or both will be changed.
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| Gsrn | [string](#string) |  | Unique metering point identifier of the metering point which has its metering method changed. |
+| settlementMethod | [string](#string) |  | The settlement method of the metering point. |
+| meterReadingPeriodicity | [string](#string) |  | The reading periodicity of the metering point. |
+| EffectiveDate | [string](#string) |  | The date on which the settlement details are change. |

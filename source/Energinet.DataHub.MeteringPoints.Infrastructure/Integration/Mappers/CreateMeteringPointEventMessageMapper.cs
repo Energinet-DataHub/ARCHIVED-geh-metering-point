@@ -29,7 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Mappers
             if (obj == null) throw new ArgumentNullException(nameof(obj));
             return new IntegrationEventEnvelope()
             {
-                MeteringPointCreatedEventMessage = new IntegrationEventContracts.MeteringPointCreatedEventMessage
+                MeteringPointCreatedMessage = new IntegrationEventContracts.MeteringPointCreated
                 {
                     Gsrn = obj.Gsrn,
                     MeteringPointType = obj.MeteringPointType,
