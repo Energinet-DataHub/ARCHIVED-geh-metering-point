@@ -23,15 +23,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
     {
         protected override IInboundMessage Convert(CreateMeteringPoint obj)
         {
-            var address = new Address(
+            return new Application.CreateMeteringPoint(
                 StreetName: obj.InstallationLocationAddress.StreetName,
                 PostCode: obj.InstallationLocationAddress.PostCode,
                 CityName: obj.InstallationLocationAddress.CityName,
                 CountryCode: obj.InstallationLocationAddress.CountryCode,
-                IsWashable: obj.InstallationLocationAddress.IsWashable);
-
-            return new Application.CreateMeteringPoint(
-                address,
+                IsWashable: obj.InstallationLocationAddress.IsWashable,
                 GsrnNumber: obj.GsrnNumber,
                 TypeOfMeteringPoint: obj.TypeOfMeteringPoint,
                 SubTypeOfMeteringPoint: obj.SubTypeOfMeteringPoint,

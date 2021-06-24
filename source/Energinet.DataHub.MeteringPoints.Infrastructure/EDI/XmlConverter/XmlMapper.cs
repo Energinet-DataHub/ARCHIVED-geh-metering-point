@@ -89,11 +89,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
                         throw new ArgumentNullException($"Missing map for property with name: {property.Key}");
                     }
 
-                    if (property.Value.IsComplex())
-                    {
-                        return new Address();
-                    }
-
                     var xmlHierarchyQueue = new Queue<string>(property.Value.XmlHierarchy);
                     var correspondingXmlElement = GetXmlElement(element, xmlHierarchyQueue, ns);
 
@@ -116,6 +111,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             if (dest == typeof(Nullable<>)) return default;
 
             if (dest == typeof(string))
+            {
+                return valueTranslatorFunc != null ? valueTranslatorFunc(source ?? string.Empty) : source;
+            }
+
+            if (dest == typeof(bool))
             {
                 return valueTranslatorFunc != null ? valueTranslatorFunc(source ?? string.Empty) : source;
             }

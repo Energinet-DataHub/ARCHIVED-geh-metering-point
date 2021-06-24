@@ -136,7 +136,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         private static CreateMeteringPoint CreateRequest()
         {
             return new CreateMeteringPoint(
-                new Address(SampleData.StreetName, SampleData.PostCode, SampleData.CityName, SampleData.CountryCode),
+                SampleData.StreetName,
+                SampleData.PostCode,
+                SampleData.CityName,
+                SampleData.CountryCode,
+                SampleData.IsWashable,
                 SampleData.GsrnNumber,
                 SampleData.TypeOfMeteringPoint,
                 SampleData.SubTypeOfMeteringPoint,

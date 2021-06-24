@@ -39,15 +39,5 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
         public PropertyInfo PropertyInfo { get; }
 
         public Func<string, object>? TranslatorFunc { get; }
-
-        public bool IsComplex()
-        {
-            return IsComplex(PropertyInfo.PropertyType);
-        }
-
-        private static bool IsComplex(Type type)
-        {
-            return !type.IsSubclassOf(typeof(ValueType)) && type != typeof(string);
-        }
     }
 }

@@ -18,7 +18,11 @@ using Energinet.DataHub.MeteringPoints.Application.Transport;
 namespace Energinet.DataHub.MeteringPoints.Application
 {
     public record CreateMeteringPoint(
-            Address InstallationLocationAddress = default!,
+            string StreetName = "",
+            string PostCode = "",
+            string CityName = "",
+            string CountryCode = "",
+            bool IsWashable = false,
             string GsrnNumber = "",
             string TypeOfMeteringPoint = "",
             string SubTypeOfMeteringPoint = "",

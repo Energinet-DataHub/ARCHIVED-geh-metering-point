@@ -39,7 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 MeteringPointId.New(),
                 GsrnNumber.Create(request.GsrnNumber),
                 CreateAddress(request),
-                request.InstallationLocationAddress.IsWashable,
+                request.IsWashable,
                 PhysicalState.New,
                 EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
                 EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint),
@@ -63,13 +63,13 @@ namespace Energinet.DataHub.MeteringPoints.Application
             return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
         }
 
-        private Domain.MeteringPoints.Address CreateAddress(CreateMeteringPoint request)
+        private static Domain.MeteringPoints.Address CreateAddress(CreateMeteringPoint request)
         {
             return Domain.MeteringPoints.Address.Create(
-                request.InstallationLocationAddress.StreetName,
-                request.InstallationLocationAddress.PostCode,
-                request.InstallationLocationAddress.CityName,
-                request.InstallationLocationAddress.CountryCode);
+                request.StreetName,
+                request.PostCode,
+                request.CityName,
+                request.CountryCode);
         }
     }
 }

@@ -52,5 +52,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         public static string CityName => "Aarhus";
 
         public static string CountryCode => "DK";
+
+        public static bool IsWashable => true;
     }
 }

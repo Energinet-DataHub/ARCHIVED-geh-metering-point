@@ -17,11 +17,11 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class PostCodeMandatoryForMeteringPointTypeMustBeValidRule : AbstractValidator<Address>
+    public class PostCodeMandatoryForMeteringPointTypeMustBeValidRule : AbstractValidator<string>
     {
         public PostCodeMandatoryForMeteringPointTypeMustBeValidRule(string gsrnNumber)
         {
-            RuleFor(installationLocationAddress => installationLocationAddress.PostCode)
+            RuleFor(postCode => postCode)
                 .NotEmpty()
                 .WithState(_ => new PostCodeMandatoryForMeteringPointTypeValidationError(gsrnNumber));
         }

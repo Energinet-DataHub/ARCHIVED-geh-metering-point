@@ -38,23 +38,50 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             }
         }
 
-        public ConverterMapperConfigurationBuilder<T> AddProperty<TProperty>(Expression<Func<T, TProperty>> selector, Func<string, object> translatorFunc, params string[] xmlHierarchy)
+        public ConverterMapperConfigurationBuilder<T> AddProperty<TProperty>(Expression<Func<T, string>> selector, Func<string, TProperty> translatorFunc, params string[] xmlHierarchy)
+        {
+            return AddPropertyInternal(selector, CastFunc(translatorFunc), xmlHierarchy);
+        }
+
+        public ConverterMapperConfigurationBuilder<T> AddProperty<TProperty>(Expression<Func<T, TProperty>> selector, Func<string, TProperty> translatorFunc, params string[] xmlHierarchy)
+            where TProperty : struct, IComparable, IConvertible, IComparable<TProperty>, IEquatable<TProperty>
+        {
+            return AddPropertyInternal(selector, CastFunc(translatorFunc), xmlHierarchy);
+        }
+
+        public ConverterMapperConfigurationBuilder<T> AddProperty(Expression<Func<T, string>> selector, params string[] xmlHierarchy)
+        {
+            return AddPropertyInternal(selector, xmlHierarchy);
+        }
+
+        public ConverterMapperConfigurationBuilder<T> AddProperty<TProperty>(Expression<Func<T, TProperty>> selector, params string[] xmlHierarchy)
+            where TProperty : struct, IComparable, IConvertible, IComparable<TProperty>, IEquatable<TProperty>
+        {
+            return AddPropertyInternal(selector, xmlHierarchy);
+        }
+
+        public ConverterMapperConfiguration Build()
+        {
+            return new(typeof(T), _xmlElementName, _properties);
+        }
+
+        private static Func<string, object> CastFunc<TProperty>(Func<string, TProperty> translatorFunc)
+        {
+            return p => translatorFunc(p) ?? throw new InvalidOperationException($"Type '{typeof(TProperty)}' could not be casted to object");
+        }
+
+        private ConverterMapperConfigurationBuilder<T> AddPropertyInternal<TProperty>(Expression<Func<T, TProperty>> selector, Func<string, object> translatorFunc, params string[] xmlHierarchy)
         {
             var propertyInfo = PropertyInfoHelper.GetPropertyInfo(selector);
             _properties[propertyInfo.Name] = new ExtendedPropertyInfo(xmlHierarchy, propertyInfo, translatorFunc);
             return this;
         }
 
-        public ConverterMapperConfigurationBuilder<T> AddProperty<TProperty>(Expression<Func<T, TProperty>> selector, params string[] xmlHierarchy)
+        private ConverterMapperConfigurationBuilder<T> AddPropertyInternal<TProperty>(Expression<Func<T, TProperty>> selector, string[] xmlHierarchy)
         {
             var propertyInfo = PropertyInfoHelper.GetPropertyInfo(selector);
             _properties[propertyInfo.Name] = new ExtendedPropertyInfo(xmlHierarchy, propertyInfo);
             return this;
-        }
-
-        public ConverterMapperConfiguration Build()
-        {
-            return new(typeof(T), _xmlElementName, _properties);
         }
     }
 }

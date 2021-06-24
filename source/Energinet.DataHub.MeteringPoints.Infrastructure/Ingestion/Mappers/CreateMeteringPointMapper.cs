@@ -41,11 +41,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
                     LocationDescription = obj.LocationDescription,
                     InstallationLocationAddress = new Address
                     {
-                        StreetName = obj.InstallationLocationAddress.StreetName,
-                        PostCode = obj.InstallationLocationAddress.PostCode,
-                        CityName = obj.InstallationLocationAddress.CityName,
-                        CountryCode = obj.InstallationLocationAddress.CountryCode,
-                        IsWashable = obj.InstallationLocationAddress.IsWashable,
+                        StreetName = obj.StreetName,
+                        PostCode = obj.PostCode,
+                        CityName = obj.CityName,
+                        CountryCode = obj.CountryCode,
+                        IsWashable = obj.IsWashable,
                     },
                     SettlementMethod = obj.SettlementMethod,
                     UnitType = obj.UnitType,
