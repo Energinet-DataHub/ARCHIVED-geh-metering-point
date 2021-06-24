@@ -68,24 +68,19 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
             Assert.Equal(nameof(DisconnectionType.Remote), command.DisconnectionType);
             Assert.Equal(nameof(ReadingOccurrence.Hourly), command.MeterReadingOccurrence);
 
-            Assert.Equal("3. Gadelygte fra højre", command.LocationDescription);
+            Assert.Equal("D01", command.LocationDescription);
             Assert.Equal("1234567890", command.MeterNumber);
             Assert.Equal("2021-05-27T22:00:00.00Z", command.OccurenceDate);
             Assert.Equal("822", command.MeteringGridArea);
             Assert.Equal("99", command.NetSettlementGroup);
             Assert.Equal(666, command.MaximumCurrent);
             Assert.Equal("asdasweqweasedGUID", command.TransactionId);
-
+            Assert.Equal("6000", command.PostCode);
+            Assert.Equal("Test street name", command.StreetName);
+            Assert.Equal("Test city", command.CityName);
+            Assert.Equal("DK", command.CountryCode);
+            Assert.True(command.IsWashable);
             Assert.Null(command.ParentRelatedMeteringPoint);
-
-            // // Main address
-            // Assert.Equal("6000", command.InstallationLocationAddress.PostCode);
-            //
-            // // Street detail
-            // Assert.Equal("Test street name", command.InstallationLocationAddress.StreetName);
-            //
-            // // Town detail
-            // Assert.Equal("Test city", command.InstallationLocationAddress.CityName);
         }
 
         [Fact]

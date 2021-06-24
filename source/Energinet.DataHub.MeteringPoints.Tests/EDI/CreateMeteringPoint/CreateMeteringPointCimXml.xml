@@ -155,7 +155,7 @@ limitations under the License.
                 <urn:language>DK</urn:language>
             </urn:usagePointLocation.mainAddress>
             <!--Optional:-->
-            <urn:usagePointLocation.remark>3. Gadelygte fra højre</urn:usagePointLocation.remark>
+            <urn:usagePointLocation.remark>D01</urn:usagePointLocation.remark>
             <!--Optional:-->
             <urn:usagePointLocation.geoInfoReference>string</urn:usagePointLocation.geoInfoReference>
             <!--Optional:-->
