@@ -109,3 +109,4 @@ proto
 MeteringMethodChanged
 NetSettlementGroupChanged
 SettlementDetailsChanged
+IntegrationEventContract
