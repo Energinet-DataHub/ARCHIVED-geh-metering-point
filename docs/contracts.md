@@ -13,7 +13,7 @@
     - [ParentCoupled](#.ParentCoupled)
     - [ParentDecoupled](#.ParentDecoupled)
     - [SettlementDetailsChanged](#.SettlementDetailsChanged)
-    
+
 <a name="IntegrationEventContract.proto"></a>
 
 ## IntegrationEventContract.proto
