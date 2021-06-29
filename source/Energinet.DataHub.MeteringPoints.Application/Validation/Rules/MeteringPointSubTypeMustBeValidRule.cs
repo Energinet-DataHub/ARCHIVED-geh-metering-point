@@ -12,21 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Messages;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class IntegrationEventTypeFactory
+    public class MeteringPointSubTypeMustBeValidRule : AbstractValidator<CreateMeteringPoint>
     {
-        public static Type GetType(string type)
+        public MeteringPointSubTypeMustBeValidRule()
         {
-            if (typeof(MeteringPointCreatedEventMessage).FullName == type)
-            {
-                return typeof(MeteringPointCreatedEventMessage);
-            }
-
-            throw new ArgumentException("Integration Event type is not implemented.");
+            RuleFor(createMeteringPoint => createMeteringPoint.SubTypeOfMeteringPoint)
+                .NotEmpty()
+                .WithState(createMeteringPoint => new MeteringPointSubTypeMandatoryValidationError(createMeteringPoint.GsrnNumber));
         }
     }
 }

@@ -40,6 +40,8 @@ module "azfun_outbox" {
     # POST_OFFICE_QUEUE_TOPIC_NAME          = data.azurerm_key_vault_secret.POST_OFFICE_QUEUE_MARKETDATA_TOPIC_NAME.value
     METERINGPOINTEVENTHUB_CONNECTION_STRING   = module.evhar_meteringpoint_sender.primary_connection_string
     METERINGPOINTEVENTHUB_HUB_NAME = module.evh_meteringpoint.name
+    TEMP_POST_OFFICE_CONNECTION_STRING = module.stor_postoffice.primary_connection_string
+    TEMP_POST_OFFICE_SHARE = azurerm_storage_share.postoffice.name
   }
   dependencies                              = [
     module.appi.dependent_on,

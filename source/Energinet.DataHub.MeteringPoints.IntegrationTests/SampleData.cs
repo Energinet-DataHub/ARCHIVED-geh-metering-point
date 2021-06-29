@@ -54,5 +54,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         public static string CountryCode => "DK";
 
         public static bool IsWashable => true;
+
+        public static string MeterNumber => "12345678910";
     }
 }

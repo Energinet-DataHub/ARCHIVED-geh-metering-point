@@ -19,20 +19,22 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
 {
     public class OutboxMessage
     {
-        public OutboxMessage(string type, string data, OutboxMessageCategory category, Instant creationDate)
+        public OutboxMessage(string type, string data, string correlation, OutboxMessageCategory category, Instant creationDate)
         {
             Id = Guid.NewGuid();
             Type = type;
             Data = data;
+            Correlation = correlation;
             Category = category;
             CreationDate = creationDate;
         }
 
-        public OutboxMessage(string type, string data, OutboxMessageCategory category, Instant creationDate, Guid id)
+        public OutboxMessage(string type, string data, string correlation, OutboxMessageCategory category, Instant creationDate, Guid id)
         {
             Id = id;
             Type = type;
             Data = data;
+            Correlation = correlation;
             Category = category;
             CreationDate = creationDate;
         }
@@ -43,11 +45,13 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
 
         public string Data { get; }
 
+        public string Correlation { get; set; }
+
         public OutboxMessageCategory Category { get; }
 
         public Instant CreationDate { get; }
 
-        public Instant? ProcessedDate { get; internal set; } // TODO: Make private
+        public Instant? ProcessedDate { get; private set; }
 
         public void SetProcessed(Instant when)
         {

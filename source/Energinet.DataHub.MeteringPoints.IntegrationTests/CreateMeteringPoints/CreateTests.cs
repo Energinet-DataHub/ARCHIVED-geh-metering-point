@@ -77,7 +77,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             var outboxMessage = _outbox.GetNext(OutboxMessageCategory.IntegrationEvent);
             outboxMessage.Should().NotBeNull();
             outboxMessage?.Type.Should()
-                .Be(typeof(CreateMeteringPointEventMessage).FullName);
+                .Be(typeof(MeteringPointCreatedEventMessage).FullName);
         }
 
         [Fact]
@@ -154,7 +154,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SampleData.MeasurementUnitType,
                 SampleData.DisconnectionType,
                 SampleData.Occurrence,
-                string.Empty,
+                SampleData.MeterNumber,
                 string.Empty,
                 string.Empty,
                 string.Empty,

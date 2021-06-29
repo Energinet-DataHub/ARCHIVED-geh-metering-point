@@ -75,7 +75,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _maximumPower = maximumPower;
             _occurenceDate = occurenceDate;
 
-            AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaId));
+            AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaId, meteringPointSubType, physicalState, meterReadingOccurrence, ProductType.Tariff, unitType));
         }
 
         protected MeteringPoint(

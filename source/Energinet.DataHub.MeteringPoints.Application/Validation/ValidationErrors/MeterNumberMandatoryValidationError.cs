@@ -12,21 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Messages;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class IntegrationEventTypeFactory
+    public class MeterNumberMandatoryValidationError : ValidationError
     {
-        public static Type GetType(string type)
+        public MeterNumberMandatoryValidationError(string gsrnNumber)
         {
-            if (typeof(MeteringPointCreatedEventMessage).FullName == type)
-            {
-                return typeof(MeteringPointCreatedEventMessage);
-            }
-
-            throw new ArgumentException("Integration Event type is not implemented.");
+            GsrnNumber = gsrnNumber;
         }
+
+        public string GsrnNumber { get; }
     }
 }

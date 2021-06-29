@@ -12,21 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Messages;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class IntegrationEventTypeFactory
+    public class MeteringPointSubTypeMandatoryErrorConverter : ErrorConverter<MeteringPointSubTypeMandatoryValidationError>
     {
-        public static Type GetType(string type)
+        protected override Error Convert(MeteringPointSubTypeMandatoryValidationError error)
         {
-            if (typeof(MeteringPointCreatedEventMessage).FullName == type)
-            {
-                return typeof(MeteringPointCreatedEventMessage);
-            }
-
-            throw new ArgumentException("Integration Event type is not implemented.");
+            return new("D02", $"Sub type is missing for metering point {error.GsrnNumber}");
         }
     }
 }

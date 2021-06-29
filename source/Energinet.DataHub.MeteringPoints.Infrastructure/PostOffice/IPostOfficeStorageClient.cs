@@ -12,21 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Messages;
+using System.Threading.Tasks;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice
 {
-    public class IntegrationEventTypeFactory
+    /// <summary>
+    /// Basic file management for PostOffice communication.
+    /// </summary>
+    public interface IPostOfficeStorageClient
     {
-        public static Type GetType(string type)
-        {
-            if (typeof(MeteringPointCreatedEventMessage).FullName == type)
-            {
-                return typeof(MeteringPointCreatedEventMessage);
-            }
-
-            throw new ArgumentException("Integration Event type is not implemented.");
-        }
+        /// <summary>
+        /// Write file.
+        /// </summary>
+        /// <param name="path">Write to this path</param>
+        /// <param name="data">Data to write</param>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        Task WriteAsync(string path, string data);
     }
 }

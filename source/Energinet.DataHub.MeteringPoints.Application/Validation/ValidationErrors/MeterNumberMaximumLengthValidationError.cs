@@ -12,21 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Messages;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class IntegrationEventTypeFactory
+    public class MeterNumberMaximumLengthValidationError : ValidationError
     {
-        public static Type GetType(string type)
+        public MeterNumberMaximumLengthValidationError(string gsrnNumber, string meterNumber, int maximumLength)
         {
-            if (typeof(MeteringPointCreatedEventMessage).FullName == type)
-            {
-                return typeof(MeteringPointCreatedEventMessage);
-            }
-
-            throw new ArgumentException("Integration Event type is not implemented.");
+            GsrnNumber = gsrnNumber;
+            MeterNumber = meterNumber;
+            MaximumLength = maximumLength;
         }
+
+        public string GsrnNumber { get; }
+
+        public int MaximumLength { get; }
+
+        public string MeterNumber { get; }
     }
 }

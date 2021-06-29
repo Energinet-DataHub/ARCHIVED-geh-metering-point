@@ -12,21 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Messages;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class IntegrationEventTypeFactory
+    public class MeterNumberNotAllowedErrorConverter : ErrorConverter<MeterNumberNotAllowedValidationError>
     {
-        public static Type GetType(string type)
+        protected override Error Convert(MeterNumberNotAllowedValidationError error)
         {
-            if (typeof(MeteringPointCreatedEventMessage).FullName == type)
-            {
-                return typeof(MeteringPointCreatedEventMessage);
-            }
-
-            throw new ArgumentException("Integration Event type is not implemented.");
+            return new("E86", "Meter number is not allowed for sub types other than physical");
         }
     }
 }
