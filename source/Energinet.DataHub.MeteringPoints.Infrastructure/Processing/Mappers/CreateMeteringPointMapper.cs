@@ -23,15 +23,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
     {
         protected override IInboundMessage Convert(CreateMeteringPoint obj)
         {
-            var address = new Address(
+            return new Application.CreateMeteringPoint(
                 StreetName: obj.InstallationLocationAddress.StreetName,
                 PostCode: obj.InstallationLocationAddress.PostCode,
                 CityName: obj.InstallationLocationAddress.CityName,
                 CountryCode: obj.InstallationLocationAddress.CountryCode,
-                IsWashable: obj.InstallationLocationAddress.IsWashable);
-
-            return new Application.CreateMeteringPoint(
-                address,
+                IsWashable: obj.InstallationLocationAddress.IsWashable,
                 GsrnNumber: obj.GsrnNumber,
                 TypeOfMeteringPoint: obj.TypeOfMeteringPoint,
                 SubTypeOfMeteringPoint: obj.SubTypeOfMeteringPoint,
@@ -41,7 +38,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
                 MeteringGridArea: obj.MeteringGridArea,
                 PowerPlant: obj.PowerPlant,
                 LocationDescription: obj.LocationDescription,
-                ParentRelatedMeteringPoint: obj.ParentRelatedMeteringPoint,
                 SettlementMethod: obj.SettlementMethod,
                 UnitType: obj.UnitType,
                 DisconnectionType: obj.DisconnectionType,
@@ -51,7 +47,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
                 PhysicalStatusOfMeteringPoint: obj.PhysicalStatusOfMeteringPoint,
                 NetSettlementGroup: obj.NetSettlementGroup,
                 ConnectionType: obj.ConnectionType,
-                AssetType: obj.AssetType);
+                AssetType: obj.AssetType,
+                ParentRelatedMeteringPoint: obj.ParentRelatedMeteringPoint);
         }
     }
 }

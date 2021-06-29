@@ -39,7 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             var sendingServiceProvider = sendingServiceCollection.BuildServiceProvider();
 
             var messageDispatcher = sendingServiceProvider.GetRequiredService<Dispatcher>();
-            var outboundMessage = new Application.CreateMeteringPoint(new Application.Address())
+            var outboundMessage = new Application.CreateMeteringPoint
             {
                 GsrnNumber = expectedGsrnNumber,
             };

@@ -39,7 +39,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 GridAreaId.New(),
                 GsrnNumber.Create(SampleData.PowerPlant),
                 SampleData.LocationDescription,
-                SampleData.ParentRelatedMeteringPoint,
                 MeasurementUnitType.KWh,
                 SampleData.MeterNumber,
                 ReadingOccurrence.Hourly,

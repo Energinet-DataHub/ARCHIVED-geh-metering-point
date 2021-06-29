@@ -12,20 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using FluentValidation;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 {
-    public class CityNameMaximumLengthMustBeValidRule : AbstractValidator<string>
+    /// <summary>
+    /// XML converter
+    /// </summary>
+    public interface IXmlConverter
     {
-        private const int MaxCityNameLength = 25;
-
-        public CityNameMaximumLengthMustBeValidRule(string gsrnNumber)
-        {
-             RuleFor(cityName => cityName)
-                .MaximumLength(MaxCityNameLength)
-                .WithState(cityName => new CityNameMaximumLengthValidationError(gsrnNumber, cityName, MaxCityNameLength));
-        }
+        /// <summary>
+        /// Deserializes an EDI message in XML format to a generic collection
+        /// </summary>
+        /// <param name="body"></param>
+        /// <returns>A generic collection</returns>
+        public Task<IEnumerable<IBusinessRequest>> DeserializeAsync(Stream body);
     }
 }

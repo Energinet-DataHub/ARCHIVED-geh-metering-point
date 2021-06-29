@@ -12,18 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using FluentValidation;
-
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 {
-    public class PostCodeMandatoryForMeteringPointTypeMustBeValidRule : AbstractValidator<string>
-    {
-        public PostCodeMandatoryForMeteringPointTypeMustBeValidRule(string gsrnNumber)
-        {
-            RuleFor(postCode => postCode)
-                .NotEmpty()
-                .WithState(_ => new PostCodeMandatoryForMeteringPointTypeValidationError(gsrnNumber));
-        }
-    }
+    public record XmlHeaderData(string Mrid, string Type, string ProcessType);
 }

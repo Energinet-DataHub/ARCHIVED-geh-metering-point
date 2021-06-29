@@ -17,11 +17,11 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class StreetNameMandatoryForMeteringPointTypeMustBeValidRule : AbstractValidator<Address>
+    public class StreetNameMandatoryForMeteringPointTypeMustBeValidRule : AbstractValidator<string>
     {
         public StreetNameMandatoryForMeteringPointTypeMustBeValidRule(string gsrnNumber)
         {
-            RuleFor(installationLocationAddress => installationLocationAddress.StreetName)
+            RuleFor(streetName => streetName)
                 .NotEmpty()
                 .WithState(_ => new StreetNameMandatoryForMeteringPointTypeValidationError(gsrnNumber));
         }

@@ -39,14 +39,13 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
                     MeteringGridArea = obj.MeteringGridArea,
                     PowerPlant = obj.PowerPlant,
                     LocationDescription = obj.LocationDescription,
-                    ParentRelatedMeteringPoint = obj.ParentRelatedMeteringPoint,
                     InstallationLocationAddress = new Address
                     {
-                        StreetName = obj.InstallationLocationAddress.StreetName,
-                        PostCode = obj.InstallationLocationAddress.PostCode,
-                        CityName = obj.InstallationLocationAddress.CityName,
-                        CountryCode = obj.InstallationLocationAddress.CountryCode,
-                        IsWashable = obj.InstallationLocationAddress.IsWashable,
+                        StreetName = obj.StreetName,
+                        PostCode = obj.PostCode,
+                        CityName = obj.CityName,
+                        CountryCode = obj.CountryCode,
+                        IsWashable = obj.IsWashable,
                     },
                     SettlementMethod = obj.SettlementMethod,
                     UnitType = obj.UnitType,
@@ -58,6 +57,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
                     NetSettlementGroup = obj.NetSettlementGroup,
                     ConnectionType = obj.ConnectionType,
                     AssetType = obj.AssetType,
+                    ParentRelatedMeteringPoint = obj.ParentRelatedMeteringPoint,
                 },
             };
         }

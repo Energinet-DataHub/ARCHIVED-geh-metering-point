@@ -136,7 +136,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         private static CreateMeteringPoint CreateRequest()
         {
             return new CreateMeteringPoint(
-                new Address(SampleData.StreetName, SampleData.PostCode, SampleData.CityName, SampleData.CountryCode),
+                SampleData.StreetName,
+                SampleData.PostCode,
+                SampleData.CityName,
+                SampleData.CountryCode,
+                SampleData.IsWashable,
                 SampleData.GsrnNumber,
                 SampleData.TypeOfMeteringPoint,
                 SampleData.SubTypeOfMeteringPoint,
@@ -145,7 +149,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 0,
                 SampleData.MeteringGridArea,
                 SampleData.PowerPlantGsrnNumber,
-                string.Empty,
                 string.Empty,
                 SampleData.SettlementMethod,
                 SampleData.MeasurementUnitType,
@@ -156,7 +159,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 string.Empty,
                 string.Empty,
                 SampleData.ConnectionType,
-                SampleData.AssetType);
+                SampleData.AssetType,
+                string.Empty);
         }
     }
 }

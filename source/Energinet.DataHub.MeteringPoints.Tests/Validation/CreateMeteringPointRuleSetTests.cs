@@ -134,9 +134,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         {
             var businessRequest = CreateRequest() with
             {
+                StreetName = streetName,
+                PostCode = SampleData.PostCode,
+                CityName = SampleData.CityName,
                 GsrnNumber = SampleData.GsrnNumber,
                 TypeOfMeteringPoint = typeOfMeteringPoint,
-                InstallationLocationAddress = new Address(streetName, SampleData.PostCode, SampleData.CityName, string.Empty),
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
@@ -153,9 +155,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         {
             var businessRequest = CreateRequest() with
             {
+                StreetName = SampleData.StreetName,
+                PostCode = postCode,
+                CityName = SampleData.CityName,
+                CountryCode = countryCode,
                 GsrnNumber = SampleData.GsrnNumber,
                 TypeOfMeteringPoint = typeOfMeteringPoint,
-                InstallationLocationAddress = new Address(SampleData.StreetName, postCode, SampleData.CityName, countryCode),
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
@@ -173,9 +178,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         {
             var businessRequest = CreateRequest() with
             {
+                StreetName = SampleData.StreetName,
+                PostCode = SampleData.PostCode,
+                CityName = cityName,
                 GsrnNumber = SampleData.GsrnNumber,
                 TypeOfMeteringPoint = typeOfMeteringPoint,
-                InstallationLocationAddress = new Address(SampleData.StreetName, SampleData.PostCode, cityName, string.Empty),
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
@@ -244,7 +251,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 
         private CreateMeteringPoint CreateRequest()
         {
-            return new CreateMeteringPoint(new Address());
+            return new();
         }
 
         private List<ValidationError> GetValidationErrors(CreateMeteringPoint request)
