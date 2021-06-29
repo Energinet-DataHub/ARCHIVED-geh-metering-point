@@ -16,7 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
@@ -74,11 +73,13 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 
         private static IEnumerable<IBusinessRequest> InternalMap(XmlMappingConfigurationBase xmlMappingConfigurationBase, XElement rootElement, XNamespace ns)
         {
-            var properties = xmlMappingConfigurationBase.GetProperties();
+            var configuration = xmlMappingConfigurationBase.Configuration;
+
+            var properties = configuration.GetProperties();
 
             var messages = new List<IBusinessRequest>();
 
-            var elements = rootElement.Elements(ns + xmlMappingConfigurationBase.GetXmlElementName());
+            var elements = rootElement.Elements(ns + configuration.GetXmlElementName());
 
             foreach (var element in elements)
             {
@@ -95,7 +96,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
                     return Convert(correspondingXmlElement?.Value, property.Value.PropertyInfo.PropertyType, property.Value.TranslatorFunc);
                 }).ToArray();
 
-                if (xmlMappingConfigurationBase.CreateInstance(args) is not IBusinessRequest instance)
+                if (configuration.CreateInstance(args) is not IBusinessRequest instance)
                 {
                     throw new InvalidOperationException("Could not create instance");
                 }

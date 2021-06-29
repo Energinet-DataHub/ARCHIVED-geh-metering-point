@@ -14,6 +14,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 {
@@ -22,13 +24,17 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
         private readonly Type _type;
         private readonly string _xmlElementName;
         private readonly Dictionary<string, ExtendedPropertyInfo?> _properties;
+        private readonly ConstructorDelegate _cachedConstructor;
 
         public ConverterMapperConfiguration(Type type, string xmlElementName, Dictionary<string, ExtendedPropertyInfo?> properties)
         {
             _type = type;
             _xmlElementName = xmlElementName;
             _properties = properties;
+            _cachedConstructor = CreateConstructor();
         }
+
+        private delegate object ConstructorDelegate(params object?[] args);
 
         public Dictionary<string, ExtendedPropertyInfo?> GetProperties()
         {
@@ -40,9 +46,27 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             return _xmlElementName;
         }
 
+        public object CreateInstance(params object?[] parameters)
+        {
+            return _cachedConstructor(parameters);
+        }
+
         public new Type GetType()
         {
             return _type;
+        }
+
+        private ConstructorDelegate CreateConstructor()
+        {
+            var constructorInfo = GetType().GetConstructors().SingleOrDefault() ??
+                                  throw new Exception("No constructor found for type");
+            var parameters = constructorInfo.GetParameters().Select(x => x.ParameterType);
+            var paramExpr = Expression.Parameter(typeof(object[]));
+            var constructorParameters = parameters.Select((paramType, index) =>
+                    Expression.Convert(Expression.ArrayAccess(paramExpr, Expression.Constant(index)), paramType))
+                .ToArray<Expression>();
+            var body = Expression.New(constructorInfo, constructorParameters);
+            return Expression.Lambda<ConstructorDelegate>(body, paramExpr).Compile();
         }
     }
 }

@@ -19,7 +19,7 @@ using Energinet.DataHub.MeteringPoints.Application.Common;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 {
-    public class ConverterMapperConfigurations
+    public static class ConverterMapperConfigurations
     {
         public static void AssertConfigurationValid()
         {
@@ -29,11 +29,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 
             foreach (var type in businessRequests)
             {
-                var configForType = configurations.SingleOrDefault(x => x.GetType() != null && x.GetType() == type);
+                var configForType = configurations.SingleOrDefault(x => x.Configuration.GetType() == type);
 
                 if (configForType == null) throw new Exception($"Missing XmlMappingConfiguration for type: {type.Name}");
 
-                var propertiesInConfig = configForType.GetProperties();
+                var propertiesInConfig = configForType.Configuration.GetProperties();
                 var propertiesInType = type.GetProperties();
 
                 foreach (var propertyInfo in propertiesInType)

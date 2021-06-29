@@ -13,59 +13,18 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 {
-    public class XmlMappingConfigurationBase
+    public abstract class XmlMappingConfigurationBase
     {
         private ConverterMapperConfiguration? _configuration;
 
-        private ConstructorDelegate? _cachedConstructor;
-
-        private delegate object ConstructorDelegate(params object?[] args);
-
-        public Dictionary<string, ExtendedPropertyInfo?> GetProperties()
-        {
-            return _configuration?.GetProperties() ?? throw new InvalidOperationException();
-        }
-
-        public new Type? GetType()
-        {
-            return _configuration?.GetType();
-        }
-
-        public string GetXmlElementName()
-        {
-            return _configuration?.GetXmlElementName() ?? throw new InvalidOperationException();
-        }
-
-        public object CreateInstance(params object?[] parameters)
-        {
-            if (_cachedConstructor is null)
-            {
-                throw new Exception();
-            }
-
-            return _cachedConstructor(parameters);
-        }
+        public ConverterMapperConfiguration Configuration => _configuration ?? throw new InvalidOperationException("Found no configuration for this instance. You need to create an instance by calling CreateMapping first.")!;
 
         protected void CreateMapping<T>(string xmlElementName, Func<ConverterMapperConfigurationBuilder<T>, ConverterMapperConfigurationBuilder<T>> createFunc)
         {
             _configuration = createFunc(new ConverterMapperConfigurationBuilder<T>(xmlElementName)).Build();
-            CreateConstructor();
-        }
-
-        private void CreateConstructor()
-        {
-            var constructorInfo = _configuration?.GetType().GetConstructors().SingleOrDefault() ?? throw new Exception("No constructor found for type");
-            var parameters = constructorInfo.GetParameters().Select(x => x.ParameterType);
-            var paramExpr = Expression.Parameter(typeof(object[]));
-            var constructorParameters = parameters.Select((paramType, index) => Expression.Convert(Expression.ArrayAccess(paramExpr, Expression.Constant(index)), paramType)).ToArray<Expression>();
-            var body = Expression.New(constructorInfo, constructorParameters);
-            _cachedConstructor = Expression.Lambda<ConstructorDelegate>(body, paramExpr).Compile();
         }
     }
 }

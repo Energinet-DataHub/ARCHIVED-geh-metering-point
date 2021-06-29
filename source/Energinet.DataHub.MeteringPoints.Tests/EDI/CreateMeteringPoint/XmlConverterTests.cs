@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,6 +21,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappings;
+using FluentAssertions;
 using Xunit;
 using Xunit.Categories;
 
@@ -38,8 +40,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
         [Fact]
         public void AssertConfigurationsValid()
         {
-            ConverterMapperConfigurations.AssertConfigurationValid();
-            Assert.True(true);
+            Action assertConfigurationValid = ConverterMapperConfigurations.AssertConfigurationValid;
+            assertConfigurationValid.Should().NotThrow();
         }
 
         [Fact]
@@ -54,31 +56,31 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
 
             var command = commands.First();
 
-            Assert.Equal(nameof(MeteringPointType.Consumption), command.TypeOfMeteringPoint);
-            Assert.Equal("571234567891234605", command.GsrnNumber);
-            Assert.Equal(666, command.MaximumPower);
-            Assert.Equal(nameof(MeasurementUnitType.KWh).ToLower(), command.UnitType.ToLower());
-            Assert.Equal("571234567891234636", command.PowerPlant);
-            Assert.Equal(nameof(SettlementMethod.Flex), command.SettlementMethod);
-            Assert.Equal(nameof(MeteringPointType.Consumption), command.TypeOfMeteringPoint);
-            Assert.Equal(nameof(MeteringPointSubType.Physical), command.SubTypeOfMeteringPoint);
-            Assert.Equal(nameof(PhysicalState.New), command.PhysicalStatusOfMeteringPoint);
-            Assert.Equal(nameof(ConnectionType.Direct), command.ConnectionType);
-            Assert.Equal(nameof(AssetType.WindTurbines), command.AssetType);
-            Assert.Equal(nameof(DisconnectionType.Remote), command.DisconnectionType);
-            Assert.Equal(nameof(ReadingOccurrence.Hourly), command.MeterReadingOccurrence);
+            command.TypeOfMeteringPoint.Should().Be(nameof(MeteringPointType.Consumption));
+            command.GsrnNumber.Should().Be("571234567891234605");
+            command.MaximumPower.Should().Be(666);
+            command.UnitType.ToLower().Should().Be(nameof(MeasurementUnitType.KWh).ToLower());
+            command.PowerPlant.Should().Be("571234567891234636");
+            command.SettlementMethod.Should().Be(nameof(SettlementMethod.Flex));
+            command.TypeOfMeteringPoint.Should().Be(nameof(MeteringPointType.Consumption));
+            command.SubTypeOfMeteringPoint.Should().Be(nameof(MeteringPointSubType.Physical));
+            command.PhysicalStatusOfMeteringPoint.Should().Be(nameof(PhysicalState.New));
+            command.ConnectionType.Should().Be(nameof(ConnectionType.Direct));
+            command.AssetType.Should().Be(nameof(AssetType.WindTurbines));
+            command.DisconnectionType.Should().Be(nameof(DisconnectionType.Remote));
+            command.MeterReadingOccurrence.Should().Be(nameof(ReadingOccurrence.Hourly));
 
-            Assert.Equal("D01", command.LocationDescription);
-            Assert.Equal("1234567890", command.MeterNumber);
-            Assert.Equal("2021-05-27T22:00:00.00Z", command.OccurenceDate);
-            Assert.Equal("822", command.MeteringGridArea);
-            Assert.Equal("99", command.NetSettlementGroup);
-            Assert.Equal(666, command.MaximumCurrent);
-            Assert.Equal("asdasweqweasedGUID", command.TransactionId);
-            Assert.Equal("6000", command.PostCode);
-            Assert.Equal("Test street name", command.StreetName);
-            Assert.Equal("Test city", command.CityName);
-            Assert.Equal("DK", command.CountryCode);
+            command.LocationDescription.Should().Be("D01");
+            command.MeterNumber.Should().Be("1234567890");
+            command.OccurenceDate.Should().Be("2021-05-27T22:00:00.00Z");
+            command.MeteringGridArea.Should().Be("822");
+            command.NetSettlementGroup.Should().Be("99");
+            command.MaximumCurrent.Should().Be(666);
+            command.TransactionId.Should().Be("asdasweqweasedGUID");
+            command.PostCode.Should().Be("6000");
+            command.StreetName.Should().Be("Test street name");
+            command.CityName.Should().Be("Test city");
+            command.CountryCode.Should().Be("DK");
             Assert.True(command.IsWashable);
             Assert.Null(command.ParentRelatedMeteringPoint);
         }
@@ -94,14 +96,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
 
             var command = commands.First();
 
-            Assert.Equal(nameof(SettlementMethod.Flex), command.SettlementMethod);
-            Assert.Equal(nameof(MeteringPointType.Consumption), command.TypeOfMeteringPoint);
-            Assert.Equal(nameof(MeteringPointSubType.Physical), command.SubTypeOfMeteringPoint);
-            Assert.Equal(nameof(PhysicalState.New), command.PhysicalStatusOfMeteringPoint);
-            Assert.Equal(nameof(ConnectionType.Direct), command.ConnectionType);
-            Assert.Equal(nameof(AssetType.WindTurbines), command.AssetType);
-            Assert.Equal(nameof(DisconnectionType.Remote), command.DisconnectionType);
-            Assert.Equal(nameof(ReadingOccurrence.Hourly), command.MeterReadingOccurrence);
+            command.SettlementMethod.Should().Be(nameof(SettlementMethod.Flex));
+            command.TypeOfMeteringPoint.Should().Be(nameof(MeteringPointType.Consumption));
+            command.SubTypeOfMeteringPoint.Should().Be(nameof(MeteringPointSubType.Physical));
+            command.PhysicalStatusOfMeteringPoint.Should().Be(nameof(PhysicalState.New));
+            command.ConnectionType.Should().Be(nameof(ConnectionType.Direct));
+            command.AssetType.Should().Be(nameof(AssetType.WindTurbines));
+            command.DisconnectionType.Should().Be(nameof(DisconnectionType.Remote));
+            command.MeterReadingOccurrence.Should().Be(nameof(ReadingOccurrence.Hourly));
         }
 
         private static Stream GetResourceStream(string resourcePath)
