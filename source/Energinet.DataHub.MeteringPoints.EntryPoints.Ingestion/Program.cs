@@ -81,16 +81,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 
             // TODO: Expand factory for handling other XML types
             container.Register<Func<string, string, XmlMappingConfigurationBase>>(
-                () => (processType, type) =>
-            {
-                switch (processType)
-                {
-                    case "dsfsdf":
-                        return new CreateMeteringPointXmlMappingConfiguration();
-                    default:
-                        throw new NotImplementedException();
-                }
-            }, Lifestyle.Singleton);
+                () => (processType, type) => XmlMappingConfiguration(processType), Lifestyle.Singleton);
             container.Register<XmlMapper>(Lifestyle.Singleton);
             container.Register<IXmlConverter, XmlConverter>(Lifestyle.Singleton);
 
@@ -104,6 +95,19 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             await host.RunAsync().ConfigureAwait(false);
 
             await container.DisposeAsync().ConfigureAwait(false);
+        }
+
+        private static XmlMappingConfigurationBase XmlMappingConfiguration(string processType)
+        {
+            switch (processType)
+            {
+                case "E02":
+                    return new CreateMeteringPointXmlMappingConfiguration();
+                case "D15":
+                    return new ConnectMeteringPointXmlMappingConfiguration();
+                default:
+                    throw new NotImplementedException();
+            }
         }
     }
 }
