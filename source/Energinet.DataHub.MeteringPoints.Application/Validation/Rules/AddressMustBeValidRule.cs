@@ -24,14 +24,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         {
             When(MeteringPointTypeIsProductionOrConsumption, () =>
             {
-                RuleFor(request => request.InstallationLocationAddress).SetValidator(request => new StreetNameMandatoryForMeteringPointTypeMustBeValidRule(request.GsrnNumber));
-                RuleFor(request => request.InstallationLocationAddress).SetValidator(request => new PostCodeMandatoryForMeteringPointTypeMustBeValidRule(request.GsrnNumber));
-                RuleFor(request => request.InstallationLocationAddress).SetValidator(request => new CityNameMandatoryForMeteringPointTypeMustBeValidRule(request.GsrnNumber));
+                RuleFor(request => request.StreetName).SetValidator(request => new StreetNameMandatoryForMeteringPointTypeMustBeValidRule(request.GsrnNumber));
+                RuleFor(request => request.PostCode).SetValidator(request => new PostCodeMandatoryForMeteringPointTypeMustBeValidRule(request.GsrnNumber));
+                RuleFor(request => request.CityName).SetValidator(request => new CityNameMandatoryForMeteringPointTypeMustBeValidRule(request.GsrnNumber));
             });
 
-            RuleFor(request => request.InstallationLocationAddress).SetValidator(request => new PostCodeFormatMustBeValidRule(request.GsrnNumber));
-            RuleFor(request => request.InstallationLocationAddress).SetValidator(request => new StreetNameMaximumLengthMustBeValidRule(request.GsrnNumber));
-            RuleFor(request => request.InstallationLocationAddress).SetValidator(request => new CityNameMaximumLengthMustBeValidRule(request.GsrnNumber));
+            RuleFor(request => request.PostCode).SetValidator(request => new PostCodeFormatMustBeValidRule(request.GsrnNumber, request.CountryCode));
+            RuleFor(request => request.StreetName).SetValidator(request => new StreetNameMaximumLengthMustBeValidRule(request.GsrnNumber));
+            RuleFor(request => request.CityName).SetValidator(request => new CityNameMaximumLengthMustBeValidRule(request.GsrnNumber));
         }
 
         private static bool MeteringPointTypeIsProductionOrConsumption(CreateMeteringPoint createMeteringPoint)

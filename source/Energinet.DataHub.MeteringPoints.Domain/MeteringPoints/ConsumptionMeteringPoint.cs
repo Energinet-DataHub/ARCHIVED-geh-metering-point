@@ -36,7 +36,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GridAreaId gridAreaId,
             GsrnNumber powerPlantGsrnNumber,
             string locationDescription,
-            string parentRelatedMeteringPoint,
             MeasurementUnitType unitType,
             string meterNumber,
             ReadingOccurrence meterReadingOccurrence,
@@ -59,7 +58,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 gridAreaId,
                 powerPlantGsrnNumber,
                 locationDescription,
-                parentRelatedMeteringPoint,
                 unitType,
                 meterNumber,
                 meterReadingOccurrence,
@@ -85,7 +83,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GridAreaId gridAreaId,
             GsrnNumber powerPlantGsrnNumber,
             string locationDescription,
-            string parentRelatedMeteringPoint,
             MeasurementUnitType unitType,
             string meterNumber,
             ReadingOccurrence meterReadingOccurrence,
@@ -96,7 +93,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             string netSettlementGroup,
             DisconnectionType disconnectionType,
             ConnectionType connectionType,
-            AssetType assetType)
+            AssetType assetType,
+            string? parentRelatedMeteringPoint)
             : base(
                 id,
                 gsrnNumber,
@@ -107,13 +105,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 gridAreaId,
                 powerPlantGsrnNumber,
                 locationDescription,
-                parentRelatedMeteringPoint,
                 unitType,
                 meterNumber,
                 meterReadingOccurrence,
                 maximumCurrent,
                 maximumPower,
-                occurenceDate)
+                occurenceDate,
+                parentRelatedMeteringPoint)
         {
             _settlementMethod = settlementMethod;
             _netSettlementGroup = netSettlementGroup;

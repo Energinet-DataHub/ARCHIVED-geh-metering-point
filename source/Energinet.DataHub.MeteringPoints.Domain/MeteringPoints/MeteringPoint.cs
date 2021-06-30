@@ -34,9 +34,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private int _maximumPower;
         private GsrnNumber _powerPlantGsrnNumber;
         private string _locationDescription;
-        private string _parentRelatedMeteringPoint;
         private MeasurementUnitType _unitType;
         private Instant? _occurenceDate;
+        private string? _parentRelatedMeteringPoint;
         private string _meterNumber;
 
         #pragma warning disable CS8618 //Disable nullable check
@@ -51,7 +51,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GridAreaId gridAreaId,
             GsrnNumber powerPlantGsrnNumber,
             string locationDescription,
-            string parentRelatedMeteringPoint,
             MeasurementUnitType unitType,
             string meterNumber,
             ReadingOccurrence meterReadingOccurrence,
@@ -69,7 +68,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _gridAreaId = gridAreaId;
             _powerPlantGsrnNumber = powerPlantGsrnNumber;
             _locationDescription = locationDescription;
-            _parentRelatedMeteringPoint = parentRelatedMeteringPoint;
             _unitType = unitType;
             _meterNumber = meterNumber;
             _meterReadingOccurrence = meterReadingOccurrence;
@@ -77,7 +75,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _maximumPower = maximumPower;
             _occurenceDate = occurenceDate;
 
-            AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaId));
+            AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaId, meteringPointSubType, physicalState, meterReadingOccurrence, ProductType.Tariff, unitType));
         }
 
         protected MeteringPoint(
@@ -90,13 +88,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GridAreaId gridAreaId,
             GsrnNumber powerPlantGsrnNumber,
             string locationDescription,
-            string parentRelatedMeteringPoint,
             MeasurementUnitType unitType,
             string meterNumber,
             ReadingOccurrence meterReadingOccurrence,
             int maximumCurrent,
             int maximumPower,
-            Instant? occurenceDate)
+            Instant? occurenceDate,
+            string? parentRelatedMeteringPoint)
         {
             Id = id;
             GsrnNumber = gsrnNumber;
@@ -107,13 +105,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _gridAreaId = gridAreaId;
             _powerPlantGsrnNumber = powerPlantGsrnNumber;
             _locationDescription = locationDescription;
-            _parentRelatedMeteringPoint = parentRelatedMeteringPoint;
             _unitType = unitType;
             _meterNumber = meterNumber;
             _meterReadingOccurrence = meterReadingOccurrence;
             _maximumCurrent = maximumCurrent;
             _maximumPower = maximumPower;
             _occurenceDate = occurenceDate;
+            _parentRelatedMeteringPoint = parentRelatedMeteringPoint;
         }
 
         public MeteringPointId Id { get; }

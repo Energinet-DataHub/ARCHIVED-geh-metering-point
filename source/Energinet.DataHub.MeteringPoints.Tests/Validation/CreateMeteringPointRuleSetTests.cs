@@ -134,9 +134,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         {
             var businessRequest = CreateRequest() with
             {
+                StreetName = streetName,
+                PostCode = SampleData.PostCode,
+                CityName = SampleData.CityName,
                 GsrnNumber = SampleData.GsrnNumber,
                 TypeOfMeteringPoint = typeOfMeteringPoint,
-                InstallationLocationAddress = new Address(streetName, SampleData.PostCode, SampleData.CityName, string.Empty),
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
@@ -153,9 +155,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         {
             var businessRequest = CreateRequest() with
             {
+                StreetName = SampleData.StreetName,
+                PostCode = postCode,
+                CityName = SampleData.CityName,
+                CountryCode = countryCode,
                 GsrnNumber = SampleData.GsrnNumber,
                 TypeOfMeteringPoint = typeOfMeteringPoint,
-                InstallationLocationAddress = new Address(SampleData.StreetName, postCode, SampleData.CityName, countryCode),
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
@@ -173,9 +178,57 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         {
             var businessRequest = CreateRequest() with
             {
+                StreetName = SampleData.StreetName,
+                PostCode = SampleData.PostCode,
+                CityName = cityName,
                 GsrnNumber = SampleData.GsrnNumber,
                 TypeOfMeteringPoint = typeOfMeteringPoint,
-                InstallationLocationAddress = new Address(SampleData.StreetName, SampleData.PostCode, cityName, string.Empty),
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData("1234", "Physical", typeof(MeterNumberMandatoryValidationError), false)]
+        [InlineData("", "Physical", typeof(MeterNumberMandatoryValidationError), true)]
+        [InlineData("1234", "OtherSubType", typeof(MeterNumberNotAllowedValidationError), true)]
+        [InlineData("", "OtherSubType", typeof(MeterNumberNotAllowedValidationError), false)]
+        public void Validate_MeterNumberMandatoryForPhysicalMP_MeterNumberNotAllowedForOtherMPTypes(string meterNumber, string subTypeOfMeteringPoint, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                MeterNumber = meterNumber,
+                SubTypeOfMeteringPoint = subTypeOfMeteringPoint,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData("1234", "Physical", typeof(MeterNumberMaximumLengthValidationError), false)]
+        [InlineData("1234567890000000", "Physical", typeof(MeterNumberMaximumLengthValidationError), true)]
+        public void Validate_MeterNumberMaximumLength(string meterNumber, string subTypeOfMeteringPoint, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                MeterNumber = meterNumber,
+                SubTypeOfMeteringPoint = subTypeOfMeteringPoint,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData("Physical", typeof(MeteringPointSubTypeMandatoryValidationError), false)]
+        [InlineData("", typeof(MeteringPointSubTypeMandatoryValidationError), true)]
+        public void Validate_MandatorySubTypeOfMP(string subTypeOfMeteringPoint, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                SubTypeOfMeteringPoint = subTypeOfMeteringPoint,
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
@@ -198,7 +251,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 
         private CreateMeteringPoint CreateRequest()
         {
-            return new CreateMeteringPoint(new Address());
+            return new();
         }
 
         private List<ValidationError> GetValidationErrors(CreateMeteringPoint request)

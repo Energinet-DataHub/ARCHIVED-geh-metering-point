@@ -14,15 +14,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint.Input;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
@@ -33,13 +30,16 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
     {
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageDispatcher _dispatcher;
+        private readonly IXmlConverter _xmlConverter;
 
         public CreateMeteringPointHttpTrigger(
             ICorrelationContext correlationContext,
-            MessageDispatcher dispatcher)
+            MessageDispatcher dispatcher,
+            IXmlConverter xmlConverter)
         {
             _correlationContext = correlationContext;
             _dispatcher = dispatcher;
+            _xmlConverter = xmlConverter;
         }
 
         [Function("CreateMeteringPoint")]
@@ -51,13 +51,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             var logger = executionContext.GetLogger("CreateMeteringPointHttpTrigger");
             logger.LogInformation("Received CreateMeteringPoint request");
 
-            IEnumerable<CreateMeteringPoint> commands;
+            IEnumerable<IBusinessRequest> commands;
 
             try
             {
-                // TODO: Currently we assume that we will have a function for each metering point event. This might change if we're not able to handle the routing in the API Gateway.
-                // TODO: In that case we would need to make a switch case or something like that to look at the value in the "process.processType" element.
-                commands = CreateMeteringPointXmlDeserializer.Deserialize(request.Body);
+                commands = await _xmlConverter.DeserializeAsync(request.Body);
             }
             catch (Exception exception)
             {
@@ -74,7 +72,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 
             foreach (var command in commands)
             {
-                await _dispatcher.DispatchAsync(command).ConfigureAwait(false);
+                await _dispatcher.DispatchAsync((IOutboundMessage)command).ConfigureAwait(false);
             }
 
             return response;

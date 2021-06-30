@@ -17,30 +17,30 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class PostCodeFormatMustBeValidRule : AbstractValidator<Address>
+    public class PostCodeFormatMustBeValidRule : AbstractValidator<string>
     {
         private const string PostCodeDkFormatRegEx = @"^([0-9]{4})$";
         private const int MaxPostCodeLength = 10;
         private readonly string _gsrnNumber;
 
-        public PostCodeFormatMustBeValidRule(string gsrnNumber)
+        public PostCodeFormatMustBeValidRule(string gsrnNumber, string countryCode)
         {
             _gsrnNumber = gsrnNumber;
-            When(address => address.CountryCode.Equals("DK"), PostCodeDenmarkFormat).Otherwise(PostCodeFormatMaxLength);
+            When(address => countryCode.Equals("DK"), PostCodeDenmarkFormat).Otherwise(PostCodeFormatMaxLength);
         }
 
         private void PostCodeDenmarkFormat()
         {
-            RuleFor(installationLocationAddress => installationLocationAddress.PostCode)
+            RuleFor(postCode => postCode)
                 .Matches(PostCodeDkFormatRegEx)
-                .WithState(installationLocationAddress => new PostCodeWrongFormatValidationError(_gsrnNumber, installationLocationAddress.PostCode));
+                .WithState(postCode => new PostCodeWrongFormatValidationError(_gsrnNumber, postCode));
         }
 
         private void PostCodeFormatMaxLength()
         {
-            RuleFor(installationLocationAddress => installationLocationAddress.PostCode)
+            RuleFor(postCode => postCode)
                 .MaximumLength(MaxPostCodeLength)
-                .WithState(installationLocationAddress => new PostCodeMaximumLengthValidationError(_gsrnNumber, installationLocationAddress.PostCode, MaxPostCodeLength));
+                .WithState(postCode => new PostCodeMaximumLengthValidationError(_gsrnNumber, postCode, MaxPostCodeLength));
         }
     }
 }

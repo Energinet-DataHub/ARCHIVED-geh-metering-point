@@ -21,6 +21,8 @@ using Energinet.DataHub.MeteringPoints.Application.UserIdentity;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappings;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Resilience;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
@@ -76,6 +78,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             var policyRetryCount = int.TryParse(Environment.GetEnvironmentVariable("INTERNAL_SERVICEBUS_RETRY_COUNT"), out var parsedRetryCount) ? parsedRetryCount : 0;
             container.Register<IChannelResiliencePolicy>(() => new RetryNTimesPolicy(policyRetryCount), Lifestyle.Scoped);
             container.RegisterDecorator<Channel, ChannelResilienceDecorator>(Lifestyle.Scoped);
+
+            // TODO: Expand factory for handling other XML types
+            container.Register<Func<string, string, XmlMappingConfigurationBase>>(() => (processType, type) => new CreateMeteringPointXmlMappingConfiguration(), Lifestyle.Singleton);
+            container.Register<XmlMapper>(Lifestyle.Singleton);
+            container.Register<IXmlConverter, XmlConverter>(Lifestyle.Singleton);
 
             var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING");
             var topic = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME");

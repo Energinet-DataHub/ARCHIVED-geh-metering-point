@@ -18,7 +18,11 @@ using Energinet.DataHub.MeteringPoints.Application.Transport;
 namespace Energinet.DataHub.MeteringPoints.Application
 {
     public record CreateMeteringPoint(
-            Address InstallationLocationAddress,
+            string StreetName = "",
+            string PostCode = "",
+            string CityName = "",
+            string CountryCode = "",
+            bool IsWashable = false,
             string GsrnNumber = "",
             string TypeOfMeteringPoint = "",
             string SubTypeOfMeteringPoint = "",
@@ -28,7 +32,6 @@ namespace Energinet.DataHub.MeteringPoints.Application
             string MeteringGridArea = "",
             string PowerPlant = "",
             string LocationDescription = "",
-            string ParentRelatedMeteringPoint = "",
             string SettlementMethod = "",
             string UnitType = "",
             string DisconnectionType = "",
@@ -38,7 +41,8 @@ namespace Energinet.DataHub.MeteringPoints.Application
             string PhysicalStatusOfMeteringPoint = "",
             string NetSettlementGroup = "",
             string ConnectionType = "",
-            string AssetType = "")
+            string AssetType = "",
+            string ParentRelatedMeteringPoint = "")
         : IBusinessRequest,
             IOutboundMessage,
             IInboundMessage;

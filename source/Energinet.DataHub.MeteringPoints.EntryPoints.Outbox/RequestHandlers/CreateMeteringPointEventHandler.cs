@@ -20,7 +20,7 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.RequestHandlers
 {
-    public class CreateMeteringPointEventHandler : IRequestHandler<CreateMeteringPointEventMessage>
+    public class CreateMeteringPointEventHandler : IRequestHandler<MeteringPointCreatedEventMessage>
     {
         private readonly IntegrationEventToEventHubDispatcher _dispatcher;
 
@@ -29,7 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.RequestHandlers
             _dispatcher = dispatcher;
         }
 
-        public async Task<Unit> Handle(CreateMeteringPointEventMessage request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(MeteringPointCreatedEventMessage request, CancellationToken cancellationToken)
         {
             await _dispatcher.DispatchAsync(request, CancellationToken.None).ConfigureAwait(false);
             return Unit.Value;

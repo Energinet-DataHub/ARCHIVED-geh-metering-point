@@ -12,11 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
-using Energinet.DataHub.MeteringPoints.Application.Transport;
-using MediatR;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Messages
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public record CreateMeteringPointEventMessage(string Gsrn, string MeteringPointType, string GridAreaId, bool Child) : IOutboundMessage, IRequest, IIntegrationEvent;
+    public class MeterNumberMandatoryErrorConverter : ErrorConverter<MeterNumberMandatoryValidationError>
+    {
+        protected override Error Convert(MeterNumberMandatoryValidationError error)
+        {
+            return new("D02", $"Meter number is mandatory for sub type physical for metering point {error.GsrnNumber}");
+        }
+    }
 }

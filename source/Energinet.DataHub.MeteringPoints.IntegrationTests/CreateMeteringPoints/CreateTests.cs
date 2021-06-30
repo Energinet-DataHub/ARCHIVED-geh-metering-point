@@ -77,7 +77,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             var outboxMessage = _outbox.GetNext(OutboxMessageCategory.IntegrationEvent);
             outboxMessage.Should().NotBeNull();
             outboxMessage?.Type.Should()
-                .Be(typeof(CreateMeteringPointEventMessage).FullName);
+                .Be(typeof(MeteringPointCreatedEventMessage).FullName);
         }
 
         [Fact]
@@ -136,7 +136,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         private static CreateMeteringPoint CreateRequest()
         {
             return new CreateMeteringPoint(
-                new Address(SampleData.StreetName, SampleData.PostCode, SampleData.CityName, SampleData.CountryCode),
+                SampleData.StreetName,
+                SampleData.PostCode,
+                SampleData.CityName,
+                SampleData.CountryCode,
+                SampleData.IsWashable,
                 SampleData.GsrnNumber,
                 SampleData.TypeOfMeteringPoint,
                 SampleData.SubTypeOfMeteringPoint,
@@ -146,17 +150,17 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SampleData.MeteringGridArea,
                 SampleData.PowerPlantGsrnNumber,
                 string.Empty,
-                string.Empty,
                 SampleData.SettlementMethod,
                 SampleData.MeasurementUnitType,
                 SampleData.DisconnectionType,
                 SampleData.Occurrence,
-                string.Empty,
+                SampleData.MeterNumber,
                 string.Empty,
                 string.Empty,
                 string.Empty,
                 SampleData.ConnectionType,
-                SampleData.AssetType);
+                SampleData.AssetType,
+                string.Empty);
         }
     }
 }

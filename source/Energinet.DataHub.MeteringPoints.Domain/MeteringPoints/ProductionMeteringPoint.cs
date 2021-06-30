@@ -35,7 +35,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GridAreaId gridAreaId,
             GsrnNumber powerPlant,
             string locationDescription,
-            string parentRelatedMeteringPoint,
             MeasurementUnitType unitType,
             string meterNumber,
             ReadingOccurrence meterReadingOccurrence,
@@ -57,7 +56,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 gridAreaId,
                 powerPlant,
                 locationDescription,
-                parentRelatedMeteringPoint,
                 unitType,
                 meterNumber,
                 meterReadingOccurrence,
@@ -82,7 +80,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GridAreaId gridAreaId,
             GsrnNumber powerPlantGsrnNumber,
             string locationDescription,
-            string parentRelatedMeteringPoint,
             MeasurementUnitType unitType,
             string meterNumber,
             ReadingOccurrence meterReadingOccurrence,
@@ -92,7 +89,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             int productionObligation,
             int netSettlementGroup,
             DisconnectionType disconnectionType,
-            ConnectionType connectionType)
+            ConnectionType connectionType,
+            string? parentRelatedMeteringPoint)
             : base(
                 id,
                 gsrnNumber,
@@ -103,13 +101,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 gridAreaId,
                 powerPlantGsrnNumber,
                 locationDescription,
-                parentRelatedMeteringPoint,
                 unitType,
                 meterNumber,
                 meterReadingOccurrence,
                 maximumCurrent,
                 maximumPower,
-                occurenceDate)
+                occurenceDate,
+                parentRelatedMeteringPoint)
         {
             _productionObligation = productionObligation;
             _netSettlementGroup = netSettlementGroup;
