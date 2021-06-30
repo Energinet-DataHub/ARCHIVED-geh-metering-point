@@ -3,7 +3,6 @@
 ## Table of Contents
 
 - [IntegrationEventContract.proto](#IntegrationEventContract.proto)
-    - [IntegrationEventEnvelope](#.IntegrationEventEnvelope)
     - [MeteringMethodChanged](#.MeteringMethodChanged)
     - [MeteringPointCancelled](#.MeteringPointCancelled)
     - [MeteringPointClosed](#.MeteringPointClosed)
@@ -20,23 +19,6 @@
 ## IntegrationEventContract.proto
 
 Metering Point Domain related messages.
-
-<a name=".IntegrationEventEnvelope"></a>
-
-### IntegrationEventEnvelope
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| meteringPointCreatedMessage | [MeteringPointCreated](#MeteringPointCreated) |  |  |
-| meteringPointConnectedMessage | [MeteringPointConnected](#MeteringPointConnected) |  |  |
-| meteringPointDisconnectedMessage | [MeteringPointDisconnected](#MeteringPointDisconnected) |  |  |
-| meteringPointClosedMessage | [MeteringPointClosed](#MeteringPointClosed) |  |  |
-| meteringPointCancelledMessage | [MeteringPointCancelled](#MeteringPointCancelled) |  |  |
-| parentCoupledMessage | [ParentCoupled](#ParentCoupled) |  |  |
-| parentDecoupledMessage | [ParentDecoupled](#ParentDecoupled) |  |  |
-| settlementDetailsChangedMessage | [SettlementDetailsChanged](#SettlementDetailsChanged) |  |  |
-| meteringMethodChangedMessage | [MeteringMethodChanged](#MeteringMethodChanged) |  |  |
-| netSettlementGroupChangedMessage | [NetSettlementGroupChanged](#NetSettlementGroupChanged) |  |  |
 
 <a name=".MeteringMethodChanged"></a>
 
