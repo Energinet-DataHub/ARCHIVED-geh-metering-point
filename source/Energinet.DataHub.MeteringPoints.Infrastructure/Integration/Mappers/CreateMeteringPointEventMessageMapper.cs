@@ -31,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Mappers
             {
                 MeteringPointCreatedMessage = new IntegrationEventContracts.MeteringPointCreated
                 {
-                    Gsrn = obj.Gsrn,
+                    MeteringPointId = obj.Gsrn,
                     MeteringPointType = obj.MeteringPointType,
                     MeteringGridArea = obj.GridAreaId,
                     ToGrid = obj.ToGrid,
@@ -43,7 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Mappers
                     MeterReadingPeriodicity = obj.MeterReadingPeriodicity,
                     Product = obj.Product,
                     QuantityUnit = obj.QuantityUnit,
-                    ParentMeteringPointGsrn = obj.ParentGsrn,
+                    ParentMeteringPointId = obj.ParentGsrn,
                     EffectiveDate = obj.EffectiveDate,
                 },
             };
