@@ -80,7 +80,17 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             container.RegisterDecorator<Channel, ChannelResilienceDecorator>(Lifestyle.Scoped);
 
             // TODO: Expand factory for handling other XML types
-            container.Register<Func<string, string, XmlMappingConfigurationBase>>(() => (processType, type) => new CreateMeteringPointXmlMappingConfiguration(), Lifestyle.Singleton);
+            container.Register<Func<string, string, XmlMappingConfigurationBase>>(
+                () => (processType, type) =>
+            {
+                switch (processType)
+                {
+                    case "dsfsdf":
+                        return new CreateMeteringPointXmlMappingConfiguration();
+                    default:
+                        throw new NotImplementedException();
+                }
+            }, Lifestyle.Singleton);
             container.Register<XmlMapper>(Lifestyle.Singleton);
             container.Register<IXmlConverter, XmlConverter>(Lifestyle.Singleton);
 
