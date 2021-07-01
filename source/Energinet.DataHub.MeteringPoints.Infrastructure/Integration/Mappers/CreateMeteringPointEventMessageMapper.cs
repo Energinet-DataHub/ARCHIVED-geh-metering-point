@@ -29,9 +29,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Mappers
             if (obj == null) throw new ArgumentNullException(nameof(obj));
             return new IntegrationEventEnvelope()
             {
-                MeteringPointCreatedEventMessage = new IntegrationEventContracts.MeteringPointCreatedEventMessage
+                MeteringPointCreatedMessage = new IntegrationEventContracts.MeteringPointCreated
                 {
-                    Gsrn = obj.Gsrn,
+                    MeteringPointId = obj.Gsrn,
                     MeteringPointType = obj.MeteringPointType,
                     MeteringGridArea = obj.GridAreaId,
                     ToGrid = obj.ToGrid,
@@ -43,7 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Mappers
                     MeterReadingPeriodicity = obj.MeterReadingPeriodicity,
                     Product = obj.Product,
                     QuantityUnit = obj.QuantityUnit,
-                    ParentMeteringPointGsrn = obj.ParentGsrn,
+                    ParentMeteringPointId = obj.ParentGsrn,
                     EffectiveDate = obj.EffectiveDate,
                 },
             };
