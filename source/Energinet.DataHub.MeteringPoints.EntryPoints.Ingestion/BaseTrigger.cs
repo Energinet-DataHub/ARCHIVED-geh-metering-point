@@ -12,13 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter;
 using Microsoft.Azure.Functions.Worker.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 {
@@ -26,13 +30,16 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
     {
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageDispatcher _dispatcher;
+        private readonly IXmlConverter _xmlConverter;
 
         protected BaseTrigger(
             ICorrelationContext correlationContext,
-            MessageDispatcher dispatcher)
+            MessageDispatcher dispatcher,
+            IXmlConverter xmlConverter)
         {
             _correlationContext = correlationContext;
             _dispatcher = dispatcher;
+            _xmlConverter = xmlConverter;
         }
 
         protected async Task<HttpResponseData> CreateResponseAsync(HttpRequestData request)
@@ -46,8 +53,20 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
              return response;
         }
 
-        protected async Task DispatchCommandsAsync(IEnumerable<IBusinessRequest> commands)
+        protected async Task DispatchCommandsAsync(Stream stream, ILogger logger)
         {
+            IEnumerable<IBusinessRequest>? commands = null;
+
+            try
+            {
+                commands = await _xmlConverter.DeserializeAsync(stream).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                logger.LogError(exception, "Unable to deserialize request");
+                throw new Exception(exception.Message);
+            }
+
             foreach (var command in commands)
             {
                 await _dispatcher.DispatchAsync((IOutboundMessage)command).ConfigureAwait(false);

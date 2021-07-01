@@ -28,15 +28,12 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 {
     public class ConnectMeteringPointHttpTrigger : BaseTrigger
     {
-        private readonly IXmlConverter _xmlConverter;
-
         public ConnectMeteringPointHttpTrigger(
             MessageDispatcher dispatcher,
             IXmlConverter xmlConverter,
             ICorrelationContext correlationContext)
-            : base(correlationContext, dispatcher)
+            : base(correlationContext, dispatcher, xmlConverter)
         {
-            _xmlConverter = xmlConverter;
         }
 
         [Function("ConnectMeteringPoint")]
@@ -48,18 +45,15 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             var logger = executionContext.GetLogger("ConnectMeteringPoint");
             logger.LogInformation("Received ConnectMeteringPoint request");
 
-            IEnumerable<IBusinessRequest> commands;
             try
             {
-                commands = await _xmlConverter.DeserializeAsync(request.Body);
+                await DispatchCommandsAsync(request.Body, logger).ConfigureAwait(false);
             }
-            catch (Exception exception)
+            catch
             {
-                logger.LogError(exception, "Unable to deserialize request");
                 return request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
-            await DispatchCommandsAsync(commands).ConfigureAwait(false);
             return await CreateResponseAsync(request).ConfigureAwait(false);
         }
     }

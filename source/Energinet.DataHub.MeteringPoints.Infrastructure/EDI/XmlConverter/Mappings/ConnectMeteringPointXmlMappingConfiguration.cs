@@ -19,7 +19,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
         public ConnectMeteringPointXmlMappingConfiguration()
         {
             CreateMapping<Application.ConnectMeteringPoint>("MktActivityRecord", mapper => mapper
-                .AddProperty(x => x.GsrnNumber, "MarketEvaluationPoint", "mRID"));
+                .AddProperty(x => x.GsrnNumber, "MarketEvaluationPoint", "mRID")
+                .AddProperty(x => x.TransactionId, "mRID")
+                .AddProperty(x => x.Type, "MarketEvaluationPoint", "Type")
+                .AddProperty(x => x.EffectiveDate, "Start_DateAndOrTime.dateTime"));
         }
     }
 }
