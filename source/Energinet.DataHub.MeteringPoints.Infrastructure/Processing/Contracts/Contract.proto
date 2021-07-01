@@ -54,6 +54,8 @@ message CreateMeteringPoint {
 message ConnectMeteringPoint {
     string gsrnNumber = 1;
     string effectiveDate = 2;
+    string transactionId = 3;
+    string type = 4;
 }
 
 message MeteringPointEnvelope {
