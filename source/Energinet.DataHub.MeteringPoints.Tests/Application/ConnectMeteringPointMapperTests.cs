@@ -24,7 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Application
     {
         [Fact]
         [UnitTest]
-        public void ConnectMeteringPointCommandShouldMapToContractAndBack()
+        public void ConnectMeteringPoint_Command_Should_Map_To_Contract_And_Back()
         {
             var fixture = new Fixture();
             var outboundMapper = new Infrastructure.Ingestion.Mappers.ConnectMeteringPointMapper();
