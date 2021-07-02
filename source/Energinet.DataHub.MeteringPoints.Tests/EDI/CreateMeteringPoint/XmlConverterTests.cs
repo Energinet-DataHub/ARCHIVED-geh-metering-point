@@ -58,7 +58,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
             var command = commands.First();
 
             command.GsrnNumber.Should().Be("571234567891234605");
-            command.Type.Should().Be("E17");
             command.EffectiveDate.Should().Be("2021-05-27T22:00:00.00Z");
             command.TransactionId.Should().Be("asdasweqweasedGUID");
         }
