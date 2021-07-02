@@ -45,19 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             HttpRequestData request,
             FunctionContext executionContext)
         {
-            var logger = executionContext.GetLogger("ConnectMeteringPoint");
-            logger.LogInformation("Received ConnectMeteringPoint request");
-
-            try
-            {
-                await DispatchCommandsAsync(request.Body, logger).ConfigureAwait(false);
-            }
-            catch
-            {
-                return request.CreateResponse(HttpStatusCode.BadRequest);
-            }
-
-            return await CreateResponseAsync(request).ConfigureAwait(false);
+            return await ProcessRequestAsync(request, executionContext, "CreateMeteringPoint").ConfigureAwait(false);
         }
     }
 }

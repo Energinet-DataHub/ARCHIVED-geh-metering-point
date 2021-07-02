@@ -21,6 +21,7 @@ using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 
@@ -42,7 +43,24 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             _xmlConverter = xmlConverter;
         }
 
-        protected async Task<HttpResponseData> CreateResponseAsync(HttpRequestData request)
+        protected async Task<HttpResponseData> ProcessRequestAsync(HttpRequestData request, FunctionContext executionContext, string loggerName)
+        {
+            var logger = executionContext.GetLogger(loggerName);
+            logger.LogInformation($"Received {loggerName} request");
+
+            try
+            {
+                await DispatchCommandsAsync(request.Body, logger).ConfigureAwait(false);
+            }
+            catch
+            {
+                return request.CreateResponse(HttpStatusCode.BadRequest);
+            }
+
+            return await CreateOkResponseAsync(request).ConfigureAwait(false);
+        }
+
+        private async Task<HttpResponseData> CreateOkResponseAsync(HttpRequestData request)
         {
              var response = request.CreateResponse(HttpStatusCode.OK);
 
@@ -53,7 +71,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
              return response;
         }
 
-        protected async Task DispatchCommandsAsync(Stream stream, ILogger logger)
+        private async Task DispatchCommandsAsync(Stream stream, ILogger logger)
         {
             IEnumerable<IBusinessRequest>? commands = null;
 
@@ -71,6 +89,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             {
                 await _dispatcher.DispatchAsync((IOutboundMessage)command).ConfigureAwait(false);
             }
+        }
+
+        private HttpResponseData BadRequest(HttpRequestData request)
+        {
+            return request.CreateResponse(HttpStatusCode.BadRequest);
         }
     }
 }
