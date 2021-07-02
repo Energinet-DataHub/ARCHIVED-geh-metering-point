@@ -48,14 +48,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 .AddProperty(x => x.ParentRelatedMeteringPoint, "sdf"));
         }
 
-        private static bool IsWashable(string remark)
+        private static bool IsWashable(XmlElementInfo remark)
         {
-            return remark == "D01";
+            return remark.SourceValue == "D01";
         }
 
-        private static string TranslateSettlementMethod(string settlementMethod)
+        private static string TranslateSettlementMethod(XmlElementInfo settlementMethod)
         {
-            return settlementMethod switch
+            return settlementMethod.SourceValue switch
             {
                 "D01" => nameof(SettlementMethod.Flex),
                 "E02" => nameof(SettlementMethod.NonProfiled),
@@ -63,36 +63,36 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
             };
         }
 
-        private static string TranslateMeteringPointType(string meteringPointType)
+        private static string TranslateMeteringPointType(XmlElementInfo meteringPointType)
         {
-            return meteringPointType switch
+            return meteringPointType.SourceValue switch
             {
                 "E17" => nameof(MeteringPointType.Consumption),
                 _ => string.Empty,
             };
         }
 
-        private static string TranslateMeteringPointSubType(string meteringPointSubType)
+        private static string TranslateMeteringPointSubType(XmlElementInfo meteringPointSubType)
         {
-            return meteringPointSubType switch
+            return meteringPointSubType.SourceValue switch
             {
                 "D01" => nameof(MeteringPointSubType.Physical),
                 _ => string.Empty,
             };
         }
 
-        private static string TranslatePhysicalState(string physicalState)
+        private static string TranslatePhysicalState(XmlElementInfo physicalState)
         {
-            return physicalState switch
+            return physicalState.SourceValue switch
             {
                 "D03" => nameof(PhysicalState.New),
                 _ => string.Empty,
             };
         }
 
-        private static string TranslateConnectionType(string connectionType)
+        private static string TranslateConnectionType(XmlElementInfo connectionType)
         {
-            return connectionType switch
+            return connectionType.SourceValue switch
             {
                 "D01" => nameof(ConnectionType.Direct),
                 "D02" => nameof(ConnectionType.Installation),
@@ -100,18 +100,18 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
             };
         }
 
-        private static string TranslateAssetType(string assetType)
+        private static string TranslateAssetType(XmlElementInfo assetType)
         {
-            return assetType switch
+            return assetType.SourceValue switch
             {
                 "D12" => nameof(AssetType.WindTurbines),
                 _ => string.Empty,
             };
         }
 
-        private static string TranslateDisconnectionType(string disconnectionType)
+        private static string TranslateDisconnectionType(XmlElementInfo disconnectionType)
         {
-            return disconnectionType switch
+            return disconnectionType.SourceValue switch
             {
                 "D01" => nameof(DisconnectionType.Remote),
                 "D02" => nameof(DisconnectionType.Manual),
@@ -119,9 +119,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
             };
         }
 
-        private static string TranslateMeterReadingOccurrence(string meterReadingOccurrence)
+        private static string TranslateMeterReadingOccurrence(XmlElementInfo meterReadingOccurrence)
         {
-            return meterReadingOccurrence switch
+            return meterReadingOccurrence.SourceValue switch
             {
                 "P1Y" => nameof(ReadingOccurrence.Yearly),
                 "P1M" => nameof(ReadingOccurrence.Monthly),
