@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
@@ -26,17 +27,20 @@ using Microsoft.Extensions.Logging;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 {
-    public class MeteringPointHttpTrigger : BaseTrigger
+    public class MeteringPointHttpTrigger
     {
+        private readonly ICorrelationContext _correlationContext;
+        private readonly MessageDispatcher _dispatcher;
+        private readonly IXmlConverter _xmlConverter;
+
         public MeteringPointHttpTrigger(
             ICorrelationContext correlationContext,
             MessageDispatcher dispatcher,
             IXmlConverter xmlConverter)
-            : base(
-                correlationContext,
-                dispatcher,
-                xmlConverter)
         {
+            _correlationContext = correlationContext;
+            _dispatcher = dispatcher;
+            _xmlConverter = xmlConverter;
         }
 
         [Function("MeteringPoint")]
@@ -45,7 +49,55 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             HttpRequestData request,
             FunctionContext executionContext)
         {
-            return await ProcessRequestAsync(request, executionContext, "MeteringPoint").ConfigureAwait(false);
+            var logger = executionContext.GetLogger("MeteringPoint");
+            logger.LogInformation($"Received MeteringPoint request");
+
+            try
+            {
+                await DispatchCommandsAsync(request.Body, logger).ConfigureAwait(false);
+            }
+            catch
+            {
+                return BadRequest(request);
+            }
+
+            return await CreateOkResponseAsync(request).ConfigureAwait(false);
+        }
+
+        private async Task<HttpResponseData> CreateOkResponseAsync(HttpRequestData request)
+        {
+            var response = request.CreateResponse(HttpStatusCode.OK);
+
+            response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
+
+            await response.WriteStringAsync("Correlation id: " + _correlationContext.GetCorrelationId())
+                .ConfigureAwait(false);
+            return response;
+        }
+
+        private async Task DispatchCommandsAsync(Stream stream, ILogger logger)
+        {
+            IEnumerable<IBusinessRequest>? commands = null;
+
+            try
+            {
+                commands = await _xmlConverter.DeserializeAsync(stream).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                logger.LogError(exception, "Unable to deserialize request");
+                throw new ArgumentException("Unable to deserialize request");
+            }
+
+            foreach (var command in commands)
+            {
+                await _dispatcher.DispatchAsync((IOutboundMessage)command).ConfigureAwait(false);
+            }
+        }
+
+        private HttpResponseData BadRequest(HttpRequestData request)
+        {
+            return request.CreateResponse(HttpStatusCode.BadRequest);
         }
     }
 }
