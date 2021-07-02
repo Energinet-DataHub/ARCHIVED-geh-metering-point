@@ -26,9 +26,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 {
-    public class CreateMeteringPointHttpTrigger : BaseTrigger
+    public class MeteringPointHttpTrigger : BaseTrigger
     {
-        public CreateMeteringPointHttpTrigger(
+        public MeteringPointHttpTrigger(
             ICorrelationContext correlationContext,
             MessageDispatcher dispatcher,
             IXmlConverter xmlConverter)
@@ -39,13 +39,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
         {
         }
 
-        [Function("CreateMeteringPoint")]
+        [Function("MeteringPoint")]
         public async Task<HttpResponseData> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")]
             HttpRequestData request,
             FunctionContext executionContext)
         {
-            return await ProcessRequestAsync(request, executionContext, "CreateMeteringPoint").ConfigureAwait(false);
+            return await ProcessRequestAsync(request, executionContext, "MeteringPoint").ConfigureAwait(false);
         }
     }
 }

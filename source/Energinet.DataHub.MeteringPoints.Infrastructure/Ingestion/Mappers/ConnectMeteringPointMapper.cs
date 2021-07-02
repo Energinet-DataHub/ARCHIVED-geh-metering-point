@@ -37,7 +37,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
                 {
                     GsrnNumber = obj.GsrnNumber,
                     EffectiveDate = obj.EffectiveDate,
-                    Type = obj.Type,
                     TransactionId = obj.TransactionId,
                 },
             };

@@ -25,7 +25,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
             return new Application.ConnectMeteringPoint
             {
                 GsrnNumber = obj.GsrnNumber,
-                Type = obj.Type,
                 EffectiveDate = obj.EffectiveDate,
                 TransactionId = obj.TransactionId,
             };

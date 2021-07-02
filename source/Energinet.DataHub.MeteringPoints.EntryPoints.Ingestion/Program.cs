@@ -66,8 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
                 .UseSimpleInjector(container);
 
             // Register application components.
-            container.Register<CreateMeteringPointHttpTrigger>(Lifestyle.Scoped);
-            container.Register<ConnectMeteringPointHttpTrigger>(Lifestyle.Scoped);
+            container.Register<MeteringPointHttpTrigger>(Lifestyle.Scoped);
             container.Register<HttpCorrelationIdMiddleware>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
             container.Register<HttpUserContextMiddleware>(Lifestyle.Scoped);
