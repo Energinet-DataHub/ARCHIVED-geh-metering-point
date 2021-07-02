@@ -64,7 +64,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             catch (Exception exception)
             {
                 logger.LogError(exception, "Unable to deserialize request");
-                throw new Exception(exception.Message);
+                throw new Exception("Unable to deserialize request");
             }
 
             foreach (var command in commands)
