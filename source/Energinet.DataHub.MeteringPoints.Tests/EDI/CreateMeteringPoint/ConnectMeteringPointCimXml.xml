@@ -1,170 +1,158 @@
-﻿<!--
-Copyright 2020 Energinet DataHub A/S
-Licensed under the Apache License, Version 2.0 (the "License2");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-    http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
--->
-<urn:RequestChangeAccountingPointCharacteristics_MarketDocument
-        xmlns:urn="urn:ediel:org:requestchangeofapcharacteristics:0:1">
-    <urn:mRID>string</urn:mRID>
-    <urn:type>E17</urn:type>
-    <urn:process.processType>D15</urn:process.processType>
+﻿<cim:RequestChangeAccountingPointCharacteristics_MarketDocument
+        xmlns:cim="cim:ediel:org:requestchangeofapcharacteristics:0:1">
+    <cim:mRID>string</cim:mRID>
+    <cim:type>E17</cim:type>
+    <cim:process.processType>D15</cim:process.processType>
     <!--Optional:-->
-    <urn:businessSector.type>E24</urn:businessSector.type>
-    <urn:sender_MarketParticipant.mRID codingScheme="NAZ">8100000000030</urn:sender_MarketParticipant.mRID>
-    <urn:sender_MarketParticipant.marketRole.type>DDM</urn:sender_MarketParticipant.marketRole.type>
-    <urn:receiver_MarketParticipant.mRID codingScheme="ARR">5790001330552</urn:receiver_MarketParticipant.mRID>
-    <urn:receiver_MarketParticipant.marketRole.type>SYO</urn:receiver_MarketParticipant.marketRole.type>
-    <urn:createdDateTime>2002-11-05T09:01:03+01:00</urn:createdDateTime>
+    <cim:businessSector.type>E24</cim:businessSector.type>
+    <cim:sender_MarketParticipant.mRID codingScheme="NAZ">8100000000030</cim:sender_MarketParticipant.mRID>
+    <cim:sender_MarketParticipant.marketRole.type>DDM</cim:sender_MarketParticipant.marketRole.type>
+    <cim:receiver_MarketParticipant.mRID codingScheme="ARR">5790001330552</cim:receiver_MarketParticipant.mRID>
+    <cim:receiver_MarketParticipant.marketRole.type>SYO</cim:receiver_MarketParticipant.marketRole.type>
+    <cim:createdDateTime>2002-11-05T09:01:03+01:00</cim:createdDateTime>
     <!--1 or more repetitions:-->
-    <urn:MktActivityRecord>
-        <urn:mRID>asdasweqweasedGUID</urn:mRID>
+    <cim:MktActivityRecord>
+        <cim:mRID>asdasweqweasedGUID</cim:mRID>
         <!--Optional:-->
-        <urn:status>9</urn:status>
-        <urn:MarketEvaluationPoint>
-            <urn:mRID codingScheme="A01">571234567891234605</urn:mRID>
+        <cim:status>9</cim:status>
+        <cim:MarketEvaluationPoint>
+            <cim:mRID codingScheme="A01">571234567891234605</cim:mRID>
             <!--Optional:-->
-            <urn:type>E17</urn:type>
+            <cim:type>E17</cim:type>
             <!--Optional:-->
-            <urn:description>random string description</urn:description>
+            <cim:description>random string description</cim:description>
             <!--Optional:-->
-            <urn:settlementMethod>D01</urn:settlementMethod>
+            <cim:settlementMethod>D01</cim:settlementMethod>
             <!--Optional:-->
-            <urn:meteringMethod>D01</urn:meteringMethod>
+            <cim:meteringMethod>D01</cim:meteringMethod>
             <!--Optional:-->
-            <urn:meteredDataCollectionMethod>D01</urn:meteredDataCollectionMethod>
+            <cim:meteredDataCollectionMethod>D01</cim:meteredDataCollectionMethod>
             <!--Optional:-->
-            <urn:netSettlementGroup>99</urn:netSettlementGroup>
+            <cim:netSettlementGroup>99</cim:netSettlementGroup>
             <!--Optional:-->
-            <urn:mPConnectionType>D01</urn:mPConnectionType>
+            <cim:mPConnectionType>D01</cim:mPConnectionType>
             <!--Optional:-->
-            <urn:readCycle>PT1H</urn:readCycle>
+            <cim:readCycle>PT1H</cim:readCycle>
             <!--Optional:-->
-            <urn:disconnectionMethod>D01</urn:disconnectionMethod>
+            <cim:disconnectionMethod>D01</cim:disconnectionMethod>
             <!--Optional:-->
-            <urn:nextReadingDate>--11-16+01:00</urn:nextReadingDate>
+            <cim:nextReadingDate>--11-16+01:00</cim:nextReadingDate>
             <!--Optional:-->
-            <urn:ratedCurrent unit="AMP">666</urn:ratedCurrent>
+            <cim:ratedCurrent unit="AMP">666</cim:ratedCurrent>
             <!--Optional:-->
-            <urn:connectionState>D03</urn:connectionState>
+            <cim:connectionState>D03</cim:connectionState>
             <!--Optional:-->
-            <urn:physicalConnectionCapacity>
-                <urn:value>1000.00</urn:value>
-                <urn:unit>KWH</urn:unit>
-            </urn:physicalConnectionCapacity>
-            <urn:product>8716867000030</urn:product>
+            <cim:physicalConnectionCapacity>
+                <cim:value>1000.00</cim:value>
+                <cim:unit>KWH</cim:unit>
+            </cim:physicalConnectionCapacity>
+            <cim:product>8716867000030</cim:product>
             <!--Optional:-->
-            <urn:firstCustomer_MarketParticipant.mRID codingScheme="NLU">string
-            </urn:firstCustomer_MarketParticipant.mRID>
+            <cim:firstCustomer_MarketParticipant.mRID codingScheme="NLU">string
+            </cim:firstCustomer_MarketParticipant.mRID>
             <!--Optional:-->
-            <urn:firstCustomer_MarketParticipant.name>string</urn:firstCustomer_MarketParticipant.name>
+            <cim:firstCustomer_MarketParticipant.name>string</cim:firstCustomer_MarketParticipant.name>
             <!--Optional:-->
-            <urn:secondCustomer_MarketParticipant.mRID codingScheme="A01">string
-            </urn:secondCustomer_MarketParticipant.mRID>
+            <cim:secondCustomer_MarketParticipant.mRID codingScheme="A01">string
+            </cim:secondCustomer_MarketParticipant.mRID>
             <!--Optional:-->
-            <urn:secondCustomer_MarketParticipant.name>string</urn:secondCustomer_MarketParticipant.name>
+            <cim:secondCustomer_MarketParticipant.name>string</cim:secondCustomer_MarketParticipant.name>
             <!--Optional:-->
-            <urn:energyLabel_EnergyTechnologyAndFuel.technology>D12</urn:energyLabel_EnergyTechnologyAndFuel.technology>
+            <cim:energyLabel_EnergyTechnologyAndFuel.technology>D12</cim:energyLabel_EnergyTechnologyAndFuel.technology>
             <!--Optional:-->
-            <urn:marketAgreement.contractedConnectionCapacity>
+            <cim:marketAgreement.contractedConnectionCapacity>
                 <!--Optional:-->
-                <urn:value>666</urn:value>
+                <cim:value>666</cim:value>
                 <!--Optional:-->
-                <urn:unit>KWH</urn:unit>
+                <cim:unit>KWH</cim:unit>
                 <!--Optional:-->
-                <urn:multiplier>none</urn:multiplier>
-            </urn:marketAgreement.contractedConnectionCapacity>
+                <cim:multiplier>none</cim:multiplier>
+            </cim:marketAgreement.contractedConnectionCapacity>
             <!--Optional:-->
-            <urn:meter.mRID>1234567890</urn:meter.mRID>
+            <cim:meter.mRID>1234567890</cim:meter.mRID>
             <!--Zero or more repetitions:-->
-            <urn:Series>
+            <cim:Series>
                 <!--Optional:-->
-                <urn:mRID>string</urn:mRID>
+                <cim:mRID>string</cim:mRID>
                 <!--Optional:-->
-                <urn:estimatedAnnualVolume_Quantity.quantity>1000.00</urn:estimatedAnnualVolume_Quantity.quantity>
+                <cim:estimatedAnnualVolume_Quantity.quantity>1000.00</cim:estimatedAnnualVolume_Quantity.quantity>
                 <!--Optional:-->
-                <urn:quantity_Measure_Unit.name>kWh</urn:quantity_Measure_Unit.name>
-            </urn:Series>
-            <urn:Linked_MarketEvaluationPoint>
-                <urn:mRID>571234567891234636</urn:mRID>
-            </urn:Linked_MarketEvaluationPoint>
+                <cim:quantity_Measure_Unit.name>kWh</cim:quantity_Measure_Unit.name>
+            </cim:Series>
+            <cim:Linked_MarketEvaluationPoint>
+                <cim:mRID>571234567891234636</cim:mRID>
+            </cim:Linked_MarketEvaluationPoint>
             <!--Optional:-->
-            <urn:register.rightDigitCount>100</urn:register.rightDigitCount>
+            <cim:register.rightDigitCount>100</cim:register.rightDigitCount>
             <!--Optional:-->
-            <urn:register.leftDigitCount>100</urn:register.leftDigitCount>
+            <cim:register.leftDigitCount>100</cim:register.leftDigitCount>
             <!--Optional:-->
-            <urn:register.channels.readingType.accumulation>D01</urn:register.channels.readingType.accumulation>
+            <cim:register.channels.readingType.accumulation>D01</cim:register.channels.readingType.accumulation>
             <!--Optional:-->
-            <urn:register.channels.readingType.multiplier>1000.00</urn:register.channels.readingType.multiplier>
+            <cim:register.channels.readingType.multiplier>1000.00</cim:register.channels.readingType.multiplier>
             <!--Optional:-->
-            <urn:register.channels.readingType.unit>DD</urn:register.channels.readingType.unit>
+            <cim:register.channels.readingType.unit>DD</cim:register.channels.readingType.unit>
             <!--Optional:-->
-            <urn:usagePointLocation.mainAddress>
+            <cim:usagePointLocation.mainAddress>
                 <!--Optional:-->
-                <urn:streetDetail>
+                <cim:streetDetail>
                     <!--Optional:-->
-                    <urn:number>12</urn:number>
+                    <cim:number>12</cim:number>
                     <!--Optional:-->
-                    <urn:name>Test street name</urn:name>
+                    <cim:name>Test street name</cim:name>
                     <!--Optional:-->
-                    <urn:type>tv</urn:type>
+                    <cim:type>tv</cim:type>
                     <!--Optional:-->
-                    <urn:code>string</urn:code>
+                    <cim:code>string</cim:code>
                     <!--Optional:-->
-                    <urn:buildingName>string</urn:buildingName>
+                    <cim:buildingName>string</cim:buildingName>
                     <!--Optional:-->
-                    <urn:suiteNumber>string</urn:suiteNumber>
+                    <cim:suiteNumber>string</cim:suiteNumber>
                     <!--Optional:-->
-                    <urn:floorIdentification>string</urn:floorIdentification>
-                </urn:streetDetail>
+                    <cim:floorIdentification>string</cim:floorIdentification>
+                </cim:streetDetail>
                 <!--Optional:-->
-                <urn:townDetail>
+                <cim:townDetail>
                     <!--Optional:-->
-                    <urn:code>Test code</urn:code>
+                    <cim:code>Test code</cim:code>
                     <!--Optional:-->
-                    <urn:section>Test section</urn:section>
+                    <cim:section>Test section</cim:section>
                     <!--Optional:-->
-                    <urn:name>Test city</urn:name>
+                    <cim:name>Test city</cim:name>
                     <!--Optional:-->
-                    <urn:stateOrProvince>Vejle</urn:stateOrProvince>
+                    <cim:stateOrProvince>Vejle</cim:stateOrProvince>
                     <!--Optional:-->
-                    <urn:country>DK</urn:country>
-                </urn:townDetail>
+                    <cim:country>DK</cim:country>
+                </cim:townDetail>
                 <!--Optional:-->
-                <urn:status>
+                <cim:status>
                     <!--Optional:-->
-                    <urn:value>string</urn:value>
+                    <cim:value>string</cim:value>
                     <!--Optional:-->
-                    <urn:dateTime>2017-08-18T22:01:40</urn:dateTime>
+                    <cim:dateTime>2017-08-18T22:01:40</cim:dateTime>
                     <!--Optional:-->
-                    <urn:remark>string</urn:remark>
+                    <cim:remark>string</cim:remark>
                     <!--Optional:-->
-                    <urn:reason>string</urn:reason>
-                </urn:status>
+                    <cim:reason>string</cim:reason>
+                </cim:status>
                 <!--Optional:-->
-                <urn:postalCode>6000</urn:postalCode>
+                <cim:postalCode>6000</cim:postalCode>
                 <!--Optional:-->
-                <urn:poBox>string</urn:poBox>
+                <cim:poBox>string</cim:poBox>
                 <!--Optional:-->
-                <urn:language>DK</urn:language>
-            </urn:usagePointLocation.mainAddress>
+                <cim:language>DK</cim:language>
+            </cim:usagePointLocation.mainAddress>
             <!--Optional:-->
-            <urn:usagePointLocation.remark>D01</urn:usagePointLocation.remark>
+            <cim:usagePointLocation.remark>D01</cim:usagePointLocation.remark>
             <!--Optional:-->
-            <urn:usagePointLocation.geoInfoReference>string</urn:usagePointLocation.geoInfoReference>
+            <cim:usagePointLocation.geoInfoReference>string</cim:usagePointLocation.geoInfoReference>
             <!--Optional:-->
-            <urn:meteringGridArea_Domain.mRID codingScheme="NDK">822</urn:meteringGridArea_Domain.mRID>
-        </urn:MarketEvaluationPoint>
+            <cim:meteringGridArea_Domain.mRID codingScheme="NDK">822</cim:meteringGridArea_Domain.mRID>
+        </cim:MarketEvaluationPoint>
         <!--Optional:-->
-        <urn:businessProcessReference_MktActivityRecord.mRID>string
-        </urn:businessProcessReference_MktActivityRecord.mRID>
+        <cim:businessProcessReference_MktActivityRecord.mRID>string
+        </cim:businessProcessReference_MktActivityRecord.mRID>
         <!--Optional:-->
-        <urn:start_DateAndOrTime.dateTime>2021-05-27T22:00:00.00Z</urn:start_DateAndOrTime.dateTime>
-    </urn:MktActivityRecord>
-</urn:RequestChangeAccountingPointCharacteristics_MarketDocument>
+        <cim:start_DateAndOrTime.dateTime>2021-05-27T22:00:00.00Z</cim:start_DateAndOrTime.dateTime>
+    </cim:MktActivityRecord>
+</cim:RequestChangeAccountingPointCharacteristics_MarketDocument>
