@@ -31,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 
         public IEnumerable<IBusinessRequest> Map(XElement rootElement)
         {
-            XNamespace ns = rootElement.FirstAttribute?.Value ?? throw new Exception("Found no namespace for XML Document");
+            XNamespace ns = rootElement.Attributes().FirstOrDefault(attr => attr.Name.LocalName == "cim")?.Value ?? throw new ArgumentException("Found no namespace for XML Document");
 
             var headerData = MapHeaderData(rootElement, ns);
 
@@ -93,7 +93,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
                     var xmlHierarchyQueue = new Queue<string>(property.Value.XmlHierarchy);
                     var correspondingXmlElement = GetXmlElement(element, xmlHierarchyQueue, ns);
 
-                    return Convert(correspondingXmlElement?.Value, property.Value.PropertyInfo.PropertyType, property.Value.TranslatorFunc);
+                    return Convert(correspondingXmlElement, property.Value.PropertyInfo.PropertyType, property.Value.TranslatorFunc);
                 }).ToArray();
 
                 if (configuration.CreateInstance(args) is not IBusinessRequest instance)
@@ -107,21 +107,23 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             return messages;
         }
 
-        private static object? Convert(string? source, Type dest, Func<string, object>? valueTranslatorFunc)
+        private static object? Convert(XElement? source, Type dest, Func<XmlElementInfo, object>? valueTranslatorFunc)
         {
-            if (dest == typeof(Nullable<>)) return default;
+            if (source is null) return default;
+
+            var xmlElementInfo = new XmlElementInfo(source.Value, source.Attributes());
 
             if (dest == typeof(string))
             {
-                return valueTranslatorFunc != null ? valueTranslatorFunc(source ?? string.Empty) : source;
+                return valueTranslatorFunc != null ? valueTranslatorFunc(xmlElementInfo) : source.Value;
             }
 
             if (dest == typeof(bool))
             {
-                return valueTranslatorFunc != null ? valueTranslatorFunc(source ?? string.Empty) : source;
+                return valueTranslatorFunc != null ? valueTranslatorFunc(xmlElementInfo) : source.Value;
             }
 
-            return System.Convert.ChangeType(source, dest);
+            return System.Convert.ChangeType(source.Value, dest);
         }
     }
 }
