@@ -20,7 +20,6 @@ namespace Energinet.DataHub.MeteringPoints.Application
 {
     public record ConnectMeteringPoint(
         string GsrnNumber = "",
-        string Type = "",
         string EffectiveDate = "",
         string TransactionId = "")
         : IBusinessRequest,
