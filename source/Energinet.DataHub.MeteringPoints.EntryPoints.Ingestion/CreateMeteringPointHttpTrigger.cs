@@ -26,20 +26,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 {
-    public class CreateMeteringPointHttpTrigger
+    public class CreateMeteringPointHttpTrigger : BaseTrigger
     {
-        private readonly ICorrelationContext _correlationContext;
-        private readonly MessageDispatcher _dispatcher;
-        private readonly IXmlConverter _xmlConverter;
-
         public CreateMeteringPointHttpTrigger(
             ICorrelationContext correlationContext,
             MessageDispatcher dispatcher,
             IXmlConverter xmlConverter)
+            : base(
+                correlationContext,
+                dispatcher,
+                xmlConverter)
         {
-            _correlationContext = correlationContext;
-            _dispatcher = dispatcher;
-            _xmlConverter = xmlConverter;
         }
 
         [Function("CreateMeteringPoint")]
@@ -48,34 +45,19 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             HttpRequestData request,
             FunctionContext executionContext)
         {
-            var logger = executionContext.GetLogger("CreateMeteringPointHttpTrigger");
-            logger.LogInformation("Received CreateMeteringPoint request");
-
-            IEnumerable<IBusinessRequest> commands;
+            var logger = executionContext.GetLogger("ConnectMeteringPoint");
+            logger.LogInformation("Received ConnectMeteringPoint request");
 
             try
             {
-                commands = await _xmlConverter.DeserializeAsync(request.Body);
+                await DispatchCommandsAsync(request.Body, logger).ConfigureAwait(false);
             }
-            catch (Exception exception)
+            catch
             {
-                logger.LogError(exception, "Unable to deserialize request");
                 return request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
-            var response = request.CreateResponse(HttpStatusCode.OK);
-
-            response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
-
-            await response.WriteStringAsync("Correlation id: " + _correlationContext.GetCorrelationId())
-                .ConfigureAwait(false);
-
-            foreach (var command in commands)
-            {
-                await _dispatcher.DispatchAsync((IOutboundMessage)command).ConfigureAwait(false);
-            }
-
-            return response;
+            return await CreateResponseAsync(request).ConfigureAwait(false);
         }
     }
 }

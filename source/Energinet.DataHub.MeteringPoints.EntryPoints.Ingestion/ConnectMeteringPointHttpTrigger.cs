@@ -32,7 +32,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             MessageDispatcher dispatcher,
             IXmlConverter xmlConverter,
             ICorrelationContext correlationContext)
-            : base(correlationContext, dispatcher, xmlConverter)
+            : base(
+                correlationContext,
+                dispatcher,
+                xmlConverter)
         {
         }
 
