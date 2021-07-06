@@ -51,8 +51,15 @@ message CreateMeteringPoint {
   string assetType = 21;
 }
 
+message ConnectMeteringPoint {
+    string gsrnNumber = 1;
+    string effectiveDate = 2;
+    string transactionId = 3;
+}
+
 message MeteringPointEnvelope {
   oneof MeteringPointMessages {
     CreateMeteringPoint createMeteringPoint = 1;
+    ConnectMeteringPoint connectMeteringPoint = 2;
   }
 }

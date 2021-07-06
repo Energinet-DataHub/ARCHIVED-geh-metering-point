@@ -50,6 +50,7 @@ limitations under the License.
 
     <ItemGroup>
       <None Remove="EDI\CreateMeteringPoint\CreateMeteringPointCimXml.xml" />
+      <EmbeddedResource Include="EDI\ConnectMeteringPoint\ConnectMeteringPointCimXml.xml" />
       <EmbeddedResource Include="EDI\CreateMeteringPoint\CreateMeteringPointCimXml.xml" />
     </ItemGroup>
 
