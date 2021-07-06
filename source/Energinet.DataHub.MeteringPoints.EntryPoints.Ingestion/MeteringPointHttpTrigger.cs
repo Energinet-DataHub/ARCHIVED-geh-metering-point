@@ -52,15 +52,17 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             var logger = executionContext.GetLogger("MeteringPoint");
             logger.LogInformation($"Received MeteringPoint request");
 
+            IEnumerable<IBusinessRequest> commands;
             try
             {
-                await DispatchCommandsAsync(request.Body, logger).ConfigureAwait(false);
+               commands = await DeserializeInputAsync(request.Body, logger).ConfigureAwait(false);
             }
             catch
             {
-                return BadRequest(request);
+                return request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
+            await DispatchCommandsAsync(commands).ConfigureAwait(false);
             return await CreateOkResponseAsync(request).ConfigureAwait(false);
         }
 
@@ -75,29 +77,25 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             return response;
         }
 
-        private async Task DispatchCommandsAsync(Stream stream, ILogger logger)
+        private async Task<IEnumerable<IBusinessRequest>> DeserializeInputAsync(Stream stream, ILogger logger)
         {
-            IEnumerable<IBusinessRequest>? commands = null;
-
             try
             {
-                commands = await _xmlConverter.DeserializeAsync(stream).ConfigureAwait(false);
+               return await _xmlConverter.DeserializeAsync(stream).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
                 logger.LogError(exception, "Unable to deserialize request");
-                throw new ArgumentException("Unable to deserialize request");
+                throw new ArgumentException(exception.Message);
             }
+        }
 
+        private async Task DispatchCommandsAsync(IEnumerable<IBusinessRequest> commands)
+        {
             foreach (var command in commands)
             {
                 await _dispatcher.DispatchAsync((IOutboundMessage)command).ConfigureAwait(false);
             }
-        }
-
-        private HttpResponseData BadRequest(HttpRequestData request)
-        {
-            return request.CreateResponse(HttpStatusCode.BadRequest);
         }
     }
 }
