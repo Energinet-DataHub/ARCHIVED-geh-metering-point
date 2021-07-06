@@ -29,15 +29,18 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 {
     public class MeteringPointHttpTrigger
     {
+        private readonly ILogger _logger;
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageDispatcher _dispatcher;
         private readonly IXmlConverter _xmlConverter;
 
         public MeteringPointHttpTrigger(
+            ILogger logger,
             ICorrelationContext correlationContext,
             MessageDispatcher dispatcher,
             IXmlConverter xmlConverter)
         {
+            _logger = logger;
             _correlationContext = correlationContext;
             _dispatcher = dispatcher;
             _xmlConverter = xmlConverter;
@@ -49,17 +52,16 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             HttpRequestData request,
             FunctionContext executionContext)
         {
-            var logger = executionContext.GetLogger("MeteringPoint");
-            logger.LogInformation($"Received MeteringPoint request");
+            _logger.LogInformation($"Received MeteringPoint request");
 
             IEnumerable<IBusinessRequest> commands;
             try
             {
-               commands = await DeserializeInputAsync(request.Body, logger).ConfigureAwait(false);
+               commands = await DeserializeInputAsync(request.Body).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
-                logger.LogError(exception, "Unable to deserialize request");
+                _logger.LogError(exception, "Unable to deserialize request");
                 return request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
@@ -78,7 +80,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             return response;
         }
 
-        private async Task<IEnumerable<IBusinessRequest>> DeserializeInputAsync(Stream stream, ILogger logger)
+        private async Task<IEnumerable<IBusinessRequest>> DeserializeInputAsync(Stream stream)
         {
             return await _xmlConverter.DeserializeAsync(stream).ConfigureAwait(false);
         }
