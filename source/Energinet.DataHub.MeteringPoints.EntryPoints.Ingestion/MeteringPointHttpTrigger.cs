@@ -57,8 +57,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             {
                commands = await DeserializeInputAsync(request.Body, logger).ConfigureAwait(false);
             }
-            catch
+            catch (Exception exception)
             {
+                logger.LogError(exception, "Unable to deserialize request");
                 return request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
@@ -79,15 +80,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 
         private async Task<IEnumerable<IBusinessRequest>> DeserializeInputAsync(Stream stream, ILogger logger)
         {
-            try
-            {
-               return await _xmlConverter.DeserializeAsync(stream).ConfigureAwait(false);
-            }
-            catch (Exception exception)
-            {
-                logger.LogError(exception, "Unable to deserialize request");
-                throw new ArgumentException(exception.Message);
-            }
+            return await _xmlConverter.DeserializeAsync(stream).ConfigureAwait(false);
         }
 
         private async Task DispatchCommandsAsync(IEnumerable<IBusinessRequest> commands)
