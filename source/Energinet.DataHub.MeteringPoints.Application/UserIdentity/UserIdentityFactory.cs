@@ -14,6 +14,7 @@
 
 using System;
 using System.Linq;
+using System.Text.Json;
 
 namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
 {
@@ -25,7 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
             return System.Text.Json.JsonSerializer.Deserialize<UserIdentity>(userIdentity) ?? throw new System.Text.Json.JsonException(nameof(userIdentity));
         }
 
-        public UserIdentity FromDictionaryString(string inputText, string propertyKey)
+        public UserIdentity? FromDictionaryString(string inputText, string propertyKey)
         {
             if (string.IsNullOrWhiteSpace(inputText)) throw new ArgumentNullException(nameof(inputText));
             if (string.IsNullOrWhiteSpace(propertyKey)) throw new ArgumentNullException(nameof(propertyKey));
@@ -34,6 +35,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
             var resultJsonProperty = inputJsonDocument.RootElement
                 .EnumerateObject()
                 .FirstOrDefault(e => e.Name.Equals(propertyKey));
+
+            if (resultJsonProperty.Value.ValueKind == JsonValueKind.Undefined)
+            {
+                return null;
+            }
 
             return FromString(resultJsonProperty.Value.ToString() ?? string.Empty);
         }
