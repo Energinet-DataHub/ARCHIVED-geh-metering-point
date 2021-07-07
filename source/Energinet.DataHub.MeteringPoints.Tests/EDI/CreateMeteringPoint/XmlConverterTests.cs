@@ -99,6 +99,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
             command.StreetName.Should().Be("Test street name");
             command.CityName.Should().Be("Test city");
             command.CountryCode.Should().Be("DK");
+
+            command.FromGrid.Should().Be("870");
+            command.ToGrid.Should().Be("871");
             Assert.True(command.IsWashable);
             Assert.Null(command.ParentRelatedMeteringPoint);
         }

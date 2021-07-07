@@ -57,9 +57,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public static Instant? OccurenceDate => SystemClock.Instance.GetCurrentInstant();
 
-        public static string SettlementMethod => string.Empty;
+        public static string SettlementMethod => Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.SettlementMethod.Flex.Name;
 
-        public static string NetSettlementGroup => string.Empty;
+        public static string NetSettlementGroup => Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.NetSettlementGroup.Zero.Name;
 
         public static string DisconnectionType => string.Empty;
 

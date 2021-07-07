@@ -39,6 +39,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private string? _parentRelatedMeteringPoint;
         private string _meterNumber;
 
+#pragma warning disable 8618
+        protected MeteringPoint() { }
+#pragma warning restore 8618
+
         #pragma warning disable CS8618 //Disable nullable check
         protected MeteringPoint(
             MeteringPointId id,
@@ -56,7 +60,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             ReadingOccurrence meterReadingOccurrence,
             int maximumCurrent,
             int maximumPower,
-            Instant? occurenceDate)
+            Instant? occurenceDate,
+            string? parentRelatedMeteringPoint)
         {
             Id = id;
             GsrnNumber = gsrnNumber;
@@ -74,44 +79,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _maximumCurrent = maximumCurrent;
             _maximumPower = maximumPower;
             _occurenceDate = occurenceDate;
+            _parentRelatedMeteringPoint = parentRelatedMeteringPoint;
 
             AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaId, meteringPointSubType, physicalState, meterReadingOccurrence, ProductType.Tariff, unitType));
-        }
-
-        protected MeteringPoint(
-            MeteringPointId id,
-            GsrnNumber gsrnNumber,
-            bool isAddressWashable,
-            PhysicalState physicalState,
-            MeteringPointSubType meteringPointSubType,
-            MeteringPointType meteringPointType,
-            GridAreaId gridAreaId,
-            GsrnNumber powerPlantGsrnNumber,
-            string locationDescription,
-            MeasurementUnitType unitType,
-            string meterNumber,
-            ReadingOccurrence meterReadingOccurrence,
-            int maximumCurrent,
-            int maximumPower,
-            Instant? occurenceDate,
-            string? parentRelatedMeteringPoint)
-        {
-            Id = id;
-            GsrnNumber = gsrnNumber;
-            _isAddressWashable = isAddressWashable;
-            _physicalState = physicalState;
-            _meteringPointSubType = meteringPointSubType;
-            _meteringPointType = meteringPointType;
-            _gridAreaId = gridAreaId;
-            _powerPlantGsrnNumber = powerPlantGsrnNumber;
-            _locationDescription = locationDescription;
-            _unitType = unitType;
-            _meterNumber = meterNumber;
-            _meterReadingOccurrence = meterReadingOccurrence;
-            _maximumCurrent = maximumCurrent;
-            _maximumPower = maximumPower;
-            _occurenceDate = occurenceDate;
-            _parentRelatedMeteringPoint = parentRelatedMeteringPoint;
         }
 
         public MeteringPointId Id { get; }

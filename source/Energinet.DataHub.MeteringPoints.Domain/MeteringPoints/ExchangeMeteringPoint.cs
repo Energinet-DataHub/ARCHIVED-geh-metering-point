@@ -31,47 +31,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
             GridAreaId gridAreaId,
-            GsrnNumber powerPlant,
-            string locationDescription,
-            MeasurementUnitType unitType,
-            string meterNumber,
-            ReadingOccurrence meterReadingOccurrence,
-            int maximumCurrent,
-            int maximumPower,
-            Instant? occurenceDate,
-            string toGrid,
-            string fromGrid)
-            : base(
-                id,
-                gsrnNumber,
-                address,
-                isAddressWashable,
-                physicalState,
-                meteringPointSubType,
-                meteringPointType,
-                gridAreaId,
-                powerPlant,
-                locationDescription,
-                unitType,
-                meterNumber,
-                meterReadingOccurrence,
-                maximumCurrent,
-                maximumPower,
-                occurenceDate)
-        {
-            _toGrid = toGrid;
-            _fromGrid = fromGrid;
-            _productType = ProductType.EnergyReactive;
-        }
-
-        private ExchangeMeteringPoint(
-            MeteringPointId id,
-            GsrnNumber gsrnNumber,
-            bool isAddressWashable,
-            PhysicalState physicalState,
-            MeteringPointSubType meteringPointSubType,
-            MeteringPointType meteringPointType,
-            GridAreaId gridAreaId,
             GsrnNumber powerPlantGsrnNumber,
             string locationDescription,
             MeasurementUnitType unitType,
@@ -86,6 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             : base(
                 id,
                 gsrnNumber,
+                address,
                 isAddressWashable,
                 physicalState,
                 meteringPointSubType,
@@ -105,5 +65,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _fromGrid = fromGrid;
             _productType = ProductType.EnergyReactive;
         }
+
+#pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
+        internal ExchangeMeteringPoint() { }
+#pragma warning restore 8618
     }
 }
