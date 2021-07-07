@@ -1,0 +1,170 @@
+﻿<!--
+Copyright 2020 Energinet DataHub A/S
+Licensed under the Apache License, Version 2.0 (the "License2");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<cim:RequestChangeAccountingPointCharacteristics_MarketDocument
+        xmlns:cim="cim:ediel:org:requestchangeofapcharacteristics:0:1">
+    <cim:mRID>string</cim:mRID>
+    <cim:type>E17</cim:type>
+    <cim:process.processType>D15</cim:process.processType>
+    <!--Optional:-->
+    <cim:businessSector.type>E24</cim:businessSector.type>
+    <cim:sender_MarketParticipant.mRID codingScheme="NAZ">8100000000030</cim:sender_MarketParticipant.mRID>
+    <cim:sender_MarketParticipant.marketRole.type>DDM</cim:sender_MarketParticipant.marketRole.type>
+    <cim:receiver_MarketParticipant.mRID codingScheme="ARR">5790001330552</cim:receiver_MarketParticipant.mRID>
+    <cim:receiver_MarketParticipant.marketRole.type>SYO</cim:receiver_MarketParticipant.marketRole.type>
+    <cim:createdDateTime>2002-11-05T09:01:03+01:00</cim:createdDateTime>
+    <!--1 or more repetitions:-->
+    <cim:MktActivityRecord>
+        <cim:mRID>asdasweqweasedGUID</cim:mRID>
+        <!--Optional:-->
+        <cim:status>9</cim:status>
+        <cim:MarketEvaluationPoint>
+            <cim:mRID codingScheme="A01">571234567891234605</cim:mRID>
+            <!--Optional:-->
+            <cim:type>E17</cim:type>
+            <!--Optional:-->
+            <cim:description>random string description</cim:description>
+            <!--Optional:-->
+            <cim:settlementMethod>D01</cim:settlementMethod>
+            <!--Optional:-->
+            <cim:meteringMethod>D01</cim:meteringMethod>
+            <!--Optional:-->
+            <cim:meteredDataCollectionMethod>D01</cim:meteredDataCollectionMethod>
+            <!--Optional:-->
+            <cim:netSettlementGroup>99</cim:netSettlementGroup>
+            <!--Optional:-->
+            <cim:mPConnectionType>D01</cim:mPConnectionType>
+            <!--Optional:-->
+            <cim:readCycle>PT1H</cim:readCycle>
+            <!--Optional:-->
+            <cim:disconnectionMethod>D01</cim:disconnectionMethod>
+            <!--Optional:-->
+            <cim:nextReadingDate>--11-16+01:00</cim:nextReadingDate>
+            <!--Optional:-->
+            <cim:ratedCurrent unit="AMP">666</cim:ratedCurrent>
+            <!--Optional:-->
+            <cim:connectionState>D03</cim:connectionState>
+            <!--Optional:-->
+            <cim:physicalConnectionCapacity>
+                <cim:value>1000.00</cim:value>
+                <cim:unit>KWH</cim:unit>
+            </cim:physicalConnectionCapacity>
+            <cim:product>8716867000030</cim:product>
+            <!--Optional:-->
+            <cim:firstCustomer_MarketParticipant.mRID codingScheme="NLU">string
+            </cim:firstCustomer_MarketParticipant.mRID>
+            <!--Optional:-->
+            <cim:firstCustomer_MarketParticipant.name>string</cim:firstCustomer_MarketParticipant.name>
+            <!--Optional:-->
+            <cim:secondCustomer_MarketParticipant.mRID codingScheme="A01">string
+            </cim:secondCustomer_MarketParticipant.mRID>
+            <!--Optional:-->
+            <cim:secondCustomer_MarketParticipant.name>string</cim:secondCustomer_MarketParticipant.name>
+            <!--Optional:-->
+            <cim:energyLabel_EnergyTechnologyAndFuel.technology>D12</cim:energyLabel_EnergyTechnologyAndFuel.technology>
+            <!--Optional:-->
+            <cim:marketAgreement.contractedConnectionCapacity>
+                <!--Optional:-->
+                <cim:value>666</cim:value>
+                <!--Optional:-->
+                <cim:unit>KWH</cim:unit>
+                <!--Optional:-->
+                <cim:multiplier>none</cim:multiplier>
+            </cim:marketAgreement.contractedConnectionCapacity>
+            <!--Optional:-->
+            <cim:meter.mRID>1234567890</cim:meter.mRID>
+            <!--Zero or more repetitions:-->
+            <cim:Series>
+                <!--Optional:-->
+                <cim:mRID>string</cim:mRID>
+                <!--Optional:-->
+                <cim:estimatedAnnualVolume_Quantity.quantity>1000.00</cim:estimatedAnnualVolume_Quantity.quantity>
+                <!--Optional:-->
+                <cim:quantity_Measure_Unit.name>kWh</cim:quantity_Measure_Unit.name>
+            </cim:Series>
+            <cim:Linked_MarketEvaluationPoint>
+                <cim:mRID>571234567891234636</cim:mRID>
+            </cim:Linked_MarketEvaluationPoint>
+            <!--Optional:-->
+            <cim:register.rightDigitCount>100</cim:register.rightDigitCount>
+            <!--Optional:-->
+            <cim:register.leftDigitCount>100</cim:register.leftDigitCount>
+            <!--Optional:-->
+            <cim:register.channels.readingType.accumulation>D01</cim:register.channels.readingType.accumulation>
+            <!--Optional:-->
+            <cim:register.channels.readingType.multiplier>1000.00</cim:register.channels.readingType.multiplier>
+            <!--Optional:-->
+            <cim:register.channels.readingType.unit>DD</cim:register.channels.readingType.unit>
+            <!--Optional:-->
+            <cim:usagePointLocation.mainAddress>
+                <!--Optional:-->
+                <cim:streetDetail>
+                    <!--Optional:-->
+                    <cim:number>12</cim:number>
+                    <!--Optional:-->
+                    <cim:name>Test street name</cim:name>
+                    <!--Optional:-->
+                    <cim:type>tv</cim:type>
+                    <!--Optional:-->
+                    <cim:code>string</cim:code>
+                    <!--Optional:-->
+                    <cim:buildingName>string</cim:buildingName>
+                    <!--Optional:-->
+                    <cim:suiteNumber>string</cim:suiteNumber>
+                    <!--Optional:-->
+                    <cim:floorIdentification>string</cim:floorIdentification>
+                </cim:streetDetail>
+                <!--Optional:-->
+                <cim:townDetail>
+                    <!--Optional:-->
+                    <cim:code>Test code</cim:code>
+                    <!--Optional:-->
+                    <cim:section>Test section</cim:section>
+                    <!--Optional:-->
+                    <cim:name>Test city</cim:name>
+                    <!--Optional:-->
+                    <cim:stateOrProvince>Vejle</cim:stateOrProvince>
+                    <!--Optional:-->
+                    <cim:country>DK</cim:country>
+                </cim:townDetail>
+                <!--Optional:-->
+                <cim:status>
+                    <!--Optional:-->
+                    <cim:value>string</cim:value>
+                    <!--Optional:-->
+                    <cim:dateTime>2017-08-18T22:01:40</cim:dateTime>
+                    <!--Optional:-->
+                    <cim:remark>string</cim:remark>
+                    <!--Optional:-->
+                    <cim:reason>string</cim:reason>
+                </cim:status>
+                <!--Optional:-->
+                <cim:postalCode>6000</cim:postalCode>
+                <!--Optional:-->
+                <cim:poBox>string</cim:poBox>
+                <!--Optional:-->
+                <cim:language>DK</cim:language>
+            </cim:usagePointLocation.mainAddress>
+            <!--Optional:-->
+            <cim:usagePointLocation.remark>D01</cim:usagePointLocation.remark>
+            <!--Optional:-->
+            <cim:usagePointLocation.geoInfoReference>string</cim:usagePointLocation.geoInfoReference>
+            <!--Optional:-->
+            <cim:meteringGridArea_Domain.mRID codingScheme="NDK">822</cim:meteringGridArea_Domain.mRID>
+        </cim:MarketEvaluationPoint>
+        <!--Optional:-->
+        <cim:businessProcessReference_MktActivityRecord.mRID>string
+        </cim:businessProcessReference_MktActivityRecord.mRID>
+        <!--Optional:-->
+        <cim:start_DateAndOrTime.dateTime>2021-05-27T22:00:00.00Z</cim:start_DateAndOrTime.dateTime>
+    </cim:MktActivityRecord>
+</cim:RequestChangeAccountingPointCharacteristics_MarketDocument>

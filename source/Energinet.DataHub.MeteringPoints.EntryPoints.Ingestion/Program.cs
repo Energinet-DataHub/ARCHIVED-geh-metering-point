@@ -66,7 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
                 .UseSimpleInjector(container);
 
             // Register application components.
-            container.Register<CreateMeteringPointHttpTrigger>(Lifestyle.Scoped);
+            container.Register<MeteringPointHttpTrigger>(Lifestyle.Scoped);
             container.Register<HttpCorrelationIdMiddleware>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
             container.Register<HttpUserContextMiddleware>(Lifestyle.Scoped);
@@ -80,7 +80,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             container.RegisterDecorator<Channel, ChannelResilienceDecorator>(Lifestyle.Scoped);
 
             // TODO: Expand factory for handling other XML types
-            container.Register<Func<string, string, XmlMappingConfigurationBase>>(() => (processType, type) => new CreateMeteringPointXmlMappingConfiguration(), Lifestyle.Singleton);
+            container.Register<Func<string, string, XmlMappingConfigurationBase>>(
+                () => (processType, type) => XmlMappingConfiguration(processType), Lifestyle.Singleton);
             container.Register<XmlMapper>(Lifestyle.Singleton);
             container.Register<IXmlConverter, XmlConverter>(Lifestyle.Singleton);
 
@@ -94,6 +95,19 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             await host.RunAsync().ConfigureAwait(false);
 
             await container.DisposeAsync().ConfigureAwait(false);
+        }
+
+        private static XmlMappingConfigurationBase XmlMappingConfiguration(string processType)
+        {
+            switch (processType)
+            {
+                case "E02":
+                    return new CreateMeteringPointXmlMappingConfiguration();
+                case "D15":
+                    return new ConnectMeteringPointXmlMappingConfiguration();
+                default:
+                    throw new NotImplementedException();
+            }
         }
     }
 }

@@ -45,6 +45,24 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
         }
 
         [Fact]
+        public async Task Validate_Values_From_Each_Element_ConnectMeteringPointCimXml()
+        {
+            var xmlMapper = new XmlMapper((processType, type) => new ConnectMeteringPointXmlMappingConfiguration());
+
+            var xmlConverter = new XmlConverter(xmlMapper);
+
+            var stream = GetResourceStream("ConnectMeteringPointCimXml.xml");
+            var commandsRaw = await xmlConverter.DeserializeAsync(stream);
+            var commands = commandsRaw.Cast<MeteringPoints.Application.ConnectMeteringPoint>();
+
+            var command = commands.First();
+
+            command.GsrnNumber.Should().Be("571234567891234605");
+            command.EffectiveDate.Should().Be("2021-05-27T22:00:00.00Z");
+            command.TransactionId.Should().Be("asdasweqweasedGUID");
+        }
+
+        [Fact]
         public async Task ValidateValuesFromEachElementTest()
         {
             var xmlMapper = new XmlMapper((processType, type) => new CreateMeteringPointXmlMappingConfiguration());
