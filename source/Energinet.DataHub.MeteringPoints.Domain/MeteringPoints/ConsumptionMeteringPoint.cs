@@ -20,7 +20,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
     public class ConsumptionMeteringPoint : MeteringPoint
     {
         private SettlementMethod _settlementMethod;
-        private string _netSettlementGroup;
+        private NetSettlementGroup _netSettlementGroup;
         private DisconnectionType _disconnectionType;
         private ConnectionType _connectionType;
         private AssetType _assetType;
@@ -43,54 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             int maximumPower,
             Instant? occurenceDate,
             SettlementMethod settlementMethod,
-            string netSettlementGroup,
-            DisconnectionType disconnectionType,
-            ConnectionType connectionType,
-            AssetType assetType)
-            : base(
-                id,
-                gsrnNumber,
-                address,
-                isAddressWashable,
-                physicalState,
-                meteringPointSubType,
-                meteringPointType,
-                gridAreaId,
-                powerPlantGsrnNumber,
-                locationDescription,
-                unitType,
-                meterNumber,
-                meterReadingOccurrence,
-                maximumCurrent,
-                maximumPower,
-                occurenceDate)
-        {
-            _settlementMethod = settlementMethod;
-            _netSettlementGroup = netSettlementGroup;
-            _disconnectionType = disconnectionType;
-            _connectionType = connectionType;
-            _assetType = assetType;
-            _productType = ProductType.EnergyActive;
-        }
-
-        private ConsumptionMeteringPoint(
-            MeteringPointId id,
-            GsrnNumber gsrnNumber,
-            bool isAddressWashable,
-            PhysicalState physicalState,
-            MeteringPointSubType meteringPointSubType,
-            MeteringPointType meteringPointType,
-            GridAreaId gridAreaId,
-            GsrnNumber powerPlantGsrnNumber,
-            string locationDescription,
-            MeasurementUnitType unitType,
-            string meterNumber,
-            ReadingOccurrence meterReadingOccurrence,
-            int maximumCurrent,
-            int maximumPower,
-            Instant? occurenceDate,
-            SettlementMethod settlementMethod,
-            string netSettlementGroup,
+            NetSettlementGroup netSettlementGroup,
             DisconnectionType disconnectionType,
             ConnectionType connectionType,
             AssetType assetType,
@@ -98,6 +51,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             : base(
                 id,
                 gsrnNumber,
+                address,
                 isAddressWashable,
                 physicalState,
                 meteringPointSubType,
@@ -120,5 +74,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _assetType = assetType;
             _productType = ProductType.EnergyActive;
         }
+
+#pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
+        internal ConsumptionMeteringPoint() { }
+#pragma warning restore 8618
     }
 }

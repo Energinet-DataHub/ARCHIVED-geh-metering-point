@@ -19,8 +19,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class ProductionMeteringPoint : MeteringPoint
     {
-        private int _productionObligation;
-        private int _netSettlementGroup;
+        private NetSettlementGroup _netSettlementGroup;
         private DisconnectionType _disconnectionType;
         private ConnectionType _connectionType;
 
@@ -86,8 +85,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             int maximumCurrent,
             int maximumPower,
             Instant? occurenceDate,
-            int productionObligation,
-            int netSettlementGroup,
+            NetSettlementGroup netSettlementGroup,
             DisconnectionType disconnectionType,
             ConnectionType connectionType,
             string? parentRelatedMeteringPoint)

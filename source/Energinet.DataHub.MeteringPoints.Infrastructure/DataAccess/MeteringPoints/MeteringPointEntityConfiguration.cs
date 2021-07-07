@@ -155,8 +155,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<SettlementMethod>(fromDbValue));
 
-            builder.Property("_netSettlementGroup")
-                .HasColumnName("NetSettlementGroup");
+            builder.Property<NetSettlementGroup>("_netSettlementGroup")
+                .HasColumnName("NetSettlementGroup")
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<NetSettlementGroup>(fromDbValue));
         }
     }
 
@@ -173,8 +176,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.Property("_productionObligation")
                 .HasColumnName("ProductionObligation");
-            builder.Property("_netSettlementGroup")
-                .HasColumnName("NetSettlementGroup");
+            builder.Property<NetSettlementGroup>("_netSettlementGroup")
+                .HasColumnName("NetSettlementGroup")
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<NetSettlementGroup>(fromDbValue));
             builder.Property<DisconnectionType>("_disconnectionType")
                 .HasColumnName("DisconnectionType")
                 .HasConversion(
