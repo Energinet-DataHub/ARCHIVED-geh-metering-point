@@ -26,9 +26,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency
         /// Register an message
         /// </summary>
         /// <param name="messageId">Unique id of incoming message</param>
-        /// <param name="message">The message it self</param>
-        /// <typeparam name="TMessage">Any class</typeparam>
+        /// <param name="messageType">Message type</param>
         /// <returns><see cref="Task"/></returns>
-        Task RegisterMessageAsync<TMessage>(string messageId, TMessage message);
+        Task RegisterMessageAsync(string messageId, string messageType);
     }
 }

@@ -62,6 +62,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     options.UseMiddleware<SimpleInjectorScopedRequest>();
                     options.UseMiddleware<ServiceBusCorrelationIdMiddleware>();
                     options.UseMiddleware<ServiceBusUserContextMiddleware>();
+                    options.UseMiddleware<ServiceBusMessageIdempotencyMiddleware>();
                 })
                 .ConfigureServices(services =>
                 {
@@ -112,7 +113,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<ISystemDateTimeProvider, SystemDateTimeProvider>(Lifestyle.Singleton);
             container.Register<IDomainEventsAccessor, DomainEventsAccessor>();
             container.Register<IDomainEventsDispatcher, DomainEventsDispatcher>();
-            container.Register<IIncomingMessageRegistry, IncomingMessageRegistry>(Lifestyle.Scoped);
+            container.Register<IIncomingMessageRegistry, IncomingMessageRegistry>(Lifestyle.Transient);
+            container.Register<ServiceBusMessageIdempotencyMiddleware>(Lifestyle.Scoped);
 
             container.AddValidationErrorConversion(
                 validateRegistrations: true,
