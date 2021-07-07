@@ -58,6 +58,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
                     ConnectionType = obj.ConnectionType,
                     AssetType = obj.AssetType,
                     ParentRelatedMeteringPoint = obj.ParentRelatedMeteringPoint,
+                    FromGrid = obj.FromGrid,
+                    ToGrid = obj.ToGrid,
                 },
             };
         }

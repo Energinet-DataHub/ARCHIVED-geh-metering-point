@@ -49,6 +49,8 @@ message CreateMeteringPoint {
   string netSettlementGroup = 19;
   string connectionType = 20;
   string assetType = 21;
+  string fromGrid = 22;
+  string toGrid = 23;
 }
 
 message ConnectMeteringPoint {

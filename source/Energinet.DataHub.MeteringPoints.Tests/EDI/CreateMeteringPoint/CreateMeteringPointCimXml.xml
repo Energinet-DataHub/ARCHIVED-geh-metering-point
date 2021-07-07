@@ -71,6 +71,9 @@ limitations under the License.
             <cim:secondCustomer_MarketParticipant.name>string</cim:secondCustomer_MarketParticipant.name>
             <!--Optional:-->
             <cim:energyLabel_EnergyTechnologyAndFuel.technology>D12</cim:energyLabel_EnergyTechnologyAndFuel.technology>
+            <cim:usagePointLocation.officialAddressIndicator>true</cim:usagePointLocation.officialAddressIndicator>
+            <cim:outMeteringGridArea_Domain.mRID codingScheme="NAT">871</cim:outMeteringGridArea_Domain.mRID>
+            <cim:inMeteringGridArea_Domain.mRID codingScheme="NLV">870</cim:inMeteringGridArea_Domain.mRID>
             <!--Optional:-->
             <cim:marketAgreement.contractedConnectionCapacity>
                 <!--Optional:-->
