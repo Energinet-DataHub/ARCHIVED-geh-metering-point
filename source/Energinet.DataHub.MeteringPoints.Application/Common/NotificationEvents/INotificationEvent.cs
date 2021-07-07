@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common.NotificationEvents;
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Connect
+namespace Energinet.DataHub.MeteringPoints.Application.Common.NotificationEvents
 {
-    public class EnergySupplierChanged : INotificationEvent, IInboundMessage
+    /// <summary>
+    /// An event that originates from another bounded context
+    /// </summary>
+    public interface INotificationEvent : INotification
     {
-        public string GsrnNumber { get; set; } = string.Empty;
     }
 }
