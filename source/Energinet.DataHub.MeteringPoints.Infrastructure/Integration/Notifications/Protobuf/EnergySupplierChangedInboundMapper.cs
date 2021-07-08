@@ -16,7 +16,7 @@ using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Events.Incoming.Protobuf
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notifications.Protobuf
 {
     public class EnergySupplierChangedInboundMapper : ProtobufInboundMapper<NotificationContracts.EnergySupplierChanged>
     {
