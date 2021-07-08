@@ -18,9 +18,9 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Events.Incoming.Protobuf
 {
-    public class EnergySupplierChangedInboundMapper : ProtobufInboundMapper<MarketRoles.IntegrationEventContracts.EnergySupplierChanged>
+    public class EnergySupplierChangedInboundMapper : ProtobufInboundMapper<NotificationContracts.EnergySupplierChanged>
     {
-        protected override IInboundMessage Convert(MarketRoles.IntegrationEventContracts.EnergySupplierChanged obj)
+        protected override IInboundMessage Convert(NotificationContracts.EnergySupplierChanged obj)
         {
             return new EnergySupplierChanged()
             {

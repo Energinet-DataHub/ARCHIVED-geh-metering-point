@@ -15,7 +15,7 @@
 
 syntax = "proto3";
 
-option csharp_namespace = "Energinet.DataHub.MarketRoles.IntegrationEventContracts";
+option csharp_namespace = "NotificationContracts";
 /**
  * This message is sent out when an energy supplier has been changed.
  */
