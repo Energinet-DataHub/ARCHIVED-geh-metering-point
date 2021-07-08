@@ -34,17 +34,5 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Application.UserIdentity
             // Assert
             Assert.Equal(expectedUserId, userIdentityParsed.Id);
         }
-
-        [Theory]
-        [InlineData("{\"123geh_userIdentity\":\"{\\\"Id\\\":\\\"5\\\"}\"}", "geh_userIdentity")]
-        public void UserIdentityArgumentNullException(string inputText, string propertyKey)
-        {
-            // Arrange
-            var userIdentityFactory = new UserIdentityFactory();
-
-            // Act - Assert
-            Assert.Throws<ArgumentNullException>(() =>
-                userIdentityFactory.FromDictionaryString(inputText, propertyKey));
-        }
     }
 }
