@@ -141,8 +141,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     typeof(DomainEventsDispatcherBehaviour<,>),
                 });
 
-            container.RegisterDecorator(typeof(INotificationHandler<>), typeof(UnitOfWorkHandlerDecorator<>));
-
             container.Verify();
 
             await host.RunAsync().ConfigureAwait(false);
