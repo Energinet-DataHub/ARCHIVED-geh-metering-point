@@ -33,16 +33,13 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Events.Incoming;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Events.Incoming.Protobuf;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Handlers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentValidation;
-using Google.Protobuf;
-using MediatR;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -117,6 +114,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IDomainEventsDispatcher, DomainEventsDispatcher>();
             container.Register<IIncomingMessageRegistry, IncomingMessageRegistry>(Lifestyle.Transient);
             container.Register<ServiceBusMessageIdempotencyMiddleware>(Lifestyle.Scoped);
+            container.Register<IProtobufMessageFactory, ProtobufMessageFactory>(Lifestyle.Singleton);
 
             container.AddValidationErrorConversion(
                 validateRegistrations: true,

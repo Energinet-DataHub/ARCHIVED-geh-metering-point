@@ -14,6 +14,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Events.Incoming;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Google.Protobuf;
@@ -27,11 +28,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
     {
         private readonly ProtobufInboundMapperFactory _protobufInboundMapperFactory;
         private readonly IMediator _mediator;
+        private readonly IProtobufMessageFactory _protobufMessageFactory;
 
-        public IntegrationEventReceiver(ProtobufInboundMapperFactory protobufInboundMapperFactory, IMediator mediator)
+        public IntegrationEventReceiver(ProtobufInboundMapperFactory protobufInboundMapperFactory, IMediator mediator, IProtobufMessageFactory protobufMessageFactory)
         {
             _protobufInboundMapperFactory = protobufInboundMapperFactory ?? throw new ArgumentNullException(nameof(protobufInboundMapperFactory));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _protobufMessageFactory = protobufMessageFactory ?? throw new ArgumentNullException(nameof(protobufMessageFactory));
         }
 
         [Function("IntegrationEventReceiver")]
@@ -39,40 +42,17 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
         {
             var logger = context.GetLogger("IntegrationEventReceiver");
 
-            var eventTypeName = GetEventTypeNameOrThrow(context);
+            var eventTypeName = GetEventTypeName(context);
             logger.LogInformation($"Received notification event of type {eventTypeName}.");
-            var eventType = GetEventTypeOrThrow(eventTypeName);
-            var protobufMessage = ExtractMessageOrThrow(data, eventType);
-            var mapper = _protobufInboundMapperFactory.GetMapper(eventType);
-            var @event = mapper.Convert(protobufMessage);
+
+            var message = _protobufMessageFactory.CreateMessageFrom(data, eventTypeName);
+            var mapper = _protobufInboundMapperFactory.GetMapper(message.GetType());
+            var @event = mapper.Convert(message);
 
             return _mediator.Publish(@event);
         }
 
-        private IMessage ExtractMessageOrThrow(byte[] data, Type eventType)
-        {
-            if (eventType == null) throw new ArgumentNullException(nameof(eventType));
-            var message = Activator.CreateInstance(eventType) as IMessage;
-            if (message is null)
-            {
-                throw new UnknownNotificationEventTypeException(eventType.FullName!);
-            }
-
-            return message.Descriptor.Parser.ParseFrom(data);
-        }
-
-        private Type GetEventTypeOrThrow(string eventTypeName)
-        {
-            var eventType = typeof(IIncomingMessageRegistry).Assembly.GetType(eventTypeName);
-            if (eventType is null)
-            {
-                throw new UnknownNotificationEventTypeException(eventTypeName);
-            }
-
-            return eventType;
-        }
-
-        private string GetEventTypeNameOrThrow(FunctionContext context)
+        private string GetEventTypeName(FunctionContext context)
         {
             context.BindingContext.BindingData.TryGetValue("Label", out var label);
 
