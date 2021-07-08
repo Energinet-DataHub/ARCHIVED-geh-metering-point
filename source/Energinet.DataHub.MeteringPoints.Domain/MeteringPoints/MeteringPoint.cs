@@ -117,5 +117,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public MeteringPointId Id { get; }
 
         public GsrnNumber GsrnNumber { get; }
+
+        public void Connect(Instant effectiveDate)
+        {
+            _physicalState = PhysicalState.Connected;
+            // TODO - for now we ignore scheduling - must be handled later
+            AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, effectiveDate));
+        }
     }
 }
