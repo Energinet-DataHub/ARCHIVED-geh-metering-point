@@ -16,8 +16,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.Common.UserIdentity;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
-using Energinet.DataHub.MeteringPoints.Application.UserIdentity;
+using Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion
 {

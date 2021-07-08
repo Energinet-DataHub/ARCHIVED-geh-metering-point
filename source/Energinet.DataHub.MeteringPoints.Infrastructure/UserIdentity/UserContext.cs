@@ -12,21 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
-{
-    /// <summary>
-    /// Context for the current user.
-    /// </summary>
-    public interface IUserContext
-    {
-        /// <summary>
-        /// Get the current user.
-        /// </summary>
-        public UserIdentity? CurrentUser { get; set; }
+using Energinet.DataHub.MeteringPoints.Application.Common.UserIdentity;
 
-        /// <summary>
-        /// Key to be used when storing identity in property collections.
-        /// </summary>
-        public string Key { get; }
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity
+{
+    public class UserContext : IUserContext
+    {
+        public Application.Common.UserIdentity.UserIdentity? CurrentUser { get; set; }
+
+        public string Key => "geh_userIdentity";
     }
 }
