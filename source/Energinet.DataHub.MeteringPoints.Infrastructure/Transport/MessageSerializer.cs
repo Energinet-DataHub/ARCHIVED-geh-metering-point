@@ -16,19 +16,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Transport
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Transport
 {
     /// <summary>
-    /// Abstract class for deserializing incoming messages.
+    /// Abstract class for serializing outgoing messages.
     /// </summary>
-    public abstract class MessageDeserializer
+    public abstract class MessageSerializer
     {
         /// <summary>
-        /// Deserialize <paramref name="data"/> to an inbound message
+        /// Serialize a message
         /// </summary>
-        /// <param name="data">Data to deserialize</param>
-        /// <param name="cancellationToken">Cancellation token for the operation</param>
-        /// <returns><see cref="IInboundMessage"/> extracted from <paramref name="data"/></returns>
-        public abstract Task<IInboundMessage> FromBytesAsync(byte[] data, CancellationToken cancellationToken = default);
+        /// <param name="message">Message to serialize</param>
+        /// <param name="cancellationToken">Cancellation token for the request</param>
+        /// <returns><see cref="byte"/> sequence for the message</returns>
+        public abstract Task<byte[]> ToBytesAsync(IOutboundMessage message, CancellationToken cancellationToken = default);
     }
 }

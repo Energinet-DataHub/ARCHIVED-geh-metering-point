@@ -14,7 +14,6 @@
 
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
-using Energinet.DataHub.MeteringPoints.Application.Transport;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Messages

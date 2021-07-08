@@ -15,7 +15,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Transport
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Transport
 {
     /// <summary>
     /// Abstract class representing an out-of-process transport channel.
