@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Contracts.CreateMeteringPoint;

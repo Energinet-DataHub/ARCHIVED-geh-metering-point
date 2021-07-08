@@ -14,6 +14,7 @@
 
 using System.Data;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
 
 namespace Energinet.DataHub.MeteringPoints.Application

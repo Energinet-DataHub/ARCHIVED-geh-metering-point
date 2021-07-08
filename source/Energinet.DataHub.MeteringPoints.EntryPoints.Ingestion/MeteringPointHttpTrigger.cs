@@ -19,6 +19,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Application.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter;
 using Microsoft.Azure.Functions.Worker;
