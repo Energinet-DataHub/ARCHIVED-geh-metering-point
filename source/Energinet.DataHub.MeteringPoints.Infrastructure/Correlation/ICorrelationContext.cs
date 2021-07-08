@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Correlation
 {
     /// <summary>
     /// Context for the current scope identified by a correlation id.

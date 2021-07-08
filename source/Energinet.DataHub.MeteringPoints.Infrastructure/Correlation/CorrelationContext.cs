@@ -13,9 +13,8 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Correlation
 {
     public sealed class CorrelationContext : ICorrelationContext
     {
