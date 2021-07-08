@@ -44,9 +44,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             var message = _protobufMessageFactory.CreateMessageFrom(data, eventTypeName);
             var mapper = _protobufInboundMapperFactory.GetMapper(message.GetType());
-            var @event = mapper.Convert(message);
+            var integrationEvent = mapper.Convert(message);
 
-            return _mediator.Publish(@event);
+            return _mediator.Publish(integrationEvent);
         }
 
         private string GetEventTypeName(FunctionContext context)
