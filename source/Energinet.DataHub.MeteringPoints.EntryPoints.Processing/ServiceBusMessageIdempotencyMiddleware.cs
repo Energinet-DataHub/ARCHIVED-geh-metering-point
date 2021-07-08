@@ -25,10 +25,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
     {
         private const string MessageIdKey = "MessageId";
         private const string MessageTypeKey = "Label";
-        private readonly ILogger<ServiceBusCorrelationIdMiddleware> _logger;
+        private readonly ILogger _logger;
         private readonly IIncomingMessageRegistry _incomingMessageRegistry;
 
-        public ServiceBusMessageIdempotencyMiddleware(ILogger<ServiceBusCorrelationIdMiddleware> logger, IIncomingMessageRegistry incomingMessageRegistry)
+        public ServiceBusMessageIdempotencyMiddleware(ILogger logger, IIncomingMessageRegistry incomingMessageRegistry)
         {
             _logger = logger;
             _incomingMessageRegistry = incomingMessageRegistry ?? throw new ArgumentNullException(nameof(incomingMessageRegistry));
@@ -38,8 +38,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
-            var messageType = GetFromMessage(context, MessageTypeKey);
-            var messageId = GetFromMessage(context, MessageIdKey);
+            var messageType = GetValueFromMessage(context, MessageTypeKey);
+            var messageId = GetValueFromMessage(context, MessageIdKey);
             if (messageId != null && messageType != null)
             {
                 await RegisterIdempotentMessageAsync(messageId, messageType).ConfigureAwait(false);
@@ -59,7 +59,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             _logger?.LogTrace($"Registered incoming message id {messageId} of type {messageType}");
         }
 
-        private string? GetFromMessage(FunctionContext context, string key)
+        private string? GetValueFromMessage(FunctionContext context, string key)
         {
             context.BindingContext.BindingData.TryGetValue(key, out var value);
             return value?.ToString();
