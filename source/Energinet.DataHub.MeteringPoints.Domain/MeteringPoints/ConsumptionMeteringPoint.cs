@@ -76,7 +76,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         }
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
-        internal ConsumptionMeteringPoint() { }
+        private ConsumptionMeteringPoint() { }
 #pragma warning restore 8618
     }
 }
