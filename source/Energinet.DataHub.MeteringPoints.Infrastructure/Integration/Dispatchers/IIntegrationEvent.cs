@@ -14,7 +14,7 @@
 
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Application.IntegrationEvent
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Dispatchers
 {
     /// <summary>
     /// IntegrationEvent interface
