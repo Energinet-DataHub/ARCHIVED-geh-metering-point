@@ -15,17 +15,17 @@
 using System;
 using System.Linq;
 
-namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity
 {
     public class UserIdentityFactory
     {
-        public UserIdentity FromString(string userIdentity)
+        public Application.Common.UserIdentity.UserIdentity FromString(string userIdentity)
         {
             if (string.IsNullOrWhiteSpace(userIdentity)) throw new ArgumentNullException(nameof(userIdentity));
-            return System.Text.Json.JsonSerializer.Deserialize<UserIdentity>(userIdentity) ?? throw new System.Text.Json.JsonException(nameof(userIdentity));
+            return System.Text.Json.JsonSerializer.Deserialize<Application.Common.UserIdentity.UserIdentity>(userIdentity) ?? throw new System.Text.Json.JsonException(nameof(userIdentity));
         }
 
-        public UserIdentity FromDictionaryString(string inputText, string propertyKey)
+        public Application.Common.UserIdentity.UserIdentity FromDictionaryString(string inputText, string propertyKey)
         {
             if (string.IsNullOrWhiteSpace(inputText)) throw new ArgumentNullException(nameof(inputText));
             if (string.IsNullOrWhiteSpace(propertyKey)) throw new ArgumentNullException(nameof(propertyKey));

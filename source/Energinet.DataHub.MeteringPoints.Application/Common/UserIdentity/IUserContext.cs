@@ -12,22 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Energinet.DataHub.MeteringPoints.Application.Transport
+namespace Energinet.DataHub.MeteringPoints.Application.Common.UserIdentity
 {
     /// <summary>
-    /// Abstract class for deserializing incoming messages.
+    /// Context for the current user.
     /// </summary>
-    public abstract class MessageDeserializer
+    public interface IUserContext
     {
         /// <summary>
-        /// Deserialize <paramref name="data"/> to an inbound message
+        /// Get the current user.
         /// </summary>
-        /// <param name="data">Data to deserialize</param>
-        /// <param name="cancellationToken">Cancellation token for the operation</param>
-        /// <returns><see cref="IInboundMessage"/> extracted from <paramref name="data"/></returns>
-        public abstract Task<IInboundMessage> FromBytesAsync(byte[] data, CancellationToken cancellationToken = default);
+        public UserIdentity? CurrentUser { get; set; }
+
+        /// <summary>
+        /// Key to be used when storing identity in property collections.
+        /// </summary>
+        public string Key { get; }
     }
 }

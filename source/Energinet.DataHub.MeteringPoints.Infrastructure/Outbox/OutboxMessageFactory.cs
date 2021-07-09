@@ -15,6 +15,7 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox

@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application
+using Energinet.DataHub.MeteringPoints.Application.Common.UserIdentity;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity
 {
-    /// <summary>
-    /// Command object
-    /// </summary>
-    #pragma warning disable CA1040 // TODO: This ICommand is just a placeholder
-    public interface ICommand
+    public class UserContext : IUserContext
     {
+        public Application.Common.UserIdentity.UserIdentity? CurrentUser { get; set; }
+
+        public string Key => "geh_userIdentity";
     }
 }

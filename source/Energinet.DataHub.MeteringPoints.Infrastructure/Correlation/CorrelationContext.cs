@@ -12,13 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.Transport
+using System;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Correlation
 {
-    /// <summary>
-    /// Marker interface for incoming messages
-    /// </summary>
-    #pragma warning disable CA1040 // Marker interface
-    public interface IInboundMessage
+    public sealed class CorrelationContext : ICorrelationContext
     {
+        private string? _correlationId;
+
+        public string GetCorrelationId()
+        {
+            if (string.IsNullOrWhiteSpace(_correlationId))
+            {
+                throw new InvalidOperationException("Correlation id not set");
+            }
+
+            return _correlationId;
+        }
+
+        public void SetCorrelationId(string correlationId)
+        {
+            _correlationId = correlationId;
+        }
     }
 }
