@@ -12,22 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
-using System.Threading.Tasks;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Transport
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Dispatchers
 {
     /// <summary>
-    /// Abstract class for serializing outgoing messages.
+    /// IntegrationEvent interface
     /// </summary>
-    public abstract class MessageSerializer
+    public interface IIntegrationEvent : INotification
     {
-        /// <summary>
-        /// Serialize a message
-        /// </summary>
-        /// <param name="message">Message to serialize</param>
-        /// <param name="cancellationToken">Cancellation token for the request</param>
-        /// <returns><see cref="byte"/> sequence for the message</returns>
-        public abstract Task<byte[]> ToBytesAsync(IOutboundMessage message, CancellationToken cancellationToken = default);
     }
 }

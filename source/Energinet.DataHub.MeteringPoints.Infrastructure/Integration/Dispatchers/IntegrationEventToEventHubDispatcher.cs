@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Channels;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Dispatchers
 {

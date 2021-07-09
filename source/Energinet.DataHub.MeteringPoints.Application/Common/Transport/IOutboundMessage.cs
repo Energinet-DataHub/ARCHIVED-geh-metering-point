@@ -12,21 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
+namespace Energinet.DataHub.MeteringPoints.Application.Common.Transport
 {
     /// <summary>
-    /// Context for the current user.
+    /// Marker interface for outgoing messages
     /// </summary>
-    public interface IUserContext
+    public interface IOutboundMessage
     {
-        /// <summary>
-        /// Get the current user.
-        /// </summary>
-        public UserIdentity? CurrentUser { get; set; }
-
-        /// <summary>
-        /// Key to be used when storing identity in property collections.
-        /// </summary>
-        public string Key { get; }
     }
 }

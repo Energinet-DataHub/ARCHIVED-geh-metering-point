@@ -15,7 +15,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Send
 {

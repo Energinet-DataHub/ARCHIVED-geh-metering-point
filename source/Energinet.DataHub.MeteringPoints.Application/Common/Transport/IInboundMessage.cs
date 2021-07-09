@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
+namespace Energinet.DataHub.MeteringPoints.Application.Common.Transport
 {
-    public static class UserIdentityExtensions
+    /// <summary>
+    /// Marker interface for incoming messages
+    /// </summary>
+    #pragma warning disable CA1040 // Marker interface
+    public interface IInboundMessage
     {
-        public static string AsString(this UserIdentity userIdentity)
-        {
-            return System.Text.Json.JsonSerializer.Serialize(userIdentity);
-        }
     }
 }

@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Energinet.DataHub.MeteringPoints.Application.Transport;
 using Google.Protobuf;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

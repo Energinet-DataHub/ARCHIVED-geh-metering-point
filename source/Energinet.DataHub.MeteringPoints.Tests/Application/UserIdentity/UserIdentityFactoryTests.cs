@@ -13,7 +13,8 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.UserIdentity;
+using Energinet.DataHub.MeteringPoints.Application.Common.UserIdentity;
+using Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity;
 using Xunit;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Application.UserIdentity
