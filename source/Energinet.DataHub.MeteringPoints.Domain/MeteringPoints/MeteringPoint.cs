@@ -28,7 +28,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private MeteringPointType _meteringPointType;
         private MeteringPointSubType _meteringPointSubType;
         private PhysicalState _physicalState;
-        private bool _isAddressWashable;
         private ReadingOccurrence _meterReadingOccurrence;
         private int _maximumCurrent;
         private int _maximumPower;
@@ -48,7 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            bool isAddressWashable,
+            // bool isAddressWashable,
             PhysicalState physicalState,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
@@ -66,7 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             Id = id;
             GsrnNumber = gsrnNumber;
             _address = address;
-            _isAddressWashable = isAddressWashable;
+            // _isAddressWashable = isAddressWashable;
             _physicalState = physicalState;
             _meteringPointSubType = meteringPointSubType;
             _meteringPointType = meteringPointType;

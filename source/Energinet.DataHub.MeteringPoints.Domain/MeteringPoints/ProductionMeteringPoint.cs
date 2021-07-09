@@ -22,6 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private NetSettlementGroup _netSettlementGroup;
         private DisconnectionType _disconnectionType;
         private ConnectionType _connectionType;
+        private bool _isAddressWashable;
 #pragma warning disable 414 // Temporarily disabled since variable is not yet in use
         private bool _productionObligation;
 #pragma warning restore 414
@@ -51,7 +52,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 id,
                 gsrnNumber,
                 address,
-                isAddressWashable,
                 physicalState,
                 meteringPointSubType,
                 meteringPointType,
@@ -71,6 +71,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _connectionType = connectionType;
             _productionObligation = false;
             _productType = ProductType.EnergyActive;
+            _isAddressWashable = isAddressWashable;
         }
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor

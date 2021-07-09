@@ -52,9 +52,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 y.Property(x => x.PostCode).HasColumnName("PostCode");
             });
 
-            builder.Property<bool>("_isAddressWashable")
-                .HasColumnName("IsAddressWashable");
-
             builder.Property<PhysicalState>("_physicalState")
                 .HasColumnName("PhysicalStatusOfMeteringPoint")
                 .HasConversion(
@@ -132,6 +129,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.ToTable("ConsumptionMeteringPoints", "dbo");
 
+            builder.Property<bool>("_isAddressWashable")
+                .HasColumnName("IsAddressWashable");
+
             builder.Property<AssetType>("_assetType")
                 .HasColumnName("AssetType")
                 .HasConversion(
@@ -173,6 +173,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             }
 
             builder.ToTable("ProductionMeteringPoints", "dbo");
+
+            builder.Property<bool>("_isAddressWashable")
+                .HasColumnName("IsAddressWashable");
 
             builder.Property("_productionObligation")
                 .HasColumnName("ProductionObligation");

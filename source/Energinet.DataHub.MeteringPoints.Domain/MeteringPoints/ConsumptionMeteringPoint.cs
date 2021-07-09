@@ -24,6 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private DisconnectionType _disconnectionType;
         private ConnectionType _connectionType;
         private AssetType _assetType;
+        private bool _isAddressWashable;
 
         public ConsumptionMeteringPoint(
             MeteringPointId id,
@@ -52,7 +53,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 id,
                 gsrnNumber,
                 address,
-                isAddressWashable,
                 physicalState,
                 meteringPointSubType,
                 meteringPointType,
@@ -73,6 +73,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _connectionType = connectionType;
             _assetType = assetType;
             _productType = ProductType.EnergyActive;
+            _isAddressWashable = isAddressWashable;
         }
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
