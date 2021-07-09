@@ -16,7 +16,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.EventHubs;
 using Azure.Messaging.EventHubs.Producer;
-using Energinet.DataHub.MeteringPoints.Application.Transport;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Channels
 {
