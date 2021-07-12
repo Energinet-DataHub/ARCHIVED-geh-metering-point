@@ -23,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private DisconnectionType _disconnectionType;
         private ConnectionType _connectionType;
         private bool _isAddressWashable;
-#pragma warning disable 414 // Temporarily disabled since variable is not yet in use
+#pragma warning disable 414 // TODO: Temporarily disabled since variable is not yet in use
         private bool _productionObligation;
 #pragma warning restore 414
 
