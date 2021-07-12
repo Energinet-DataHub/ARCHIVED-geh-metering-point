@@ -25,6 +25,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
         OutboxMessage? GetNext(OutboxMessageCategory category);
 
         /// <summary>
+        /// Get next unprocessed message based on category and type
+        /// </summary>
+        OutboxMessage? GetNext(OutboxMessageCategory category, string type);
+
+        /// <summary>
         /// Mark message as processed
         /// </summary>
         /// <param name="outboxMessage"></param>

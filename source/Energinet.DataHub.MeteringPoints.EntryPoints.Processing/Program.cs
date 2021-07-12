@@ -18,7 +18,6 @@ using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.Common.UserIdentity;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
-using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -32,6 +31,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
@@ -47,7 +47,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using SimpleInjector;
-using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Application.CreateMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 {
@@ -103,8 +102,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<UserIdentityFactory>(Lifestyle.Singleton);
             container.Register<IDomainEventPublisher, DomainEventPublisher>();
             container.Register<IUnitOfWork, UnitOfWork>();
-            container.Register<IValidator<CreateMeteringPoint>, CreateMeteringPointRuleSet>(Lifestyle.Scoped);
-            container.Register(typeof(IBusinessProcessResultHandler<>), typeof(CreateMeteringPointResultHandler), Lifestyle.Scoped);
+            container.Register<IValidator<Application.CreateMeteringPoint>, CreateMeteringPointRuleSet>(Lifestyle.Scoped);
+            container.Register<IValidator<Application.ConnectMeteringPoint>, ConnectMeteringPointRuleSet>(Lifestyle.Scoped);
+            container.Register(typeof(IBusinessProcessResultHandler<Application.CreateMeteringPoint>), typeof(CreateMeteringPointResultHandler), Lifestyle.Scoped);
+            container.Register(typeof(IBusinessProcessResultHandler<Application.ConnectMeteringPoint>), typeof(ConnectMeteringPointResultHandler), Lifestyle.Scoped);
             container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
             container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Scoped);
             container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
@@ -114,7 +115,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             container.AddValidationErrorConversion(
                 validateRegistrations: true,
-                typeof(CreateMeteringPoint).Assembly, // Application
+                typeof(Application.CreateMeteringPoint).Assembly, // Application
                 typeof(MeteringPoint).Assembly, // Domain
                 typeof(ErrorMessageFactory).Assembly); // Infrastructure
 
@@ -122,7 +123,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.BuildMediator(
                 new[]
                 {
-                    typeof(CreateMeteringPoint).Assembly,
+                    typeof(Application.CreateMeteringPoint).Assembly,
                     typeof(MeteringPointCreatedNotificationHandler).Assembly,
                 },
                 new[]

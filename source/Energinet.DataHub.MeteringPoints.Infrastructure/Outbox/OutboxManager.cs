@@ -44,6 +44,15 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
                 .FirstOrDefault(message => message.Category == category);
         }
 
+        public OutboxMessage? GetNext(OutboxMessageCategory category, string type)
+        {
+            return _context.OutboxMessages
+                .OrderBy(message => message.CreationDate)
+                .Where(message => !message.ProcessedDate.HasValue)
+                .Where(message => message.Type == type)
+                .FirstOrDefault(message => message.Category == category);
+        }
+
         public void MarkProcessed(OutboxMessage outboxMessage)
         {
             var processedMessage = _context.OutboxMessages.Single(message => message.Id == outboxMessage.Id);

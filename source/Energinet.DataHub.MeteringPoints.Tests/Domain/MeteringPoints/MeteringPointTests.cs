@@ -16,6 +16,7 @@ using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -28,7 +29,26 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         [Fact]
         public void ShouldRaiseEventWhenCreated()
         {
-            var meteringPoint = new ConsumptionMeteringPoint(
+            var meteringPoint = CreateConsumptionMeteringPoint();
+
+            var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MeteringPointCreated);
+            Assert.NotNull(createdEvent);
+        }
+
+        [Fact]
+        public void ShouldRaiseEventWhenConnected()
+        {
+            var meteringPoint = CreateConsumptionMeteringPoint();
+
+            meteringPoint.Connect(SystemClock.Instance.GetCurrentInstant());
+
+            var connectedEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MeteringPointConnected);
+            Assert.NotNull(connectedEvent);
+        }
+
+        private static MeteringPoint CreateConsumptionMeteringPoint()
+        {
+            return new ConsumptionMeteringPoint(
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 Address.Create(SampleData.StreetName, SampleData.PostCode, SampleData.CityName, SampleData.CountryCode),
@@ -51,9 +71,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 ConnectionType.Direct,
                 AssetType.Boiler,
                 parentRelatedMeteringPoint: null);
-
-            var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MeteringPointCreated);
-            Assert.NotNull(createdEvent);
         }
     }
 }
