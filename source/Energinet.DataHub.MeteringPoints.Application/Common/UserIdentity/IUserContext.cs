@@ -12,15 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
-
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Send
+namespace Energinet.DataHub.MeteringPoints.Application.Common.UserIdentity
 {
-    public class Dispatcher : MessageDispatcher
+    /// <summary>
+    /// Context for the current user.
+    /// </summary>
+    public interface IUserContext
     {
-        public Dispatcher(MessageSerializer serializer, InProcessChannel channel)
-            : base(serializer, channel)
-        {
-        }
+        /// <summary>
+        /// Get the current user.
+        /// </summary>
+        public UserIdentity? CurrentUser { get; set; }
+
+        /// <summary>
+        /// Key to be used when storing identity in property collections.
+        /// </summary>
+        public string Key { get; }
     }
 }

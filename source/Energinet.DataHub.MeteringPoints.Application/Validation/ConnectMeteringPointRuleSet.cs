@@ -12,21 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
-{
-    /// <summary>
-    /// Context for the current user.
-    /// </summary>
-    public interface IUserContext
-    {
-        /// <summary>
-        /// Get the current user.
-        /// </summary>
-        public UserIdentity? CurrentUser { get; set; }
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
+using FluentValidation;
 
-        /// <summary>
-        /// Key to be used when storing identity in property collections.
-        /// </summary>
-        public string Key { get; }
+namespace Energinet.DataHub.MeteringPoints.Application.Validation
+{
+    public class ConnectMeteringPointRuleSet : AbstractValidator<ConnectMeteringPoint>
+    {
+        public ConnectMeteringPointRuleSet()
+        {
+            RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberMustBeValidRule());
+
+            // TODO: add rules to fulfill a complete validation
+        }
     }
 }

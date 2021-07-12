@@ -12,23 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
-
-namespace Energinet.DataHub.MeteringPoints.Application.Transport
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Correlation
 {
     /// <summary>
-    /// Abstract class for serializing outgoing messages.
+    /// Context for the current scope identified by a correlation id.
     /// </summary>
-    public abstract class MessageSerializer
+    public interface ICorrelationContext
     {
         /// <summary>
-        /// Serialize a message
+        /// Get the current correlation id.
         /// </summary>
-        /// <param name="message">Message to serialize</param>
-        /// <param name="cancellationToken">Cancellation token for the request</param>
-        /// <returns><see cref="byte"/> sequence for the message</returns>
-        public abstract Task<byte[]> ToBytesAsync(IOutboundMessage message, CancellationToken cancellationToken = default);
+        string GetCorrelationId();
+
+        /// <summary>
+        /// Set the current correlation id.
+        /// </summary>
+        void SetCorrelationId(string correlationId);
     }
 }

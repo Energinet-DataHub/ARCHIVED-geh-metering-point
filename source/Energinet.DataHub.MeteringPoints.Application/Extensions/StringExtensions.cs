@@ -12,21 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application
-{
-    /// <summary>
-    /// Context for the current scope identified by a correlation id.
-    /// </summary>
-    public interface ICorrelationContext
-    {
-        /// <summary>
-        /// Get the current correlation id.
-        /// </summary>
-        string GetCorrelationId();
+using System;
+using System.Globalization;
+using NodaTime;
 
-        /// <summary>
-        /// Set the current correlation id.
-        /// </summary>
-        void SetCorrelationId(string correlationId);
+namespace Energinet.DataHub.MeteringPoints.Application.Extensions
+{
+    public static class StringExtensions
+    {
+        public static Instant ToInstant(this string value)
+        {
+            var datetime = DateTime.Parse(value, CultureInfo.InvariantCulture);
+            datetime = DateTime.SpecifyKind(datetime, DateTimeKind.Utc);
+            return Instant.FromDateTimeUtc(datetime);
+        }
     }
 }

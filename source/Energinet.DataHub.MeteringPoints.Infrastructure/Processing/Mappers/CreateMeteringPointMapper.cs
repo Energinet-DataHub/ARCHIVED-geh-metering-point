@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
-using Energinet.DataHub.MeteringPoints.Application.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Contracts.CreateMeteringPoint;
 
@@ -49,7 +47,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
                 NetSettlementGroup: obj.NetSettlementGroup,
                 ConnectionType: obj.ConnectionType,
                 AssetType: obj.AssetType,
-                ParentRelatedMeteringPoint: obj.ParentRelatedMeteringPoint);
+                ParentRelatedMeteringPoint: obj.ParentRelatedMeteringPoint,
+                FromGrid: obj.FromGrid,
+                ToGrid: obj.ToGrid);
         }
     }
 }

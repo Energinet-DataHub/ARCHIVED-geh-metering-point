@@ -12,21 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading;
+using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
-using Google.Protobuf;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Transport
 {
     /// <summary>
-    /// Map from <see cref="IMessage"/> to application message
+    /// Abstract class for deserializing incoming messages.
     /// </summary>
-    public abstract class ProtobufInboundMapper
+    public abstract class MessageDeserializer
     {
         /// <summary>
-        /// Convert to application message
+        /// Deserialize <paramref name="data"/> to an inbound message
         /// </summary>
-        /// <param name="obj"><see cref="IMessage"/> to be converted</param>
-        /// <returns>The encoded <see cref="IInboundMessage"/></returns>
-        public abstract IInboundMessage Convert(IMessage obj);
+        /// <param name="data">Data to deserialize</param>
+        /// <param name="cancellationToken">Cancellation token for the operation</param>
+        /// <returns><see cref="IInboundMessage"/> extracted from <paramref name="data"/></returns>
+        public abstract Task<IInboundMessage> FromBytesAsync(byte[] data, CancellationToken cancellationToken = default);
     }
 }

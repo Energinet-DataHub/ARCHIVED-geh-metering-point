@@ -13,22 +13,24 @@
 // limitations under the License.
 
 using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Send
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public class InProcessChannel : Channel
+    public class MeteringPointConnected : DomainEventBase
     {
-        private byte[] _writtenBytes;
-
-        public byte[] GetWrittenBytes() => _writtenBytes ?? throw new InvalidOperationException("Write bytes before getting them.");
-
-        public override async Task WriteAsync(byte[] data, CancellationToken cancellationToken = default)
+        public MeteringPointConnected(Guid meteringPointId, string gsrnNumber, Instant effectiveDate)
         {
-            _writtenBytes = data;
-            await Task.CompletedTask.ConfigureAwait(false);
+            MeteringPointId = meteringPointId;
+            GsrnNumber = gsrnNumber;
+            EffectiveDate = effectiveDate;
         }
+
+        public Guid MeteringPointId { get; }
+
+        public string GsrnNumber { get; }
+
+        public Instant EffectiveDate { get; }
     }
 }

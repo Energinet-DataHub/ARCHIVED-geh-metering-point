@@ -12,10 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.UserIdentity
+using MediatR;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Dispatchers
 {
     /// <summary>
-    /// User identity
+    /// IntegrationEvent interface
     /// </summary>
-    public record UserIdentity(string Id);
+    public interface IIntegrationEvent : INotification
+    {
+    }
 }

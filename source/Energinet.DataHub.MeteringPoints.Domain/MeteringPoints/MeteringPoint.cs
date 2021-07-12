@@ -28,7 +28,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private MeteringPointType _meteringPointType;
         private MeteringPointSubType _meteringPointSubType;
         private PhysicalState _physicalState;
-        private bool _isAddressWashable;
         private ReadingOccurrence _meterReadingOccurrence;
         private int _maximumCurrent;
         private int _maximumPower;
@@ -39,49 +38,16 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private string? _parentRelatedMeteringPoint;
         private string _meterNumber;
 
+#pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
+        protected MeteringPoint() { }
+#pragma warning restore 8618
+
         #pragma warning disable CS8618 //Disable nullable check
         protected MeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            bool isAddressWashable,
-            PhysicalState physicalState,
-            MeteringPointSubType meteringPointSubType,
-            MeteringPointType meteringPointType,
-            GridAreaId gridAreaId,
-            GsrnNumber powerPlantGsrnNumber,
-            string locationDescription,
-            MeasurementUnitType unitType,
-            string meterNumber,
-            ReadingOccurrence meterReadingOccurrence,
-            int maximumCurrent,
-            int maximumPower,
-            Instant? occurenceDate)
-        {
-            Id = id;
-            GsrnNumber = gsrnNumber;
-            _address = address;
-            _isAddressWashable = isAddressWashable;
-            _physicalState = physicalState;
-            _meteringPointSubType = meteringPointSubType;
-            _meteringPointType = meteringPointType;
-            _gridAreaId = gridAreaId;
-            _powerPlantGsrnNumber = powerPlantGsrnNumber;
-            _locationDescription = locationDescription;
-            _unitType = unitType;
-            _meterNumber = meterNumber;
-            _meterReadingOccurrence = meterReadingOccurrence;
-            _maximumCurrent = maximumCurrent;
-            _maximumPower = maximumPower;
-            _occurenceDate = occurenceDate;
-
-            AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaId, meteringPointSubType, physicalState, meterReadingOccurrence, ProductType.Tariff, unitType));
-        }
-
-        protected MeteringPoint(
-            MeteringPointId id,
-            GsrnNumber gsrnNumber,
-            bool isAddressWashable,
+            // bool isAddressWashable,
             PhysicalState physicalState,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
@@ -98,7 +64,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             Id = id;
             GsrnNumber = gsrnNumber;
-            _isAddressWashable = isAddressWashable;
+            _address = address;
+            // _isAddressWashable = isAddressWashable;
             _physicalState = physicalState;
             _meteringPointSubType = meteringPointSubType;
             _meteringPointType = meteringPointType;
@@ -112,10 +79,19 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _maximumPower = maximumPower;
             _occurenceDate = occurenceDate;
             _parentRelatedMeteringPoint = parentRelatedMeteringPoint;
+
+            AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaId, meteringPointSubType, physicalState, meterReadingOccurrence, ProductType.Tariff, unitType));
         }
 
         public MeteringPointId Id { get; }
 
         public GsrnNumber GsrnNumber { get; }
+
+        public void Connect(Instant effectiveDate)
+        {
+            _physicalState = PhysicalState.Connected;
+            // TODO - for now we ignore scheduling - must be handled later
+            AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, effectiveDate));
+        }
     }
 }

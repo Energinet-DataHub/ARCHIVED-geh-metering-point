@@ -15,15 +15,14 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
-using Energinet.DataHub.MeteringPoints.Application.IntegrationEvent;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Dispatchers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Messages;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using FluentAssertions;
 using MediatR;
 using Xunit;
-using Address = Energinet.DataHub.MeteringPoints.Application.Address;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 {
@@ -135,7 +134,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
         private static CreateMeteringPoint CreateRequest()
         {
-            return new CreateMeteringPoint(
+            return new(
                 SampleData.StreetName,
                 SampleData.PostCode,
                 SampleData.CityName,
@@ -157,10 +156,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SampleData.MeterNumber,
                 string.Empty,
                 string.Empty,
-                string.Empty,
+                SampleData.NetSettlementGroup,
                 SampleData.ConnectionType,
                 SampleData.AssetType,
-                string.Empty);
+                "123",
+                ToGrid: "456",
+                ParentRelatedMeteringPoint: string.Empty);
         }
     }
 }

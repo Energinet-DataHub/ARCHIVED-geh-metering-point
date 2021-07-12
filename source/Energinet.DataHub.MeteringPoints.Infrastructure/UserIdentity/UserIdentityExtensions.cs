@@ -12,28 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Application;
-
-namespace Energinet.DataHub.MeteringPoints.Infrastructure
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity
 {
-    public sealed class CorrelationContext : ICorrelationContext
+    public static class UserIdentityExtensions
     {
-        private string? _correlationId;
-
-        public string GetCorrelationId()
+        public static string AsString(this Application.Common.UserIdentity.UserIdentity userIdentity)
         {
-            if (string.IsNullOrWhiteSpace(_correlationId))
-            {
-                throw new InvalidOperationException("Correlation id not set");
-            }
-
-            return _correlationId;
-        }
-
-        public void SetCorrelationId(string correlationId)
-        {
-            _correlationId = correlationId;
+            return System.Text.Json.JsonSerializer.Serialize(userIdentity);
         }
     }
 }

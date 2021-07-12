@@ -19,60 +19,18 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class ProductionMeteringPoint : MeteringPoint
     {
-        private int _productionObligation;
-        private int _netSettlementGroup;
+        private NetSettlementGroup _netSettlementGroup;
         private DisconnectionType _disconnectionType;
         private ConnectionType _connectionType;
+        private bool _isAddressWashable;
+#pragma warning disable 414 // TODO: Temporarily disabled since variable is not yet in use
+        private bool _productionObligation;
+#pragma warning restore 414
 
         public ProductionMeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            bool isAddressWashable,
-            PhysicalState physicalState,
-            MeteringPointSubType meteringPointSubType,
-            MeteringPointType meteringPointType,
-            GridAreaId gridAreaId,
-            GsrnNumber powerPlant,
-            string locationDescription,
-            MeasurementUnitType unitType,
-            string meterNumber,
-            ReadingOccurrence meterReadingOccurrence,
-            int maximumCurrent,
-            int maximumPower,
-            Instant? occurenceDate,
-            int productionObligation,
-            int netSettlementGroup,
-            DisconnectionType disconnectionType,
-            ConnectionType connectionType)
-            : base(
-                id,
-                gsrnNumber,
-                address,
-                isAddressWashable,
-                physicalState,
-                meteringPointSubType,
-                meteringPointType,
-                gridAreaId,
-                powerPlant,
-                locationDescription,
-                unitType,
-                meterNumber,
-                meterReadingOccurrence,
-                maximumCurrent,
-                maximumPower,
-                occurenceDate)
-        {
-            _productionObligation = productionObligation;
-            _netSettlementGroup = netSettlementGroup;
-            _disconnectionType = disconnectionType;
-            _connectionType = connectionType;
-            _productType = ProductType.EnergyActive;
-        }
-
-        public ProductionMeteringPoint(
-            MeteringPointId id,
-            GsrnNumber gsrnNumber,
             bool isAddressWashable,
             PhysicalState physicalState,
             MeteringPointSubType meteringPointSubType,
@@ -86,15 +44,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             int maximumCurrent,
             int maximumPower,
             Instant? occurenceDate,
-            int productionObligation,
-            int netSettlementGroup,
+            NetSettlementGroup netSettlementGroup,
             DisconnectionType disconnectionType,
             ConnectionType connectionType,
             string? parentRelatedMeteringPoint)
             : base(
                 id,
                 gsrnNumber,
-                isAddressWashable,
+                address,
                 physicalState,
                 meteringPointSubType,
                 meteringPointType,
@@ -109,11 +66,16 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 occurenceDate,
                 parentRelatedMeteringPoint)
         {
-            _productionObligation = productionObligation;
             _netSettlementGroup = netSettlementGroup;
             _disconnectionType = disconnectionType;
             _connectionType = connectionType;
+            _productionObligation = false;
             _productType = ProductType.EnergyActive;
+            _isAddressWashable = isAddressWashable;
         }
+
+#pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
+        private ProductionMeteringPoint() { }
+#pragma warning restore 8618
     }
 }

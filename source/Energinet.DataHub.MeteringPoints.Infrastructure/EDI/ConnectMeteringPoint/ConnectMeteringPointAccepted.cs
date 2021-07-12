@@ -12,13 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint
 {
-    /// <summary>
-    /// Command object
-    /// </summary>
-    #pragma warning disable CA1040 // TODO: This ICommand is just a placeholder
-    public interface ICommand
-    {
-    }
+    public record ConnectMeteringPointAccepted(
+        string TransactionId,
+        string Status, // TODO: Is status implicit in Accepted from type?
+        string GsrnNumber);
+
+    // TODO: Reference to original document?
 }

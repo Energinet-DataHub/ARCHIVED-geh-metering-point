@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Send
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint
 {
-    public class Dispatcher : MessageDispatcher
-    {
-        public Dispatcher(MessageSerializer serializer, InProcessChannel channel)
-            : base(serializer, channel)
-        {
-        }
-    }
+    public record ConnectMeteringPointRejected(
+        string TransactionId,
+        string Status, // TODO: Is status implicit in Rejected from type?
+        string GsrnNumber,
+        string Reason,
+        Error[] Errors);
+
+    // TODO: Reference to original document?
 }

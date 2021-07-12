@@ -17,7 +17,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Transport
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Transport
 {
     /// <summary>
     /// Extract a message from a data sequence
