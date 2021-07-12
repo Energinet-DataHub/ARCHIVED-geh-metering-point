@@ -1,4 +1,4 @@
-﻿// Copyright 2020 Energinet DataHub A/S
+// Copyright 2020 Energinet DataHub A/S
 //
 // Licensed under the Apache License, Version 2.0 (the "License2");
 // you may not use this file except in compliance with the License.
@@ -12,19 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Dispatchers
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration
 {
-    /// <summary>
-    /// Interface for the integration event dispatch orchestrator
-    /// </summary>
-    public interface IIntegrationEventDispatchOrchestrator
+    public abstract record Topic
     {
-        /// <summary>
-        /// Orchestrate the events to be dispatched
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task ProcessEventOrchestratorAsync();
+        public abstract string Name { get; init; }
     }
 }

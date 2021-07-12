@@ -1,4 +1,4 @@
-﻿// Copyright 2020 Energinet DataHub A/S
+// Copyright 2020 Energinet DataHub A/S
 //
 // Licensed under the Apache License, Version 2.0 (the "License2");
 // you may not use this file except in compliance with the License.
@@ -12,14 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using MediatR;
+using System.Threading.Tasks;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Dispatchers
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration
 {
     /// <summary>
-    /// IntegrationEvent interface
+    /// Interface for Topic sender
     /// </summary>
-    public interface IIntegrationEvent : INotification
+    public interface ITopicSender<TTopic>
+        where TTopic : Topic
     {
+        /// <summary>
+        /// Sends a message async
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        Task SendMessageAsync(byte[] message);
     }
 }

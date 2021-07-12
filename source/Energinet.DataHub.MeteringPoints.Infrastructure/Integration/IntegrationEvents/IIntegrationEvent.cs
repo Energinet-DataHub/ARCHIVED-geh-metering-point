@@ -12,16 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Channels;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Dispatchers
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents
 {
-    public class IntegrationEventToEventHubDispatcher : MessageDispatcher
+    /// <summary>
+    /// IntegrationEvent interface
+    /// </summary>
+    public interface IIntegrationEvent : INotification
     {
-        public IntegrationEventToEventHubDispatcher(MessageSerializer serializer, AzureEventHubChannel channel)
-            : base(serializer, channel)
-        {
-        }
     }
 }

@@ -13,10 +13,9 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Dispatchers;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Messages
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint
 {
     public record MeteringPointCreatedEventMessage(string Gsrn, string MeteringPointType, string GridAreaId,
         string SettlementMethod, string MeteringMethod, string ConnectionState, string MeterReadingPeriodicity, string NetSettlementGroup, string ToGrid, string FromGrid,

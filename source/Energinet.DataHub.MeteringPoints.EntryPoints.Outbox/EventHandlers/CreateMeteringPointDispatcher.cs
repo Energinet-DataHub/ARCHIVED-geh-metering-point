@@ -12,21 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.RequestHandlers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.EventHandlers
 {
-    public class IntegrationEventTypeFactory
+    public class CreateMeteringPointDispatcher : IntegrationEventDispatcher<MeteringPointCreatedTopic, MeteringPointCreatedEventMessage>
     {
-        public static Type GetType(string type)
+        public CreateMeteringPointDispatcher(ITopicSender<MeteringPointCreatedTopic> topicSender, ProtobufOutboundMapper<MeteringPointCreatedEventMessage> mapper)
+            : base(
+                topicSender,
+                mapper)
         {
-            if (typeof(MeteringPointCreatedEventMessage).FullName == type)
-            {
-                return typeof(MeteringPointCreatedEventMessage);
-            }
-
-            throw new ArgumentException("Integration Event type is not implemented.");
         }
     }
 }
