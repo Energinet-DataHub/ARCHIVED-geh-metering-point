@@ -12,16 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+using Google.Protobuf;
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf
 {
-    public record ConnectMeteringPoint(
-        string GsrnNumber = "",
-        string EffectiveDate = "",
-        string TransactionId = "")
-        : IBusinessRequest,
-            IOutboundMessage,
-            IInboundMessage;
+    /// <summary>
+    /// Factory for generating protobuf messages
+    /// </summary>
+    public interface IProtobufMessageFactory
+    {
+        /// <summary>
+        /// Create message from binary payload
+        /// </summary>
+        /// <param name="payload">Payload</param>
+        /// <param name="messageTypeName">Name of protobuf message type</param>
+        /// <returns><see cref="IMessage"/></returns>
+        IMessage CreateMessageFrom(byte[] payload, string messageTypeName);
+    }
 }

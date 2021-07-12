@@ -36,7 +36,9 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Handlers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
@@ -61,6 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     options.UseMiddleware<SimpleInjectorScopedRequest>();
                     options.UseMiddleware<ServiceBusCorrelationIdMiddleware>();
                     options.UseMiddleware<ServiceBusUserContextMiddleware>();
+                    options.UseMiddleware<ServiceBusMessageIdempotencyMiddleware>();
                 })
                 .ConfigureServices(services =>
                 {
@@ -94,6 +97,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             // Register application components.
             container.Register<QueueSubscriber>(Lifestyle.Scoped);
+            container.Register<IntegrationEventReceiver>(Lifestyle.Scoped);
             container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
             container.Register<ServiceBusCorrelationIdMiddleware>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
@@ -112,6 +116,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<ISystemDateTimeProvider, SystemDateTimeProvider>(Lifestyle.Singleton);
             container.Register<IDomainEventsAccessor, DomainEventsAccessor>();
             container.Register<IDomainEventsDispatcher, DomainEventsDispatcher>();
+            container.Register<IIncomingMessageRegistry, IncomingMessageRegistry>(Lifestyle.Transient);
+            container.Register<ServiceBusMessageIdempotencyMiddleware>(Lifestyle.Scoped);
+            container.Register<IProtobufMessageFactory, ProtobufMessageFactory>(Lifestyle.Singleton);
 
             container.AddValidationErrorConversion(
                 validateRegistrations: true,

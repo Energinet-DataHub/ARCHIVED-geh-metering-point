@@ -15,6 +15,7 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,6 +43,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
 
         public DbSet<ExchangeMeteringPoint> ExchangeMeteringPoints { get; private set; }
 
+        public DbSet<IncomingMessage> IncomingMessages { get; private set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             if (modelBuilder == null) throw new ArgumentNullException(nameof(modelBuilder));
@@ -51,6 +54,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
             modelBuilder.ApplyConfiguration(new ConsumptionMeteringPointEntityConfiguration());
             modelBuilder.ApplyConfiguration(new ProductionMeteringPointEntityConfiguration());
             modelBuilder.ApplyConfiguration(new ExchangeMeteringPointEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new IncomingMessageEntityConfiguration());
         }
     }
 }

@@ -12,16 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Application.Common.Commands
 {
-    public record ConnectMeteringPoint(
-        string GsrnNumber = "",
-        string EffectiveDate = "",
-        string TransactionId = "")
-        : IBusinessRequest,
-            IOutboundMessage,
-            IInboundMessage;
+    #pragma warning disable CA1040
+    /// <summary>
+    /// CQRS command object
+    /// </summary>
+    public interface ICommand : IRequest, IOutboundMessage, IInboundMessage
+    {
+    }
+
+    /// <summary>
+    /// CQRS command with result
+    /// </summary>
+    /// <typeparam name="TResult"><see cref="IRequest"/></typeparam>
+    public interface ICommand<out TResult> : IRequest<TResult>, IOutboundMessage, IInboundMessage
+    {
+    }
+    #pragma warning restore
 }

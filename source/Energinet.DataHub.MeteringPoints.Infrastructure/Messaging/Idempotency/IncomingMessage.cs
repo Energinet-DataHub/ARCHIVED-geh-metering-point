@@ -12,16 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
-
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency
 {
-    public record ConnectMeteringPoint(
-        string GsrnNumber = "",
-        string EffectiveDate = "",
-        string TransactionId = "")
-        : IBusinessRequest,
-            IOutboundMessage,
-            IInboundMessage;
+    public class IncomingMessage
+    {
+        public IncomingMessage(string messageId, string messageType)
+        {
+            MessageId = messageId;
+            MessageType = messageType;
+        }
+
+        public string MessageId { get; }
+
+        public string MessageType { get; }
+    }
 }

@@ -12,16 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
-    public record ConnectMeteringPoint(
-        string GsrnNumber = "",
-        string EffectiveDate = "",
-        string TransactionId = "")
-        : IBusinessRequest,
-            IOutboundMessage,
-            IInboundMessage;
+    public class EnergySupplierChangedEventHandler : INotificationHandler<EnergySupplierChanged>
+    {
+        public Task Handle(EnergySupplierChanged notification, CancellationToken cancellationToken)
+        {
+            //TODO: Schedule internal command that updates the MeteringPoint aggregate to be connectable
+            return Task.CompletedTask;
+        }
+    }
 }
