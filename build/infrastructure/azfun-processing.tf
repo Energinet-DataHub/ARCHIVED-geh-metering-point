@@ -36,7 +36,7 @@ module "azfun_processing" {
     METERINGPOINT_QUEUE_CONNECTION_STRING   = module.sbnar_meteringpoint_listener.primary_connection_string
     METERINGPOINT_DB_CONNECTION_STRING      = local.METERING_POINT_CONNECTION_STRING
     METERINGPOINT_QUEUE_TOPIC_NAME          = module.sbq_meteringpoint.name
-    INTEGRATION_EVENT_QUEUE                 = "metering-point-forwarded_queue"
+    INTEGRATION_EVENT_QUEUE                 = "metering-point-forwarded-queue"
     INTEGRATION_EVENT_QUEUE_CONNECTION      = data.azurerm_key_vault_secret.INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING.value
     # POST_OFFICE_QUEUE_CONNECTION_STRING   = data.azurerm_key_vault_secret.POST_OFFICE_QUEUE_CONNECTION_STRING.value
     # POST_OFFICE_QUEUE_TOPIC_NAME          = data.azurerm_key_vault_secret.POST_OFFICE_QUEUE_MARKETDATA_TOPIC_NAME.value
