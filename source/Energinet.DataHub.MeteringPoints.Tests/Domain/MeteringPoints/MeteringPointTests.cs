@@ -71,9 +71,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 ConnectionType.Direct,
                 AssetType.Boiler,
                 parentRelatedMeteringPoint: null);
-
-            var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MeteringPointCreated);
-            Assert.NotNull(createdEvent);
         }
     }
 }
