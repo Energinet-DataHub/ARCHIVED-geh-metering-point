@@ -12,15 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
     public class MeteringPointTypeErrorConverter : ErrorConverter<MeteringPointTypeValidationError>
     {
-        protected override Error Convert(MeteringPointTypeValidationError error)
+        protected override ErrorMessage Convert(MeteringPointTypeValidationError validationError)
         {
-            return new("D18", $"Metering point type {error.MeteringPointType} for metering point {error.GsrnNumber} has wrong value (outside domain)");
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new("D18", $"Metering point type {validationError.MeteringPointType} for metering point {validationError.GsrnNumber} has wrong value (outside domain)");
         }
     }
 }

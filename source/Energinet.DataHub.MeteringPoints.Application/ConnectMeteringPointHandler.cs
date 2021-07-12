@@ -34,8 +34,11 @@ namespace Energinet.DataHub.MeteringPoints.Application
 
         public async Task<BusinessProcessResult> Handle(ConnectMeteringPoint request, CancellationToken cancellationToken)
         {
-            var meteringPoint =
-                await _meteringPointRepository.GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber));
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
+            var meteringPoint = await _meteringPointRepository
+                .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
+                .ConfigureAwait(false);
 
             if (meteringPoint is null)
             {

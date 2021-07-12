@@ -12,7 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors
+using System;
+
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.TimerTriggers
 {
-    public record Error(string Code, string Description);
+    public class ScheduleStatus
+    {
+        public DateTime Last { get; set; }
+
+        public DateTime Next { get; set; }
+
+        public DateTime LastUpdated { get; set; }
+    }
 }

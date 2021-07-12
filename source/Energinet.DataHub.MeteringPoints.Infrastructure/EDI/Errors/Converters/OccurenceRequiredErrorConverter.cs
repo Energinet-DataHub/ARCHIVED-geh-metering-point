@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
@@ -19,9 +20,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
     public class OccurenceRequiredErrorConverter : ErrorConverter<OccurenceRequiredValidationError>
     {
         // TODO: This is an example, redo when we know what/how etc.
-        protected override Error Convert(OccurenceRequiredValidationError error)
+        protected override ErrorMessage Convert(OccurenceRequiredValidationError validationError)
         {
-            return new("D02", $"Occurrence date is missing for metering point {error.GsrnNumber}");
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new("D02", $"Occurrence date is missing for metering point {validationError.GsrnNumber}");
         }
     }
 }

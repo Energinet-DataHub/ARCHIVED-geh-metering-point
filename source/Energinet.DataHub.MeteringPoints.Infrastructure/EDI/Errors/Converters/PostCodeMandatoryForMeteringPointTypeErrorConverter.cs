@@ -12,15 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
     public class PostCodeMandatoryForMeteringPointTypeErrorConverter : ErrorConverter<PostCodeMandatoryForMeteringPointTypeValidationError>
     {
-        protected override Error Convert(PostCodeMandatoryForMeteringPointTypeValidationError error)
+        protected override ErrorMessage Convert(PostCodeMandatoryForMeteringPointTypeValidationError validationError)
         {
-            return new("E86", $"Post code is missing for metering point {error.GsrnNumber}");
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new("E86", $"Post code is missing for metering point {validationError.GsrnNumber}");
         }
     }
 }

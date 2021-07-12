@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Contracts.CreateMeteringPoint;
@@ -22,6 +23,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
     {
         protected override IInboundMessage Convert(CreateMeteringPoint obj)
         {
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
+
             return new Application.CreateMeteringPoint(
                 StreetName: obj.InstallationLocationAddress.StreetName,
                 PostCode: obj.InstallationLocationAddress.PostCode,

@@ -20,11 +20,11 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.RequestHandlers
 {
-    public class CreateMeteringPointEventHandler : IRequestHandler<MeteringPointCreatedEventMessage>
+    public class CreateMeteringPointHandler : IRequestHandler<MeteringPointCreatedEventMessage>
     {
         private readonly IntegrationEventToEventHubDispatcher _dispatcher;
 
-        public CreateMeteringPointEventHandler(IntegrationEventToEventHubDispatcher dispatcher)
+        public CreateMeteringPointHandler(IntegrationEventToEventHubDispatcher dispatcher)
         {
             _dispatcher = dispatcher;
         }

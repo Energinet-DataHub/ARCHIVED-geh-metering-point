@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Authorization;
@@ -32,6 +33,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcess
 
         public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
+            if (next == null) throw new ArgumentNullException(nameof(next));
+
             var validationResult = _authorizationHandler.Authorize(request);
 
             if (validationResult.Success)

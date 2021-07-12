@@ -37,6 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
         public async Task Invoke(FunctionContext context, FunctionExecutionDelegate next)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
+            if (next == null) throw new ArgumentNullException(nameof(next));
 
             var messageType = GetValueFromMessage(context, MessageTypeKey);
             var messageId = GetValueFromMessage(context, MessageIdKey);
@@ -50,19 +51,19 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 _logger?.LogCritical($"{MessageIdKey} and {MessageIdKey} must be present on incoming Service Bus message to enforce message idempotency.");
             }
 
-            await next(context);
+            await next(context).ConfigureAwait(false);
+        }
+
+        private static string? GetValueFromMessage(FunctionContext context, string key)
+        {
+            context.BindingContext.BindingData.TryGetValue(key, out var value);
+            return value?.ToString();
         }
 
         private async Task RegisterIdempotentMessageAsync(string messageId, string messageType)
         {
             await _incomingMessageRegistry.RegisterMessageAsync(messageId, messageType).ConfigureAwait(false);
             _logger?.LogTrace($"Registered incoming message id {messageId} of type {messageType}");
-        }
-
-        private string? GetValueFromMessage(FunctionContext context, string key)
-        {
-            context.BindingContext.BindingData.TryGetValue(key, out var value);
-            return value?.ToString();
         }
     }
 }

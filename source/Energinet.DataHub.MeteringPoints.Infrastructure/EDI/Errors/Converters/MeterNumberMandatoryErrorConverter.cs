@@ -12,15 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
     public class MeterNumberMandatoryErrorConverter : ErrorConverter<MeterNumberMandatoryValidationError>
     {
-        protected override Error Convert(MeterNumberMandatoryValidationError error)
+        protected override ErrorMessage Convert(MeterNumberMandatoryValidationError validationError)
         {
-            return new("D02", $"Meter number is mandatory for sub type physical for metering point {error.GsrnNumber}");
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new("D02", $"Meter number is mandatory for sub type physical for metering point {validationError.GsrnNumber}");
         }
     }
 }

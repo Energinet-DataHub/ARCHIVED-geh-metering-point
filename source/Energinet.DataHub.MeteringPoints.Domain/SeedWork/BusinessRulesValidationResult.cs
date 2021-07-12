@@ -26,13 +26,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
 
             public bool Success => Errors.Count == 0;
 
-            public List<ValidationError> Errors { get; private set; } = new();
+            public IReadOnlyCollection<ValidationError> Errors { get; private set; } = new List<ValidationError>();
 
             private void SetValidationErrors(IEnumerable<IBusinessRule> rules)
             {
                 Errors = rules
                     .Where(r => r.IsBroken)
-                    .Select(r => r.Error)
+                    .Select(r => r.ValidationError)
                     .ToList();
             }
         }

@@ -34,8 +34,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion
         {
             await _policy.AsyncPolicy.ExecuteAsync(async () =>
             {
-                await _channel.WriteAsync(data, cancellationToken);
-            });
+                await _channel.WriteAsync(data, cancellationToken).ConfigureAwait(false);
+            }).ConfigureAwait(false);
         }
     }
 }

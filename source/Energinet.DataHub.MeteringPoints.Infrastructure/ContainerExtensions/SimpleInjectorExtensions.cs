@@ -27,6 +27,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions
     {
         public static void AddInputValidation(this Container container)
         {
+            if (container == null) throw new ArgumentNullException(nameof(container));
+
             container.Register(typeof(IAuthorizationHandler<,>), typeof(InputAuthorizationHandler<,>));
             container.Collection.Register(typeof(IAuthorizationHandler<,>), new[]
             {
@@ -36,6 +38,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions
 
         public static void AddValidationErrorConversion(this Container container, bool validateRegistrations, params Assembly[] assemblies)
         {
+            if (container == null) throw new ArgumentNullException(nameof(container));
+
             var validationErrorTypes = container.GetTypesToRegister(typeof(ValidationError), assemblies).ToList();
             var errorConverterTypes = container.GetTypesToRegister(typeof(ErrorConverter<>), assemblies).ToList();
             container.Register(typeof(ErrorConverter<>), errorConverterTypes, Lifestyle.Singleton);

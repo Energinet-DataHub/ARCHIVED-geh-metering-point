@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
@@ -22,6 +23,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
     {
         protected override IInboundMessage Convert(ConnectMeteringPoint obj)
         {
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
+
             return new Application.ConnectMeteringPoint
             {
                 GsrnNumber = obj.GsrnNumber,
