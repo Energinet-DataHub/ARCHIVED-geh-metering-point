@@ -20,7 +20,7 @@ using MeteringPointCreatedEventMessage = Energinet.DataHub.MeteringPoints.Infras
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint
 {
-    public class CreateMeteringPointEventMessageMapper : ProtobufOutboundMapper<MeteringPointCreatedEventMessage>
+    public class MeteringPointCreatedEventMessageMapper : ProtobufOutboundMapper<MeteringPointCreatedEventMessage>
     {
         protected override IMessage Convert(MeteringPointCreatedEventMessage obj)
         {

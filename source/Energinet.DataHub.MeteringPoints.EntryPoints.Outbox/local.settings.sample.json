@@ -3,8 +3,6 @@
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-    "METERINGPOINTEVENTHUB_CONNECTION_STRING": "",
-    "METERINGPOINTEVENTHUB_HUB_NAME": "",
     "METERINGPOINT_DB_CONNECTION_STRING": "",
     "EVENT_MESSAGE_DISPATCH_TRIGGER_TIMER": "*/10 * * * * *",
     "ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER": "*/10 * * * * *",

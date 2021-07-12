@@ -14,5 +14,5 @@
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint
 {
-    public record CreateMeteringPointTopic(string Name) : Topic;
+    public record MeteringPointCreatedTopic(string Name) : Topic;
 }
