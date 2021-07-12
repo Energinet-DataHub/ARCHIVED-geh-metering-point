@@ -35,14 +35,89 @@ namespace Energinet.DataHub.MeteringPoints.Application
 
         public Task<BusinessProcessResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
         {
-            var meteringPoint = new ConsumptionMeteringPoint(
+            var meteringPointType = EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint);
+
+            MeteringPoint meteringPoint;
+
+            switch (meteringPointType.Name)
+            {
+                case nameof(MeteringPointType.Consumption):
+                    meteringPoint = CreateConsumptionMeteringPoint(request, meteringPointType);
+                    break;
+                case nameof(MeteringPointType.Exchange):
+                    meteringPoint = CreateExchangeMeteringPoint(request, meteringPointType);
+                    break;
+                case nameof(MeteringPointType.Production):
+                    meteringPoint = CreateProductionMeteringPoint(request, meteringPointType);
+                    break;
+                default:
+                    throw new NotImplementedException(
+                        $"Could not create instance of MeteringPoint for type {meteringPointType.Name}");
+            }
+
+            _meteringPointRepository.Add(meteringPoint);
+
+            return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
+        }
+
+        private static ProductionMeteringPoint CreateProductionMeteringPoint(CreateMeteringPoint request, MeteringPointType meteringPointType)
+        {
+           return new(
                 MeteringPointId.New(),
                 GsrnNumber.Create(request.GsrnNumber),
                 CreateAddress(request),
                 request.IsWashable,
                 PhysicalState.New,
                 EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
-                EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint),
+                meteringPointType,
+                new GridAreaId(Guid.NewGuid()),
+                GsrnNumber.Create(request.PowerPlant),
+                request.LocationDescription,
+                EnumerationType.FromName<MeasurementUnitType>(request.UnitType),
+                request.MeterNumber,
+                EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
+                request.MaximumCurrent,
+                request.MaximumPower,
+                SystemClock.Instance.GetCurrentInstant(), // TODO: Parse date in correct format when implemented in Input Validation
+                EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup),
+                EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
+                EnumerationType.FromName<ConnectionType>(request.ConnectionType),
+                request.ParentRelatedMeteringPoint);
+        }
+
+        private static ExchangeMeteringPoint CreateExchangeMeteringPoint(CreateMeteringPoint request, MeteringPointType meteringPointType)
+        {
+            return new(
+                MeteringPointId.New(),
+                GsrnNumber.Create(request.GsrnNumber),
+                CreateAddress(request),
+                PhysicalState.New,
+                EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
+                meteringPointType,
+                new GridAreaId(Guid.NewGuid()),
+                GsrnNumber.Create(request.PowerPlant),
+                request.LocationDescription,
+                EnumerationType.FromName<MeasurementUnitType>(request.UnitType),
+                request.MeterNumber,
+                EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
+                request.MaximumCurrent,
+                request.MaximumPower,
+                SystemClock.Instance.GetCurrentInstant(), // TODO: Parse date in correct format when implemented in Input Validation
+                request.ToGrid,
+                request.FromGrid,
+                request.ParentRelatedMeteringPoint);
+        }
+
+        private static ConsumptionMeteringPoint CreateConsumptionMeteringPoint(CreateMeteringPoint request, MeteringPointType meteringPointType)
+        {
+            return new(
+                MeteringPointId.New(),
+                GsrnNumber.Create(request.GsrnNumber),
+                CreateAddress(request),
+                request.IsWashable,
+                PhysicalState.New,
+                EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
+                meteringPointType,
                 new GridAreaId(Guid.NewGuid()),
                 GsrnNumber.Create(request.PowerPlant),
                 request.LocationDescription,
@@ -53,14 +128,11 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 request.MaximumPower,
                 SystemClock.Instance.GetCurrentInstant(), // TODO: Parse date in correct format when implemented in Input Validation
                 EnumerationType.FromName<SettlementMethod>(request.SettlementMethod),
-                request.NetSettlementGroup,
+                EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup),
                 EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
                 EnumerationType.FromName<ConnectionType>(request.ConnectionType),
-                EnumerationType.FromName<AssetType>(request.AssetType));
-
-            _meteringPointRepository.Add(meteringPoint);
-
-            return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
+                EnumerationType.FromName<AssetType>(request.AssetType),
+                request.ParentRelatedMeteringPoint);
         }
 
         private static Domain.MeteringPoints.Address CreateAddress(CreateMeteringPoint request)

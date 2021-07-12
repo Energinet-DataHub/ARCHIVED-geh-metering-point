@@ -25,23 +25,23 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string Transaction => Guid.NewGuid().ToString();
 
-        public static string SubTypeOfMeteringPoint => nameof(MeteringPointSubType.Physical);
+        public static string SubTypeOfMeteringPoint => MeteringPointSubType.Physical.Name;
 
-        public static string SettlementMethod => nameof(Domain.MeteringPoints.SettlementMethod.Flex);
+        public static string SettlementMethod => Domain.MeteringPoints.SettlementMethod.Flex.Name;
 
-        public static string DisconnectionType => nameof(Domain.MeteringPoints.DisconnectionType.Manual);
+        public static string DisconnectionType => Domain.MeteringPoints.DisconnectionType.Manual.Name;
 
-        public static string ConnectionType => nameof(Domain.MeteringPoints.ConnectionType.Installation);
+        public static string ConnectionType => Domain.MeteringPoints.ConnectionType.Installation.Name;
 
         public static string PowerPlantGsrnNumber => "571234567891234568";
 
-        public static string ReadingOccurrence => nameof(Domain.MeteringPoints.ReadingOccurrence.Hourly);
+        public static string ReadingOccurrence => Domain.MeteringPoints.ReadingOccurrence.Hourly.Name;
 
-        public static string AssetType => nameof(Domain.MeteringPoints.AssetType.GasTurbine);
+        public static string AssetType => Domain.MeteringPoints.AssetType.GasTurbine.Name;
 
         public static string Occurrence => "2021-05-05T10:10:10Z";
 
-        public static string MeasurementUnitType => nameof(Domain.MeteringPoints.MeasurementUnitType.KWh);
+        public static string MeasurementUnitType => Domain.MeteringPoints.MeasurementUnitType.KWh.Name;
 
         public static string MeteringGridArea => "990";
 
@@ -56,5 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         public static bool IsWashable => true;
 
         public static string MeterNumber => "12345678910";
+
+        public static string NetSettlementGroup => Domain.MeteringPoints.NetSettlementGroup.Zero.Name;
     }
 }
