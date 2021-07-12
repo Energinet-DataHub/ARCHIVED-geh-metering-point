@@ -66,10 +66,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 SampleData.MaximumPower,
                 SampleData.OccurenceDate,
                 SettlementMethod.Flex,
-                SampleData.NetSettlementGroup,
+                NetSettlementGroup.Zero,
                 DisconnectionType.Manual,
                 ConnectionType.Direct,
-                AssetType.Boiler);
+                AssetType.Boiler,
+                parentRelatedMeteringPoint: null);
+
+            var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MeteringPointCreated);
+            Assert.NotNull(createdEvent);
         }
     }
 }

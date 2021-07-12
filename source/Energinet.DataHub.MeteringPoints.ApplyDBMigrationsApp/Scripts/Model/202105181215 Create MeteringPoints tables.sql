@@ -7,7 +7,6 @@ CREATE TABLE [dbo].[MeteringPoints]
     [PostCode] NVARCHAR(10) NOT NULL,
     [CityName] NVARCHAR(100) NOT NULL,
     [CountryCode] NVARCHAR(4) NOT NULL,
-    [IsAddressWashable] BIT NOT NULL DEFAULT(0),
     [PhysicalStatusOfMeteringPoint] NVARCHAR(255) NOT NULL,
     [MeteringPointSubType] NVARCHAR(50) NULL,
     [MeterReadingOccurrence] NVARCHAR(50) NULL,
@@ -33,7 +32,7 @@ CREATE TABLE [dbo].[ConsumptionMeteringPoints]
 (
     [Id] UNIQUEIDENTIFIER NOT NULL,
     [RecordId] INT IDENTITY(1,1) NOT NULL,
-    
+    [IsAddressWashable] BIT NOT NULL DEFAULT(0),
     [SettlementMethod] NVARCHAR(255) NULL,
     [NetSettlementGroup] NVARCHAR(255) NULL,
     [DisconnectionType] NVARCHAR(255) NULL,
@@ -50,7 +49,7 @@ CREATE TABLE [dbo].[ProductionMeteringPoints]
 (
     [Id] UNIQUEIDENTIFIER NOT NULL,
     [RecordId] INT IDENTITY(1,1) NOT NULL,
-    
+    [IsAddressWashable] BIT NOT NULL DEFAULT(0),
     [ProductionObligation] NVARCHAR(255) NULL,
     [NetSettlementGroup] NVARCHAR(255) NULL,
     [DisconnectionType] NVARCHAR(255) NULL,

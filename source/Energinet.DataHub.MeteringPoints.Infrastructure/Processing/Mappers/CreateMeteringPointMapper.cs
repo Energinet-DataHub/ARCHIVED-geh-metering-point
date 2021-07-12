@@ -48,7 +48,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
                 NetSettlementGroup: obj.NetSettlementGroup,
                 ConnectionType: obj.ConnectionType,
                 AssetType: obj.AssetType,
-                ParentRelatedMeteringPoint: obj.ParentRelatedMeteringPoint);
+                ParentRelatedMeteringPoint: obj.ParentRelatedMeteringPoint,
+                FromGrid: obj.FromGrid,
+                ToGrid: obj.ToGrid);
         }
     }
 }

@@ -42,6 +42,8 @@ namespace Energinet.DataHub.MeteringPoints.Application
             string NetSettlementGroup = "",
             string ConnectionType = "",
             string AssetType = "",
+            string FromGrid = "",
+            string ToGrid = "",
             string ParentRelatedMeteringPoint = "")
         : IBusinessRequest,
             IOutboundMessage,
