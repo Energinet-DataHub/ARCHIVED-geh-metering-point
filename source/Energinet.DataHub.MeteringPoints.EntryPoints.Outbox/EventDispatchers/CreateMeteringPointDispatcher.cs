@@ -12,15 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.RequestHandlers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
-using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.EventHandlers
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.EventDispatchers
 {
     public class CreateMeteringPointDispatcher : IntegrationEventDispatcher<MeteringPointCreatedTopic, MeteringPointCreatedEventMessage>
     {

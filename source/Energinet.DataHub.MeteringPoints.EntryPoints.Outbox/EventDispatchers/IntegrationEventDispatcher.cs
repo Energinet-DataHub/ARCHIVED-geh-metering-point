@@ -20,7 +20,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Google.Protobuf;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.RequestHandlers
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.EventDispatchers
 {
     public abstract class IntegrationEventDispatcher<TTopic, TEvent> : IRequestHandler<TEvent>
         where TTopic : Topic
