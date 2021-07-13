@@ -12,15 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
     public class MeteringPointSubTypeMandatoryErrorConverter : ErrorConverter<MeteringPointSubTypeMandatoryValidationError>
     {
-        protected override Error Convert(MeteringPointSubTypeMandatoryValidationError error)
+        protected override ErrorMessage Convert(MeteringPointSubTypeMandatoryValidationError validationError)
         {
-            return new("D02", $"Sub type is missing for metering point {error.GsrnNumber}");
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new("D02", $"Sub type is missing for metering point {validationError.GsrnNumber}");
         }
     }
 }

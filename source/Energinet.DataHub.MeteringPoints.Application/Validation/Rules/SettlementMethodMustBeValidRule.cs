@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using FluentValidation;
@@ -22,7 +23,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
     public class SettlementMethodMustBeValidRule : AbstractValidator<CreateMeteringPoint>
     {
-        private readonly List<string> _allowedDomainValuesForConsumptionAndNetLossCorrection = new() { SettlementMethod.NonProfiled.Name.ToLower(), SettlementMethod.Flex.Name.ToLower() };
+        private readonly List<string> _allowedDomainValuesForConsumptionAndNetLossCorrection = new()
+        {
+            SettlementMethod.NonProfiled.Name.ToUpperInvariant(),
+            SettlementMethod.Flex.Name.ToUpperInvariant(),
+        };
 
         public SettlementMethodMustBeValidRule()
         {
@@ -31,8 +36,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
                     .NotEmpty()
                     .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SettlementMethod));
+
                 RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
-                    .Must(settlementMethod => _allowedDomainValuesForConsumptionAndNetLossCorrection.Contains(settlementMethod.ToLower()))
+                    .Must(settlementMethod => _allowedDomainValuesForConsumptionAndNetLossCorrection.Contains(settlementMethod.ToUpperInvariant()))
                     .WithState(createMeteringPoint => new SettlementMethodMissingRequiredDomainValuesValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SettlementMethod));
             }).Otherwise(() =>
             {

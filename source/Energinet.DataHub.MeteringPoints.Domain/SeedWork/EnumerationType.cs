@@ -101,7 +101,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
                 return false;
             }
 
-            if (!(obj is EnumerationType otherValue))
+            if (obj is not EnumerationType otherValue)
             {
                 return false;
             }
@@ -114,14 +114,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
 
         public override int GetHashCode() => Id.GetHashCode();
 
-        public int CompareTo(object? other)
+        public int CompareTo(object? obj)
         {
-            if (other is null)
+            if (obj is null)
             {
-                throw new ArgumentNullException(nameof(other));
+                throw new ArgumentNullException(nameof(obj));
             }
 
-            return Id.CompareTo(((EnumerationType)other).Id);
+            return Id.CompareTo(((EnumerationType)obj).Id);
         }
     }
 }

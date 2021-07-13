@@ -12,18 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
-
-namespace Energinet.DataHub.MeteringPoints.Application.Connect
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.TimerTriggers
 {
-    public class EnergySupplierChangedEventHandler : INotificationHandler<EnergySupplierChanged>
+    public class TimerInfo
     {
-        public Task Handle(EnergySupplierChanged notification, CancellationToken cancellationToken)
-        {
-            //TODO: Schedule internal command that updates the MeteringPoint aggregate to be connectable
-            return Task.CompletedTask;
-        }
+        public ScheduleStatus? ScheduleStatus { get; set; }
+
+        public bool IsPastDue { get; set; }
     }
 }

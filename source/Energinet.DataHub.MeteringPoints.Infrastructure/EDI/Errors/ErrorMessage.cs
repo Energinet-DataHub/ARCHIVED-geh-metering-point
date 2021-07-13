@@ -12,14 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common.Users;
-
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors
 {
-    public class UserContext : IUserContext
-    {
-        public Application.Common.Users.UserIdentity? CurrentUser { get; set; }
-
-        public string Key => "geh_userIdentity";
-    }
+    public record ErrorMessage(string Code, string Description);
 }

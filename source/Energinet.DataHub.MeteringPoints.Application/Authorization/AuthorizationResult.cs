@@ -20,7 +20,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Authorization
 {
     public class AuthorizationResult
     {
-        public AuthorizationResult(List<ValidationError> errors)
+        public AuthorizationResult(IReadOnlyCollection<ValidationError> errors)
         {
             Errors = errors;
         }
@@ -30,7 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Authorization
             Errors = new List<ValidationError>();
         }
 
-        public List<ValidationError> Errors { get; }
+        public IReadOnlyCollection<ValidationError> Errors { get; }
 
         public bool Success => !Errors.Any();
 

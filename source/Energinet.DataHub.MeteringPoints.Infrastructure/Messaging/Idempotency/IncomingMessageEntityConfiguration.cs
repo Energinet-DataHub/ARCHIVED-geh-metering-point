@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -21,6 +22,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency
     {
         public void Configure(EntityTypeBuilder<IncomingMessage> builder)
         {
+            if (builder == null) throw new ArgumentNullException(nameof(builder));
+
             builder.ToTable("IncomingMessages", "dbo");
             builder.HasKey(x => new { x.MessageId, x.MessageType });
         }

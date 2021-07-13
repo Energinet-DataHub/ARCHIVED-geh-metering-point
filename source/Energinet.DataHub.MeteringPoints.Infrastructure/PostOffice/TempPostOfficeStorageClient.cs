@@ -36,10 +36,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice
             var shareDirectoryClient = shareClient.GetDirectoryClient(path);
 
             // Create the directory if it doesn't already exist
-            await shareDirectoryClient.CreateIfNotExistsAsync();
+            await shareDirectoryClient.CreateIfNotExistsAsync().ConfigureAwait(false);
 
             // Ensure that the directory exists
-            if (await shareDirectoryClient.ExistsAsync())
+            if (await shareDirectoryClient.ExistsAsync().ConfigureAwait(false))
             {
                 var bytes = Encoding.ASCII.GetBytes(data);
 

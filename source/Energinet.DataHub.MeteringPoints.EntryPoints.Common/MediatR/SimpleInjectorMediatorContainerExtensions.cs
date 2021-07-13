@@ -27,6 +27,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR
     {
         public static void BuildMediator(this Container container, Assembly[] applicationAssemblies, Type[] pipelineBehaviors)
         {
+            if (container == null) throw new ArgumentNullException(nameof(container));
+
             var assemblies = GetMediatorAssemblies().Union(applicationAssemblies).ToArray();
             container.RegisterSingleton<IMediator, Mediator>();
             container.Register(typeof(IRequestHandler<,>), assemblies);

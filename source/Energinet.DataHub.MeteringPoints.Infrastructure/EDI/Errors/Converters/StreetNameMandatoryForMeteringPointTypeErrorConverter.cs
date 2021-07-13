@@ -12,15 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
     public class StreetNameMandatoryForMeteringPointTypeErrorConverter : ErrorConverter<StreetNameMandatoryForMeteringPointTypeValidationError>
     {
-        protected override Error Convert(StreetNameMandatoryForMeteringPointTypeValidationError error)
+        protected override ErrorMessage Convert(StreetNameMandatoryForMeteringPointTypeValidationError validationError)
         {
-            return new("E85", $"Street name is missing for metering point {error.GsrnNumber}");
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new("E85", $"Street name is missing for metering point {validationError.GsrnNumber}");
         }
     }
 }

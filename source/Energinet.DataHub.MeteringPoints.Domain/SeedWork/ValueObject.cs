@@ -24,11 +24,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
         private List<PropertyInfo>? _properties;
         private List<FieldInfo>? _fields;
 
-        public static bool operator ==(ValueObject obj1, ValueObject obj2)
+        public static bool operator ==(ValueObject? obj1, ValueObject? obj2)
         {
-            if (object.Equals(obj1, null))
+            if (Equals(obj1, null))
             {
-                if (object.Equals(obj2, null))
+                if (Equals(obj2, null))
                 {
                     return true;
                 }
@@ -44,14 +44,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
             return !(obj1 == obj2);
         }
 
-        public bool Equals(ValueObject? obj)
+        public bool Equals(ValueObject? other)
         {
-            if (obj is null)
-            {
-                return false;
-            }
-
-            return Equals(obj as object);
+            return other is not null && Equals(other as object);
         }
 
         public override bool Equals(object? obj)
@@ -62,7 +57,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
             }
 
             return GetProperties().All(p => PropertiesAreEqual(obj, p))
-                   && GetFields().All(f => FieldsAreEqual(obj, f));
+                && GetFields().All(f => FieldsAreEqual(obj, f));
         }
 
         public override int GetHashCode()
@@ -86,6 +81,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
             }
         }
 
+        // TODO: fix commented out code
         // protected static BusinessRuleValidationResult CheckRule(IBusinessRule rule)
         // {
         //     if (rule is null)
@@ -118,9 +114,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
             {
                 _properties = GetType()
                     .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                    // TODO: fix commented out code
                     //.Where(p => p.GetCustomAttribute(typeof(IgnoreMemberAttribute)) == null)
                     .ToList();
 
+                // TODO: fix commented out code
                 // Not available in Core
                 // !Attribute.IsDefined(p, typeof(IgnoreMemberAttribute))).ToList();
             }
@@ -133,6 +131,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
             if (_fields == null)
             {
                 _fields = GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                    // TODO: fix commented out code
                     //.Where(p => p.GetCustomAttribute(typeof(IgnoreMemberAttribute)) == null)
                     .ToList();
             }

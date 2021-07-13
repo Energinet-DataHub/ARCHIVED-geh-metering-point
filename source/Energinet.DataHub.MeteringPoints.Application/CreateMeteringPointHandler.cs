@@ -35,6 +35,8 @@ namespace Energinet.DataHub.MeteringPoints.Application
 
         public Task<BusinessProcessResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
         {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
             var meteringPointType = EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint);
 
             MeteringPoint meteringPoint;

@@ -18,7 +18,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
     public class MeterNumberNotAllowedErrorConverter : ErrorConverter<MeterNumberNotAllowedValidationError>
     {
-        protected override Error Convert(MeterNumberNotAllowedValidationError error)
+        protected override ErrorMessage Convert(MeterNumberNotAllowedValidationError validationError)
         {
             return new("E86", "Meter number is not allowed for sub types other than physical");
         }

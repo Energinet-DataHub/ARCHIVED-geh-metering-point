@@ -30,7 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency
         public async Task RegisterMessageAsync(string messageId, string messageType)
         {
             if (messageType == null) throw new ArgumentNullException(nameof(messageType));
-            await _context.IncomingMessages.AddAsync(new IncomingMessage(messageId, messageType));
+            await _context.IncomingMessages.AddAsync(new IncomingMessage(messageId, messageType)).ConfigureAwait(false);
         }
     }
 }
