@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 module "stor_postoffice" {
-    source = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//storage-account?ref=1.2.0"
+    source = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//storage-account?ref=1.7.0"
     name = "stor${var.project}tmp${var.environment}"
     resource_group_name = data.azurerm_resource_group.main.name
     location = data.azurerm_resource_group.main.location
