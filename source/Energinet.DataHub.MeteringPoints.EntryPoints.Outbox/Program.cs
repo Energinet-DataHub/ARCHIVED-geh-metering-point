@@ -14,7 +14,6 @@
 
 using System;
 using System.Threading.Tasks;
-using Azure.Messaging.EventHubs.Producer;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Infrastructure;

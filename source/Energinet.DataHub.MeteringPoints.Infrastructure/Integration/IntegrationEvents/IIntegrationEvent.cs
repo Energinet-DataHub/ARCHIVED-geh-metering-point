@@ -12,19 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Dispatchers
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents
 {
     /// <summary>
-    /// Interface for the integration event dispatch orchestrator
+    /// IntegrationEvent interface
     /// </summary>
-    public interface IIntegrationEventDispatchOrchestrator
+    #pragma warning disable CA1040 // Marker interface
+    public interface IIntegrationEvent : INotification
     {
-        /// <summary>
-        /// Orchestrate the events to be dispatched
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task ProcessEventOrchestratorAsync();
     }
 }

@@ -13,16 +13,14 @@
 // limitations under the License.
 
 using System;
-using System.Net;
-using System.Runtime.Remoting;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using Google.Protobuf;
-using MeteringPointCreatedEventMessage = Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Messages.MeteringPointCreatedEventMessage;
+using MeteringPointCreatedEventMessage = Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.MeteringPointCreatedEventMessage;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Mappers
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint
 {
-    public class CreateMeteringPointEventMessageMapper : ProtobufOutboundMapper<Messages.MeteringPointCreatedEventMessage>
+    public class MeteringPointCreatedEventMessageMapper : ProtobufOutboundMapper<MeteringPointCreatedEventMessage>
     {
         protected override IMessage Convert(MeteringPointCreatedEventMessage obj)
         {

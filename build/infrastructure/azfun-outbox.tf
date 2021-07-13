@@ -34,12 +34,12 @@ module "azfun_outbox" {
     # VALIDATION_REPORTS_CONNECTION_STRING  = data.azurerm_key_vault_secret.VALIDATION_REPORTS_CONNECTION_STRING.value
     METERINGPOINT_DB_CONNECTION_STRING      = local.METERING_POINT_CONNECTION_STRING
     METERINGPOINT_QUEUE_TOPIC_NAME          = module.sbq_meteringpoint.name
+    SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING = data.azurerm_key_vault_secret.INTEGRATION_EVENTS_SENDER_CONNECTION_STRING.value
+    METERING_POINT_CREATED_TOPIC            = "metering-point-created"
     ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER  = "*/10 * * * * *"
     EVENT_MESSAGE_DISPATCH_TRIGGER_TIMER  = "*/10 * * * * *"
     # POST_OFFICE_QUEUE_CONNECTION_STRING   = data.azurerm_key_vault_secret.POST_OFFICE_QUEUE_CONNECTION_STRING.value
     # POST_OFFICE_QUEUE_TOPIC_NAME          = data.azurerm_key_vault_secret.POST_OFFICE_QUEUE_MARKETDATA_TOPIC_NAME.value
-    METERINGPOINTEVENTHUB_CONNECTION_STRING   = module.evhar_meteringpoint_sender.primary_connection_string
-    METERINGPOINTEVENTHUB_HUB_NAME = module.evh_meteringpoint.name
     TEMP_POST_OFFICE_CONNECTION_STRING = module.stor_postoffice.primary_connection_string
     TEMP_POST_OFFICE_SHARE = azurerm_storage_share.postoffice.name
   }

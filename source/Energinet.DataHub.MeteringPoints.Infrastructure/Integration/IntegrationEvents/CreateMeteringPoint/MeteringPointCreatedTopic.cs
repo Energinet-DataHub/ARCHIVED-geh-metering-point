@@ -12,16 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Channels;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
-
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Dispatchers
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint
 {
-    public class IntegrationEventToEventHubDispatcher : MessageDispatcher
-    {
-        public IntegrationEventToEventHubDispatcher(MessageSerializer serializer, AzureEventHubChannel channel)
-            : base(serializer, channel)
-        {
-        }
-    }
+    public record MeteringPointCreatedTopic(string Name) : Topic;
 }

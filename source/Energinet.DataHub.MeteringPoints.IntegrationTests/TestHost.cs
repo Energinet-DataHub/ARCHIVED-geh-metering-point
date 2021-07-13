@@ -31,11 +31,10 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Dispatchers;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Handlers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Services;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
-using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -93,7 +92,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 {
                     typeof(CreateMeteringPoint).Assembly,
                     typeof(MeteringPointCreatedNotificationHandler).Assembly,
-                    typeof(CreateMeteringPointEventMessageHandlerTestDispatcher).Assembly,
                 },
                 new[]
                 {
