@@ -16,7 +16,7 @@ using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.MeteringPoints.Application;
-using Energinet.DataHub.MeteringPoints.Application.Common.UserIdentity;
+using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
@@ -85,7 +85,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             container.Register<Func<string, string, XmlMappingConfigurationBase>>(
                 () => (processType, type) => XmlMappingConfiguration(processType), Lifestyle.Singleton);
             container.Register<XmlMapper>(Lifestyle.Singleton);
-            container.Register<IXmlConverter, XmlConverter>(Lifestyle.Singleton);
+            container.Register<IXmlConverter, XmlDeserializer>(Lifestyle.Singleton);
 
             var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING");
             var topic = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME");

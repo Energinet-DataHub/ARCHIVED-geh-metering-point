@@ -20,7 +20,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public abstract class MeteringPoint : AggregateRootBase
     {
-        #pragma warning disable SA1401 // Field cannot be private since it is set by derivatives
+        #pragma warning disable SA1401, CA1051 // Field cannot be private since it is set by derivatives
         protected ProductType _productType;
         #pragma warning restore
         private Address _address;

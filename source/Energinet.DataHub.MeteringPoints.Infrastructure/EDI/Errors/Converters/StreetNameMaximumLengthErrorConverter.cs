@@ -12,16 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
     public class StreetNameMaximumLengthErrorConverter : ErrorConverter<StreetNameMaximumLengthValidationError>
     {
-        protected override Error Convert(StreetNameMaximumLengthValidationError error)
+        protected override ErrorMessage Convert(StreetNameMaximumLengthValidationError validationError)
         {
-            return new("E86", $"Street name {error.StreetName} for metering point {error.GsrnNumber} has a length that exceeds {error.MaxLength}");
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new("E86", $"Street name {validationError.StreetName} for metering point {validationError.GsrnNumber} has a length that exceeds {validationError.MaxLength}");
         }
     }
 }

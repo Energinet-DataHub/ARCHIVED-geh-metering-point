@@ -50,17 +50,20 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
         [Function("MeteringPoint")]
         public async Task<HttpResponseData> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")]
-            HttpRequestData request,
-            FunctionContext executionContext)
+            HttpRequestData request)
         {
             _logger.LogInformation($"Received MeteringPoint request");
+
+            if (request == null) throw new ArgumentNullException(nameof(request));
 
             IEnumerable<IBusinessRequest> commands;
             try
             {
                commands = await DeserializeInputAsync(request.Body).ConfigureAwait(false);
             }
+            #pragma warning disable CA1031 // TODO: We'll allow catching Exception in the entrypoint, I guess?
             catch (Exception exception)
+            #pragma warning restore CA1031
             {
                 _logger.LogError(exception, "Unable to deserialize request");
                 return request.CreateResponse(HttpStatusCode.BadRequest);

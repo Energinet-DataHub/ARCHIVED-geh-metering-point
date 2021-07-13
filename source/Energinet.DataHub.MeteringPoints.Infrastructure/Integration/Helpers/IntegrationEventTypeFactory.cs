@@ -17,7 +17,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEve
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
 {
-    public class IntegrationEventTypeFactory
+    public static class IntegrationEventTypeFactory
     {
         public static Type GetType(string type)
         {

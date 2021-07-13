@@ -12,15 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
     public class PostCodeWrongFormatErrorConverter : ErrorConverter<PostCodeWrongFormatValidationError>
     {
-        protected override Error Convert(PostCodeWrongFormatValidationError error)
+        protected override ErrorMessage Convert(PostCodeWrongFormatValidationError validationError)
         {
-            return new("E86", $"Post code {error.PostCode} for metering point {error.GsrnNumber} is not in correct format it should be equal 4 (if country code is DK) or maximum 10.");
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new("E86", $"Post code {validationError.PostCode} for metering point {validationError.GsrnNumber} is not in correct format it should be equal 4 (if country code is DK) or maximum 10.");
         }
     }
 }

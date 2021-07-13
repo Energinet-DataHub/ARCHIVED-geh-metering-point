@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
@@ -31,10 +32,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcess
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            // Call next handler in the pipeline and wait for the result
-            var result = await next();
+            if (next == null) throw new ArgumentNullException(nameof(next));
 
-            await _unitOfWork.CommitAsync();
+            // Call next handler in the pipeline and wait for the result
+            var result = await next().ConfigureAwait(false);
+
+            await _unitOfWork.CommitAsync().ConfigureAwait(false);
 
             return result;
         }

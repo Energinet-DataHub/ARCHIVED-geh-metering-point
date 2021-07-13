@@ -14,7 +14,6 @@
 
 using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice;
@@ -25,11 +24,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
 {
     public class ActorMessageDispatcher
     {
+        private readonly ILogger _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOutboxManager _outbox;
         private readonly IPostOfficeStorageClient _postOfficeStorageClient;
 
         public ActorMessageDispatcher(
+            ILogger logger,
             IUnitOfWork unitOfWork,
             IOutboxManager outbox,
             IPostOfficeStorageClient postOfficeStorageClient)
@@ -37,12 +38,16 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             _unitOfWork = unitOfWork;
             _outbox = outbox;
             _postOfficeStorageClient = postOfficeStorageClient;
+            _logger = logger;
         }
 
         [Function("ActorMessageDispatcher")]
         public async Task RunAsync(
-            [TimerTrigger("%ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER%")] string timerInformation)
+            [TimerTrigger("%ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER%")] TimerInfo timerInformation)
         {
+            _logger.LogInformation($"Timer trigger function executed at: {DateTime.Now}");
+            _logger.LogInformation($"Next timer schedule at: {timerInformation?.ScheduleStatus?.Next}");
+
             while (true)
             {
                 var message = _outbox.GetNext(OutboxMessageCategory.ActorMessage);

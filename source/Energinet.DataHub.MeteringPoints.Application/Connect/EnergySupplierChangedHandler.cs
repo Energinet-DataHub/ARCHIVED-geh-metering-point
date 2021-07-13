@@ -12,28 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
+namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
-    public class XmlConverter : IXmlConverter
+    public class EnergySupplierChangedHandler : INotificationHandler<EnergySupplierChanged>
     {
-        private readonly XmlMapper _xmlMapper;
-
-        public XmlConverter(XmlMapper xmlMapper)
+        public Task Handle(EnergySupplierChanged notification, CancellationToken cancellationToken)
         {
-            _xmlMapper = xmlMapper;
-        }
-
-        public async Task<IEnumerable<IBusinessRequest>> DeserializeAsync(Stream body)
-        {
-            XElement rootElement = await XElement.LoadAsync(body, LoadOptions.None, CancellationToken.None);
-            return _xmlMapper.Map(rootElement);
+            // TODO: Schedule internal command that updates the MeteringPoint aggregate to be connectable
+            return Task.CompletedTask;
         }
     }
 }

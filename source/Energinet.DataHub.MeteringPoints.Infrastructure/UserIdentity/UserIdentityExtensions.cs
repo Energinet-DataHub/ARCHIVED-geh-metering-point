@@ -16,7 +16,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity
 {
     public static class UserIdentityExtensions
     {
-        public static string AsString(this Application.Common.UserIdentity.UserIdentity userIdentity)
+        public static string AsString(this Application.Common.Users.UserIdentity userIdentity)
         {
             return System.Text.Json.JsonSerializer.Serialize(userIdentity);
         }

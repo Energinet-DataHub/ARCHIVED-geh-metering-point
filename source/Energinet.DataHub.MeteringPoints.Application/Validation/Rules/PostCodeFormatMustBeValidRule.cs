@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using FluentValidation;
 
@@ -26,7 +27,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         public PostCodeFormatMustBeValidRule(string gsrnNumber, string countryCode)
         {
             _gsrnNumber = gsrnNumber;
-            When(address => countryCode.Equals("DK"), PostCodeDenmarkFormat).Otherwise(PostCodeFormatMaxLength);
+            When(address => countryCode.Equals("DK", StringComparison.Ordinal), PostCodeDenmarkFormat)
+                .Otherwise(PostCodeFormatMaxLength);
         }
 
         private void PostCodeDenmarkFormat()

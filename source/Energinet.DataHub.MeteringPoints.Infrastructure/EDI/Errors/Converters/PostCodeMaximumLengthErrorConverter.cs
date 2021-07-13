@@ -12,15 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
     public class PostCodeMaximumLengthErrorConverter : ErrorConverter<PostCodeMaximumLengthValidationError>
     {
-        protected override Error Convert(PostCodeMaximumLengthValidationError error)
+        protected override ErrorMessage Convert(PostCodeMaximumLengthValidationError validationError)
         {
-            return new("E86", $"Post code {error.PostCode} for metering point {error.GsrnNumber} is out of range maximum length is {error.MaxLength}.");
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new("E86", $"Post code {validationError.PostCode} for metering point {validationError.GsrnNumber} is out of range maximum length is {validationError.MaxLength}.");
         }
     }
 }

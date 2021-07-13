@@ -30,7 +30,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors
             _converters = registrations.ToDictionary(x => x.Error, x => x.Func);
         }
 
-        public Error GetErrorMessage(ValidationError error)
-            => _converters[error.GetType()]().Convert(error);
+        public ErrorMessage GetErrorMessage(ValidationError validationError)
+        {
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return _converters[validationError.GetType()]().Convert(validationError);
+        }
     }
 }

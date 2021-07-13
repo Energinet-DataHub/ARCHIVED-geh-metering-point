@@ -23,9 +23,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Authorization
     {
         private readonly List<IAuthorizationHandler<TCommand, TResult>> _validators;
 
-        public InputAuthorizationHandler(List<IAuthorizationHandler<TCommand, TResult>> validators)
+        public InputAuthorizationHandler(IEnumerable<IAuthorizationHandler<TCommand, TResult>> validators)
         {
-            _validators = validators;
+            _validators = validators.ToList();
         }
 
         public AuthorizationResult Authorize(TCommand command)

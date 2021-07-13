@@ -17,6 +17,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common.Transport
     /// <summary>
     /// Marker interface for outgoing messages
     /// </summary>
+    #pragma warning disable CA1040 // Marker interface
     public interface IOutboundMessage
     {
     }

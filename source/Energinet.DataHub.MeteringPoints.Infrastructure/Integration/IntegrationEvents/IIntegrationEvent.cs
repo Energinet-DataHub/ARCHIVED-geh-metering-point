@@ -19,6 +19,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
     /// <summary>
     /// IntegrationEvent interface
     /// </summary>
+    #pragma warning disable CA1040 // Marker interface
     public interface IIntegrationEvent : INotification
     {
     }

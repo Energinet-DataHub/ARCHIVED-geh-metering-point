@@ -30,10 +30,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
         private void TypeOfMeteringPointShouldBeKnown()
         {
-            var meteringPointTypeNames = EnumerationType.GetAll<MeteringPointType>().Select(typeMe => typeMe.Name.ToLower()).ToList();
+            var meteringPointTypeNames = EnumerationType.GetAll<MeteringPointType>().Select(typeMe => typeMe.Name.ToUpperInvariant()).ToList();
 
             RuleFor(createMeteringPoint => createMeteringPoint.TypeOfMeteringPoint)
-                .Must(meteringPointType => meteringPointTypeNames.Contains(meteringPointType.ToLower()))
+                .Must(meteringPointType => meteringPointTypeNames.Contains(meteringPointType.ToUpperInvariant()))
                 .WithState(createMeteringPoint => new MeteringPointTypeValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.TypeOfMeteringPoint));
         }
 

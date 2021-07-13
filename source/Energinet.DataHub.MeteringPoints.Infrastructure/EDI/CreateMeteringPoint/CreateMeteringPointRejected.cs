@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint
@@ -21,7 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
         string Status, // TODO: Is status implicit in Rejected from type?
         string GsrnNumber,
         string Reason,
-        Error[] Errors);
+        IReadOnlyList<ErrorMessage> Errors);
 
     // TODO: Reference to original document?
 }

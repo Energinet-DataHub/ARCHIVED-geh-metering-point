@@ -12,21 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.Common.UserIdentity
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors
 {
-    /// <summary>
-    /// Context for the current user.
-    /// </summary>
-    public interface IUserContext
-    {
-        /// <summary>
-        /// Get the current user.
-        /// </summary>
-        public UserIdentity? CurrentUser { get; set; }
-
-        /// <summary>
-        /// Key to be used when storing identity in property collections.
-        /// </summary>
-        public string Key { get; }
-    }
+    public record ErrorMessage(string Code, string Description);
 }

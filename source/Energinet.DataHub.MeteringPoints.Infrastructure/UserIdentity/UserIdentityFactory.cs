@@ -18,23 +18,24 @@ using System.Text.Json;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity
 {
+#pragma warning disable CA1822 // Could be static, but we keep it non-static for now.
     public class UserIdentityFactory
     {
-        public Application.Common.UserIdentity.UserIdentity FromString(string userIdentity)
+        public Application.Common.Users.UserIdentity FromString(string userIdentity)
         {
             if (string.IsNullOrWhiteSpace(userIdentity)) throw new ArgumentNullException(nameof(userIdentity));
-            return System.Text.Json.JsonSerializer.Deserialize<Application.Common.UserIdentity.UserIdentity>(userIdentity) ?? throw new System.Text.Json.JsonException(nameof(userIdentity));
+            return JsonSerializer.Deserialize<Application.Common.Users.UserIdentity>(userIdentity) ?? throw new JsonException(nameof(userIdentity));
         }
 
-        public Application.Common.UserIdentity.UserIdentity? FromDictionaryString(string inputText, string propertyKey)
+        public Application.Common.Users.UserIdentity? FromDictionaryString(string inputText, string propertyKey)
         {
             if (string.IsNullOrWhiteSpace(inputText)) throw new ArgumentNullException(nameof(inputText));
             if (string.IsNullOrWhiteSpace(propertyKey)) throw new ArgumentNullException(nameof(propertyKey));
 
-            var inputJsonDocument = System.Text.Json.JsonDocument.Parse(inputText);
+            var inputJsonDocument = JsonDocument.Parse(inputText);
             var resultJsonProperty = inputJsonDocument.RootElement
                 .EnumerateObject()
-                .FirstOrDefault(e => e.Name.Equals(propertyKey));
+                .FirstOrDefault(e => e.Name.Equals(propertyKey, StringComparison.Ordinal));
 
             if (resultJsonProperty.Value.ValueKind == JsonValueKind.Undefined)
             {
