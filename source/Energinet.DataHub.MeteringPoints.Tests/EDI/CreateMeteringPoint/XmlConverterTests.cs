@@ -76,7 +76,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
 
             command.TypeOfMeteringPoint.Should().Be(nameof(MeteringPointType.Consumption));
             command.GsrnNumber.Should().Be("571234567891234605");
-            command.MaximumPower.Should().Be(666);
+            command.MaximumPower.Should().Be(2000);
             command.UnitType.ToLower().Should().Be(nameof(MeasurementUnitType.KWh).ToLower());
             command.PowerPlant.Should().Be("571234567891234636");
             command.SettlementMethod.Should().Be(nameof(SettlementMethod.Flex));
@@ -88,19 +88,19 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
             command.DisconnectionType.Should().Be(nameof(DisconnectionType.Remote));
             command.MeterReadingOccurrence.Should().Be(nameof(ReadingOccurrence.Hourly));
 
-            command.LocationDescription.Should().Be("D01");
-            command.MeterNumber.Should().Be("1234567890");
-            command.OccurenceDate.Should().Be("2021-05-27T22:00:00.00Z");
-            command.MeteringGridArea.Should().Be("822");
-            command.NetSettlementGroup.Should().Be("99");
-            command.MaximumCurrent.Should().Be(666);
-            command.TransactionId.Should().Be("asdasweqweasedGUID");
-            command.PostCode.Should().Be("6000");
+            command.LocationDescription.Should().Be("String");
+            command.MeterNumber.Should().Be("123456789");
+            command.OccurenceDate.Should().Be("2021-07-13T22:00:00Z");
+            command.MeteringGridArea.Should().Be("870");
+            command.NetSettlementGroup.Should().Be("0");
+            command.MaximumCurrent.Should().Be(5000);
+            command.TransactionId.Should().Be("1234");
+            command.PostCode.Should().Be("8000");
             command.StreetName.Should().Be("Test street name");
             command.CityName.Should().Be("Test city");
             command.CountryCode.Should().Be("DK");
 
-            command.FromGrid.Should().Be("870");
+            command.FromGrid.Should().Be("869");
             command.ToGrid.Should().Be("871");
             Assert.True(command.IsWashable);
             Assert.Null(command.ParentRelatedMeteringPoint);
