@@ -18,6 +18,7 @@ using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Contracts;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
@@ -36,36 +37,38 @@ using SimpleInjector;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 {
-    public static class Program
+    public class Program : EntryPoint
     {
         public static async Task Main()
         {
-            var container = new Container();
-            var host = new HostBuilder()
-                .ConfigureFunctionsWorkerDefaults(options =>
-                {
-                    options.UseMiddleware<SimpleInjectorScopedRequest>();
-                    options.UseMiddleware<HttpCorrelationIdMiddleware>();
-                    options.UseMiddleware<HttpUserContextMiddleware>();
-                })
-                .ConfigureServices(services =>
-                {
-                    var descriptor = new ServiceDescriptor(
-                        typeof(IFunctionActivator),
-                        typeof(SimpleInjectorActivator),
-                        ServiceLifetime.Singleton);
-                    services.Replace(descriptor); // Replace existing activator
+            var program = new Program();
 
-                    services.AddLogging();
-                    services.AddSimpleInjector(container, options =>
-                    {
-                        options.AddLogging();
-                    });
+            var host = program.ConfigureApplication();
+            program.AssertConfiguration();
+            await program.ExecuteApplicationAsync(host).ConfigureAwait(false);
+        }
 
-                    services.SendProtobuf<MeteringPointEnvelope>();
-                })
-                .Build()
-                .UseSimpleInjector(container);
+        protected override void ConfigureFunctionsWorkerDefaults(IFunctionsWorkerApplicationBuilder options)
+        {
+            if (options == null) throw new ArgumentNullException(nameof(options));
+            base.ConfigureFunctionsWorkerDefaults(options);
+
+            options.UseMiddleware<HttpCorrelationIdMiddleware>();
+            options.UseMiddleware<HttpUserContextMiddleware>();
+        }
+
+        protected override void ConfigureServiceCollection(IServiceCollection services)
+        {
+            if (services == null) throw new ArgumentNullException(nameof(services));
+            base.ConfigureServiceCollection(services);
+
+            services.SendProtobuf<MeteringPointEnvelope>();
+        }
+
+        protected override void ConfigureContainer(Container container)
+        {
+            if (container == null) throw new ArgumentNullException(nameof(container));
+            base.ConfigureContainer(container);
 
             // Register application components.
             container.Register<MeteringPointHttpTrigger>(Lifestyle.Scoped);
@@ -92,11 +95,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             container.Register<ServiceBusSender>(
                 () => new ServiceBusClient(connectionString).CreateSender(topic),
                 Lifestyle.Singleton);
-            container.Verify();
-
-            await host.RunAsync().ConfigureAwait(false);
-
-            await container.DisposeAsync().ConfigureAwait(false);
         }
 
         private static XmlMappingConfigurationBase XmlMappingConfiguration(string processType)
