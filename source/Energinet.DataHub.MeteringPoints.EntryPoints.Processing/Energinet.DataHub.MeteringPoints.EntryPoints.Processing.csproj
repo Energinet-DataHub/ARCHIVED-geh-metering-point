@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <LangVersion>9.0</LangVersion>
@@ -21,11 +22,8 @@ limitations under the License.
     <OutputType>Exe</OutputType>
     <_FunctionsSkipCleanOutput>true</_FunctionsSkipCleanOutput>
     <RootNamespace>Energinet.DataHub.MeteringPoints.EntryPoints.Processing</RootNamespace>
-    <Nullable>enable</Nullable>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
@@ -35,6 +33,7 @@ limitations under the License.
     <PackageReference Include="SimpleInjector" Version="5.3.2" />
     <PackageReference Include="SimpleInjector.Integration.GenericHost" Version="5.3.0" />
   </ItemGroup>
+
   <ItemGroup>
     <None Update="host.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -64,6 +63,7 @@ limitations under the License.
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </None>
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Application\Energinet.DataHub.MeteringPoints.Application.csproj" />
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.EntryPoints.Common\Energinet.DataHub.MeteringPoints.EntryPoints.Common.csproj" />
