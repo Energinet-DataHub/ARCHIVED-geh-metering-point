@@ -22,6 +22,7 @@ using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.EnumerationTypeTest
 {
+    #pragma warning disable CA1034 // Nested classes
     [UnitTest]
     public abstract class ReflectionStrategyTests
     {

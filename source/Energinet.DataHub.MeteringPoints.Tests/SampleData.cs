@@ -43,7 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public static string ProductType => string.Empty;
 
-        public static string ParentRelatedMeteringPoint => null;
+        public static string ParentRelatedMeteringPoint => null!;
 
         public static string UnitType => string.Empty;
 
