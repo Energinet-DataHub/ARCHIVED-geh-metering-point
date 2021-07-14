@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 .AddProperty(x => x.MeterNumber, "MarketEvaluationPoint", "meter.mRID")
                 .AddProperty(x => x.TransactionId, "mRID")
                 .AddProperty(x => x.PhysicalStatusOfMeteringPoint, TranslatePhysicalState, "MarketEvaluationPoint", "connectionState")
-                .AddProperty(x => x.NetSettlementGroup, "MarketEvaluationPoint", "netSettlementGroup")
+                .AddProperty(x => x.NetSettlementGroup, TranslateNetSettlementGroup, "MarketEvaluationPoint", "netSettlementGroup")
                 .AddProperty(x => x.ConnectionType, TranslateConnectionType, "MarketEvaluationPoint", "mPConnectionType")
                 .AddProperty(x => x.StreetName, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "streetDetail", "name")
                 .AddProperty(x => x.CityName, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "townDetail", "name")
@@ -61,6 +61,20 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
             {
                 "D01" => nameof(SettlementMethod.Flex),
                 "E02" => nameof(SettlementMethod.NonProfiled),
+                _ => string.Empty,
+            };
+        }
+
+        private static string TranslateNetSettlementGroup(XmlElementInfo netSettlementGroup)
+        {
+            return netSettlementGroup.SourceValue switch
+            {
+                "0" => nameof(NetSettlementGroup.Zero),
+                "1" => nameof(NetSettlementGroup.One),
+                "2" => nameof(NetSettlementGroup.Two),
+                "3" => nameof(NetSettlementGroup.Three),
+                "6" => nameof(NetSettlementGroup.Six),
+                "99" => nameof(NetSettlementGroup.Ninetynine),
                 _ => string.Empty,
             };
         }
