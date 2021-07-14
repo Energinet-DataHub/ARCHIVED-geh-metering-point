@@ -21,6 +21,7 @@ using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
@@ -52,48 +53,49 @@ using SimpleInjector;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 {
-    public static class Program
+    public class Program : EntryPoint
     {
         public static async Task Main()
         {
-            var container = new Container();
-            var host = new HostBuilder()
-                .ConfigureFunctionsWorkerDefaults(options =>
-                {
-                    options.UseMiddleware<SimpleInjectorScopedRequest>();
-                    options.UseMiddleware<ServiceBusCorrelationIdMiddleware>();
-                    options.UseMiddleware<ServiceBusUserContextMiddleware>();
-                    options.UseMiddleware<ServiceBusMessageIdempotencyMiddleware>();
-                })
-                .ConfigureServices(services =>
-                {
-                    var descriptor = new ServiceDescriptor(
-                        typeof(IFunctionActivator),
-                        typeof(SimpleInjectorActivator),
-                        ServiceLifetime.Singleton);
-                    services.Replace(descriptor); // Replace existing activator
+            var program = new Program();
 
-                    services.AddLogging();
-                    services.AddDbContext<MeteringPointContext>(x =>
-                    {
-                        var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")
-                                               ?? throw new InvalidOperationException(
-                                                   "Metering point db connection string not found.");
+            var host = program.ConfigureApplication();
+            program.AssertConfiguration();
+            await program.ExecuteApplicationAsync(host).ConfigureAwait(false);
+        }
 
-                        x.UseSqlServer(connectionString, y => y.UseNodaTime());
-                    });
-                    services.AddSimpleInjector(container, options =>
-                    {
-                        options.AddLogging();
-                    });
+        protected override void ConfigureFunctionsWorkerDefaults(IFunctionsWorkerApplicationBuilder options)
+        {
+            base.ConfigureFunctionsWorkerDefaults(options);
 
-                    services.ReceiveProtobuf<MeteringPointEnvelope>(
-                        config => config
-                            .FromOneOf(envelope => envelope.MeteringPointMessagesCase)
-                            .WithParser(() => MeteringPointEnvelope.Parser));
-                })
-                .Build()
-                .UseSimpleInjector(container);
+            options.UseMiddleware<ServiceBusCorrelationIdMiddleware>();
+            options.UseMiddleware<ServiceBusUserContextMiddleware>();
+            options.UseMiddleware<ServiceBusMessageIdempotencyMiddleware>();
+        }
+
+        protected override void ConfigureServiceCollection(IServiceCollection services)
+        {
+            base.ConfigureServiceCollection(services);
+
+            services.AddDbContext<MeteringPointContext>(x =>
+            {
+                var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")
+                                       ?? throw new InvalidOperationException(
+                                           "Metering point db connection string not found.");
+
+                x.UseSqlServer(connectionString, y => y.UseNodaTime());
+            });
+
+            services.ReceiveProtobuf<MeteringPointEnvelope>(
+                config => config
+                    .FromOneOf(envelope => envelope.MeteringPointMessagesCase)
+                    .WithParser(() => MeteringPointEnvelope.Parser));
+        }
+
+        protected override void ConfigureContainer(Container container)
+        {
+            if (container == null) throw new ArgumentNullException(nameof(container));
+            base.ConfigureContainer(container);
 
             // Register application components.
             container.Register<QueueSubscriber>(Lifestyle.Scoped);
@@ -142,12 +144,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     // TODO: NotImplementedException -> typeof(ValidationReportsBehavior<,>),
                     typeof(DomainEventsDispatcherBehaviour<,>),
                 });
-
-            container.Verify();
-
-            await host.RunAsync().ConfigureAwait(false);
-
-            await container.DisposeAsync().ConfigureAwait(false);
         }
     }
 }
