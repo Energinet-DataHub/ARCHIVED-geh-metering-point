@@ -22,23 +22,23 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
         {
             CreateMapping<Application.CreateMeteringPoint>("MktActivityRecord", mapper => mapper
                 .AddProperty(x => x.GsrnNumber, "MarketEvaluationPoint", "mRID")
-                .AddProperty(x => x.AssetType, TranslateAssetType, "MarketEvaluationPoint", "energyLabel_EnergyTechnologyAndFuel.technology")
-                .AddProperty(x => x.MaximumPower, "MarketEvaluationPoint", "marketAgreement.contractedConnectionCapacity", "value")
+                .AddProperty(x => x.AssetType, TranslateAssetType, "MarketEvaluationPoint", "asset_MktPSRType.psrType")
+                .AddProperty(x => x.MaximumPower, "MarketEvaluationPoint", "contractedConnectionCapacity")
                 .AddProperty(x => x.MaximumCurrent, "MarketEvaluationPoint", "ratedCurrent")
                 .AddProperty(x => x.TypeOfMeteringPoint, TranslateMeteringPointType, "MarketEvaluationPoint", "type")
                 .AddProperty(x => x.SubTypeOfMeteringPoint, TranslateMeteringPointSubType, "MarketEvaluationPoint", "meteringMethod")
                 .AddProperty(x => x.MeterReadingOccurrence, TranslateMeterReadingOccurrence, "MarketEvaluationPoint", "readCycle")
                 .AddProperty(x => x.MeteringGridArea, "MarketEvaluationPoint", "meteringGridArea_Domain.mRID")
                 .AddProperty(x => x.PowerPlant, "MarketEvaluationPoint", "Linked_MarketEvaluationPoint", "mRID")
-                .AddProperty(x => x.LocationDescription, "MarketEvaluationPoint", "usagePointLocation.remark")
+                .AddProperty(x => x.LocationDescription, "MarketEvaluationPoint", "description")
                 .AddProperty(x => x.SettlementMethod, TranslateSettlementMethod, "MarketEvaluationPoint", "settlementMethod")
                 .AddProperty(x => x.UnitType, "MarketEvaluationPoint", "Series", "quantity_Measure_Unit.name")
                 .AddProperty(x => x.DisconnectionType, TranslateDisconnectionType, "MarketEvaluationPoint", "disconnectionMethod")
-                .AddProperty(x => x.OccurenceDate, "start_DateAndOrTime.dateTime")
+                .AddProperty(x => x.OccurenceDate, "validityStart_DateAndOrTime.dateTime")
                 .AddProperty(x => x.MeterNumber, "MarketEvaluationPoint", "meter.mRID")
                 .AddProperty(x => x.TransactionId, "mRID")
                 .AddProperty(x => x.PhysicalStatusOfMeteringPoint, TranslatePhysicalState, "MarketEvaluationPoint", "connectionState")
-                .AddProperty(x => x.NetSettlementGroup, "MarketEvaluationPoint", "netSettlementGroup")
+                .AddProperty(x => x.NetSettlementGroup, TranslateNetSettlementGroup, "MarketEvaluationPoint", "netSettlementGroup")
                 .AddProperty(x => x.ConnectionType, TranslateConnectionType, "MarketEvaluationPoint", "mPConnectionType")
                 .AddProperty(x => x.StreetName, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "streetDetail", "name")
                 .AddProperty(x => x.CityName, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "townDetail", "name")
@@ -65,11 +65,27 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
             };
         }
 
+        private static string TranslateNetSettlementGroup(XmlElementInfo netSettlementGroup)
+        {
+            return netSettlementGroup.SourceValue switch
+            {
+                "0" => nameof(NetSettlementGroup.Zero),
+                "1" => nameof(NetSettlementGroup.One),
+                "2" => nameof(NetSettlementGroup.Two),
+                "3" => nameof(NetSettlementGroup.Three),
+                "6" => nameof(NetSettlementGroup.Six),
+                "99" => nameof(NetSettlementGroup.Ninetynine),
+                _ => string.Empty,
+            };
+        }
+
         private static string TranslateMeteringPointType(XmlElementInfo meteringPointType)
         {
             return meteringPointType.SourceValue switch
             {
                 "E17" => nameof(MeteringPointType.Consumption),
+                "E18" => nameof(MeteringPointType.Production),
+                "E20" => nameof(MeteringPointType.Exchange),
                 _ => string.Empty,
             };
         }
@@ -79,6 +95,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
             return meteringPointSubType.SourceValue switch
             {
                 "D01" => nameof(MeteringPointSubType.Physical),
+                "D02" => nameof(MeteringPointSubType.Virtual),
+                "D03" => nameof(MeteringPointSubType.Calculated),
                 _ => string.Empty,
             };
         }

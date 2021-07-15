@@ -79,7 +79,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 .Be(typeof(MeteringPointCreatedEventMessage).FullName);
         }
 
-        [Fact]
+        [Fact(Skip = "Should not be run with processing configuration. Redo with outbox configuration.")]
         public async Task CreateMeteringPoint_ProcessIntegrationEvent_ShouldMarkAsProcessedIntegrationEventInOutbox()
         {
             var request = CreateRequest();
