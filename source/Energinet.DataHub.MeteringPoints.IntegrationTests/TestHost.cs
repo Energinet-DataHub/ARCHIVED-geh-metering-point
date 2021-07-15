@@ -48,6 +48,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
     [Collection("IntegrationTest")]
     [IntegrationTest]
+    #pragma warning disable CA1724 // TODO: TestHost is reserved. Maybe refactor to base EntryPoint?
     public class TestHost : IDisposable
     {
         private readonly Scope _scope;
@@ -112,7 +113,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             CleanupDatabase();
         }
 
-        private string ConnectionString => Environment.GetEnvironmentVariable("MeteringPoints_IntegrationTests_ConnectionString");
+        private static string ConnectionString =>
+            Environment.GetEnvironmentVariable("MeteringPoints_IntegrationTests_ConnectionString")
+            ?? throw new InvalidOperationException("MeteringPoints_IntegrationTests_ConnectionString config not set");
 
         public void Dispose()
         {

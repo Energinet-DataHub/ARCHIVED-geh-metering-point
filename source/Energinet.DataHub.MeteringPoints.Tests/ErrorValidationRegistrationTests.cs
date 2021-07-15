@@ -34,7 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
         [Fact]
         public void ErrorMessageFactoryShouldMapValidationErrorToErrorDto()
         {
-            var container = new Container();
+            using var container = new Container();
             container.AddValidationErrorConversion(
                 validateRegistrations: true,
                 typeof(GsrnNumberMustBeValidErrorConverter).Assembly,
@@ -56,7 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
         [Fact]
         public void EnsureAllValidationErrorsAreCoveredByConverters()
         {
-            var container = new Container();
+            using var container = new Container();
             container.AddValidationErrorConversion(
                 validateRegistrations: true,
                 typeof(CreateMeteringPoint).Assembly, // Application

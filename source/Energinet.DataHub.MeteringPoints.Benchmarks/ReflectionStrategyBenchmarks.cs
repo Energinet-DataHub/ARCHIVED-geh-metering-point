@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals;
 
 namespace Energinet.DataHub.MeteringPoints.Benchmarks
 {
+    #pragma warning disable CA1707
     [MemoryDiagnoser]
     [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]
     [CategoriesColumn]

@@ -32,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Application.UserIdentity
             var userIdentityParsed = userIdentityFactory.FromDictionaryString(inputText, propertyKey);
 
             // Assert
-            Assert.Equal(expectedUserId, userIdentityParsed.Id);
+            Assert.Equal(expectedUserId, userIdentityParsed?.Id);
         }
     }
 }

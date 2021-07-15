@@ -47,10 +47,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         {
             var request = CreateRequest();
 
-            await _mediator.Send(request, CancellationToken.None);
+            await _mediator.Send(request, CancellationToken.None).ConfigureAwait(false);
 
             var gsrnNumber = GsrnNumber.Create(request.GsrnNumber);
-            var found = await _meteringPointRepository.GetByGsrnNumberAsync(gsrnNumber);
+            var found = await _meteringPointRepository.GetByGsrnNumberAsync(gsrnNumber).ConfigureAwait(false);
             Assert.NotNull(found);
         }
 
@@ -59,7 +59,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         {
             var request = CreateRequest();
 
-            await _mediator.Send(request, CancellationToken.None);
+            await _mediator.Send(request, CancellationToken.None).ConfigureAwait(false);
 
             var outboxMessage = _outbox.GetNext(OutboxMessageCategory.ActorMessage);
             outboxMessage.Should().NotBeNull();
@@ -71,7 +71,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         {
             var request = CreateRequest();
 
-            await _mediator.Send(request, CancellationToken.None);
+            await _mediator.Send(request, CancellationToken.None).ConfigureAwait(false);
 
             var outboxMessage = _outbox.GetNext(OutboxMessageCategory.IntegrationEvent);
             outboxMessage.Should().NotBeNull();
@@ -84,7 +84,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         {
             var request = CreateRequest();
 
-            await _mediator.Send(request, CancellationToken.None);
+            await _mediator.Send(request, CancellationToken.None).ConfigureAwait(false);
             await _integrationEventDispatchOrchestrator.ProcessEventOrchestratorAsync().ConfigureAwait(false);
 
             var outboxMessage = _outbox.GetNext(OutboxMessageCategory.IntegrationEvent);
@@ -100,7 +100,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SettlementMethod = "WrongSettlementMethod",
             };
 
-            await _mediator.Send(request, CancellationToken.None);
+            await _mediator.Send(request, CancellationToken.None).ConfigureAwait(false);
 
             var outboxMessage = _outbox.GetNext(OutboxMessageCategory.ActorMessage);
             outboxMessage.Should().NotBeNull();

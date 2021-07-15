@@ -234,7 +234,22 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
         }
 
-        private void ValidateCreateMeteringPoint(CreateMeteringPoint businessRequest, System.Type validationError, bool expectedError)
+        private static CreateMeteringPoint CreateRequest()
+        {
+            return new();
+        }
+
+        private static List<ValidationError> GetValidationErrors(CreateMeteringPoint request)
+        {
+            var ruleSet = new CreateMeteringPointRuleSet();
+            var validationResult = ruleSet.Validate(request);
+
+            return validationResult.Errors
+                .Select(error => (ValidationError)error.CustomState)
+                .ToList();
+        }
+
+        private static void ValidateCreateMeteringPoint(CreateMeteringPoint businessRequest, System.Type validationError, bool expectedError)
         {
             var errors = GetValidationErrors(businessRequest);
             var errorType = errors.Find(error => error.GetType() == validationError);
@@ -247,21 +262,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             {
                 errorType.Should().BeNull();
             }
-        }
-
-        private CreateMeteringPoint CreateRequest()
-        {
-            return new();
-        }
-
-        private List<ValidationError> GetValidationErrors(CreateMeteringPoint request)
-        {
-            var ruleSet = new CreateMeteringPointRuleSet();
-            var validationResult = ruleSet.Validate(request);
-
-            return validationResult.Errors
-                .Select(error => error.CustomState as ValidationError)
-                .ToList();
         }
     }
 }
