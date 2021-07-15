@@ -20,48 +20,59 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integra
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Send;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleInjector;
+using SimpleInjector.Lifestyles;
 using Xunit;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
-    public class UnitTest1
+    public class TransportTests
     {
         [Fact]
         public async Task Send_and_receive_must_result_in_same_transmitted_values()
         {
             var expectedGsrnNumber = "123";
+            byte[]? bytes;
 
-            // Send
-            var sendingServiceCollection = new ServiceCollection();
-            sendingServiceCollection.AddSingleton<InProcessChannel>();
-            sendingServiceCollection.AddScoped<Dispatcher>();
-            sendingServiceCollection.SendProtobuf<MeteringPointEnvelope>();
-            var sendingServiceProvider = sendingServiceCollection.BuildServiceProvider();
+            // Send setup
+            await using var sendingContainer = new Container();
+            sendingContainer.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
+            sendingContainer.Register<InProcessChannel>(Lifestyle.Singleton);
+            sendingContainer.Register<Dispatcher>(Lifestyle.Transient);
+            sendingContainer.SendProtobuf<MeteringPointEnvelope>();
+            sendingContainer.Verify();
 
-            var messageDispatcher = sendingServiceProvider.GetRequiredService<Dispatcher>();
-            var outboundMessage = new Application.CreateMeteringPoint
+            // Send scope
+            using (var sendingScope = AsyncScopedLifestyle.BeginScope(sendingContainer))
             {
-                GsrnNumber = expectedGsrnNumber,
-            };
-            await messageDispatcher.DispatchAsync(outboundMessage).ConfigureAwait(false);
-            var channel = sendingServiceProvider.GetRequiredService<InProcessChannel>();
+                var messageDispatcher = sendingContainer.GetRequiredService<Dispatcher>();
+                var outboundMessage = new Application.CreateMeteringPoint
+                {
+                    GsrnNumber = expectedGsrnNumber,
+                };
+                await messageDispatcher.DispatchAsync(outboundMessage).ConfigureAwait(false);
+                var channel = sendingContainer.GetRequiredService<InProcessChannel>();
 
-            // The wire
-            var bytes = channel.GetWrittenBytes();
+                // The wire
+                bytes = channel.GetWrittenBytes();
+            }
 
-            // Receive
-            var receivingServiceCollection = new ServiceCollection();
-            receivingServiceCollection.ReceiveProtobuf<MeteringPointEnvelope>(
+            // Receive setup
+            await using var receivingContainer = new Container();
+            receivingContainer.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
+            receivingContainer.ReceiveProtobuf<MeteringPointEnvelope>(
                 config => config
                     .FromOneOf(envelope => envelope.MeteringPointMessagesCase)
                     .WithParser(() => MeteringPointEnvelope.Parser));
+            receivingContainer.Verify();
 
-            var receivingServiceProvider = receivingServiceCollection.BuildServiceProvider();
-            var messageExtractor = receivingServiceProvider.GetRequiredService<MessageExtractor>();
-
-            var message = await messageExtractor.ExtractAsync(bytes).ConfigureAwait(false);
-
-            message.Should().BeOfType<Application.CreateMeteringPoint>();
+            // Receive scope
+            using (var receivingScope = AsyncScopedLifestyle.BeginScope(receivingContainer))
+            {
+                var messageExtractor = receivingContainer.GetRequiredService<MessageExtractor>();
+                var message = await messageExtractor.ExtractAsync(bytes).ConfigureAwait(false);
+                message.Should().BeOfType<Application.CreateMeteringPoint>();
+            }
         }
     }
 }
