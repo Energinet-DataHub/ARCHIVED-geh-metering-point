@@ -14,8 +14,10 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
@@ -43,10 +45,14 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
-            if (context.BindingContext.BindingData.TryGetValue("CorrelationId", out var correlationIdObject)
-                && correlationIdObject is string correlationId)
+            if (!string.IsNullOrWhiteSpace(context.TraceContext.TraceParent))
             {
-                _correlationContext.SetCorrelationId(correlationId);
+                // Example: 00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-00
+                var operation = context.TraceContext.TraceParent.Split("-")[1];
+                var parent = context.TraceContext.TraceParent.Split("-")[2];
+                CorrelationIdContext.SetCorrelationId(operation);
+                _correlationContext.SetCorrelationId(operation);
+                CorrelationIdContext.SetParentId(parent);
             }
             else
             {

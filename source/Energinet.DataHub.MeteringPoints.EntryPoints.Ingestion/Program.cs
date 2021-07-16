@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.MeteringPoints.Application;
@@ -54,6 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             base.ConfigureFunctionsWorkerDefaults(options);
 
             options.UseMiddleware<HttpCorrelationIdMiddleware>();
+            options.UseMiddleware<IngestionTelemetryScope>();
             options.UseMiddleware<HttpUserContextMiddleware>();
         }
 

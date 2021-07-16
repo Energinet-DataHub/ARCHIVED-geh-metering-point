@@ -15,32 +15,44 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Channel;
+using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 {
-    public sealed class HttpCorrelationIdMiddleware : IFunctionsWorkerMiddleware
+    public class IngestionTelemetryScope : IFunctionsWorkerMiddleware
     {
-        private readonly ICorrelationContext _correlationContext;
+        private readonly TelemetryClient _telemetryClient;
 
-        public HttpCorrelationIdMiddleware(
-            ICorrelationContext correlationContext)
+        public IngestionTelemetryScope(TelemetryClient telemetryClient)
         {
-            _correlationContext = correlationContext;
+            _telemetryClient = telemetryClient;
         }
 
         public async Task Invoke(FunctionContext context, [NotNull] FunctionExecutionDelegate next)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
-            _correlationContext.SetCorrelationId(context.InvocationId.Replace("-", string.Empty, StringComparison.Ordinal));
-            CorrelationIdContext.SetCorrelationId(context.InvocationId.Replace("-", string.Empty, StringComparison.Ordinal));
-
-            await next(context).ConfigureAwait(false);
+            var operation = _telemetryClient.StartOperation<RequestTelemetry>("Ingestion", CorrelationIdContext.CorrelationId);
+            try
+            {
+                operation.Telemetry.Success = true;
+                await next(context).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                operation.Telemetry.Success = false;
+                throw;
+            }
+            finally
+            {
+                _telemetryClient.StopOperation(operation);
+            }
         }
     }
 }

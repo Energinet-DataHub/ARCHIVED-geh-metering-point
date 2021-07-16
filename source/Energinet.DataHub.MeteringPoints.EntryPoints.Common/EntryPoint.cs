@@ -12,8 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
+using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.ApplicationInsights.W3C;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -49,10 +53,15 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common
                     // Configure IServiceCollection dependencies for specific entrypoint.
                     ConfigureServiceCollection(services);
 
+                    services.AddApplicationInsightsTelemetryWorkerService(
+                        Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY"));
+
+                    // TODO: do we need the telemetry initializer? I don't think so.
+                    // services.AddSingleton<ITelemetryInitializer, CustomTelemetryInitializer>();
                     services.AddLogging();
                     services.AddSimpleInjector(_container, options =>
                     {
-                        options.AddLogging();
+                        options.AddLogging(); // Allow use non-generic ILogger interface
                     });
                 })
                 .Build()
