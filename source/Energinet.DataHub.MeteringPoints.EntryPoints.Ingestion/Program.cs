@@ -57,14 +57,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             options.UseMiddleware<HttpUserContextMiddleware>();
         }
 
-        protected override void ConfigureServiceCollection(IServiceCollection services)
-        {
-            if (services == null) throw new ArgumentNullException(nameof(services));
-            base.ConfigureServiceCollection(services);
-
-            services.SendProtobuf<MeteringPointEnvelope>();
-        }
-
         protected override void ConfigureContainer(Container container)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
@@ -95,6 +87,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             container.Register<ServiceBusSender>(
                 () => new ServiceBusClient(connectionString).CreateSender(topic),
                 Lifestyle.Singleton);
+
+            container.SendProtobuf<MeteringPointEnvelope>();
         }
 
         private static XmlMappingConfigurationBase XmlMappingConfiguration(string processType)

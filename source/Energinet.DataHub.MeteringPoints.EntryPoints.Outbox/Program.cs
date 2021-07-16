@@ -58,8 +58,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                                            "Metering point db connection string not found.");
 
                 x.UseSqlServer(connectionString, y => y.UseNodaTime());
-
-                services.SendProtobuf<IntegrationEventEnvelope>();
             });
         }
 
@@ -78,6 +76,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
             container.Register<ActorMessageDispatcher>(Lifestyle.Transient);
             container.Register<IPostOfficeStorageClient, TempPostOfficeStorageClient>(Lifestyle.Scoped);
+
+            container.SendProtobuf<IntegrationEventEnvelope>();
         }
     }
 }

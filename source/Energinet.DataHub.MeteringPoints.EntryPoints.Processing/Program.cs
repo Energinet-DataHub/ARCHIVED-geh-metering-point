@@ -85,11 +85,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
                 x.UseSqlServer(connectionString, y => y.UseNodaTime());
             });
-
-            services.ReceiveProtobuf<MeteringPointEnvelope>(
-                config => config
-                    .FromOneOf(envelope => envelope.MeteringPointMessagesCase)
-                    .WithParser(() => MeteringPointEnvelope.Parser));
         }
 
         protected override void ConfigureContainer(Container container)
@@ -144,6 +139,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     // TODO: NotImplementedException -> typeof(ValidationReportsBehavior<,>),
                     typeof(DomainEventsDispatcherBehaviour<,>),
                 });
+
+            container.ReceiveProtobuf<MeteringPointEnvelope>(
+                config => config
+                    .FromOneOf(envelope => envelope.MeteringPointMessagesCase)
+                    .WithParser(() => MeteringPointEnvelope.Parser));
         }
     }
 }
