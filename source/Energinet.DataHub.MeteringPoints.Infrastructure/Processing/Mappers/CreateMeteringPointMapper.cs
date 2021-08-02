@@ -30,6 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
                 PostCode: obj.InstallationLocationAddress.PostCode,
                 CityName: obj.InstallationLocationAddress.CityName,
                 CountryCode: obj.InstallationLocationAddress.CountryCode,
+                StreetCode: obj.InstallationLocationAddress.StreetCode,
                 IsWashable: obj.InstallationLocationAddress.IsWashable,
                 GsrnNumber: obj.GsrnNumber,
                 TypeOfMeteringPoint: obj.TypeOfMeteringPoint,

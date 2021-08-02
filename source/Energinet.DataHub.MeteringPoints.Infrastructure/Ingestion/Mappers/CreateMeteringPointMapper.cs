@@ -46,6 +46,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
                         CityName = obj.CityName,
                         CountryCode = obj.CountryCode,
                         IsWashable = obj.IsWashable,
+                        StreetCode = obj.StreetCode,
                     },
                     SettlementMethod = obj.SettlementMethod,
                     UnitType = obj.UnitType,

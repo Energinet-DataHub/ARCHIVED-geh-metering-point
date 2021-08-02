@@ -183,6 +183,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
                 CityName = cityName,
                 GsrnNumber = SampleData.GsrnNumber,
                 TypeOfMeteringPoint = typeOfMeteringPoint,
+                StreetCode = "9999",
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
@@ -229,6 +230,25 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             {
                 GsrnNumber = SampleData.GsrnNumber,
                 SubTypeOfMeteringPoint = subTypeOfMeteringPoint,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData("1234", typeof(StreetCodeValidationError), false)]
+        [InlineData("0000", typeof(StreetCodeValidationError), true)]
+        [InlineData("0001", typeof(StreetCodeValidationError), false)]
+        [InlineData("00011", typeof(StreetCodeValidationError), true)]
+        [InlineData("12345", typeof(StreetCodeValidationError), true)]
+        [InlineData("9999", typeof(StreetCodeValidationError), false)]
+        [InlineData("9", typeof(StreetCodeValidationError), true)]
+        [InlineData("afsd", typeof(StreetCodeValidationError), true)]
+        public void Validate_StreetCode(string streetCode, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                StreetCode = streetCode,
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);

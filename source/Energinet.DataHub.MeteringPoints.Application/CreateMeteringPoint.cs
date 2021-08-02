@@ -22,6 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
             string PostCode = "",
             string CityName = "",
             string CountryCode = "",
+            string StreetCode = "",
             bool IsWashable = false,
             string GsrnNumber = "",
             string TypeOfMeteringPoint = "",
