@@ -56,8 +56,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common
                     services.AddApplicationInsightsTelemetryWorkerService(
                         Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY"));
 
-                    // TODO: do we need the telemetry initializer? I don't think so.
-                    // services.AddSingleton<ITelemetryInitializer, CustomTelemetryInitializer>();
                     services.AddLogging();
                     services.AddSimpleInjector(_container, options =>
                     {
