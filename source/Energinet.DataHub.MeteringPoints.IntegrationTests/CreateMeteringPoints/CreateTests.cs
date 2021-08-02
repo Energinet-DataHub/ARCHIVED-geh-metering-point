@@ -136,8 +136,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         {
             return new(
                 SampleData.StreetName,
+                SampleData.BuildingNumber,
                 SampleData.PostCode,
                 SampleData.CityName,
+                SampleData.MunicipalityCode,
                 SampleData.CountryCode,
                 SampleData.IsWashable,
                 SampleData.GsrnNumber,

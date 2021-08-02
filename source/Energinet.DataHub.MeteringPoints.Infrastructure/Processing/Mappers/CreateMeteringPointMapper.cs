@@ -27,8 +27,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
 
             return new Application.CreateMeteringPoint(
                 StreetName: obj.InstallationLocationAddress.StreetName,
+                BuildingNumber: obj.InstallationLocationAddress.BuildingNumber,
                 PostCode: obj.InstallationLocationAddress.PostCode,
                 CityName: obj.InstallationLocationAddress.CityName,
+                MunicipalityCode: obj.InstallationLocationAddress.MunicipalityCode,
                 CountryCode: obj.InstallationLocationAddress.CountryCode,
                 IsWashable: obj.InstallationLocationAddress.IsWashable,
                 GsrnNumber: obj.GsrnNumber,

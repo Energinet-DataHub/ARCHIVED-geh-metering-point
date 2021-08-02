@@ -47,9 +47,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string StreetName => "Test Road 1";
 
+        public static string BuildingNumber => "145K";
+
         public static string PostCode => "8000";
 
         public static string CityName => "Aarhus";
+
+        public static string MunicipalityCode => "124";
 
         public static string CountryCode => "DK";
 

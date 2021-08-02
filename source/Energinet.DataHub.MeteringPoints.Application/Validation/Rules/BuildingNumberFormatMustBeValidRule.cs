@@ -20,14 +20,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
     public class BuildingNumberFormatMustBeValidRule : AbstractValidator<string>
     {
-        private const string BuildingNumberDkFormatRegEx = @"^([1-9][0-9]{0,2}|[A-ZÆØÅ]{0,3})([A-ZÆØÅ])$";
-        private const string BuildingNumberNotDkFormatRegEx = @"^[a-zA-Z0-9]{6}$";
+        private const string BuildingNumberDkFormatRegEx = @"^(?=.{1,4}$)((([1-9][0-9]{0,2})?[A-ZÆØÅ]*)|([A-ZÆØÅ]*([1-9][0-9]{0,2})?))$";
+        private const int BuildingNumberNotDkFormatMaxLength = 6;
         private readonly string _gsrnNumber;
 
-        public BuildingNumberFormatMustBeValidRule(string gsrnNumber, string buildingNumber)
+        public BuildingNumberFormatMustBeValidRule(string gsrnNumber, string countryCode)
         {
             _gsrnNumber = gsrnNumber;
-            When(address => buildingNumber.Equals("DK", StringComparison.Ordinal), BuildingNumberDenmarkFormat)
+            When(address => countryCode.Equals("DK", StringComparison.Ordinal), BuildingNumberDenmarkFormat)
                 .Otherwise(BuildingNumberNotDenmarkFormat);
         }
 
@@ -41,8 +41,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         private void BuildingNumberNotDenmarkFormat()
         {
             RuleFor(postCode => postCode)
-                .Matches(BuildingNumberNotDkFormatRegEx)
-                .WithState(buildingNumber => new BuildingNumberWrongFormatValidationError(_gsrnNumber, buildingNumber));
+                .MaximumLength(BuildingNumberNotDkFormatMaxLength)
+                .WithState(buildingNumber => new BuildingNumberMaximumLengthValidationError(_gsrnNumber, buildingNumber, BuildingNumberNotDkFormatMaxLength));
         }
     }
 }

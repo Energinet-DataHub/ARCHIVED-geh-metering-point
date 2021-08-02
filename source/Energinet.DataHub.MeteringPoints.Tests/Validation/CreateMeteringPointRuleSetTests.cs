@@ -234,6 +234,43 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
         }
 
+        [Theory]
+        [InlineData("22A", "DK", typeof(BuildingNumberWrongFormatValidationError), false)]
+        [InlineData("AÆZ", "DK", typeof(BuildingNumberWrongFormatValidationError), false)]
+        [InlineData("22ADA", "", typeof(BuildingNumberMaximumLengthValidationError), false)]
+        [InlineData("ÆØÅ", "", typeof(BuildingNumberMaximumLengthValidationError), false)]
+        [InlineData("", "DK", typeof(BuildingNumberWrongFormatValidationError), true)]
+        [InlineData("001K", "DK", typeof(BuildingNumberWrongFormatValidationError), true)]
+        [InlineData("001KA", "DK", typeof(BuildingNumberWrongFormatValidationError), true)]
+        [InlineData("2AaIOAK", "", typeof(BuildingNumberMaximumLengthValidationError), true)]
+        public void Validate_BuildingNumber_Format(string buildingNumber, string countryCode, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                CountryCode = countryCode,
+                BuildingNumber = buildingNumber,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData("123", typeof(MunicipalityCodeMustBeValidValidationError), false)]
+        [InlineData("999", typeof(MunicipalityCodeMustBeValidValidationError), false)]
+        [InlineData("1234", typeof(MunicipalityCodeMustBeValidValidationError), true)]
+        [InlineData("12", typeof(MunicipalityCodeMustBeValidValidationError), true)]
+        public void Validate_Municipality_Code(string municipalityCode, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                MunicipalityCode = municipalityCode,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
         private static CreateMeteringPoint CreateRequest()
         {
             return new();
