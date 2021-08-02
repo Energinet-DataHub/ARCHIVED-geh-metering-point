@@ -248,7 +248,42 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         {
             var businessRequest = CreateRequest() with
             {
+                GsrnNumber = SampleData.GsrnNumber,
                 StreetCode = streetCode,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData("", typeof(FloorIdentificationValidationError), false)]
+        [InlineData("2", typeof(FloorIdentificationValidationError), false)]
+        [InlineData("A", typeof(FloorIdentificationValidationError), false)]
+        [InlineData("ABCDE", typeof(FloorIdentificationValidationError), true)]
+        [InlineData("12345", typeof(FloorIdentificationValidationError), true)]
+        public void Validate_FloorIdentification(string floorIdentification, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                FloorIdentification = floorIdentification,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData("", typeof(RoomIdentificationValidationError), false)]
+        [InlineData("2", typeof(RoomIdentificationValidationError), false)]
+        [InlineData("A", typeof(RoomIdentificationValidationError), false)]
+        [InlineData("ABCDE", typeof(RoomIdentificationValidationError), true)]
+        [InlineData("12345", typeof(RoomIdentificationValidationError), true)]
+        public void Validate_RoomIdentification(string roomIdentification, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                RoomIdentification = roomIdentification,
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);

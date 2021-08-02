@@ -60,5 +60,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         public static string MeterNumber => "12345678910";
 
         public static string NetSettlementGroup => Domain.MeteringPoints.NetSettlementGroup.Zero.Name;
+
+        public static string FloorIdentification => string.Empty;
+
+        public static string RoomIdentification => string.Empty;
     }
 }

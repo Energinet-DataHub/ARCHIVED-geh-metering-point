@@ -140,6 +140,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SampleData.CityName,
                 SampleData.CountryCode,
                 SampleData.StreetCode,
+                SampleData.FloorIdentification,
+                SampleData.RoomIdentification,
                 SampleData.IsWashable,
                 SampleData.GsrnNumber,
                 SampleData.TypeOfMeteringPoint,

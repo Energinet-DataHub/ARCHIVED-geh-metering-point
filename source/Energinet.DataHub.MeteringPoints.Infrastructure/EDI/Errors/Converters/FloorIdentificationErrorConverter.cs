@@ -17,14 +17,14 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class StreetCodeErrorConverter : ErrorConverter<StreetCodeValidationError>
+    public class FloorIdentificationErrorConverter : ErrorConverter<FloorIdentificationValidationError>
     {
-        protected override ErrorMessage Convert(StreetCodeValidationError validationError)
+        protected override ErrorMessage Convert(FloorIdentificationValidationError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
             // TODO - which is the right code for this?
-            return new("CODE", $"Street code {validationError.StreetCode} for metering point {validationError.GsrnNumber} has a length that is not within range 0001 to 9999");
+            return new("CODE", $"Floor Identification {validationError.FloorIdentification} for metering point {validationError.GsrnNumber} has a length that exceeds maximum of 4");
         }
     }
 }

@@ -12,19 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class StreetCodeErrorConverter : ErrorConverter<StreetCodeValidationError>
+    public class FloorIdentificationRule : AbstractValidator<string>
     {
-        protected override ErrorMessage Convert(StreetCodeValidationError validationError)
-        {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+        private const int FloorIdentificationLength = 4;
 
-            // TODO - which is the right code for this?
-            return new("CODE", $"Street code {validationError.StreetCode} for metering point {validationError.GsrnNumber} has a length that is not within range 0001 to 9999");
+        public FloorIdentificationRule(string gsrnNumber)
+        {
+            CascadeMode = CascadeMode.Stop;
+
+            RuleFor(floorIdentification => floorIdentification)
+                .MaximumLength(FloorIdentificationLength)
+                .WithState(floorIdentification => new FloorIdentificationValidationError(gsrnNumber, floorIdentification));
         }
     }
 }

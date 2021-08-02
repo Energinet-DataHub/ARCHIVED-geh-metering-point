@@ -23,6 +23,8 @@ namespace Energinet.DataHub.MeteringPoints.Application
             string CityName = "",
             string CountryCode = "",
             string StreetCode = "",
+            string FloorIdentification = "",
+            string RoomIdentification = "",
             bool IsWashable = false,
             string GsrnNumber = "",
             string TypeOfMeteringPoint = "",

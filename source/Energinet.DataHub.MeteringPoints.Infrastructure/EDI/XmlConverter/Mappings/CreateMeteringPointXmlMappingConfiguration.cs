@@ -45,6 +45,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 .AddProperty(x => x.PostCode, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "postalCode")
                 .AddProperty(x => x.StreetCode, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "streetDetail", "code")
                 .AddProperty(x => x.CountryCode, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "townDetail", "country")
+                .AddProperty(x => x.FloorIdentification, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "streetDetail", "floorIdentification")
+                .AddProperty(x => x.RoomIdentification, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "streetDetail", "suiteNumber")
                 .AddProperty(x => x.IsWashable, IsWashable, "MarketEvaluationPoint", "usagePointLocation.officialAddressIndicator")
                 .AddProperty(x => x.FromGrid, "MarketEvaluationPoint", "inMeteringGridArea_Domain.mRID")
                 .AddProperty(x => x.ToGrid, "MarketEvaluationPoint", "outMeteringGridArea_Domain.mRID")
