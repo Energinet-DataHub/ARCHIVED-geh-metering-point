@@ -20,7 +20,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
     public class BuildingNumberFormatMustBeValidRule : AbstractValidator<string>
     {
-        private const string BuildingNumberDkFormatRegEx = @"^([1-9][0-9]{0,2}|[A-ZÆØÅ]{3})([A-ZÆØÅ])$";
+        private const string BuildingNumberDkFormatRegEx = @"^([1-9][0-9]{0,2}|[A-ZÆØÅ]{0,3})([A-ZÆØÅ])$";
         private const string BuildingNumberNotDkFormatRegEx = @"^[a-zA-Z0-9]{6}$";
         private readonly string _gsrnNumber;
 
