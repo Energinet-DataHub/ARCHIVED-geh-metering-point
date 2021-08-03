@@ -55,6 +55,7 @@ message CreateMeteringPoint {
   string fromGrid = 22;
   string toGrid = 23;
   string productType = 24;
+  string measureUnitType = 25;
 }
 
 message ConnectMeteringPoint {
