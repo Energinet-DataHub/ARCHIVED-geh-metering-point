@@ -17,6 +17,7 @@ using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentAssertions;
 using Xunit;
@@ -284,6 +285,25 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             {
                 GsrnNumber = SampleData.GsrnNumber,
                 RoomIdentification = roomIdentification,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.Ninetynine), typeof(NetSettlementGroupMandatoryValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Production), nameof(NetSettlementGroup.Ninetynine), typeof(NetSettlementGroupMandatoryValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Production), "InvalidNetSettlementGroupValue", typeof(NetSettlementGroupInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.Exchange), nameof(NetSettlementGroup.Ninetynine), typeof(NetSettlementGroupNotAllowedValidationError), true)]
+        [InlineData(nameof(MeteringPointType.Consumption), "", typeof(NetSettlementGroupMandatoryValidationError), true)]
+        [InlineData(nameof(MeteringPointType.Production), "", typeof(NetSettlementGroupMandatoryValidationError), true)]
+        [InlineData(nameof(MeteringPointType.Exchange), "", typeof(NetSettlementGroupMandatoryValidationError), false)]
+        public void Validate_NetSettlementGroup(string meteringPointType, string netSettlementGroup, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                NetSettlementGroup = netSettlementGroup,
+                TypeOfMeteringPoint = meteringPointType,
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
