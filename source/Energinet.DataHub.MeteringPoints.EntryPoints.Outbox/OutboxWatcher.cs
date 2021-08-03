@@ -14,53 +14,33 @@
 
 using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
-using Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
 {
-    public class ActorMessageDispatcher
+    internal class OutboxWatcher
     {
         private readonly ILogger _logger;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IOutboxManager _outbox;
-        private readonly IPostOfficeStorageClient _postOfficeStorageClient;
+        private readonly IActorMessageCoordinator _actorMessageCoordinator;
 
-        public ActorMessageDispatcher(
+        public OutboxWatcher(
             ILogger logger,
-            IUnitOfWork unitOfWork,
-            IOutboxManager outbox,
-            IPostOfficeStorageClient postOfficeStorageClient)
+            IActorMessageCoordinator actorMessageCoordinator)
         {
-            _unitOfWork = unitOfWork;
-            _outbox = outbox;
-            _postOfficeStorageClient = postOfficeStorageClient;
             _logger = logger;
+            _actorMessageCoordinator = actorMessageCoordinator;
         }
 
-        [Function("ActorMessageDispatcher")]
+        [Function("OutboxWatcher")]
         public async Task RunAsync(
             [TimerTrigger("%ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER%")] TimerInfo timerInformation)
         {
             _logger.LogInformation($"Timer trigger function executed at: {DateTime.Now}");
             _logger.LogInformation($"Next timer schedule at: {timerInformation?.ScheduleStatus?.Next}");
 
-            while (true)
-            {
-                var message = _outbox.GetNext(OutboxMessageCategory.ActorMessage);
-                if (message == null)
-                {
-                    break;
-                }
-
-                await _postOfficeStorageClient.WriteAsync(message.Correlation, message.Data).ConfigureAwait(false);
-                _outbox.MarkProcessed(message);
-
-                await _unitOfWork.CommitAsync().ConfigureAwait(false);
-            }
+            await _actorMessageCoordinator.FetchAndProcessMessagesAsync().ConfigureAwait(false);
         }
     }
 }
