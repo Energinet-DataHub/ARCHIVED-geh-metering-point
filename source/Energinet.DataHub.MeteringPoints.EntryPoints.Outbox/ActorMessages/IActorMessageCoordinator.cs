@@ -13,19 +13,17 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
 {
     /// <summary>
-    /// Basic file management for PostOffice communication.
+    /// Coordinate fetching, dispatching, flagging as sent, of actor messages.
     /// </summary>
-    public interface IPostOfficeStorageClient
+    public interface IActorMessageCoordinator
     {
         /// <summary>
-        /// Write file.
+        /// Fetch messages and process them.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task WriteAsync(OutboxMessage message);
+        Task FetchAndProcessMessagesAsync();
     }
 }

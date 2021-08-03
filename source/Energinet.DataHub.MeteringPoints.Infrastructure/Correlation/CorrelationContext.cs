@@ -40,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Correlation
         {
             if (string.IsNullOrEmpty(_id) || string.IsNullOrEmpty(_parentId))
             {
-                return null;
+                return string.Empty;
             }
 
             return $"00-{_id}-{_parentId}-00";

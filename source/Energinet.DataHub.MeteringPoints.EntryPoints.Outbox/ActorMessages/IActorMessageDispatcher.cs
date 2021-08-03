@@ -15,17 +15,17 @@
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
 {
     /// <summary>
-    /// Basic file management for PostOffice communication.
+    /// Service for dispatching actor messages.
     /// </summary>
-    public interface IPostOfficeStorageClient
+    public interface IActorMessageDispatcher
     {
         /// <summary>
-        /// Write file.
+        /// Dispatch single message.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task WriteAsync(OutboxMessage message);
+        /// <param name="message">Message to process.</param>
+        Task DispatchMessageAsync(OutboxMessage message);
     }
 }
