@@ -21,7 +21,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
 {
-    public class ActorMessageDispatcher : IActorMessageDispatcher
+    internal class ActorMessageDispatcher : IActorMessageDispatcher
     {
         private readonly IPostOfficeStorageClient _postOfficeStorageClient;
 

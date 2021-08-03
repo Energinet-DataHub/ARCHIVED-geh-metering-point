@@ -20,7 +20,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
     /// <summary>
     /// Service for dispatching actor messages.
     /// </summary>
-    public interface IActorMessageDispatcher
+    internal interface IActorMessageDispatcher
     {
         /// <summary>
         /// Dispatch single message.

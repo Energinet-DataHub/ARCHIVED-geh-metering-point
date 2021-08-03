@@ -26,7 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
         private readonly TelemetryClient _telemetryClient;
         private readonly IActorMessageDispatcher _decoratee;
 
-        public ActorMessageDispatcherTelemetryDecorator(
+        internal ActorMessageDispatcherTelemetryDecorator(
             TelemetryClient telemetryClient,
             IActorMessageDispatcher decoratee)
         {

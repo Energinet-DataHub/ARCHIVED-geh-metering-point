@@ -19,7 +19,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
     /// <summary>
     /// Coordinate fetching, dispatching, flagging as sent, of actor messages.
     /// </summary>
-    public interface IActorMessageCoordinator
+    internal interface IActorMessageCoordinator
     {
         /// <summary>
         /// Fetch messages and process them.
