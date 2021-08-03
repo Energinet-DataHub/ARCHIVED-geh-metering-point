@@ -59,10 +59,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string CountryCode => "DK";
 
+        public static string StreetCode => "9999";
+
         public static bool IsWashable => true;
 
         public static string MeterNumber => "12345678910";
 
         public static string NetSettlementGroup => Domain.MeteringPoints.NetSettlementGroup.Zero.Name;
+
+        public static string FloorIdentification => string.Empty;
+
+        public static string RoomIdentification => string.Empty;
     }
 }
