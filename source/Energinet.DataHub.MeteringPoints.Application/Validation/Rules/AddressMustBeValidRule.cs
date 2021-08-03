@@ -42,6 +42,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 .SetValidator(request => new BuildingNumberFormatMustBeValidRule(request.GsrnNumber, request.CountryCode));
             RuleFor(request => request.MunicipalityCode)
                 .SetValidator(request => new MunicipalityCodeMustBeValidRule(request.GsrnNumber));
+            RuleFor(request => request.CitySubDivisionName)
+                .SetValidator(request => new CitySubDivisionNameMaximumLengthMustBeValidRule(request.GsrnNumber));
         }
 
         private static bool MeteringPointTypeIsProductionOrConsumption(CreateMeteringPoint createMeteringPoint)

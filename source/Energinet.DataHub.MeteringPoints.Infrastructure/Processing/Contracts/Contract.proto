@@ -27,6 +27,7 @@ message Address {
   bool isWashable = 5;
   string buildingNumber = 6;
   string municipalityCode = 10;
+  string cityNameSubDivision = 11;
 }
 
 message CreateMeteringPoint {

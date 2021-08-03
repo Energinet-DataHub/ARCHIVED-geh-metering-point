@@ -12,21 +12,17 @@
 // // See the License for the specific language governing permissions and
 // // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class MunicipalityCodeMustBeValidRule : AbstractValidator<string>
+    public class CitySubDivisionNameMaximumValidErrorConverter : ErrorConverter<CitySubDivisionNameMaximumLengthValidationError>
     {
-        private const string MunicipalityCodeFormatRegex = @"^[1-9][0-9][0-9]$";
-
-        public MunicipalityCodeMustBeValidRule(string gsrnNumber)
+        protected override ErrorMessage Convert(CitySubDivisionNameMaximumLengthValidationError validationError)
         {
-            RuleFor(municipalityCode => municipalityCode)
-                .Matches(MunicipalityCodeFormatRegex)
-                .WithState(municipalityCode =>
-                    new MunicipalityCodeMustBeValidValidationError(gsrnNumber, municipalityCode));
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+            return new("Code", "Error");
         }
     }
 }

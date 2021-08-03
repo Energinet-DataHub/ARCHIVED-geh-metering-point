@@ -97,8 +97,10 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
             command.TransactionId.Should().Be("1234");
             command.PostCode.Should().Be("8000");
             command.StreetName.Should().Be("Test street name");
-            command.CityName.Should().Be("Test city");
+            command.CityName.Should().Be("12");
             command.CountryCode.Should().Be("DK");
+            command.CitySubDivisionName.Should().Be("Test city");
+            command.MunicipalityCode.Should().Be("12");
 
             command.FromGrid.Should().Be("869");
             command.ToGrid.Should().Be("871");

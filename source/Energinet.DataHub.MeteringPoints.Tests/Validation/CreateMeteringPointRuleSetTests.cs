@@ -271,6 +271,36 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
         }
 
+        [Theory]
+        [InlineData("", typeof(CitySubDivisionNameMaximumLengthValidationError), false)]
+        [InlineData("Asdasdakl k asdasdsa", typeof(CitySubDivisionNameMaximumLengthValidationError), false)]
+        [InlineData("Asdkl dasdkjsajkd ksd skladsa lkdasjlk assad sakd sadas asd sa", typeof(CitySubDivisionNameMaximumLengthValidationError), true)]
+        public void Validate_CitySubDivisionName(string citySubDivisionName, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                CitySubDivisionName = citySubDivisionName,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData("", typeof(LocationDescriptionMaximumLengthValidationError), false)]
+        [InlineData("Lorem ipsum dolor sit amet, consectetur adipiscing elit.", typeof(LocationDescriptionMaximumLengthValidationError), false)]
+        [InlineData("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec semper neque ac lectus accumsan, vel gravida nulla pretium. Ut vitae ipsum leo. Vestibulum consectetur iaculis est venenatis tincidunt. Fusce eu tincidunt ex.", typeof(LocationDescriptionMaximumLengthValidationError), true)]
+        public void Validate_LocationDescription(string localDescription, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                LocationDescription = localDescription,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
         private static CreateMeteringPoint CreateRequest()
         {
             return new();

@@ -53,6 +53,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string CityName => "Aarhus";
 
+        public static string CitySubDivisionName => "Aarhus";
+
         public static string MunicipalityCode => "124";
 
         public static string CountryCode => "DK";

@@ -87,6 +87,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
                 SampleData.BuildingNumber,
                 SampleData.PostCode,
                 SampleData.CityName,
+                SampleData.CitySubDivisionName,
                 SampleData.MunicipalityCode,
                 SampleData.CountryCode,
                 SampleData.IsWashable,

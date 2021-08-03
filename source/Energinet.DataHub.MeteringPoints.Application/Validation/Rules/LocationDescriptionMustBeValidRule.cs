@@ -17,16 +17,15 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class MunicipalityCodeMustBeValidRule : AbstractValidator<string>
+    public class LocationDescriptionMustBeValidRule : AbstractValidator<CreateMeteringPoint>
     {
-        private const string MunicipalityCodeFormatRegex = @"^[1-9][0-9][0-9]$";
+        private const int LocationDescriptionMaximumLength = 60;
 
-        public MunicipalityCodeMustBeValidRule(string gsrnNumber)
+        public LocationDescriptionMustBeValidRule()
         {
-            RuleFor(municipalityCode => municipalityCode)
-                .Matches(MunicipalityCodeFormatRegex)
-                .WithState(municipalityCode =>
-                    new MunicipalityCodeMustBeValidValidationError(gsrnNumber, municipalityCode));
+            RuleFor(createMeteringPoint => createMeteringPoint.LocationDescription)
+                .MaximumLength(LocationDescriptionMaximumLength)
+                .WithState(createMeteringPoint => new LocationDescriptionMaximumLengthValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.LocationDescription));
         }
     }
 }
