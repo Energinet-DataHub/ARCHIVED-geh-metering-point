@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice
 {
@@ -24,9 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice
         /// <summary>
         /// Write file.
         /// </summary>
-        /// <param name="path">Write to this path</param>
-        /// <param name="data">Data to write</param>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task WriteAsync(string path, string data);
+        Task WriteAsync(OutboxMessage message);
     }
 }

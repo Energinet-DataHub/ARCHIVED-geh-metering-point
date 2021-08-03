@@ -17,6 +17,8 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Azure.Storage.Files.Shares;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice
 {
@@ -30,9 +32,13 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice
             _settings = settings;
         }
 
-        public async Task WriteAsync(string path, string data)
+        public async Task WriteAsync(OutboxMessage message)
         {
+            if (message == null) throw new ArgumentNullException(nameof(message));
+
             var shareClient = new ShareClient(_settings.ConnectionString, _settings.ShareName);
+            var traceContext = TraceContext.Parse(message.Correlation);
+            var path = traceContext.IsValid ? traceContext.TraceId : "None";
             var shareDirectoryClient = shareClient.GetDirectoryClient(path);
 
             // Create the directory if it doesn't already exist
@@ -41,7 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice
             // Ensure that the directory exists
             if (await shareDirectoryClient.ExistsAsync().ConfigureAwait(false))
             {
-                var bytes = Encoding.ASCII.GetBytes(data);
+                var bytes = Encoding.ASCII.GetBytes(message.Data);
 
                 var fileClient = await shareDirectoryClient.CreateFileAsync(Guid.NewGuid().ToString(), bytes.LongLength).ConfigureAwait(false);
                 using (var fileShareStream = await fileClient.Value.OpenWriteAsync(false, 0).ConfigureAwait(false))

@@ -42,7 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion
         public override async Task WriteAsync(byte[] data, CancellationToken cancellationToken = default)
         {
             var message = new ServiceBusMessage(data);
-            message.CorrelationId = _correlationContext.GetCorrelationId();
+            message.CorrelationId = _correlationContext.Id;
             message.ApplicationProperties.Add(_userContext.Key, _userContext.CurrentUser?.AsString() ?? string.Empty);
 
             await _sender.SendMessageAsync(message, cancellationToken).ConfigureAwait(false);
