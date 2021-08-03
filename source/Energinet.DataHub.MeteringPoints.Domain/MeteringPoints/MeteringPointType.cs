@@ -22,6 +22,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public static readonly MeteringPointType Production = new MeteringPointType(1, nameof(Production));
         public static readonly MeteringPointType Exchange = new MeteringPointType(2, nameof(Exchange));
         public static readonly MeteringPointType GridLossCorrection = new MeteringPointType(3, nameof(GridLossCorrection));
+        public static readonly MeteringPointType Analysis = new MeteringPointType(4, nameof(Analysis));
+        public static readonly MeteringPointType VEProduction = new MeteringPointType(5, nameof(VEProduction));
+        public static readonly MeteringPointType ExchangeReactiveEnergy = new MeteringPointType(6, nameof(ExchangeReactiveEnergy));
+        public static readonly MeteringPointType InternalUse = new MeteringPointType(7, nameof(InternalUse));
 
         private MeteringPointType(int id, string name)
             : base(id, name)

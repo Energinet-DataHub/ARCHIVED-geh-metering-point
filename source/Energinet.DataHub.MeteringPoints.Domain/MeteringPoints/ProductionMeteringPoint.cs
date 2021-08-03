@@ -47,7 +47,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             NetSettlementGroup netSettlementGroup,
             DisconnectionType disconnectionType,
             ConnectionType connectionType,
-            string? parentRelatedMeteringPoint)
+            string? parentRelatedMeteringPoint,
+            ProductType productType)
             : base(
                 id,
                 gsrnNumber,
@@ -70,7 +71,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _disconnectionType = disconnectionType;
             _connectionType = connectionType;
             _productionObligation = false;
-            _productType = ProductType.EnergyActive;
+            _productType = productType;
             _isAddressWashable = isAddressWashable;
         }
 
