@@ -15,30 +15,33 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.DataContracts;
-using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common
 {
-    public class IngestionTelemetryScope : IFunctionsWorkerMiddleware
+    public class EntryPointTelemetryScopeMiddleware : IFunctionsWorkerMiddleware
     {
         private readonly TelemetryClient _telemetryClient;
+        private readonly ICorrelationContext _correlationContext;
 
-        public IngestionTelemetryScope(TelemetryClient telemetryClient)
+        public EntryPointTelemetryScopeMiddleware(
+            TelemetryClient telemetryClient,
+            ICorrelationContext correlationContext)
         {
             _telemetryClient = telemetryClient;
+            _correlationContext = correlationContext;
         }
 
         public async Task Invoke(FunctionContext context, [NotNull] FunctionExecutionDelegate next)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
-            var operation = _telemetryClient.StartOperation<RequestTelemetry>("Ingestion", CorrelationIdContext.CorrelationId);
+            var operation = _telemetryClient.StartOperation<DependencyTelemetry>(context.FunctionDefinition.Name, _correlationContext.Id, _correlationContext.ParentId);
+            operation.Telemetry.Type = "Function";
             try
             {
                 operation.Telemetry.Success = true;

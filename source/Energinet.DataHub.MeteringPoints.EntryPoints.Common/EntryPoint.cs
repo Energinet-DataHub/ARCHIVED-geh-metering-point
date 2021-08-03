@@ -13,11 +13,9 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
-using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.ApplicationInsights.W3C;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

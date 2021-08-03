@@ -54,8 +54,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             if (options == null) throw new ArgumentNullException(nameof(options));
             base.ConfigureFunctionsWorkerDefaults(options);
 
-            options.UseMiddleware<HttpCorrelationIdMiddleware>();
-            options.UseMiddleware<IngestionTelemetryScope>();
+            options.UseMiddleware<CorrelationIdMiddleware>();
+            options.UseMiddleware<EntryPointTelemetryScopeMiddleware>();
             options.UseMiddleware<HttpUserContextMiddleware>();
         }
 
@@ -66,8 +66,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 
             // Register application components.
             container.Register<MeteringPointHttpTrigger>(Lifestyle.Scoped);
-            container.Register<HttpCorrelationIdMiddleware>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
+            container.Register<CorrelationIdMiddleware>(Lifestyle.Scoped);
+            container.Register<EntryPointTelemetryScopeMiddleware>(Lifestyle.Scoped);
             container.Register<HttpUserContextMiddleware>(Lifestyle.Scoped);
             container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
 

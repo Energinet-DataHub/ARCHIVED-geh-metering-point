@@ -68,8 +68,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
         {
             base.ConfigureFunctionsWorkerDefaults(options);
 
-            options.UseMiddleware<ServiceBusCorrelationIdMiddleware>();
-            options.UseMiddleware<ProcessingTelemetryScope>();
+            options.UseMiddleware<CorrelationIdMiddleware>();
+            options.UseMiddleware<EntryPointTelemetryScopeMiddleware>();
             options.UseMiddleware<ServiceBusUserContextMiddleware>();
             options.UseMiddleware<ServiceBusMessageIdempotencyMiddleware>();
         }
@@ -98,8 +98,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             // container.Register<IntegrationEventReceiver>(Lifestyle.Scoped);
             container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
-            container.Register<ServiceBusCorrelationIdMiddleware>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
+            container.Register<CorrelationIdMiddleware>(Lifestyle.Scoped);
+            container.Register<EntryPointTelemetryScopeMiddleware>(Lifestyle.Scoped);
             container.Register<ServiceBusUserContextMiddleware>(Lifestyle.Scoped);
             container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
             container.Register<UserIdentityFactory>(Lifestyle.Singleton);

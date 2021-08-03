@@ -13,44 +13,37 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
+using TraceContext = Energinet.DataHub.MeteringPoints.Infrastructure.Correlation.TraceContext;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common
 {
-    public class ProcessingTelemetryScope : IFunctionsWorkerMiddleware
+    public class CorrelationIdMiddleware : IFunctionsWorkerMiddleware
     {
-        private readonly TelemetryClient _telemetryClient;
+        private readonly ICorrelationContext _correlationContext;
 
-        public ProcessingTelemetryScope(TelemetryClient telemetryClient)
+        public CorrelationIdMiddleware(
+            ICorrelationContext correlationContext)
         {
-            _telemetryClient = telemetryClient;
+            _correlationContext = correlationContext;
         }
 
         public async Task Invoke(FunctionContext context, [NotNull] FunctionExecutionDelegate next)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
-            var operation = _telemetryClient.StartOperation<RequestTelemetry>("Processing", CorrelationIdContext.CorrelationId, CorrelationIdContext.ParentId);
-            try
-            {
-                operation.Telemetry.Success = true;
-                await next(context).ConfigureAwait(false);
-            }
-            catch (Exception)
-            {
-                operation.Telemetry.Success = false;
-                throw;
-            }
-            finally
-            {
-                _telemetryClient.StopOperation(operation);
-            }
+            var traceContext = TraceContext.Parse(context.TraceContext.TraceParent);
+
+            _correlationContext.SetId(traceContext.TraceId);
+            _correlationContext.SetParentId(traceContext.ParentId);
+
+            await next(context).ConfigureAwait(false);
         }
     }
 }

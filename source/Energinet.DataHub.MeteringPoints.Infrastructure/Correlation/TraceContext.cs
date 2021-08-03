@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Correlation
 {
@@ -25,22 +26,23 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Correlation
     /// </remarks>
     public class TraceContext
     {
-        private TraceContext(string? traceId, string? parentId, bool isValid)
+        // TODO: Use ActivityContext.Parse()?
+        private TraceContext(string traceId, string parentId, bool isValid)
         {
             TraceId = traceId;
             ParentId = parentId;
             IsValid = isValid;
         }
 
-        public string? TraceId { get; }
+        public string TraceId { get; }
 
-        public string? ParentId { get; }
+        public string ParentId { get; }
 
         public bool IsValid { get; }
 
-        public static TraceContext Parse(string traceContext)
+        public static TraceContext Parse([NotNull] string traceContext)
         {
-            if (traceContext == null) throw new ArgumentNullException(nameof(traceContext));
+            if (string.IsNullOrWhiteSpace(traceContext)) return Invalid();
             if (traceContext.Length != 55) return Invalid();
 
             var parts = traceContext.Split('-');
@@ -53,7 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Correlation
             return Create(traceId, parentId);
         }
 
-        private static TraceContext Create(string? traceId, string? parentId)
+        private static TraceContext Create(string traceId, string parentId)
         {
             return new(
                 traceId,
@@ -64,8 +66,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Correlation
         private static TraceContext Invalid()
         {
             return new(
-                null,
-                null,
+                string.Empty,
+                string.Empty,
                 false);
         }
     }
