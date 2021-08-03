@@ -23,8 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            // TODO - which is the right code for this?
-            return new("CODE", $"Floor Identification {validationError.RoomIdentification} for metering point {validationError.GsrnNumber} has a length that exceeds maximum of 4");
+            return new ErrorMessage("E86", $"Room identification {validationError.RoomIdentification} for metering point {validationError.GsrnNumber} has a length that exceeds 4");
         }
     }
 }

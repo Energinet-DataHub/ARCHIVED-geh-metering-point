@@ -34,12 +34,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
                 RuleFor(request => request.NetSettlementGroup)
                     .Must(netSettlementGroup => AllowedNetSettlementGroupValues().Contains(netSettlementGroup.ToUpperInvariant()))
-                    .WithState(createMeteringPoint => new NetSettlementGroupInvalidValueValidationError(AllowedNetSettlementGroupValues(), createMeteringPoint.TypeOfMeteringPoint));
+                    .WithState(createMeteringPoint => new NetSettlementGroupInvalidValueValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.TypeOfMeteringPoint));
             }).Otherwise(() =>
             {
                 RuleFor(request => request.NetSettlementGroup)
                     .Empty()
-                    .WithState(createMeteringPoint => new NetSettlementGroupNotAllowedValidationError(createMeteringPoint.TypeOfMeteringPoint));
+                    .WithState(createMeteringPoint => new NetSettlementGroupNotAllowedValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.TypeOfMeteringPoint));
             });
         }
 

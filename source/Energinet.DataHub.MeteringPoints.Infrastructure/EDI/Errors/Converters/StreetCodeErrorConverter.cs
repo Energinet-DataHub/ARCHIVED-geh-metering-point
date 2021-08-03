@@ -23,8 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            // TODO - which is the right code for this?
-            return new("CODE", $"Street code {validationError.StreetCode} for metering point {validationError.GsrnNumber} has a length that is not within range 0001 to 9999");
+            return new ErrorMessage("E86", $"Street code {validationError.StreetCode} for metering point {validationError.GsrnNumber} is out of range or contains a non-digit character or has a length that does not equal 4");
         }
     }
 }

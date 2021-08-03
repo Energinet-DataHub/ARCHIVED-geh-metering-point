@@ -12,21 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
     public class NetSettlementGroupInvalidValueValidationError : ValidationError
     {
-        public NetSettlementGroupInvalidValueValidationError(IEnumerable<string> allowedValues, string netNetSettlementGroup)
+        public NetSettlementGroupInvalidValueValidationError(string netNetSettlementGroup, string gsrnNumber)
         {
-            AllowedValues = allowedValues;
             NetSettlementGroup = netNetSettlementGroup;
+            GsrnNumber = gsrnNumber;
         }
 
-        public IEnumerable<string> AllowedValues { get; }
-
         public string NetSettlementGroup { get; }
+
+        public string GsrnNumber { get; }
     }
 }

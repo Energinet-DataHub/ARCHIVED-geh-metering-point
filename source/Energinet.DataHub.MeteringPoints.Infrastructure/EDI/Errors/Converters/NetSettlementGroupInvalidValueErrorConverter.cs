@@ -23,8 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            // TODO - which is the right code for this?
-            return new("CODE", $"The value {validationError.NetSettlementGroup} for Net settlement group is not valid. Allowed values are: {string.Join(',', validationError.AllowedValues)}");
+            return new ErrorMessage("D02", $"Net settlement group {validationError.NetSettlementGroup} for metering point {validationError.GsrnNumber} has wrong value (outside domain)");
         }
     }
 }

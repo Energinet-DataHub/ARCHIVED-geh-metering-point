@@ -18,11 +18,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class NetSettlementGroupNotAllowedValidationError : ValidationError
     {
-        public NetSettlementGroupNotAllowedValidationError(string meteringPointType)
+        public NetSettlementGroupNotAllowedValidationError(string meteringPointType, string netSettlementGroup)
         {
             MeteringPointType = meteringPointType;
+            NetSettlementGroup = netSettlementGroup;
         }
 
         public string MeteringPointType { get; }
+
+        public string NetSettlementGroup { get; }
     }
 }

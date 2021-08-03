@@ -23,8 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            // TODO - which is the right code for this?
-            return new("CODE", $"Net settlement group is mandatory for metering point type {validationError.MeteringPointType}");
+            return new("D02", $"Net settlement group for metering point {validationError.MeteringPointType} is missing (type E17/E18)");
         }
     }
 }
