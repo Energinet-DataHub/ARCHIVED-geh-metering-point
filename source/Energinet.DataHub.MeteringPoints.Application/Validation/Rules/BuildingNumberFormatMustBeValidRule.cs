@@ -35,14 +35,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         {
             RuleFor(buildingNumber => buildingNumber)
                 .Matches(BuildingNumberDkFormatRegEx)
-                .WithState(buildingNumber => new BuildingNumberWrongFormatValidationError(_gsrnNumber, buildingNumber));
+                .WithState(buildingNumber => new BuildingNumberMustBeValidValidationError(_gsrnNumber, buildingNumber));
         }
 
         private void BuildingNumberNotDenmarkFormat()
         {
             RuleFor(postCode => postCode)
                 .MaximumLength(BuildingNumberNotDkFormatMaxLength)
-                .WithState(buildingNumber => new BuildingNumberMaximumLengthValidationError(_gsrnNumber, buildingNumber, BuildingNumberNotDkFormatMaxLength));
+                .WithState(buildingNumber => new BuildingNumberMustBeValidValidationError(_gsrnNumber, buildingNumber));
         }
     }
 }

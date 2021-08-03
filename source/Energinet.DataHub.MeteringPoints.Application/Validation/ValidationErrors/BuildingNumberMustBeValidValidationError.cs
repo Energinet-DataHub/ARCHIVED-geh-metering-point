@@ -16,16 +16,16 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class PowerPlantCheckSumValidationError : ValidationError
+    public class BuildingNumberMustBeValidValidationError : ValidationError
     {
-        public PowerPlantCheckSumValidationError(string gsrnNumber, string powerPlant)
+        public BuildingNumberMustBeValidValidationError(string gsrnNumber, string buildingNumber)
         {
             GsrnNumber = gsrnNumber;
-            PowerPlant = powerPlant;
+            BuildingNumber = buildingNumber;
         }
 
         public string GsrnNumber { get; }
 
-        public string PowerPlant { get; }
+        public string BuildingNumber { get; }
     }
 }

@@ -17,12 +17,12 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class PowerPlantCheckSumValidationErrorConverter : ErrorConverter<PowerPlantCheckSumValidationError>
+    public class BuildingNumberMustValidErrorConverter : ErrorConverter<BuildingNumberMustBeValidValidationError>
     {
-        protected override ErrorMessage Convert(PowerPlantCheckSumValidationError validationError)
+        protected override ErrorMessage Convert(BuildingNumberMustBeValidValidationError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-            return new("Code", "Error");
+            return new("E86", $"Building number {validationError.BuildingNumber} for metering point {validationError.GsrnNumber} has an incorrect format: the length exceeds 4 characters or is not in the range 1-999, optionally with a capital letter (if country code is DK) or the length exceeds 6 characters (if other country)");
         }
     }
 }

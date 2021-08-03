@@ -310,14 +310,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         }
 
         [Theory]
-        [InlineData("22A", "DK", typeof(BuildingNumberWrongFormatValidationError), false)]
-        [InlineData("AÆZ", "DK", typeof(BuildingNumberWrongFormatValidationError), false)]
-        [InlineData("22ADA", "", typeof(BuildingNumberMaximumLengthValidationError), false)]
-        [InlineData("ÆØÅ", "", typeof(BuildingNumberMaximumLengthValidationError), false)]
-        [InlineData("", "DK", typeof(BuildingNumberWrongFormatValidationError), true)]
-        [InlineData("001K", "DK", typeof(BuildingNumberWrongFormatValidationError), true)]
-        [InlineData("001KA", "DK", typeof(BuildingNumberWrongFormatValidationError), true)]
-        [InlineData("2AaIOAK", "", typeof(BuildingNumberMaximumLengthValidationError), true)]
+        [InlineData("22A", "DK", typeof(BuildingNumberMustBeValidValidationError), false)]
+        [InlineData("AÆZ", "DK", typeof(BuildingNumberMustBeValidValidationError), false)]
+        [InlineData("22ADA", "", typeof(BuildingNumberMustBeValidValidationError), false)]
+        [InlineData("ÆØÅ", "", typeof(BuildingNumberMustBeValidValidationError), false)]
+        [InlineData("", "DK", typeof(BuildingNumberMustBeValidValidationError), true)]
+        [InlineData("001K", "DK", typeof(BuildingNumberMustBeValidValidationError), true)]
+        [InlineData("001KA", "DK", typeof(BuildingNumberMustBeValidValidationError), true)]
+        [InlineData("2AaIOAK", "", typeof(BuildingNumberMustBeValidValidationError), true)]
         public void Validate_BuildingNumber_Format(string buildingNumber, string countryCode, System.Type validationError, bool expectedError)
         {
             var businessRequest = CreateRequest() with
@@ -371,6 +371,27 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             {
                 GsrnNumber = SampleData.GsrnNumber,
                 LocationDescription = localDescription,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData("571234567891234568", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.One), typeof(PowerPlantGsrnEan18ValidValidationError), false)]
+        [InlineData("561234567891234568", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.One), typeof(PowerPlantGsrnEan18ValidValidationError), true)]
+        [InlineData("571234567891234568", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(PowerPlantGsrnEan18ValidValidationError), false)]
+        [InlineData("8891928731", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(PowerPlantGsrnEan18ValidValidationError), true)]
+        [InlineData("", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(PowerPlantGsrnEan18ValidValidationError), true)]
+        [InlineData("", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.One), typeof(PowerPlantGsrnEan18ValidValidationError), true)]
+        [InlineData("", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.Zero), typeof(PowerPlantGsrnEan18ValidValidationError), false)]
+        public void Validate_PowerPlant(string powerPlant, string meteringPointType, string netSettlementGroup,  System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                PowerPlant = powerPlant,
+                TypeOfMeteringPoint = meteringPointType,
+                NetSettlementGroup = netSettlementGroup,
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);

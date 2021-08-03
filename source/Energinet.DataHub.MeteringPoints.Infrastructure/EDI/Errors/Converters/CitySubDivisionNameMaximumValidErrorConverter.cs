@@ -22,7 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         protected override ErrorMessage Convert(CitySubDivisionNameMaximumLengthValidationError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-            return new("Code", "Error");
+            return new("E86", $"City sub division name {validationError.CitySubDivisionName} for metering point {validationError.GsrnNumber} has a length that exceeds 34");
         }
     }
 }

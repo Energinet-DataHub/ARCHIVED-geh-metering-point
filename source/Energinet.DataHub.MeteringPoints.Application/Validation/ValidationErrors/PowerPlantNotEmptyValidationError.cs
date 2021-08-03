@@ -18,11 +18,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class PowerPlantNotEmptyValidationError : ValidationError
     {
-        public PowerPlantNotEmptyValidationError(string gsrnNumber)
+        public PowerPlantNotEmptyValidationError(string gsrnNumber, string powerPlant)
         {
             GsrnNumber = gsrnNumber;
+            PowerPlant = powerPlant;
         }
 
         public string GsrnNumber { get; }
+
+        public string PowerPlant { get; }
     }
 }

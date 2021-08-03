@@ -22,7 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         protected override ErrorMessage Convert(PowerPlantNotEmptyValidationError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-            return new("Code", "Error");
+            return new("D57", $"Power plant {validationError.PowerPlant} for metering point {validationError.GsrnNumber} is missing (type E18/D01) or not allowed (types E20/D02/D13/D14/D15/D20)");
         }
     }
 }

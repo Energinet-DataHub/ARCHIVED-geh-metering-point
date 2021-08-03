@@ -22,7 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         protected override ErrorMessage Convert(PowerPlantGsrnEan18ValidValidationError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-            return new("Code", "Error");
+            return new("D57", $"Power plant {validationError.PowerPlant} for metering point {validationError.GsrnNumber} is not a valid GSRN/EAN18 code (wrong checksum) or does not start with digits '57'");
         }
     }
 }
