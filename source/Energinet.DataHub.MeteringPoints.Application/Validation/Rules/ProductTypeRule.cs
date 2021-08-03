@@ -39,6 +39,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                     .Must(productType => productType == ProductType.EnergyActive.Name)
                     .WithState(createMeteringPoint => new ProductTypeWrongDefaultValueValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.ProductType));
             });
+
+            When(createMeteringPoint => createMeteringPoint.TypeOfMeteringPoint == MeteringPointType.ExchangeReactiveEnergy.Name, () =>
+            {
+                RuleFor(request => request.ProductType)
+                    .Must(productType => productType == ProductType.EnergyReactive.Name)
+                    .WithState(createMeteringPoint => new ProductTypeWrongDefaultValueValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.ProductType));
+            });
         }
 
         private static bool IsMeteringPointTypeWithDefaultProductType(CreateMeteringPoint createMeteringPoint)

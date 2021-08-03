@@ -27,8 +27,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Application
         public void CreateMeteringPointCommandShouldMapToContractAndBack()
         {
             var fixture = new Fixture();
-            var outboundMapper = new Infrastructure.Ingestion.Mappers.CreateMeteringPointMapper();
-            var inboundMapper = new Infrastructure.Processing.Mappers.CreateMeteringPointMapper();
+            var outboundMapper = new Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers.CreateMeteringPointMapper();
+            var inboundMapper = new Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers.CreateMeteringPointMapper();
             var command = fixture.Create<CreateMeteringPoint>();
 
             var contract = (Contracts.MeteringPointEnvelope)outboundMapper.Convert(command);

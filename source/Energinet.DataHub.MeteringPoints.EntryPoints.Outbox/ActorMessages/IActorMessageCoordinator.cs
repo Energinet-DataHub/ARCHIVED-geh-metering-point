@@ -12,31 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Correlation
+using System.Threading.Tasks;
+
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
 {
     /// <summary>
-    /// Context for the current scope identified by a correlation id.
+    /// Coordinate fetching, dispatching, flagging as sent, of actor messages.
     /// </summary>
-    public interface ICorrelationContext
+    internal interface IActorMessageCoordinator
     {
         /// <summary>
-        /// Get the current correlation id.
+        /// Fetch messages and process them.
         /// </summary>
-        string Id { get; }
-
-        /// <summary>
-        /// Get the parent's id.
-        /// </summary>
-        string? ParentId { get; }
-
-        /// <summary>
-        /// Set the current correlation/operation id.
-        /// </summary>
-        void SetId(string id);
-
-        /// <summary>
-        /// Set the id of the parent operation.
-        /// </summary>
-        void SetParentId(string parentId);
+        Task FetchAndProcessMessagesAsync();
     }
 }

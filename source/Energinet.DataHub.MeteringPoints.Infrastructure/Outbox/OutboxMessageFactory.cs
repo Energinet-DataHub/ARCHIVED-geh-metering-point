@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
@@ -48,7 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
 
             var data = _jsonSerializer.Serialize(message);
 
-            return new OutboxMessage(type, data, _correlationContext.GetCorrelationId(), category, _systemDateTimeProvider.Now());
+            return new OutboxMessage(type, data, _correlationContext.ToString()!, category, _systemDateTimeProvider.Now());
         }
     }
 }
