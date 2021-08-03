@@ -30,6 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation
             RuleFor(request => request).SetValidator(new MeteringPointSubTypeMustBeValidRule());
             RuleFor(request => request).SetValidator(new MeterNumberMustBeValidRule());
             RuleFor(request => request).SetValidator(new LocationDescriptionMustBeValidRule());
+            RuleFor(request => request).SetValidator(new PowerPlantMustBeValidRule());
         }
     }
 }
