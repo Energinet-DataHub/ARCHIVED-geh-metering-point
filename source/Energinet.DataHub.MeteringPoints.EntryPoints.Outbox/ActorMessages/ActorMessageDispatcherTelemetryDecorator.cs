@@ -21,12 +21,12 @@ using Microsoft.ApplicationInsights.DataContracts;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
 {
-    public class ActorMessageDispatcherTelemetryDecorator : IActorMessageDispatcher
+    internal class ActorMessageDispatcherTelemetryDecorator : IActorMessageDispatcher
     {
         private readonly TelemetryClient _telemetryClient;
         private readonly IActorMessageDispatcher _decoratee;
 
-        internal ActorMessageDispatcherTelemetryDecorator(
+        public ActorMessageDispatcherTelemetryDecorator(
             TelemetryClient telemetryClient,
             IActorMessageDispatcher decoratee)
         {
@@ -41,7 +41,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
             var traceContext = TraceContext.Parse(message.Correlation);
             if (!traceContext.IsValid)
             {
-                throw new InvalidOperationException("Buhuu! :(");
+                await _decoratee.DispatchMessageAsync(message).ConfigureAwait(false);
+                return;
             }
 
             var operation = _telemetryClient.StartOperation<DependencyTelemetry>("Outbox", traceContext.TraceId, traceContext.ParentId);
