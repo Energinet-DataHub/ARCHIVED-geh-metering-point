@@ -37,6 +37,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                     StringComparison.Ordinal) &&
                 !createMeteringPoint.NetSettlementGroup.Equals(NetSettlementGroup.Zero.Name, StringComparison.Ordinal),
                 WhenSettlementIsNotZeroForConsumptionMeteringPoint);
+
+            PowerPlantStartsWith57();
+            PowerPlantIsValidGsrnEan18Code();
         }
 
         private static int Parse(string input)
@@ -78,15 +81,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         private void WhenTypeOfMeteringPointIsProduction()
         {
             PowerPlantNotEmpty();
-            PowerPlantStartsWith57();
-            PowerPlantIsValidGsrnEan18Code();
         }
 
         private void WhenSettlementIsNotZeroForConsumptionMeteringPoint()
         {
             PowerPlantNotEmpty();
-            PowerPlantStartsWith57();
-            PowerPlantIsValidGsrnEan18Code();
         }
 
         private void PowerPlantNotEmpty()
@@ -100,14 +99,19 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         {
             RuleFor(createMeteringPoint => createMeteringPoint.PowerPlant)
                 .Must(powerPlant => powerPlant.StartsWith("57", StringComparison.Ordinal))
-                .WithState(createMeteringPoint => new PowerPlantGsrnEan18ValidValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.PowerPlant));
+                .WithState(createMeteringPoint => new PowerPlantGsrnEan18ValidValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.PowerPlant))
+                .When(createMeteringPoint => createMeteringPoint.PowerPlant.Length > 0);
         }
 
         private void PowerPlantIsValidGsrnEan18Code()
         {
             RuleFor(createMeteringPoint => createMeteringPoint.PowerPlant)
                 .Must(powerPlant => powerPlant.Length == RequiredIdLength && CheckSumIsValid(powerPlant))
-                .WithState(createMeteringPoint => new PowerPlantGsrnEan18ValidValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.PowerPlant));
+                .WithState(createMeteringPoint =>
+                    new PowerPlantGsrnEan18ValidValidationError(
+                        createMeteringPoint.GsrnNumber,
+                        createMeteringPoint.PowerPlant))
+                .When(createMeteringPoint => createMeteringPoint.PowerPlant.Length > 0);
         }
     }
 }
