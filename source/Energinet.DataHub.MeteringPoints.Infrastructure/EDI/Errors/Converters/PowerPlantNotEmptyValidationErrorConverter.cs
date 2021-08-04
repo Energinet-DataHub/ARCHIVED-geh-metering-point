@@ -17,9 +17,9 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class PowerPlantNotEmptyValidationConverter : ErrorConverter<PowerPlantNotEmptyValidationError>
+    public class PowerPlantValidationConverter : ErrorConverter<PowerPlantValidationError>
     {
-        protected override ErrorMessage Convert(PowerPlantNotEmptyValidationError validationError)
+        protected override ErrorMessage Convert(PowerPlantValidationError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
             return new("D57", $"Power plant {validationError.PowerPlant} for metering point {validationError.GsrnNumber} is missing (type E18/D01) or not allowed (types E20/D02/D13/D14/D15/D20)");

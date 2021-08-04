@@ -13,6 +13,7 @@
 // // limitations under the License.
 
 using System;
+using System.Data;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using FluentValidation;
@@ -30,17 +31,67 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 PowerPlantMustNotBeEmpty);
 
             When(
+                VEProduction,
+                PowerPlantMustNotBeEmpty);
+
+            When(
                 ConsumptionAndNetSettlementGroupZero,
                 PowerPlantMustNotBeEmpty);
 
+            When(
+                PowerPlantNotAllowedGroupOfMeteringPointTypes,
+                PowerPlantMustBeEmpty);
+
             PowerPlantStartsWith57();
             PowerPlantIsValidGsrnEan18Code();
+        }
+
+        private static bool VEProduction(CreateMeteringPoint createMeteringPoint)
+        {
+            return createMeteringPoint.TypeOfMeteringPoint.Equals(
+                MeteringPointType.VEProduction.Name,
+                StringComparison.Ordinal);
         }
 
         private static bool Production(CreateMeteringPoint createMeteringPoint)
         {
             return createMeteringPoint.TypeOfMeteringPoint.Equals(
                 MeteringPointType.Production.Name,
+                StringComparison.Ordinal);
+        }
+
+        private static bool Analysis(CreateMeteringPoint createMeteringPoint)
+        {
+            return createMeteringPoint.TypeOfMeteringPoint.Equals(
+                MeteringPointType.Analysis.Name,
+                StringComparison.Ordinal);
+        }
+
+        private static bool InternalUse(CreateMeteringPoint createMeteringPoint)
+        {
+            return createMeteringPoint.TypeOfMeteringPoint.Equals(
+                MeteringPointType.InternalUse.Name,
+                StringComparison.Ordinal);
+        }
+
+        private static bool NetConsumption(CreateMeteringPoint createMeteringPoint)
+        {
+            return createMeteringPoint.TypeOfMeteringPoint.Equals(
+                MeteringPointType.NetConsumption.Name,
+                StringComparison.Ordinal);
+        }
+
+        private static bool ExchangeReactiveEnergy(CreateMeteringPoint createMeteringPoint)
+        {
+            return createMeteringPoint.TypeOfMeteringPoint.Equals(
+                MeteringPointType.ExchangeReactiveEnergy.Name,
+                StringComparison.Ordinal);
+        }
+
+        private static bool Exchange(CreateMeteringPoint createMeteringPoint)
+        {
+            return createMeteringPoint.TypeOfMeteringPoint.Equals(
+                MeteringPointType.Exchange.Name,
                 StringComparison.Ordinal);
         }
 
@@ -52,6 +103,15 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                    !createMeteringPoint.NetSettlementGroup.Equals(
                        NetSettlementGroup.Zero.Name,
                        StringComparison.Ordinal);
+        }
+
+        private static bool PowerPlantNotAllowedGroupOfMeteringPointTypes(CreateMeteringPoint createMeteringPoint)
+        {
+            return Analysis(createMeteringPoint) ||
+                   InternalUse(createMeteringPoint) ||
+                   NetConsumption(createMeteringPoint) ||
+                   ExchangeReactiveEnergy(createMeteringPoint) ||
+                   Exchange(createMeteringPoint);
         }
 
         private static int Parse(string input)
@@ -90,11 +150,18 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             return equalOrHigherMultipleOf - sum;
         }
 
+        private void PowerPlantMustBeEmpty()
+        {
+            RuleFor(createmeteringPoint => createmeteringPoint.PowerPlant)
+                .Empty()
+                .WithState(createMeteringPoint => new PowerPlantValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.PowerPlant));
+        }
+
         private void PowerPlantMustNotBeEmpty()
         {
             RuleFor(createMeteringPoint => createMeteringPoint.PowerPlant)
                 .NotEmpty()
-                .WithState(createMeteringPoint => new PowerPlantNotEmptyValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.PowerPlant));
+                .WithState(createMeteringPoint => new PowerPlantValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.PowerPlant));
         }
 
         private void PowerPlantStartsWith57()
