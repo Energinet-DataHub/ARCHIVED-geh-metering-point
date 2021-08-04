@@ -28,7 +28,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors
     }
 
     public abstract class ErrorConverter<TError> : ErrorConverter
-        where TError : ValidationError
     {
         public override ErrorMessage Convert(ValidationError validationError)
         {
