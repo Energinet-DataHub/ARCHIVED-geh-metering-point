@@ -23,9 +23,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
         public StreetCodeMustBeValidRule(string gsrnNumber)
         {
-            CascadeMode = CascadeMode.Stop;
-
             RuleFor(streetCode => streetCode)
+                .Cascade(CascadeMode.Stop)
                 .Length(StreetCodeLength)
                 .WithState(streetCode => new StreetCodeValidationError(gsrnNumber, streetCode))
                 .InclusiveBetween("0001", "9999")
