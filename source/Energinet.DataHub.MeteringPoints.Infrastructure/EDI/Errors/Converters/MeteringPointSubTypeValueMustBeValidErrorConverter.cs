@@ -17,12 +17,13 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class PowerPlantValidationConverter : ErrorConverter<PowerPlantValidationError>
+    public class MeteringPointSubTypeValueMustBeValidErrorConverter : ErrorConverter<MeteringPointSubTypeValueMustBeValidValidationError>
     {
-        protected override ErrorMessage Convert(PowerPlantValidationError validationError)
+        protected override ErrorMessage Convert(MeteringPointSubTypeValueMustBeValidValidationError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-            return new("D57", $"Power plant {validationError.PowerPlant} for metering point {validationError.GsrnNumber} is missing (type E18/D01) or not allowed (types E20/D02/D13/D14/D15/D20)");
+
+            return new("D02", $"Sub type {validationError.MeteringPointSubType} for metering point {validationError.GsrnNumber} has wrong value (outside domain)");
         }
     }
 }
