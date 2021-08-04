@@ -12,17 +12,20 @@
 // // See the License for the specific language governing permissions and
 // // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class PowerPlantValidationConverter : ErrorConverter<PowerPlantValidationError>
+    public class MeteringPointSubTypeValueMustBeValidValidationError : ValidationError
     {
-        protected override ErrorMessage Convert(PowerPlantValidationError validationError)
+        public MeteringPointSubTypeValueMustBeValidValidationError(string gsrnNumber, string meteringPointSubType)
         {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-            return new("D57", $"Power plant {validationError.PowerPlant} for metering point {validationError.GsrnNumber} is missing (type E18/D01) or not allowed (types E20/D02/D13/D14/D15/D20)");
+            GsrnNumber = gsrnNumber;
+            MeteringPointSubType = meteringPointSubType;
         }
+
+        public string GsrnNumber { get; }
+
+        public string MeteringPointSubType { get; }
     }
 }

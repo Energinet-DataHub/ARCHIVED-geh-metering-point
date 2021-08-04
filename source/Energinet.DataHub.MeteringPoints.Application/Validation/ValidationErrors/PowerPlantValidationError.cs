@@ -16,9 +16,9 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class PowerPlantNotEmptyValidationError : ValidationError
+    public class PowerPlantValidationError : ValidationError
     {
-        public PowerPlantNotEmptyValidationError(string gsrnNumber, string powerPlant)
+        public PowerPlantValidationError(string gsrnNumber, string powerPlant)
         {
             GsrnNumber = gsrnNumber;
             PowerPlant = powerPlant;
