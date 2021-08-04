@@ -358,6 +358,30 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
         }
 
+        [Theory]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(ReadingOccurrence.Hourly), typeof(MeterReadingOccurenceMandatoryValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Consumption), "", typeof(MeterReadingOccurenceMandatoryValidationError), true)]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(ReadingOccurrence.Yearly), typeof(MeterReadingOccurenceInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.VEProduction), nameof(ReadingOccurrence.Yearly), typeof(MeterReadingOccurenceInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.VEProduction), nameof(ReadingOccurrence.Monthly), typeof(MeterReadingOccurenceInvalidValueValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Analysis), nameof(ReadingOccurrence.Monthly), typeof(MeterReadingOccurenceInvalidValueValidationError), false)]
+        [InlineData(nameof(MeteringPointType.NetConsumption), nameof(ReadingOccurrence.Monthly), typeof(MeterReadingOccurenceInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.NetConsumption), nameof(ReadingOccurrence.Quarterly), typeof(MeterReadingOccurenceInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.NetConsumption), nameof(ReadingOccurrence.Hourly), typeof(MeterReadingOccurenceInvalidValueValidationError), false)]
+        [InlineData(nameof(MeteringPointType.SurplusProductionGroup), nameof(ReadingOccurrence.Monthly), typeof(MeterReadingOccurenceInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.SurplusProductionGroup), nameof(ReadingOccurrence.Quarterly), typeof(MeterReadingOccurenceInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.SurplusProductionGroup), nameof(ReadingOccurrence.Hourly), typeof(MeterReadingOccurenceInvalidValueValidationError), false)]
+        public void Validate_MeterReadingOccurence(string meteringPointType, string meterReadingOccurence, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                MeterReadingOccurrence = meterReadingOccurence,
+                TypeOfMeteringPoint = meteringPointType,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
         private static CreateMeteringPoint CreateRequest()
         {
             return new();
