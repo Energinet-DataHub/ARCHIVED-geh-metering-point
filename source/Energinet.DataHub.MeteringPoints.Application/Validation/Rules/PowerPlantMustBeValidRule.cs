@@ -102,8 +102,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         {
             RuleFor(createMeteringPoint => createMeteringPoint.PowerPlant)
                 .Must(powerPlant => powerPlant.StartsWith("57", StringComparison.Ordinal))
-                .WithState(createMeteringPoint => new PowerPlantGsrnEan18ValidValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.PowerPlant))
-                .When(createMeteringPoint => createMeteringPoint.PowerPlant.Length > 0);
+                .WithState(createMeteringPoint =>
+                    new PowerPlantGsrnEan18ValidValidationError(
+                        createMeteringPoint.GsrnNumber,
+                        createMeteringPoint.PowerPlant));
         }
 
         private void PowerPlantIsValidGsrnEan18Code()
@@ -113,8 +115,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 .WithState(createMeteringPoint =>
                     new PowerPlantGsrnEan18ValidValidationError(
                         createMeteringPoint.GsrnNumber,
-                        createMeteringPoint.PowerPlant))
-                .When(createMeteringPoint => createMeteringPoint.PowerPlant.Length > 0);
+                        createMeteringPoint.PowerPlant));
         }
 
         private void PowerPlantValueMustBeValid()
