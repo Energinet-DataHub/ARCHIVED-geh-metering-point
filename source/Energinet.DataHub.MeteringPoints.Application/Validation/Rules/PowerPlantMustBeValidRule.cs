@@ -55,7 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         {
             return IsProduction(createMeteringPoint) ||
                    IsVeProduction(createMeteringPoint) ||
-                   IsConsumptionAndNotZero(createMeteringPoint);
+                   IsConsumptionAndNotZeroOrNinetyNine(createMeteringPoint);
         }
 
         private static bool IsAnalysis(CreateMeteringPoint createMeteringPoint)
@@ -93,14 +93,32 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 StringComparison.Ordinal);
         }
 
-        private static bool IsConsumptionAndNotZero(CreateMeteringPoint createMeteringPoint)
+        private static bool IsConsumptionAndNotZeroOrNinetyNine(CreateMeteringPoint createMeteringPoint)
+        {
+            return IsConsumption(createMeteringPoint) &&
+             !IsNetSettlementGroupZero(createMeteringPoint) &&
+             !IsNetSettlementGroupNinetyNine(createMeteringPoint);
+        }
+
+        private static bool IsConsumption(CreateMeteringPoint createMeteringPoint)
         {
             return createMeteringPoint.TypeOfMeteringPoint.Equals(
-                 MeteringPointType.Consumption.Name,
-                 StringComparison.Ordinal) &&
-             !createMeteringPoint.NetSettlementGroup.Equals(
-                 NetSettlementGroup.Zero.Name,
-                 StringComparison.Ordinal);
+                MeteringPointType.Consumption.Name,
+                StringComparison.Ordinal);
+        }
+
+        private static bool IsNetSettlementGroupZero(CreateMeteringPoint createMeteringPoint)
+        {
+            return createMeteringPoint.NetSettlementGroup.Equals(
+                NetSettlementGroup.Zero.Name,
+                StringComparison.Ordinal);
+        }
+
+        private static bool IsNetSettlementGroupNinetyNine(CreateMeteringPoint createMeteringPoint)
+        {
+            return createMeteringPoint.NetSettlementGroup.Equals(
+                       NetSettlementGroup.Ninetynine.Name,
+                       StringComparison.Ordinal);
         }
 
         private static bool PowerPlantNotAllowedGroupOfMeteringPointTypes(CreateMeteringPoint createMeteringPoint)
