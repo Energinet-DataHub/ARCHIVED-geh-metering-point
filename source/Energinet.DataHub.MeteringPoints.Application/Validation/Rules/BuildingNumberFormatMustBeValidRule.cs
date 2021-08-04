@@ -27,18 +27,18 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         public BuildingNumberFormatMustBeValidRule(string gsrnNumber, string countryCode)
         {
             _gsrnNumber = gsrnNumber;
-            When(address => countryCode.Equals("DK", StringComparison.Ordinal), BuildingNumberDenmarkFormat)
-                .Otherwise(BuildingNumberNotDenmarkFormat);
+            When(address => countryCode.Equals("DK", StringComparison.OrdinalIgnoreCase), BuildingNumberMustBeDanishFormat)
+                .Otherwise(BuildingNumberMustNotBeDanishFormat);
         }
 
-        private void BuildingNumberDenmarkFormat()
+        private void BuildingNumberMustBeDanishFormat()
         {
             RuleFor(buildingNumber => buildingNumber)
                 .Matches(BuildingNumberDenmarkFormatRegEx)
                 .WithState(buildingNumber => new BuildingNumberMustBeValidValidationError(_gsrnNumber, buildingNumber));
         }
 
-        private void BuildingNumberNotDenmarkFormat()
+        private void BuildingNumberMustNotBeDanishFormat()
         {
             RuleFor(postCode => postCode)
                 .MaximumLength(BuildingNumberNotDenmarkFormatMaxLength)

@@ -22,7 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         protected override ErrorMessage Convert(MunicipalityCodeMustBeValidValidationError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-            return new("Code", "Error");
+            return new("E86", $"Municipality code {validationError.MunicipalityCode} for metering point {validationError.GrsnNumber} is out of range or contains a non-digit character or has a length that does not equal 3");
         }
     }
 }
