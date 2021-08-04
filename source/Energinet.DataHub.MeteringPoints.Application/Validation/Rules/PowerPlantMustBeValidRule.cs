@@ -26,7 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         public PowerPlantMustBeValidRule()
         {
             When(
-                ProductionOrConsumptionAndNetSettlementGroupNotZero,
+                ProductionOrConsumptionAndNetSettlementGroupIsNotZero,
                 PowerPlantMustNotBeEmpty);
 
             When(
@@ -34,7 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 PowerPlantValueMustBeValid);
         }
 
-        private static bool ProductionOrConsumptionAndNetSettlementGroupNotZero(CreateMeteringPoint createMeteringPoint)
+        private static bool ProductionOrConsumptionAndNetSettlementGroupIsNotZero(CreateMeteringPoint createMeteringPoint)
         {
             return createMeteringPoint.TypeOfMeteringPoint.Equals(
                 MeteringPointType.Production.Name,
