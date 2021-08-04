@@ -55,6 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 .AddProperty(x => x.ToGrid, "MarketEvaluationPoint", "outMeteringGridArea_Domain.mRID")
                 .AddProperty(x => x.ParentRelatedMeteringPoint, "MarketEvaluationPoint", "parent_MarketEvaluationPoint.mRID")
                 .AddProperty(x => x.ProductType, TranslateProductType, "MarketEvaluationPoint", "Series", "product")
+                .AddProperty(x => x.PhysicalConnectionCapacity, "MarketEvaluationPoint", "physicalConnectionCapacity")
                 .AddProperty(x => x.MeasureUnitType, TranslateMeasureUnitType, "MarketEvaluationPoint", "Series", "quantity_Measure_Unit.name"));
         }
 
@@ -70,6 +71,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 "D01" => nameof(SettlementMethod.Flex),
                 "E02" => nameof(SettlementMethod.NonProfiled),
                 "E01" => nameof(SettlementMethod.Profiled),
+                // TODO: don't return empty string.
+                // TODO: Pass through original value instead.
                 _ => string.Empty,
             };
         }
@@ -207,7 +210,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 "8716867000023" => nameof(ProductType.PowerReactive),
                 "5790001330606" => nameof(ProductType.FuelQuantity),
                 "5790001330590" => nameof(ProductType.Tariff),
-                _ => string.Empty,
+                _ => productType.SourceValue,
             };
         }
 

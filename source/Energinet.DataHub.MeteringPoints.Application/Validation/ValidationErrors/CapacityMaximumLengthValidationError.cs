@@ -16,16 +16,16 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class ProductTypeInvalidValueValidationError : ValidationError
+    public class CapacityMaximumLengthValidationError : ValidationError
     {
-        public ProductTypeInvalidValueValidationError(string gsrnNumber, string productType)
+        public CapacityMaximumLengthValidationError(string gsrnNumber, string? capacity)
         {
             GsrnNumber = gsrnNumber;
-            ProductType = productType;
+            Capacity = capacity;
         }
 
         public string GsrnNumber { get; }
 
-        public string ProductType { get; }
+        public string? Capacity { get; }
     }
 }
