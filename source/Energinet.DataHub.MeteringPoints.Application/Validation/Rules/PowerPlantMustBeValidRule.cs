@@ -37,14 +37,19 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         private static bool ProductionOrConsumptionAndNetSettlementGroupIsNotZero(CreateMeteringPoint createMeteringPoint)
         {
             return createMeteringPoint.TypeOfMeteringPoint.Equals(
-                MeteringPointType.Production.Name,
-                StringComparison.Ordinal) ||
-                (createMeteringPoint.TypeOfMeteringPoint.Equals(
-                       MeteringPointType.Consumption.Name,
-                       StringComparison.Ordinal) &&
-                   !createMeteringPoint.NetSettlementGroup.Equals(
-                       NetSettlementGroup.Zero.Name,
-                       StringComparison.Ordinal));
+                       MeteringPointType.Production.Name,
+                       StringComparison.Ordinal) ||
+                   IsConsumptionAndNotZero(createMeteringPoint);
+        }
+
+        private static bool IsConsumptionAndNotZero(CreateMeteringPoint createMeteringPoint)
+        {
+            return createMeteringPoint.TypeOfMeteringPoint.Equals(
+                 MeteringPointType.Consumption.Name,
+                 StringComparison.Ordinal) &&
+             !createMeteringPoint.NetSettlementGroup.Equals(
+                 NetSettlementGroup.Zero.Name,
+                 StringComparison.Ordinal);
         }
 
         private static int Parse(string input)
