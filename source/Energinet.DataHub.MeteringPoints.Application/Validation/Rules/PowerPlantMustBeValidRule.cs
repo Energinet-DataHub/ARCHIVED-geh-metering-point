@@ -13,6 +13,7 @@
 // // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -27,70 +28,25 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         public PowerPlantMustBeValidRule()
         {
             When(
-                PowerPlantMustNotBeEmptyGroupOfMeteringPointTypes,
+                MandatoryGroupOfMeteringPointTypes,
                 PowerPlantMustNotBeEmpty);
             When(
-                PowerPlantNotAllowedGroupOfMeteringPointTypes,
+                NotAllowedGroupOfMeteringPointTypes,
                 PowerPlantMustBeEmpty);
             When(
                 createMeteringPoint => createMeteringPoint.PowerPlant.Length > 0,
                 PowerPlantValueMustBeValid);
         }
 
-        private static bool IsVeProduction(CreateMeteringPoint createMeteringPoint)
+        private static bool MandatoryGroupOfMeteringPointTypes(CreateMeteringPoint createMeteringPoint)
         {
-            return createMeteringPoint.TypeOfMeteringPoint.Equals(
-                MeteringPointType.VEProduction.Name,
-                StringComparison.Ordinal);
-        }
-
-        private static bool IsProduction(CreateMeteringPoint createMeteringPoint)
-        {
-            return createMeteringPoint.TypeOfMeteringPoint.Equals(
-                MeteringPointType.Production.Name,
-                StringComparison.Ordinal);
-        }
-
-        private static bool PowerPlantMustNotBeEmptyGroupOfMeteringPointTypes(CreateMeteringPoint createMeteringPoint)
-        {
-            return IsProduction(createMeteringPoint) ||
-                   IsVeProduction(createMeteringPoint) ||
-                   IsConsumptionAndNotZeroOrNinetyNine(createMeteringPoint);
-        }
-
-        private static bool IsAnalysis(CreateMeteringPoint createMeteringPoint)
-        {
-            return createMeteringPoint.TypeOfMeteringPoint.Equals(
-                MeteringPointType.Analysis.Name,
-                StringComparison.Ordinal);
-        }
-
-        private static bool IsInternalUse(CreateMeteringPoint createMeteringPoint)
-        {
-            return createMeteringPoint.TypeOfMeteringPoint.Equals(
-                MeteringPointType.InternalUse.Name,
-                StringComparison.Ordinal);
-        }
-
-        private static bool IsNetConsumption(CreateMeteringPoint createMeteringPoint)
-        {
-            return createMeteringPoint.TypeOfMeteringPoint.Equals(
-                MeteringPointType.NetConsumption.Name,
-                StringComparison.Ordinal);
-        }
-
-        private static bool IsExchangeReactiveEnergy(CreateMeteringPoint createMeteringPoint)
-        {
-            return createMeteringPoint.TypeOfMeteringPoint.Equals(
-                MeteringPointType.ExchangeReactiveEnergy.Name,
-                StringComparison.Ordinal);
-        }
-
-        private static bool IsExchange(CreateMeteringPoint createMeteringPoint)
-        {
-            return createMeteringPoint.TypeOfMeteringPoint.Equals(
-                MeteringPointType.Exchange.Name,
-                StringComparison.Ordinal);
+            return new HashSet<string>
+                    {
+                        MeteringPointType.Production.Name,
+                        MeteringPointType.VEProduction.Name,
+                    }
+                .Contains(createMeteringPoint.TypeOfMeteringPoint) ||
+                IsConsumptionAndNotZeroOrNinetyNine(createMeteringPoint);
         }
 
         private static bool IsConsumptionAndNotZeroOrNinetyNine(CreateMeteringPoint createMeteringPoint)
@@ -121,13 +77,17 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                        StringComparison.Ordinal);
         }
 
-        private static bool PowerPlantNotAllowedGroupOfMeteringPointTypes(CreateMeteringPoint createMeteringPoint)
+        private static bool NotAllowedGroupOfMeteringPointTypes(CreateMeteringPoint createMeteringPoint)
         {
-            return IsAnalysis(createMeteringPoint) ||
-                   IsInternalUse(createMeteringPoint) ||
-                   IsNetConsumption(createMeteringPoint) ||
-                   IsExchangeReactiveEnergy(createMeteringPoint) ||
-                   IsExchange(createMeteringPoint);
+            return new HashSet<string>
+                    {
+                        MeteringPointType.Analysis.Name,
+                        MeteringPointType.Exchange.Name,
+                        MeteringPointType.ExchangeReactiveEnergy.Name,
+                        MeteringPointType.InternalUse.Name,
+                        MeteringPointType.NetConsumption.Name,
+                    }
+                .Contains(createMeteringPoint.TypeOfMeteringPoint);
         }
 
         private static int Parse(string input)
@@ -168,7 +128,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
         private void PowerPlantMustBeEmpty()
         {
-            RuleFor(createmeteringPoint => createmeteringPoint.PowerPlant)
+            RuleFor(createMeteringPoint => createMeteringPoint.PowerPlant)
                 .Empty()
                 .WithState(createMeteringPoint => new PowerPlantValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.PowerPlant));
         }
