@@ -26,20 +26,32 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         public PowerPlantMustBeValidRule()
         {
             When(
-                createMeteringPoint =>
-                    createMeteringPoint.TypeOfMeteringPoint.Equals(MeteringPointType.Production.Name, StringComparison.Ordinal),
-                WhenTypeOfMeteringPointIsProduction);
+                Production,
+                PowerPlantMustNotBeEmpty);
 
             When(
-                createMeteringPoint =>
-                createMeteringPoint.TypeOfMeteringPoint.Equals(
-                    MeteringPointType.Consumption.Name,
-                    StringComparison.Ordinal) &&
-                !createMeteringPoint.NetSettlementGroup.Equals(NetSettlementGroup.Zero.Name, StringComparison.Ordinal),
-                WhenSettlementIsNotZeroForConsumptionMeteringPoint);
+                ConsumptionAndNetSettlementGroupZero,
+                PowerPlantMustNotBeEmpty);
 
             PowerPlantStartsWith57();
             PowerPlantIsValidGsrnEan18Code();
+        }
+
+        private static bool Production(CreateMeteringPoint createMeteringPoint)
+        {
+            return createMeteringPoint.TypeOfMeteringPoint.Equals(
+                MeteringPointType.Production.Name,
+                StringComparison.Ordinal);
+        }
+
+        private static bool ConsumptionAndNetSettlementGroupZero(CreateMeteringPoint createMeteringPoint)
+        {
+            return createMeteringPoint.TypeOfMeteringPoint.Equals(
+                       MeteringPointType.Consumption.Name,
+                       StringComparison.Ordinal) &&
+                   !createMeteringPoint.NetSettlementGroup.Equals(
+                       NetSettlementGroup.Zero.Name,
+                       StringComparison.Ordinal);
         }
 
         private static int Parse(string input)
@@ -78,17 +90,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             return equalOrHigherMultipleOf - sum;
         }
 
-        private void WhenTypeOfMeteringPointIsProduction()
-        {
-            PowerPlantNotEmpty();
-        }
-
-        private void WhenSettlementIsNotZeroForConsumptionMeteringPoint()
-        {
-            PowerPlantNotEmpty();
-        }
-
-        private void PowerPlantNotEmpty()
+        private void PowerPlantMustNotBeEmpty()
         {
             RuleFor(createMeteringPoint => createMeteringPoint.PowerPlant)
                 .NotEmpty()

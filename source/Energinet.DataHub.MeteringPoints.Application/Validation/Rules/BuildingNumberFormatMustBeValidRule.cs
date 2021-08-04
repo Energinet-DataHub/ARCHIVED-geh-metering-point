@@ -20,8 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
     public class BuildingNumberFormatMustBeValidRule : AbstractValidator<string>
     {
-        private const string BuildingNumberDkFormatRegEx = @"^(?=.{1,4}$)((([1-9][0-9]{0,2})?[A-ZÆØÅ]*)|([A-ZÆØÅ]*([1-9][0-9]{0,2})?))$";
-        private const int BuildingNumberNotDkFormatMaxLength = 6;
+        private const string BuildingNumberDenmarkFormatRegEx = @"^(?=.{1,4}$)((([1-9][0-9]{0,2})?[A-ZÆØÅ]*)|([A-ZÆØÅ]*([1-9][0-9]{0,2})?))$";
+        private const int BuildingNumberNotDenmarkFormatMaxLength = 6;
         private readonly string _gsrnNumber;
 
         public BuildingNumberFormatMustBeValidRule(string gsrnNumber, string countryCode)
@@ -34,14 +34,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         private void BuildingNumberDenmarkFormat()
         {
             RuleFor(buildingNumber => buildingNumber)
-                .Matches(BuildingNumberDkFormatRegEx)
+                .Matches(BuildingNumberDenmarkFormatRegEx)
                 .WithState(buildingNumber => new BuildingNumberMustBeValidValidationError(_gsrnNumber, buildingNumber));
         }
 
         private void BuildingNumberNotDenmarkFormat()
         {
             RuleFor(postCode => postCode)
-                .MaximumLength(BuildingNumberNotDkFormatMaxLength)
+                .MaximumLength(BuildingNumberNotDenmarkFormatMaxLength)
                 .WithState(buildingNumber => new BuildingNumberMustBeValidValidationError(_gsrnNumber, buildingNumber));
         }
     }

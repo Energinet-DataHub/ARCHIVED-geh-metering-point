@@ -314,6 +314,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         [InlineData("AÆZ", "DK", typeof(BuildingNumberMustBeValidValidationError), false)]
         [InlineData("22ADA", "", typeof(BuildingNumberMustBeValidValidationError), false)]
         [InlineData("ÆØÅ", "", typeof(BuildingNumberMustBeValidValidationError), false)]
+        [InlineData("1AAA", "", typeof(BuildingNumberMustBeValidValidationError), false)]
         [InlineData("", "DK", typeof(BuildingNumberMustBeValidValidationError), true)]
         [InlineData("001K", "DK", typeof(BuildingNumberMustBeValidValidationError), true)]
         [InlineData("001KA", "DK", typeof(BuildingNumberMustBeValidValidationError), true)]
