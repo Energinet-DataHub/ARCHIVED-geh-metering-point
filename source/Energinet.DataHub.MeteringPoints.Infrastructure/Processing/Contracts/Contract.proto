@@ -60,6 +60,7 @@ message CreateMeteringPoint {
   string toGrid = 23;
   string productType = 24;
   string measureUnitType = 25;
+  google.protobuf.StringValue physicalConnectionCapacity = 26;
 }
 
 message ConnectMeteringPoint {

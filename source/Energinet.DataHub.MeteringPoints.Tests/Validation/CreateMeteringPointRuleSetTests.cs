@@ -20,6 +20,7 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentAssertions;
+using FluentValidation;
 using Xunit;
 using Xunit.Categories;
 
@@ -455,8 +456,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         [InlineData("561234567891234568", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.One), typeof(PowerPlantGsrnEan18ValidValidationError), true)]
         [InlineData("571234567891234568", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(PowerPlantGsrnEan18ValidValidationError), false)]
         [InlineData("8891928731", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(PowerPlantGsrnEan18ValidValidationError), true)]
-        [InlineData("", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(PowerPlantNotEmptyValidationError), true)]
-        [InlineData("", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.One), typeof(PowerPlantNotEmptyValidationError), true)]
+        [InlineData("", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError), true)]
+        [InlineData("", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError), true)]
         [InlineData("", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.Zero), typeof(PowerPlantGsrnEan18ValidValidationError), false)]
         public void Validate_PowerPlant(string powerPlant, string meteringPointType, string netSettlementGroup,  System.Type validationError, bool expectedError)
         {
@@ -466,6 +467,41 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
                 PowerPlant = powerPlant,
                 TypeOfMeteringPoint = meteringPointType,
                 NetSettlementGroup = netSettlementGroup,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData("571234567891234568", nameof(MeteringPointType.Analysis), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError), true)]
+        [InlineData("571234567891234568", nameof(MeteringPointType.Exchange), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError), true)]
+        [InlineData("571234567891234568", nameof(MeteringPointType.ExchangeReactiveEnergy), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError), true)]
+        [InlineData("571234567891234568", nameof(MeteringPointType.InternalUse), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError), true)]
+        [InlineData("571234567891234568", nameof(MeteringPointType.NetConsumption), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError), true)]
+        public void Validate_PowerPlant_Not_Allowed(string powerPlant, string meteringPointType, string netSettlementGroup,  System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                PowerPlant = powerPlant,
+                TypeOfMeteringPoint = meteringPointType,
+                NetSettlementGroup = netSettlementGroup,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData(nameof(MeteringPointSubType.Physical), typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
+        [InlineData(nameof(MeteringPointSubType.Virtual), typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
+        [InlineData(nameof(MeteringPointSubType.Calculated), typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
+        [InlineData("", typeof(MeteringPointSubTypeValueMustBeValidValidationError), true)]
+        public void Validate_MeteringPoint_Subtype_Correct_Value(string meteringPointSubType,  System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                SubTypeOfMeteringPoint = meteringPointSubType,
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
