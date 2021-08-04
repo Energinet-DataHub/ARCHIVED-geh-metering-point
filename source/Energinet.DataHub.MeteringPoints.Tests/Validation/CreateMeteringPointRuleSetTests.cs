@@ -20,7 +20,6 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentAssertions;
-using FluentValidation;
 using Xunit;
 using Xunit.Categories;
 
@@ -478,6 +477,39 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             {
                 GsrnNumber = SampleData.GsrnNumber,
                 SubTypeOfMeteringPoint = meteringPointSubType,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData(nameof(MeteringPointType.Consumption), "gridArea", typeof(SourceMeteringGridAreaNotAllowedValidationError), false)]
+        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), "gridArea", typeof(SourceMeteringGridAreaNotAllowedValidationError), true)]
+        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), "", typeof(SourceMeteringGridAreaNotAllowedValidationError), false)]
+        public void Validate_SourceMeteringGridArea(string meteringPointType, string gridArea,  System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                TypeOfMeteringPoint = meteringPointType,
+                FromGrid = gridArea,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData(nameof(MeteringPointType.Consumption), "gridArea", typeof(TargetMeteringGridAreaNotAllowedValidationError), false)]
+        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), "gridArea", typeof(TargetMeteringGridAreaNotAllowedValidationError), true)]
+        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), "", typeof(TargetMeteringGridAreaNotAllowedValidationError), false)]
+
+        public void Validate_TargetMeteringGridArea(string meteringPointType, string gridArea,  System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                TypeOfMeteringPoint = meteringPointType,
+                ToGrid = gridArea,
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);

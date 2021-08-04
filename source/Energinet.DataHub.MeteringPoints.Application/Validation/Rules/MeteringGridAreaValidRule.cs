@@ -25,7 +25,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         public MeteringGridAreaValidRule()
         {
             MandatoryMeteringGridArea();
-            MeteringGridAreaLengthOf3Digits();
+            MeteringGridAreaLengthOfNDigits();
+            SourceAndTargetMeteringGridAreaNotAllowedForExchangeReactiveEnergy();
         }
 
         private void MandatoryMeteringGridArea()
@@ -35,11 +36,25 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 .WithState(createMeteringPoint => new MeteringGridAreaMandatoryValidationError(createMeteringPoint.GsrnNumber));
         }
 
-        private void MeteringGridAreaLengthOf3Digits()
+        private void MeteringGridAreaLengthOfNDigits()
         {
             RuleFor(createMeteringPoint => createMeteringPoint.MeteringGridArea)
                 .Length(ExactGridAreaLengthAllowed)
                 .WithState(createMeteringPoint => new MeteringGridAreaLengthValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.MeteringGridArea, ExactGridAreaLengthAllowed));
+        }
+
+        private void SourceAndTargetMeteringGridAreaNotAllowedForExchangeReactiveEnergy()
+        {
+            When(createMeteringPoint => createMeteringPoint.TypeOfMeteringPoint == MeteringPointType.ExchangeReactiveEnergy.Name, () =>
+            {
+                RuleFor(createMeteringPoint => createMeteringPoint.FromGrid)
+                    .Empty()
+                    .WithState(createMeteringPoint => new SourceMeteringGridAreaNotAllowedValidationError(createMeteringPoint.GsrnNumber));
+
+                RuleFor(createMeteringPoint => createMeteringPoint.ToGrid)
+                    .Empty()
+                    .WithState(createMeteringPoint => new TargetMeteringGridAreaNotAllowedValidationError(createMeteringPoint.GsrnNumber));
+            });
         }
     }
 }
