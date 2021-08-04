@@ -26,9 +26,12 @@ message Address {
   string cityName = 3;
   string countryCode = 4;
   bool isWashable = 5;
+  string buildingNumber = 6;
   string streetCode = 7;
   string floorIdentification = 8;
   string roomIdentification = 9;
+  string municipalityCode = 10;
+  string cityNameSubDivision = 11;
 }
 
 message CreateMeteringPoint {

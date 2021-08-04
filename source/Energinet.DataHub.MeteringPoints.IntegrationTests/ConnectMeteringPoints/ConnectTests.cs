@@ -84,8 +84,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
         {
             return new(
                 SampleData.StreetName,
+                SampleData.BuildingNumber,
                 SampleData.PostCode,
                 SampleData.CityName,
+                SampleData.CitySubDivisionName,
+                SampleData.MunicipalityCode,
                 SampleData.CountryCode,
                 SampleData.StreetCode,
                 SampleData.FloorIdentification,

@@ -358,6 +358,95 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
         }
 
+        [Theory]
+        [InlineData("22A", "DK", typeof(BuildingNumberMustBeValidValidationError), false)]
+        [InlineData("AÆZ", "DK", typeof(BuildingNumberMustBeValidValidationError), false)]
+        [InlineData("22ADA", "", typeof(BuildingNumberMustBeValidValidationError), false)]
+        [InlineData("ÆØÅ", "", typeof(BuildingNumberMustBeValidValidationError), false)]
+        [InlineData("1AAA", "", typeof(BuildingNumberMustBeValidValidationError), false)]
+        [InlineData("", "DK", typeof(BuildingNumberMustBeValidValidationError), true)]
+        [InlineData("001K", "DK", typeof(BuildingNumberMustBeValidValidationError), true)]
+        [InlineData("001KA", "DK", typeof(BuildingNumberMustBeValidValidationError), true)]
+        [InlineData("2AaIOAK", "", typeof(BuildingNumberMustBeValidValidationError), true)]
+        public void Validate_BuildingNumber_Format(string buildingNumber, string countryCode, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                CountryCode = countryCode,
+                BuildingNumber = buildingNumber,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData("123", typeof(MunicipalityCodeMustBeValidValidationError), false)]
+        [InlineData("999", typeof(MunicipalityCodeMustBeValidValidationError), false)]
+        [InlineData("1234", typeof(MunicipalityCodeMustBeValidValidationError), true)]
+        [InlineData("12", typeof(MunicipalityCodeMustBeValidValidationError), true)]
+        public void Validate_Municipality_Code(string municipalityCode, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                MunicipalityCode = municipalityCode,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData("", typeof(CitySubDivisionNameMaximumLengthValidationError), false)]
+        [InlineData("Asdasdakl k asdasdsa", typeof(CitySubDivisionNameMaximumLengthValidationError), false)]
+        [InlineData("Asdkl dasdkjsajkd ksd skladsa lkdasjlk assad sakd sadas asd sa", typeof(CitySubDivisionNameMaximumLengthValidationError), true)]
+        public void Validate_CitySubDivisionName(string citySubDivisionName, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                CitySubDivisionName = citySubDivisionName,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData("", typeof(LocationDescriptionMaximumLengthValidationError), false)]
+        [InlineData("Lorem ipsum dolor sit amet, consectetur adipiscing elit.", typeof(LocationDescriptionMaximumLengthValidationError), false)]
+        [InlineData("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec semper neque ac lectus accumsan, vel gravida nulla pretium. Ut vitae ipsum leo. Vestibulum consectetur iaculis est venenatis tincidunt. Fusce eu tincidunt ex.", typeof(LocationDescriptionMaximumLengthValidationError), true)]
+        public void Validate_LocationDescription(string localDescription, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                LocationDescription = localDescription,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData("571234567891234568", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.One), typeof(PowerPlantGsrnEan18ValidValidationError), false)]
+        [InlineData("561234567891234568", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.One), typeof(PowerPlantGsrnEan18ValidValidationError), true)]
+        [InlineData("571234567891234568", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(PowerPlantGsrnEan18ValidValidationError), false)]
+        [InlineData("8891928731", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(PowerPlantGsrnEan18ValidValidationError), true)]
+        [InlineData("", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(PowerPlantNotEmptyValidationError), true)]
+        [InlineData("", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.One), typeof(PowerPlantNotEmptyValidationError), true)]
+        [InlineData("", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.Zero), typeof(PowerPlantGsrnEan18ValidValidationError), false)]
+        public void Validate_PowerPlant(string powerPlant, string meteringPointType, string netSettlementGroup,  System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                PowerPlant = powerPlant,
+                TypeOfMeteringPoint = meteringPointType,
+                NetSettlementGroup = netSettlementGroup,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
         private static CreateMeteringPoint CreateRequest()
         {
             return new();
