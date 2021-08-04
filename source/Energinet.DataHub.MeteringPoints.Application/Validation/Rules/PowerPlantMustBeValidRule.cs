@@ -30,11 +30,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 PowerPlantMustNotBeEmpty);
 
             When(
-                ConsumptionAndNetSettlementGroupZero,
+                ConsumptionAndNetSettlementGroupNotZero,
                 PowerPlantMustNotBeEmpty);
 
-            PowerPlantStartsWith57();
-            PowerPlantIsValidGsrnEan18Code();
+            When(
+                createMeteringPoint => createMeteringPoint.PowerPlant.Length > 0,
+                PowerPlantValueMustBeValid);
         }
 
         private static bool Production(CreateMeteringPoint createMeteringPoint)
@@ -44,7 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 StringComparison.Ordinal);
         }
 
-        private static bool ConsumptionAndNetSettlementGroupZero(CreateMeteringPoint createMeteringPoint)
+        private static bool ConsumptionAndNetSettlementGroupNotZero(CreateMeteringPoint createMeteringPoint)
         {
             return createMeteringPoint.TypeOfMeteringPoint.Equals(
                        MeteringPointType.Consumption.Name,
@@ -97,7 +98,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 .WithState(createMeteringPoint => new PowerPlantNotEmptyValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.PowerPlant));
         }
 
-        private void PowerPlantStartsWith57()
+        private void PowerPlantMustStartsWith57()
         {
             RuleFor(createMeteringPoint => createMeteringPoint.PowerPlant)
                 .Must(powerPlant => powerPlant.StartsWith("57", StringComparison.Ordinal))
@@ -114,6 +115,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                         createMeteringPoint.GsrnNumber,
                         createMeteringPoint.PowerPlant))
                 .When(createMeteringPoint => createMeteringPoint.PowerPlant.Length > 0);
+        }
+
+        private void PowerPlantValueMustBeValid()
+        {
+            PowerPlantMustStartsWith57();
+            PowerPlantIsValidGsrnEan18Code();
         }
     }
 }
