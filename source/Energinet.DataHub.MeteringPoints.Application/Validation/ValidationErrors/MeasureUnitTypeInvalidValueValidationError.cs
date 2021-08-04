@@ -12,20 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using FluentValidation;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class FloorIdentificationRule : AbstractValidator<string>
+    public class MeasureUnitTypeInvalidValueValidationError : ValidationError
     {
-        private const int FloorIdentificationLength = 4;
-
-        public FloorIdentificationRule(string gsrnNumber)
+        public MeasureUnitTypeInvalidValueValidationError(string measureUnitType, string gsrnNumber)
         {
-            RuleFor(floorIdentification => floorIdentification)
-                .MaximumLength(FloorIdentificationLength)
-                .WithState(floorIdentification => new FloorIdentificationValidationError(gsrnNumber, floorIdentification));
+            MeasureUnitType = measureUnitType;
+            GsrnNumber = gsrnNumber;
         }
+
+        public string MeasureUnitType { get; }
+
+        public string GsrnNumber { get; }
     }
 }
