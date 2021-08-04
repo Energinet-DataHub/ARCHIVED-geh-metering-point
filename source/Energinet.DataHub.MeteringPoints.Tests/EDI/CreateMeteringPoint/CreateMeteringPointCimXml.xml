@@ -50,7 +50,7 @@ limitations under the License.
             <cim:asset_MktPSRType.psrType>D12</cim:asset_MktPSRType.psrType>
             <cim:productionObligation>true</cim:productionObligation>
             <cim:Series>
-                <cim:mRID>String</cim:mRID>
+                <cim:product>8716867000139</cim:product>
                 <cim:estimatedAnnualVolume_Quantity.quantity>0</cim:estimatedAnnualVolume_Quantity.quantity>
                 <cim:quantity_Measure_Unit.name>KWh</cim:quantity_Measure_Unit.name>
             </cim:Series>

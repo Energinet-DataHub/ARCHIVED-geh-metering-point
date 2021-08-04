@@ -12,14 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class MessageQueueItem
+    public class RoomIdentificationValidationError : ValidationError
     {
-        // public IUserIdentity UserIdentity { get; set; }
-        //
-        // public string CommandType { get; set; }
-        //
-        // public ICommand Command { get; set; }
+        public RoomIdentificationValidationError(string gsrnNumber, string roomIdentification)
+        {
+            GsrnNumber = gsrnNumber;
+            RoomIdentification = roomIdentification;
+        }
+
+        public string GsrnNumber { get; }
+
+        public string RoomIdentification { get; }
     }
 }

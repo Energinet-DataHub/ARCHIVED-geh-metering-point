@@ -43,11 +43,16 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 .AddProperty(x => x.StreetName, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "streetDetail", "name")
                 .AddProperty(x => x.CityName, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "townDetail", "name")
                 .AddProperty(x => x.PostCode, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "postalCode")
+                .AddProperty(x => x.StreetCode, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "streetDetail", "code")
                 .AddProperty(x => x.CountryCode, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "townDetail", "country")
+                .AddProperty(x => x.FloorIdentification, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "streetDetail", "floorIdentification")
+                .AddProperty(x => x.RoomIdentification, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "streetDetail", "suiteNumber")
                 .AddProperty(x => x.IsWashable, IsWashable, "MarketEvaluationPoint", "usagePointLocation.officialAddressIndicator")
                 .AddProperty(x => x.FromGrid, "MarketEvaluationPoint", "inMeteringGridArea_Domain.mRID")
                 .AddProperty(x => x.ToGrid, "MarketEvaluationPoint", "outMeteringGridArea_Domain.mRID")
-                .AddProperty(x => x.ParentRelatedMeteringPoint, "MarketEvaluationPoint", "parent_MarketEvaluationPoint.mRID"));
+                .AddProperty(x => x.ParentRelatedMeteringPoint, "MarketEvaluationPoint", "parent_MarketEvaluationPoint.mRID")
+                .AddProperty(x => x.ProductType, TranslateProductType, "MarketEvaluationPoint", "Series", "product")
+                .AddProperty(x => x.MeasureUnitType, TranslateMeasureUnitType, "MarketEvaluationPoint", "Series", "quantity_Measure_Unit.name"));
         }
 
         private static bool IsWashable(XmlElementInfo remark)
@@ -57,10 +62,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
 
         private static string TranslateSettlementMethod(XmlElementInfo settlementMethod)
         {
-            return settlementMethod.SourceValue switch
+            return settlementMethod.SourceValue.ToUpperInvariant() switch
             {
                 "D01" => nameof(SettlementMethod.Flex),
                 "E02" => nameof(SettlementMethod.NonProfiled),
+                // TODO: add translation for Profiled
                 _ => string.Empty,
             };
         }
@@ -81,18 +87,36 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
 
         private static string TranslateMeteringPointType(XmlElementInfo meteringPointType)
         {
-            return meteringPointType.SourceValue switch
+            return meteringPointType.SourceValue.ToUpperInvariant() switch
             {
+                "D01" => nameof(MeteringPointType.VEProduction),
+                "D02" => nameof(MeteringPointType.Analysis),
+                "D20" => nameof(MeteringPointType.ExchangeReactiveEnergy),
+                "D99" => nameof(MeteringPointType.InternalUse),
                 "E17" => nameof(MeteringPointType.Consumption),
                 "E18" => nameof(MeteringPointType.Production),
                 "E20" => nameof(MeteringPointType.Exchange),
+                "D04" => nameof(MeteringPointType.SurplusProductionGroup),
+                "D05" => nameof(MeteringPointType.NetProduction),
+                "D06" => nameof(MeteringPointType.SupplyToGrid),
+                "D07" => nameof(MeteringPointType.ConsumptionFromGrid),
+                "D08" => nameof(MeteringPointType.WholesaleServices),
+                "D09" => nameof(MeteringPointType.OwnProduction),
+                "D10" => nameof(MeteringPointType.NetFromGrid),
+                "D11" => nameof(MeteringPointType.NetToGrid),
+                "D12" => nameof(MeteringPointType.TotalConsumption),
+                "D13" => nameof(MeteringPointType.GridLossCorrection),
+                "D14" => nameof(MeteringPointType.ElectricalHeating),
+                "D15" => nameof(MeteringPointType.NetConsumption),
+                "D17" => nameof(MeteringPointType.OtherConsumption),
+                "D18" => nameof(MeteringPointType.OtherProduction),
                 _ => string.Empty,
             };
         }
 
         private static string TranslateMeteringPointSubType(XmlElementInfo meteringPointSubType)
         {
-            return meteringPointSubType.SourceValue switch
+            return meteringPointSubType.SourceValue.ToUpperInvariant() switch
             {
                 "D01" => nameof(MeteringPointSubType.Physical),
                 "D02" => nameof(MeteringPointSubType.Virtual),
@@ -106,13 +130,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
             return physicalState.SourceValue switch
             {
                 "D03" => nameof(PhysicalState.New),
+                // TODO: Add translation for all Physical States
                 _ => string.Empty,
             };
         }
 
         private static string TranslateConnectionType(XmlElementInfo connectionType)
         {
-            return connectionType.SourceValue switch
+            return connectionType.SourceValue.ToUpperInvariant() switch
             {
                 "D01" => nameof(ConnectionType.Direct),
                 "D02" => nameof(ConnectionType.Installation),
@@ -125,6 +150,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
             return assetType.SourceValue switch
             {
                 "D12" => nameof(AssetType.WindTurbines),
+                // TODO: Add translations for all Asset Types
                 _ => string.Empty,
             };
         }
@@ -147,6 +173,31 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 "P1M" => nameof(ReadingOccurrence.Monthly),
                 "PT1H" => nameof(ReadingOccurrence.Hourly),
                 "PT15M" => nameof(ReadingOccurrence.Quarterly),
+                _ => string.Empty,
+            };
+        }
+
+        private static string TranslateProductType(XmlElementInfo productType)
+        {
+            return productType.SourceValue switch
+            {
+                "8716867000030" => nameof(ProductType.EnergyActive),
+                "8716867000047" => nameof(ProductType.EnergyReactive),
+                "8716867000016" => nameof(ProductType.PowerActive),
+                "8716867000023" => nameof(ProductType.PowerReactive),
+                "5790001330606" => nameof(ProductType.FuelQuantity),
+                "5790001330590" => nameof(ProductType.Tariff),
+                _ => string.Empty,
+            };
+        }
+
+        private static string TranslateMeasureUnitType(XmlElementInfo measureUnitType)
+        {
+            return measureUnitType.SourceValue.ToUpperInvariant() switch
+            {
+                "KWH" => nameof(MeasurementUnitType.KWh),
+                "MWH" => nameof(MeasurementUnitType.MWh),
+                // TODO: Add translations for all Measure Units
                 _ => string.Empty,
             };
         }

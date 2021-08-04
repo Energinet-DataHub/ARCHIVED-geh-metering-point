@@ -79,7 +79,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 
             response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
 
-            await response.WriteStringAsync("Correlation id: " + _correlationContext.GetCorrelationId())
+            await response.WriteStringAsync("Correlation id: " + _correlationContext.Id)
                 .ConfigureAwait(false);
             return response;
         }

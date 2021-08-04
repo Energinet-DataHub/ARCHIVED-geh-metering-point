@@ -22,6 +22,23 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public static readonly MeteringPointType Production = new MeteringPointType(1, nameof(Production));
         public static readonly MeteringPointType Exchange = new MeteringPointType(2, nameof(Exchange));
         public static readonly MeteringPointType GridLossCorrection = new MeteringPointType(3, nameof(GridLossCorrection));
+        public static readonly MeteringPointType Analysis = new MeteringPointType(4, nameof(Analysis));
+        public static readonly MeteringPointType VEProduction = new MeteringPointType(5, nameof(VEProduction));
+        public static readonly MeteringPointType ExchangeReactiveEnergy = new MeteringPointType(6, nameof(ExchangeReactiveEnergy));
+        public static readonly MeteringPointType InternalUse = new MeteringPointType(7, nameof(InternalUse));
+        public static readonly MeteringPointType SurplusProductionGroup = new MeteringPointType(8, nameof(SurplusProductionGroup));
+        public static readonly MeteringPointType NetProduction = new MeteringPointType(9, nameof(NetProduction));
+        public static readonly MeteringPointType SupplyToGrid = new MeteringPointType(10, nameof(SupplyToGrid));
+        public static readonly MeteringPointType ConsumptionFromGrid = new MeteringPointType(11, nameof(ConsumptionFromGrid));
+        public static readonly MeteringPointType WholesaleServices = new MeteringPointType(12, nameof(WholesaleServices));
+        public static readonly MeteringPointType OwnProduction = new MeteringPointType(13, nameof(OwnProduction));
+        public static readonly MeteringPointType NetFromGrid = new MeteringPointType(14, nameof(NetFromGrid));
+        public static readonly MeteringPointType NetToGrid = new MeteringPointType(15, nameof(NetToGrid));
+        public static readonly MeteringPointType TotalConsumption = new MeteringPointType(16, nameof(TotalConsumption));
+        public static readonly MeteringPointType ElectricalHeating = new MeteringPointType(17, nameof(ElectricalHeating));
+        public static readonly MeteringPointType NetConsumption = new MeteringPointType(18, nameof(NetConsumption));
+        public static readonly MeteringPointType OtherConsumption = new MeteringPointType(19, nameof(OtherConsumption));
+        public static readonly MeteringPointType OtherProduction = new MeteringPointType(20, nameof(OtherProduction));
 
         private MeteringPointType(int id, string name)
             : base(id, name)

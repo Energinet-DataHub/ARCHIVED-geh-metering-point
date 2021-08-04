@@ -13,29 +13,24 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
+using Microsoft.ApplicationInsights;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
-using Microsoft.Extensions.Logging;
+using TraceContext = Energinet.DataHub.MeteringPoints.Infrastructure.Correlation.TraceContext;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common
 {
-    /// <summary>
-    /// Set <see cref="ICorrelationContext"/> via a ServiceBus function context
-    /// </summary>
-    public sealed class ServiceBusCorrelationIdMiddleware : IFunctionsWorkerMiddleware
+    public class CorrelationIdMiddleware : IFunctionsWorkerMiddleware
     {
-        private readonly ILogger _logger;
         private readonly ICorrelationContext _correlationContext;
 
-        public ServiceBusCorrelationIdMiddleware(
-            ILogger logger,
+        public CorrelationIdMiddleware(
             ICorrelationContext correlationContext)
         {
-            _logger = logger;
             _correlationContext = correlationContext;
         }
 
@@ -43,16 +38,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
-            if (context.BindingContext.BindingData.TryGetValue("CorrelationId", out var correlationIdObject)
-                && correlationIdObject is string correlationId)
-            {
-                _correlationContext.SetCorrelationId(correlationId);
-            }
-            else
-            {
-                _logger.LogWarning("CorrelationId not found for invocation: {invocationId}", context.InvocationId);
-                throw new InvalidOperationException();
-            }
+            var traceContext = TraceContext.Parse(context.TraceContext.TraceParent);
+
+            _correlationContext.SetId(traceContext.TraceId);
+            _correlationContext.SetParentId(traceContext.ParentId);
 
             await next(context).ConfigureAwait(false);
         }

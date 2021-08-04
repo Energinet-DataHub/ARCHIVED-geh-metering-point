@@ -46,6 +46,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
                         CityName = obj.CityName,
                         CountryCode = obj.CountryCode,
                         IsWashable = obj.IsWashable,
+                        StreetCode = obj.StreetCode,
+                        FloorIdentification = obj.FloorIdentification,
+                        RoomIdentification = obj.RoomIdentification,
                     },
                     SettlementMethod = obj.SettlementMethod,
                     UnitType = obj.UnitType,
@@ -60,6 +63,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
                     ParentRelatedMeteringPoint = obj.ParentRelatedMeteringPoint,
                     FromGrid = obj.FromGrid,
                     ToGrid = obj.ToGrid,
+                    ProductType = obj.ProductType,
+                    MeasureUnitType = obj.MeasureUnitType,
                 },
             };
         }

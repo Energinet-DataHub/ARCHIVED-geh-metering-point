@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
@@ -58,8 +59,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                                            "Metering point db connection string not found.");
 
                 x.UseSqlServer(connectionString, y => y.UseNodaTime());
-
-                services.SendProtobuf<IntegrationEventEnvelope>();
             });
         }
 
@@ -76,8 +75,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             container.Register<ISystemDateTimeProvider, SystemDateTimeProvider>(Lifestyle.Scoped);
             container.Register<IOutboxManager, OutboxManager>(Lifestyle.Scoped);
             container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
-            container.Register<ActorMessageDispatcher>(Lifestyle.Transient);
+            container.Register<OutboxWatcher>(Lifestyle.Scoped);
             container.Register<IPostOfficeStorageClient, TempPostOfficeStorageClient>(Lifestyle.Scoped);
+            container.Register<IActorMessageCoordinator, ActorMessageCoordinator>(Lifestyle.Scoped);
+            container.Register<IActorMessageDispatcher, ActorMessageDispatcher>(Lifestyle.Scoped);
+            container.RegisterDecorator<IActorMessageDispatcher, ActorMessageDispatcherTelemetryDecorator>(Lifestyle.Scoped);
+
+            container.SendProtobuf<IntegrationEventEnvelope>();
         }
     }
 }

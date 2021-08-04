@@ -52,7 +52,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
             var xmlConverter = new XmlDeserializer(xmlMapper);
 
             var stream = GetResourceStream("ConnectMeteringPointCimXml.xml");
-            var commandsRaw = await xmlConverter.DeserializeAsync(stream);
+            var commandsRaw = await xmlConverter.DeserializeAsync(stream).ConfigureAwait(false);
             var commands = commandsRaw.Cast<MeteringPoints.Application.ConnectMeteringPoint>();
 
             var command = commands.First();
@@ -69,7 +69,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
 
             var xmlConverter = new XmlDeserializer(xmlMapper);
 
-            var commandsRaw = await xmlConverter.DeserializeAsync(_xmlStream);
+            var commandsRaw = await xmlConverter.DeserializeAsync(_xmlStream).ConfigureAwait(false);
             var commands = commandsRaw.Cast<MeteringPoints.Application.CreateMeteringPoint>();
 
             var command = commands.First();
@@ -77,7 +77,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
             command.TypeOfMeteringPoint.Should().Be(nameof(MeteringPointType.Consumption));
             command.GsrnNumber.Should().Be("571234567891234605");
             command.MaximumPower.Should().Be(2000);
-            command.UnitType.ToLower().Should().Be(nameof(MeasurementUnitType.KWh).ToLower());
+            command.UnitType.ToUpperInvariant().Should().Be(nameof(MeasurementUnitType.KWh).ToUpperInvariant());
             command.PowerPlant.Should().Be("571234567891234636");
             command.SettlementMethod.Should().Be(nameof(SettlementMethod.Flex));
             command.TypeOfMeteringPoint.Should().Be(nameof(MeteringPointType.Consumption));
@@ -112,7 +112,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
             var xmlMapper = new XmlMapper((processType, type) => new CreateMeteringPointXmlMappingConfiguration());
 
             var xmlConverter = new XmlDeserializer(xmlMapper);
-            var commandsRaw = await xmlConverter.DeserializeAsync(_xmlStream);
+            var commandsRaw = await xmlConverter.DeserializeAsync(_xmlStream).ConfigureAwait(false);
             var commands = commandsRaw.Cast<MeteringPoints.Application.CreateMeteringPoint>();
 
             var command = commands.First();
@@ -132,15 +132,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
             var assembly = Assembly.GetExecutingAssembly();
             var resourceNames = new List<string>(assembly.GetManifestResourceNames());
 
-            resourcePath = resourcePath.Replace(@"/", ".");
-            resourcePath = resourceNames.FirstOrDefault(r => r.Contains(resourcePath));
+            var resourceName = resourcePath.Replace(@"/", ".", StringComparison.Ordinal);
+            var resource = resourceNames.FirstOrDefault(r => r.Contains(resourceName, StringComparison.Ordinal))
+                ?? throw new FileNotFoundException("Resource not found");
 
-            if (resourcePath == null)
-            {
-                throw new FileNotFoundException("Resource not found");
-            }
-
-            return assembly.GetManifestResourceStream(resourcePath);
+            return assembly.GetManifestResourceStream(resource)
+                   ?? throw new InvalidOperationException($"Couldn't get requested resource: {resourcePath}");
         }
     }
 }

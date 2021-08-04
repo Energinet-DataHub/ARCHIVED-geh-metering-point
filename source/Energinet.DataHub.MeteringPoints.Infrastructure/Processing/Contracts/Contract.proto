@@ -16,6 +16,7 @@
 syntax = "proto3";
 
 // import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 
 option csharp_namespace = "Energinet.DataHub.MeteringPoints.Contracts";
 
@@ -25,6 +26,9 @@ message Address {
   string cityName = 3;
   string countryCode = 4;
   bool isWashable = 5;
+  string streetCode = 7;
+  string floorIdentification = 8;
+  string roomIdentification = 9;
 }
 
 message CreateMeteringPoint {
@@ -37,7 +41,7 @@ message CreateMeteringPoint {
   string meteringGridArea = 7;
   string powerPlant = 8;
   string locationDescription = 9;
-  string parentRelatedMeteringPoint = 10;
+  google.protobuf.StringValue parentRelatedMeteringPoint = 10;
   Address installationLocationAddress = 11;
   string settlementMethod = 12;
   string unitType = 13;
@@ -51,6 +55,8 @@ message CreateMeteringPoint {
   string assetType = 21;
   string fromGrid = 22;
   string toGrid = 23;
+  string productType = 24;
+  string measureUnitType = 25;
 }
 
 message ConnectMeteringPoint {

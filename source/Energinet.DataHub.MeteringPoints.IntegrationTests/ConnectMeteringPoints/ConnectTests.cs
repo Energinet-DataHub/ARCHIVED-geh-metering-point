@@ -44,8 +44,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             var createMeteringPointRequest = CreateMeteringPointRequest();
             var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
 
-            await _mediator.Send(createMeteringPointRequest, CancellationToken.None);
-            await _mediator.Send(connectMeteringPointRequest, CancellationToken.None);
+            await _mediator.Send(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
             var meteringPointConnectedOutboxMessage = _outbox.GetNext(OutboxMessageCategory.ActorMessage, typeof(ConnectMeteringPointAccepted).FullName!);
             meteringPointConnectedOutboxMessage.Should().NotBeNull();
@@ -62,8 +62,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
                 GsrnNumber = "This is not a valid GSRN number",
             };
 
-            await _mediator.Send(createMeteringPointRequest, CancellationToken.None);
-            await _mediator.Send(connectMeteringPointRequest, CancellationToken.None);
+            await _mediator.Send(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
             var outboxMessage = _outbox.GetNext(OutboxMessageCategory.ActorMessage, typeof(ConnectMeteringPointRejected).FullName!);
             outboxMessage.Should().NotBeNull();
@@ -87,6 +87,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
                 SampleData.PostCode,
                 SampleData.CityName,
                 SampleData.CountryCode,
+                SampleData.StreetCode,
+                SampleData.FloorIdentification,
+                SampleData.RoomIdentification,
                 SampleData.IsWashable,
                 SampleData.GsrnNumber,
                 SampleData.TypeOfMeteringPoint,
@@ -107,7 +110,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
                 SampleData.NetSettlementGroup,
                 SampleData.ConnectionType,
                 SampleData.AssetType,
-                string.Empty);
+                string.Empty,
+                ToGrid: string.Empty,
+                ParentRelatedMeteringPoint: string.Empty,
+                SampleData.ProductType,
+                SampleData.MeasurementUnitType);
         }
 
         private ConnectMeteringPoint CreateConnectMeteringPointRequest()

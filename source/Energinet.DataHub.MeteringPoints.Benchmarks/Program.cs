@@ -18,7 +18,7 @@ namespace Energinet.DataHub.MeteringPoints.Benchmarks
 {
     internal static class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
             _ = BenchmarkRunner.Run<ReflectionStrategyBenchmarks>();
         }

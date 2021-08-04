@@ -22,6 +22,9 @@ namespace Energinet.DataHub.MeteringPoints.Application
             string PostCode = "",
             string CityName = "",
             string CountryCode = "",
+            string StreetCode = "",
+            string FloorIdentification = "",
+            string RoomIdentification = "",
             bool IsWashable = false,
             string GsrnNumber = "",
             string TypeOfMeteringPoint = "",
@@ -44,7 +47,9 @@ namespace Energinet.DataHub.MeteringPoints.Application
             string AssetType = "",
             string FromGrid = "",
             string ToGrid = "",
-            string ParentRelatedMeteringPoint = "")
+            string ParentRelatedMeteringPoint = "",
+            string ProductType = "",
+            string MeasureUnitType = "")
         : IBusinessRequest,
             IOutboundMessage,
             IInboundMessage;

@@ -22,11 +22,21 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Correlation
         /// <summary>
         /// Get the current correlation id.
         /// </summary>
-        string GetCorrelationId();
+        string Id { get; }
 
         /// <summary>
-        /// Set the current correlation id.
+        /// Get the parent's id.
         /// </summary>
-        void SetCorrelationId(string correlationId);
+        string? ParentId { get; }
+
+        /// <summary>
+        /// Set the current correlation/operation id.
+        /// </summary>
+        void SetId(string id);
+
+        /// <summary>
+        /// Set the id of the parent operation.
+        /// </summary>
+        void SetParentId(string parentId);
     }
 }

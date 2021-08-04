@@ -30,6 +30,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
                 PostCode: obj.InstallationLocationAddress.PostCode,
                 CityName: obj.InstallationLocationAddress.CityName,
                 CountryCode: obj.InstallationLocationAddress.CountryCode,
+                StreetCode: obj.InstallationLocationAddress.StreetCode,
+                FloorIdentification: obj.InstallationLocationAddress.FloorIdentification,
+                RoomIdentification: obj.InstallationLocationAddress.RoomIdentification,
                 IsWashable: obj.InstallationLocationAddress.IsWashable,
                 GsrnNumber: obj.GsrnNumber,
                 TypeOfMeteringPoint: obj.TypeOfMeteringPoint,
@@ -52,7 +55,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
                 AssetType: obj.AssetType,
                 ParentRelatedMeteringPoint: obj.ParentRelatedMeteringPoint,
                 FromGrid: obj.FromGrid,
-                ToGrid: obj.ToGrid);
+                ToGrid: obj.ToGrid,
+                ProductType: obj.ProductType,
+                MeasureUnitType: obj.MeasureUnitType);
         }
     }
 }

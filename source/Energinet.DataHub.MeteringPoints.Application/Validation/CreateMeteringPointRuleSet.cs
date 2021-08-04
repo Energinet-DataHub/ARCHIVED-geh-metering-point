@@ -29,6 +29,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation
             RuleFor(request => request).SetValidator(new AddressMustBeValidRule());
             RuleFor(request => request).SetValidator(new MeteringPointSubTypeMustBeValidRule());
             RuleFor(request => request).SetValidator(new MeterNumberMustBeValidRule());
+            RuleFor(request => request).SetValidator(new NetSettlementGroupRule());
+            RuleFor(request => request).SetValidator(new ProductTypeRule());
+            RuleFor(request => request).SetValidator(new MeasureUnitTypeRule());
         }
     }
 }
