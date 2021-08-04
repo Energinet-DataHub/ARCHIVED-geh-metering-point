@@ -48,7 +48,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             return (
                     IsConsumption(createMeteringPoint) ||
                     IsProduction(createMeteringPoint)) &&
-                    NetSettlementGroupIsNotZeroOrNinetyNine(createMeteringPoint.NetSettlementGroup);
+                    !NetSettlementGroupIsZeroOrNinetyNine(createMeteringPoint.NetSettlementGroup);
         }
 
         private static bool IsProduction(CreateMeteringPoint createMeteringPoint)
@@ -65,7 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 StringComparison.Ordinal);
         }
 
-        private static bool NetSettlementGroupIsNotZeroOrNinetyNine(string netSettlement)
+        private static bool NetSettlementGroupIsZeroOrNinetyNine(string netSettlement)
         {
             return netSettlement.Equals(
                 NetSettlementGroup.Ninetynine.Name,

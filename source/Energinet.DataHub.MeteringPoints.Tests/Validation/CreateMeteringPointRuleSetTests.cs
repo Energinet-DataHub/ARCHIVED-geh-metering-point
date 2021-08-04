@@ -468,7 +468,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         }
 
         [Theory]
-        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.One), typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
         [InlineData(nameof(MeteringPointType.Production), nameof(MeteringPointSubType.Virtual), nameof(NetSettlementGroup.One),  typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
         [InlineData(nameof(MeteringPointType.Consumption), nameof(MeteringPointSubType.Calculated), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
         [InlineData(nameof(MeteringPointType.WholesaleServices), nameof(MeteringPointSubType.Virtual), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
@@ -482,10 +481,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         [InlineData(nameof(MeteringPointType.NetFromGrid), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError), true)]
         [InlineData(nameof(MeteringPointType.NetToGrid), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError), true)]
         [InlineData(nameof(MeteringPointType.TotalConsumption), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError), true)]
-        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.Zero), typeof(MeteringPointSubTypeValueMustBeValidValidationError), true)]
-        [InlineData(nameof(MeteringPointType.Production), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.Ninetynine), typeof(MeteringPointSubTypeValueMustBeValidValidationError), true)]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.Zero), typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Production), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.Ninetynine), typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Production), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.One), typeof(MeteringPointSubTypeValueMustBeValidValidationError), true)]
         [InlineData(nameof(MeteringPointType.Consumption), nameof(MeteringPointSubType.Virtual), nameof(NetSettlementGroup.Zero), typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
         [InlineData(nameof(MeteringPointType.Production), nameof(MeteringPointSubType.Calculated), nameof(NetSettlementGroup.Ninetynine), typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.One), typeof(MeteringPointSubTypeValueMustBeValidValidationError), true)]
         public void Validate_MeteringPoint_Subtype_Correct_Value(string typeOfMeteringPoint, string meteringPointSubType, string netSettlementGroup,  System.Type validationError, bool expectedError)
         {
             var businessRequest = CreateRequest() with
