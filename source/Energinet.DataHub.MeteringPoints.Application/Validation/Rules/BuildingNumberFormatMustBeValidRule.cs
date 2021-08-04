@@ -27,7 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         public BuildingNumberFormatMustBeValidRule(string gsrnNumber, string countryCode)
         {
             _gsrnNumber = gsrnNumber;
-            When(address => countryCode.Equals("DK", StringComparison.Ordinal), BuildingNumberMustBeDanishFormat)
+            When(address => countryCode.Equals("DK", StringComparison.OrdinalIgnoreCase), BuildingNumberMustBeDanishFormat)
                 .Otherwise(BuildingNumberMustNotBeDanishFormat);
         }
 
