@@ -12,20 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class FloorIdentificationRule : AbstractValidator<string>
+    public class MeasureUnitTypeInvalidValueErrorConverter : ErrorConverter<MeasureUnitTypeInvalidValueValidationError>
     {
-        private const int FloorIdentificationLength = 4;
-
-        public FloorIdentificationRule(string gsrnNumber)
+        protected override ErrorMessage Convert(MeasureUnitTypeInvalidValueValidationError validationError)
         {
-            RuleFor(floorIdentification => floorIdentification)
-                .MaximumLength(FloorIdentificationLength)
-                .WithState(floorIdentification => new FloorIdentificationValidationError(gsrnNumber, floorIdentification));
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new ErrorMessage("D02", $"Energy time series measure unit {validationError.MeasureUnitType} for metering point {validationError.GsrnNumber} has wrong value (outside domain)");
         }
     }
 }

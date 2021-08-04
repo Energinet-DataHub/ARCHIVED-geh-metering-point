@@ -67,6 +67,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
                     FromGrid = obj.FromGrid,
                     ToGrid = obj.ToGrid,
                     ProductType = obj.ProductType,
+                    MeasureUnitType = obj.MeasureUnitType,
                 },
             };
         }

@@ -23,8 +23,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
         public RoomIdentificationRule(string gsrnNumber)
         {
-            CascadeMode = CascadeMode.Stop;
-
             RuleFor(roomIdentification => roomIdentification)
                 .MaximumLength(RoomIdentificationLength)
                 .WithState(roomIdentification => new RoomIdentificationValidationError(gsrnNumber, roomIdentification));

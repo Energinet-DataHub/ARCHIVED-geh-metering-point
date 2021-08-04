@@ -54,7 +54,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 .AddProperty(x => x.FromGrid, "MarketEvaluationPoint", "inMeteringGridArea_Domain.mRID")
                 .AddProperty(x => x.ToGrid, "MarketEvaluationPoint", "outMeteringGridArea_Domain.mRID")
                 .AddProperty(x => x.ParentRelatedMeteringPoint, "MarketEvaluationPoint", "parent_MarketEvaluationPoint.mRID")
-                .AddProperty(x => x.ProductType, "MarketEvaluationPoint", "Series", "product"));
+                .AddProperty(x => x.ProductType, TranslateProductType, "MarketEvaluationPoint", "Series", "product")
+                .AddProperty(x => x.MeasureUnitType, TranslateMeasureUnitType, "MarketEvaluationPoint", "Series", "quantity_Measure_Unit.name"));
         }
 
         private static bool IsWashable(XmlElementInfo remark)
@@ -64,10 +65,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
 
         private static string TranslateSettlementMethod(XmlElementInfo settlementMethod)
         {
-            return settlementMethod.SourceValue switch
+            return settlementMethod.SourceValue.ToUpperInvariant() switch
             {
                 "D01" => nameof(SettlementMethod.Flex),
                 "E02" => nameof(SettlementMethod.NonProfiled),
+                "E01" => nameof(SettlementMethod.Profiled),
                 _ => string.Empty,
             };
         }
@@ -88,7 +90,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
 
         private static string TranslateMeteringPointType(XmlElementInfo meteringPointType)
         {
-            return meteringPointType.SourceValue switch
+            return meteringPointType.SourceValue.ToUpperInvariant() switch
             {
                 "D01" => nameof(MeteringPointType.VEProduction),
                 "D02" => nameof(MeteringPointType.Analysis),
@@ -97,13 +99,27 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 "E17" => nameof(MeteringPointType.Consumption),
                 "E18" => nameof(MeteringPointType.Production),
                 "E20" => nameof(MeteringPointType.Exchange),
+                "D04" => nameof(MeteringPointType.SurplusProductionGroup),
+                "D05" => nameof(MeteringPointType.NetProduction),
+                "D06" => nameof(MeteringPointType.SupplyToGrid),
+                "D07" => nameof(MeteringPointType.ConsumptionFromGrid),
+                "D08" => nameof(MeteringPointType.WholesaleServices),
+                "D09" => nameof(MeteringPointType.OwnProduction),
+                "D10" => nameof(MeteringPointType.NetFromGrid),
+                "D11" => nameof(MeteringPointType.NetToGrid),
+                "D12" => nameof(MeteringPointType.TotalConsumption),
+                "D13" => nameof(MeteringPointType.GridLossCorrection),
+                "D14" => nameof(MeteringPointType.ElectricalHeating),
+                "D15" => nameof(MeteringPointType.NetConsumption),
+                "D17" => nameof(MeteringPointType.OtherConsumption),
+                "D18" => nameof(MeteringPointType.OtherProduction),
                 _ => string.Empty,
             };
         }
 
         private static string TranslateMeteringPointSubType(XmlElementInfo meteringPointSubType)
         {
-            return meteringPointSubType.SourceValue switch
+            return meteringPointSubType.SourceValue.ToUpperInvariant() switch
             {
                 "D01" => nameof(MeteringPointSubType.Physical),
                 "D02" => nameof(MeteringPointSubType.Virtual),
@@ -114,16 +130,19 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
 
         private static string TranslatePhysicalState(XmlElementInfo physicalState)
         {
-            return physicalState.SourceValue switch
+            return physicalState.SourceValue.ToUpperInvariant() switch
             {
+                "D02" => nameof(PhysicalState.ClosedDown),
                 "D03" => nameof(PhysicalState.New),
+                "E22" => nameof(PhysicalState.Connected),
+                "E23" => nameof(PhysicalState.Disconnected),
                 _ => string.Empty,
             };
         }
 
         private static string TranslateConnectionType(XmlElementInfo connectionType)
         {
-            return connectionType.SourceValue switch
+            return connectionType.SourceValue.ToUpperInvariant() switch
             {
                 "D01" => nameof(ConnectionType.Direct),
                 "D02" => nameof(ConnectionType.Installation),
@@ -133,16 +152,32 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
 
         private static string TranslateAssetType(XmlElementInfo assetType)
         {
-            return assetType.SourceValue switch
+            return assetType.SourceValue.ToUpperInvariant() switch
             {
+                "D01" => nameof(AssetType.SteamTurbineWithBackPressureMode),
+                "D02" => nameof(AssetType.GasTurbine),
+                "D03" => nameof(AssetType.CombinedCycle),
+                "D04" => nameof(AssetType.CombustionEngineGas),
+                "D05" => nameof(AssetType.SteamTurbineWithCondensation),
+                "D06" => nameof(AssetType.Boiler),
+                "D07" => nameof(AssetType.StirlingEngine),
+                "D10" => nameof(AssetType.FuelCells),
+                "D11" => nameof(AssetType.PhotovoltaicCells),
                 "D12" => nameof(AssetType.WindTurbines),
+                "D13" => nameof(AssetType.HydroelectricPower),
+                "D14" => nameof(AssetType.WavePower),
+                "D17" => nameof(AssetType.DispatchableWindTurbines),
+                "D19" => nameof(AssetType.DieselCombustionEngine),
+                "D20" => nameof(AssetType.BioCombustionEngine),
+                "D99" => nameof(AssetType.UnknownTechnology),
+
                 _ => string.Empty,
             };
         }
 
         private static string TranslateDisconnectionType(XmlElementInfo disconnectionType)
         {
-            return disconnectionType.SourceValue switch
+            return disconnectionType.SourceValue.ToUpperInvariant() switch
             {
                 "D01" => nameof(DisconnectionType.Remote),
                 "D02" => nameof(DisconnectionType.Manual),
@@ -152,12 +187,44 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
 
         private static string TranslateMeterReadingOccurrence(XmlElementInfo meterReadingOccurrence)
         {
-            return meterReadingOccurrence.SourceValue switch
+            return meterReadingOccurrence.SourceValue.ToUpperInvariant() switch
             {
                 "P1Y" => nameof(ReadingOccurrence.Yearly),
                 "P1M" => nameof(ReadingOccurrence.Monthly),
                 "PT1H" => nameof(ReadingOccurrence.Hourly),
                 "PT15M" => nameof(ReadingOccurrence.Quarterly),
+                _ => string.Empty,
+            };
+        }
+
+        private static string TranslateProductType(XmlElementInfo productType)
+        {
+            return productType.SourceValue switch
+            {
+                "8716867000030" => nameof(ProductType.EnergyActive),
+                "8716867000047" => nameof(ProductType.EnergyReactive),
+                "8716867000016" => nameof(ProductType.PowerActive),
+                "8716867000023" => nameof(ProductType.PowerReactive),
+                "5790001330606" => nameof(ProductType.FuelQuantity),
+                "5790001330590" => nameof(ProductType.Tariff),
+                _ => string.Empty,
+            };
+        }
+
+        private static string TranslateMeasureUnitType(XmlElementInfo measureUnitType)
+        {
+            return measureUnitType.SourceValue.ToUpperInvariant() switch
+            {
+                "K3" => nameof(MeasurementUnitType.KVArh),
+                "KWH" => nameof(MeasurementUnitType.KWh),
+                "KWT" => nameof(MeasurementUnitType.KW),
+                "MAW" => nameof(MeasurementUnitType.MW),
+                "MWH" => nameof(MeasurementUnitType.MWh),
+                "TNE" => nameof(MeasurementUnitType.Tonne),
+                "Z03" => nameof(MeasurementUnitType.MVAr),
+                "AMP" => nameof(MeasurementUnitType.Ampere),
+                "H87" => nameof(MeasurementUnitType.STK),
+                "Z14" => nameof(MeasurementUnitType.DanishTariffCode),
                 _ => string.Empty,
             };
         }
