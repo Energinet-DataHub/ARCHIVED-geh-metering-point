@@ -326,6 +326,39 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         }
 
         [Theory]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.KWh), typeof(MeasureUnitTypeMandatoryValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Consumption), "", typeof(MeasureUnitTypeMandatoryValidationError), true)]
+        [InlineData(nameof(MeteringPointType.Consumption), "InvalidMeasureUnitType", typeof(MeasureUnitTypeInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), nameof(MeasurementUnitType.KVArh), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
+        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), nameof(MeasurementUnitType.KW), typeof(MeasureUnitTypeInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.OtherConsumption), nameof(MeasurementUnitType.MWh), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
+        [InlineData(nameof(MeteringPointType.OtherConsumption), nameof(MeasurementUnitType.KWh), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
+        [InlineData(nameof(MeteringPointType.OtherConsumption), nameof(MeasurementUnitType.MVAr), typeof(MeasureUnitTypeInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.OtherProduction), nameof(MeasurementUnitType.MWh), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
+        [InlineData(nameof(MeteringPointType.OtherProduction), nameof(MeasurementUnitType.KWh), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
+        [InlineData(nameof(MeteringPointType.OtherProduction), nameof(MeasurementUnitType.MVAr), typeof(MeasureUnitTypeInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.KWh), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.KVArh), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.KW), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.MW), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.MWh), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.Tonne), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.MVAr), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.DanishTariffCode), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.Ampere), typeof(MeasureUnitTypeInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.STK), typeof(MeasureUnitTypeInvalidValueValidationError), true)]
+        public void Validate_MeasureUnitType(string meteringPointType, string measureUnitType, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                MeasureUnitType = measureUnitType,
+                TypeOfMeteringPoint = meteringPointType,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
         [InlineData("22A", "DK", typeof(BuildingNumberMustBeValidValidationError), false)]
         [InlineData("AÆZ", "DK", typeof(BuildingNumberMustBeValidValidationError), false)]
         [InlineData("22ADA", "", typeof(BuildingNumberMustBeValidValidationError), false)]

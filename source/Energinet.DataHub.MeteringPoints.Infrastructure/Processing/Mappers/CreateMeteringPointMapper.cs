@@ -59,7 +59,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
                 ParentRelatedMeteringPoint: obj.ParentRelatedMeteringPoint,
                 FromGrid: obj.FromGrid,
                 ToGrid: obj.ToGrid,
-                ProductType: obj.ProductType);
+                ProductType: obj.ProductType,
+                MeasureUnitType: obj.MeasureUnitType);
         }
     }
 }
