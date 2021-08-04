@@ -127,7 +127,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
 
         private static string TranslatePhysicalState(XmlElementInfo physicalState)
         {
-            return physicalState.SourceValue.ToUpperInvariant() switch
+            return physicalState.SourceValue switch
             {
                 "D03" => nameof(PhysicalState.New),
                 // TODO: Add translation for all Physical States
@@ -147,7 +147,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
 
         private static string TranslateAssetType(XmlElementInfo assetType)
         {
-            return assetType.SourceValue.ToUpperInvariant() switch
+            return assetType.SourceValue switch
             {
                 "D12" => nameof(AssetType.WindTurbines),
                 // TODO: Add translations for all Asset Types
@@ -157,7 +157,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
 
         private static string TranslateDisconnectionType(XmlElementInfo disconnectionType)
         {
-            return disconnectionType.SourceValue.ToUpperInvariant() switch
+            return disconnectionType.SourceValue switch
             {
                 "D01" => nameof(DisconnectionType.Remote),
                 "D02" => nameof(DisconnectionType.Manual),
@@ -167,7 +167,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
 
         private static string TranslateMeterReadingOccurrence(XmlElementInfo meterReadingOccurrence)
         {
-            return meterReadingOccurrence.SourceValue.ToUpperInvariant() switch
+            return meterReadingOccurrence.SourceValue switch
             {
                 "P1Y" => nameof(ReadingOccurrence.Yearly),
                 "P1M" => nameof(ReadingOccurrence.Monthly),

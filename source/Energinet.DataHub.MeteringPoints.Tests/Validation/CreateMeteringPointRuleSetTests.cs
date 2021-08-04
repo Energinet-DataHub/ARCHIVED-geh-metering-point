@@ -184,6 +184,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
                 CityName = cityName,
                 GsrnNumber = SampleData.GsrnNumber,
                 TypeOfMeteringPoint = typeOfMeteringPoint,
+                StreetCode = "9999",
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
