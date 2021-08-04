@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using FluentValidation;
@@ -40,17 +41,17 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
         private static bool Physical(string subTypeOfMeteringPoint)
         {
-            return subTypeOfMeteringPoint.Equals(MeteringPointSubType.Physical.Name);
+            return subTypeOfMeteringPoint.Equals(MeteringPointSubType.Physical.Name, StringComparison.Ordinal);
         }
 
         private static bool Virtual(string subTypeOfMeteringPoint)
         {
-            return subTypeOfMeteringPoint.Equals(MeteringPointSubType.Virtual.Name);
+            return subTypeOfMeteringPoint.Equals(MeteringPointSubType.Virtual.Name, StringComparison.Ordinal);
         }
 
         private static bool Calculated(string subTypeOfMeteringPoint)
         {
-            return subTypeOfMeteringPoint.Equals(MeteringPointSubType.Calculated.Name);
+            return subTypeOfMeteringPoint.Equals(MeteringPointSubType.Calculated.Name, StringComparison.Ordinal);
         }
     }
 }

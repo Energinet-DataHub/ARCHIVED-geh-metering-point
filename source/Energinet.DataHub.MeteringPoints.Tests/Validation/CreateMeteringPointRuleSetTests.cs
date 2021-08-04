@@ -468,6 +468,22 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
         }
 
+        [Theory]
+        [InlineData(nameof(MeteringPointSubType.Physical), typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
+        [InlineData(nameof(MeteringPointSubType.Virtual), typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
+        [InlineData(nameof(MeteringPointSubType.Calculated), typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
+        [InlineData("", typeof(MeteringPointSubTypeValueMustBeValidValidationError), true)]
+        public void Validate_MeteringPoint_Subtype_Correct_Value(string meteringPointSubType,  System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                SubTypeOfMeteringPoint = meteringPointSubType,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
         private static CreateMeteringPoint CreateRequest()
         {
             return new();
