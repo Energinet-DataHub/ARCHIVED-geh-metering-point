@@ -49,7 +49,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice
             {
                 var bytes = Encoding.ASCII.GetBytes(message.Data);
 
-                var fileClient = await shareDirectoryClient.CreateFileAsync(Guid.NewGuid().ToString(), bytes.LongLength).ConfigureAwait(false);
+                var fileName = Guid.NewGuid().ToString() + ".json";
+                var fileClient = await shareDirectoryClient.CreateFileAsync(fileName, bytes.LongLength).ConfigureAwait(false);
                 using (var fileShareStream = await fileClient.Value.OpenWriteAsync(false, 0).ConfigureAwait(false))
                 using (var localStream = new MemoryStream(bytes))
                 {

@@ -60,10 +60,6 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Application\Energinet.DataHub.MeteringPoints.Application.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Folder Include="Messaging\Incoming\Protobuf\Contracts" />
     </ItemGroup>
 

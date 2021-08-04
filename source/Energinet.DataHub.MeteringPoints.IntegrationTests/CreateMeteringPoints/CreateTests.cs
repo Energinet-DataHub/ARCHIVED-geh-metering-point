@@ -169,6 +169,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 ToGrid: "456",
                 ParentRelatedMeteringPoint: string.Empty,
                 SampleData.ProductType,
+                null,
                 SampleData.MeasurementUnitType);
         }
     }

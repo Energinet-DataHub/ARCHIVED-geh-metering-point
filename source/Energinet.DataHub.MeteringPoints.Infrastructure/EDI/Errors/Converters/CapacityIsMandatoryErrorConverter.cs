@@ -12,23 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class StreetCodeMustBeValidRule : AbstractValidator<string>
+    public class CapacityIsMandatoryErrorConverter : ErrorConverter<CapacityIsMandatoryValidationError>
     {
-        private const int StreetCodeLength = 4;
-
-        public StreetCodeMustBeValidRule(string gsrnNumber)
+        protected override ErrorMessage Convert(CapacityIsMandatoryValidationError validationError)
         {
-            RuleFor(streetCode => streetCode)
-                .Cascade(CascadeMode.Stop)
-                .Length(StreetCodeLength)
-                .WithState(streetCode => new StreetCodeValidationError(gsrnNumber, streetCode))
-                .InclusiveBetween("0001", "9999")
-                .WithState(streetCode => new StreetCodeValidationError(gsrnNumber, streetCode));
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new("D56", $"Capacity '{validationError.Capacity}' for metering point {validationError.GsrnNumber} with net settlement group not 0 is missing (type E18) or not allowed (other types).");
         }
     }
 }

@@ -20,6 +20,7 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentAssertions;
+using FluentValidation;
 using Xunit;
 using Xunit.Categories;
 
