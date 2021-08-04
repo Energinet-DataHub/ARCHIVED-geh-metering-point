@@ -27,62 +27,66 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         public PowerPlantMustBeValidRule()
         {
             When(
-                ProductionOrConsumptionAndNetSettlementGroupIsNotZero,
+                PowerPlantMustNotBeEmptyGroupOfMeteringPointTypes,
                 PowerPlantMustNotBeEmpty);
-
             When(
-                VEProduction,
-                PowerPlantMustNotBeEmpty);
-
+                PowerPlantNotAllowedGroupOfMeteringPointTypes,
+                PowerPlantMustBeEmpty);
             When(
                 createMeteringPoint => createMeteringPoint.PowerPlant.Length > 0,
                 PowerPlantValueMustBeValid);
         }
 
-        private static bool VEProduction(CreateMeteringPoint createMeteringPoint)
+        private static bool IsVeProduction(CreateMeteringPoint createMeteringPoint)
         {
             return createMeteringPoint.TypeOfMeteringPoint.Equals(
                 MeteringPointType.VEProduction.Name,
                 StringComparison.Ordinal);
         }
 
-        private static bool ProductionOrConsumptionAndNetSettlementGroupIsNotZero(CreateMeteringPoint createMeteringPoint)
+        private static bool IsProduction(CreateMeteringPoint createMeteringPoint)
         {
             return createMeteringPoint.TypeOfMeteringPoint.Equals(
-                       MeteringPointType.Production.Name,
-                       StringComparison.Ordinal) ||
+                MeteringPointType.Production.Name,
+                StringComparison.Ordinal);
+        }
+
+        private static bool PowerPlantMustNotBeEmptyGroupOfMeteringPointTypes(CreateMeteringPoint createMeteringPoint)
+        {
+            return IsProduction(createMeteringPoint) ||
+                   IsVeProduction(createMeteringPoint) ||
                    IsConsumptionAndNotZero(createMeteringPoint);
         }
 
-        private static bool Analysis(CreateMeteringPoint createMeteringPoint)
+        private static bool IsAnalysis(CreateMeteringPoint createMeteringPoint)
         {
             return createMeteringPoint.TypeOfMeteringPoint.Equals(
                 MeteringPointType.Analysis.Name,
                 StringComparison.Ordinal);
         }
 
-        private static bool InternalUse(CreateMeteringPoint createMeteringPoint)
+        private static bool IsInternalUse(CreateMeteringPoint createMeteringPoint)
         {
             return createMeteringPoint.TypeOfMeteringPoint.Equals(
                 MeteringPointType.InternalUse.Name,
                 StringComparison.Ordinal);
         }
 
-        private static bool NetConsumption(CreateMeteringPoint createMeteringPoint)
+        private static bool IsNetConsumption(CreateMeteringPoint createMeteringPoint)
         {
             return createMeteringPoint.TypeOfMeteringPoint.Equals(
                 MeteringPointType.NetConsumption.Name,
                 StringComparison.Ordinal);
         }
 
-        private static bool ExchangeReactiveEnergy(CreateMeteringPoint createMeteringPoint)
+        private static bool IsExchangeReactiveEnergy(CreateMeteringPoint createMeteringPoint)
         {
             return createMeteringPoint.TypeOfMeteringPoint.Equals(
                 MeteringPointType.ExchangeReactiveEnergy.Name,
                 StringComparison.Ordinal);
         }
 
-        private static bool Exchange(CreateMeteringPoint createMeteringPoint)
+        private static bool IsExchange(CreateMeteringPoint createMeteringPoint)
         {
             return createMeteringPoint.TypeOfMeteringPoint.Equals(
                 MeteringPointType.Exchange.Name,
@@ -101,11 +105,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
         private static bool PowerPlantNotAllowedGroupOfMeteringPointTypes(CreateMeteringPoint createMeteringPoint)
         {
-            return Analysis(createMeteringPoint) ||
-                   InternalUse(createMeteringPoint) ||
-                   NetConsumption(createMeteringPoint) ||
-                   ExchangeReactiveEnergy(createMeteringPoint) ||
-                   Exchange(createMeteringPoint);
+            return IsAnalysis(createMeteringPoint) ||
+                   IsInternalUse(createMeteringPoint) ||
+                   IsNetConsumption(createMeteringPoint) ||
+                   IsExchangeReactiveEnergy(createMeteringPoint) ||
+                   IsExchange(createMeteringPoint);
         }
 
         private static int Parse(string input)
