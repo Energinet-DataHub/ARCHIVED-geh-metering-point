@@ -66,7 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
             {
                 "D01" => nameof(SettlementMethod.Flex),
                 "E02" => nameof(SettlementMethod.NonProfiled),
-                // TODO: add translation for Profiled
+                "E01" => nameof(SettlementMethod.Profiled),
                 _ => string.Empty,
             };
         }
@@ -129,8 +129,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
         {
             return physicalState.SourceValue.ToUpperInvariant() switch
             {
+                "D02" => nameof(PhysicalState.ClosedDown),
                 "D03" => nameof(PhysicalState.New),
-                // TODO: Add translation for all Physical States
+                "E22" => nameof(PhysicalState.Connected),
+                "E23" => nameof(PhysicalState.Disconnected),
                 _ => string.Empty,
             };
         }
@@ -149,8 +151,23 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
         {
             return assetType.SourceValue.ToUpperInvariant() switch
             {
+                "D01" => nameof(AssetType.SteamTurbineWithBackPressureMode),
+                "D02" => nameof(AssetType.GasTurbine),
+                "D03" => nameof(AssetType.CombinedCycle),
+                "D04" => nameof(AssetType.CombustionEngineGas),
+                "D05" => nameof(AssetType.SteamTurbineWithCondensation),
+                "D06" => nameof(AssetType.Boiler),
+                "D07" => nameof(AssetType.StirlingEngine),
+                "D10" => nameof(AssetType.FuelCells),
+                "D11" => nameof(AssetType.PhotovoltaicCells),
                 "D12" => nameof(AssetType.WindTurbines),
-                // TODO: Add translations for all Asset Types
+                "D13" => nameof(AssetType.HydroelectricPower),
+                "D14" => nameof(AssetType.WavePower),
+                "D17" => nameof(AssetType.DispatchableWindTurbines),
+                "D19" => nameof(AssetType.DieselCombustionEngine),
+                "D20" => nameof(AssetType.BioCombustionEngine),
+                "D99" => nameof(AssetType.UnknownTechnology),
+
                 _ => string.Empty,
             };
         }
@@ -195,9 +212,16 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
         {
             return measureUnitType.SourceValue.ToUpperInvariant() switch
             {
+                "K3" => nameof(MeasurementUnitType.KVArh),
                 "KWH" => nameof(MeasurementUnitType.KWh),
+                "KWT" => nameof(MeasurementUnitType.KW),
+                "MAW" => nameof(MeasurementUnitType.MW),
                 "MWH" => nameof(MeasurementUnitType.MWh),
-                // TODO: Add translations for all Measure Units
+                "TNE" => nameof(MeasurementUnitType.Tonne),
+                "Z03" => nameof(MeasurementUnitType.MVAr),
+                "AMP" => nameof(MeasurementUnitType.Ampere),
+                "H87" => nameof(MeasurementUnitType.STK),
+                "Z14" => nameof(MeasurementUnitType.DanishTariffCode),
                 _ => string.Empty,
             };
         }

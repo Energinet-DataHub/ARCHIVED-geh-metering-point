@@ -24,7 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public static readonly AssetType CombustionEngineGas = new AssetType(3, nameof(CombustionEngineGas));
         public static readonly AssetType SteamTurbineWithCondensation = new AssetType(4, nameof(SteamTurbineWithCondensation));
         public static readonly AssetType Boiler = new AssetType(5, nameof(Boiler));
-        public static readonly AssetType SterlingEngine = new AssetType(6, nameof(SterlingEngine));
+        public static readonly AssetType StirlingEngine = new AssetType(6, nameof(StirlingEngine));
         public static readonly AssetType FuelCells = new AssetType(7, nameof(FuelCells));
         public static readonly AssetType PhotovoltaicCells = new AssetType(8, nameof(PhotovoltaicCells));
         public static readonly AssetType WindTurbines = new AssetType(9, nameof(WindTurbines));
