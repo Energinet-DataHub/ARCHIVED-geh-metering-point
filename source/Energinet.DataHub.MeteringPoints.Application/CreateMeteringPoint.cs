@@ -50,7 +50,8 @@ namespace Energinet.DataHub.MeteringPoints.Application
             string AssetType = "",
             string FromGrid = "",
             string ToGrid = "",
-            string ParentRelatedMeteringPoint = "")
+            string ParentRelatedMeteringPoint = "",
+            string ProductType = "")
         : IBusinessRequest,
             IOutboundMessage,
             IInboundMessage;

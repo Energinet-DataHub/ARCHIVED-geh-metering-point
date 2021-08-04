@@ -84,7 +84,8 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup),
                 EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
                 EnumerationType.FromName<ConnectionType>(request.ConnectionType),
-                request.ParentRelatedMeteringPoint);
+                request.ParentRelatedMeteringPoint,
+                EnumerationType.FromName<ProductType>(request.ProductType));
         }
 
         private static ExchangeMeteringPoint CreateExchangeMeteringPoint(CreateMeteringPoint request, MeteringPointType meteringPointType)
@@ -107,7 +108,8 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 SystemClock.Instance.GetCurrentInstant(), // TODO: Parse date in correct format when implemented in Input Validation
                 request.ToGrid,
                 request.FromGrid,
-                request.ParentRelatedMeteringPoint);
+                request.ParentRelatedMeteringPoint,
+                EnumerationType.FromName<ProductType>(request.ProductType));
         }
 
         private static ConsumptionMeteringPoint CreateConsumptionMeteringPoint(CreateMeteringPoint request, MeteringPointType meteringPointType)
@@ -134,7 +136,8 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
                 EnumerationType.FromName<ConnectionType>(request.ConnectionType),
                 EnumerationType.FromName<AssetType>(request.AssetType),
-                request.ParentRelatedMeteringPoint);
+                request.ParentRelatedMeteringPoint,
+                EnumerationType.FromName<ProductType>(request.ProductType));
         }
 
         private static Domain.MeteringPoints.Address CreateAddress(CreateMeteringPoint request)

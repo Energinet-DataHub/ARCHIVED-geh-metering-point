@@ -70,7 +70,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 DisconnectionType.Manual,
                 ConnectionType.Direct,
                 AssetType.Boiler,
-                parentRelatedMeteringPoint: null);
+                parentRelatedMeteringPoint: null,
+                ProductType.PowerActive);
         }
     }
 }

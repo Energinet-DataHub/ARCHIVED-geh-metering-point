@@ -12,20 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using System;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    /// <summary>
-    /// Basic file management for PostOffice communication.
-    /// </summary>
-    public interface IPostOfficeStorageClient
+    public class ProductTypeMandatoryErrorConverter : ErrorConverter<ProductTypeMandatoryValidationError>
     {
-        /// <summary>
-        /// Write file.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task WriteAsync(OutboxMessage message);
+        protected override ErrorMessage Convert(ProductTypeMandatoryValidationError validationError)
+        {
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new ErrorMessage("D02", $"Product is missing for metering point {validationError.GsrnNumber}");
+        }
     }
 }

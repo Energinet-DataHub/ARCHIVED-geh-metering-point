@@ -53,7 +53,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 .AddProperty(x => x.BuildingNumber, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "streetDetail", "number")
                 .AddProperty(x => x.FromGrid, "MarketEvaluationPoint", "inMeteringGridArea_Domain.mRID")
                 .AddProperty(x => x.ToGrid, "MarketEvaluationPoint", "outMeteringGridArea_Domain.mRID")
-                .AddProperty(x => x.ParentRelatedMeteringPoint, "MarketEvaluationPoint", "parent_MarketEvaluationPoint.mRID"));
+                .AddProperty(x => x.ParentRelatedMeteringPoint, "MarketEvaluationPoint", "parent_MarketEvaluationPoint.mRID")
+                .AddProperty(x => x.ProductType, "MarketEvaluationPoint", "Series", "product"));
         }
 
         private static bool IsWashable(XmlElementInfo remark)
@@ -89,6 +90,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
         {
             return meteringPointType.SourceValue switch
             {
+                "D01" => nameof(MeteringPointType.VEProduction),
+                "D02" => nameof(MeteringPointType.Analysis),
+                "D20" => nameof(MeteringPointType.ExchangeReactiveEnergy),
+                "D99" => nameof(MeteringPointType.InternalUse),
                 "E17" => nameof(MeteringPointType.Consumption),
                 "E18" => nameof(MeteringPointType.Production),
                 "E20" => nameof(MeteringPointType.Exchange),

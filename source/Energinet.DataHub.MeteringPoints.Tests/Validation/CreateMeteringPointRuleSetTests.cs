@@ -184,7 +184,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
                 CityName = cityName,
                 GsrnNumber = SampleData.GsrnNumber,
                 TypeOfMeteringPoint = typeOfMeteringPoint,
-                StreetCode = "9999",
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
@@ -303,6 +302,23 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             var businessRequest = CreateRequest() with
             {
                 NetSettlementGroup = netSettlementGroup,
+                TypeOfMeteringPoint = meteringPointType,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(ProductType.EnergyActive), typeof(ProductTypeMandatoryValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Consumption), "", typeof(ProductTypeMandatoryValidationError), true)]
+        [InlineData(nameof(MeteringPointType.Consumption), "InvalidProductType", typeof(ProductTypeInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.Analysis), nameof(ProductType.PowerReactive), typeof(ProductTypeWrongDefaultValueValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(ProductType.PowerReactive), typeof(ProductTypeWrongDefaultValueValidationError), true)]
+        public void Validate_ProductType(string meteringPointType, string productType, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                ProductType = productType,
                 TypeOfMeteringPoint = meteringPointType,
             };
 

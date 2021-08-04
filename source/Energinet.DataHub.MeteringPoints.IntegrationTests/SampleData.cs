@@ -70,5 +70,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         public static string FloorIdentification => string.Empty;
 
         public static string RoomIdentification => string.Empty;
+
+        public static string ProductType => Domain.MeteringPoints.ProductType.EnergyActive.Name;
     }
 }

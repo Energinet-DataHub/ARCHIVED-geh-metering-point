@@ -12,20 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    /// <summary>
-    /// Basic file management for PostOffice communication.
-    /// </summary>
-    public interface IPostOfficeStorageClient
+    public class ProductTypeInvalidValueValidationError : ValidationError
     {
-        /// <summary>
-        /// Write file.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task WriteAsync(OutboxMessage message);
+        public ProductTypeInvalidValueValidationError(string productType, string gsrnNumber)
+        {
+            ProductType = productType;
+            GsrnNumber = gsrnNumber;
+        }
+
+        public string ProductType { get; }
+
+        public string GsrnNumber { get; }
     }
 }

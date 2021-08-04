@@ -40,7 +40,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             Instant? occurenceDate,
             string toGrid,
             string fromGrid,
-            string? parentRelatedMeteringPoint)
+            string? parentRelatedMeteringPoint,
+            ProductType productType)
             : base(
                 id,
                 gsrnNumber,
@@ -61,7 +62,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             _toGrid = toGrid;
             _fromGrid = fromGrid;
-            _productType = ProductType.EnergyReactive;
+            _productType = productType;
         }
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
