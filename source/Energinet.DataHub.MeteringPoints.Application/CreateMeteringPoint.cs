@@ -19,8 +19,11 @@ namespace Energinet.DataHub.MeteringPoints.Application
 {
     public record CreateMeteringPoint(
             string StreetName = "",
+            string BuildingNumber = "",
             string PostCode = "",
             string CityName = "",
+            string CitySubDivisionName = "",
+            string MunicipalityCode = "",
             string CountryCode = "",
             string StreetCode = "",
             string FloorIdentification = "",

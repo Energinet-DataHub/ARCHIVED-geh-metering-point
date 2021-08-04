@@ -33,6 +33,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation
             RuleFor(request => request).SetValidator(new ProductTypeRule());
             RuleFor(request => request).SetValidator(new MeasureUnitTypeRule());
             RuleFor(request => request).SetValidator(new MeterReadingOccurenceRule());
+            RuleFor(request => request).SetValidator(new LocationDescriptionMustBeValidRule());
+            RuleFor(request => request).SetValidator(new PowerPlantMustBeValidRule());
         }
     }
 }
