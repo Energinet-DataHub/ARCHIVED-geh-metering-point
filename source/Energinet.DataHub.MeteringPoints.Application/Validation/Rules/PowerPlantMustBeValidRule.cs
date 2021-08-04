@@ -26,11 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         public PowerPlantMustBeValidRule()
         {
             When(
-                Production,
-                PowerPlantMustNotBeEmpty);
-
-            When(
-                ConsumptionAndNetSettlementGroupNotZero,
+                ProductionOrConsumptionAndNetSettlementGroupNotZero,
                 PowerPlantMustNotBeEmpty);
 
             When(
@@ -38,21 +34,17 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 PowerPlantValueMustBeValid);
         }
 
-        private static bool Production(CreateMeteringPoint createMeteringPoint)
+        private static bool ProductionOrConsumptionAndNetSettlementGroupNotZero(CreateMeteringPoint createMeteringPoint)
         {
             return createMeteringPoint.TypeOfMeteringPoint.Equals(
                 MeteringPointType.Production.Name,
-                StringComparison.Ordinal);
-        }
-
-        private static bool ConsumptionAndNetSettlementGroupNotZero(CreateMeteringPoint createMeteringPoint)
-        {
-            return createMeteringPoint.TypeOfMeteringPoint.Equals(
+                StringComparison.Ordinal) ||
+                (createMeteringPoint.TypeOfMeteringPoint.Equals(
                        MeteringPointType.Consumption.Name,
                        StringComparison.Ordinal) &&
                    !createMeteringPoint.NetSettlementGroup.Equals(
                        NetSettlementGroup.Zero.Name,
-                       StringComparison.Ordinal);
+                       StringComparison.Ordinal));
         }
 
         private static int Parse(string input)
@@ -98,7 +90,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 .WithState(createMeteringPoint => new PowerPlantNotEmptyValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.PowerPlant));
         }
 
-        private void PowerPlantMustStartsWith57()
+        private void PowerPlantMustStartWith57()
         {
             RuleFor(createMeteringPoint => createMeteringPoint.PowerPlant)
                 .Must(powerPlant => powerPlant.StartsWith("57", StringComparison.Ordinal))
@@ -120,7 +112,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
         private void PowerPlantValueMustBeValid()
         {
-            PowerPlantMustStartsWith57();
+            PowerPlantMustStartWith57();
             PowerPlantIsValidGsrnEan18Code();
         }
     }
