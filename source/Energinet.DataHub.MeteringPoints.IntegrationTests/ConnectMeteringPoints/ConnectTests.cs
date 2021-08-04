@@ -110,7 +110,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
                 SampleData.NetSettlementGroup,
                 SampleData.ConnectionType,
                 SampleData.AssetType,
-                string.Empty);
+                string.Empty,
+                ToGrid: string.Empty,
+                ParentRelatedMeteringPoint: string.Empty,
+                SampleData.ProductType);
         }
 
         private ConnectMeteringPoint CreateConnectMeteringPointRequest()

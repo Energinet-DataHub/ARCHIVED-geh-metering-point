@@ -55,6 +55,7 @@ message CreateMeteringPoint {
   string assetType = 21;
   string fromGrid = 22;
   string toGrid = 23;
+  string productType = 24;
 }
 
 message ConnectMeteringPoint {
