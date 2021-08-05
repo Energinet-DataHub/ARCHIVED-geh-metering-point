@@ -30,6 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         [InlineData(nameof(ConnectionType.Installation), nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One))]
         [InlineData(nameof(ConnectionType.Installation), nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.One))]
         [InlineData(nameof(ConnectionType.Direct), nameof(MeteringPointType.VEProduction), nameof(NetSettlementGroup.Zero))]
+        [InlineData(nameof(ConnectionType.Installation), nameof(MeteringPointType.Analysis), nameof(NetSettlementGroup.Ninetynine))]
         [InlineData("", nameof(MeteringPointType.VEProduction), nameof(NetSettlementGroup.Zero))]
         public void ConnectionShouldValidate(string connectionType, string meteringPointType, string netSettlementGroup)
         {
