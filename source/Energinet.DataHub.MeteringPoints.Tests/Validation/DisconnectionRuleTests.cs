@@ -22,7 +22,7 @@ using Xunit;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 {
-    public class DisconnectionRuleTests : CreateMeteringPointRequest<DisconnectionRule>
+    public class DisconnectionRuleTests : CreateMeteringPointRulesTest<DisconnectionRule>
     {
         [Theory]
         [InlineData(nameof(DisconnectionType.Manual), nameof(MeteringPointType.Production))]

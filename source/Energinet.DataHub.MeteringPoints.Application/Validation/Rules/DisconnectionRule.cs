@@ -26,9 +26,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         {
             When(MandatoryMeteringPointTypes, () =>
             {
-                CascadeMode = CascadeMode.Stop;
-
                 RuleFor(createMeteringPoint => createMeteringPoint.DisconnectionType)
+                    .Cascade(CascadeMode.Stop)
                     .NotEmpty()
                     .WithState(createMeteringPoint => new DisconnectionTypeMandatoryValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.DisconnectionType))
                     .Must(AllowedDisconnectionTypes)

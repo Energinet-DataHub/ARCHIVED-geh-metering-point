@@ -24,11 +24,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
     {
         public ConnectionTypeRule()
         {
-            CascadeMode = CascadeMode.Stop;
-
             When(ConnectionTypeIsMandatory, () =>
             {
                 RuleFor(createMeteringPoint => createMeteringPoint.ConnectionType)
+                    .Cascade(CascadeMode.Stop)
                     .NotEmpty()
                     .WithState(createMeteringPoint =>
                         new ConnectionTypeMandatoryValidationError(
@@ -39,6 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             When(ConnectionTypeIsNotAllowed, () =>
             {
                 RuleFor(createMeteringPoint => createMeteringPoint.ConnectionType)
+                    .Cascade(CascadeMode.Stop)
                     .Empty()
                     .WithState(createMeteringPoint =>
                         new ConnectionTypeMandatoryValidationError(
@@ -46,13 +46,15 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                             createMeteringPoint.ConnectionType));
             });
 
-            RuleFor(createMeteringPoint => createMeteringPoint.ConnectionType)
-                .Must(AllowedConnectionTypes)
-                .WithState(createMeteringPoint =>
-                    new ConnectionTypeWrongValueValidationError(
-                        createMeteringPoint.GsrnNumber,
-                        createMeteringPoint.ConnectionType))
-                .When(createMeteringPoint => createMeteringPoint.ConnectionType.Length > 0);
+            When(createMeteringPoint => createMeteringPoint.ConnectionType.Length > 0, () =>
+            {
+                RuleFor(createMeteringPoint => createMeteringPoint.ConnectionType)
+                    .Must(AllowedConnectionTypes)
+                    .WithState(createMeteringPoint =>
+                        new ConnectionTypeWrongValueValidationError(
+                            createMeteringPoint.GsrnNumber,
+                            createMeteringPoint.ConnectionType));
+            });
         }
 
         private static bool ConnectionTypeIsNotAllowed(CreateMeteringPoint createMeteringPoint)

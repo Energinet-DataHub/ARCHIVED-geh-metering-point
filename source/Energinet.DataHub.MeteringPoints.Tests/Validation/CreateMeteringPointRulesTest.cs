@@ -17,7 +17,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 {
-    public abstract class CreateMeteringPointRequest<TRuleSet> : RuleSetTest<CreateMeteringPoint, TRuleSet>
+    public abstract class CreateMeteringPointRulesTest<TRuleSet> : RuleSetTest<CreateMeteringPoint, TRuleSet>
         where TRuleSet : AbstractValidator<CreateMeteringPoint>, new()
     {
         protected CreateMeteringPoint CreateRequest()
