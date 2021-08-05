@@ -23,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("E86", $"Capacity '{validationError.Capacity}' for metering point {validationError.GsrnNumber} contains a non-digit character other than a decimal point or has a length that exceeds 8.");
+            return new("E86", $"Capacity {validationError.Capacity} for metering point {validationError.GsrnNumber} contains a non-digit character other than a decimal point or has a length that exceeds 8.");
         }
     }
 }
