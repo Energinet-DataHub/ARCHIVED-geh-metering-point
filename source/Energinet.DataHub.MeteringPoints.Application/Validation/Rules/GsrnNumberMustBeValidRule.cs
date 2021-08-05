@@ -23,14 +23,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
     {
         public GsrnNumberMustBeValidRule()
         {
-            CascadeMode = CascadeMode.Stop;
-
             RuleFor(gsrn => gsrn)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .WithState(CreateValidationError);
-
-            RuleFor(gsrn => GsrnNumber.CheckRules(gsrn))
-                .Must(x => x.Success)
+                .WithState(CreateValidationError)
+                .Must(x => GsrnNumber.CheckRules(x).Success)
                 .WithState(CreateValidationError);
         }
 

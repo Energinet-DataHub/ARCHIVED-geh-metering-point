@@ -42,12 +42,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
             When(request => request.PhysicalConnectionCapacity?.Length > 0, () =>
             {
-                CascadeMode = CascadeMode.Stop;
-
                 RuleFor(request => request.PhysicalConnectionCapacity)
+                    .Cascade(CascadeMode.Stop)
                     .MaximumLength(CapacityMaximumLength)
                     .WithState(request => new CapacityMaximumLengthValidationError(request.GsrnNumber, request.PhysicalConnectionCapacity))
-                    .Must(capacity => float.TryParse(capacity, NumberStyles.AllowDecimalPoint, NumberFormatInfo.InvariantInfo, out _))
+                    .Must(capacity => capacity.Length <= CapacityMaximumLength && float.TryParse(capacity, NumberStyles.AllowDecimalPoint, NumberFormatInfo.InvariantInfo, out _))
                     .WithState(request => new CapacityMaximumLengthValidationError(request.GsrnNumber, request.PhysicalConnectionCapacity));
             });
         }
