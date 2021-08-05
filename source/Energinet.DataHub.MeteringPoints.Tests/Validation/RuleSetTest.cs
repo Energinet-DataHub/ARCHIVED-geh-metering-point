@@ -39,6 +39,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
                 .ToList();
         }
 
+        protected CreateMeteringPoint CreateRequest()
+        {
+            return new();
+        }
+
         private class RuleSet : AbstractValidator<TRequest>
         {
             public RuleSet()

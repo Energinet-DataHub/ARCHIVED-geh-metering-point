@@ -76,10 +76,5 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 
             errors.Should().ContainSingle(error => error.GetType() == expectedError);
         }
-
-        private static CreateMeteringPoint CreateRequest()
-        {
-            return new();
-        }
     }
 }

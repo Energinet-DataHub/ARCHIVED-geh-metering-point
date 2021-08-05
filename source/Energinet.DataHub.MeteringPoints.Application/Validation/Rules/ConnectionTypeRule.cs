@@ -20,9 +20,9 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class ConnectionRule : AbstractValidator<CreateMeteringPoint>
+    public class ConnectionTypeRule : AbstractValidator<CreateMeteringPoint>
     {
-        public ConnectionRule()
+        public ConnectionTypeRule()
         {
             CascadeMode = CascadeMode.Stop;
 
@@ -30,6 +30,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             {
                 RuleFor(createMeteringPoint => createMeteringPoint.ConnectionType)
                     .NotEmpty()
+                    .WithState(createMeteringPoint =>
+                        new ConnectionTypeMandatoryValidationError(
+                            createMeteringPoint.GsrnNumber,
+                            createMeteringPoint.ConnectionType));
+            });
+
+            When(ConnectionTypeIsNotAllowed, () =>
+            {
+                RuleFor(createMeteringPoint => createMeteringPoint.ConnectionType)
+                    .Empty()
                     .WithState(createMeteringPoint =>
                         new ConnectionTypeMandatoryValidationError(
                             createMeteringPoint.GsrnNumber,
@@ -45,6 +55,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 .When(createMeteringPoint => createMeteringPoint.ConnectionType.Length > 0);
         }
 
+        private static bool ConnectionTypeIsNotAllowed(CreateMeteringPoint createMeteringPoint)
+        {
+            return NetSettlementGroupIsZero(createMeteringPoint) &&
+                   ProductOrConsumptionMeteringPointTypes(createMeteringPoint);
+        }
+
         private static bool AllowedConnectionTypes(string connectionType)
         {
             return new HashSet<string>
@@ -58,12 +74,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         private static bool ConnectionTypeIsMandatory(CreateMeteringPoint createMeteringPoint)
         {
             return ProductOrConsumptionMeteringPointTypes(createMeteringPoint) &&
-                   !NetSettlementGroupIsZero(createMeteringPoint.NetSettlementGroup);
+                   !NetSettlementGroupIsZero(createMeteringPoint);
         }
 
-        private static bool NetSettlementGroupIsZero(string netSettlementGroup)
+        private static bool NetSettlementGroupIsZero(CreateMeteringPoint createMeteringPoint)
         {
-            return NetSettlementGroup.Zero.Name.Equals(netSettlementGroup, StringComparison.Ordinal);
+            return NetSettlementGroup.Zero.Name.Equals(createMeteringPoint.NetSettlementGroup, StringComparison.Ordinal);
         }
 
         private static bool ProductOrConsumptionMeteringPointTypes(CreateMeteringPoint createMeteringPoint)
