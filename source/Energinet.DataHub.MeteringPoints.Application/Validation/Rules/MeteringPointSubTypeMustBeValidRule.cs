@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using FluentValidation;
@@ -27,21 +28,81 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 .NotEmpty()
                 .WithState(createMeteringPoint => new MeteringPointSubTypeMandatoryValidationError(createMeteringPoint.GsrnNumber));
 
-            RuleFor(createMeteringPoint => createMeteringPoint.SubTypeOfMeteringPoint)
+            RuleFor(createMeteringPoint => createMeteringPoint)
                 .Must(SubTypeIsPhysicalOrVirtualOrCalculated)
                 .WithState(createMeteringPoint => new MeteringPointSubTypeValueMustBeValidValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SubTypeOfMeteringPoint));
         }
 
-        private static bool SubTypeIsPhysicalOrVirtualOrCalculated(string subTypeOfMeteringPoint)
+        private static bool GroupOfMeteringPointTypesThatMustBeSubTypeVirtualOrCalculated(CreateMeteringPoint createMeteringPoint)
         {
-            return Physical(subTypeOfMeteringPoint) ||
-                   Virtual(subTypeOfMeteringPoint) ||
-                   Calculated(subTypeOfMeteringPoint);
+            return new HashSet<string>
+                    {
+                        MeteringPointType.WholesaleServices.Name,
+                        MeteringPointType.OwnProduction.Name,
+                        MeteringPointType.NetFromGrid.Name,
+                        MeteringPointType.NetToGrid.Name,
+                        MeteringPointType.TotalConsumption.Name,
+                    }
+                .Contains(createMeteringPoint.TypeOfMeteringPoint) ||
+                MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNine(createMeteringPoint);
         }
 
-        private static bool Physical(string subTypeOfMeteringPoint)
+        private static bool MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNine(
+            CreateMeteringPoint createMeteringPoint)
         {
-            return subTypeOfMeteringPoint.Equals(MeteringPointSubType.Physical.Name, StringComparison.Ordinal);
+            return IsProductionOrConsumption(createMeteringPoint) &&
+                   !NetSettlementGroupIsZeroOrNinetyNine(createMeteringPoint.NetSettlementGroup);
+        }
+
+        private static bool IsProductionOrConsumption(CreateMeteringPoint createMeteringPoint)
+        {
+            return new HashSet<string>
+                    {
+                        MeteringPointType.Consumption.Name,
+                        MeteringPointType.Production.Name,
+                    }
+                .Contains(createMeteringPoint.TypeOfMeteringPoint);
+        }
+
+        private static bool IsConsumption(CreateMeteringPoint createMeteringPoint)
+        {
+            return createMeteringPoint.TypeOfMeteringPoint.Equals(
+                MeteringPointType.Consumption.Name,
+                StringComparison.Ordinal);
+        }
+
+        private static bool NetSettlementGroupIsZeroOrNinetyNine(string netSettlement)
+        {
+            return new HashSet<string>
+                    {
+                        NetSettlementGroup.Ninetynine.Name,
+                        NetSettlementGroup.Zero.Name,
+                    }
+                .Contains(netSettlement);
+        }
+
+        private static bool SubTypeIsPhysicalOrVirtualOrCalculated(CreateMeteringPoint createMeteringPoint)
+        {
+            return GroupOfMeteringPointTypesThatMustBeSubTypeVirtualOrCalculated(createMeteringPoint)
+                ? SubTypeIsVirtualOrCalculated(createMeteringPoint)
+                : ExpectedSubTypes(createMeteringPoint);
+        }
+
+        private static bool SubTypeIsVirtualOrCalculated(CreateMeteringPoint createMeteringPoint)
+        {
+            return Virtual(createMeteringPoint.SubTypeOfMeteringPoint) ||
+                   Calculated(createMeteringPoint.SubTypeOfMeteringPoint);
+        }
+
+        private static bool ExpectedSubTypes(CreateMeteringPoint createMeteringPoint)
+        {
+            return new HashSet<string>
+                    {
+                        MeteringPointSubType.Calculated.Name,
+                        MeteringPointSubType.Physical.Name,
+                        MeteringPointSubType.Virtual.Name,
+                    }
+                .Contains(createMeteringPoint.SubTypeOfMeteringPoint);
         }
 
         private static bool Virtual(string subTypeOfMeteringPoint)
