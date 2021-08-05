@@ -22,7 +22,7 @@ using Xunit;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 {
-    public class ConnectionRuleTypeTests : RuleSetTest<CreateMeteringPoint, ConnectionTypeRule>
+    public class ConnectionRuleTypeTests : CreateMeteringPointRequest<ConnectionTypeRule>
     {
         [Theory]
         [InlineData(nameof(ConnectionType.Direct), nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One))]

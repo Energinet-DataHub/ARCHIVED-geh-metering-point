@@ -24,7 +24,7 @@ using Xunit.Categories;
 namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 {
     [UnitTest]
-    public class CapacityRuleTests : RuleSetTest<CreateMeteringPoint, CapacityRule>
+    public class CapacityRuleTests : CreateMeteringPointRequest<CapacityRule>
     {
         [Theory]
         [InlineData("12345678", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One))]
