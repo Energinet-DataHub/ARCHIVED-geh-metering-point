@@ -49,17 +49,18 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 .AddProperty(x => x.CountryCode, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "townDetail", "country")
                 .AddProperty(x => x.FloorIdentification, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "streetDetail", "floorIdentification")
                 .AddProperty(x => x.RoomIdentification, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "streetDetail", "suiteNumber")
-                .AddProperty(x => x.IsWashable, IsWashable, "MarketEvaluationPoint", "usagePointLocation.officialAddressIndicator")
                 .AddProperty(x => x.BuildingNumber, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "streetDetail", "number")
                 .AddProperty(x => x.FromGrid, "MarketEvaluationPoint", "inMeteringGridArea_Domain.mRID")
                 .AddProperty(x => x.ToGrid, "MarketEvaluationPoint", "outMeteringGridArea_Domain.mRID")
                 .AddProperty(x => x.ParentRelatedMeteringPoint, "MarketEvaluationPoint", "parent_MarketEvaluationPoint.mRID")
                 .AddProperty(x => x.ProductType, TranslateProductType, "MarketEvaluationPoint", "Series", "product")
                 .AddProperty(x => x.PhysicalConnectionCapacity, "MarketEvaluationPoint", "physicalConnectionCapacity")
+                .AddProperty(x => x.IsOfficialAddress, OfficialAddressIndicator, "MarketEvaluationPoint", "usagePointLocation.officialAddressIndicator")
+                .AddProperty(x => x.GeoInfoReference, "MarketEvaluationPoint", "usagePointLocation.geoInfoReference")
                 .AddProperty(x => x.MeasureUnitType, TranslateMeasureUnitType, "MarketEvaluationPoint", "Series", "quantity_Measure_Unit.name"));
         }
 
-        private static bool IsWashable(XmlElementInfo element)
+        private static bool OfficialAddressIndicator(XmlElementInfo element)
         {
             return bool.TryParse(element.SourceValue, out var b) && b;
         }
