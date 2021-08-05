@@ -145,12 +145,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             RuleFor(createMeteringPoint => createMeteringPoint.PowerPlant)
                 .Cascade(CascadeMode.Stop)
                 .Must(powerPlant => powerPlant.StartsWith("57", StringComparison.Ordinal))
-                .WithState(createMeteringPoint =>
-                    new PowerPlantGsrnEan18ValidValidationError(
-                        createMeteringPoint.GsrnNumber,
-                        createMeteringPoint.PowerPlant));
-
-            RuleFor(createMeteringPoint => createMeteringPoint.PowerPlant)
+                .WithState(
+                    createMeteringPoint =>
+                        new PowerPlantGsrnEan18ValidValidationError(
+                            createMeteringPoint.GsrnNumber,
+                            createMeteringPoint.PowerPlant))
                 .Must(powerPlant => powerPlant.Length == RequiredIdLength && CheckSumIsValid(powerPlant))
                 .WithState(createMeteringPoint =>
                     new PowerPlantGsrnEan18ValidValidationError(
