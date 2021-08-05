@@ -12,18 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Application;
-using Energinet.DataHub.MeteringPoints.Application.Validation;
-using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentAssertions;
 using FluentValidation;
-using Xunit;
-using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 {
@@ -37,6 +31,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             return validationResult.Errors
                 .Select(error => (ValidationError)error.CustomState)
                 .ToList();
+        }
+
+        protected void ShouldContainErrors(TRequest request, Type expectedError)
+        {
+            var errors = Validate(request);
+
+            errors.Should().ContainSingle(error => error.GetType() == expectedError);
+        }
+
+        protected void NoErrors(TRequest request)
+        {
+            var errors = Validate(request);
+
+            errors.Should().BeEmpty();
         }
 
         private class RuleSet : AbstractValidator<TRequest>
