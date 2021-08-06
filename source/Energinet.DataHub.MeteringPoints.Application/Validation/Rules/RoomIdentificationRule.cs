@@ -17,15 +17,15 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class RoomIdentificationRule : AbstractValidator<string>
+    public class RoomIdentificationRule : AbstractValidator<CreateMeteringPoint>
     {
         private const int RoomIdentificationLength = 4;
 
-        public RoomIdentificationRule(string gsrnNumber)
+        public RoomIdentificationRule()
         {
-            RuleFor(roomIdentification => roomIdentification)
+            RuleFor(request => request.RoomIdentification)
                 .MaximumLength(RoomIdentificationLength)
-                .WithState(roomIdentification => new RoomIdentificationValidationError(gsrnNumber, roomIdentification));
+                .WithState(request => new RoomIdentificationValidationError(request.GsrnNumber, request.RoomIdentification));
         }
     }
 }

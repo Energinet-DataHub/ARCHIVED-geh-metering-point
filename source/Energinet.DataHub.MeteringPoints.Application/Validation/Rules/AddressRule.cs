@@ -12,20 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class FloorIdentificationRule : AbstractValidator<CreateMeteringPoint>
+    public class AddressRule : AbstractValidator<CreateMeteringPoint>
     {
-        private const int FloorIdentificationLength = 4;
-
-        public FloorIdentificationRule()
+        public AddressRule()
         {
-            RuleFor(request => request.FloorIdentification)
-                .MaximumLength(FloorIdentificationLength)
-                .WithState(request => new FloorIdentificationValidationError(request.GsrnNumber, request.FloorIdentification));
+            Include(new CountryCodeRule());
+            Include(new PostCodeRule());
+            Include(new StreetNameRule());
+            Include(new CityNameRule());
+            Include(new FloorIdentificationRule());
+            Include(new RoomIdentificationRule());
+            Include(new BuildingNumberRule());
+            Include(new StreetCodeRule());
+            Include(new MunicipalityCodeRule());
+            Include(new CitySubDivisionNameRule());
         }
     }
 }

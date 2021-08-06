@@ -17,18 +17,18 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class StreetCodeMustBeValidRule : AbstractValidator<string>
+    public class StreetCodeRule : AbstractValidator<CreateMeteringPoint>
     {
         private const int StreetCodeLength = 4;
 
-        public StreetCodeMustBeValidRule(string gsrnNumber)
+        public StreetCodeRule()
         {
-            RuleFor(streetCode => streetCode)
+            RuleFor(request => request.StreetCode)
                 .Cascade(CascadeMode.Stop)
                 .Length(StreetCodeLength)
-                .WithState(streetCode => new StreetCodeValidationError(gsrnNumber, streetCode))
+                .WithState(request => new StreetCodeValidationError(request.GsrnNumber, request.StreetCode))
                 .InclusiveBetween("0001", "9999")
-                .WithState(streetCode => new StreetCodeValidationError(gsrnNumber, streetCode));
+                .WithState(request => new StreetCodeValidationError(request.GsrnNumber, request.StreetCode));
         }
     }
 }

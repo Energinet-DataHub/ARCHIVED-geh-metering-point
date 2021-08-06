@@ -23,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
     {
         public GsrnNumberMustBeValidRule()
         {
-            RuleFor(gsrn => gsrn)
+            RuleFor(gsrnNumber => gsrnNumber)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithState(CreateValidationError)
@@ -31,9 +31,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 .WithState(CreateValidationError);
         }
 
-        private static ValidationError CreateValidationError(string gsrn)
+        private static ValidationError CreateValidationError(string gsrnNumber)
         {
-            return new GsrnNumberMustBeValidValidationError(gsrn);
+            return new GsrnNumberMustBeValidValidationError(gsrnNumber);
         }
     }
 }

@@ -17,15 +17,21 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class CityNameMaximumLengthMustBeValidRule : AbstractValidator<string>
+    public class CityNameRule : AbstractValidator<CreateMeteringPoint>
     {
         private const int MaxCityNameLength = 25;
 
-        public CityNameMaximumLengthMustBeValidRule(string gsrnNumber)
+        public CityNameRule()
         {
-             RuleFor(cityName => cityName)
+             RuleFor(request => request.CityName)
                 .MaximumLength(MaxCityNameLength)
-                .WithState(cityName => new CityNameMaximumLengthValidationError(gsrnNumber, cityName, MaxCityNameLength));
+                .WithState(request => new CityNameMaximumLengthValidationError(request.GsrnNumber, request.CityName, MaxCityNameLength));
+
+             When(CreateMeteringPointRulesHelper.MeteringPointTypeIsProductionOrConsumption, () =>
+             {
+                 RuleFor(request => request.CityName)
+                     .SetValidator(request => new CityNameMandatoryForMeteringPointTypeMustBeValidRule(request.GsrnNumber));
+             });
         }
     }
 }
