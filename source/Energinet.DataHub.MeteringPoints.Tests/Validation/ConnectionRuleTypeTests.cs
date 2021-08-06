@@ -13,7 +13,6 @@
 // // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -31,6 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         [InlineData(nameof(ConnectionType.Installation), nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.One))]
         [InlineData(nameof(ConnectionType.Direct), nameof(MeteringPointType.VEProduction), nameof(NetSettlementGroup.Zero))]
         [InlineData(nameof(ConnectionType.Installation), nameof(MeteringPointType.Analysis), nameof(NetSettlementGroup.Ninetynine))]
+        [InlineData(nameof(ConnectionType.Installation), nameof(MeteringPointType.Analysis), nameof(NetSettlementGroup.Three))]
         [InlineData("", nameof(MeteringPointType.VEProduction), nameof(NetSettlementGroup.Zero))]
         public void ConnectionShouldValidate(string connectionType, string meteringPointType, string netSettlementGroup)
         {
@@ -50,6 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         [InlineData(nameof(ConnectionType.Direct), nameof(MeteringPointType.Production), nameof(NetSettlementGroup.Zero), typeof(ConnectionTypeMandatoryValidationError))]
         [InlineData("", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.One), typeof(ConnectionTypeMandatoryValidationError))]
         [InlineData("Connection Test Type", nameof(MeteringPointType.VEProduction), nameof(NetSettlementGroup.One), typeof(ConnectionTypeWrongValueValidationError))]
+        [InlineData(nameof(ConnectionType.Direct), nameof(MeteringPointType.VEProduction), nameof(NetSettlementGroup.Six), typeof(ConnectionTypeNetSettlementGroupValidationError))]
         public void ConnectShouldResultInError(string connectionType, string meteringPointType, string netSettlementGroup, Type expectedError)
         {
             var request = CreateRequest() with
