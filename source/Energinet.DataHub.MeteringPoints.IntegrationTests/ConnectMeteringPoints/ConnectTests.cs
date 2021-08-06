@@ -118,6 +118,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
                 ParentRelatedMeteringPoint: string.Empty,
                 SampleData.ProductType,
                 null,
+                SampleData.GeoInfoReference,
                 SampleData.MeasurementUnitType);
         }
 
