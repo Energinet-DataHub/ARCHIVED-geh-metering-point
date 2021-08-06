@@ -54,7 +54,9 @@ namespace Energinet.DataHub.MeteringPoints.Application
             string ProductType = "",
             string? PhysicalConnectionCapacity = null,
             string? GeoInfoReference = null,
-            string MeasureUnitType = "")
+            string MeasureUnitType = "",
+            string? ContractedConnectionCapacity = null,
+            string? RatedCurrent = null)
         : IBusinessRequest,
             IOutboundMessage,
             IInboundMessage;
