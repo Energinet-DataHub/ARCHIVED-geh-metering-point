@@ -62,9 +62,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 .AddProperty(x => x.RatedCurrent, TranslateMeasureUnitType, "MarketEvaluationPoint", "ratedCurrent"));
         }
 
-        private static bool OfficialAddressIndicator(XmlElementInfo element)
+        private static bool? OfficialAddressIndicator(XmlElementInfo element)
         {
-            return bool.TryParse(element.SourceValue, out var b) && b;
+            if (bool.TryParse(element?.SourceValue, out var result))
+            {
+                return result;
+            }
+
+            return null;
         }
 
         private static string TranslateSettlementMethod(XmlElementInfo element)
