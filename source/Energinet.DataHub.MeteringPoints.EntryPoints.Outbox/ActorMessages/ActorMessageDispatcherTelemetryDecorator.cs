@@ -53,9 +53,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
 
                 await _decoratee.DispatchMessageAsync(message).ConfigureAwait(false);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
                 operation.Telemetry.Success = false;
+                _telemetryClient.TrackException(exception);
                 throw;
             }
             finally
