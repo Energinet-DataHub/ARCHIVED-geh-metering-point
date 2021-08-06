@@ -14,29 +14,18 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class Address : ValueObject
+    public class CountryCodeInvalidValidationError : ValidationError
     {
-        private Address(string streetName, string postCode, string cityName, string? countryCode)
+        public CountryCodeInvalidValidationError(string gsrnNumber, string countryCode)
         {
-            StreetName = streetName;
-            PostCode = postCode;
-            CityName = cityName;
+            GsrnNumber = gsrnNumber;
             CountryCode = countryCode;
         }
 
-        public string StreetName { get; }
+        public string GsrnNumber { get; }
 
-        public string PostCode { get; }
-
-        public string CityName { get; }
-
-        public string? CountryCode { get; }
-
-        public static Address Create(string streetName, string postCode, string cityName, string? countryCode)
-        {
-            return new Address(streetName, postCode, cityName, countryCode);
-        }
+        public string CountryCode { get; }
     }
 }

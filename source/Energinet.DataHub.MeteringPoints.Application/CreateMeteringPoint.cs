@@ -24,7 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
             string CityName = "",
             string CitySubDivisionName = "",
             string MunicipalityCode = "",
-            string CountryCode = "",
+            string? CountryCode = null,
             string StreetCode = "",
             string FloorIdentification = "",
             string RoomIdentification = "",
