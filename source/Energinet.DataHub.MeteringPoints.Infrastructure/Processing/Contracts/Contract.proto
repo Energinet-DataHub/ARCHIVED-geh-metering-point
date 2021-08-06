@@ -25,7 +25,7 @@ message Address {
   string postCode = 2;
   string cityName = 3;
   string countryCode = 4;
-  bool officialAddressIndicator = 5;
+  google.protobuf.BoolValue officialAddressIndicator = 5;
   string buildingNumber = 6;
   string streetCode = 7;
   string floorIdentification = 8;
