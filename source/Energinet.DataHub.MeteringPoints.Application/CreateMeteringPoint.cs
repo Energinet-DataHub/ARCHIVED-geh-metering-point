@@ -28,7 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
             string StreetCode = "",
             string FloorIdentification = "",
             string RoomIdentification = "",
-            bool IsWashable = false,
+            bool IsOfficialAddress = false,
             string GsrnNumber = "",
             string TypeOfMeteringPoint = "",
             string SubTypeOfMeteringPoint = "",
@@ -53,6 +53,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
             string ParentRelatedMeteringPoint = "",
             string ProductType = "",
             string? PhysicalConnectionCapacity = null,
+            string? GeoInfoReference = null,
             string MeasureUnitType = "")
         : IBusinessRequest,
             IOutboundMessage,

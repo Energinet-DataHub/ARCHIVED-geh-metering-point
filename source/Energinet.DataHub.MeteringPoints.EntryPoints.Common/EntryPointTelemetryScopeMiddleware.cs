@@ -47,9 +47,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common
                 operation.Telemetry.Success = true;
                 await next(context).ConfigureAwait(false);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
                 operation.Telemetry.Success = false;
+                _telemetryClient.TrackException(exception);
                 throw;
             }
             finally

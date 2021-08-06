@@ -72,5 +72,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         public static string RoomIdentification => string.Empty;
 
         public static string ProductType => Domain.MeteringPoints.ProductType.EnergyActive.Name;
+
+        public static string GeoInfoReference => Guid.NewGuid().ToString();
     }
 }
