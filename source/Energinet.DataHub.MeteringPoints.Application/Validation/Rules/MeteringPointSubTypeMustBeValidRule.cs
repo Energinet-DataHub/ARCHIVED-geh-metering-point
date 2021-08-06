@@ -116,13 +116,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 .Contains(createMeteringPoint.TypeOfMeteringPoint);
         }
 
-        private static bool IsConsumption(CreateMeteringPoint createMeteringPoint)
-        {
-            return createMeteringPoint.TypeOfMeteringPoint.Equals(
-                MeteringPointType.Consumption.Name,
-                StringComparison.Ordinal);
-        }
-
         private static bool NetSettlementGroupIsZeroOrNinetyNine(string netSettlement)
         {
             return new HashSet<string>
