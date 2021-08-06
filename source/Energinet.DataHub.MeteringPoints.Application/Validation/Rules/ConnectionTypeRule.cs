@@ -48,12 +48,17 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
             When(createMeteringPoint => createMeteringPoint.ConnectionType.Length > 0, () =>
             {
-                RuleFor(createMeteringPoint => createMeteringPoint.ConnectionType)
-                    .Must(AllowedConnectionTypes)
-                    .WithState(createMeteringPoint =>
-                        new ConnectionTypeWrongValueValidationError(
-                            createMeteringPoint.GsrnNumber,
-                            createMeteringPoint.ConnectionType));
+                When(NetSettlementGroupIsThreeOrSix, () =>
+                    {
+                        RuleFor(createMeteringPoint => createMeteringPoint.ConnectionType)
+                            .Must(connectionType => ConnectionType.Installation.Name == connectionType)
+                            .WithState(createMeteringPoint =>
+                                new ConnectionTypeNetSettlementGroupValidationError(
+                                    createMeteringPoint.GsrnNumber,
+                                    createMeteringPoint.ConnectionType,
+                                    createMeteringPoint.NetSettlementGroup));
+                    })
+                    .Otherwise(AllowedConnectionTypesAction);
             });
         }
 
@@ -84,6 +89,22 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             return NetSettlementGroup.Zero.Name.Equals(createMeteringPoint.NetSettlementGroup, StringComparison.Ordinal);
         }
 
+        private static bool NetSettlementGroupIsThreeOrSix(CreateMeteringPoint createMeteringPoint)
+        {
+            return NetSettlementGroupIsThree(createMeteringPoint)
+                   || NetSettlementGroupIsSix(createMeteringPoint);
+        }
+
+        private static bool NetSettlementGroupIsThree(CreateMeteringPoint createMeteringPoint)
+        {
+            return NetSettlementGroup.Three.Name.Equals(createMeteringPoint.NetSettlementGroup, StringComparison.Ordinal);
+        }
+
+        private static bool NetSettlementGroupIsSix(CreateMeteringPoint createMeteringPoint)
+        {
+            return NetSettlementGroup.Six.Name.Equals(createMeteringPoint.NetSettlementGroup, StringComparison.Ordinal);
+        }
+
         private static bool ProductOrConsumptionMeteringPointTypes(CreateMeteringPoint createMeteringPoint)
         {
             return new HashSet<string>
@@ -92,6 +113,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                     MeteringPointType.Consumption.Name,
                 }
                 .Contains(createMeteringPoint.TypeOfMeteringPoint);
+        }
+
+        private void AllowedConnectionTypesAction()
+        {
+            RuleFor(createMeteringPoint => createMeteringPoint.ConnectionType)
+                .Must(AllowedConnectionTypes)
+                .WithState(createMeteringPoint =>
+                    new ConnectionTypeWrongValueValidationError(
+                        createMeteringPoint.GsrnNumber,
+                        createMeteringPoint.ConnectionType));
         }
     }
 }
