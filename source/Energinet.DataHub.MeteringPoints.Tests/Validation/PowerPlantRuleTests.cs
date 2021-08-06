@@ -45,6 +45,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         [InlineData("", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError))]
         [InlineData("8891928731459", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(PowerPlantGsrnEan18ValidValidationError))]
         [InlineData("561234567891234568", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.One), typeof(PowerPlantGsrnEan18ValidValidationError))]
+        [InlineData("571234567891234568", nameof(MeteringPointType.Analysis), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError))]
+        [InlineData("571234567891234568", nameof(MeteringPointType.Exchange), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError))]
+        [InlineData("571234567891234568", nameof(MeteringPointType.ExchangeReactiveEnergy), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError))]
+        [InlineData("571234567891234568", nameof(MeteringPointType.InternalUse), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError))]
+        [InlineData("571234567891234568", nameof(MeteringPointType.NetConsumption), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError))]
         public void PowerPlantShouldResultInError(string powerPlant, string meteringPointType, string netSettlementGroup, Type expectedError)
         {
             var request = CreateRequest() with
@@ -55,26 +60,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             };
 
             ShouldContainErrors(request, expectedError);
-        }
-
-        [Theory]
-        [InlineData("571234567891234568", nameof(MeteringPointType.Analysis), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError))]
-        [InlineData("571234567891234568", nameof(MeteringPointType.Exchange), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError))]
-        [InlineData("571234567891234568", nameof(MeteringPointType.ExchangeReactiveEnergy), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError))]
-        [InlineData("571234567891234568", nameof(MeteringPointType.InternalUse), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError))]
-        [InlineData("571234567891234568", nameof(MeteringPointType.NetConsumption), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError))]
-        public void PowerPlantShouldNotBeAllowed(string powerPlant, string meteringPointType, string netSettlementGroup, Type expectedError)
-        {
-            var request = CreateRequest() with
-            {
-                PowerPlant = powerPlant,
-                TypeOfMeteringPoint = meteringPointType,
-                NetSettlementGroup = netSettlementGroup,
-            };
-
-            var errors = Validate(request);
-
-            errors.Should().ContainSingle(error => error.GetType() == expectedError);
         }
     }
 }
