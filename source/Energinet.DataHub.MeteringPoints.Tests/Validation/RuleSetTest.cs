@@ -32,14 +32,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
                 .Select(error => (ValidationError)error.CustomState);
         }
 
-        protected void ShouldContainErrors(TRequest request, Type expectedError)
+        protected void ShouldValidateWithSingleError(TRequest request, Type expectedError)
         {
             var errors = Validate(request);
 
             errors.Should().ContainSingle(error => error.GetType() == expectedError);
         }
 
-        protected void NoErrors(TRequest request)
+        protected void ShouldValidateWithNoErrors(TRequest request)
         {
             var errors = Validate(request);
 

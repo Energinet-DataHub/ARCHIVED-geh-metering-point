@@ -37,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
                 NetSettlementGroup = netSettlementGroup,
             };
 
-            NoErrors(request);
+            ShouldValidateWithNoErrors(request);
         }
 
         [Theory]
@@ -59,7 +59,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
                 NetSettlementGroup = netSettlementGroup,
             };
 
-            ShouldContainErrors(request, expectedError);
+            ShouldValidateWithSingleError(request, expectedError);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
                 LocationDescription = localDescription,
             };
 
-            NoErrors(request);
+            ShouldValidateWithNoErrors(request);
         }
 
         [Theory]
@@ -45,7 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
                 LocationDescription = localDescription,
             };
 
-            ShouldContainErrors(request, expectedError);
+            ShouldValidateWithSingleError(request, expectedError);
         }
     }
 }
