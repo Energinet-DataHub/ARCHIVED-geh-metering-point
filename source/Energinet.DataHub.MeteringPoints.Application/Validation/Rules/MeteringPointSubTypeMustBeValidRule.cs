@@ -95,6 +95,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 {
                     MeteringPointType.OtherConsumption.Name,
                     MeteringPointType.OtherProduction.Name,
+                    MeteringPointType.ExchangeReactiveEnergy.Name,
                 }
                 .Contains(createMeteringPoint.TypeOfMeteringPoint);
         }
