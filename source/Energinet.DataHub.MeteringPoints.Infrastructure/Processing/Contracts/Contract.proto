@@ -55,7 +55,7 @@ message CreateMeteringPoint {
   string physicalStatusOfMeteringPoint = 18;
   string netSettlementGroup = 19;
   string connectionType = 20;
-  string assetType = 21;
+  google.protobuf.StringValue assetType = 21;
   string fromGrid = 22;
   string toGrid = 23;
   string productType = 24;
