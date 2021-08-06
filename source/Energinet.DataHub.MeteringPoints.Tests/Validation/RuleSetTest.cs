@@ -16,7 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using FluentAssertions;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Validation
@@ -24,13 +23,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
     public abstract class RuleSetTest<TRequest, TRuleSet>
         where TRuleSet : AbstractValidator<TRequest>, new()
     {
-        protected IReadOnlyCollection<ValidationError> Validate(TRequest request)
+        protected IEnumerable<ValidationError> Validate(TRequest request)
         {
             var validationResult = new RuleSet().Validate(request);
 
             return validationResult.Errors
-                .Select(error => (ValidationError)error.CustomState)
-                .ToList();
+                .Select(error => (ValidationError)error.CustomState);
         }
 
         protected void ShouldContainErrors(TRequest request, Type expectedError)
