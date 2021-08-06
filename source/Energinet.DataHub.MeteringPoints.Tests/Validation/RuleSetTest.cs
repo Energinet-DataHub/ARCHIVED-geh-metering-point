@@ -14,29 +14,20 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Application;
-using Energinet.DataHub.MeteringPoints.Application.Validation;
-using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using FluentAssertions;
 using FluentValidation;
-using Xunit;
-using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 {
     public abstract class RuleSetTest<TRequest, TRuleSet>
         where TRuleSet : AbstractValidator<TRequest>, new()
     {
-        protected IReadOnlyCollection<ValidationError> Validate(TRequest request)
+        protected IEnumerable<ValidationError> Validate(TRequest request)
         {
             var validationResult = new RuleSet().Validate(request);
 
             return validationResult.Errors
-                .Select(error => (ValidationError)error.CustomState)
-                .ToList();
+                .Select(error => (ValidationError)error.CustomState);
         }
 
         private class RuleSet : AbstractValidator<TRequest>

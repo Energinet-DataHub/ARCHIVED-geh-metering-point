@@ -47,7 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
             string PhysicalStatusOfMeteringPoint = "",
             string NetSettlementGroup = "",
             string ConnectionType = "",
-            string AssetType = "",
+            string? AssetType = null,
             string FromGrid = "",
             string ToGrid = "",
             string ParentRelatedMeteringPoint = "",

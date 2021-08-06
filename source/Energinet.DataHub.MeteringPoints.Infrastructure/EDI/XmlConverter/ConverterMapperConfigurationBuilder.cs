@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             }
         }
 
-        public ConverterMapperConfigurationBuilder<T> AddProperty<TProperty>(Expression<Func<T, string>> selector, Func<XmlElementInfo, TProperty> translatorFunc, params string[] xmlHierarchy)
+        public ConverterMapperConfigurationBuilder<T> AddProperty<TProperty>(Expression<Func<T, string?>> selector, Func<XmlElementInfo, TProperty> translatorFunc, params string[] xmlHierarchy)
         {
             return AddPropertyInternal(selector, CastFunc(translatorFunc), xmlHierarchy);
         }
