@@ -135,7 +135,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup),
                 EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
                 EnumerationType.FromName<ConnectionType>(request.ConnectionType),
-                EnumerationType.FromName<AssetType>(request.AssetType),
+                assetType: !string.IsNullOrEmpty(request.AssetType) ? EnumerationType.FromName<AssetType>(request.AssetType) : null,
                 request.ParentRelatedMeteringPoint,
                 EnumerationType.FromName<ProductType>(request.ProductType));
         }

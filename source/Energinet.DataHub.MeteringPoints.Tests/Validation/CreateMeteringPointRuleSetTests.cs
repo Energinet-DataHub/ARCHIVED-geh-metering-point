@@ -20,7 +20,6 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentAssertions;
-using FluentValidation;
 using Xunit;
 using Xunit.Categories;
 
@@ -360,6 +359,30 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         }
 
         [Theory]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(ReadingOccurrence.Hourly), typeof(MeterReadingOccurenceMandatoryValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Consumption), "", typeof(MeterReadingOccurenceMandatoryValidationError), true)]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(ReadingOccurrence.Yearly), typeof(MeterReadingOccurenceInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.VEProduction), nameof(ReadingOccurrence.Yearly), typeof(MeterReadingOccurenceInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.VEProduction), nameof(ReadingOccurrence.Monthly), typeof(MeterReadingOccurenceInvalidValueValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Analysis), nameof(ReadingOccurrence.Monthly), typeof(MeterReadingOccurenceInvalidValueValidationError), false)]
+        [InlineData(nameof(MeteringPointType.NetConsumption), nameof(ReadingOccurrence.Monthly), typeof(MeterReadingOccurenceInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.NetConsumption), nameof(ReadingOccurrence.Quarterly), typeof(MeterReadingOccurenceInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.NetConsumption), nameof(ReadingOccurrence.Hourly), typeof(MeterReadingOccurenceInvalidValueValidationError), false)]
+        [InlineData(nameof(MeteringPointType.SurplusProductionGroup), nameof(ReadingOccurrence.Monthly), typeof(MeterReadingOccurenceInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.SurplusProductionGroup), nameof(ReadingOccurrence.Quarterly), typeof(MeterReadingOccurenceInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.SurplusProductionGroup), nameof(ReadingOccurrence.Hourly), typeof(MeterReadingOccurenceInvalidValueValidationError), false)]
+        public void Validate_MeterReadingOccurence(string meteringPointType, string meterReadingOccurence, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                MeterReadingOccurrence = meterReadingOccurence,
+                TypeOfMeteringPoint = meteringPointType,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
         [InlineData("22A", "DK", typeof(BuildingNumberMustBeValidValidationError), false)]
         [InlineData("AÆZ", "DK", typeof(BuildingNumberMustBeValidValidationError), false)]
         [InlineData("22ADA", "", typeof(BuildingNumberMustBeValidValidationError), false)]
@@ -435,6 +458,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         [InlineData("", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError), true)]
         [InlineData("", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError), true)]
         [InlineData("", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.Zero), typeof(PowerPlantGsrnEan18ValidValidationError), false)]
+        [InlineData("", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.Ninetynine), typeof(PowerPlantGsrnEan18ValidValidationError), false)]
         public void Validate_PowerPlant(string powerPlant, string meteringPointType, string netSettlementGroup,  System.Type validationError, bool expectedError)
         {
             var businessRequest = CreateRequest() with
@@ -468,16 +492,66 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         }
 
         [Theory]
-        [InlineData(nameof(MeteringPointSubType.Physical), typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
-        [InlineData(nameof(MeteringPointSubType.Virtual), typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
-        [InlineData(nameof(MeteringPointSubType.Calculated), typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
-        [InlineData("", typeof(MeteringPointSubTypeValueMustBeValidValidationError), true)]
-        public void Validate_MeteringPoint_Subtype_Correct_Value(string meteringPointSubType,  System.Type validationError, bool expectedError)
+        [InlineData(nameof(MeteringPointType.Production), nameof(MeteringPointSubType.Virtual), nameof(NetSettlementGroup.One),  typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeteringPointSubType.Calculated), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
+        [InlineData(nameof(MeteringPointType.WholesaleServices), nameof(MeteringPointSubType.Virtual), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
+        [InlineData(nameof(MeteringPointType.OwnProduction), nameof(MeteringPointSubType.Virtual), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
+        [InlineData(nameof(MeteringPointType.NetFromGrid), nameof(MeteringPointSubType.Calculated), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
+        [InlineData(nameof(MeteringPointType.NetToGrid), nameof(MeteringPointSubType.Calculated), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
+        [InlineData(nameof(MeteringPointType.TotalConsumption), nameof(MeteringPointSubType.Calculated), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Consumption), "", nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError), true)]
+        [InlineData(nameof(MeteringPointType.WholesaleServices), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError), true)]
+        [InlineData(nameof(MeteringPointType.OwnProduction), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError), true)]
+        [InlineData(nameof(MeteringPointType.NetFromGrid), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError), true)]
+        [InlineData(nameof(MeteringPointType.NetToGrid), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError), true)]
+        [InlineData(nameof(MeteringPointType.TotalConsumption), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError), true)]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.Zero), typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Production), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.Ninetynine), typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Production), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.One), typeof(MeteringPointSubTypeValueMustBeValidValidationError), true)]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeteringPointSubType.Virtual), nameof(NetSettlementGroup.Zero), typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Production), nameof(MeteringPointSubType.Calculated), nameof(NetSettlementGroup.Ninetynine), typeof(MeteringPointSubTypeValueMustBeValidValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.One), typeof(MeteringPointSubTypeValueMustBeValidValidationError), true)]
+        public void Validate_MeteringPoint_Subtype_Correct_Value(string typeOfMeteringPoint, string meteringPointSubType, string netSettlementGroup,  System.Type validationError, bool expectedError)
         {
             var businessRequest = CreateRequest() with
             {
                 GsrnNumber = SampleData.GsrnNumber,
+                TypeOfMeteringPoint = typeOfMeteringPoint,
                 SubTypeOfMeteringPoint = meteringPointSubType,
+                NetSettlementGroup = netSettlementGroup,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData(nameof(MeteringPointType.Consumption), "gridArea", typeof(SourceMeteringGridAreaNotAllowedValidationError), false)]
+        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), "gridArea", typeof(SourceMeteringGridAreaNotAllowedValidationError), true)]
+        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), "", typeof(SourceMeteringGridAreaNotAllowedValidationError), false)]
+        public void Validate_SourceMeteringGridArea(string meteringPointType, string gridArea,  System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                TypeOfMeteringPoint = meteringPointType,
+                FromGrid = gridArea,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
+        [InlineData(nameof(MeteringPointType.Consumption), "gridArea", typeof(TargetMeteringGridAreaNotAllowedValidationError), false)]
+        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), "gridArea", typeof(TargetMeteringGridAreaNotAllowedValidationError), true)]
+        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), "", typeof(TargetMeteringGridAreaNotAllowedValidationError), false)]
+
+        public void Validate_TargetMeteringGridArea(string meteringPointType, string gridArea,  System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                GsrnNumber = SampleData.GsrnNumber,
+                TypeOfMeteringPoint = meteringPointType,
+                ToGrid = gridArea,
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);

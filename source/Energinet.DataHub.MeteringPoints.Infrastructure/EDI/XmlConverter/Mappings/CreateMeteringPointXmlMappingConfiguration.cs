@@ -72,8 +72,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 "D01" => nameof(SettlementMethod.Flex),
                 "E02" => nameof(SettlementMethod.NonProfiled),
                 "E01" => nameof(SettlementMethod.Profiled),
-                // TODO: don't return empty string.
-                // TODO: Pass through original value instead.
                 _ => element.SourceValue,
             };
         }

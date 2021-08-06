@@ -23,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private NetSettlementGroup _netSettlementGroup;
         private DisconnectionType _disconnectionType;
         private ConnectionType _connectionType;
-        private AssetType _assetType;
+        private AssetType? _assetType;
         private bool _isAddressWashable;
 
         public ConsumptionMeteringPoint(
@@ -47,7 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             NetSettlementGroup netSettlementGroup,
             DisconnectionType disconnectionType,
             ConnectionType connectionType,
-            AssetType assetType,
+            AssetType? assetType,
             string? parentRelatedMeteringPoint,
             ProductType productType)
             : base(
