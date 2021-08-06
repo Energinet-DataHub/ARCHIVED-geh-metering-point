@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using FluentAssertions;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Validation
