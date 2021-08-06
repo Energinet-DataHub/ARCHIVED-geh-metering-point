@@ -25,12 +25,26 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
     {
         public OfficialAddressRule()
         {
-            When(request => IsProductionOrConsumption(request) || request.IsOfficialAddress, () =>
-            {
-                RuleFor(request => request.GeoInfoReference)
-                    .Must(IsValidReference)
-                    .WithState(request => new GeoInfoReferenceIsMandatoryValidationError(request.GsrnNumber, request.GeoInfoReference));
-            });
+            When(request => IsProductionOrConsumption(request) || IsOfficialAddress(request) || HasGeoInfoReference(request), () =>
+                {
+                    RuleFor(request => request.GeoInfoReference)
+                        .Must(IsValidReference)
+                        .WithState(request => new GeoInfoReferenceIsMandatoryValidationError(request.GsrnNumber, request.GeoInfoReference));
+
+                    RuleFor(request => request.IsOfficialAddress)
+                        .NotNull()
+                        .WithState(request => new OfficialAddressIsMandatoryWhenGeoInfoReferenceIsPresentValidationError(request.GsrnNumber, request.GeoInfoReference));
+                });
+        }
+
+        private static bool HasGeoInfoReference(CreateMeteringPoint request)
+        {
+            return !string.IsNullOrWhiteSpace(request.GeoInfoReference);
+        }
+
+        private static bool IsOfficialAddress(CreateMeteringPoint request)
+        {
+            return request.IsOfficialAddress.GetValueOrDefault();
         }
 
         private static bool IsValidReference(string? reference)
