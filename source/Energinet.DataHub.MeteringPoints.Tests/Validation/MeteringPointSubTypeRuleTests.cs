@@ -61,7 +61,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         [InlineData(nameof(MeteringPointType.Consumption), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.One), typeof(MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineSubtypeVirtualOrCalculatedValidationError))]
         [InlineData(nameof(MeteringPointType.OtherConsumption), nameof(MeteringPointSubType.Calculated), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeMustBePhysicalOrVirtualValidationError))]
         [InlineData(nameof(MeteringPointType.OtherProduction), nameof(MeteringPointSubType.Calculated), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeMustBePhysicalOrVirtualValidationError))]
-        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), nameof(MeteringPointSubType.Calculated), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeMustBePhysicalOrVirtualValidationError))]
+        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), nameof(MeteringPointSubType.Calculated), nameof(NetSettlementGroup.One),   typeof(MeteringPointExchangeReactiveEnergySubTypeMustBePhysicalOrVirtualValidationError))]
         public void MeteringPointSubtypeShouldResultInError(string typeOfMeteringPoint, string meteringPointSubType, string netSettlementGroup,  Type expectedError)
         {
             var request = CreateRequest() with

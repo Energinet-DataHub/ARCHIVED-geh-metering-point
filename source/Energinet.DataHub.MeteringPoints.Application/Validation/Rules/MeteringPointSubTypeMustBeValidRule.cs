@@ -57,6 +57,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                             createMeteringPoint.TypeOfMeteringPoint));
             });
 
+            When(IsMeteringPointExchangeReactiveEnergy, () =>
+            {
+                RuleFor(createMeteringPoint => createMeteringPoint)
+                    .Must(SubTypeIsVirtualOrPhysical)
+                    .WithState(createMeteringPoint => new MeteringPointExchangeReactiveEnergySubTypeMustBePhysicalOrVirtualValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SubTypeOfMeteringPoint));
+            });
+
             When(ExpectedValueForAllOtherMeteringPointTypes, () =>
             {
                 RuleFor(createMeteringPoint => createMeteringPoint)
@@ -72,7 +79,15 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         {
             return !GroupOfMeteringPointTypesThatMustBeSubtypePhysicalOrVirtual(createMeteringPoint) &&
                    !GroupOfMeteringPointTypesThatMustBeSubTypeVirtualOrCalculated(createMeteringPoint) &&
-                   !MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNine(createMeteringPoint);
+                   !MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNine(createMeteringPoint) &&
+                   !IsMeteringPointExchangeReactiveEnergy(createMeteringPoint);
+        }
+
+        private static bool IsMeteringPointExchangeReactiveEnergy(CreateMeteringPoint createMeteringPoint)
+        {
+            return MeteringPointType.ExchangeReactiveEnergy.Name.Equals(
+                createMeteringPoint.TypeOfMeteringPoint,
+                StringComparison.Ordinal);
         }
 
         private static bool GroupOfMeteringPointTypesThatMustBeSubTypeVirtualOrCalculated(CreateMeteringPoint createMeteringPoint)
@@ -95,7 +110,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 {
                     MeteringPointType.OtherConsumption.Name,
                     MeteringPointType.OtherProduction.Name,
-                    MeteringPointType.ExchangeReactiveEnergy.Name,
                 }
                 .Contains(createMeteringPoint.TypeOfMeteringPoint);
         }
