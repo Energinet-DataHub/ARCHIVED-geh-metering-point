@@ -51,7 +51,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         [InlineData("7511e205cd4344e39a177664f66a5d07", true, nameof(MeteringPointType.Production), typeof(GeoInfoReferenceIsMandatoryValidationError))]
         [InlineData("7511e205cd4344e39a177664f66a5d075d07", true, nameof(MeteringPointType.Production), typeof(GeoInfoReferenceIsMandatoryValidationError))]
         [InlineData("", true, nameof(MeteringPointType.ElectricalHeating), typeof(GeoInfoReferenceIsMandatoryValidationError))]
-        public void OfficialAddressShouldResultInError(string reference, bool isOfficialAddress, string meteringPointType, Type expectedError)
+        [InlineData("x", true, nameof(MeteringPointType.ElectricalHeating), typeof(GeoInfoReferenceIsMandatoryValidationError))]
+        [InlineData("x", null, nameof(MeteringPointType.ElectricalHeating), typeof(OfficialAddressIsMandatoryWhenGeoInfoReferenceIsPresentValidationError))]
+        [InlineData("x", false, nameof(MeteringPointType.ElectricalHeating), typeof(GeoInfoReferenceIsMandatoryValidationError))]
+        [InlineData("x", true, nameof(MeteringPointType.Production), typeof(GeoInfoReferenceIsMandatoryValidationError))]
+        [InlineData("x", null, nameof(MeteringPointType.Production), typeof(OfficialAddressIsMandatoryWhenGeoInfoReferenceIsPresentValidationError))]
+        [InlineData("x", false, nameof(MeteringPointType.Production), typeof(GeoInfoReferenceIsMandatoryValidationError))]
+        public void OfficialAddressShouldResultInError(string reference, bool? isOfficialAddress, string meteringPointType, Type expectedError)
         {
             var request = CreateRequest() with
             {

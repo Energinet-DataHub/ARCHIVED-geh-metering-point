@@ -118,7 +118,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
                 return valueTranslatorFunc != null ? valueTranslatorFunc(xmlElementInfo) : source.Value;
             }
 
-            if (dest == typeof(bool))
+            if (dest == typeof(bool) || dest == typeof(bool?))
             {
                 return valueTranslatorFunc != null ? valueTranslatorFunc(xmlElementInfo) : source.Value;
             }

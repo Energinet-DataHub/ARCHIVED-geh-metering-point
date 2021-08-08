@@ -32,8 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                     .WithState(createMeteringPoint => new DisconnectionTypeMandatoryValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.DisconnectionType))
                     .Must(AllowedDisconnectionTypes)
                     .WithState(createMeteringPoint => new DisconnectionTypeWrongValueValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.DisconnectionType));
-            })
-                .Otherwise(DisconnectionTypeMustBeEmpty);
+            }).Otherwise(DisconnectionTypeMustBeEmpty);
         }
 
         private static bool AllowedDisconnectionTypes(string disconnectionType)
@@ -42,8 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             {
                 DisconnectionType.Manual.Name,
                 DisconnectionType.Remote.Name,
-            }
-                .Contains(disconnectionType);
+            }.Contains(disconnectionType);
         }
 
         private static bool MandatoryMeteringPointTypes(CreateMeteringPoint createMeteringPoint)
@@ -52,8 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             {
                 MeteringPointType.Production.Name,
                 MeteringPointType.Consumption.Name,
-            }
-                .Contains(createMeteringPoint.TypeOfMeteringPoint);
+            }.Contains(createMeteringPoint.TypeOfMeteringPoint);
         }
 
         private void DisconnectionTypeMustBeEmpty()
