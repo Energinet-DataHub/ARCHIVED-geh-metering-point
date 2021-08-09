@@ -29,6 +29,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation.Address
         [InlineData("22ADA", "")]
         [InlineData("ÆØÅ", "")]
         [InlineData("1AAA", "")]
+        [InlineData(null, "DK")]
+        [InlineData(null, "")]
         public void ShouldValidate(string buildingNumber, string countryCode)
         {
             var request = CreateRequest() with
