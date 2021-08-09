@@ -12,20 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using FluentValidation;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class StreetNameMaximumLengthMustBeValidRule : AbstractValidator<string>
+    public class CountryCodeInvalidValidationError : ValidationError
     {
-        private const int MaxStreetNameLength = 40;
-
-        public StreetNameMaximumLengthMustBeValidRule(string gsrnNumber)
+        public CountryCodeInvalidValidationError(string gsrnNumber, string countryCode)
         {
-            RuleFor(streetName => streetName)
-                .MaximumLength(MaxStreetNameLength)
-                .WithState(streetName => new StreetNameMaximumLengthValidationError(gsrnNumber, streetName, MaxStreetNameLength));
+            GsrnNumber = gsrnNumber;
+            CountryCode = countryCode;
         }
+
+        public string GsrnNumber { get; }
+
+        public string CountryCode { get; }
     }
 }

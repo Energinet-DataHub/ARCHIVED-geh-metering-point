@@ -18,31 +18,29 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class BuildingNumberFormatMustBeValidRule : AbstractValidator<string>
+    public class BuildingNumberRule : AbstractValidator<CreateMeteringPoint>
     {
         private const string BuildingNumberDenmarkFormatRegEx = @"^(?=.{1,4}$)((([1-9][0-9]{0,2})?[A-ZÆØÅ]*)|([A-ZÆØÅ]*([1-9][0-9]{0,2})?))$";
         private const int BuildingNumberNotDenmarkFormatMaxLength = 6;
-        private readonly string _gsrnNumber;
 
-        public BuildingNumberFormatMustBeValidRule(string gsrnNumber, string countryCode)
+        public BuildingNumberRule()
         {
-            _gsrnNumber = gsrnNumber;
-            When(address => countryCode.Equals("DK", StringComparison.OrdinalIgnoreCase), BuildingNumberMustBeDanishFormat)
+            When(request => !string.IsNullOrWhiteSpace(request.CountryCode) && request.CountryCode.Equals("DK", StringComparison.OrdinalIgnoreCase), BuildingNumberMustBeDanishFormat)
                 .Otherwise(BuildingNumberMustNotBeDanishFormat);
         }
 
         private void BuildingNumberMustBeDanishFormat()
         {
-            RuleFor(buildingNumber => buildingNumber)
+            RuleFor(request => request.BuildingNumber)
                 .Matches(BuildingNumberDenmarkFormatRegEx)
-                .WithState(buildingNumber => new BuildingNumberMustBeValidValidationError(_gsrnNumber, buildingNumber));
+                .WithState(request => new BuildingNumberMustBeValidValidationError(request.GsrnNumber, request.BuildingNumber));
         }
 
         private void BuildingNumberMustNotBeDanishFormat()
         {
-            RuleFor(postCode => postCode)
+            RuleFor(request => request.BuildingNumber)
                 .MaximumLength(BuildingNumberNotDenmarkFormatMaxLength)
-                .WithState(buildingNumber => new BuildingNumberMustBeValidValidationError(_gsrnNumber, buildingNumber));
+                .WithState(request => new BuildingNumberMustBeValidValidationError(request.GsrnNumber, request.BuildingNumber));
         }
     }
 }

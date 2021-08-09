@@ -12,20 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class CityNameMaximumLengthMustBeValidRule : AbstractValidator<string>
+    public class CountryCodeInvalidErrorConverter : ErrorConverter<CountryCodeInvalidValidationError>
     {
-        private const int MaxCityNameLength = 25;
-
-        public CityNameMaximumLengthMustBeValidRule(string gsrnNumber)
+        protected override ErrorMessage Convert(CountryCodeInvalidValidationError validationError)
         {
-             RuleFor(cityName => cityName)
-                .MaximumLength(MaxCityNameLength)
-                .WithState(cityName => new CityNameMaximumLengthValidationError(gsrnNumber, cityName, MaxCityNameLength));
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new ErrorMessage("E86", $"Country name {validationError.CountryCode} for metering point {validationError.GsrnNumber} must be empty or 'DK'");
         }
     }
 }

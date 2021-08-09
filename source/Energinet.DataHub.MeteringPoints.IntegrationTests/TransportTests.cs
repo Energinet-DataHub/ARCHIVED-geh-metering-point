@@ -31,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         [Fact]
         public async Task Send_and_receive_must_result_in_same_transmitted_values()
         {
-            var expectedGsrnNumber = "123";
+            const string? expectedGsrnNumber = "123";
             byte[]? bytes;
 
             // Send setup
@@ -43,7 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             sendingContainer.Verify();
 
             // Send scope
-            using (var sendingScope = AsyncScopedLifestyle.BeginScope(sendingContainer))
+            await using (AsyncScopedLifestyle.BeginScope(sendingContainer))
             {
                 var messageDispatcher = sendingContainer.GetRequiredService<Dispatcher>();
                 var outboundMessage = new Application.CreateMeteringPoint
@@ -67,12 +67,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             receivingContainer.Verify();
 
             // Receive scope
-            using (var receivingScope = AsyncScopedLifestyle.BeginScope(receivingContainer))
-            {
-                var messageExtractor = receivingContainer.GetRequiredService<MessageExtractor>();
-                var message = await messageExtractor.ExtractAsync(bytes).ConfigureAwait(false);
-                message.Should().BeOfType<Application.CreateMeteringPoint>();
-            }
+            await using var scope = AsyncScopedLifestyle.BeginScope(receivingContainer);
+            var messageExtractor = receivingContainer.GetRequiredService<MessageExtractor>();
+            var message = await messageExtractor.ExtractAsync(bytes).ConfigureAwait(false);
+            message.Should().BeOfType<Application.CreateMeteringPoint>();
         }
     }
 }
