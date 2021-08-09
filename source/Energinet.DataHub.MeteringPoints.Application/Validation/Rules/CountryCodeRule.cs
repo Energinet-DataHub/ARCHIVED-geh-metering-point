@@ -12,28 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class GsrnNumberMustBeValidRule : AbstractValidator<string>
+    public class CountryCodeRule : AbstractValidator<CreateMeteringPoint>
     {
-        public GsrnNumberMustBeValidRule()
+        public CountryCodeRule()
         {
-            RuleFor(gsrnNumber => gsrnNumber)
-                .Cascade(CascadeMode.Stop)
-                .NotEmpty()
-                .WithState(CreateValidationError)
-                .Must(x => GsrnNumber.CheckRules(x).Success)
-                .WithState(CreateValidationError);
-        }
-
-        private static ValidationError CreateValidationError(string gsrnNumber)
-        {
-            return new GsrnNumberMustBeValidValidationError(gsrnNumber);
+            When(request => !string.IsNullOrWhiteSpace(request.CountryCode), () =>
+            {
+                RuleFor(request => request.CountryCode)
+                    .Must(countryCode => countryCode == "DK")
+                    .WithState(request => new CountryCodeInvalidValidationError(request.GsrnNumber, request.CountryCode!));
+            });
         }
     }
 }

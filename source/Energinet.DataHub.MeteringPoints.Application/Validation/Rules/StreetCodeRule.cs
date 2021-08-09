@@ -13,27 +13,22 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class GsrnNumberMustBeValidRule : AbstractValidator<string>
+    public class StreetCodeRule : AbstractValidator<CreateMeteringPoint>
     {
-        public GsrnNumberMustBeValidRule()
-        {
-            RuleFor(gsrnNumber => gsrnNumber)
-                .Cascade(CascadeMode.Stop)
-                .NotEmpty()
-                .WithState(CreateValidationError)
-                .Must(x => GsrnNumber.CheckRules(x).Success)
-                .WithState(CreateValidationError);
-        }
+        private const int StreetCodeLength = 4;
 
-        private static ValidationError CreateValidationError(string gsrnNumber)
+        public StreetCodeRule()
         {
-            return new GsrnNumberMustBeValidValidationError(gsrnNumber);
+            RuleFor(request => request.StreetCode)
+                .Cascade(CascadeMode.Stop)
+                .Length(StreetCodeLength)
+                .WithState(request => new StreetCodeValidationError(request.GsrnNumber, request.StreetCode))
+                .InclusiveBetween("0001", "9999")
+                .WithState(request => new StreetCodeValidationError(request.GsrnNumber, request.StreetCode));
         }
     }
 }

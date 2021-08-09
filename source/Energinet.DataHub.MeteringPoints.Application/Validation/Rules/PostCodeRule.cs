@@ -18,31 +18,35 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class PostCodeFormatMustBeValidRule : AbstractValidator<string>
+    public class PostCodeRule : AbstractValidator<CreateMeteringPoint>
     {
         private const string PostCodeDkFormatRegEx = @"^([0-9]{4})$";
         private const int MaxPostCodeLength = 10;
-        private readonly string _gsrnNumber;
 
-        public PostCodeFormatMustBeValidRule(string gsrnNumber, string countryCode)
+        public PostCodeRule()
         {
-            _gsrnNumber = gsrnNumber;
-            When(address => countryCode.Equals("DK", StringComparison.Ordinal), PostCodeDenmarkFormat)
+            When(request => !string.IsNullOrWhiteSpace(request.CountryCode) && request.CountryCode.Equals("DK", StringComparison.Ordinal) && !string.IsNullOrEmpty(request.PostCode), PostCodeDenmarkFormat)
                 .Otherwise(PostCodeFormatMaxLength);
+
+            When(CreateMeteringPointRulesHelper.MeteringPointTypeIsProductionOrConsumption, () =>
+            {
+                RuleFor(request => request.PostCode)
+                    .SetValidator(request => new PostCodeMandatoryForMeteringPointTypeMustBeValidRule(request.GsrnNumber));
+            });
         }
 
         private void PostCodeDenmarkFormat()
         {
-            RuleFor(postCode => postCode)
+            RuleFor(request => request.PostCode)
                 .Matches(PostCodeDkFormatRegEx)
-                .WithState(postCode => new PostCodeWrongFormatValidationError(_gsrnNumber, postCode));
+                .WithState(request => new PostCodeWrongFormatValidationError(request.GsrnNumber, request.PostCode));
         }
 
         private void PostCodeFormatMaxLength()
         {
-            RuleFor(postCode => postCode)
+            RuleFor(request => request.PostCode)
                 .MaximumLength(MaxPostCodeLength)
-                .WithState(postCode => new PostCodeMaximumLengthValidationError(_gsrnNumber, postCode, MaxPostCodeLength));
+                .WithState(request => new PostCodeMaximumLengthValidationError(request.GsrnNumber, request.PostCode, MaxPostCodeLength));
         }
     }
 }

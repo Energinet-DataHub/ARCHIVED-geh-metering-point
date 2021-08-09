@@ -17,16 +17,15 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class CitySubDivisionNameMaximumLengthMustBeValidRule : AbstractValidator<string>
+    public class CitySubDivisionNameRule : AbstractValidator<CreateMeteringPoint>
     {
         private const int CitySubDivisionNameMaximumLength = 34;
 
-        public CitySubDivisionNameMaximumLengthMustBeValidRule(string gsrnNumber)
+        public CitySubDivisionNameRule()
         {
-            RuleFor(citySubDivisionName => citySubDivisionName)
+            RuleFor(request => request.CitySubDivisionName)
                 .MaximumLength(CitySubDivisionNameMaximumLength)
-                .WithState(citySubDivisionName =>
-                    new CitySubDivisionNameMaximumLengthValidationError(gsrnNumber, citySubDivisionName));
+                .WithState(request => new CitySubDivisionNameMaximumLengthValidationError(request.GsrnNumber, request.CitySubDivisionName));
         }
     }
 }

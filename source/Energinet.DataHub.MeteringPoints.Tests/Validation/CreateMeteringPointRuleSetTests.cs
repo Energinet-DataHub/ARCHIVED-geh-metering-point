@@ -124,72 +124,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         }
 
         [Theory]
-        [InlineData("Tester 1", "Consumption", typeof(StreetNameMandatoryForMeteringPointTypeValidationError), false)]
-        [InlineData("Tester 1", "Production", typeof(StreetNameMandatoryForMeteringPointTypeValidationError), false)]
-        [InlineData("", "Production", typeof(StreetNameMandatoryForMeteringPointTypeValidationError), true)]
-        [InlineData("", "OtherType", typeof(StreetNameMandatoryForMeteringPointTypeValidationError), false)]
-        [InlineData("VeryLongAddressNameThatWillReturnValidationErrorForMaxLength", "Consumption", typeof(StreetNameMaximumLengthValidationError), true)]
-        [InlineData("VeryLongAddressNameThatWillReturnValidationErrorForMaxLength", "OtherType", typeof(StreetNameMaximumLengthValidationError), true)]
-        [InlineData("Tester 1", "OtherType", typeof(StreetNameMaximumLengthValidationError), false)]
-        public void Validate_StreetNameRequiredAndMaximumLength(string streetName, string typeOfMeteringPoint, System.Type validationError, bool expectedError)
-        {
-            var businessRequest = CreateRequest() with
-            {
-                StreetName = streetName,
-                PostCode = SampleData.PostCode,
-                CityName = SampleData.CityName,
-                GsrnNumber = SampleData.GsrnNumber,
-                TypeOfMeteringPoint = typeOfMeteringPoint,
-            };
-
-            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
-        }
-
-        [Theory]
-        [InlineData("8000", "Consumption", "DK", typeof(PostCodeWrongFormatValidationError), false)]
-        [InlineData("800", "Consumption", "DK", typeof(PostCodeWrongFormatValidationError), true)]
-        [InlineData("", "OtherType", "DK", typeof(PostCodeMandatoryForMeteringPointTypeValidationError), false)]
-        [InlineData("", "Consumption", "DK", typeof(PostCodeMandatoryForMeteringPointTypeValidationError), true)]
-        [InlineData("LONGPOSTCODE", "Consumption", "SE", typeof(PostCodeMaximumLengthValidationError), true)]
-        [InlineData("POSTCODE", "Consumption", "SE", typeof(PostCodeMaximumLengthValidationError), false)]
-        public void Validate_PostCodeRequiredAndFormat(string postCode, string typeOfMeteringPoint, string countryCode, System.Type validationError, bool expectedError)
-        {
-            var businessRequest = CreateRequest() with
-            {
-                StreetName = SampleData.StreetName,
-                PostCode = postCode,
-                CityName = SampleData.CityName,
-                CountryCode = countryCode,
-                GsrnNumber = SampleData.GsrnNumber,
-                TypeOfMeteringPoint = typeOfMeteringPoint,
-            };
-
-            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
-        }
-
-        [Theory]
-        [InlineData("Aarhus C", "Consumption", typeof(CityNameMandatoryForMeteringPointTypeValidationError), false)]
-        [InlineData("København", "Production", typeof(CityNameMandatoryForMeteringPointTypeValidationError), false)]
-        [InlineData("", "Production", typeof(CityNameMandatoryForMeteringPointTypeValidationError), true)]
-        [InlineData("", "OtherType", typeof(CityNameMandatoryForMeteringPointTypeValidationError), false)]
-        [InlineData("Azpilicuetagaraycosaroyarenberecolarrea", "Consumption", typeof(CityNameMaximumLengthValidationError), true)]
-        [InlineData("Azpilicuetagaraycosaroyarenberecolarrea", "OtherType", typeof(CityNameMaximumLengthValidationError), true)]
-        [InlineData("Aarhus C", "OtherType", typeof(CityNameMaximumLengthValidationError), false)]
-        public void Validate_CityNameRequiredAndMaximumLength(string cityName, string typeOfMeteringPoint, System.Type validationError, bool expectedError)
-        {
-            var businessRequest = CreateRequest() with
-            {
-                StreetName = SampleData.StreetName,
-                PostCode = SampleData.PostCode,
-                CityName = cityName,
-                GsrnNumber = SampleData.GsrnNumber,
-                TypeOfMeteringPoint = typeOfMeteringPoint,
-            };
-
-            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
-        }
-
-        [Theory]
         [InlineData("1234", "Physical", typeof(MeterNumberMandatoryValidationError), false)]
         [InlineData("", "Physical", typeof(MeterNumberMandatoryValidationError), true)]
         [InlineData("1234", "OtherSubType", typeof(MeterNumberNotAllowedValidationError), true)]
@@ -230,60 +164,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             {
                 GsrnNumber = SampleData.GsrnNumber,
                 SubTypeOfMeteringPoint = subTypeOfMeteringPoint,
-            };
-
-            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
-        }
-
-        [Theory]
-        [InlineData("1234", typeof(StreetCodeValidationError), false)]
-        [InlineData("0000", typeof(StreetCodeValidationError), true)]
-        [InlineData("0001", typeof(StreetCodeValidationError), false)]
-        [InlineData("00011", typeof(StreetCodeValidationError), true)]
-        [InlineData("12345", typeof(StreetCodeValidationError), true)]
-        [InlineData("9999", typeof(StreetCodeValidationError), false)]
-        [InlineData("9", typeof(StreetCodeValidationError), true)]
-        [InlineData("afsd", typeof(StreetCodeValidationError), true)]
-        public void Validate_StreetCode(string streetCode, System.Type validationError, bool expectedError)
-        {
-            var businessRequest = CreateRequest() with
-            {
-                GsrnNumber = SampleData.GsrnNumber,
-                StreetCode = streetCode,
-            };
-
-            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
-        }
-
-        [Theory]
-        [InlineData("", typeof(FloorIdentificationValidationError), false)]
-        [InlineData("2", typeof(FloorIdentificationValidationError), false)]
-        [InlineData("A", typeof(FloorIdentificationValidationError), false)]
-        [InlineData("ABCDE", typeof(FloorIdentificationValidationError), true)]
-        [InlineData("12345", typeof(FloorIdentificationValidationError), true)]
-        public void Validate_FloorIdentification(string floorIdentification, System.Type validationError, bool expectedError)
-        {
-            var businessRequest = CreateRequest() with
-            {
-                GsrnNumber = SampleData.GsrnNumber,
-                FloorIdentification = floorIdentification,
-            };
-
-            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
-        }
-
-        [Theory]
-        [InlineData("", typeof(RoomIdentificationValidationError), false)]
-        [InlineData("2", typeof(RoomIdentificationValidationError), false)]
-        [InlineData("A", typeof(RoomIdentificationValidationError), false)]
-        [InlineData("ABCDE", typeof(RoomIdentificationValidationError), true)]
-        [InlineData("12345", typeof(RoomIdentificationValidationError), true)]
-        public void Validate_RoomIdentification(string roomIdentification, System.Type validationError, bool expectedError)
-        {
-            var businessRequest = CreateRequest() with
-            {
-                GsrnNumber = SampleData.GsrnNumber,
-                RoomIdentification = roomIdentification,
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
@@ -383,28 +263,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         }
 
         [Theory]
-        [InlineData("22A", "DK", typeof(BuildingNumberMustBeValidValidationError), false)]
-        [InlineData("AÆZ", "DK", typeof(BuildingNumberMustBeValidValidationError), false)]
-        [InlineData("22ADA", "", typeof(BuildingNumberMustBeValidValidationError), false)]
-        [InlineData("ÆØÅ", "", typeof(BuildingNumberMustBeValidValidationError), false)]
-        [InlineData("1AAA", "", typeof(BuildingNumberMustBeValidValidationError), false)]
-        [InlineData("", "DK", typeof(BuildingNumberMustBeValidValidationError), true)]
-        [InlineData("001K", "DK", typeof(BuildingNumberMustBeValidValidationError), true)]
-        [InlineData("001KA", "DK", typeof(BuildingNumberMustBeValidValidationError), true)]
-        [InlineData("2AaIOAK", "", typeof(BuildingNumberMustBeValidValidationError), true)]
-        public void Validate_BuildingNumber_Format(string buildingNumber, string countryCode, System.Type validationError, bool expectedError)
-        {
-            var businessRequest = CreateRequest() with
-            {
-                GsrnNumber = SampleData.GsrnNumber,
-                CountryCode = countryCode,
-                BuildingNumber = buildingNumber,
-            };
-
-            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
-        }
-
-        [Theory]
         [InlineData("123", typeof(MunicipalityCodeMustBeValidValidationError), false)]
         [InlineData("999", typeof(MunicipalityCodeMustBeValidValidationError), false)]
         [InlineData("1234", typeof(MunicipalityCodeMustBeValidValidationError), true)]
@@ -415,21 +273,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             {
                 GsrnNumber = SampleData.GsrnNumber,
                 MunicipalityCode = municipalityCode,
-            };
-
-            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
-        }
-
-        [Theory]
-        [InlineData("", typeof(CitySubDivisionNameMaximumLengthValidationError), false)]
-        [InlineData("Asdasdakl k asdasdsa", typeof(CitySubDivisionNameMaximumLengthValidationError), false)]
-        [InlineData("Asdkl dasdkjsajkd ksd skladsa lkdasjlk assad sakd sadas asd sa", typeof(CitySubDivisionNameMaximumLengthValidationError), true)]
-        public void Validate_CitySubDivisionName(string citySubDivisionName, System.Type validationError, bool expectedError)
-        {
-            var businessRequest = CreateRequest() with
-            {
-                GsrnNumber = SampleData.GsrnNumber,
-                CitySubDivisionName = citySubDivisionName,
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);

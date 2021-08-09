@@ -12,17 +12,21 @@
 // // See the License for the specific language governing permissions and
 // // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Tests.Validation
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public abstract class CreateMeteringPointRulesTest<TRuleSet> : RuleSetTest<CreateMeteringPoint, TRuleSet>
-        where TRuleSet : AbstractValidator<CreateMeteringPoint>, new()
+    public class MunicipalityCodeRule : AbstractValidator<CreateMeteringPoint>
     {
-        protected CreateMeteringPoint CreateRequest()
+        private const string MunicipalityCodeFormatRegex = @"^[1-9][0-9][0-9]$";
+
+        public MunicipalityCodeRule()
         {
-            return new();
+            RuleFor(request => request.MunicipalityCode)
+                .Matches(MunicipalityCodeFormatRegex)
+                .WithState(request =>
+                    new MunicipalityCodeMustBeValidValidationError(request.GsrnNumber, request.MunicipalityCode));
         }
     }
 }
