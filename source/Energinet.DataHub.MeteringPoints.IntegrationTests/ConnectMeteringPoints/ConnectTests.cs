@@ -109,7 +109,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
                 SampleData.Occurrence,
                 SampleData.MeterNumber,
                 string.Empty,
-                string.Empty,
+                SampleData.PhysicalState,
                 SampleData.NetSettlementGroup,
                 SampleData.ConnectionType,
                 SampleData.AssetType,
