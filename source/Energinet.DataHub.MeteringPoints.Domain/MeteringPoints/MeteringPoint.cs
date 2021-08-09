@@ -31,8 +31,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private ReadingOccurrence _meterReadingOccurrence;
         private int _maximumCurrent;
         private int _maximumPower;
-        private GsrnNumber _powerPlantGsrnNumber;
-        private string _locationDescription;
+        private GsrnNumber? _powerPlantGsrnNumber;
+        private string? _locationDescription;
         private MeasurementUnitType _unitType;
         private Instant? _occurenceDate;
         private string? _parentRelatedMeteringPoint;
@@ -52,8 +52,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
             GridAreaId gridAreaId,
-            GsrnNumber powerPlantGsrnNumber,
-            string locationDescription,
+            GsrnNumber? powerPlantGsrnNumber,
+            string? locationDescription,
             MeasurementUnitType unitType,
             string meterNumber,
             ReadingOccurrence meterReadingOccurrence,

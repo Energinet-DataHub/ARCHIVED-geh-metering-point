@@ -21,17 +21,17 @@ import "google/protobuf/wrappers.proto";
 option csharp_namespace = "Energinet.DataHub.MeteringPoints.Contracts";
 
 message Address {
-  string streetName = 1;
-  string postCode = 2;
-  string cityName = 3;
+  google.protobuf.StringValue streetName = 1;
+  google.protobuf.StringValue postCode = 2;
+  google.protobuf.StringValue cityName = 3;
   google.protobuf.StringValue countryCode = 4;
   google.protobuf.BoolValue officialAddressIndicator = 5;
-  string buildingNumber = 6;
+  google.protobuf.StringValue buildingNumber = 6;
   string streetCode = 7;
-  string floorIdentification = 8;
-  string roomIdentification = 9;
+  google.protobuf.StringValue floorIdentification = 8;
+  google.protobuf.StringValue roomIdentification = 9;
   string municipalityCode = 10;
-  string cityNameSubDivision = 11;
+  google.protobuf.StringValue cityNameSubDivision = 11;
   google.protobuf.StringValue geoInfoReference = 12;
 }
 
@@ -43,22 +43,22 @@ message CreateMeteringPoint {
   int32 maximumCurrent = 5;
   int32 maximumPower = 6;
   string meteringGridArea = 7;
-  string powerPlant = 8;
-  string locationDescription = 9;
+  google.protobuf.StringValue powerPlant = 8;
+  google.protobuf.StringValue locationDescription = 9;
   google.protobuf.StringValue parentRelatedMeteringPoint = 10;
   Address installationLocationAddress = 11;
-  string settlementMethod = 12;
+  google.protobuf.StringValue settlementMethod = 12;
   string unitType = 13;
   string disconnectionType = 14;
   string occurenceDate = 15;
   string meterNumber = 16;
   string transactionId = 17;
   string physicalStatusOfMeteringPoint = 18;
-  string netSettlementGroup = 19;
-  string connectionType = 20;
+  google.protobuf.StringValue netSettlementGroup = 19;
+  google.protobuf.StringValue connectionType = 20;
   google.protobuf.StringValue assetType = 21;
-  string fromGrid = 22;
-  string toGrid = 23;
+  google.protobuf.StringValue fromGrid = 22;
+  google.protobuf.StringValue toGrid = 23;
   string productType = 24;
   string measureUnitType = 25;
   google.protobuf.StringValue physicalConnectionCapacity = 26;

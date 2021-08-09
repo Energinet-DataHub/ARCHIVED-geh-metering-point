@@ -17,7 +17,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class PostCodeMandatoryForMeteringPointTypeMustBeValidRule : AbstractValidator<string>
+    public class PostCodeMandatoryForMeteringPointTypeMustBeValidRule : AbstractValidator<string?>
     {
         public PostCodeMandatoryForMeteringPointTypeMustBeValidRule(string gsrnNumber)
         {
