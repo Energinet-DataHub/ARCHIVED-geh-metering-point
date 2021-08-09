@@ -23,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D37", $"Sub type {validationError.MeteringPointSubType} not allowed: the sub type for metering point {validationError.GsrnNumber} must be Physical (D01) or Virtual (D02) if type is Other consumption (D17) or Other production (D18).");
+            return new("D37", $"Sub type {validationError.MeteringPointSubType} not allowed: the sub type for metering point {validationError.GsrnNumber} must be Physical (D01) or Virtual (D02) if type is Other consumption (D17) or Other production (D18) or Exchange - Reactive energy (D20).");
         }
     }
 }

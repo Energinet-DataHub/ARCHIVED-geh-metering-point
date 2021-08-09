@@ -57,13 +57,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                             createMeteringPoint.TypeOfMeteringPoint));
             });
 
-            When(IsMeteringPointExchangeReactiveEnergy, () =>
-            {
-                RuleFor(createMeteringPoint => createMeteringPoint)
-                    .Must(SubTypeIsVirtualOrPhysical)
-                    .WithState(createMeteringPoint => new MeteringPointExchangeReactiveEnergySubTypeMustBePhysicalOrVirtualValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SubTypeOfMeteringPoint));
-            });
-
             When(ExpectedValueForAllOtherMeteringPointTypes, () =>
             {
                 RuleFor(createMeteringPoint => createMeteringPoint)
@@ -110,6 +103,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 {
                     MeteringPointType.OtherConsumption.Name,
                     MeteringPointType.OtherProduction.Name,
+                    MeteringPointType.ExchangeReactiveEnergy.Name,
                 }
                 .Contains(createMeteringPoint.TypeOfMeteringPoint);
         }
