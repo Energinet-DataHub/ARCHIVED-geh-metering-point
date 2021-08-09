@@ -25,8 +25,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
     {
         private readonly List<string> _allowedDomainValuesForConsumptionAndNetLossCorrection = new()
         {
-            SettlementMethod.NonProfiled.Name.ToUpperInvariant(),
-            SettlementMethod.Flex.Name.ToUpperInvariant(),
+            SettlementMethod.NonProfiled.Name,
+            SettlementMethod.Flex.Name,
         };
 
         public SettlementMethodMustBeValidRule()
@@ -34,12 +34,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             When(TypeOgMeteringPointIsConsumptionOrGridLossCorrection, () =>
             {
                 RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
+                    .Cascade(CascadeMode.Stop)
                     .NotEmpty()
-                    .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SettlementMethod));
-
-                RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
-                    .Must(settlementMethod => _allowedDomainValuesForConsumptionAndNetLossCorrection.Contains(settlementMethod.ToUpperInvariant()))
-                    .WithState(createMeteringPoint => new SettlementMethodMissingRequiredDomainValuesValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SettlementMethod));
+                    .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SettlementMethod))
+                    .Must(settlementMethod => _allowedDomainValuesForConsumptionAndNetLossCorrection.Contains(settlementMethod!))
+                    .WithState(createMeteringPoint => new SettlementMethodMissingRequiredDomainValuesValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SettlementMethod!));
             }).Otherwise(() =>
             {
                 RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)

@@ -47,7 +47,7 @@ message CreateMeteringPoint {
   string locationDescription = 9;
   google.protobuf.StringValue parentRelatedMeteringPoint = 10;
   Address installationLocationAddress = 11;
-  string settlementMethod = 12;
+  google.protobuf.StringValue settlementMethod = 12;
   string unitType = 13;
   string disconnectionType = 14;
   string occurenceDate = 15;
