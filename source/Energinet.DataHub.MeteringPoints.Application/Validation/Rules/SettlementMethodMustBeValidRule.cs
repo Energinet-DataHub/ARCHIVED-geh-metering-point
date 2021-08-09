@@ -33,17 +33,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             When(TypeOgMeteringPointIsConsumptionOrGridLossCorrection, () =>
             {
                 RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
+                    .Cascade(CascadeMode.Stop)
                     .NotEmpty()
-                    .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SettlementMethod));
-
-                RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
-                    .Must(settlementMethod => !string.IsNullOrEmpty(settlementMethod) && _allowedDomainValuesForConsumptionAndNetLossCorrection.Contains(settlementMethod))
+                    .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SettlementMethod))
+                    .Must(settlementMethod => _allowedDomainValuesForConsumptionAndNetLossCorrection.Contains(settlementMethod!))
                     .WithState(createMeteringPoint => new SettlementMethodMissingRequiredDomainValuesValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SettlementMethod!));
             }).Otherwise(() =>
             {
                 RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
                     .Empty()
-                    .WithState(createMeteringPoint => new SettlementMethodNotAllowedValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SettlementMethod!, createMeteringPoint.TypeOfMeteringPoint));
+                    .WithState(createMeteringPoint => new SettlementMethodNotAllowedValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SettlementMethod, createMeteringPoint.TypeOfMeteringPoint));
             });
         }
 

@@ -69,7 +69,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 GsrnNumber.Create(request.GsrnNumber),
                 CreateAddress(request),
                 request.IsOfficialAddress.GetValueOrDefault(), // TODO: change to boolean in domain?
-                EnumerationType.FromName<PhysicalState>(request.PhysicalStatusOfMeteringPoint),
+                PhysicalState.New,
                 EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
                 meteringPointType,
                 new GridAreaId(Guid.NewGuid()),
@@ -94,7 +94,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 MeteringPointId.New(),
                 GsrnNumber.Create(request.GsrnNumber),
                 CreateAddress(request),
-                EnumerationType.FromName<PhysicalState>(request.PhysicalStatusOfMeteringPoint),
+                PhysicalState.New,
                 EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
                 meteringPointType,
                 new GridAreaId(Guid.NewGuid()),
@@ -119,7 +119,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 GsrnNumber.Create(request.GsrnNumber),
                 CreateAddress(request),
                 request.IsOfficialAddress.GetValueOrDefault(), // TODO: change to boolean in domain?
-                EnumerationType.FromName<PhysicalState>(request.PhysicalStatusOfMeteringPoint),
+                PhysicalState.New,
                 EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
                 meteringPointType,
                 new GridAreaId(Guid.NewGuid()),
