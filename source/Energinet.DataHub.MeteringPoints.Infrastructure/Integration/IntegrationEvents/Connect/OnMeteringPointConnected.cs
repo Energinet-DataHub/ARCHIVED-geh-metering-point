@@ -17,28 +17,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
-using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect
 {
-    public class OnMeteringPointConnected : INotificationHandler<MeteringPointConnected>
+    public class OnMeteringPointConnected : IntegrationEventPublisher<MeteringPointConnected>
     {
-        private readonly IOutbox _outbox;
-        private readonly IOutboxMessageFactory _outboxMessageFactory;
-
         public OnMeteringPointConnected(IOutbox outbox, IOutboxMessageFactory outboxMessageFactory)
+            : base(outbox, outboxMessageFactory)
         {
-            _outbox = outbox ?? throw new ArgumentNullException(nameof(outbox));
-            _outboxMessageFactory = outboxMessageFactory ?? throw new ArgumentNullException(nameof(outboxMessageFactory));
         }
 
-        public Task Handle(MeteringPointConnected notification, CancellationToken cancellationToken)
+        public override Task Handle(MeteringPointConnected notification, CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
             var integrationEvent = new MeteringPointConnectedIntegrationEvent(notification.MeteringPointId, notification.GsrnNumber, notification.EffectiveDate.ToDateTimeUtc().ToShortDateString());
 
-            var outboxMessage = _outboxMessageFactory.CreateFrom(integrationEvent, OutboxMessageCategory.IntegrationEvent);
-            _outbox.Add(outboxMessage);
+            CreateAndAddOutboxMessage(integrationEvent);
 
             return Task.CompletedTask;
         }
