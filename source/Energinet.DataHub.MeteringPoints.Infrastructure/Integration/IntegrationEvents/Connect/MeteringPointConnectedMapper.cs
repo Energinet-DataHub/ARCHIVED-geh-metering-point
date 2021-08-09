@@ -20,14 +20,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
 {
     public class MeteringPointConnectedMapper : ProtobufOutboundMapper<MeteringPointConnectedIntegrationEvent>
     {
-        protected override IMessage Convert(MeteringPointConnectedIntegrationEvent integrationEvent)
+        protected override IMessage Convert(MeteringPointConnectedIntegrationEvent obj)
         {
-            if (integrationEvent == null) throw new ArgumentNullException(nameof(integrationEvent));
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
             return new IntegrationEventContracts.MeteringPointConnected
             {
-                EffectiveDate = integrationEvent.EffectiveDate,
-                GsrnNumber = integrationEvent.GSRNNumber,
-                MeteringpointId = integrationEvent.MeteringPointId.ToString(),
+                EffectiveDate = obj.EffectiveDate,
+                GsrnNumber = obj.GSRNNumber,
+                MeteringpointId = obj.MeteringPointId.ToString(),
             };
         }
     }
