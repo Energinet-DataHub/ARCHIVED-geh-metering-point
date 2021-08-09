@@ -41,13 +41,6 @@ message MeteringPointCreated {
   string parent_metering_point_id = 13; // Unique identifier of associated parent metering point. This field is empty if no parent is set upon creation.
   string effective_date = 14; // The date on which the metering point is created.
 }
-/**
- * Represents the connection of a metering point.
- */
-message MeteringPointConnected {
-  string metering_point_id = 1; // Unique metering point identifier.
-  string effective_date = 2; // The date on which the metering point is connected.
-}
 
 /**
  * Represents the disconnection of a metering point.
@@ -122,14 +115,13 @@ message NetSettlementGroupChanged {
 message IntegrationEventEnvelope {
   oneof IntegrationEventMessages {
     MeteringPointCreated meteringPointCreatedMessage = 1;
-    MeteringPointConnected meteringPointConnectedMessage = 2;
-    MeteringPointDisconnected meteringPointDisconnectedMessage = 3;
-    MeteringPointClosed meteringPointClosedMessage = 4;
-    MeteringPointCancelled meteringPointCancelledMessage = 5;
-    ParentCoupled parentCoupledMessage = 6;
-    ParentDecoupled parentDecoupledMessage = 7;
-    SettlementDetailsChanged settlementDetailsChangedMessage = 8;
-    MeteringMethodChanged meteringMethodChangedMessage = 9;
-    NetSettlementGroupChanged netSettlementGroupChangedMessage = 10;
+    MeteringPointDisconnected meteringPointDisconnectedMessage = 2;
+    MeteringPointClosed meteringPointClosedMessage = 3;
+    MeteringPointCancelled meteringPointCancelledMessage = 4;
+    ParentCoupled parentCoupledMessage = 5;
+    ParentDecoupled parentDecoupledMessage = 6;
+    SettlementDetailsChanged settlementDetailsChangedMessage = 7;
+    MeteringMethodChanged meteringMethodChangedMessage = 8;
+    NetSettlementGroupChanged netSettlementGroupChangedMessage = 9;
   }
 }
