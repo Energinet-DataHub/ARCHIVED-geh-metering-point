@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
             string MeteringGridArea = "",
             string PowerPlant = "",
             string LocationDescription = "",
-            string SettlementMethod = "",
+            string? SettlementMethod = null,
             string UnitType = "",
             string DisconnectionType = "",
             string OccurenceDate = "",

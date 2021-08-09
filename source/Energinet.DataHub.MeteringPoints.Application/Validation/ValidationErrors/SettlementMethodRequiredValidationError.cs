@@ -18,7 +18,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class SettlementMethodRequiredValidationError : ValidationError
     {
-        public SettlementMethodRequiredValidationError(string gsrnNumber, string settlementMethod)
+        public SettlementMethodRequiredValidationError(string gsrnNumber, string? settlementMethod)
         {
             GsrnNumber = gsrnNumber;
             SettlementMethod = settlementMethod;
@@ -26,6 +26,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 
         public string GsrnNumber { get; }
 
-        public string SettlementMethod { get; }
+        public string? SettlementMethod { get; }
     }
 }
