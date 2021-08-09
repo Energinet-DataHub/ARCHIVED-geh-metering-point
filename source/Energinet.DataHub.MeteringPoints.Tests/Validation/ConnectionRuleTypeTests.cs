@@ -16,7 +16,6 @@ using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using FluentAssertions;
 using Xunit;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Validation
@@ -41,9 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
                 NetSettlementGroup = netSettlementGroup,
             };
 
-            var errors = Validate(request);
-
-            errors.Should().BeEmpty();
+            ShouldValidateWithNoErrors(request);
         }
 
         [Theory]
@@ -60,9 +57,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
                 NetSettlementGroup = netSettlementGroup,
             };
 
-            var errors = Validate(request);
-
-            errors.Should().ContainSingle(error => error.GetType() == expectedError);
+            ShouldValidateWithSingleError(request, expectedError);
         }
     }
 }

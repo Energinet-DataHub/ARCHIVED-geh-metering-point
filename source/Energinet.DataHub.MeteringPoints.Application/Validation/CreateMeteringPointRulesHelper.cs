@@ -12,21 +12,19 @@
 // // See the License for the specific language governing permissions and
 // // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using FluentValidation;
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Application.Validation
 {
-    public class MunicipalityCodeMustBeValidRule : AbstractValidator<string>
+    public static class CreateMeteringPointRulesHelper
     {
-        private const string MunicipalityCodeFormatRegex = @"^[1-9][0-9][0-9]$";
-
-        public MunicipalityCodeMustBeValidRule(string gsrnNumber)
+        public static bool MeteringPointTypeIsProductionOrConsumption(CreateMeteringPoint createMeteringPoint)
         {
-            RuleFor(municipalityCode => municipalityCode)
-                .Matches(MunicipalityCodeFormatRegex)
-                .WithState(municipalityCode =>
-                    new MunicipalityCodeMustBeValidValidationError(gsrnNumber, municipalityCode));
+            if (createMeteringPoint is null) throw new ArgumentNullException(nameof(createMeteringPoint));
+
+            return createMeteringPoint.TypeOfMeteringPoint.Equals(MeteringPointType.Consumption.Name, StringComparison.Ordinal)
+                   || createMeteringPoint.TypeOfMeteringPoint.Equals(MeteringPointType.Production.Name, StringComparison.Ordinal);
         }
     }
 }
