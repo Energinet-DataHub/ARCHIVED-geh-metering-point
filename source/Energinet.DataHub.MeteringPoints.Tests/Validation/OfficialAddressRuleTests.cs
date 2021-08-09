@@ -13,18 +13,16 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using FluentAssertions;
 using Xunit;
 using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 {
     [UnitTest]
-    public class OfficialAddressRuleTests : RuleSetTest<CreateMeteringPoint, OfficialAddressRule>
+    public class OfficialAddressRuleTests : CreateMeteringPointRulesTest<OfficialAddressRule>
     {
         [Theory]
         [InlineData("7511e205-cd43-44e3-9a17-7664f66a5d07", true, nameof(MeteringPointType.Production))]
@@ -39,9 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
                 TypeOfMeteringPoint = meteringPointType,
             };
 
-            var errors = Validate(request);
-
-            errors.Should().BeEmpty();
+            ShouldValidateWithNoErrors(request);
         }
 
         [Theory]
@@ -66,14 +62,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
                 TypeOfMeteringPoint = meteringPointType,
             };
 
-            var errors = Validate(request);
-
-            errors.Should().ContainSingle(error => error.GetType() == expectedError);
-        }
-
-        private static CreateMeteringPoint CreateRequest()
-        {
-            return new();
+            ShouldValidateWithSingleError(request, expectedError);
         }
     }
 }

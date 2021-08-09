@@ -24,7 +24,7 @@ message Address {
   string streetName = 1;
   string postCode = 2;
   string cityName = 3;
-  string countryCode = 4;
+  google.protobuf.StringValue countryCode = 4;
   google.protobuf.BoolValue officialAddressIndicator = 5;
   string buildingNumber = 6;
   string streetCode = 7;
@@ -62,6 +62,8 @@ message CreateMeteringPoint {
   string productType = 24;
   string measureUnitType = 25;
   google.protobuf.StringValue physicalConnectionCapacity = 26;
+  google.protobuf.StringValue contractedConnectionCapacity = 27;
+  google.protobuf.StringValue ratedCurrent = 28;
 }
 
 message ConnectMeteringPoint {
