@@ -1,4 +1,4 @@
-﻿/* Copyright 2020 Energinet DataHub A/S
+/* Copyright 2020 Energinet DataHub A/S
  *
  * Licensed under the Apache License, Version 2.0 (the "License2");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 syntax = "proto3";
 
 option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEventContracts";
-/**
- * This message is sent out when an energy supplier has been changed.
- */
 
+/**
+ * This message is sent out when a metering point is connected.
+ */
 message MeteringPointConnected {
   string meteringpoint_id = 1;
   string gsrn_number = 2; // Unique metering point identification
-  string effective_date = 4; // Date which the change of supplier goes into effect.
+  string effective_date = 3; // Date which the change of supplier goes into effect.
 }
