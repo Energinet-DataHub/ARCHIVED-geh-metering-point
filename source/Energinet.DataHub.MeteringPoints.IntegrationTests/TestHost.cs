@@ -13,7 +13,9 @@
 // limitations under the License.
 
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
@@ -141,6 +143,14 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             where TService : class
         {
             return _container.GetInstance<TService>();
+        }
+
+        protected async Task<TMessage> GetLastMessageFromOutboxAsync<TMessage>()
+        {
+            var context = GetService<MeteringPointContext>();
+            var outboxMessage = await context.OutboxMessages.FirstAsync(m => m.Type.Equals(typeof(TMessage).FullName, StringComparison.OrdinalIgnoreCase)).ConfigureAwait(false);
+            var message = GetService<IJsonSerializer>().Deserialize<TMessage>(outboxMessage.Data);
+            return message;
         }
 
         private void CleanupDatabase()
