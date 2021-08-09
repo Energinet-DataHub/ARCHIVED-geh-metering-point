@@ -51,7 +51,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 RuleFor(createMeteringPoint => createMeteringPoint)
                     .Must(SubTypeIsVirtualOrCalculated)
                     .WithState(createMeteringPoint =>
-                        new MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineSubtypeVirtualOrCalculatedValidationError(
+                        new MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineMustBeSubtypeVirtualOrCalculatedValidationError(
                             createMeteringPoint.GsrnNumber,
                             createMeteringPoint.SubTypeOfMeteringPoint,
                             createMeteringPoint.TypeOfMeteringPoint));

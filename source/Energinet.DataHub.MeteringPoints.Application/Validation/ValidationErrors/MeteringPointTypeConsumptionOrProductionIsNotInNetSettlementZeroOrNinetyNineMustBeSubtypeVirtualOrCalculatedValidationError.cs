@@ -16,10 +16,9 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class
-        MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineSubtypeVirtualOrCalculatedValidationError : ValidationError
+    public class MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineMustBeSubtypeVirtualOrCalculatedValidationError : ValidationError
     {
-        public MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineSubtypeVirtualOrCalculatedValidationError(string gsrnNumber, string meteringPointSubType, string meteringPointType)
+        public MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineMustBeSubtypeVirtualOrCalculatedValidationError(string gsrnNumber, string meteringPointSubType, string meteringPointType)
         {
             GsrnNumber = gsrnNumber;
             MeteringPointSubType = meteringPointSubType;

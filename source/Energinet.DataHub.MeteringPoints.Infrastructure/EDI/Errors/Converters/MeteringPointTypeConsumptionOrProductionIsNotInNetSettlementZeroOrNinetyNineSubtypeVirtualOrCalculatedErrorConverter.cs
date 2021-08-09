@@ -17,11 +17,10 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class
-        MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineSubtypeVirtualOrCalculatedErrorConverter : ErrorConverter<MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineSubtypeVirtualOrCalculatedValidationError>
+    public class MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineSubtypeVirtualOrCalculatedErrorConverter : ErrorConverter<MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineMustBeSubtypeVirtualOrCalculatedValidationError>
     {
         protected override ErrorMessage Convert(
-            MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineSubtypeVirtualOrCalculatedValidationError
+            MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineMustBeSubtypeVirtualOrCalculatedValidationError
                 validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
