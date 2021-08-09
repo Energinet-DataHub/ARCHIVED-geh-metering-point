@@ -27,14 +27,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             {
                 RuleFor(request => request.ContractedConnectionCapacity)
                     .Must(IsValidPowerLimit())
-                    .WithState(request => new PowerLimitValidationError(request.GsrnNumber, request.ContractedConnectionCapacity));
+                    .WithState(request => new KilowattPowerLimitValidationError(request.GsrnNumber, request.ContractedConnectionCapacity));
             });
 
             When(createMeteringPoint => !string.IsNullOrEmpty(createMeteringPoint.RatedCurrent), () =>
             {
                 RuleFor(request => request.RatedCurrent)
                     .Must(IsValidPowerLimit())
-                    .WithState(request => new PowerLimitValidationError(request.GsrnNumber, request.RatedCurrent));
+                    .WithState(request => new AmperePowerLimitValidationError(request.GsrnNumber, request.RatedCurrent));
             });
         }
 

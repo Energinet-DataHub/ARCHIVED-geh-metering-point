@@ -17,13 +17,13 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class AmperePowerLimitErrorConverter : ErrorConverter<AmperePowerLimitValidationError>
+    public class KilowattPowerLimitErrorConverter : ErrorConverter<KilowattPowerLimitValidationError>
     {
-        protected override ErrorMessage Convert(AmperePowerLimitValidationError validationError)
+        protected override ErrorMessage Convert(KilowattPowerLimitValidationError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("E86", $"Power limit A {validationError.AmperePowerLimit} for metering point {validationError.GsrnNumber} contains a non-digit character or has a length that exceeds 6");
+            return new("E86", $"Power limit KW {validationError.KilowattPowerLimit} for metering point {validationError.GsrnNumber} contains a non-digit character or has a length that exceeds 6");
         }
     }
 }

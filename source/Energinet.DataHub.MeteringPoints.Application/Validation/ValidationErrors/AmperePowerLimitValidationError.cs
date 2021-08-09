@@ -16,16 +16,16 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class PowerLimitValidationError : ValidationError
+    public class AmperePowerLimitValidationError : ValidationError
     {
-        public PowerLimitValidationError(string gsrnNumber, string? powerLimit)
+        public AmperePowerLimitValidationError(string gsrnNumber, string? amperePowerLimit)
         {
             GsrnNumber = gsrnNumber;
-            PowerLimit = powerLimit;
+            AmperePowerLimit = amperePowerLimit;
         }
 
         public string GsrnNumber { get; }
 
-        public string? PowerLimit { get; }
+        public string? AmperePowerLimit { get; }
     }
 }

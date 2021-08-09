@@ -48,13 +48,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         }
 
         [Theory]
-        [InlineData("123.456", null, typeof(PowerLimitValidationError))]
-        [InlineData("1234567", null, typeof(PowerLimitValidationError))]
-        [InlineData("-1", null, typeof(PowerLimitValidationError))]
-        [InlineData(null, "123.456", typeof(PowerLimitValidationError))]
-        [InlineData(null, "1234567", typeof(PowerLimitValidationError))]
-        [InlineData(null, "-1", typeof(PowerLimitValidationError))]
-        [InlineData(null, "123N", typeof(PowerLimitValidationError))]
+        [InlineData("123.456", null, typeof(KilowattPowerLimitValidationError))]
+        [InlineData("1234567", null, typeof(KilowattPowerLimitValidationError))]
+        [InlineData("-1", null, typeof(KilowattPowerLimitValidationError))]
+        [InlineData(null, "123.456", typeof(AmperePowerLimitValidationError))]
+        [InlineData(null, "1234567", typeof(AmperePowerLimitValidationError))]
+        [InlineData(null, "-1", typeof(AmperePowerLimitValidationError))]
+        [InlineData(null, "123N", typeof(AmperePowerLimitValidationError))]
         public void ShouldResultInError(string contractedConnectionCapacity, string ratedCurrent, Type expectedError)
         {
             var request = CreateRequest() with
