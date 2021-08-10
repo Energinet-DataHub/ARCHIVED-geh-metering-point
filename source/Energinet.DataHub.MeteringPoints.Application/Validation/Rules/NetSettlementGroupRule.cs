@@ -29,11 +29,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             When(MeteringPointTypeIsProductionOrConsumption, () =>
             {
                 RuleFor(request => request.NetSettlementGroup)
+                    .Cascade(CascadeMode.Stop)
                     .NotEmpty()
-                    .WithState(createMeteringPoint => new NetSettlementGroupMandatoryValidationError(createMeteringPoint.TypeOfMeteringPoint));
-
-                RuleFor(request => request.NetSettlementGroup)
-                    .Must(netSettlementGroup => AllowedNetSettlementGroupValues().Contains(netSettlementGroup.ToUpperInvariant()))
+                    .WithState(createMeteringPoint => new NetSettlementGroupMandatoryValidationError(createMeteringPoint.TypeOfMeteringPoint))
+                    .Must(netSettlementGroup => AllowedNetSettlementGroupValues().Contains(netSettlementGroup!))
                     .WithState(createMeteringPoint => new NetSettlementGroupInvalidValueValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.TypeOfMeteringPoint));
             }).Otherwise(() =>
             {
@@ -51,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
         private static HashSet<string> AllowedNetSettlementGroupValues()
         {
-            return EnumerationType.GetAll<NetSettlementGroup>().Select(x => x.Name.ToUpperInvariant()).ToHashSet();
+            return EnumerationType.GetAll<NetSettlementGroup>().Select(x => x.Name).ToHashSet();
         }
     }
 }

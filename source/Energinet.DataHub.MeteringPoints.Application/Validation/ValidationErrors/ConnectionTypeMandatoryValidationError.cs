@@ -18,7 +18,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class ConnectionTypeMandatoryValidationError : ValidationError
     {
-        public ConnectionTypeMandatoryValidationError(string gsrnNumber, string connectionType)
+        public ConnectionTypeMandatoryValidationError(string gsrnNumber, string? connectionType)
         {
             GsrnNumber = gsrnNumber;
             ConnectionType = connectionType;
@@ -26,6 +26,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 
         public string GsrnNumber { get; }
 
-        public string ConnectionType { get; }
+        public string? ConnectionType { get; }
     }
 }

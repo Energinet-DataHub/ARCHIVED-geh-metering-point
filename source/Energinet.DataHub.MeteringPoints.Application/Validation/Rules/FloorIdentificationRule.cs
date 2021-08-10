@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         {
             RuleFor(request => request.FloorIdentification)
                 .MaximumLength(FloorIdentificationLength)
-                .WithState(request => new FloorIdentificationValidationError(request.GsrnNumber, request.FloorIdentification));
+                .WithState(request => new FloorIdentificationValidationError(request.GsrnNumber, request.FloorIdentification!));
         }
     }
 }
