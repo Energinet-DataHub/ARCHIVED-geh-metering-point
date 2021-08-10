@@ -16,9 +16,9 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class MeteringPointSubTypeValueMustBeValidValidationError : ValidationError
+    public class MeteringPointSubTypeMustBePhysicalOrVirtualValidationError : ValidationError
     {
-        public MeteringPointSubTypeValueMustBeValidValidationError(string gsrnNumber, string meteringPointSubType)
+        public MeteringPointSubTypeMustBePhysicalOrVirtualValidationError(string gsrnNumber, string meteringPointSubType)
         {
             GsrnNumber = gsrnNumber;
             MeteringPointSubType = meteringPointSubType;
