@@ -1,4 +1,4 @@
-﻿// Copyright 2020 Energinet DataHub A/S
+// Copyright 2020 Energinet DataHub A/S
 //
 // Licensed under the Apache License, Version 2.0 (the "License2");
 // you may not use this file except in compliance with the License.
@@ -12,14 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
 {
-    public record CreateMeteringPointAccepted(
-        string TransactionId,
-        string Status, // TODO: Is status implicit in Accepted from type?
-        string GsrnNumber) : IRequest;
-
-    // TODO: Reference to original document?
+    public class AcceptMessageDispatcher : IRequestHandler<CreateMeteringPointAccepted>
+    {
+        public Task<Unit> Handle(CreateMeteringPointAccepted request, CancellationToken cancellationToken)
+        {
+            
+        }
+    }
 }
