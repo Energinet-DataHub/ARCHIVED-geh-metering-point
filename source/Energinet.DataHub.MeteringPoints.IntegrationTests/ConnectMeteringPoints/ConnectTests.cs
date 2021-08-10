@@ -86,9 +86,32 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             outboxMessage?.Type.Should().Be(typeof(ConnectMeteringPointRejected).FullName);
         }
 
-        [Fact(Skip = "Not implemented yet")]
-        public void ConnectMeteringPoint_WithAlreadyConnected_ShouldGenerateRejectMessageInOutbox()
+        [Fact]
+        public async Task ConnectMeteringPoint_WithNotExistingMetering_ShouldGenerateRejectMessageInOutbox()
         {
+            var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
+
+            await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+
+            var outboxMessage = _outbox.GetNext(OutboxMessageCategory.ActorMessage, typeof(ConnectMeteringPointRejected).FullName!);
+            outboxMessage.Should().NotBeNull();
+            outboxMessage?.Type.Should().Be(typeof(ConnectMeteringPointRejected).FullName);
+        }
+
+        [Fact]
+        public async Task ConnectMeteringPoint_WithAlreadyConnected_ShouldGenerateRejectMessageInOutbox()
+        {
+            var createMeteringPointRequest = CreateMeteringPointRequest();
+
+            var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
+
+            await _mediator.Send(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+
+            var outboxMessage = _outbox.GetNext(OutboxMessageCategory.ActorMessage, typeof(ConnectMeteringPointRejected).FullName!);
+            outboxMessage.Should().NotBeNull();
+            outboxMessage?.Type.Should().Be(typeof(ConnectMeteringPointRejected).FullName);
         }
 
         [Fact(Skip = "Not implemented yet")]
@@ -125,7 +148,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
                 SampleData.Occurrence,
                 SampleData.MeterNumber,
                 string.Empty,
-                string.Empty,
+                SampleData.PhysicalState,
                 SampleData.NetSettlementGroup,
                 SampleData.ConnectionType,
                 SampleData.AssetType,
