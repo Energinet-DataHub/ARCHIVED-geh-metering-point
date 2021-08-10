@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions
 {
     public static class SimpleInjectorExtensions
     {
-        public static void AddInputValidation(this Container container)
+        public static void AddAuthorization(this Container container)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
 
