@@ -14,13 +14,12 @@
 
 using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
 {
     internal class OutboxMessageDispatcherTelemetryDecorator : IOutboxMessageDispatcher
     {

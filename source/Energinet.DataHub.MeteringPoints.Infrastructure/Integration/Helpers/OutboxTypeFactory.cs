@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using System.Reflection;
+using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
@@ -22,24 +22,18 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
 {
     public static class OutboxTypeFactory
     {
+        private static readonly Dictionary<string, Type> _types = new()
+        {
+            { typeof(MeteringPointCreatedEventMessage).FullName!, typeof(MeteringPointCreatedEventMessage) },
+            { typeof(MeteringPointConnectedIntegrationEvent).FullName!, typeof(MeteringPointConnectedIntegrationEvent) },
+            { typeof(PostOfficeEnvelope).FullName!, typeof(PostOfficeEnvelope) },
+        };
+
         public static Type GetType(string type)
         {
-            if (typeof(MeteringPointCreatedEventMessage).FullName == type)
-            {
-                return typeof(MeteringPointCreatedEventMessage);
-            }
-
-            if (typeof(MeteringPointConnectedIntegrationEvent).FullName == type)
-            {
-                return typeof(MeteringPointConnectedIntegrationEvent);
-            }
-
-            if (typeof(PostOfficeEnvelope).FullName == type)
-            {
-                return typeof(PostOfficeEnvelope);
-            }
-
-            throw new ArgumentException("Outbox type is not implemented.");
+            return _types.TryGetValue(type, out var result)
+                ? result
+                : throw new ArgumentException("Outbox type is not implemented.");
         }
     }
 }

@@ -21,11 +21,11 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
 {
-    public class AcceptMessageDispatcher : IRequestHandler<PostOfficeEnvelope>
+    public class PostOfficeDispatcher : IRequestHandler<PostOfficeEnvelope>
     {
         private readonly IPostOfficeStorageClient _postOfficeStorageClient;
 
-        public AcceptMessageDispatcher(
+        public PostOfficeDispatcher(
             IPostOfficeStorageClient postOfficeStorageClient)
         {
             _postOfficeStorageClient = postOfficeStorageClient;
