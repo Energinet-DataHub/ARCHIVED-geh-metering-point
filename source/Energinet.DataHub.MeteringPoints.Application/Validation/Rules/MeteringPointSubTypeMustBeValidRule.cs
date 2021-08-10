@@ -125,8 +125,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 .Contains(createMeteringPoint.TypeOfMeteringPoint);
         }
 
-        private static bool NetSettlementGroupIsZeroOrNinetyNine(string netSettlement)
+        private static bool NetSettlementGroupIsZeroOrNinetyNine(string? netSettlement)
         {
+            if (string.IsNullOrEmpty(netSettlement)) return false;
+
             return new HashSet<string>
                     {
                         NetSettlementGroup.Ninetynine.Name,

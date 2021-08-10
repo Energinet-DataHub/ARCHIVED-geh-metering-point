@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.ObjectModel;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
@@ -31,8 +33,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private ReadingOccurrence _meterReadingOccurrence;
         private int _maximumCurrent;
         private int _maximumPower;
-        private GsrnNumber _powerPlantGsrnNumber;
-        private string _locationDescription;
+        private GsrnNumber? _powerPlantGsrnNumber;
+        private string? _locationDescription;
         private MeasurementUnitType _unitType;
         private Instant? _occurenceDate;
         private string? _parentRelatedMeteringPoint;
@@ -52,8 +54,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
             GridAreaId gridAreaId,
-            GsrnNumber powerPlantGsrnNumber,
-            string locationDescription,
+            GsrnNumber? powerPlantGsrnNumber,
+            string? locationDescription,
             MeasurementUnitType unitType,
             string meterNumber,
             ReadingOccurrence meterReadingOccurrence,
@@ -86,6 +88,16 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public MeteringPointId Id { get; }
 
         public GsrnNumber GsrnNumber { get; }
+
+        public BusinessRulesValidationResult ConnectAcceptable()
+        {
+            var rules = new Collection<IBusinessRule>
+            {
+                new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, _meteringPointType, _physicalState),
+            };
+
+            return new BusinessRulesValidationResult(rules);
+        }
 
         public void Connect(Instant effectiveDate)
         {

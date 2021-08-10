@@ -23,9 +23,11 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using FluentAssertions;
 using MediatR;
 using Xunit;
+using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 {
+    [IntegrationTest]
     public class CreateTests
         : TestHost
     {
@@ -161,17 +163,19 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SampleData.Occurrence,
                 SampleData.MeterNumber,
                 string.Empty,
-                string.Empty,
+                SampleData.PhysicalState,
                 SampleData.NetSettlementGroup,
                 SampleData.ConnectionType,
                 SampleData.AssetType,
                 "123",
                 ToGrid: "456",
-                ParentRelatedMeteringPoint: string.Empty,
+                ParentRelatedMeteringPoint: null,
                 SampleData.ProductType,
                 null,
                 SampleData.GeoInfoReference,
-                SampleData.MeasurementUnitType);
+                SampleData.MeasurementUnitType,
+                ContractedConnectionCapacity: null,
+                RatedCurrent: null);
         }
     }
 }

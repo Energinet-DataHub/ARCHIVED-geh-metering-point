@@ -70,6 +70,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
                     ProductType = obj.ProductType,
                     MeasureUnitType = obj.MeasureUnitType,
                     PhysicalConnectionCapacity = obj.PhysicalConnectionCapacity,
+                    ContractedConnectionCapacity = obj.ContractedConnectionCapacity,
+                    RatedCurrent = obj.RatedCurrent,
                 },
             };
         }

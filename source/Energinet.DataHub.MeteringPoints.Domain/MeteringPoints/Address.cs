@@ -18,7 +18,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class Address : ValueObject
     {
-        private Address(string streetName, string postCode, string cityName, string? countryCode)
+        private Address(string? streetName, string? postCode, string? cityName, string? countryCode)
         {
             StreetName = streetName;
             PostCode = postCode;
@@ -26,17 +26,17 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             CountryCode = countryCode;
         }
 
-        public string StreetName { get; }
+        public string? StreetName { get; }
 
-        public string PostCode { get; }
+        public string? PostCode { get; }
 
-        public string CityName { get; }
+        public string? CityName { get; }
 
         public string? CountryCode { get; }
 
-        public static Address Create(string streetName, string postCode, string cityName, string? countryCode)
+        public static Address Create(string? streetName, string? postCode, string? cityName, string? countryCode)
         {
-            return new Address(streetName, postCode, cityName, countryCode);
+            return new(streetName, postCode, cityName, countryCode);
         }
     }
 }
