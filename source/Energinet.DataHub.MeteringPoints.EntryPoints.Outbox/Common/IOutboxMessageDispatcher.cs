@@ -15,7 +15,7 @@
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
 {
     /// <summary>
     /// Service for dispatching actor messages.

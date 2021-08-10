@@ -15,6 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
@@ -23,14 +24,14 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
     internal class OutboxWatcher
     {
         private readonly ILogger _logger;
-        private readonly ActorMessageCoordinator _actorMessageCoordinator;
+        private readonly OutboxOrchestrator _outboxOrchestrator;
 
         public OutboxWatcher(
             ILogger logger,
-            ActorMessageCoordinator actorMessageCoordinator)
+             OutboxOrchestrator outboxOrchestrator)
         {
             _logger = logger;
-            _actorMessageCoordinator = actorMessageCoordinator;
+            _outboxOrchestrator = outboxOrchestrator;
         }
 
         [Function("OutboxWatcher")]
@@ -40,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             _logger.LogInformation($"Timer trigger function executed at: {DateTime.Now}");
             _logger.LogInformation($"Next timer schedule at: {timerInformation?.ScheduleStatus?.Next}");
 
-            await _actorMessageCoordinator.FetchAndProcessMessagesAsync().ConfigureAwait(false);
+            await _outboxOrchestrator.ProcessOutboxMessagesAsync().ConfigureAwait(false);
         }
     }
 }

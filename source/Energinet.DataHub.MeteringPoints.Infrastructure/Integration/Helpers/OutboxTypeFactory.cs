@@ -18,7 +18,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEve
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
 {
-    public static class IntegrationEventTypeFactory
+    public static class OutboxTypeFactory
     {
         public static Type GetType(string type)
         {
@@ -32,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
                 return typeof(MeteringPointConnectedIntegrationEvent);
             }
 
-            throw new ArgumentException("Integration Event type is not implemented.");
+            throw new ArgumentException("Outbox type is not implemented.");
         }
     }
 }

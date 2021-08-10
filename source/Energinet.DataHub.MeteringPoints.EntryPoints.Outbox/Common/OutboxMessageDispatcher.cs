@@ -15,15 +15,12 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
-using Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
 {
     internal class OutboxMessageDispatcher : IOutboxMessageDispatcher
     {

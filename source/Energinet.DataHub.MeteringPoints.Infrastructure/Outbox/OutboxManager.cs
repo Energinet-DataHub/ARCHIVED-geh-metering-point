@@ -36,6 +36,13 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
             _context.OutboxMessages.Add(message);
         }
 
+        public OutboxMessage? GetNext()
+        {
+            return _context.OutboxMessages
+                .OrderBy(message => message.CreationDate)
+                .FirstOrDefault(message => !message.ProcessedDate.HasValue);
+        }
+
         public OutboxMessage? GetNext(OutboxMessageCategory category)
         {
             return _context.OutboxMessages

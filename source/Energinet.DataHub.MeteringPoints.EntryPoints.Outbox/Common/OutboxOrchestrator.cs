@@ -12,16 +12,11 @@
 // // See the License for the specific language governing permissions and
 // // limitations under the License.
 
-using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
-using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
 {
     internal class OutboxOrchestrator
     {
