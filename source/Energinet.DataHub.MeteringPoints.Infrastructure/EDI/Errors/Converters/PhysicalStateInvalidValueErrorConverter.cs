@@ -12,20 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class RoomIdentificationRule : AbstractValidator<CreateMeteringPoint>
+    public class PhysicalStateInvalidValueErrorConverter : ErrorConverter<PhysicalStateInvalidValueValidationError>
     {
-        private const int RoomIdentificationLength = 4;
-
-        public RoomIdentificationRule()
+        protected override ErrorMessage Convert(PhysicalStateInvalidValueValidationError validationError)
         {
-            RuleFor(request => request.RoomIdentification)
-                .MaximumLength(RoomIdentificationLength)
-                .WithState(request => new RoomIdentificationValidationError(request.GsrnNumber, request.RoomIdentification!));
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new("D02", $"Physical status {validationError.PhysicalState} for metering point {validationError.GsrnNumber} has wrong value (outside domain)");
         }
     }
 }

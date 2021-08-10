@@ -12,20 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using FluentValidation;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class RoomIdentificationRule : AbstractValidator<CreateMeteringPoint>
+    public class MeteringPointSubTypeMustBePhysicalOrVirtualValidationError : ValidationError
     {
-        private const int RoomIdentificationLength = 4;
-
-        public RoomIdentificationRule()
+        public MeteringPointSubTypeMustBePhysicalOrVirtualValidationError(string gsrnNumber, string meteringPointSubType)
         {
-            RuleFor(request => request.RoomIdentification)
-                .MaximumLength(RoomIdentificationLength)
-                .WithState(request => new RoomIdentificationValidationError(request.GsrnNumber, request.RoomIdentification!));
+            GsrnNumber = gsrnNumber;
+            MeteringPointSubType = meteringPointSubType;
         }
+
+        public string GsrnNumber { get; }
+
+        public string MeteringPointSubType { get; }
     }
 }

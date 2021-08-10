@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using FluentValidation;
@@ -28,23 +29,83 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 .NotEmpty()
                 .WithState(createMeteringPoint => new MeteringPointSubTypeMandatoryValidationError(createMeteringPoint.GsrnNumber));
 
-            RuleFor(createMeteringPoint => createMeteringPoint)
-                .Must(SubTypeIsPhysicalOrVirtualOrCalculated)
-                .WithState(createMeteringPoint => new MeteringPointSubTypeValueMustBeValidValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SubTypeOfMeteringPoint));
+            When(GroupOfMeteringPointTypesThatMustBeSubTypeVirtualOrCalculated, () =>
+            {
+                RuleFor(createMeteringPoint => createMeteringPoint)
+                    .Must(SubTypeIsVirtualOrCalculated)
+                    .WithState(createMeteringPoint =>
+                        new MeteringPointSubTypeValueMustBeValidValidationError(
+                            createMeteringPoint.GsrnNumber,
+                            createMeteringPoint.SubTypeOfMeteringPoint));
+            });
+
+            When(GroupOfMeteringPointTypesThatMustBeSubtypePhysicalOrVirtual, () =>
+            {
+                RuleFor(createMeteringPoint => createMeteringPoint)
+                    .Must(SubTypeIsVirtualOrPhysical)
+                    .WithState(createMeteringPoint => new MeteringPointSubTypeMustBePhysicalOrVirtualValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SubTypeOfMeteringPoint));
+            });
+
+            When(MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNine, () =>
+            {
+                RuleFor(createMeteringPoint => createMeteringPoint)
+                    .Must(SubTypeIsVirtualOrCalculated)
+                    .WithState(createMeteringPoint =>
+                        new MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineMustBeSubtypeVirtualOrCalculatedValidationError(
+                            createMeteringPoint.GsrnNumber,
+                            createMeteringPoint.SubTypeOfMeteringPoint,
+                            createMeteringPoint.TypeOfMeteringPoint));
+            });
+
+            When(ExpectedValueForAllOtherMeteringPointTypes, () =>
+            {
+                RuleFor(createMeteringPoint => createMeteringPoint)
+                    .Must(ExpectedSubTypes)
+                    .WithState(createMeteringPoint =>
+                        new MeteringPointSubTypeValueMustBeValidValidationError(
+                            createMeteringPoint.GsrnNumber,
+                            createMeteringPoint.SubTypeOfMeteringPoint));
+            });
+        }
+
+        private static bool ExpectedValueForAllOtherMeteringPointTypes(CreateMeteringPoint createMeteringPoint)
+        {
+            return !GroupOfMeteringPointTypesThatMustBeSubtypePhysicalOrVirtual(createMeteringPoint) &&
+                   !GroupOfMeteringPointTypesThatMustBeSubTypeVirtualOrCalculated(createMeteringPoint) &&
+                   !MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNine(createMeteringPoint) &&
+                   !IsMeteringPointExchangeReactiveEnergy(createMeteringPoint);
+        }
+
+        private static bool IsMeteringPointExchangeReactiveEnergy(CreateMeteringPoint createMeteringPoint)
+        {
+            return MeteringPointType.ExchangeReactiveEnergy.Name.Equals(
+                createMeteringPoint.TypeOfMeteringPoint,
+                StringComparison.Ordinal);
         }
 
         private static bool GroupOfMeteringPointTypesThatMustBeSubTypeVirtualOrCalculated(CreateMeteringPoint createMeteringPoint)
         {
             return new HashSet<string>
-                    {
-                        MeteringPointType.WholesaleServices.Name,
-                        MeteringPointType.OwnProduction.Name,
-                        MeteringPointType.NetFromGrid.Name,
-                        MeteringPointType.NetToGrid.Name,
-                        MeteringPointType.TotalConsumption.Name,
-                    }
-                .Contains(createMeteringPoint.TypeOfMeteringPoint) ||
-                MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNine(createMeteringPoint);
+                {
+                    MeteringPointType.WholesaleServices.Name,
+                    MeteringPointType.OwnProduction.Name,
+                    MeteringPointType.NetFromGrid.Name,
+                    MeteringPointType.NetToGrid.Name,
+                    MeteringPointType.TotalConsumption.Name,
+                }
+                .Contains(createMeteringPoint.TypeOfMeteringPoint);
+        }
+
+        private static bool GroupOfMeteringPointTypesThatMustBeSubtypePhysicalOrVirtual(
+            CreateMeteringPoint createMeteringPoint)
+        {
+            return new HashSet<string>
+                {
+                    MeteringPointType.OtherConsumption.Name,
+                    MeteringPointType.OtherProduction.Name,
+                    MeteringPointType.ExchangeReactiveEnergy.Name,
+                }
+                .Contains(createMeteringPoint.TypeOfMeteringPoint);
         }
 
         private static bool MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNine(
@@ -64,15 +125,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 .Contains(createMeteringPoint.TypeOfMeteringPoint);
         }
 
-        private static bool IsConsumption(CreateMeteringPoint createMeteringPoint)
+        private static bool NetSettlementGroupIsZeroOrNinetyNine(string? netSettlement)
         {
-            return createMeteringPoint.TypeOfMeteringPoint.Equals(
-                MeteringPointType.Consumption.Name,
-                StringComparison.Ordinal);
-        }
+            if (string.IsNullOrEmpty(netSettlement)) return false;
 
-        private static bool NetSettlementGroupIsZeroOrNinetyNine(string netSettlement)
-        {
             return new HashSet<string>
                     {
                         NetSettlementGroup.Ninetynine.Name,
@@ -81,17 +137,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 .Contains(netSettlement);
         }
 
-        private static bool SubTypeIsPhysicalOrVirtualOrCalculated(CreateMeteringPoint createMeteringPoint)
-        {
-            return GroupOfMeteringPointTypesThatMustBeSubTypeVirtualOrCalculated(createMeteringPoint)
-                ? SubTypeIsVirtualOrCalculated(createMeteringPoint)
-                : ExpectedSubTypes(createMeteringPoint);
-        }
-
         private static bool SubTypeIsVirtualOrCalculated(CreateMeteringPoint createMeteringPoint)
         {
             return Virtual(createMeteringPoint.SubTypeOfMeteringPoint) ||
                    Calculated(createMeteringPoint.SubTypeOfMeteringPoint);
+        }
+
+        private static bool SubTypeIsVirtualOrPhysical(CreateMeteringPoint createMeteringPoint)
+        {
+            return Virtual(createMeteringPoint.SubTypeOfMeteringPoint) ||
+                   Physical(createMeteringPoint.SubTypeOfMeteringPoint);
         }
 
         private static bool ExpectedSubTypes(CreateMeteringPoint createMeteringPoint)
@@ -113,6 +168,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         private static bool Calculated(string subTypeOfMeteringPoint)
         {
             return subTypeOfMeteringPoint.Equals(MeteringPointSubType.Calculated.Name, StringComparison.Ordinal);
+        }
+
+        private static bool Physical(string subTypeOfMeteringPoint)
+        {
+            return subTypeOfMeteringPoint.Equals(MeteringPointSubType.Physical.Name, StringComparison.Ordinal);
         }
     }
 }

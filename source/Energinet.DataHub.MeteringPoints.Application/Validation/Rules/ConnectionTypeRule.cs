@@ -46,7 +46,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                             createMeteringPoint.ConnectionType));
             });
 
-            When(createMeteringPoint => createMeteringPoint.ConnectionType.Length > 0, () =>
+            When(createMeteringPoint => createMeteringPoint.ConnectionType?.Length > 0, () =>
             {
                 When(NetSettlementGroupIsThreeOrSix, () =>
                     {
@@ -68,8 +68,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                    ProductOrConsumptionMeteringPointTypes(createMeteringPoint);
         }
 
-        private static bool AllowedConnectionTypes(string connectionType)
+        private static bool AllowedConnectionTypes(string? connectionType)
         {
+            if (string.IsNullOrEmpty(connectionType)) return false;
+
             return new HashSet<string>
                 {
                     ConnectionType.Direct.Name,

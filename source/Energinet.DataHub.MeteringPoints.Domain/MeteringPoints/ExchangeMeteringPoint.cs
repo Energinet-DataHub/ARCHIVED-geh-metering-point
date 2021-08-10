@@ -19,8 +19,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class ExchangeMeteringPoint : MeteringPoint
     {
-        private string _fromGrid;
-        private string _toGrid;
+        private string? _fromGrid;
+        private string? _toGrid;
 
         public ExchangeMeteringPoint(
             MeteringPointId id,
@@ -30,16 +30,16 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
             GridAreaId gridAreaId,
-            GsrnNumber powerPlantGsrnNumber,
-            string locationDescription,
+            GsrnNumber? powerPlantGsrnNumber,
+            string? locationDescription,
             MeasurementUnitType unitType,
             string meterNumber,
             ReadingOccurrence meterReadingOccurrence,
             int maximumCurrent,
             int maximumPower,
             Instant? occurenceDate,
-            string toGrid,
-            string fromGrid,
+            string? toGrid,
+            string? fromGrid,
             string? parentRelatedMeteringPoint,
             ProductType productType)
             : base(

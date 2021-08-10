@@ -17,13 +17,15 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class MeteringPointSubTypeValueMustBeValidErrorConverter : ErrorConverter<MeteringPointSubTypeValueMustBeValidValidationError>
+    public class MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineMustBeSubtypeVirtualOrCalculatedErrorConverter : ErrorConverter<MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineMustBeSubtypeVirtualOrCalculatedValidationError>
     {
-        protected override ErrorMessage Convert(MeteringPointSubTypeValueMustBeValidValidationError validationError)
+        protected override ErrorMessage Convert(
+            MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineMustBeSubtypeVirtualOrCalculatedValidationError
+                validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D02", $"Sub type {validationError.MeteringPointSubType} for metering point {validationError.GsrnNumber} has wrong value (outside domain)");
+            return new("D37", $"Sub type {validationError.MeteringPointSubType} not allowed: the sub type for metering point {validationError.GsrnNumber} must be Virtual (D02) or Calculated (D03) if type is {validationError.MeteringPointType} and net settlement group is not 0 or 99.");
         }
     }
 }

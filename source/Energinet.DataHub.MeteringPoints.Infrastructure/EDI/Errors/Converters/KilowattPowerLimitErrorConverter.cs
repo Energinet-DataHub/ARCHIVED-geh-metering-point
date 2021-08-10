@@ -12,20 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class RoomIdentificationRule : AbstractValidator<CreateMeteringPoint>
+    public class KilowattPowerLimitErrorConverter : ErrorConverter<KilowattPowerLimitValidationError>
     {
-        private const int RoomIdentificationLength = 4;
-
-        public RoomIdentificationRule()
+        protected override ErrorMessage Convert(KilowattPowerLimitValidationError validationError)
         {
-            RuleFor(request => request.RoomIdentification)
-                .MaximumLength(RoomIdentificationLength)
-                .WithState(request => new RoomIdentificationValidationError(request.GsrnNumber, request.RoomIdentification!));
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new("E86", $"Power limit KW {validationError.KilowattPowerLimit} for metering point {validationError.GsrnNumber} contains a non-digit character or has a length that exceeds 6");
         }
     }
 }
