@@ -14,7 +14,7 @@
 
 using System.Threading.Tasks;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.EventDispatchers
 {
     /// <summary>
     /// Interface for the integration event dispatch orchestrator
