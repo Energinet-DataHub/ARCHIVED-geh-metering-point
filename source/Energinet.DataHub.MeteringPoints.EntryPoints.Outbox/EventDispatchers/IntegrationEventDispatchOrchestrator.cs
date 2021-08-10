@@ -21,7 +21,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEve
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Services
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.EventDispatchers
 {
     public class IntegrationEventDispatchOrchestrator : IIntegrationEventDispatchOrchestrator
     {

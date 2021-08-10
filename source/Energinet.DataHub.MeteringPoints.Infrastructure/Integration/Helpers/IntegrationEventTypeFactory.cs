@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
@@ -24,6 +25,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
             if (typeof(MeteringPointCreatedEventMessage).FullName == type)
             {
                 return typeof(MeteringPointCreatedEventMessage);
+            }
+
+            if (typeof(MeteringPointConnectedIntegrationEvent).FullName == type)
+            {
+                return typeof(MeteringPointConnectedIntegrationEvent);
             }
 
             throw new ArgumentException("Integration Event type is not implemented.");
