@@ -21,18 +21,14 @@ using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint
 {
-    public class MeteringPointCreatedNotificationHandler : INotificationHandler<Domain.MeteringPoints.MeteringPointCreated>
+    public class MeteringPointCreatedNotificationHandler : IntegrationEventPublisher<Domain.MeteringPoints.MeteringPointCreated>
     {
-        private readonly IOutbox _outbox;
-        private readonly IOutboxMessageFactory _outboxMessageFactory;
-
         public MeteringPointCreatedNotificationHandler(IOutbox outbox, IOutboxMessageFactory outboxMessageFactory)
+            : base(outbox, outboxMessageFactory)
         {
-            _outbox = outbox;
-            _outboxMessageFactory = outboxMessageFactory;
         }
 
-        public Task Handle(
+        public override Task Handle(
             Domain.MeteringPoints.MeteringPointCreated notification,
             CancellationToken cancellationToken)
         {
@@ -53,9 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 string.Empty,
                 SystemClock.Instance.GetCurrentInstant().ToString());  // TODO: Use actual input properties for this and other missing fields
 
-            // TODO: When parent_MarketEvaluationPoint.mRID is implemented update child property
-            var outboxMessage = _outboxMessageFactory.CreateFrom(message, OutboxMessageCategory.IntegrationEvent);
-            _outbox.Add(outboxMessage);
+            CreateAndAddOutboxMessage(message);
 
             return Task.CompletedTask;
         }

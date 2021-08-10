@@ -16,9 +16,11 @@ using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Xunit;
+using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 {
+    [UnitTest]
     public class LocalDescriptionRuleTests : CreateMeteringPointRulesTest<LocationDescriptionMustBeValidRule>
     {
         [Theory]

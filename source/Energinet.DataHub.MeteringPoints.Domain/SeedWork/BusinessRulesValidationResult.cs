@@ -24,7 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
                 SetValidationErrors(rules);
             }
 
-            public bool Success => Errors.Count == 0;
+            public bool Success => !Errors.Any();
 
             public IReadOnlyCollection<ValidationError> Errors { get; private set; } = new List<ValidationError>();
 

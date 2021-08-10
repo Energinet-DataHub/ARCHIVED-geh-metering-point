@@ -13,11 +13,14 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Extensions;
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application
@@ -28,8 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Application
 
         public ConnectMeteringPointHandler(IMeteringPointRepository meteringPointRepository)
         {
-            _meteringPointRepository = meteringPointRepository ??
-                                       throw new ArgumentNullException(nameof(meteringPointRepository));
+            _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
         }
 
         public async Task<BusinessProcessResult> Handle(ConnectMeteringPoint request, CancellationToken cancellationToken)
@@ -40,14 +42,38 @@ namespace Energinet.DataHub.MeteringPoints.Application
                 .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
                 .ConfigureAwait(false);
 
-            if (meteringPoint is null)
+            var validationResult = Validate(request, meteringPoint);
+            if (!validationResult.Success)
             {
-                return BusinessProcessResult.Fail(request.TransactionId);
+                return validationResult;
             }
 
-            meteringPoint.Connect(effectiveDate: request.EffectiveDate.ToInstant());
+            var rulesCheckResult = CheckBusinessRules(request, meteringPoint!);
+            if (!rulesCheckResult.Success)
+            {
+                return rulesCheckResult;
+            }
+
+            meteringPoint?.Connect(effectiveDate: request.EffectiveDate.ToInstant());
 
             return BusinessProcessResult.Ok(request.TransactionId);
+        }
+
+        private static BusinessProcessResult Validate(ConnectMeteringPoint request, MeteringPoint? meteringPoint)
+        {
+            var validationRules = new List<IBusinessRule>()
+            {
+                new MeteringPointMustBeKnownRule(meteringPoint, request.GsrnNumber),
+            };
+
+            return new BusinessProcessResult(request.TransactionId, validationRules);
+        }
+
+        private static BusinessProcessResult CheckBusinessRules(ConnectMeteringPoint request, MeteringPoint meteringPoint)
+        {
+            var validationResult = meteringPoint.ConnectAcceptable();
+
+            return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
         }
     }
 }
