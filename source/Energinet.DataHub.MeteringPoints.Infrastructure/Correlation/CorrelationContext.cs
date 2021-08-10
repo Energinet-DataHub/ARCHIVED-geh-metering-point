@@ -36,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Correlation
             _parentId = parentId;
         }
 
-        public override string? ToString()
+        public string AsTraceContext()
         {
             if (string.IsNullOrEmpty(_id) || string.IsNullOrEmpty(_parentId))
             {
