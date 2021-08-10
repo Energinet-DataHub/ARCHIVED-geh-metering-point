@@ -23,9 +23,11 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using FluentAssertions;
 using MediatR;
 using Xunit;
+using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 {
+    [IntegrationTest]
     public class CreateTests
         : TestHost
     {
