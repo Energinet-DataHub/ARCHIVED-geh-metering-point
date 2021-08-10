@@ -28,7 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
 
         public OutboxWatcher(
             ILogger logger,
-             OutboxOrchestrator outboxOrchestrator)
+            OutboxOrchestrator outboxOrchestrator)
         {
             _logger = logger;
             _outboxOrchestrator = outboxOrchestrator;

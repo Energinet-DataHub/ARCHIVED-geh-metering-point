@@ -81,7 +81,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IDomainEventsAccessor, DomainEventsAccessor>();
             _container.Register<IDomainEventsDispatcher, DomainEventsDispatcher>();
             _container.Register<IDomainEventPublisher, DomainEventPublisher>();
-            _container.Register<IIntegrationEventDispatchOrchestrator, IntegrationEventMessageCoordinator>();
             _container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Singleton);
 
             _container.AddValidationErrorConversion(

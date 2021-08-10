@@ -34,14 +34,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         private readonly IMediator _mediator;
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly IOutboxManager _outbox;
-        private readonly IIntegrationEventDispatchOrchestrator _integrationEventDispatchOrchestrator;
 
         public CreateTests()
         {
             _mediator = GetService<IMediator>();
             _meteringPointRepository = GetService<IMeteringPointRepository>();
             _outbox = GetService<IOutboxManager>();
-            _integrationEventDispatchOrchestrator = GetService<IIntegrationEventDispatchOrchestrator>();
         }
 
         [Fact]
@@ -79,18 +77,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             outboxMessage.Should().NotBeNull();
             outboxMessage?.Type.Should()
                 .Be(typeof(MeteringPointCreatedEventMessage).FullName);
-        }
-
-        [Fact(Skip = "Should not be run with processing configuration. Redo with outbox configuration.")]
-        public async Task CreateMeteringPoint_ProcessIntegrationEvent_ShouldMarkAsProcessedIntegrationEventInOutbox()
-        {
-            var request = CreateRequest();
-
-            await _mediator.Send(request, CancellationToken.None).ConfigureAwait(false);
-            await _integrationEventDispatchOrchestrator.ProcessEventOrchestratorAsync().ConfigureAwait(false);
-
-            var outboxMessage = _outbox.GetNext(OutboxMessageCategory.IntegrationEvent);
-            outboxMessage.Should().BeNull();
         }
 
         [Fact]
