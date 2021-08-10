@@ -57,7 +57,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 .AddProperty(x => x.PhysicalConnectionCapacity, "MarketEvaluationPoint", "physicalConnectionCapacity")
                 .AddProperty(x => x.IsOfficialAddress, OfficialAddressIndicator, "MarketEvaluationPoint", "usagePointLocation.officialAddressIndicator")
                 .AddProperty(x => x.GeoInfoReference, "MarketEvaluationPoint", "usagePointLocation.geoInfoReference")
-                .AddProperty(x => x.MeasureUnitType, TranslateMeasureUnitType, "MarketEvaluationPoint", "Series", "quantity_Measure_Unit.name"));
+                .AddProperty(x => x.MeasureUnitType, TranslateMeasureUnitType, "MarketEvaluationPoint", "Series", "quantity_Measure_Unit.name")
+                .AddProperty(x => x.ContractedConnectionCapacity, TranslateMeasureUnitType, "MarketEvaluationPoint", "contractedConnectionCapacity")
+                .AddProperty(x => x.RatedCurrent, TranslateMeasureUnitType, "MarketEvaluationPoint", "ratedCurrent"));
         }
 
         private static bool? OfficialAddressIndicator(XmlElementInfo element)
