@@ -74,5 +74,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         public static string ProductType => Domain.MeteringPoints.ProductType.EnergyActive.Name;
 
         public static string GeoInfoReference => Guid.NewGuid().ToString();
+
+        public static string PhysicalState => Domain.MeteringPoints.PhysicalState.New.Name;
     }
 }

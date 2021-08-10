@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.ObjectModel;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
@@ -86,6 +88,16 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public MeteringPointId Id { get; }
 
         public GsrnNumber GsrnNumber { get; }
+
+        public BusinessRulesValidationResult ConnectAcceptable()
+        {
+            var rules = new Collection<IBusinessRule>
+            {
+                new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, _meteringPointType, _physicalState),
+            };
+
+            return new BusinessRulesValidationResult(rules);
+        }
 
         public void Connect(Instant effectiveDate)
         {
