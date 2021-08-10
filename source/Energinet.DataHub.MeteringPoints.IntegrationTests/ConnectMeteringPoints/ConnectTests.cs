@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using FluentAssertions;
 using MediatR;
@@ -52,6 +53,19 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             var meteringPointConnectedOutboxMessage = _outbox.GetNext(OutboxMessageCategory.ActorMessage, typeof(ConnectMeteringPointAccepted).FullName!);
             meteringPointConnectedOutboxMessage.Should().NotBeNull();
             meteringPointConnectedOutboxMessage?.Type.Should().Be(typeof(ConnectMeteringPointAccepted).FullName);
+        }
+
+        [Fact]
+        public async Task ConnectMeteringPoint_WithNoValidationErrors_ShouldGenerateIntegrationEventInOutbox()
+        {
+            var createMeteringPointRequest = CreateMeteringPointRequest();
+            var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
+
+            await _mediator.Send(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+
+            var integrationEvent = GetLastMessageFromOutboxAsync<MeteringPointConnectedIntegrationEvent>();
+            integrationEvent.Should().NotBeNull();
         }
 
         [Fact]
