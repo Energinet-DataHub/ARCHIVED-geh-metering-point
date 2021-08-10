@@ -24,14 +24,33 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
     public class CreationTests
     {
         [Fact]
-        public void Powerplant_GSRN_is_required_when_netsettlement_group_is_other_than_0()
+        public void Powerplant_GSRN_is_required_when_netsettlementgroup_is_other_than_0()
         {
-            var checkResult = ConsumptionMeteringPoint.CanCreate(
+            var checkResult = CreateInvalidRequest();
+
+            AssertContainsValidationError<PowerPlantIsRequiredForNetSettlementGroupRuleError>(checkResult);
+        }
+
+        [Fact]
+        public void Street_name_is_required()
+        {
+            var checkResult = CreateInvalidRequest();
+            AssertContainsValidationError<StreetNameIsRequiredRuleError>(checkResult);
+            Assert.Contains(checkResult.Errors, error => error is StreetNameIsRequiredRuleError);
+        }
+
+        private static BusinessRulesValidationResult CreateInvalidRequest()
+        {
+            return ConsumptionMeteringPoint.CanCreate(
                 meteringPointGSRN: GsrnNumber.Create(SampleData.GsrnNumber),
                 netSettlementGroup: NetSettlementGroup.One,
-                powerPlantGSRN: null);
+                powerPlantGSRN: null,
+                address: Address.Create(null, null, null, null));
+        }
 
-            Assert.Contains(checkResult.Errors, error => error is PowerPlantIsRequiredForNetSettlementGroupRuleError);
+        private static void AssertContainsValidationError<TValidationError>(BusinessRulesValidationResult result)
+        {
+            Assert.Contains(result.Errors, error => error is TValidationError);
         }
     }
 }

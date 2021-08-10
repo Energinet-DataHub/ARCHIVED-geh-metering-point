@@ -84,11 +84,16 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private ConsumptionMeteringPoint() { }
 #pragma warning restore 8618
 
-        public static BusinessRulesValidationResult CanCreate(GsrnNumber meteringPointGSRN, NetSettlementGroup netSettlementGroup, GsrnNumber? powerPlantGSRN)
+        public static BusinessRulesValidationResult CanCreate(
+            GsrnNumber meteringPointGSRN,
+            NetSettlementGroup netSettlementGroup,
+            GsrnNumber? powerPlantGSRN,
+            Address address)
         {
             var rules = new List<IBusinessRule>()
             {
                 new PowerPlantIsRequiredForNetSettlementGroupRule(meteringPointGSRN, netSettlementGroup, powerPlantGSRN),
+                new StreetNameIsRequiredRule(meteringPointGSRN, address),
             };
 
             return new BusinessRulesValidationResult(rules);
