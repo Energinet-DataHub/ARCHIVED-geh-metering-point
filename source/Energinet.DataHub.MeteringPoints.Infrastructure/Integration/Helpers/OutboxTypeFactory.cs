@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Reflection;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 
@@ -30,6 +32,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
             if (typeof(MeteringPointConnectedIntegrationEvent).FullName == type)
             {
                 return typeof(MeteringPointConnectedIntegrationEvent);
+            }
+
+            if (typeof(PostOfficeEnvelope).FullName == type)
+            {
+                return typeof(PostOfficeEnvelope);
             }
 
             throw new ArgumentException("Outbox type is not implemented.");

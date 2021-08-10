@@ -1,4 +1,4 @@
-// Copyright 2020 Energinet DataHub A/S
+﻿// Copyright 2020 Energinet DataHub A/S
 //
 // Licensed under the Apache License, Version 2.0 (the "License2");
 // you may not use this file except in compliance with the License.
@@ -12,18 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
+using Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
 {
-    public class AcceptMessageDispatcher : IRequestHandler<CreateMeteringPointAccepted>
+    public class AcceptMessageDispatcher : IRequestHandler<PostOfficeEnvelope>
     {
-        public Task<Unit> Handle(CreateMeteringPointAccepted request, CancellationToken cancellationToken)
+        private readonly IPostOfficeStorageClient _postOfficeStorageClient;
+
+        public AcceptMessageDispatcher(
+            IPostOfficeStorageClient postOfficeStorageClient)
         {
-            
+            _postOfficeStorageClient = postOfficeStorageClient;
+        }
+
+        public async Task<Unit> Handle(PostOfficeEnvelope request, CancellationToken cancellationToken)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
+            await _postOfficeStorageClient.WriteAsync(request).ConfigureAwait(false);
+
+            return Unit.Value;
         }
     }
 }
