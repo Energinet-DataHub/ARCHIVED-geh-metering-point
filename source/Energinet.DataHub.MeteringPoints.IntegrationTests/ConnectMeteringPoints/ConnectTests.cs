@@ -73,6 +73,18 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
         }
 
         [Fact]
+        public async Task ConnectMeteringPoint_WithNotExistingMetering_ShouldGenerateRejectMessageInOutbox()
+        {
+            var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
+
+            await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+
+            var outboxMessage = _outbox.GetNext(OutboxMessageCategory.ActorMessage, typeof(ConnectMeteringPointRejected).FullName!);
+            outboxMessage.Should().NotBeNull();
+            outboxMessage?.Type.Should().Be(typeof(ConnectMeteringPointRejected).FullName);
+        }
+
+        [Fact]
         public async Task ConnectMeteringPoint_WithAlreadyConnected_ShouldGenerateRejectMessageInOutbox()
         {
             var createMeteringPointRequest = CreateMeteringPointRequest();
