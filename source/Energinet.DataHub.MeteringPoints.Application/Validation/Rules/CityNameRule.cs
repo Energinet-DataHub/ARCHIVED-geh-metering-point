@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         {
              RuleFor(request => request.CityName)
                 .MaximumLength(MaxCityNameLength)
-                .WithState(request => new CityNameMaximumLengthValidationError(request.GsrnNumber, request.CityName, MaxCityNameLength));
+                .WithState(request => new CityNameMaximumLengthValidationError(request.GsrnNumber, request.CityName!, MaxCityNameLength));
 
              When(CreateMeteringPointRulesHelper.MeteringPointTypeIsProductionOrConsumption, () =>
              {

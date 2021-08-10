@@ -18,7 +18,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class PowerPlantValidationError : ValidationError
     {
-        public PowerPlantValidationError(string gsrnNumber, string powerPlant)
+        public PowerPlantValidationError(string gsrnNumber, string? powerPlant)
         {
             GsrnNumber = gsrnNumber;
             PowerPlant = powerPlant;
@@ -26,6 +26,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 
         public string GsrnNumber { get; }
 
-        public string PowerPlant { get; }
+        public string? PowerPlant { get; }
     }
 }

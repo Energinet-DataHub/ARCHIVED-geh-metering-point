@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         {
             RuleFor(request => request.CitySubDivisionName)
                 .MaximumLength(CitySubDivisionNameMaximumLength)
-                .WithState(request => new CitySubDivisionNameMaximumLengthValidationError(request.GsrnNumber, request.CitySubDivisionName));
+                .WithState(request => new CitySubDivisionNameMaximumLengthValidationError(request.GsrnNumber, request.CitySubDivisionName!));
         }
     }
 }

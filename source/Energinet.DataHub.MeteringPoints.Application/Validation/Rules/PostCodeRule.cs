@@ -39,14 +39,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         {
             RuleFor(request => request.PostCode)
                 .Matches(PostCodeDkFormatRegEx)
-                .WithState(request => new PostCodeWrongFormatValidationError(request.GsrnNumber, request.PostCode));
+                .WithState(request => new PostCodeWrongFormatValidationError(request.GsrnNumber, request.PostCode!));
         }
 
         private void PostCodeFormatMaxLength()
         {
             RuleFor(request => request.PostCode)
                 .MaximumLength(MaxPostCodeLength)
-                .WithState(request => new PostCodeMaximumLengthValidationError(request.GsrnNumber, request.PostCode, MaxPostCodeLength));
+                .WithState(request => new PostCodeMaximumLengthValidationError(request.GsrnNumber, request.PostCode!, MaxPostCodeLength));
         }
     }
 }

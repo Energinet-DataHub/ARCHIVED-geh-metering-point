@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         {
             RuleFor(createMeteringPoint => createMeteringPoint.LocationDescription)
                 .MaximumLength(LocationDescriptionMaximumLength)
-                .WithState(createMeteringPoint => new LocationDescriptionMaximumLengthValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.LocationDescription));
+                .WithState(createMeteringPoint => new LocationDescriptionMaximumLengthValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.LocationDescription!));
         }
     }
 }

@@ -17,7 +17,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class CityNameMandatoryForMeteringPointTypeMustBeValidRule : AbstractValidator<string>
+    public class CityNameMandatoryForMeteringPointTypeMustBeValidRule : AbstractValidator<string?>
     {
         public CityNameMandatoryForMeteringPointTypeMustBeValidRule(string gsrnNumber)
         {

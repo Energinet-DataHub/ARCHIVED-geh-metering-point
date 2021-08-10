@@ -33,7 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
             RuleFor(request => request.StreetName)
                 .MaximumLength(MaxStreetNameLength)
-                .WithState(request => new StreetNameMaximumLengthValidationError(request.GsrnNumber, request.StreetName, MaxStreetNameLength));
+                .WithState(request => new StreetNameMaximumLengthValidationError(request.GsrnNumber, request.StreetName!, MaxStreetNameLength));
         }
 
         private static bool MeteringPointTypeIsProductionOrConsumption(CreateMeteringPoint createMeteringPoint)
