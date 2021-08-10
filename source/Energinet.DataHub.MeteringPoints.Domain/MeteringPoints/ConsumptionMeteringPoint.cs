@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
@@ -80,5 +83,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
         private ConsumptionMeteringPoint() { }
 #pragma warning restore 8618
+
+        public static BusinessRulesValidationResult CanCreate(GsrnNumber meteringPointGSRN, NetSettlementGroup netSettlementGroup, GsrnNumber? powerPlantGSRN)
+        {
+            var rules = new List<IBusinessRule>()
+            {
+                new PowerPlantIsRequiredForNetSettlementGroupRule(meteringPointGSRN, netSettlementGroup, powerPlantGSRN),
+            };
+
+            return new BusinessRulesValidationResult(rules);
+        }
     }
 }
