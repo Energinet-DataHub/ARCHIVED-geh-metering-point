@@ -13,29 +13,39 @@
 // limitations under the License.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice;
+using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
 {
-    internal class ActorMessageDispatcher : IActorMessageDispatcher
+    internal class OutboxMessageDispatcher : IOutboxMessageDispatcher
     {
-        private readonly IPostOfficeStorageClient _postOfficeStorageClient;
+        private readonly IMediator _mediator;
+        private readonly IJsonSerializer _jsonSerializer;
 
-        public ActorMessageDispatcher(
-            IPostOfficeStorageClient postOfficeStorageClient)
+        public OutboxMessageDispatcher(
+            IMediator mediator, IJsonSerializer jsonSerializer)
         {
-            _postOfficeStorageClient = postOfficeStorageClient;
+            _mediator = mediator;
+            _jsonSerializer = jsonSerializer;
         }
 
         public async Task DispatchMessageAsync(OutboxMessage message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
 
-            await _postOfficeStorageClient.WriteAsync(message).ConfigureAwait(false);
+            object parsedCommand = _jsonSerializer.Deserialize(
+                message.Data,
+                OutboxTypeFactory.GetType(message.Type));
+
+            await _mediator.Send(parsedCommand, CancellationToken.None).ConfigureAwait(false);
         }
     }
 }

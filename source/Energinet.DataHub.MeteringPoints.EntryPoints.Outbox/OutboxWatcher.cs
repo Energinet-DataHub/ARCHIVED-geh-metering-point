@@ -15,32 +15,32 @@
 using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages;
-using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.EventDispatchers;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
 {
-    internal class OutboxEventWatcher
+    internal class OutboxWatcher
     {
         private readonly ILogger _logger;
-        private readonly IntegrationEventDispatchOrchestrator _integrationEventDispatchOrchestrator;
+        private readonly ActorMessageCoordinator _actorMessageCoordinator;
 
-        public OutboxEventWatcher(
-            ILogger logger, IntegrationEventDispatchOrchestrator integrationEventDispatchOrchestrator)
+        public OutboxWatcher(
+            ILogger logger,
+            ActorMessageCoordinator actorMessageCoordinator)
         {
             _logger = logger;
-            _integrationEventDispatchOrchestrator = integrationEventDispatchOrchestrator;
+            _actorMessageCoordinator = actorMessageCoordinator;
         }
 
-        [Function("OutboxEventWatcher")]
+        [Function("OutboxWatcher")]
         public async Task RunAsync(
-            [TimerTrigger("%EVENT_MESSAGE_DISPATCH_TRIGGER_TIMER%")] TimerInfo timerInformation)
+            [TimerTrigger("%ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER%")] TimerInfo timerInformation)
         {
             _logger.LogInformation($"Timer trigger function executed at: {DateTime.Now}");
             _logger.LogInformation($"Next timer schedule at: {timerInformation?.ScheduleStatus?.Next}");
 
-            await _integrationEventDispatchOrchestrator.ProcessEventOrchestratorAsync().ConfigureAwait(false);
+            await _actorMessageCoordinator.FetchAndProcessMessagesAsync().ConfigureAwait(false);
         }
     }
 }

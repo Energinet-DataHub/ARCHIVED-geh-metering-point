@@ -14,6 +14,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Microsoft.ApplicationInsights;
@@ -21,14 +22,14 @@ using Microsoft.ApplicationInsights.DataContracts;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
 {
-    internal class ActorMessageDispatcherTelemetryDecorator : IActorMessageDispatcher
+    internal class OutboxMessageDispatcherTelemetryDecorator : IOutboxMessageDispatcher
     {
         private readonly TelemetryClient _telemetryClient;
-        private readonly IActorMessageDispatcher _decoratee;
+        private readonly IOutboxMessageDispatcher _decoratee;
 
-        public ActorMessageDispatcherTelemetryDecorator(
+        public OutboxMessageDispatcherTelemetryDecorator(
             TelemetryClient telemetryClient,
-            IActorMessageDispatcher decoratee)
+            IOutboxMessageDispatcher decoratee)
         {
             _telemetryClient = telemetryClient;
             _decoratee = decoratee;

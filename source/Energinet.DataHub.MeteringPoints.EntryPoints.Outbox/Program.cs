@@ -16,10 +16,14 @@ using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
+using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
@@ -77,11 +81,19 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
             container.Register<OutboxWatcher>(Lifestyle.Scoped);
             container.Register<IPostOfficeStorageClient, TempPostOfficeStorageClient>(Lifestyle.Scoped);
-            container.Register<IActorMessageCoordinator, ActorMessageCoordinator>(Lifestyle.Scoped);
-            container.Register<IActorMessageDispatcher, ActorMessageDispatcher>(Lifestyle.Scoped);
-            container.RegisterDecorator<IActorMessageDispatcher, ActorMessageDispatcherTelemetryDecorator>(Lifestyle.Scoped);
+            container.Register<OutboxOrchestrator>(Lifestyle.Scoped);
+            container.Register<IOutboxMessageDispatcher, OutboxMessageDispatcher>(Lifestyle.Scoped);
+            container.RegisterDecorator<IOutboxMessageDispatcher, OutboxMessageDispatcherTelemetryDecorator>(Lifestyle.Scoped);
 
             container.SendProtobuf<IntegrationEventEnvelope>();
+
+            // Setup pipeline behaviors
+            container.BuildMediator(
+                new[]
+                {
+                    typeof(OutboxWatcher).Assembly,
+                },
+                Array.Empty<Type>());
         }
     }
 }
