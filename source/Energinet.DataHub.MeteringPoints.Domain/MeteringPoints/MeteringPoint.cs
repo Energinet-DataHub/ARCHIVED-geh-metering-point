@@ -93,22 +93,5 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public abstract BusinessRulesValidationResult ConnectAcceptable();
 
         public abstract void Connect(Instant effectiveDate);
-        // public virtual BusinessRulesValidationResult ConnectAcceptable()
-        // {
-        //     var rules = new Collection<IBusinessRule>
-        //     {
-        //         new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, _meteringPointType, _physicalState),
-        //         new MustHaveEnergySupplierRule(GsrnNumber, _energySupplierIsRegistered),
-        //     };
-        //
-        //     return new BusinessRulesValidationResult(rules);
-        // }
-        //
-        // public void Connect(Instant effectiveDate)
-        // {
-        //     _physicalState = PhysicalState.Connected;
-        //     // TODO - for now we ignore scheduling - must be handled later
-        //     AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, effectiveDate));
-        // }
     }
 }
