@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
@@ -78,5 +79,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
         private ProductionMeteringPoint() { }
 #pragma warning restore 8618
+
+        public override BusinessRulesValidationResult ConnectAcceptable()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void Connect(Instant effectiveDate)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

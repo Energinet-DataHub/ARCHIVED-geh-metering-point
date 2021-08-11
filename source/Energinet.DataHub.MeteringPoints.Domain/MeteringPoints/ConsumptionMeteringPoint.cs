@@ -12,11 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.ObjectModel;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules.Connect;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
+    #pragma warning disable
     public class ConsumptionMeteringPoint : MeteringPoint
     {
         private SettlementMethod _settlementMethod;
@@ -25,6 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private ConnectionType _connectionType;
         private AssetType? _assetType;
         private bool _isAddressWashable;
+        private bool _energySupplierIsRegistered;
 
         public ConsumptionMeteringPoint(
             MeteringPointId id,
@@ -80,5 +86,23 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
         private ConsumptionMeteringPoint() { }
 #pragma warning restore 8618
+
+        public override BusinessRulesValidationResult ConnectAcceptable()
+        {
+            var rules = new Collection<IBusinessRule>
+            {
+                new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, _meteringPointType, _physicalState),
+                new MustHaveEnergySupplierRule(GsrnNumber, _energySupplierIsRegistered),
+            };
+
+            return new BusinessRulesValidationResult(rules);
+        }
+
+        public override void Connect(Instant effectiveDate)
+        {
+            _physicalState = PhysicalState.Connected;
+            // TODO - for now we ignore scheduling - must be handled later
+            AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, effectiveDate));
+        }
     }
 }
