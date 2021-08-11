@@ -99,6 +99,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             // container.Register<IntegrationEventReceiver>(Lifestyle.Scoped);
             container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
+            container.Register<IMarketMeteringPointRepository, MarketMeteringPointRepository>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
             container.Register<CorrelationIdMiddleware>(Lifestyle.Scoped);
             container.Register<EntryPointTelemetryScopeMiddleware>(Lifestyle.Scoped);

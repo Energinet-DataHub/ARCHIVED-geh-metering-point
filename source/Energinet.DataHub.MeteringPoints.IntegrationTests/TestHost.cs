@@ -70,6 +70,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             _container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
             _container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
+            _container.Register<IMarketMeteringPointRepository, MarketMeteringPointRepository>(Lifestyle.Scoped);
             _container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
             _container.Register<IOutboxManager, OutboxManager>(Lifestyle.Scoped);
             _container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Singleton);
@@ -161,6 +162,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             cleanupStatement.AppendLine($"DELETE FROM ConsumptionMeteringPoints");
             cleanupStatement.AppendLine($"DELETE FROM ProductionMeteringPoints");
             cleanupStatement.AppendLine($"DELETE FROM ExchangeMeteringPoints");
+            cleanupStatement.AppendLine($"DELETE FROM MarketMeteringPoints");
             cleanupStatement.AppendLine($"DELETE FROM MeteringPoints");
             cleanupStatement.AppendLine($"DELETE FROM OutboxMessages");
 

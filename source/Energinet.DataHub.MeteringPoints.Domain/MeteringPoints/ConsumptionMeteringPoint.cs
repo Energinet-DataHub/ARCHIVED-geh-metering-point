@@ -22,7 +22,7 @@ using NodaTime;
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     #pragma warning disable
-    public class ConsumptionMeteringPoint : MeteringPoint
+    public class ConsumptionMeteringPoint : MarketMeteringPoint
     {
         private SettlementMethod _settlementMethod;
         private NetSettlementGroup _netSettlementGroup;
@@ -30,7 +30,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private ConnectionType _connectionType;
         private AssetType? _assetType;
         private bool _isAddressWashable;
-        private bool _energySupplierIsRegistered;
 
         public ConsumptionMeteringPoint(
             MeteringPointId id,
@@ -92,7 +91,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             var rules = new Collection<IBusinessRule>
             {
                 new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, _meteringPointType, _physicalState),
-                new MustHaveEnergySupplierRule(GsrnNumber, _energySupplierIsRegistered),
+                new MustHaveEnergySupplierRule(GsrnNumber, HasEnergySupplier),
             };
 
             return new BusinessRulesValidationResult(rules);
