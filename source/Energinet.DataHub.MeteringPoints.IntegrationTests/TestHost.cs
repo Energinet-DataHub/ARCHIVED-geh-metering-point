@@ -16,10 +16,10 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
-using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
+using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
@@ -37,7 +37,9 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Services;
+using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +48,8 @@ using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Xunit;
 using Xunit.Categories;
+using ConnectMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Connect.ConnectMeteringPoint;
+using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Application.CreateMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
@@ -62,7 +66,17 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         protected TestHost()
         {
             _container = new Container();
+            _container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
+
             var serviceCollection = new ServiceCollection();
+
+            // Protobuf handling
+            _container.ReceiveProtobuf<MeteringPointEnvelope>(
+                config => config
+                    .FromOneOf(envelope => envelope.MeteringPointMessagesCase)
+                    .WithParser(() => MeteringPointEnvelope.Parser));
+            _container.SendProtobuf<MeteringPointEnvelope>();
+
             serviceCollection.AddDbContext<MeteringPointContext>(x =>
                 x.UseSqlServer(ConnectionString, y => y.UseNodaTime()));
             serviceCollection.AddSimpleInjector(_container);
@@ -85,6 +99,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IDomainEventPublisher, DomainEventPublisher>();
             _container.Register<IIntegrationEventDispatchOrchestrator, IntegrationEventDispatchOrchestrator>();
             _container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Singleton);
+            _container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
 
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
