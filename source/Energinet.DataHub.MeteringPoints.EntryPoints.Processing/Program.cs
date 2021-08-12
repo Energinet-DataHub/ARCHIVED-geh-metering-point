@@ -38,6 +38,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notifications;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
@@ -124,6 +125,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<ServiceBusMessageIdempotencyMiddleware>(Lifestyle.Scoped);
             container.Register<IProtobufMessageFactory, ProtobufMessageFactory>(Lifestyle.Singleton);
             container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
+            container.Register<INotificationReceiver, NotificationReceiver>(Lifestyle.Scoped);
 
             container.AddValidationErrorConversion(
                 validateRegistrations: true,
