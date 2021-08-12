@@ -186,7 +186,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
 
         private async Task MarkAsEnergySupplierAssigned()
         {
-            var setEnergySupplierAssigned = new MarkAsEnergySupplierAssigned(SampleData.GsrnNumber);
+            var setEnergySupplierAssigned = new SetEnergySupplierInfo(SampleData.GsrnNumber);
             await _mediator.Send(setEnergySupplierAssigned).ConfigureAwait(false);
         }
     }

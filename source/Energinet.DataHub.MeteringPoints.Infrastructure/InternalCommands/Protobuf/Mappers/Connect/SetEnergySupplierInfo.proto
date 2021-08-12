@@ -25,7 +25,7 @@ option csharp_namespace = "Energinet.DataHub.MeteringPoints.InternalCommandsCont
 /**
  * Represents the creation of a metering point.
  */
-message MarkAsEnergySupplierAssigned {
+message SetEnergySupplierInfo {
   string id = 1;
   string metering_point_gsrn = 2;
 }

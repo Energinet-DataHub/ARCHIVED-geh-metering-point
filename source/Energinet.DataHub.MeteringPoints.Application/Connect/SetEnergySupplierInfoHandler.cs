@@ -21,23 +21,23 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
-    public class MarkAsEnergySupplierAssignedHandler : ICommandHandler<MarkAsEnergySupplierAssigned>
+    public class SetEnergySupplierInfoHandler : ICommandHandler<SetEnergySupplierInfo>
     {
         private readonly IMarketMeteringPointRepository _marketMeteringPointRepository;
 
-        public MarkAsEnergySupplierAssignedHandler(IMarketMeteringPointRepository meteringPointRepository)
+        public SetEnergySupplierInfoHandler(IMarketMeteringPointRepository meteringPointRepository)
         {
             _marketMeteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
         }
 
-        public async Task<Unit> Handle(MarkAsEnergySupplierAssigned request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(SetEnergySupplierInfo request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var meteringPoint =
                 await _marketMeteringPointRepository.GetByGSRNAsync(GsrnNumber.Create(request.MeteringPointGsrn)).ConfigureAwait(false);
 
-            meteringPoint.MarkAsEnergySupplierAssigned();
+            meteringPoint.SetEnergySupplierInfo();
             return Unit.Value;
         }
     }

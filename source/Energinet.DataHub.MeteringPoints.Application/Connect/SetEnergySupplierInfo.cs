@@ -17,15 +17,15 @@ using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
-    public class MarkAsEnergySupplierAssigned : InternalCommand
+    public class SetEnergySupplierInfo : InternalCommand
     {
-        public MarkAsEnergySupplierAssigned(Guid id, string meteringPointGSRN)
+        public SetEnergySupplierInfo(Guid id, string meteringPointGSRN)
         {
             Id = id;
             MeteringPointGsrn = meteringPointGSRN;
         }
 
-        public MarkAsEnergySupplierAssigned(string meteringPointGSRN)
+        public SetEnergySupplierInfo(string meteringPointGSRN)
         {
             MeteringPointGsrn = meteringPointGSRN;
         }

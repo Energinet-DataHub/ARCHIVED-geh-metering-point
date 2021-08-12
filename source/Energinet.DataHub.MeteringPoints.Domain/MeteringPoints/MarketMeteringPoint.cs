@@ -62,7 +62,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         protected bool HasEnergySupplier { get; private set; }
 
-        public void MarkAsEnergySupplierAssigned()
+        public void SetEnergySupplierInfo()
         {
             HasEnergySupplier = true;
         }
