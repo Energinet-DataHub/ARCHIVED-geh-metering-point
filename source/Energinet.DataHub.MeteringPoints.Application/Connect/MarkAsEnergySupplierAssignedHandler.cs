@@ -21,11 +21,11 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
-    public class SetEnergySupplierAssignedHandler : ICommandHandler<MarkAsEnergySupplierAssigned>
+    public class MarkAsEnergySupplierAssignedHandler : ICommandHandler<MarkAsEnergySupplierAssigned>
     {
         private readonly IMarketMeteringPointRepository _marketMeteringPointRepository;
 
-        public SetEnergySupplierAssignedHandler(IMarketMeteringPointRepository meteringPointRepository)
+        public MarkAsEnergySupplierAssignedHandler(IMarketMeteringPointRepository meteringPointRepository)
         {
             _marketMeteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
         }

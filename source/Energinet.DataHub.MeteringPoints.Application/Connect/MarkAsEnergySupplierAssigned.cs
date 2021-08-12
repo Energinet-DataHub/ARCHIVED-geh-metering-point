@@ -12,12 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
     public class MarkAsEnergySupplierAssigned : InternalCommand
     {
+        public MarkAsEnergySupplierAssigned(Guid id, string meteringPointGSRN)
+        {
+            Id = id;
+            MeteringPointGsrn = meteringPointGSRN;
+        }
+
         public MarkAsEnergySupplierAssigned(string meteringPointGSRN)
         {
             MeteringPointGsrn = meteringPointGSRN;
