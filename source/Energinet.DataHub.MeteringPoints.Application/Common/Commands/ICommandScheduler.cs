@@ -28,7 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common.Commands
         /// <param name="command"></param>
         /// <param name="scheduleDate"></param>
         /// <typeparam name="TCommand"><see cref="InternalCommand"/></typeparam>
-        Task EnqueueAsync<TCommand>(TCommand command, Instant? scheduleDate)
+        Task EnqueueAsync<TCommand>(TCommand command, Instant? scheduleDate = null)
             where TCommand : InternalCommand;
     }
 }
