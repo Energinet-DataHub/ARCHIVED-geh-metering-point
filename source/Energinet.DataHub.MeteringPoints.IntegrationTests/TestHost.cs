@@ -180,6 +180,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             cleanupStatement.AppendLine($"DELETE FROM MarketMeteringPoints");
             cleanupStatement.AppendLine($"DELETE FROM MeteringPoints");
             cleanupStatement.AppendLine($"DELETE FROM OutboxMessages");
+            cleanupStatement.AppendLine($"DELETE FROM QueuedInternalCommands");
 
             _container.GetInstance<MeteringPointContext>()
                 .Database.ExecuteSqlRaw(cleanupStatement.ToString());
