@@ -15,6 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
@@ -37,6 +38,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
+using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
@@ -121,6 +123,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IIncomingMessageRegistry, IncomingMessageRegistry>(Lifestyle.Transient);
             container.Register<ServiceBusMessageIdempotencyMiddleware>(Lifestyle.Scoped);
             container.Register<IProtobufMessageFactory, ProtobufMessageFactory>(Lifestyle.Singleton);
+            container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
 
             container.AddValidationErrorConversion(
                 validateRegistrations: true,
@@ -149,6 +152,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 config => config
                     .FromOneOf(envelope => envelope.MeteringPointMessagesCase)
                     .WithParser(() => MeteringPointEnvelope.Parser));
+
+            container.SendProtobuf<MeteringPointEnvelope>();
         }
     }
 }
