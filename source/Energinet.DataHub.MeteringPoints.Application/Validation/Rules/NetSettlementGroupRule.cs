@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             {
                 RuleFor(request => request.NetSettlementGroup)
                     .Empty()
-                    .WithState(createMeteringPoint => new NetSettlementGroupNotAllowedValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.TypeOfMeteringPoint));
+                    .WithState(createMeteringPoint => new NetSettlementGroupNotAllowedValidationError(createMeteringPoint.TypeOfMeteringPoint, createMeteringPoint.NetSettlementGroup!));
             });
         }
 
