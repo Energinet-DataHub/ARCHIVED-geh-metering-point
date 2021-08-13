@@ -22,6 +22,7 @@ using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDispatchers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
 using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
@@ -35,7 +36,6 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Services;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentValidation;
@@ -81,7 +81,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IDomainEventsAccessor, DomainEventsAccessor>();
             _container.Register<IDomainEventsDispatcher, DomainEventsDispatcher>();
             _container.Register<IDomainEventPublisher, DomainEventPublisher>();
-            _container.Register<IIntegrationEventDispatchOrchestrator, IntegrationEventDispatchOrchestrator>();
             _container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Singleton);
 
             _container.AddValidationErrorConversion(
