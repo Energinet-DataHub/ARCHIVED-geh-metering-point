@@ -13,18 +13,19 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
 {
     /// <summary>
-    /// Interface for the integration event dispatch orchestrator
+    /// Service for dispatching actor messages.
     /// </summary>
-    public interface IIntegrationEventDispatchOrchestrator
+    internal interface IOutboxMessageDispatcher
     {
         /// <summary>
-        /// Orchestrate the events to be dispatched
+        /// Dispatch single message.
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task ProcessEventOrchestratorAsync();
+        /// <param name="message">Message to process.</param>
+        Task DispatchMessageAsync(OutboxMessage message);
     }
 }

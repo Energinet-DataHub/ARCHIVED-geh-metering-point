@@ -14,9 +14,10 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect
 {
     public record MeteringPointConnectedIntegrationEvent(Guid MeteringPointId, string GSRNNumber, string EffectiveDate)
-        : IIntegrationEvent, IOutboundMessage;
+        : IIntegrationEvent, IRequest, IOutboundMessage;
 }

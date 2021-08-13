@@ -18,6 +18,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Azure.Storage.Files.Shares;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice
@@ -32,7 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice
             _settings = settings;
         }
 
-        public async Task WriteAsync(OutboxMessage message)
+        public async Task WriteAsync(PostOfficeEnvelope message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
 
@@ -47,7 +48,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice
             // Ensure that the directory exists
             if (await shareDirectoryClient.ExistsAsync().ConfigureAwait(false))
             {
-                var bytes = Encoding.ASCII.GetBytes(message.Data);
+                var bytes = Encoding.ASCII.GetBytes(message.Content);
 
                 var fileName = Guid.NewGuid().ToString() + ".json";
                 var fileClient = await shareDirectoryClient.CreateFileAsync(fileName, bytes.LongLength).ConfigureAwait(false);

@@ -19,16 +19,16 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
 {
-    internal class ActorMessageDispatcherTelemetryDecorator : IActorMessageDispatcher
+    internal class OutboxMessageDispatcherTelemetryDecorator : IOutboxMessageDispatcher
     {
         private readonly TelemetryClient _telemetryClient;
-        private readonly IActorMessageDispatcher _decoratee;
+        private readonly IOutboxMessageDispatcher _decoratee;
 
-        public ActorMessageDispatcherTelemetryDecorator(
+        public OutboxMessageDispatcherTelemetryDecorator(
             TelemetryClient telemetryClient,
-            IActorMessageDispatcher decoratee)
+            IOutboxMessageDispatcher decoratee)
         {
             _telemetryClient = telemetryClient;
             _decoratee = decoratee;

@@ -12,20 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
 {
-    /// <summary>
-    /// Service for dispatching actor messages.
-    /// </summary>
-    internal interface IActorMessageDispatcher
-    {
-        /// <summary>
-        /// Dispatch single message.
-        /// </summary>
-        /// <param name="message">Message to process.</param>
-        Task DispatchMessageAsync(OutboxMessage message);
-    }
+    public record PostOfficeEnvelope(string Id, string Recipient, string Content, string MessageType, string Correlation) : IRequest;
 }

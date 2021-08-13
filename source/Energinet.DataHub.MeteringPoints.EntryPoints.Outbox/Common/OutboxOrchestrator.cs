@@ -16,34 +16,33 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
 {
-    internal class ActorMessageCoordinator : IActorMessageCoordinator
+    internal class OutboxOrchestrator
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOutboxManager _outbox;
-        private readonly IActorMessageDispatcher _actorMessageDispatcher;
+        private readonly IOutboxMessageDispatcher _outboxMessageDispatcher;
 
-        public ActorMessageCoordinator(
-            IUnitOfWork unitOfWork,
-            IOutboxManager outbox,
-            IActorMessageDispatcher actorMessageDispatcher)
+        public OutboxOrchestrator(IUnitOfWork unitOfWork, IOutboxManager outbox, IOutboxMessageDispatcher outboxMessageDispatcher)
         {
-            _outbox = outbox;
-            _actorMessageDispatcher = actorMessageDispatcher;
             _unitOfWork = unitOfWork;
+            _outbox = outbox;
+            _outboxMessageDispatcher = outboxMessageDispatcher;
         }
 
-        public async Task FetchAndProcessMessagesAsync()
+        public async Task ProcessOutboxMessagesAsync()
         {
+            // Keep iterating as long as we have a message
             while (true)
             {
-                var message = _outbox.GetNext(OutboxMessageCategory.ActorMessage);
+                var message = _outbox.GetNext();
                 if (message == null) break;
 
-                await _actorMessageDispatcher.DispatchMessageAsync(message).ConfigureAwait(false);
+                await _outboxMessageDispatcher.DispatchMessageAsync(message).ConfigureAwait(false);
 
                 _outbox.MarkProcessed(message);
+
                 await _unitOfWork.CommitAsync().ConfigureAwait(false);
             }
         }
