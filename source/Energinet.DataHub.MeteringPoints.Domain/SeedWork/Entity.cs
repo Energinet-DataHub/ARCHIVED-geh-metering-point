@@ -33,12 +33,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
             _domainEvents.Clear();
         }
 
-        /// <summary>
-        /// Validates a bussines rule
-        /// </summary>
-        /// <param name="rule"></param>
-        /// <returns><see cref="BusinessRuleValidationResult"/></returns>
-        /// <exception cref="ArgumentNullException"><see cref="ArgumentNullException"/></exception>
+        // /// <summary>
+        // /// Validates a bussines rule
+        // /// </summary>
+        // /// <param name="rule"></param>
+        // /// <returns><see cref="BusinessRuleValidationResult"/></returns>
+        // /// <exception cref="ArgumentNullException"><see cref="ArgumentNullException"/></exception>
         // protected static BusinessRuleValidationResult CheckRule(IBusinessRule rule)
         // {
         //     if (rule is null)
