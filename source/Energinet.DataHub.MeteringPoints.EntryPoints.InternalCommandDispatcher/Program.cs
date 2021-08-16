@@ -22,6 +22,8 @@ using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
+using Energinet.DataHub.MeteringPoints.InternalCommandsContracts;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -68,18 +70,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher
             container.Register<IInternalCommandProcessor, InternalCommandProcessor>(Lifestyle.Scoped);
             container.Register<IInternalCommandDispatcher, InternalCommandServiceBusDispatcher>(Lifestyle.Scoped);
 
-            var connectionString = Environment.GetEnvironmentVariable("QUEUE_CONNECTION_STRING");
-            var topicName = Environment.GetEnvironmentVariable("QUEUE_TOPIC_NAME");
+            var connectionString = Environment.GetEnvironmentVariable("PROCESSING_QUEUE_CONNECTION_STRING");
+            var queueName = Environment.GetEnvironmentVariable("PROCESSING_QUEUE_NAME");
             container.Register<ServiceBusSender>(
-                () => new ServiceBusClient(connectionString).CreateSender(topicName),
+                () => new ServiceBusClient(connectionString).CreateSender(queueName),
                 Lifestyle.Singleton);
 
-            container.AddProtobufMessageSerializer();
-            container.AddProtobufOutboundMappers(
-                new[]
-                {
-                    typeof(MeteringPointConnectedIntegrationEvent).Assembly,
-                });
+            container.SendProtobuf<SetEnergySupplierInfo>();
         }
     }
 }
