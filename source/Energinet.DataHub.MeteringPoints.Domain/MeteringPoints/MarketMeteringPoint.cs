@@ -13,26 +13,20 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public class ProductionMeteringPoint : MeteringPoint
+    public abstract class MarketMeteringPoint : MeteringPoint
     {
-        private NetSettlementGroup _netSettlementGroup;
-        private DisconnectionType _disconnectionType;
-        private ConnectionType _connectionType;
-        private bool _isAddressWashable;
-#pragma warning disable 414 // TODO: Temporarily disabled since variable is not yet in use
-        private bool _productionObligation;
-#pragma warning restore 414
+        protected MarketMeteringPoint()
+        {
+        }
 
-        public ProductionMeteringPoint(
+        protected MarketMeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            bool isAddressWashable,
             PhysicalState physicalState,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
@@ -45,11 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             int maximumCurrent,
             int maximumPower,
             Instant? occurenceDate,
-            NetSettlementGroup netSettlementGroup,
-            DisconnectionType disconnectionType,
-            ConnectionType connectionType,
-            string? parentRelatedMeteringPoint,
-            ProductType productType)
+            string? parentRelatedMeteringPoint)
             : base(
                 id,
                 gsrnNumber,
@@ -68,26 +58,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 occurenceDate,
                 parentRelatedMeteringPoint)
         {
-            _netSettlementGroup = netSettlementGroup;
-            _disconnectionType = disconnectionType;
-            _connectionType = connectionType;
-            _productionObligation = false;
-            _productType = productType;
-            _isAddressWashable = isAddressWashable;
         }
 
-#pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
-        private ProductionMeteringPoint() { }
-#pragma warning restore 8618
+        protected bool HasEnergySupplier { get; private set; }
 
-        public override BusinessRulesValidationResult ConnectAcceptable()
+        public void SetEnergySupplierInfo()
         {
-            throw new System.NotImplementedException();
-        }
-
-        public override void Connect(Instant effectiveDate)
-        {
-            throw new System.NotImplementedException();
+            HasEnergySupplier = true;
         }
     }
 }

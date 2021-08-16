@@ -15,6 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
@@ -37,6 +38,8 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notifications;
+using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
@@ -50,6 +53,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using SimpleInjector;
+using ConnectMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Connect.ConnectMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 {
@@ -98,6 +102,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             // container.Register<IntegrationEventReceiver>(Lifestyle.Scoped);
             container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
+            container.Register<IMarketMeteringPointRepository, MarketMeteringPointRepository>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
             container.Register<CorrelationIdMiddleware>(Lifestyle.Scoped);
             container.Register<EntryPointTelemetryScopeMiddleware>(Lifestyle.Scoped);
@@ -107,9 +112,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IDomainEventPublisher, DomainEventPublisher>();
             container.Register<IUnitOfWork, UnitOfWork>();
             container.Register<IValidator<Application.CreateMeteringPoint>, CreateMeteringPointRuleSet>(Lifestyle.Scoped);
-            container.Register<IValidator<Application.ConnectMeteringPoint>, ConnectMeteringPointRuleSet>(Lifestyle.Scoped);
+            container.Register<IValidator<ConnectMeteringPoint>, ConnectMeteringPointRuleSet>(Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<Application.CreateMeteringPoint>), typeof(CreateMeteringPointResultHandler), Lifestyle.Scoped);
-            container.Register(typeof(IBusinessProcessResultHandler<Application.ConnectMeteringPoint>), typeof(ConnectMeteringPointResultHandler), Lifestyle.Scoped);
+            container.Register(typeof(IBusinessProcessResultHandler<ConnectMeteringPoint>), typeof(ConnectMeteringPointResultHandler), Lifestyle.Scoped);
             container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
             container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Scoped);
             container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
@@ -119,6 +124,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IIncomingMessageRegistry, IncomingMessageRegistry>(Lifestyle.Transient);
             container.Register<ServiceBusMessageIdempotencyMiddleware>(Lifestyle.Scoped);
             container.Register<IProtobufMessageFactory, ProtobufMessageFactory>(Lifestyle.Singleton);
+            container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
+            container.Register<INotificationReceiver, NotificationReceiver>(Lifestyle.Scoped);
 
             container.AddValidationErrorConversion(
                 validateRegistrations: true,
@@ -147,6 +154,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 config => config
                     .FromOneOf(envelope => envelope.MeteringPointMessagesCase)
                     .WithParser(() => MeteringPointEnvelope.Parser));
+
+            container.SendProtobuf<MeteringPointEnvelope>();
         }
     }
 }

@@ -18,7 +18,7 @@ using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Google.Protobuf;
-using ConnectMeteringPoint = Energinet.DataHub.MeteringPoints.Application.ConnectMeteringPoint;
+using ConnectMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Connect.ConnectMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
 {

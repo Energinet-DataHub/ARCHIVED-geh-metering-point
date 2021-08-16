@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappings
+using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+
+namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
-    public class ConnectMeteringPointXmlMappingConfiguration : XmlMappingConfigurationBase
-    {
-        public ConnectMeteringPointXmlMappingConfiguration()
-        {
-            CreateMapping<Application.Connect.ConnectMeteringPoint>("MktActivityRecord", mapper => mapper
-                .AddProperty(x => x.GsrnNumber, "MarketEvaluationPoint", "mRID")
-                .AddProperty(x => x.TransactionId, "mRID")
-                .AddProperty(x => x.EffectiveDate, "validityStart_DateAndOrTime.dateTime"));
-        }
-    }
+    public record ConnectMeteringPoint(
+        string GsrnNumber = "",
+        string EffectiveDate = "",
+        string TransactionId = "")
+        : IBusinessRequest,
+            IOutboundMessage,
+            IInboundMessage;
 }

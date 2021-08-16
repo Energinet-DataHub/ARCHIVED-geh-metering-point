@@ -12,20 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
-using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
-using FluentValidation;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
+using Google.Protobuf;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands.Protobuf.Mappers.Connect
 {
-    public class ConnectMeteringPointRuleSet : AbstractValidator<ConnectMeteringPoint>
+    public class SetEnergySupplierInfoOutbound : ProtobufOutboundMapper<SetEnergySupplierInfo>
     {
-        public ConnectMeteringPointRuleSet()
+        protected override IMessage Convert(Application.Connect.SetEnergySupplierInfo obj)
         {
-            RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberMustBeValidRule());
-
-            // TODO: add rules to fulfill a complete validation
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
+            return new InternalCommandsContracts.SetEnergySupplierInfo()
+            {
+                Id = obj.Id.ToString(),
+                MeteringPointGsrn = obj.MeteringPointGsrn,
+            };
         }
     }
 }

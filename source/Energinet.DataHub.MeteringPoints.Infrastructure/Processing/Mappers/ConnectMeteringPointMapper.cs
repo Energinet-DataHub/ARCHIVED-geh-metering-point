@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 
-            return new Application.ConnectMeteringPoint
+            return new Application.Connect.ConnectMeteringPoint
             {
                 GsrnNumber = obj.GsrnNumber,
                 EffectiveDate = obj.EffectiveDate,
