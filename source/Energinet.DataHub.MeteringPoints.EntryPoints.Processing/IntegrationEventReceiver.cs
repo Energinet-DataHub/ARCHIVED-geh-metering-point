@@ -14,6 +14,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notifications;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using MediatR;
 using Microsoft.Azure.Functions.Worker;
@@ -25,19 +26,19 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
     {
         private readonly ILogger _logger;
         private readonly ProtobufInboundMapperFactory _protobufInboundMapperFactory;
-        private readonly IMediator _mediator;
         private readonly IProtobufMessageFactory _protobufMessageFactory;
+        private readonly INotificationReceiver _notificationReceiver;
 
         public IntegrationEventReceiver(
             ILogger logger,
             ProtobufInboundMapperFactory protobufInboundMapperFactory,
-            IMediator mediator,
-            IProtobufMessageFactory protobufMessageFactory)
+            IProtobufMessageFactory protobufMessageFactory,
+            INotificationReceiver notificationReceiver)
         {
             _logger = logger;
             _protobufInboundMapperFactory = protobufInboundMapperFactory ?? throw new ArgumentNullException(nameof(protobufInboundMapperFactory));
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _protobufMessageFactory = protobufMessageFactory ?? throw new ArgumentNullException(nameof(protobufMessageFactory));
+            _notificationReceiver = notificationReceiver ?? throw new ArgumentNullException(nameof(notificationReceiver));
         }
 
         [Function("IntegrationEventReceiver")]
@@ -50,9 +51,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             var message = _protobufMessageFactory.CreateMessageFrom(data, eventTypeName);
             var mapper = _protobufInboundMapperFactory.GetMapper(message.GetType());
-            var integrationEvent = mapper.Convert(message);
+            var notification = mapper.Convert(message);
 
-            return _mediator.Publish(integrationEvent);
+            return _notificationReceiver.PublishAndCommitAsync(notification);
         }
 
         private static string GetEventTypeName(FunctionContext context)

@@ -15,6 +15,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
@@ -48,11 +49,28 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
 
             await _mediator.Send(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+
+            await MarkAsEnergySupplierAssigned().ConfigureAwait(false);
+
             await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
             var meteringPointConnectedOutboxMessage = _outbox.GetNext(OutboxMessageCategory.ActorMessage, typeof(ConnectMeteringPointAccepted).FullName!);
             meteringPointConnectedOutboxMessage.Should().NotBeNull();
             meteringPointConnectedOutboxMessage?.Type.Should().Be(typeof(ConnectMeteringPointAccepted).FullName);
+        }
+
+        [Fact]
+        public async Task Reject_When_No_Energy_Supplier_Is_Assigned()
+        {
+            var createMeteringPointRequest = CreateMeteringPointRequest();
+            var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
+
+            await _mediator.Send(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+
+            var meteringPointConnectedOutboxMessage = _outbox.GetNext(OutboxMessageCategory.ActorMessage, typeof(ConnectMeteringPointRejected).FullName!);
+            meteringPointConnectedOutboxMessage.Should().NotBeNull();
+            meteringPointConnectedOutboxMessage?.Type.Should().Be(typeof(ConnectMeteringPointRejected).FullName);
         }
 
         [Fact]
@@ -164,6 +182,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
         private ConnectMeteringPoint CreateConnectMeteringPointRequest()
         {
             return new(SampleData.GsrnNumber, _dateTimeProvider.Now().ToString(), string.Empty);
+        }
+
+        private async Task MarkAsEnergySupplierAssigned()
+        {
+            var setEnergySupplierAssigned = new SetEnergySupplierInfo(SampleData.GsrnNumber);
+            await _mediator.Send(setEnergySupplierAssigned).ConfigureAwait(false);
         }
     }
 }

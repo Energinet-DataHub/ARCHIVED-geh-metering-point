@@ -28,6 +28,16 @@ CREATE TABLE [dbo].[MeteringPoints]
 CREATE UNIQUE CLUSTERED INDEX CIX_MeteringPoints ON MeteringPoints([RecordId])
 CREATE UNIQUE INDEX CIX_MeteringPoints_GsrnNumber ON MeteringPoints([GsrnNumber])
 
+CREATE TABLE [dbo].[MarketMeteringPoints]
+(
+    [Id] UNIQUEIDENTIFIER NOT NULL,
+    [RecordId] INT IDENTITY(1,1) NOT NULL,
+    [HasEnergySupplier] BIT NOT NULL DEFAULT(0),
+
+    CONSTRAINT [PK_MarketMeteringPoints] PRIMARY KEY NONCLUSTERED ([Id]),
+    CONSTRAINT [FK_MarketMeteringPoints_MeteringPoints_Id] FOREIGN KEY ([Id]) REFERENCES [MeteringPoints] ([Id])
+    )
+
 CREATE TABLE [dbo].[ConsumptionMeteringPoints]
 (
     [Id] UNIQUEIDENTIFIER NOT NULL,
@@ -40,7 +50,7 @@ CREATE TABLE [dbo].[ConsumptionMeteringPoints]
     [AssetType] NVARCHAR(255) NULL,
     
     CONSTRAINT [PK_ConsumptionMeteringPoints] PRIMARY KEY NONCLUSTERED ([Id]),
-    CONSTRAINT [FK_ConsumptionMeteringPoints_MeteringPoints_Id] FOREIGN KEY ([Id]) REFERENCES [MeteringPoints] ([Id])
+    CONSTRAINT [FK_ConsumptionMeteringPoints_MarketMeteringPoints_Id] FOREIGN KEY ([Id]) REFERENCES [MarketMeteringPoints] ([Id])
 )
     
 CREATE UNIQUE CLUSTERED INDEX CIX_ConsumptionMeteringPoints ON dbo.ConsumptionMeteringPoints([RecordId])

@@ -12,18 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
     public class EnergySupplierChangedHandler : INotificationHandler<EnergySupplierChanged>
     {
+        private readonly ICommandScheduler _commandScheduler;
+
+        public EnergySupplierChangedHandler(ICommandScheduler commandScheduler)
+        {
+            _commandScheduler = commandScheduler ?? throw new ArgumentNullException(nameof(commandScheduler));
+        }
+
         public Task Handle(EnergySupplierChanged notification, CancellationToken cancellationToken)
         {
-            // TODO: Schedule internal command that updates the MeteringPoint aggregate to be connectable
-            return Task.CompletedTask;
+            if (notification == null) throw new ArgumentNullException(nameof(notification));
+            var command = new SetEnergySupplierInfo(notification.GsrnNumber);
+            return _commandScheduler.EnqueueAsync(command);
         }
     }
 }

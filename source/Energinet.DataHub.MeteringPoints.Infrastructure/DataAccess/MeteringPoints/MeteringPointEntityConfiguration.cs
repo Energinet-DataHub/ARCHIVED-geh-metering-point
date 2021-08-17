@@ -118,6 +118,22 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
         }
     }
 
+    public class MarketMeteringPointEntityConfiguration : IEntityTypeConfiguration<MarketMeteringPoint>
+    {
+        public void Configure(EntityTypeBuilder<MarketMeteringPoint> builder)
+        {
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            builder.ToTable("MarketMeteringPoints", "dbo");
+
+            builder.Property<bool>("_hasEnergySupplier")
+                .HasColumnName("HasEnergySupplier");
+        }
+    }
+
     public class ConsumptionMeteringPointEntityConfiguration : IEntityTypeConfiguration<ConsumptionMeteringPoint>
     {
         public void Configure(EntityTypeBuilder<ConsumptionMeteringPoint> builder)

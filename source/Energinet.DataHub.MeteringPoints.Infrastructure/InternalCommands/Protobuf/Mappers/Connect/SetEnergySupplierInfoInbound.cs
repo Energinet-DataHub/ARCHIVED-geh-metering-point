@@ -12,16 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
+using Energinet.DataHub.MeteringPoints.InternalCommandsContracts;
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands.Protobuf.Mappers.Connect
 {
-    public record ConnectMeteringPoint(
-        string GsrnNumber = "",
-        string EffectiveDate = "",
-        string TransactionId = "")
-        : IBusinessRequest,
-            IOutboundMessage,
-            IInboundMessage;
+    public class SetEnergySupplierInfoInbound : ProtobufInboundMapper<InternalCommandsContracts.SetEnergySupplierInfo>
+    {
+        protected override IInboundMessage Convert(SetEnergySupplierInfo obj)
+        {
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
+            return new Application.Connect.SetEnergySupplierInfo(Guid.Parse(obj.Id), obj.MeteringPointGsrn);
+        }
+    }
 }

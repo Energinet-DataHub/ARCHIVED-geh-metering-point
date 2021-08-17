@@ -30,7 +30,7 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint
 {
-    public sealed class ConnectMeteringPointResultHandler : IBusinessProcessResultHandler<Application.ConnectMeteringPoint>
+    public sealed class ConnectMeteringPointResultHandler : IBusinessProcessResultHandler<Application.Connect.ConnectMeteringPoint>
     {
         private const string XmlNamespace = "urn:ebix.org:structure:accountingpointcharacteristics:0:1";
 
@@ -60,7 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public Task HandleAsync(Application.ConnectMeteringPoint request, BusinessProcessResult result)
+        public Task HandleAsync(Application.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (result == null) throw new ArgumentNullException(nameof(result));
@@ -70,7 +70,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
                 : RejectAsync(request, result);
         }
 
-        private async Task SuccessAsync(Application.ConnectMeteringPoint request, BusinessProcessResult result)
+        private async Task SuccessAsync(Application.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
         {
             var ediMessage = new ConnectMeteringPointAccepted(
                 TransactionId: result.TransactionId,
@@ -175,7 +175,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
             AddToOutbox(postOfficeEnvelope);
         }
 
-        private Task RejectAsync(Application.ConnectMeteringPoint request, BusinessProcessResult result)
+        private Task RejectAsync(Application.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
         {
             var errors = result.ValidationErrors
                 .Select(error => _errorMessageFactory.GetErrorMessage(error))
