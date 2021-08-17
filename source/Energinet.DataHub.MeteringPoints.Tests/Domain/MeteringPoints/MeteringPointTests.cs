@@ -22,7 +22,6 @@ using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 {
-    #pragma warning disable
     [UnitTest]
     public class MeteringPointTests
     {
