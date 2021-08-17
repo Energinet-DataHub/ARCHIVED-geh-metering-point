@@ -43,7 +43,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCha
                         new XElement(xmlNamespace + "mRID", message.MarketActivityRecord.Id),
                         new XElement(xmlNamespace + "businessProcessReference_MktActivityRecord.mRID", message.MarketActivityRecord.BusinessProcessReference),
                         new XElement(xmlNamespace + "originalTransactionReference_MktActivityRecord.mRID", message.MarketActivityRecord.OriginalTransaction),
-                        new XElement(xmlNamespace + "marketEvaluationPoint.mRID", message.MarketActivityRecord.MarketEvaluationPoint),
                         new XElement(xmlNamespace + "start_DateAndOrTime.date", message.MarketActivityRecord.ValidityStartDateAndOrTime),
                         new XElement(
                             xmlNamespace + "MarketEvaluationPoint",

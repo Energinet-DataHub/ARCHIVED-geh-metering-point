@@ -22,6 +22,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common.Address;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
@@ -97,11 +98,78 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
                     CodingScheme: "9",
                     Role: "DDQ"),
                 CreatedDateTime: _dateTimeProvider.Now(),
-                MarketActivityRecord: null!);
+                MarketActivityRecord: new MarketActivityRecord(
+                    Id: "Id",
+                    BusinessProcessReference: "BusinessProcessReference",
+                    ValidityStartDateAndOrTime: "ValidityStartDateAndOrTime",
+                    SnapshotDateAndOrTime: "SnapshotDateAndOrTime",
+                    OriginalTransaction: "OriginalTransaction",
+                    MarketEvaluationPoint: new MarketEvaluationPoint(
+                        Id: new Mrid("Id", "Foo"),
+                        MeteringPointResponsibleMarketRoleParticipant: new MarketParticipant("MeteringPointResponsibleMarketRoleParticipant", "Foo"),
+                        Type: "Type",
+                        SettlementMethod: "SettlementMethod",
+                        MeteringMethod: "MeteringMethod",
+                        ConnectionState: "ConnectionState",
+                        ReadCycle: "ReadCycle",
+                        NetSettlementGroup: "NetSettlementGroup",
+                        NextReadingDate: "NextReadingDate",
+                        MeteringGridAreaDomainId: new Mrid("MeteringGridAreaDomainId", "Foo"),
+                        InMeteringGridAreaDomainId: new Mrid("InMeteringGridAreaDomainId", "Foo"),
+                        OutMeteringGridAreaDomainId: new Mrid("OutMeteringGridAreaDomainId", "Foo"),
+                        LinkedMarketEvaluationPoint: new Mrid("LinkedMarketEvaluationPoint", "Foo"),
+                        PhysicalConnectionCapacity: new UnitValue("PhysicalConnectionCapacity", "Foo"),
+                        ConnectionType: "ConnectionType",
+                        DisconnectionMethod: "DisconnectionMethod",
+                        AssetMarketPSRTypePsrType: "AssetMarketPSRTypePsrType",
+                        ProductionObligation: false,
+                        Series: new Series(
+                            Id: "Id",
+                            EstimatedAnnualVolumeQuantity: "EstimatedAnnualVolumeQuantity",
+                            QuantityMeasureUnit: "QuantityMeasureUnit"),
+                        ContractedConnectionCapacity: new UnitValue("ContractedConnectionCapacity", "Foo"),
+                        RatedCurrent: new UnitValue("RatedCurrent", "Foo"),
+                        MeterId: "MeterId",
+                        EnergySupplierMarketParticipantId: new MarketParticipant("EnergySupplierMarketParticipantId", "Foo"),
+                        SupplyStartDateAndOrTimeDateTime: DateTime.Now,
+                        Description: "Description",
+                        UsagePointLocationMainAddress: new MainAddress(
+                            StreetDetail: new StreetDetail(
+                                Number: "Number",
+                                Name: "Name",
+                                Type: "Type",
+                                Code: "Code",
+                                BuildingName: "BuildingName",
+                                SuiteNumber: "SuiteNumber",
+                                FloorIdentification: "FloorIdentification"),
+                            TownDetail: new TownDetail(
+                                Code: "Code",
+                                Section: "Section",
+                                Name: "Name",
+                                StateOrProvince: "StateOrProvince",
+                                Country: "Country"),
+                            Status: new Status(
+                                Value: "Value",
+                                DateTime: "DateTime",
+                                Remark: "Remark",
+                                Reason: "Reason"),
+                            PostalCode: "PostalCode",
+                            PoBox: "PoBox",
+                            Language: "Language"),
+                        UsagePointLocationOfficialAddressIndicator: false,
+                        UsagePointLocationGeoInfoReference: "UsagePointLocationGeoInfoReference",
+                        ParentMarketEvaluationPointId: new ParentMarketEvaluationPoint(
+                            Id: "Id",
+                            CodingScheme: "CodingScheme",
+                            Description: "Description"),
+                        ChildMarketEvaluationPoint: new ChildMarketEvaluationPoint(
+                            Id: "Id",
+                            CodingScheme: "CodingScheme"))));
+            var serialized = AccountingPointCharacteristicsXmlSerializer.Serialize(accountingPointCharacteristicsMessage, XmlNamespace);
             var postOfficeEnvelope = new PostOfficeEnvelope(
                 string.Empty,
                 string.Empty,
-                _jsonSerializer.Serialize(AccountingPointCharacteristicsXmlSerializer.Serialize(accountingPointCharacteristicsMessage, XmlNamespace)),
+                _jsonSerializer.Serialize(serialized),
                 "accountingpointcharacteristics",
                 _correlationContext.Id);
             AddToOutbox(postOfficeEnvelope);

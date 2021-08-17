@@ -17,7 +17,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using MediatR;
+using ConsumptionMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Queries.ConsumptionMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints.Queries
 {
@@ -31,12 +33,17 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             _connectionFactory = connectionFactory;
         }
 
-        public Task<ConsumptionMeteringPoint> Handle(MeteringPointByGsrnQuery request, CancellationToken cancellationToken)
+        public async Task<ConsumptionMeteringPoint> Handle(MeteringPointByGsrnQuery request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var sql = @"SELECT * FROM [dbo].[MeteringPoint] WHERE Id = @GsrnNumber";
-            return _connectionFactory.GetOpenConnection().QuerySingleOrDefaultAsync<ConsumptionMeteringPoint>(sql, new { request.GsrnNumber });
+            var sql = @"SELECT * FROM [dbo].[MeteringPoints] WHERE GsrnNumber = @GsrnNumber";
+            var result = await _connectionFactory
+                .GetOpenConnection()
+                .QuerySingleOrDefaultAsync<ConsumptionMeteringPoint>(sql, new { request.GsrnNumber })
+                .ConfigureAwait(false);
+
+            return result;
         }
     }
 }
