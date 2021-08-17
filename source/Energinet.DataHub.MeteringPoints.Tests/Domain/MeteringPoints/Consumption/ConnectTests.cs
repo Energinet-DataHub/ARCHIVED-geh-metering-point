@@ -55,9 +55,37 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Contains(checkResult.Errors, error => error is MustHaveEnergySupplierRuleError);
         }
 
+        [Fact]
+        public void Should_succeed()
+        {
+            var meteringPoint = CreateConsumptionMeteringPoint();
+            var connectionDetails = ConnectNow();
+            SetStartOfSupplyPriorToEffectiveDate(meteringPoint, connectionDetails.EffectiveDate);
+
+            meteringPoint.Connect(connectionDetails);
+
+            Assert.Contains(meteringPoint.DomainEvents, evt => evt is MeteringPointConnected);
+        }
+
+        [Fact]
+        public void Should_throw_when_business_rules_are_violated()
+        {
+            var meteringPoint = CreateConsumptionMeteringPoint();
+            var connectionDetails = ConnectNow();
+
+            Assert.Throws<MeteringPointConnectException>(() => meteringPoint.Connect(connectionDetails));
+        }
+
         private static void SetStartOfSupplyAheadOfEffectiveDate(ConsumptionMeteringPoint meteringPoint, Instant effectiveDate)
         {
             var startOfSupply = effectiveDate.Plus(Duration.FromDays(1));
+            var energySupplierDetails = EnergySupplierDetails.Create(startOfSupply);
+            meteringPoint.SetEnergySupplierDetails(energySupplierDetails);
+        }
+
+        private static void SetStartOfSupplyPriorToEffectiveDate(ConsumptionMeteringPoint meteringPoint, Instant effectiveDate)
+        {
+            var startOfSupply = effectiveDate.Minus(Duration.FromDays(1));
             var energySupplierDetails = EnergySupplierDetails.Create(startOfSupply);
             meteringPoint.SetEnergySupplierDetails(energySupplierDetails);
         }
@@ -69,7 +97,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 Address.Create(SampleData.StreetName, SampleData.PostCode, SampleData.CityName, SampleData.CountryCode),
                 SampleData.IsAddressWashable,
-                EnumerationType.FromName<PhysicalState>(SampleData.PhysicalStateName),
                 EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
                 EnumerationType.FromName<MeteringPointType>(SampleData.TypeName),
                 GridAreaId.New(),

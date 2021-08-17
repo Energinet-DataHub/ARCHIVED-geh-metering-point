@@ -34,17 +34,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             Assert.NotNull(createdEvent);
         }
 
-        [Fact]
-        public void ShouldRaiseEventWhenConnected()
-        {
-            var meteringPoint = CreateConsumptionMeteringPoint();
-
-            meteringPoint.Connect(SystemClock.Instance.GetCurrentInstant());
-
-            var connectedEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MeteringPointConnected);
-            Assert.NotNull(connectedEvent);
-        }
-
         private static MeteringPoint CreateConsumptionMeteringPoint()
         {
             return new ConsumptionMeteringPoint(
@@ -52,7 +41,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 Address.Create(SampleData.StreetName, SampleData.PostCode, SampleData.CityName, SampleData.CountryCode),
                 SampleData.IsAddressWashable,
-                EnumerationType.FromName<PhysicalState>(SampleData.PhysicalStateName),
                 EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
                 EnumerationType.FromName<MeteringPointType>(SampleData.TypeName),
                 GridAreaId.New(),

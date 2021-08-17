@@ -47,7 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             throw new System.NotImplementedException();
         }
 
-        public override void Connect(Instant effectiveDate)
+        public override void Connect(ConnectionDetails connectionDetails)
         {
             throw new System.NotImplementedException();
         }

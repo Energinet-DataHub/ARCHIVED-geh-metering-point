@@ -92,6 +92,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public abstract BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails);
 
-        public abstract void Connect(Instant effectiveDate);
+        public abstract void Connect(ConnectionDetails connectionDetails);
     }
 }

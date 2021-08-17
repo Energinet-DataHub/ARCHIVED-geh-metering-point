@@ -54,7 +54,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
                 return rulesCheckResult;
             }
 
-            meteringPoint?.Connect(effectiveDate: request.EffectiveDate.ToInstant());
+            meteringPoint?.Connect(ConnectionDetails.Create(request.EffectiveDate.ToInstant()));
 
             return BusinessProcessResult.Ok(request.TransactionId);
         }

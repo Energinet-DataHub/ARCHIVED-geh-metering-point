@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.ObjectModel;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules.Connect;
@@ -36,7 +37,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GsrnNumber gsrnNumber,
             Address address,
             bool isAddressWashable,
-            PhysicalState physicalState,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
             GridAreaId gridAreaId,
@@ -59,7 +59,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 id,
                 gsrnNumber,
                 address,
-                physicalState,
+                PhysicalState.New,
                 meteringPointSubType,
                 meteringPointType,
                 gridAreaId,
@@ -97,11 +97,16 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             return new BusinessRulesValidationResult(rules);
         }
 
-        public override void Connect(Instant effectiveDate)
+        public override void Connect(ConnectionDetails connectionDetails)
         {
+            if (connectionDetails == null) throw new ArgumentNullException(nameof(connectionDetails));
+            if (!ConnectAcceptable(connectionDetails).Success)
+            {
+                throw MeteringPointConnectException.Create(Id, GsrnNumber);
+            }
+
             _physicalState = PhysicalState.Connected;
-            // TODO - for now we ignore scheduling - must be handled later
-            AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, effectiveDate));
+            AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
     }
 }
