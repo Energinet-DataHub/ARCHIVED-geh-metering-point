@@ -49,7 +49,7 @@ jobs:
           terraform_wrapper: false
       
       - name: Terraform CD
-        uses: ./.github/actions/terraform-cd
+        uses: Energinet-DataHub/.github/.github/actions/terraform@main
         with:
           SECRETS_SHARED_RESOURCES_KEYVAULT_NAME: ${{ secrets.SHARED_RESOURCES_KEYVAULT_NAME }}
           SECRETS_SHARED_RESOURCES_RESOURCE_GROUP_NAME: ${{ secrets.SHARED_RESOURCES_RESOURCE_GROUP_NAME }}
