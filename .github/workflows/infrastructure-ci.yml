@@ -28,7 +28,9 @@ env:
   ORGANISATION_NAME: endk
   PROJECT_NAME: 'mpoint${{ github.event.number }}'
   RESOURCE_GROUP_NAME: rg-DataHub-Testing-U
+  ENVIRONMENT_NAME: Development
   ENVIRONMENT_SHORT: u
+  ENVIRONMENT_LONG: rg-DataHub-Testing-U
 
 jobs:
   infra_deploy:
@@ -52,17 +54,17 @@ jobs:
           SECRETS_SHARED_RESOURCES_RESOURCE_GROUP_NAME: ${{ secrets.SHARED_RESOURCES_RESOURCE_GROUP_NAME }}
           SECRETS_SHARED_RESOURCES_SQL_SERVER_NAME: ${{ secrets.SHARED_RESOURCES_SQL_SERVER_NAME }}
           SECRETS_PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
-          PROJECT_NAME: ${{ env.PROJECT_NAME }}
-          ORGANISATION_NAME: ${{ env.ORGANISATION_NAME }}
-          ENVIRONMENT_SHORT: u
-          ENVIRONMENT_LONG: rg-DataHub-Testing-U
-          ENVIRONMENT_NAME: Development
-          TERRAFORM_BACKEND_FILE_PATH: "./build/infrastructure/backend.tf"
           SECRETS_TENANT_ID: ${{ secrets.TENANT_ID }}
-          SECRETS_SPN_ID: ${{ secrets.SPN_ID }}
-          SECRETS_SPN_OBJECT_ID: ${{ secrets.SPN_OBJECT_ID }}
-          SECRETS_SPN_SECRET: ${{ secrets.SPN_SECRET }}
-          SECRETS_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+          SECRETS_SPN_ID: ${{ secrets.SPN_ID }}
+          SECRETS_SPN_OBJECT_ID: ${{ secrets.SPN_OBJECT_ID }}
+          SECRETS_SPN_SECRET: ${{ secrets.SPN_SECRET }}
+          SECRETS_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+          PROJECT_NAME: ${{ env.PROJECT_NAME }}
+          ORGANISATION_NAME: ${{ env.ORGANISATION_NAME }}
+          ENVIRONMENT_SHORT: ${{ env.ENVIRONMENT_SHORT }}
+          ENVIRONMENT_LONG: ${{ env.ENVIRONMENT_LONG }}
+          ENVIRONMENT_NAME: ${{ env.ENVIRONMENT_NAME }}
+          TERRAFORM_BACKEND_FILE_PATH: "./build/infrastructure/main/backend.tf"
 
       - name: comment PR
         uses: unsplash/comment-on-pr@master
