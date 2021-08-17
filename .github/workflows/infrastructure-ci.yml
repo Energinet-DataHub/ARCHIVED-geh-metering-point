@@ -58,7 +58,7 @@ jobs:
           ENVIRONMENT_SHORT: u
           ENVIRONMENT_LONG: rg-DataHub-Testing-U
           ENVIRONMENT_NAME: Development
-          TERRAFORM_BACKEND_FILE_PATH: "./build/infrastructure/backend.tf"
+          TERRAFORM_BACKEND_FILE_PATH: "./build/infrastructure/main/backend.tf"
           SECRETS_TENANT_ID: ${{ secrets.TENANT_ID }}
           SECRETS_SPN_ID: ${{ secrets.SPN_ID }}
           SECRETS_SPN_OBJECT_ID: ${{ secrets.SPN_OBJECT_ID }}
