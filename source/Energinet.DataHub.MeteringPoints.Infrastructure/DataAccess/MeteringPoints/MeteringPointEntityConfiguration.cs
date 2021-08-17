@@ -129,8 +129,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.ToTable("MarketMeteringPoints", "dbo");
 
-            builder.Property<bool>("_hasEnergySupplier")
-                .HasColumnName("HasEnergySupplier");
+            builder.OwnsOne<EnergySupplierDetails>("EnergySupplierDetails", config =>
+            {
+                config.Property(x => x.StartOfSupply)
+                    .HasColumnName("StartOfSupplyDate");
+            });
         }
     }
 
