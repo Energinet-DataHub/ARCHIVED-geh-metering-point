@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 
-            return new Application.CreateMeteringPoint(
+            return new Application.Create.CreateMeteringPoint(
                 StreetName: obj.InstallationLocationAddress.StreetName,
                 BuildingNumber: obj.InstallationLocationAddress.BuildingNumber,
                 PostCode: obj.InstallationLocationAddress.PostCode,

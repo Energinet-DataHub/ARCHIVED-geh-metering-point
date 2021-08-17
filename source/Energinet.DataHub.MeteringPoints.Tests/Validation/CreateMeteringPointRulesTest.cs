@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.Create;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Validation

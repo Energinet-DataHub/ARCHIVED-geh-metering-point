@@ -59,7 +59,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 
         private static IEnumerable<Type> GetBusinessRequests()
         {
-            return typeof(Application.CreateMeteringPoint).Assembly.GetTypes()
+            return typeof(Application.Create.CreateMeteringPoint).Assembly.GetTypes()
                 .Where(p => typeof(IBusinessRequest).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
                 .ToList();
         }

@@ -54,6 +54,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using SimpleInjector;
 using ConnectMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Connect.ConnectMeteringPoint;
+using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Create.CreateMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 {
@@ -111,9 +112,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<UserIdentityFactory>(Lifestyle.Singleton);
             container.Register<IDomainEventPublisher, DomainEventPublisher>();
             container.Register<IUnitOfWork, UnitOfWork>();
-            container.Register<IValidator<Application.CreateMeteringPoint>, CreateMeteringPointRuleSet>(Lifestyle.Scoped);
+            container.Register<IValidator<CreateMeteringPoint>, CreateMeteringPointRuleSet>(Lifestyle.Scoped);
             container.Register<IValidator<ConnectMeteringPoint>, ConnectMeteringPointRuleSet>(Lifestyle.Scoped);
-            container.Register(typeof(IBusinessProcessResultHandler<Application.CreateMeteringPoint>), typeof(CreateMeteringPointResultHandler), Lifestyle.Scoped);
+            container.Register(typeof(IBusinessProcessResultHandler<CreateMeteringPoint>), typeof(CreateMeteringPointResultHandler), Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<ConnectMeteringPoint>), typeof(ConnectMeteringPointResultHandler), Lifestyle.Scoped);
             container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
             container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Scoped);
@@ -129,7 +130,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             container.AddValidationErrorConversion(
                 validateRegistrations: true,
-                typeof(Application.CreateMeteringPoint).Assembly, // Application
+                typeof(CreateMeteringPoint).Assembly, // Application
                 typeof(MeteringPoint).Assembly, // Domain
                 typeof(ErrorMessageFactory).Assembly); // Infrastructure
 
@@ -137,7 +138,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.BuildMediator(
                 new[]
                 {
-                    typeof(Application.CreateMeteringPoint).Assembly,
+                    typeof(CreateMeteringPoint).Assembly,
                     typeof(MeteringPointCreatedNotificationHandler).Assembly,
                 },
                 new[]

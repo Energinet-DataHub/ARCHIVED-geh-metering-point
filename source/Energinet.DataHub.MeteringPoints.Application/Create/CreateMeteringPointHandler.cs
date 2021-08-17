@@ -21,7 +21,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Application.Create
 {
     public class CreateMeteringPointHandler : IBusinessRequestHandler<CreateMeteringPoint>
     {

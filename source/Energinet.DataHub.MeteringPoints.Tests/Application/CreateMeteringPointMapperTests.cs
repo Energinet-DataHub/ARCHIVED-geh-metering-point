@@ -14,6 +14,7 @@
 
 using AutoFixture;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.Create;
 using FluentAssertions;
 using Xunit;
 using Xunit.Categories;
