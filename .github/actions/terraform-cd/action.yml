@@ -109,12 +109,12 @@ runs:
 
     - name: Terraform Init
       shell: bash
-      working-directory: ./build/infrastructure
+      working-directory: ./build/infrastructure/main
       run: terraform init
 
     - name: Terraform Plan
       shell: bash
-      working-directory: ./build/infrastructure
+      working-directory: ./build/infrastructure/main
       run: terraform plan
 
     - name: Terraform Apply
