@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
@@ -39,6 +41,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
+using FluentAssertions;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,8 +49,9 @@ using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Xunit;
 using Xunit.Categories;
+using Xunit.Sdk;
 using ConnectMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Connect.ConnectMeteringPoint;
-using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Application.CreateMeteringPoint;
+using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Create.CreateMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
@@ -115,11 +119,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 new[]
                 {
                     typeof(UnitOfWorkBehavior<,>),
-                    typeof(InputValidationBehavior<,>),
                     // typeof(AuthorizationBehavior<,>),
-                    typeof(BusinessProcessResultBehavior<,>),
+                    typeof(InputValidationBehavior<,>),
                     typeof(DomainEventsDispatcherBehaviour<,>),
-                    // typeof(ValidationReportsBehavior<,>),
+                    typeof(InternalCommandHandlingBehaviour<,>),
+                    typeof(BusinessProcessResultBehavior<,>),
                 });
 
             _container.Verify();
@@ -167,6 +171,33 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             var outboxMessage = await context.OutboxMessages.FirstAsync(m => m.Type.Equals(typeof(TMessage).FullName, StringComparison.OrdinalIgnoreCase)).ConfigureAwait(false);
             var message = GetService<IJsonSerializer>().Deserialize<TMessage>(outboxMessage.Data);
             return message;
+        }
+
+        protected IEnumerable<TMessage> GetOutboxMessages<TMessage>()
+        {
+            var jsonSerializer = GetService<IJsonSerializer>();
+            var context = GetService<MeteringPointContext>();
+            return context.OutboxMessages
+                .Where(message => message.Type == typeof(TMessage).FullName)
+                .Select(message => jsonSerializer.Deserialize<TMessage>(message.Data));
+        }
+
+        protected void AssertOutboxMessage<TMessage>(Func<TMessage, bool> funcAssert)
+        {
+            if (funcAssert == null) throw new ArgumentNullException(nameof(funcAssert));
+
+            var message = GetOutboxMessages<TMessage>().SingleOrDefault(funcAssert.Invoke);
+
+            message.Should().NotBeNull();
+            message.Should().BeOfType<TMessage>();
+        }
+
+        protected void AssertOutboxMessage<TMessage>()
+        {
+            var message = GetOutboxMessages<TMessage>().SingleOrDefault();
+
+            message.Should().NotBeNull();
+            message.Should().BeOfType<TMessage>();
         }
 
         private void CleanupDatabase()

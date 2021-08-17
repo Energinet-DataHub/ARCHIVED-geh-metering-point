@@ -20,7 +20,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
     {
         public CreateMeteringPointXmlMappingConfiguration()
         {
-            CreateMapping<Application.CreateMeteringPoint>("MktActivityRecord", mapper => mapper
+            CreateMapping<Application.Create.CreateMeteringPoint>("MktActivityRecord", mapper => mapper
                 .AddProperty(x => x.GsrnNumber, "MarketEvaluationPoint", "mRID")
                 .AddProperty(x => x.AssetType, TranslateAssetType, "MarketEvaluationPoint", "asset_MktPSRType.psrType")
                 .AddProperty(x => x.MaximumPower, "MarketEvaluationPoint", "contractedConnectionCapacity")

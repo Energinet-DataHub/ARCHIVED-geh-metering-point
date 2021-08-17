@@ -15,12 +15,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
-using FluentAssertions;
 using MediatR;
 using Xunit;
 using Xunit.Categories;
@@ -33,13 +32,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
     {
         private readonly IMediator _mediator;
         private readonly IMeteringPointRepository _meteringPointRepository;
-        private readonly IOutboxManager _outbox;
 
         public CreateTests()
         {
             _mediator = GetService<IMediator>();
             _meteringPointRepository = GetService<IMeteringPointRepository>();
-            _outbox = GetService<IOutboxManager>();
         }
 
         [Fact]
@@ -61,9 +58,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await _mediator.Send(request, CancellationToken.None).ConfigureAwait(false);
 
-            var outboxMessage = _outbox.GetNext(OutboxMessageCategory.ActorMessage);
-            outboxMessage.Should().NotBeNull();
-            outboxMessage?.Type.Should().Be(typeof(CreateMeteringPointAccepted).FullName);
+            AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == nameof(CreateMeteringPointAccepted));
         }
 
         [Fact]
@@ -73,10 +68,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await _mediator.Send(request, CancellationToken.None).ConfigureAwait(false);
 
-            var outboxMessage = _outbox.GetNext(OutboxMessageCategory.IntegrationEvent);
-            outboxMessage.Should().NotBeNull();
-            outboxMessage?.Type.Should()
-                .Be(typeof(MeteringPointCreatedEventMessage).FullName);
+            AssertOutboxMessage<MeteringPointCreatedEventMessage>();
         }
 
         [Fact]
@@ -90,9 +82,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await _mediator.Send(request, CancellationToken.None).ConfigureAwait(false);
 
-            var outboxMessage = _outbox.GetNext(OutboxMessageCategory.ActorMessage);
-            outboxMessage.Should().NotBeNull();
-            outboxMessage?.Type.Should().Be(typeof(CreateMeteringPointRejected).FullName);
+            AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == nameof(CreateMeteringPointRejected));
         }
 
         [Fact(Skip = "Not implemented yet")]
