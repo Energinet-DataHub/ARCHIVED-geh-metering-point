@@ -22,6 +22,7 @@ on:
       - build/modules/**
       - .github/workflows/infrastructure-ci-destroy.yml
     types: [closed]
+  workflow_dispatch: {}
 env:
   ORGANISATION_NAME: endk
   PROJECT_NAME: 'mpoint${{ github.event.number }}'
