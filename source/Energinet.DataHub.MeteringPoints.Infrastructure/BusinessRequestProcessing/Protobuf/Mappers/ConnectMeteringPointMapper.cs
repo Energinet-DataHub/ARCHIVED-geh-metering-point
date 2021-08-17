@@ -17,7 +17,7 @@ using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Protobuf.Mappers
 {
     public class ConnectMeteringPointMapper : ProtobufInboundMapper<ConnectMeteringPoint>
     {

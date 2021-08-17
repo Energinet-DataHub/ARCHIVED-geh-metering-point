@@ -12,18 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application;
-using Energinet.DataHub.MeteringPoints.Application.Create;
-using FluentValidation;
-
-namespace Energinet.DataHub.MeteringPoints.Tests.Validation
+namespace Energinet.DataHub.MeteringPoints.Application.Create
 {
-    public abstract class CreateMeteringPointRulesTest<TRuleSet> : RuleSetTest<CreateMeteringPoint, TRuleSet>
-        where TRuleSet : AbstractValidator<CreateMeteringPoint>, new()
-    {
-        protected CreateMeteringPoint CreateRequest()
-        {
-            return new();
-        }
-    }
+    // TODO: Add all the remaining address fields!
+    public record Address(
+        string StreetName = "",
+        string PostCode = "",
+        string CityName = "",
+        string CountryCode = "",
+        bool IsWashable = false);
 }

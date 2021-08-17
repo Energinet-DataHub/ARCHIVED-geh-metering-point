@@ -23,6 +23,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Xunit;
+using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Create.CreateMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
@@ -46,7 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             await using (AsyncScopedLifestyle.BeginScope(sendingContainer))
             {
                 var messageDispatcher = sendingContainer.GetRequiredService<Dispatcher>();
-                var outboundMessage = new Application.CreateMeteringPoint
+                var outboundMessage = new CreateMeteringPoint
                 {
                     GsrnNumber = expectedGsrnNumber,
                 };
@@ -70,7 +71,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             await using var scope = AsyncScopedLifestyle.BeginScope(receivingContainer);
             var messageExtractor = receivingContainer.GetRequiredService<MessageExtractor>();
             var message = await messageExtractor.ExtractAsync(bytes).ConfigureAwait(false);
-            message.Should().BeOfType<Application.CreateMeteringPoint>();
+            message.Should().BeOfType<CreateMeteringPoint>();
         }
     }
 }

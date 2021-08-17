@@ -50,7 +50,7 @@ using Xunit;
 using Xunit.Categories;
 using Xunit.Sdk;
 using ConnectMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Connect.ConnectMeteringPoint;
-using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Application.CreateMeteringPoint;
+using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Create.CreateMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
@@ -116,11 +116,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 new[]
                 {
                     typeof(UnitOfWorkBehavior<,>),
-                    typeof(InputValidationBehavior<,>),
                     // typeof(AuthorizationBehavior<,>),
-                    typeof(BusinessProcessResultBehavior<,>),
+                    typeof(InputValidationBehavior<,>),
                     typeof(DomainEventsDispatcherBehaviour<,>),
-                    // typeof(ValidationReportsBehavior<,>),
+                    typeof(InternalCommandHandlingBehaviour<,>),
+                    typeof(BusinessProcessResultBehavior<,>),
                 });
 
             _container.Verify();
