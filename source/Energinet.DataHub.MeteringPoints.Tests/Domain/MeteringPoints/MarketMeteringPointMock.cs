@@ -12,19 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 {
-    public abstract class MarketMeteringPoint : MeteringPoint
+    public class MarketMeteringPointMock : MarketMeteringPoint
     {
-        protected MarketMeteringPoint()
-        {
-        }
-
-        protected MarketMeteringPoint(
+        public MarketMeteringPointMock(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
@@ -41,34 +38,18 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             int maximumPower,
             Instant? occurenceDate,
             string? parentRelatedMeteringPoint)
-            : base(
-                id,
-                gsrnNumber,
-                address,
-                physicalState,
-                meteringPointSubType,
-                meteringPointType,
-                gridAreaId,
-                powerPlantGsrnNumber,
-                locationDescription,
-                unitType,
-                meterNumber,
-                meterReadingOccurrence,
-                maximumCurrent,
-                maximumPower,
-                occurenceDate,
-                parentRelatedMeteringPoint)
+            : base(id, gsrnNumber, address, physicalState, meteringPointSubType, meteringPointType, gridAreaId, powerPlantGsrnNumber, locationDescription, unitType, meterNumber, meterReadingOccurrence, maximumCurrent, maximumPower, occurenceDate, parentRelatedMeteringPoint)
         {
         }
 
-        protected EnergySupplierDetails? EnergySupplierDetails { get; private set; }
-
-        public void SetEnergySupplierDetails(EnergySupplierDetails energySupplierDetails)
+        public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
         {
-            if (energySupplierDetails == null) throw new ArgumentNullException(nameof(energySupplierDetails));
-            if (EnergySupplierDetails! == energySupplierDetails) return;
-            EnergySupplierDetails = energySupplierDetails;
-            AddDomainEvent(new EnergySupplierDetailsChanged(Id.Value, EnergySupplierDetails.StartOfSupply));
+            throw new System.NotImplementedException();
+        }
+
+        public override void Connect(Instant effectiveDate)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
