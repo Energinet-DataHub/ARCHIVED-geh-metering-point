@@ -62,7 +62,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
                 TransactionId: result.TransactionId,
                 GsrnNumber: request.GsrnNumber,
                 Status: "Accepted");
-            var envelope = new PostOfficeEnvelope(string.Empty, string.Empty, _jsonSerializer.Serialize(ediMessage), "Accepted", _correlationContext.AsTraceContext());
+            var envelope = new PostOfficeEnvelope(string.Empty, string.Empty, _jsonSerializer.Serialize(ediMessage), nameof(CreateMeteringPointAccepted), _correlationContext.AsTraceContext());
             AddToOutbox(envelope);
 
             return Task.CompletedTask;
@@ -80,7 +80,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
                 Status: "Rejected", // TODO: Is this necessary? Also, Reason?
                 Reason: "TODO",
                 Errors: errors);
-            var envelope = new PostOfficeEnvelope(string.Empty, string.Empty, _jsonSerializer.Serialize(ediMessage), "Rejected", _correlationContext.AsTraceContext());
+            var envelope = new PostOfficeEnvelope(string.Empty, string.Empty, _jsonSerializer.Serialize(ediMessage), nameof(CreateMeteringPointRejected), _correlationContext.AsTraceContext());
 
             AddToOutbox(envelope);
 
