@@ -51,22 +51,18 @@ jobs:
       - name: Terraform CD
         uses: Energinet-DataHub/.github/.github/actions/terraform@main
         with:
-          SECRETS_SHARED_RESOURCES_KEYVAULT_NAME: ${{ secrets.SHARED_RESOURCES_KEYVAULT_NAME }}
-          SECRETS_SHARED_RESOURCES_RESOURCE_GROUP_NAME: ${{ secrets.SHARED_RESOURCES_RESOURCE_GROUP_NAME }}
-          SECRETS_SHARED_RESOURCES_SQL_SERVER_NAME: ${{ secrets.SHARED_RESOURCES_SQL_SERVER_NAME }}
-          SECRETS_PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
-          PROJECT_NAME: ${{ env.PROJECT_NAME }}
-          ORGANISATION_NAME: ${{ env.ORGANISATION_NAME }}
+          PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
+          ORGANISATION_NAME: ${{ secrets.ORGANISATION_NAME }}
           ENVIRONMENT_SHORT: u
-          ENVIRONMENT_LONG: rg-DataHub-Testing-U
-          ENVIRONMENT_NAME: Development
+          ENVIRONMENT_NAME: development
           TERRAFORM_BACKEND_FILE_PATH: ${{ env.TERRAFORM_BACKEND_FILE_PATH }}
           TERRAFORM_WORKING_DIR_PATH: ${{ env.TERRAFORM_WORKING_DIR_PATH }}
-          SECRETS_TENANT_ID: ${{ secrets.TENANT_ID }}
-          SECRETS_SPN_ID: ${{ secrets.SPN_ID }}
-          SECRETS_SPN_OBJECT_ID: ${{ secrets.SPN_OBJECT_ID }}
-          SECRETS_SPN_SECRET: ${{ secrets.SPN_SECRET }}
-          SECRETS_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID }}
+          AZURE_SPN_OBJECT_ID: ${{ secrets.AZURE_SPN_OBJECT_ID }}
+          AZURE_SPN_SECRET: ${{ secrets.AZURE_SPN_SECRET }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          AZURE_RG_NAME: rg-DataHub-Testing-U
 
       - name: comment PR
         uses: unsplash/comment-on-pr@master
