@@ -30,6 +30,8 @@ env:
   PROJECT_NAME: 'mpoint${{ github.event.number }}'
   RESOURCE_GROUP_NAME: rg-DataHub-Testing-U
   ENVIRONMENT_SHORT: u
+  TERRAFORM_BACKEND_FILE_PATH: './build/infrastructure/main/backend.tf'
+  TERRAFORM_WORKING_DIR_PATH: './build/infrastructure/main'
 
 jobs:
   infra_deploy:
@@ -58,7 +60,8 @@ jobs:
           ENVIRONMENT_SHORT: u
           ENVIRONMENT_LONG: rg-DataHub-Testing-U
           ENVIRONMENT_NAME: Development
-          TERRAFORM_BACKEND_FILE_PATH: "./build/infrastructure/main/backend.tf"
+          TERRAFORM_BACKEND_FILE_PATH: ${{ env.TERRAFORM_BACKEND_FILE_PATH }}
+          TERRAFORM_WORKING_DIR_PATH: ${{ env.TERRAFORM_WORKING_DIR_PATH }}
           SECRETS_TENANT_ID: ${{ secrets.TENANT_ID }}
           SECRETS_SPN_ID: ${{ secrets.SPN_ID }}
           SECRETS_SPN_OBJECT_ID: ${{ secrets.SPN_OBJECT_ID }}
