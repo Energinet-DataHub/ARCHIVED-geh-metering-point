@@ -90,7 +90,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public GsrnNumber GsrnNumber { get; }
 
-        public abstract BusinessRulesValidationResult ConnectAcceptable();
+        public abstract BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails);
 
         public abstract void Connect(Instant effectiveDate);
     }

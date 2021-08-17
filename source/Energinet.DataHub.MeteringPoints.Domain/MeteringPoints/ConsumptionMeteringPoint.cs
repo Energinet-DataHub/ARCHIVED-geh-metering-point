@@ -86,12 +86,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private ConsumptionMeteringPoint() { }
 #pragma warning restore 8618
 
-        public override BusinessRulesValidationResult ConnectAcceptable()
+        public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
         {
             var rules = new Collection<IBusinessRule>
             {
                 new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, _meteringPointType, _physicalState),
-                new MustHaveEnergySupplierRule(GsrnNumber, HasEnergySupplier),
+                new MustHaveEnergySupplierRule(GsrnNumber, connectionDetails, EnergySupplierDetails),
             };
 
             return new BusinessRulesValidationResult(rules);

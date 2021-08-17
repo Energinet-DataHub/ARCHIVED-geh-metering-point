@@ -80,7 +80,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private ProductionMeteringPoint() { }
 #pragma warning restore 8618
 
-        public override BusinessRulesValidationResult ConnectAcceptable()
+        public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
         {
             throw new System.NotImplementedException();
         }

@@ -19,15 +19,24 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rul
     public class MustHaveEnergySupplierRule : IBusinessRule
     {
         private readonly GsrnNumber _gsrnNumber;
+        private readonly ConnectionDetails _connectDetails;
+        private readonly EnergySupplierDetails? _energySupplierDetails;
 
-        public MustHaveEnergySupplierRule(GsrnNumber gsrnNumber, bool energySupplierIsRegistered)
+        public MustHaveEnergySupplierRule(GsrnNumber gsrnNumber, ConnectionDetails connectDetails, EnergySupplierDetails? energySupplierDetails)
         {
             _gsrnNumber = gsrnNumber;
-            IsBroken = !energySupplierIsRegistered;
+            _connectDetails = connectDetails;
+            _energySupplierDetails = energySupplierDetails;
+            IsBroken = energySupplierDetails is null || EffectiveDateIsOnOrAfterStartOfSupply() == false;
         }
 
         public bool IsBroken { get; }
 
-        public ValidationError ValidationError => new MustHaveEnergySupplierRuleError(_gsrnNumber);
+        public ValidationError ValidationError => new MustHaveEnergySupplierRuleError(_gsrnNumber, _connectDetails.EffectiveDate);
+
+        private bool EffectiveDateIsOnOrAfterStartOfSupply()
+        {
+            return _connectDetails.EffectiveDate >= _energySupplierDetails?.StartOfSupply;
+        }
     }
 }

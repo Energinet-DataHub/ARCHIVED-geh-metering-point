@@ -19,20 +19,48 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 using Xunit;
 
-namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumption
 {
     public class ConnectTests
     {
+        private readonly SystemDateTimeProviderStub _systemDateTimeProvider;
+
+        public ConnectTests()
+        {
+            _systemDateTimeProvider = new SystemDateTimeProviderStub();
+        }
+
         [Fact]
         public void Not_possible_when_no_energy_supplier_has_been_registered()
         {
             var meteringPoint = CreateConsumptionMeteringPoint();
-            var checkResult = meteringPoint.ConnectAcceptable();
+            var connectionDetails = ConnectNow();
+
+            var checkResult = meteringPoint.ConnectAcceptable(connectionDetails);
 
             Assert.Contains(checkResult.Errors, error => error is MustHaveEnergySupplierRuleError);
         }
 
-        private static MeteringPoint CreateConsumptionMeteringPoint()
+        [Fact]
+        public void Not_possible_when_effective_date_is_ahead_of_start_of_supply()
+        {
+            var meteringPoint = CreateConsumptionMeteringPoint();
+            var connectionDetails = ConnectNow();
+            SetStartOfSupplyAheadOfEffectiveDate(meteringPoint, connectionDetails.EffectiveDate);
+
+            var checkResult = meteringPoint.ConnectAcceptable(connectionDetails);
+
+            Assert.Contains(checkResult.Errors, error => error is MustHaveEnergySupplierRuleError);
+        }
+
+        private static void SetStartOfSupplyAheadOfEffectiveDate(ConsumptionMeteringPoint meteringPoint, Instant effectiveDate)
+        {
+            var startOfSupply = effectiveDate.Plus(Duration.FromDays(1));
+            var energySupplierDetails = EnergySupplierDetails.Create(startOfSupply);
+            meteringPoint.SetEnergySupplierDetails(energySupplierDetails);
+        }
+
+        private static ConsumptionMeteringPoint CreateConsumptionMeteringPoint()
         {
             return new ConsumptionMeteringPoint(
                 MeteringPointId.New(),
@@ -58,6 +86,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 AssetType.Boiler,
                 parentRelatedMeteringPoint: null,
                 ProductType.PowerActive);
+        }
+
+        private ConnectionDetails ConnectNow()
+        {
+            var effectiveDate = _systemDateTimeProvider.Now();
+            return ConnectionDetails.Create(effectiveDate);
         }
     }
 }

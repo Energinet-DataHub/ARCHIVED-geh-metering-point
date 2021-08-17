@@ -15,18 +15,20 @@
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules.Connect
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public class MustHaveEnergySupplierRuleError : ValidationError
+    public class ConnectionDetails : ValueObject
     {
-        public MustHaveEnergySupplierRuleError(GsrnNumber meteringPointGSRN, Instant effectiveDate)
+        private ConnectionDetails(Instant effectiveDate)
         {
-            MeteringPointGsrn = meteringPointGSRN;
             EffectiveDate = effectiveDate;
         }
 
-        public GsrnNumber MeteringPointGsrn { get; }
+        public Instant EffectiveDate { get; }
 
-        public Instant EffectiveDate { get;  }
+        public static ConnectionDetails Create(Instant effectiveDate)
+        {
+            return new ConnectionDetails(effectiveDate);
+        }
     }
 }
