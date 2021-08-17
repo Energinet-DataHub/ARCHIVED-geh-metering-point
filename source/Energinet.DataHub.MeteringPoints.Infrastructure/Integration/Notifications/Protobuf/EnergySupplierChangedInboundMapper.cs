@@ -15,6 +15,7 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
+using Energinet.DataHub.MeteringPoints.Application.Extensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notifications.Protobuf
@@ -28,6 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notificati
             return new EnergySupplierChanged()
             {
                 GsrnNumber = obj.GsrnNumber,
+                StartOfSupply = obj.EffectiveDate.ToInstant(),
             };
         }
     }

@@ -14,6 +14,7 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
+using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
@@ -25,11 +26,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
             MeteringPointGsrn = meteringPointGSRN;
         }
 
-        public SetEnergySupplierInfo(string meteringPointGSRN)
+        public SetEnergySupplierInfo(string meteringPointGSRN, Instant startOfSupply)
         {
             MeteringPointGsrn = meteringPointGSRN;
+            StartOfSupply = startOfSupply;
         }
 
         public string MeteringPointGsrn { get; }
+
+        public Instant StartOfSupply { get; }
     }
 }
