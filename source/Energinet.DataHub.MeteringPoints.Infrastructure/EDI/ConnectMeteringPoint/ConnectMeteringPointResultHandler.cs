@@ -77,7 +77,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
                 GsrnNumber: request.GsrnNumber,
                 Status: "Accepted");
 
-            var envelope = new PostOfficeEnvelope(string.Empty, string.Empty, _jsonSerializer.Serialize(ediMessage), "Accepted", _correlationContext.AsTraceContext());
+            var envelope = new PostOfficeEnvelope(string.Empty, string.Empty, _jsonSerializer.Serialize(ediMessage), typeof(ConnectMeteringPointAccepted).FullName!, _correlationContext.AsTraceContext());
             AddToOutbox(envelope);
 
             // TODO: check type, only send for consumption
@@ -188,7 +188,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
                 Reason: "TODO",
                 Errors: errors);
 
-            var envelope = new PostOfficeEnvelope(string.Empty, string.Empty, _jsonSerializer.Serialize(ediMessage), "Rejected", _correlationContext.AsTraceContext());
+            var envelope = new PostOfficeEnvelope(string.Empty, string.Empty, _jsonSerializer.Serialize(ediMessage), typeof(ConnectMeteringPointRejected).FullName!, _correlationContext.AsTraceContext());
             AddToOutbox(envelope);
 
             return Task.CompletedTask;

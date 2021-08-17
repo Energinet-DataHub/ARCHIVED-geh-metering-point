@@ -34,7 +34,6 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
@@ -49,7 +48,6 @@ using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Xunit;
 using Xunit.Categories;
-using Xunit.Sdk;
 using ConnectMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Connect.ConnectMeteringPoint;
 using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Create.CreateMeteringPoint;
 
@@ -163,14 +161,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             where TService : class
         {
             return _container.GetInstance<TService>();
-        }
-
-        protected async Task<TMessage> GetLastMessageFromOutboxAsync<TMessage>()
-        {
-            var context = GetService<MeteringPointContext>();
-            var outboxMessage = await context.OutboxMessages.FirstAsync(m => m.Type.Equals(typeof(TMessage).FullName, StringComparison.OrdinalIgnoreCase)).ConfigureAwait(false);
-            var message = GetService<IJsonSerializer>().Deserialize<TMessage>(outboxMessage.Data);
-            return message;
         }
 
         protected IEnumerable<TMessage> GetOutboxMessages<TMessage>()
