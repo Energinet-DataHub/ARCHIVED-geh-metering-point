@@ -19,12 +19,11 @@ using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using MediatR;
 using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Application.Create
 {
-    public class CreateMeteringPointHandler : IRequestHandler<CreateMeteringPoint, BusinessProcessResult>
+    public class CreateMeteringPointHandler : IBusinessRequestHandler<CreateMeteringPoint>
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
 
