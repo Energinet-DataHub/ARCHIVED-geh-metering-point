@@ -143,11 +143,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 new[]
                 {
                     typeof(UnitOfWorkBehavior<,>),
-                    typeof(InputValidationBehavior<,>),
                     typeof(AuthorizationBehavior<,>),
-                    typeof(BusinessProcessResultBehavior<,>),
-                    // TODO: NotImplementedException -> typeof(ValidationReportsBehavior<,>),
+                    typeof(InputValidationBehavior<,>),
                     typeof(DomainEventsDispatcherBehaviour<,>),
+                    typeof(InternalCommandHandlingBehaviour<,>),
+                    typeof(BusinessProcessResultBehavior<,>),
                 });
 
             container.ReceiveProtobuf<MeteringPointEnvelope>(
