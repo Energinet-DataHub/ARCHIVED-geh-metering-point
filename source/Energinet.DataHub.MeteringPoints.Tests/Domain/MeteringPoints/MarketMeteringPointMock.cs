@@ -25,7 +25,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            PhysicalState physicalState,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
             GridAreaId gridAreaId,
@@ -38,7 +37,22 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             int maximumPower,
             Instant? occurenceDate,
             string? parentRelatedMeteringPoint)
-            : base(id, gsrnNumber, address, physicalState, meteringPointSubType, meteringPointType, gridAreaId, powerPlantGsrnNumber, locationDescription, unitType, meterNumber, meterReadingOccurrence, maximumCurrent, maximumPower, occurenceDate, parentRelatedMeteringPoint)
+            : base(
+                id,
+                gsrnNumber,
+                address,
+                meteringPointSubType,
+                meteringPointType,
+                gridAreaId,
+                powerPlantGsrnNumber,
+                locationDescription,
+                unitType,
+                meterNumber,
+                meterReadingOccurrence,
+                maximumCurrent,
+                maximumPower,
+                occurenceDate,
+                parentRelatedMeteringPoint)
         {
         }
 

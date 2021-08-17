@@ -59,7 +59,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 id,
                 gsrnNumber,
                 address,
-                PhysicalState.New,
                 meteringPointSubType,
                 meteringPointType,
                 gridAreaId,
@@ -80,6 +79,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _assetType = assetType;
             _productType = productType;
             _isAddressWashable = isAddressWashable;
+            ConnectionState = ConnectionState.New();
         }
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
@@ -90,7 +90,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             var rules = new Collection<IBusinessRule>
             {
-                new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, _meteringPointType, _physicalState),
+                new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, _meteringPointType, ConnectionState.PhysicalState),
                 new MustHaveEnergySupplierRule(GsrnNumber, connectionDetails, EnergySupplierDetails),
             };
 
@@ -105,7 +105,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 throw MeteringPointConnectException.Create(Id, GsrnNumber);
             }
 
-            _physicalState = PhysicalState.Connected;
+            ConnectionState = ConnectionState.Connected(connectionDetails.EffectiveDate);
+            //_physicalState = PhysicalState.Connected;
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
     }

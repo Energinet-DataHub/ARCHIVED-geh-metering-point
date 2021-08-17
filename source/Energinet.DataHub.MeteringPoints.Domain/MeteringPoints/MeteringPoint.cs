@@ -26,8 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         #pragma warning disable SA1401, CA1051 // Field cannot be private since it is set by derivatives
         protected MeteringPointType _meteringPointType;
         protected ProductType _productType;
-        protected PhysicalState _physicalState;
-        #pragma warning restore
+#pragma warning restore
         private Address _address;
         private GridAreaId _gridAreaId;
         private MeteringPointSubType _meteringPointSubType;
@@ -51,7 +50,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GsrnNumber gsrnNumber,
             Address address,
             // bool isAddressWashable,
-            PhysicalState physicalState,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
             GridAreaId gridAreaId,
@@ -69,7 +67,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GsrnNumber = gsrnNumber;
             _address = address;
             // _isAddressWashable = isAddressWashable;
-            _physicalState = physicalState;
             _meteringPointSubType = meteringPointSubType;
             _meteringPointType = meteringPointType;
             _gridAreaId = gridAreaId;
@@ -83,12 +80,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _occurenceDate = occurenceDate;
             _parentRelatedMeteringPoint = parentRelatedMeteringPoint;
 
-            AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaId, meteringPointSubType, physicalState, meterReadingOccurrence, ProductType.Tariff, unitType));
+            AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaId, meteringPointSubType, ConnectionState.PhysicalState, meterReadingOccurrence, ProductType.Tariff, unitType));
         }
 
         public MeteringPointId Id { get; }
 
         public GsrnNumber GsrnNumber { get; }
+
+        protected ConnectionState ConnectionState { get; set; } = ConnectionState.New();
 
         public abstract BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails);
 
