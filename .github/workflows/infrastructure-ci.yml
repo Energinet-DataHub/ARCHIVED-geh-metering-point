@@ -17,7 +17,6 @@ on:
   pull_request:
     branches:
       - main
-      - dph/Fix-Infrastructure-CI
     paths:
       - build/infrastructure/**
       - build/modules/**
@@ -29,9 +28,9 @@ env:
   ORGANISATION_NAME: endk
   PROJECT_NAME: 'mpoint${{ github.event.number }}'
   RESOURCE_GROUP_NAME: rg-DataHub-Testing-U
+  ENVIRONMENT_NAME: Development
   ENVIRONMENT_SHORT: u
-  TERRAFORM_BACKEND_FILE_PATH: './build/infrastructure/main/backend.tf'
-  TERRAFORM_WORKING_DIR_PATH: './build/infrastructure/main'
+  ENVIRONMENT_LONG: rg-DataHub-Testing-U
 
 jobs:
   infra_deploy:
@@ -49,20 +48,23 @@ jobs:
           terraform_wrapper: false
       
       - name: Terraform CD
-        uses: Energinet-DataHub/.github/.github/actions/terraform@main
+        uses: ./.github/actions/terraform-cd
         with:
-          PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
-          ORGANISATION_NAME: ${{ secrets.ORGANISATION_NAME }}
-          ENVIRONMENT_SHORT: u
-          ENVIRONMENT_NAME: development
-          TERRAFORM_BACKEND_FILE_PATH: ${{ env.TERRAFORM_BACKEND_FILE_PATH }}
-          TERRAFORM_WORKING_DIR_PATH: ${{ env.TERRAFORM_WORKING_DIR_PATH }}
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID }}
-          AZURE_SPN_OBJECT_ID: ${{ secrets.AZURE_SPN_OBJECT_ID }}
-          AZURE_SPN_SECRET: ${{ secrets.AZURE_SPN_SECRET }}
-          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          AZURE_RG_NAME: rg-DataHub-Testing-U
+           SECRETS_SHARED_RESOURCES_KEYVAULT_NAME: ${{ secrets.SHARED_RESOURCES_KEYVAULT_NAME }}
+          SECRETS_SHARED_RESOURCES_RESOURCE_GROUP_NAME: ${{ secrets.SHARED_RESOURCES_RESOURCE_GROUP_NAME }}
+          SECRETS_SHARED_RESOURCES_SQL_SERVER_NAME: ${{ secrets.SHARED_RESOURCES_SQL_SERVER_NAME }}
+          SECRETS_PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+          SECRETS_TENANT_ID: ${{ secrets.TENANT_ID }}
+          SECRETS_SPN_ID: ${{ secrets.SPN_ID }}
+          SECRETS_SPN_OBJECT_ID: ${{ secrets.SPN_OBJECT_ID }}
+          SECRETS_SPN_SECRET: ${{ secrets.SPN_SECRET }}
+          SECRETS_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+          PROJECT_NAME: ${{ env.PROJECT_NAME }}
+          ORGANISATION_NAME: ${{ env.ORGANISATION_NAME }}
+          ENVIRONMENT_SHORT: ${{ env.ENVIRONMENT_SHORT }}
+          ENVIRONMENT_LONG: ${{ env.ENVIRONMENT_LONG }}
+          ENVIRONMENT_NAME: ${{ env.ENVIRONMENT_NAME }}
+          TERRAFORM_BACKEND_FILE_PATH: "./build/infrastructure/main/backend.tf"
 
       - name: comment PR
         uses: unsplash/comment-on-pr@master
