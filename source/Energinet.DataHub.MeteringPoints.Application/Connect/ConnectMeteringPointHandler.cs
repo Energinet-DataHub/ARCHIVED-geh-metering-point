@@ -21,11 +21,10 @@ using Energinet.DataHub.MeteringPoints.Application.Extensions;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
-    public class ConnectMeteringPointHandler : IRequestHandler<ConnectMeteringPoint, BusinessProcessResult>
+    public class ConnectMeteringPointHandler : IBusinessRequestHandler<ConnectMeteringPoint>
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
 

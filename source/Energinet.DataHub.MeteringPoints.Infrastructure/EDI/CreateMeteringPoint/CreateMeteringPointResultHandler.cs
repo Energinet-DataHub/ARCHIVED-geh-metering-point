@@ -24,7 +24,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint
 {
-    public class CreateMeteringPointResultHandler : IBusinessProcessResultHandler<Application.CreateMeteringPoint>
+    public class CreateMeteringPointResultHandler : IBusinessProcessResultHandler<Application.Create.CreateMeteringPoint>
     {
         private readonly ErrorMessageFactory _errorMessageFactory;
         private readonly IOutbox _outbox;
@@ -46,7 +46,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
             _correlationContext = correlationContext;
         }
 
-        public Task HandleAsync(Application.CreateMeteringPoint request, BusinessProcessResult result)
+        public Task HandleAsync(Application.Create.CreateMeteringPoint request, BusinessProcessResult result)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (result == null) throw new ArgumentNullException(nameof(result));
@@ -56,7 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
                 : CreateRejectResponseAsync(request, result);
         }
 
-        private Task CreateAcceptResponseAsync(Application.CreateMeteringPoint request, BusinessProcessResult result)
+        private Task CreateAcceptResponseAsync(Application.Create.CreateMeteringPoint request, BusinessProcessResult result)
         {
             var ediMessage = new CreateMeteringPointAccepted(
                 TransactionId: result.TransactionId,
@@ -68,7 +68,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
             return Task.CompletedTask;
         }
 
-        private Task CreateRejectResponseAsync(Application.CreateMeteringPoint request, BusinessProcessResult result)
+        private Task CreateRejectResponseAsync(Application.Create.CreateMeteringPoint request, BusinessProcessResult result)
         {
             var errors = result.ValidationErrors
                 .Select(error => _errorMessageFactory.GetErrorMessage(error))

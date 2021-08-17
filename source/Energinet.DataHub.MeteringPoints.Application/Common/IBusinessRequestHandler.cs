@@ -12,13 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application
+using MediatR;
+
+namespace Energinet.DataHub.MeteringPoints.Application.Common
 {
-    // TODO: Add all the remaining address fields!
-    public record Address(
-        string StreetName = "",
-        string PostCode = "",
-        string CityName = "",
-        string CountryCode = "",
-        bool IsWashable = false);
+    /// <summary>
+    /// Handler for business process requests
+    /// </summary>
+    /// <typeparam name="TBusinessRequest"><see cref="IBusinessRequest"/></typeparam>
+    public interface IBusinessRequestHandler<in TBusinessRequest> : IRequestHandler<TBusinessRequest, BusinessProcessResult>
+        where TBusinessRequest : IBusinessRequest
+    {
+    }
 }
