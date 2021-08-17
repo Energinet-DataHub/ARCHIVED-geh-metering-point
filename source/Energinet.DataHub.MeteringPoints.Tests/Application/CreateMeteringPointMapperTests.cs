@@ -15,6 +15,7 @@
 using AutoFixture;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Create;
+using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Protobuf.Mappers;
 using FluentAssertions;
 using Xunit;
 using Xunit.Categories;
@@ -29,7 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Application
         {
             var fixture = new Fixture();
             var outboundMapper = new Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers.CreateMeteringPointMapper();
-            var inboundMapper = new Energinet.DataHub.MeteringPoints.Infrastructure.Processing.Mappers.CreateMeteringPointMapper();
+            var inboundMapper = new CreateMeteringPointMapper();
             var command = fixture.Create<CreateMeteringPoint>();
 
             var contract = (Contracts.MeteringPointEnvelope)outboundMapper.Convert(command);
