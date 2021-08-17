@@ -18,9 +18,11 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules.C
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 using Xunit;
+using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumption
 {
+    [UnitTest]
     public class ConnectTests
     {
         private readonly SystemDateTimeProviderStub _systemDateTimeProvider;
