@@ -18,6 +18,7 @@ using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using MediatR;
@@ -46,12 +47,23 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
 
             await _mediator.Send(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
-
             await MarkAsEnergySupplierAssigned().ConfigureAwait(false);
-
             await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
             AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == typeof(ConnectMeteringPointAccepted).FullName);
+        }
+
+        [Fact]
+        public async Task Connect_MeteringPoint_Should_Generate_AccountingPointCharacteristicsMessage_In_Outbox()
+        {
+            var createMeteringPointRequest = CreateMeteringPointRequest();
+            var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
+
+            await _mediator.Send(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await MarkAsEnergySupplierAssigned().ConfigureAwait(false);
+            await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+
+            AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == typeof(AccountingPointCharacteristicsMessage).FullName);
         }
 
         [Fact]

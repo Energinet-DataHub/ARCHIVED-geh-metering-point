@@ -17,6 +17,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
@@ -27,6 +28,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using MediatR;
+using ConsumptionMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Queries.ConsumptionMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint
 {
@@ -72,18 +74,38 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
 
         private async Task SuccessAsync(Application.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
         {
-            var ediMessage = new ConnectMeteringPointAccepted(
+            var confirmMessage = CreateConfirmMessage(request, result);
+            AddToOutbox(confirmMessage);
+
+            var meteringPoint = await _mediator.Send(new MeteringPointByGsrnQuery(request.GsrnNumber)).ConfigureAwait(false)
+                                ?? throw new InvalidOperationException("Metering point not found");
+
+            var accountingPointCharacteristicsMessage = CreateAccountingPointCharacteristicsMessage(meteringPoint);
+            AddToOutbox(accountingPointCharacteristicsMessage);
+        }
+
+        private PostOfficeEnvelope? CreateConfirmMessage(Application.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
+        {
+            var confirmMessage = new ConnectMeteringPointAccepted(
                 TransactionId: result.TransactionId,
                 GsrnNumber: request.GsrnNumber,
                 Status: "Accepted");
 
-            var envelope = new PostOfficeEnvelope(string.Empty, string.Empty, _jsonSerializer.Serialize(ediMessage), typeof(ConnectMeteringPointAccepted).FullName!, _correlationContext.AsTraceContext());
-            AddToOutbox(envelope);
+            var serializedMessage = _jsonSerializer.Serialize(confirmMessage);
 
-            // TODO: check type, only send for consumption
-            var meteringPoint = await _mediator.Send(new MeteringPointByGsrnQuery(request.GsrnNumber)).ConfigureAwait(false)
-                                ?? throw new InvalidOperationException("Metering point not found");
+            var envelope = new PostOfficeEnvelope(
+                string.Empty,
+                string.Empty,
+                serializedMessage,
+                typeof(ConnectMeteringPointAccepted).FullName!,
+                _correlationContext.AsTraceContext());
 
+            return envelope;
+        }
+
+        private PostOfficeEnvelope CreateAccountingPointCharacteristicsMessage(
+            ConsumptionMeteringPoint consumptionMeteringPoint)
+        {
             var accountingPointCharacteristicsMessage = new AccountingPointCharacteristicsMessage(
                 Id: Guid.NewGuid().ToString(),
                 Type: "TODO",
@@ -106,7 +128,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
                     OriginalTransaction: "OriginalTransaction",
                     MarketEvaluationPoint: new MarketEvaluationPoint(
                         Id: new Mrid("Id", "Foo"),
-                        MeteringPointResponsibleMarketRoleParticipant: new MarketParticipant("MeteringPointResponsibleMarketRoleParticipant", "Foo"),
+                        MeteringPointResponsibleMarketRoleParticipant: new MarketParticipant(
+                            "MeteringPointResponsibleMarketRoleParticipant", "Foo"),
                         Type: "Type",
                         SettlementMethod: "SettlementMethod",
                         MeteringMethod: "MeteringMethod",
@@ -119,7 +142,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
                         OutMeteringGridAreaDomainId: new Mrid("OutMeteringGridAreaDomainId", "Foo"),
                         LinkedMarketEvaluationPoint: new Mrid("LinkedMarketEvaluationPoint", "Foo"),
                         PhysicalConnectionCapacity: new UnitValue("PhysicalConnectionCapacity", "Foo"),
-                        ConnectionType: "ConnectionType",
+                        ConnectionType: consumptionMeteringPoint.ConnectionType,
                         DisconnectionMethod: "DisconnectionMethod",
                         AssetMarketPSRTypePsrType: "AssetMarketPSRTypePsrType",
                         ProductionObligation: false,
@@ -165,14 +188,17 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
                         ChildMarketEvaluationPoint: new ChildMarketEvaluationPoint(
                             Id: "Id",
                             CodingScheme: "CodingScheme"))));
-            var serialized = AccountingPointCharacteristicsXmlSerializer.Serialize(accountingPointCharacteristicsMessage, XmlNamespace);
+
+            var serializedMessage = AccountingPointCharacteristicsXmlSerializer.Serialize(accountingPointCharacteristicsMessage, XmlNamespace);
+
             var postOfficeEnvelope = new PostOfficeEnvelope(
                 string.Empty,
                 string.Empty,
-                _jsonSerializer.Serialize(serialized),
-                "accountingpointcharacteristics",
+                _jsonSerializer.Serialize(serializedMessage),
+                typeof(AccountingPointCharacteristicsMessage).FullName!,
                 _correlationContext.Id);
-            AddToOutbox(postOfficeEnvelope);
+
+            return postOfficeEnvelope;
         }
 
         private Task RejectAsync(Application.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
