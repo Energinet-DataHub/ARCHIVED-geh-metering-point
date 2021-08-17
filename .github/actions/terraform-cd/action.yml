@@ -120,7 +120,7 @@ runs:
     - name: Terraform Apply
       shell: bash
       id: terraform-apply
-      working-directory: ./build/infrastructure
+      working-directory: ./build/infrastructure/main
       run: | 
         terraform apply -no-color -auto-approve
         echo "::set-output name=sql-server-connectionstring::$(terraform output metering_point_connection_string)"
