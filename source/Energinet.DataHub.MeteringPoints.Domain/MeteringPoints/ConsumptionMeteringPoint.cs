@@ -106,7 +106,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             }
 
             ConnectionState = ConnectionState.Connected(connectionDetails.EffectiveDate);
-            //_physicalState = PhysicalState.Connected;
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
     }
