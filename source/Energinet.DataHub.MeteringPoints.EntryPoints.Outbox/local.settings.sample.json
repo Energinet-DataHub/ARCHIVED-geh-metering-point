@@ -3,10 +3,14 @@
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-    "METERINGPOINT_DB_CONNECTION_STRING": "",
+    "APPINSIGHTS_INSTRUMENTATIONKEY": "<App insights instrumentation key>",
+    "SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING": "Endpoint=sb://mp-processing-kfttst.servicebus.windows.net/;SharedAccessKeyName=test;SharedAccessKey=ALrwbJ60roshoWZiRl0q5SUWcyxjNuxXF9T/Tvuh3Y8=;",
+    "METERING_POINT_CREATED_TOPIC": "outgoingintegrationevents",
+    "METERING_POINT_CONNECTED_TOPIC": "outgoingintegrationevents",
+    "METERINGPOINT_DB_CONNECTION_STRING": "Server=(local); Database=MeteringPointData; Trusted_connection=true",
     "EVENT_MESSAGE_DISPATCH_TRIGGER_TIMER": "*/10 * * * * *",
     "ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER": "*/10 * * * * *",
-    "TEMP_POST_OFFICE_CONNECTION_STRING": "",
-    "TEMP_POST_OFFICE_SHARE": ""
+    "TEMP_POST_OFFICE_CONNECTION_STRING": "DefaultEndpointsProtocol=https;AccountName=mpkfttst;AccountKey=C+wY8yp0y2XwDxjqMp1+sQWo04Ha2gnxqJpHM7emymuG0gfNvuSrksKO98r0y1qMxPY8nIul5mdfBw74HF9GYw==;EndpointSuffix=core.windows.net",
+    "TEMP_POST_OFFICE_SHARE": "postoffice"
   }
 }
