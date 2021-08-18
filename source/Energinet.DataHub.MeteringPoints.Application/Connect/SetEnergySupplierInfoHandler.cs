@@ -37,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
             var meteringPoint =
                 await _marketMeteringPointRepository.GetByGSRNAsync(GsrnNumber.Create(request.MeteringPointGsrn)).ConfigureAwait(false);
 
-            meteringPoint.SetEnergySupplierInfo();
+            meteringPoint.SetEnergySupplierDetails(EnergySupplierDetails.Create(request.StartOfSupply));
             return Unit.Value;
         }
     }

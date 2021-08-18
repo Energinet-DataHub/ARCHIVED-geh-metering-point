@@ -12,16 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
-using MediatR;
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Connect
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public class EnergySupplierChanged : INotification, IInboundMessage
+    public class EnergySupplierDetailsChanged : DomainEventBase
     {
-        public string GsrnNumber { get; set; } = string.Empty;
+        public EnergySupplierDetailsChanged(Guid meteringPointId, Instant startOfSupply)
+        {
+            MeteringPointId = meteringPointId;
+            StartOfSupply = startOfSupply;
+        }
 
-        public Instant StartOfSupply { get; set; }
+        public Guid MeteringPointId { get; }
+
+        public Instant StartOfSupply { get; }
     }
 }

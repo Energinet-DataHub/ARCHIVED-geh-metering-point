@@ -13,27 +13,29 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
-using NodaTime;
+using System.Runtime.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Connect
+namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
 {
-    public class SetEnergySupplierInfo : InternalCommand
+    public class BusinessOperationException : Exception
     {
-        public SetEnergySupplierInfo(Guid id, string meteringPointGSRN)
+        public BusinessOperationException(string? message, Exception? innerException)
+            : base(message, innerException)
         {
-            Id = id;
-            MeteringPointGsrn = meteringPointGSRN;
         }
 
-        public SetEnergySupplierInfo(string meteringPointGSRN, Instant startOfSupply)
+        public BusinessOperationException()
         {
-            MeteringPointGsrn = meteringPointGSRN;
-            StartOfSupply = startOfSupply;
         }
 
-        public string MeteringPointGsrn { get; }
+        public BusinessOperationException(string? message)
+            : base(message)
+        {
+        }
 
-        public Instant StartOfSupply { get; }
+        protected BusinessOperationException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
     }
 }

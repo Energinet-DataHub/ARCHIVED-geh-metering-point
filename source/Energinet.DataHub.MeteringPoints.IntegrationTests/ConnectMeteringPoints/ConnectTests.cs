@@ -16,12 +16,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Create;
+using Energinet.DataHub.MeteringPoints.Application.Extensions;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using MediatR;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -47,7 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
 
             await _mediator.Send(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
-            await MarkAsEnergySupplierAssigned().ConfigureAwait(false);
+            await MarkAsEnergySupplierAssigned(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
             await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
             AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == typeof(ConnectMeteringPointAccepted).FullName);
@@ -60,7 +62,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
 
             await _mediator.Send(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
-            await MarkAsEnergySupplierAssigned().ConfigureAwait(false);
+            await MarkAsEnergySupplierAssigned(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
             await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
             AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == typeof(AccountingPointCharacteristicsMessage).FullName);
@@ -85,7 +87,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
 
             await _mediator.Send(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
-            await MarkAsEnergySupplierAssigned().ConfigureAwait(false);
+            await MarkAsEnergySupplierAssigned(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
             await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
             AssertOutboxMessage<MeteringPointConnectedIntegrationEvent>();
@@ -125,7 +127,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
 
             await _mediator.Send(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
-            await MarkAsEnergySupplierAssigned().ConfigureAwait(false);
+            await MarkAsEnergySupplierAssigned(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
             await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
             await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
@@ -184,9 +186,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             return new(SampleData.GsrnNumber, _dateTimeProvider.Now().ToString(), string.Empty);
         }
 
-        private async Task MarkAsEnergySupplierAssigned()
+        private async Task MarkAsEnergySupplierAssigned(Instant startOfSupply)
         {
-            var setEnergySupplierAssigned = new SetEnergySupplierInfo(SampleData.GsrnNumber);
+            var setEnergySupplierAssigned = new SetEnergySupplierInfo(SampleData.GsrnNumber, startOfSupply);
             await _mediator.Send(setEnergySupplierAssigned).ConfigureAwait(false);
         }
     }

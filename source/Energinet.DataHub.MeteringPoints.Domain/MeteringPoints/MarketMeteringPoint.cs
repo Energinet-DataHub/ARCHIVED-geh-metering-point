@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using NodaTime;
 
@@ -27,7 +28,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            PhysicalState physicalState,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
             GridAreaId gridAreaId,
@@ -44,7 +44,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 id,
                 gsrnNumber,
                 address,
-                physicalState,
                 meteringPointSubType,
                 meteringPointType,
                 gridAreaId,
@@ -60,11 +59,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
         }
 
-        protected bool HasEnergySupplier { get; private set; }
+        protected EnergySupplierDetails? EnergySupplierDetails { get; private set; }
 
-        public void SetEnergySupplierInfo()
+        public void SetEnergySupplierDetails(EnergySupplierDetails energySupplierDetails)
         {
-            HasEnergySupplier = true;
+            if (energySupplierDetails == null) throw new ArgumentNullException(nameof(energySupplierDetails));
+            if (EnergySupplierDetails! == energySupplierDetails) return;
+            EnergySupplierDetails = energySupplierDetails;
+            AddDomainEvent(new EnergySupplierDetailsChanged(Id.Value, EnergySupplierDetails.StartOfSupply));
         }
     }
 }

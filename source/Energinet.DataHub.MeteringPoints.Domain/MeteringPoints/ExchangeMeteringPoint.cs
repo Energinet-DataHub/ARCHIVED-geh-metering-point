@@ -27,7 +27,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            PhysicalState physicalState,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
             GridAreaId gridAreaId,
@@ -47,7 +46,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 id,
                 gsrnNumber,
                 address,
-                physicalState,
                 meteringPointSubType,
                 meteringPointType,
                 gridAreaId,
@@ -70,12 +68,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private ExchangeMeteringPoint() { }
 #pragma warning restore 8618
 
-        public override BusinessRulesValidationResult ConnectAcceptable()
+        public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
         {
             throw new System.NotImplementedException();
         }
 
-        public override void Connect(Instant effectiveDate)
+        public override void Connect(ConnectionDetails connectionDetails)
         {
             throw new System.NotImplementedException();
         }

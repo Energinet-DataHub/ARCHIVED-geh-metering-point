@@ -47,13 +47,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
                 return validationResult;
             }
 
-            var rulesCheckResult = CheckBusinessRules(request, meteringPoint!);
+            var connectionDetails = ConnectionDetails.Create(request.EffectiveDate.ToInstant());
+            var rulesCheckResult = CheckBusinessRules(request, connectionDetails, meteringPoint!);
             if (!rulesCheckResult.Success)
             {
                 return rulesCheckResult;
             }
 
-            meteringPoint?.Connect(effectiveDate: request.EffectiveDate.ToInstant());
+            meteringPoint?.Connect(ConnectionDetails.Create(request.EffectiveDate.ToInstant()));
 
             return BusinessProcessResult.Ok(request.TransactionId);
         }
@@ -68,9 +69,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
             return new BusinessProcessResult(request.TransactionId, validationRules);
         }
 
-        private static BusinessProcessResult CheckBusinessRules(ConnectMeteringPoint request, MeteringPoint meteringPoint)
+        private static BusinessProcessResult CheckBusinessRules(ConnectMeteringPoint request, ConnectionDetails connectionDetails, MeteringPoint meteringPoint)
         {
-            var validationResult = meteringPoint.ConnectAcceptable();
+            var validationResult = meteringPoint.ConnectAcceptable(connectionDetails);
 
             return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
         }

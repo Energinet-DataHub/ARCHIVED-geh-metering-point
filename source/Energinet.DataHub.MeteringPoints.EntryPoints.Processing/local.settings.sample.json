@@ -3,6 +3,8 @@
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "APPINSIGHTS_INSTRUMENTATIONKEY": "<Azure application insights instrumentation key>",
+    "METERINGPOINT_DB_CONNECTION_STRING": "<Main SQL server database connection string>",
     "METERINGPOINT_QUEUE_TOPIC_NAME": "<Name of Service Bus queue for receiving business requests and internal commands>",
     "METERINGPOINT_QUEUE_CONNECTION_STRING": "<Service Bus connection string where business requests and internal commands are received>",
     "INTEGRATION_EVENT_QUEUE": "<Name of Service Bus queue for receiving integration/notification events>",
