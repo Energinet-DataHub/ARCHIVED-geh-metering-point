@@ -12,34 +12,50 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using NodaTime;
 using Xunit;
+using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 {
-    public class ConnectTests
+    #pragma warning disable
+    [UnitTest]
+    public class MarketMeteringPointTests
     {
-        [Fact]
-        public void Not_possible_when_no_energy_supplier_has_been_registered()
-        {
-            var meteringPoint = CreateConsumptionMeteringPoint();
-            var checkResult = meteringPoint.ConnectAcceptable();
+        private readonly SystemDateTimeProviderStub _systemDateTimeProvider;
 
-            Assert.Contains(checkResult.Errors, error => error is MustHaveEnergySupplierRuleError);
+        public MarketMeteringPointTests()
+        {
+            _systemDateTimeProvider = new SystemDateTimeProviderStub();
         }
 
-        private static MeteringPoint CreateConsumptionMeteringPoint()
+        [Fact]
+        public void Should_set_energy_supplier_details()
         {
-            return new ConsumptionMeteringPoint(
+            var marketMeteringPoint = CreateMarketMeteringPoint();
+            marketMeteringPoint.SetEnergySupplierDetails(EnergySupplierDetails.Create(_systemDateTimeProvider.Now()));
+
+            Assert.Contains(marketMeteringPoint.DomainEvents, e => e is EnergySupplierDetailsChanged);
+        }
+
+        [Fact]
+        public void Does_not_change_energy_supplier_details_when_details_are_the_same()
+        {
+            var marketMeteringPoint = CreateMarketMeteringPoint();
+            marketMeteringPoint.SetEnergySupplierDetails(EnergySupplierDetails.Create(_systemDateTimeProvider.Now()));
+
+            Assert.Equal(1, marketMeteringPoint.DomainEvents.Count(e => e is EnergySupplierDetailsChanged));
+        }
+
+        private static MarketMeteringPoint CreateMarketMeteringPoint()
+        {
+            return new MarketMeteringPointMock(
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 Address.Create(SampleData.StreetName, SampleData.PostCode, SampleData.CityName, SampleData.CountryCode),
-                SampleData.IsAddressWashable,
-                EnumerationType.FromName<PhysicalState>(SampleData.PhysicalStateName),
                 EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
                 EnumerationType.FromName<MeteringPointType>(SampleData.TypeName),
                 GridAreaId.New(),
@@ -51,13 +67,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 SampleData.MaximumCurrent,
                 SampleData.MaximumPower,
                 SampleData.OccurenceDate,
-                SettlementMethod.Flex,
-                NetSettlementGroup.Zero,
-                DisconnectionType.Manual,
-                ConnectionType.Direct,
-                AssetType.Boiler,
-                parentRelatedMeteringPoint: null,
-                ProductType.PowerActive);
+                parentRelatedMeteringPoint: null);
         }
     }
 }

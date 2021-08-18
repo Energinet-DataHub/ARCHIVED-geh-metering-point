@@ -12,21 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules.Connect
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public class MustHaveEnergySupplierRuleError : ValidationError
+    public class ConnectionState : ValueObject
     {
-        public MustHaveEnergySupplierRuleError(GsrnNumber meteringPointGSRN, Instant effectiveDate)
+        private ConnectionState(PhysicalState physicalState, Instant? effectiveDate)
         {
-            MeteringPointGsrn = meteringPointGSRN;
+            PhysicalState = physicalState ?? throw new ArgumentNullException(nameof(physicalState));
             EffectiveDate = effectiveDate;
         }
 
-        public GsrnNumber MeteringPointGsrn { get; }
+        public PhysicalState PhysicalState { get; }
 
-        public Instant EffectiveDate { get;  }
+        public Instant? EffectiveDate { get; }
+
+        public static ConnectionState Connected(Instant effectiveDate)
+        {
+            return new ConnectionState(PhysicalState.Connected, effectiveDate);
+        }
+
+        public static ConnectionState New()
+        {
+            return new ConnectionState(PhysicalState.New, null);
+        }
     }
 }

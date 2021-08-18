@@ -12,16 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
-using MediatR;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Connect
+namespace Energinet.DataHub.MeteringPoints.Tests
 {
-    public class EnergySupplierChanged : INotification, IInboundMessage
+    public class SystemDateTimeProviderStub : ISystemDateTimeProvider
     {
-        public string GsrnNumber { get; set; } = string.Empty;
+        private Instant _now = SystemClock.Instance.GetCurrentInstant();
 
-        public Instant StartOfSupply { get; set; }
+        public void SetNow(Instant now)
+        {
+            _now = now;
+        }
+
+        public Instant Now()
+        {
+            return _now;
+        }
     }
 }

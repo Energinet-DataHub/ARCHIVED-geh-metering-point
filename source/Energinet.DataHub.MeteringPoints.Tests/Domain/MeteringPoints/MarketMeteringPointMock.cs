@@ -13,26 +13,18 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 {
-    public class ProductionMeteringPoint : MeteringPoint
+    public class MarketMeteringPointMock : MarketMeteringPoint
     {
-        private NetSettlementGroup _netSettlementGroup;
-        private DisconnectionType _disconnectionType;
-        private ConnectionType _connectionType;
-        private bool _isAddressWashable;
-#pragma warning disable 414 // TODO: Temporarily disabled since variable is not yet in use
-        private bool _productionObligation;
-#pragma warning restore 414
-
-        public ProductionMeteringPoint(
+        public MarketMeteringPointMock(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            bool isAddressWashable,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
             GridAreaId gridAreaId,
@@ -44,11 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             int maximumCurrent,
             int maximumPower,
             Instant? occurenceDate,
-            NetSettlementGroup netSettlementGroup,
-            DisconnectionType disconnectionType,
-            ConnectionType connectionType,
-            string? parentRelatedMeteringPoint,
-            ProductType productType)
+            string? parentRelatedMeteringPoint)
             : base(
                 id,
                 gsrnNumber,
@@ -66,17 +54,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 occurenceDate,
                 parentRelatedMeteringPoint)
         {
-            _netSettlementGroup = netSettlementGroup;
-            _disconnectionType = disconnectionType;
-            _connectionType = connectionType;
-            _productionObligation = false;
-            _productType = productType;
-            _isAddressWashable = isAddressWashable;
         }
-
-#pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
-        private ProductionMeteringPoint() { }
-#pragma warning restore 8618
 
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
         {

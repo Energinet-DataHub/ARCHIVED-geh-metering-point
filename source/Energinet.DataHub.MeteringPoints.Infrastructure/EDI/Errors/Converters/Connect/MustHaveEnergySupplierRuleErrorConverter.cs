@@ -22,10 +22,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.
         protected override ErrorMessage Convert(MustHaveEnergySupplierRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-            //TODO: Must review this error message and corresponding rule. Is it still needed ? Should it be Energy Supplier and NOT Balance Supplier ?
             return new ErrorMessage(
                 "D36",
-                $"Metering Point {validationError.MeteringPointGsrn.Value} of type <2> cannot be connected: There is no Balance Supplier registered on the effectuation date <3>.");
+                $"Metering Point {validationError.MeteringPointGsrn.Value} of type E17 cannot be connected: There is no Energy Supplier registered on the effectuation date {validationError.EffectiveDate}.");
         }
     }
 }
