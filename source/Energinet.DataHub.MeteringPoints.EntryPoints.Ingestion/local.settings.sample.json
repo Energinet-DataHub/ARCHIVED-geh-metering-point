@@ -1,0 +1,10 @@
+{
+    "IsEncrypted": false,
+    "Values": {
+        "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+        "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",       
+        "INTERNAL_SERVICEBUS_RETRY_COUNT": 3,
+        "METERINGPOINT_QUEUE_CONNECTION_STRING": "<Azure Service Bus namespace connection>",
+        "METERINGPOINT_QUEUE_TOPIC_NAME": "<Name of Azure Service Bus queue>"
+    }
+}
