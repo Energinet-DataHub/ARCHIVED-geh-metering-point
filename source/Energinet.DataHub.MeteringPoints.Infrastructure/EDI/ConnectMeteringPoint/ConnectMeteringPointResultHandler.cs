@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
@@ -80,7 +81,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
             var meteringPoint = await _mediator.Send(new MeteringPointByGsrnQuery(request.GsrnNumber)).ConfigureAwait(false)
                                 ?? throw new InvalidOperationException("Metering point not found");
 
-            var accountingPointCharacteristicsMessage = CreateAccountingPointCharacteristicsMessage(meteringPoint);
+            var accountingPointCharacteristicsMessage = CreateAccountingPointCharacteristicsMessage(request, meteringPoint);
             AddToOutbox(accountingPointCharacteristicsMessage);
         }
 
@@ -104,46 +105,47 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
         }
 
         private PostOfficeEnvelope CreateAccountingPointCharacteristicsMessage(
-            ConsumptionMeteringPoint consumptionMeteringPoint)
+            Application.Connect.ConnectMeteringPoint request,
+            ConsumptionMeteringPoint meteringPoint)
         {
             var accountingPointCharacteristicsMessage = new AccountingPointCharacteristicsMessage(
                 Id: Guid.NewGuid().ToString(),
-                Type: "TODO",
+                Type: "E07",
                 ProcessType: "D15",
-                BusinessSectorType: "TODO",
+                BusinessSectorType: "N/A",
                 Sender: new MarketRoleParticipant(
                     Id: "DataHub GLN", // TODO: Use correct GLN
                     CodingScheme: "9",
-                    Role: "EZ"),
+                    Role: "DDZ"),
                 Receiver: new MarketRoleParticipant(
-                    Id: "TODO",
+                    Id: "consumptionMeteringPoint.,", // TODO: Get from energy supplier changed event-ish
                     CodingScheme: "9",
                     Role: "DDQ"),
                 CreatedDateTime: _dateTimeProvider.Now(),
                 MarketActivityRecord: new MarketActivityRecord(
-                    Id: "Id",
-                    BusinessProcessReference: "BusinessProcessReference",
-                    ValidityStartDateAndOrTime: "ValidityStartDateAndOrTime",
-                    SnapshotDateAndOrTime: "SnapshotDateAndOrTime",
-                    OriginalTransaction: "OriginalTransaction",
+                    Id: Guid.NewGuid().ToString(),
+                    BusinessProcessReference: _correlationContext.Id,
+                    ValidityStartDateAndOrTime: "consumptionMeteringPoint.OccurenceDate", // TODO: Use occurence date (as effective date)
+                    SnapshotDateAndOrTime: "N/A",
+                    OriginalTransaction: request.TransactionId,
                     MarketEvaluationPoint: new MarketEvaluationPoint(
-                        Id: new Mrid("Id", "Foo"),
+                        Id: new Mrid(meteringPoint.GsrnNumber, "N/A"),
                         MeteringPointResponsibleMarketRoleParticipant: new MarketParticipant(
-                            "MeteringPointResponsibleMarketRoleParticipant", "Foo"),
-                        Type: "Type",
-                        SettlementMethod: "SettlementMethod",
-                        MeteringMethod: "MeteringMethod",
-                        ConnectionState: "ConnectionState",
-                        ReadCycle: "ReadCycle",
-                        NetSettlementGroup: "NetSettlementGroup",
-                        NextReadingDate: "NextReadingDate",
-                        MeteringGridAreaDomainId: new Mrid("MeteringGridAreaDomainId", "Foo"),
-                        InMeteringGridAreaDomainId: new Mrid("InMeteringGridAreaDomainId", "Foo"),
-                        OutMeteringGridAreaDomainId: new Mrid("OutMeteringGridAreaDomainId", "Foo"),
-                        LinkedMarketEvaluationPoint: new Mrid("LinkedMarketEvaluationPoint", "Foo"),
-                        PhysicalConnectionCapacity: new UnitValue("PhysicalConnectionCapacity", "Foo"),
-                        ConnectionType: consumptionMeteringPoint.ConnectionType,
-                        DisconnectionMethod: "DisconnectionMethod",
+                            "GLN number of grid operator", "N/A"), // TODO: Update when grid operators are a thing.
+                        Type: meteringPoint.MeteringPointType,
+                        SettlementMethod: meteringPoint.SettlementMethod,
+                        MeteringMethod: meteringPoint.MeteringPointSubType,
+                        ConnectionState: meteringPoint.PhysicalState,
+                        ReadCycle: meteringPoint.MeterReadingOccurrence,
+                        NetSettlementGroup: meteringPoint.NetSettlementGroup,
+                        NextReadingDate: "N/A",
+                        MeteringGridAreaDomainId: new Mrid(meteringPoint.GridAreaId, "N/A"),
+                        InMeteringGridAreaDomainId: new Mrid("InMeteringGridAreaDomainId", "N/A"), // TODO: Only applicable for exchange
+                        OutMeteringGridAreaDomainId: new Mrid("OutMeteringGridAreaDomainId", "N/A"), // TODO: Only applicable for exchange
+                        LinkedMarketEvaluationPoint: new Mrid(meteringPoint.PowerPlantGsrnNumber ?? string.Empty, "N/A"),
+                        PhysicalConnectionCapacity: new UnitValue("PhysicalConnectionCapacity", "N/A"),
+                        ConnectionType: meteringPoint.ConnectionType,
+                        DisconnectionMethod: meteringPoint.DisconnectionType,
                         AssetMarketPSRTypePsrType: "AssetMarketPSRTypePsrType",
                         ProductionObligation: false,
                         Series: new Series(
@@ -151,7 +153,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
                             EstimatedAnnualVolumeQuantity: "EstimatedAnnualVolumeQuantity",
                             QuantityMeasureUnit: "QuantityMeasureUnit"),
                         ContractedConnectionCapacity: new UnitValue("ContractedConnectionCapacity", "Foo"),
-                        RatedCurrent: new UnitValue("RatedCurrent", "Foo"),
+                        RatedCurrent: new UnitValue(meteringPoint.MaximumCurrent.ToString(CultureInfo.InvariantCulture), "AMP"),
                         MeterId: "MeterId",
                         EnergySupplierMarketParticipantId: new MarketParticipant("EnergySupplierMarketParticipantId", "Foo"),
                         SupplyStartDateAndOrTimeDateTime: DateTime.Now,
