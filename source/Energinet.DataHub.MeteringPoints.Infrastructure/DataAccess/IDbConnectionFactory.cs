@@ -22,7 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
     public interface IDbConnectionFactory
     {
         /// <summary>
-        /// Returns and existing open connection if any, or creates a new open connection
+        /// Returns an existing open connection if any, or creates a new open connection
         /// </summary>
         /// <returns><see cref="IDbConnection"/></returns>
         IDbConnection GetOpenConnection();
