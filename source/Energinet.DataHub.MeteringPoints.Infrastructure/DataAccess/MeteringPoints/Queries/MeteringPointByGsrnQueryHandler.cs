@@ -37,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var sql = @"SELECT * FROM [dbo].[MeteringPoints] WHERE GsrnNumber = @GsrnNumber";
+            var sql = @"SELECT * FROM [dbo].[MeteringPoints] mp INNER JOIN [dbo].[ConsumptionMeteringPoints] cmp ON mp.Id = cmp.Id WHERE mp.GsrnNumber = @GsrnNumber";
             var result = await _connectionFactory
                 .GetOpenConnection()
                 .QuerySingleOrDefaultAsync<ConsumptionMeteringPoint>(sql, new { request.GsrnNumber })
