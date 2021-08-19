@@ -14,6 +14,7 @@
 
 using System.Collections.ObjectModel;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
@@ -23,13 +24,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
     public abstract class MeteringPoint : AggregateRootBase
     {
         #pragma warning disable SA1401, CA1051 // Field cannot be private since it is set by derivatives
+        protected MeteringPointType _meteringPointType;
         protected ProductType _productType;
-        #pragma warning restore
+#pragma warning restore
         private Address _address;
         private GridAreaId _gridAreaId;
-        private MeteringPointType _meteringPointType;
         private MeteringPointSubType _meteringPointSubType;
-        private PhysicalState _physicalState;
         private ReadingOccurrence _meterReadingOccurrence;
         private int _maximumCurrent;
         private int _maximumPower;
@@ -50,7 +50,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GsrnNumber gsrnNumber,
             Address address,
             // bool isAddressWashable,
-            PhysicalState physicalState,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
             GridAreaId gridAreaId,
@@ -68,7 +67,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GsrnNumber = gsrnNumber;
             _address = address;
             // _isAddressWashable = isAddressWashable;
-            _physicalState = physicalState;
             _meteringPointSubType = meteringPointSubType;
             _meteringPointType = meteringPointType;
             _gridAreaId = gridAreaId;
@@ -82,28 +80,17 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _occurenceDate = occurenceDate;
             _parentRelatedMeteringPoint = parentRelatedMeteringPoint;
 
-            AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaId, meteringPointSubType, physicalState, meterReadingOccurrence, ProductType.Tariff, unitType));
+            AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaId, meteringPointSubType, ConnectionState.PhysicalState, meterReadingOccurrence, ProductType.Tariff, unitType));
         }
 
         public MeteringPointId Id { get; }
 
         public GsrnNumber GsrnNumber { get; }
 
-        public BusinessRulesValidationResult ConnectAcceptable()
-        {
-            var rules = new Collection<IBusinessRule>
-            {
-                new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, _meteringPointType, _physicalState),
-            };
+        protected ConnectionState ConnectionState { get; set; } = ConnectionState.New();
 
-            return new BusinessRulesValidationResult(rules);
-        }
+        public abstract BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails);
 
-        public void Connect(Instant effectiveDate)
-        {
-            _physicalState = PhysicalState.Connected;
-            // TODO - for now we ignore scheduling - must be handled later
-            AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, effectiveDate));
-        }
+        public abstract void Connect(ConnectionDetails connectionDetails);
     }
 }

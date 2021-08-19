@@ -20,6 +20,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
     public interface IOutboxManager
     {
         /// <summary>
+        /// Get next unprocessed message
+        /// </summary>
+        OutboxMessage? GetNext();
+
+        /// <summary>
         /// Get next unprocessed message based on category
         /// </summary>
         OutboxMessage? GetNext(OutboxMessageCategory category);

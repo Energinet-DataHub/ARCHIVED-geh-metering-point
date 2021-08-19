@@ -13,12 +13,14 @@
 // limitations under the License.
 
 using System;
-using System.IdentityModel.Tokens.Jwt;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
+using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
@@ -32,12 +34,13 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Helpers;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Services;
+using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
+using FluentAssertions;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,6 +48,8 @@ using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Xunit;
 using Xunit.Categories;
+using ConnectMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Connect.ConnectMeteringPoint;
+using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Create.CreateMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
@@ -61,7 +66,17 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         protected TestHost()
         {
             _container = new Container();
+            _container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
+
             var serviceCollection = new ServiceCollection();
+
+            // Protobuf handling
+            _container.ReceiveProtobuf<MeteringPointEnvelope>(
+                config => config
+                    .FromOneOf(envelope => envelope.MeteringPointMessagesCase)
+                    .WithParser(() => MeteringPointEnvelope.Parser));
+            _container.SendProtobuf<MeteringPointEnvelope>();
+
             serviceCollection.AddDbContext<MeteringPointContext>(x =>
                 x.UseSqlServer(ConnectionString, y => y.UseNodaTime()));
             serviceCollection.AddSimpleInjector(_container);
@@ -69,6 +84,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             _container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
             _container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
+            _container.Register<IMarketMeteringPointRepository, MarketMeteringPointRepository>(Lifestyle.Scoped);
             _container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
             _container.Register<IOutboxManager, OutboxManager>(Lifestyle.Scoped);
             _container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Singleton);
@@ -81,8 +97,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IDomainEventsAccessor, DomainEventsAccessor>();
             _container.Register<IDomainEventsDispatcher, DomainEventsDispatcher>();
             _container.Register<IDomainEventPublisher, DomainEventPublisher>();
-            _container.Register<IIntegrationEventDispatchOrchestrator, IntegrationEventDispatchOrchestrator>();
             _container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Singleton);
+            _container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
+
+            _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(ConnectionString), Lifestyle.Scoped);
 
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
@@ -99,11 +117,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 new[]
                 {
                     typeof(UnitOfWorkBehavior<,>),
-                    typeof(InputValidationBehavior<,>),
                     // typeof(AuthorizationBehavior<,>),
-                    typeof(BusinessProcessResultBehavior<,>),
+                    typeof(InputValidationBehavior<,>),
                     typeof(DomainEventsDispatcherBehaviour<,>),
-                    // typeof(ValidationReportsBehavior<,>),
+                    typeof(InternalCommandHandlingBehaviour<,>),
+                    typeof(BusinessProcessResultBehavior<,>),
                 });
 
             _container.Verify();
@@ -145,12 +163,31 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             return _container.GetInstance<TService>();
         }
 
-        protected async Task<TMessage> GetLastMessageFromOutboxAsync<TMessage>()
+        protected IEnumerable<TMessage> GetOutboxMessages<TMessage>()
         {
+            var jsonSerializer = GetService<IJsonSerializer>();
             var context = GetService<MeteringPointContext>();
-            var outboxMessage = await context.OutboxMessages.FirstAsync(m => m.Type.Equals(typeof(TMessage).FullName, StringComparison.OrdinalIgnoreCase)).ConfigureAwait(false);
-            var message = GetService<IJsonSerializer>().Deserialize<TMessage>(outboxMessage.Data);
-            return message;
+            return context.OutboxMessages
+                .Where(message => message.Type == typeof(TMessage).FullName)
+                .Select(message => jsonSerializer.Deserialize<TMessage>(message.Data));
+        }
+
+        protected void AssertOutboxMessage<TMessage>(Func<TMessage, bool> funcAssert)
+        {
+            if (funcAssert == null) throw new ArgumentNullException(nameof(funcAssert));
+
+            var message = GetOutboxMessages<TMessage>().SingleOrDefault(funcAssert.Invoke);
+
+            message.Should().NotBeNull();
+            message.Should().BeOfType<TMessage>();
+        }
+
+        protected void AssertOutboxMessage<TMessage>()
+        {
+            var message = GetOutboxMessages<TMessage>().SingleOrDefault();
+
+            message.Should().NotBeNull();
+            message.Should().BeOfType<TMessage>();
         }
 
         private void CleanupDatabase()
@@ -160,8 +197,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             cleanupStatement.AppendLine($"DELETE FROM ConsumptionMeteringPoints");
             cleanupStatement.AppendLine($"DELETE FROM ProductionMeteringPoints");
             cleanupStatement.AppendLine($"DELETE FROM ExchangeMeteringPoints");
+            cleanupStatement.AppendLine($"DELETE FROM MarketMeteringPoints");
             cleanupStatement.AppendLine($"DELETE FROM MeteringPoints");
             cleanupStatement.AppendLine($"DELETE FROM OutboxMessages");
+            cleanupStatement.AppendLine($"DELETE FROM QueuedInternalCommands");
 
             _container.GetInstance<MeteringPointContext>()
                 .Database.ExecuteSqlRaw(cleanupStatement.ToString());

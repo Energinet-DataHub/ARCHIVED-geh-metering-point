@@ -13,54 +13,197 @@
 // limitations under the License.
 
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Queries;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common.Address;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
+using MediatR;
+using ConsumptionMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Queries.ConsumptionMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint
 {
-    public class ConnectMeteringPointResultHandler : IBusinessProcessResultHandler<Application.ConnectMeteringPoint>
+    public sealed class ConnectMeteringPointResultHandler : IBusinessProcessResultHandler<Application.Connect.ConnectMeteringPoint>
     {
+        private const string XmlNamespace = "urn:ebix.org:structure:accountingpointcharacteristics:0:1";
+
         private readonly ErrorMessageFactory _errorMessageFactory;
         private readonly IOutbox _outbox;
         private readonly IOutboxMessageFactory _outboxMessageFactory;
+        private readonly IJsonSerializer _jsonSerializer;
+        private readonly ICorrelationContext _correlationContext;
+        private readonly IMediator _mediator;
+        private readonly ISystemDateTimeProvider _dateTimeProvider;
 
         public ConnectMeteringPointResultHandler(
             ErrorMessageFactory errorMessageFactory,
             IOutbox outbox,
-            IOutboxMessageFactory outboxMessageFactory)
+            IOutboxMessageFactory outboxMessageFactory,
+            IJsonSerializer jsonSerializer,
+            ICorrelationContext correlationContext,
+            IMediator mediator,
+            ISystemDateTimeProvider dateTimeProvider)
         {
             _errorMessageFactory = errorMessageFactory;
             _outbox = outbox;
             _outboxMessageFactory = outboxMessageFactory;
+            _jsonSerializer = jsonSerializer;
+            _correlationContext = correlationContext;
+            _mediator = mediator;
+            _dateTimeProvider = dateTimeProvider;
         }
 
-        public Task HandleAsync(Application.ConnectMeteringPoint request, BusinessProcessResult result)
+        public Task HandleAsync(Application.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (result == null) throw new ArgumentNullException(nameof(result));
 
             return result.Success
-                ? CreateAcceptResponseAsync(request, result)
-                : CreateRejectResponseAsync(request, result);
+                ? SuccessAsync(request, result)
+                : RejectAsync(request, result);
         }
 
-        private Task CreateAcceptResponseAsync(Application.ConnectMeteringPoint request, BusinessProcessResult result)
+        private async Task SuccessAsync(Application.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
         {
-            var ediMessage = new ConnectMeteringPointAccepted(
+            var confirmMessage = CreateConfirmMessage(request, result);
+            AddToOutbox(confirmMessage);
+
+            var meteringPoint = await _mediator.Send(new MeteringPointByGsrnQuery(request.GsrnNumber)).ConfigureAwait(false)
+                                ?? throw new InvalidOperationException("Metering point not found");
+
+            var accountingPointCharacteristicsMessage = CreateAccountingPointCharacteristicsMessage(request, meteringPoint);
+            AddToOutbox(accountingPointCharacteristicsMessage);
+        }
+
+        private PostOfficeEnvelope? CreateConfirmMessage(Application.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
+        {
+            var confirmMessage = new ConnectMeteringPointAccepted(
                 TransactionId: result.TransactionId,
                 GsrnNumber: request.GsrnNumber,
                 Status: "Accepted");
 
-            AddToOutbox(ediMessage);
+            var serializedMessage = _jsonSerializer.Serialize(confirmMessage);
 
-            return Task.CompletedTask;
+            var envelope = new PostOfficeEnvelope(
+                string.Empty,
+                string.Empty,
+                serializedMessage,
+                typeof(ConnectMeteringPointAccepted).FullName!,
+                _correlationContext.AsTraceContext());
+
+            return envelope;
         }
 
-        private Task CreateRejectResponseAsync(Application.ConnectMeteringPoint request, BusinessProcessResult result)
+        private PostOfficeEnvelope CreateAccountingPointCharacteristicsMessage(
+            Application.Connect.ConnectMeteringPoint request,
+            ConsumptionMeteringPoint meteringPoint)
+        {
+            var accountingPointCharacteristicsMessage = new AccountingPointCharacteristicsMessage(
+                Id: Guid.NewGuid().ToString(),
+                Type: "E07",
+                ProcessType: "D15",
+                BusinessSectorType: "N/A",
+                Sender: new MarketRoleParticipant(
+                    Id: "DataHub GLN", // TODO: Use correct GLN
+                    CodingScheme: "9",
+                    Role: "DDZ"),
+                Receiver: new MarketRoleParticipant(
+                    Id: "consumptionMeteringPoint.,", // TODO: Get from energy supplier changed event-ish
+                    CodingScheme: "9",
+                    Role: "DDQ"),
+                CreatedDateTime: _dateTimeProvider.Now(),
+                MarketActivityRecord: new MarketActivityRecord(
+                    Id: Guid.NewGuid().ToString(),
+                    BusinessProcessReference: _correlationContext.Id,
+                    ValidityStartDateAndOrTime: "consumptionMeteringPoint.OccurenceDate", // TODO: Use occurence date (as effective date)
+                    SnapshotDateAndOrTime: "N/A",
+                    OriginalTransaction: request.TransactionId,
+                    MarketEvaluationPoint: new MarketEvaluationPoint(
+                        Id: new Mrid(meteringPoint.GsrnNumber, "N/A"),
+                        MeteringPointResponsibleMarketRoleParticipant: new MarketParticipant(
+                            "GLN number of grid operator", "N/A"), // TODO: Update when grid operators are a thing.
+                        Type: meteringPoint.MeteringPointType,
+                        SettlementMethod: meteringPoint.SettlementMethod,
+                        MeteringMethod: meteringPoint.MeteringPointSubType,
+                        ConnectionState: meteringPoint.PhysicalState,
+                        ReadCycle: meteringPoint.MeterReadingOccurrence,
+                        NetSettlementGroup: meteringPoint.NetSettlementGroup,
+                        NextReadingDate: "N/A",
+                        MeteringGridAreaDomainId: new Mrid(meteringPoint.GridAreaId, "N/A"),
+                        InMeteringGridAreaDomainId: new Mrid("InMeteringGridAreaDomainId", "N/A"), // TODO: Only applicable for exchange
+                        OutMeteringGridAreaDomainId: new Mrid("OutMeteringGridAreaDomainId", "N/A"), // TODO: Only applicable for exchange
+                        LinkedMarketEvaluationPoint: new Mrid(meteringPoint.PowerPlantGsrnNumber ?? string.Empty, "N/A"),
+                        PhysicalConnectionCapacity: new UnitValue("PhysicalConnectionCapacity", "N/A"),
+                        ConnectionType: meteringPoint.ConnectionType,
+                        DisconnectionMethod: meteringPoint.DisconnectionType,
+                        AssetMarketPSRTypePsrType: "AssetMarketPSRTypePsrType",
+                        ProductionObligation: false,
+                        Series: new Series(
+                            Id: "Id",
+                            EstimatedAnnualVolumeQuantity: "EstimatedAnnualVolumeQuantity",
+                            QuantityMeasureUnit: "QuantityMeasureUnit"),
+                        ContractedConnectionCapacity: new UnitValue("ContractedConnectionCapacity", "Foo"),
+                        RatedCurrent: new UnitValue(meteringPoint.MaximumCurrent.ToString(CultureInfo.InvariantCulture), "AMP"),
+                        MeterId: "MeterId",
+                        EnergySupplierMarketParticipantId: new MarketParticipant("EnergySupplierMarketParticipantId", "Foo"),
+                        SupplyStartDateAndOrTimeDateTime: DateTime.Now,
+                        Description: "Description",
+                        UsagePointLocationMainAddress: new MainAddress(
+                            StreetDetail: new StreetDetail(
+                                Number: "Number",
+                                Name: "Name",
+                                Type: "Type",
+                                Code: "Code",
+                                BuildingName: "BuildingName",
+                                SuiteNumber: "SuiteNumber",
+                                FloorIdentification: "FloorIdentification"),
+                            TownDetail: new TownDetail(
+                                Code: "Code",
+                                Section: "Section",
+                                Name: "Name",
+                                StateOrProvince: "StateOrProvince",
+                                Country: "Country"),
+                            Status: new Status(
+                                Value: "Value",
+                                DateTime: "DateTime",
+                                Remark: "Remark",
+                                Reason: "Reason"),
+                            PostalCode: "PostalCode",
+                            PoBox: "PoBox",
+                            Language: "Language"),
+                        UsagePointLocationOfficialAddressIndicator: false,
+                        UsagePointLocationGeoInfoReference: "UsagePointLocationGeoInfoReference",
+                        ParentMarketEvaluationPointId: new ParentMarketEvaluationPoint(
+                            Id: "Id",
+                            CodingScheme: "CodingScheme",
+                            Description: "Description"),
+                        ChildMarketEvaluationPoint: new ChildMarketEvaluationPoint(
+                            Id: "Id",
+                            CodingScheme: "CodingScheme"))));
+
+            var serializedMessage = AccountingPointCharacteristicsXmlSerializer.Serialize(accountingPointCharacteristicsMessage, XmlNamespace);
+
+            var postOfficeEnvelope = new PostOfficeEnvelope(
+                string.Empty,
+                string.Empty,
+                _jsonSerializer.Serialize(serializedMessage),
+                typeof(AccountingPointCharacteristicsMessage).FullName!,
+                _correlationContext.Id);
+
+            return postOfficeEnvelope;
+        }
+
+        private Task RejectAsync(Application.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
         {
             var errors = result.ValidationErrors
                 .Select(error => _errorMessageFactory.GetErrorMessage(error))
@@ -73,7 +216,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
                 Reason: "TODO",
                 Errors: errors);
 
-            AddToOutbox(ediMessage);
+            var envelope = new PostOfficeEnvelope(string.Empty, string.Empty, _jsonSerializer.Serialize(ediMessage), typeof(ConnectMeteringPointRejected).FullName!, _correlationContext.AsTraceContext());
+            AddToOutbox(envelope);
 
             return Task.CompletedTask;
         }

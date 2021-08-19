@@ -17,28 +17,36 @@ using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint
 {
-    public class CreateMeteringPointResultHandler : IBusinessProcessResultHandler<Application.CreateMeteringPoint>
+    public class CreateMeteringPointResultHandler : IBusinessProcessResultHandler<Application.Create.CreateMeteringPoint>
     {
         private readonly ErrorMessageFactory _errorMessageFactory;
         private readonly IOutbox _outbox;
         private readonly IOutboxMessageFactory _outboxMessageFactory;
+        private readonly IJsonSerializer _jsonSerializer;
+        private readonly ICorrelationContext _correlationContext;
 
         public CreateMeteringPointResultHandler(
             ErrorMessageFactory errorMessageFactory,
             IOutbox outbox,
-            IOutboxMessageFactory outboxMessageFactory)
+            IOutboxMessageFactory outboxMessageFactory,
+            IJsonSerializer jsonSerializer,
+            ICorrelationContext correlationContext)
         {
             _errorMessageFactory = errorMessageFactory;
             _outbox = outbox;
             _outboxMessageFactory = outboxMessageFactory;
+            _jsonSerializer = jsonSerializer;
+            _correlationContext = correlationContext;
         }
 
-        public Task HandleAsync(Application.CreateMeteringPoint request, BusinessProcessResult result)
+        public Task HandleAsync(Application.Create.CreateMeteringPoint request, BusinessProcessResult result)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (result == null) throw new ArgumentNullException(nameof(result));
@@ -48,19 +56,19 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
                 : CreateRejectResponseAsync(request, result);
         }
 
-        private Task CreateAcceptResponseAsync(Application.CreateMeteringPoint request, BusinessProcessResult result)
+        private Task CreateAcceptResponseAsync(Application.Create.CreateMeteringPoint request, BusinessProcessResult result)
         {
             var ediMessage = new CreateMeteringPointAccepted(
                 TransactionId: result.TransactionId,
                 GsrnNumber: request.GsrnNumber,
                 Status: "Accepted");
-
-            AddToOutbox(ediMessage);
+            var envelope = new PostOfficeEnvelope(string.Empty, string.Empty, _jsonSerializer.Serialize(ediMessage), nameof(CreateMeteringPointAccepted), _correlationContext.AsTraceContext());
+            AddToOutbox(envelope);
 
             return Task.CompletedTask;
         }
 
-        private Task CreateRejectResponseAsync(Application.CreateMeteringPoint request, BusinessProcessResult result)
+        private Task CreateRejectResponseAsync(Application.Create.CreateMeteringPoint request, BusinessProcessResult result)
         {
             var errors = result.ValidationErrors
                 .Select(error => _errorMessageFactory.GetErrorMessage(error))
@@ -72,8 +80,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
                 Status: "Rejected", // TODO: Is this necessary? Also, Reason?
                 Reason: "TODO",
                 Errors: errors);
+            var envelope = new PostOfficeEnvelope(string.Empty, string.Empty, _jsonSerializer.Serialize(ediMessage), nameof(CreateMeteringPointRejected), _correlationContext.AsTraceContext());
 
-            AddToOutbox(ediMessage);
+            AddToOutbox(envelope);
 
             return Task.CompletedTask;
         }

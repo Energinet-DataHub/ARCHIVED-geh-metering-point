@@ -16,12 +16,13 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Authorization;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline
 {
     public class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : notnull
+        where TRequest : IBusinessRequest
         where TResponse : new()
     {
         private readonly IAuthorizationHandler<TRequest, TResponse> _authorizationHandler;

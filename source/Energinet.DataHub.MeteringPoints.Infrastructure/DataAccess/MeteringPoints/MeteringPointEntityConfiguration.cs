@@ -52,11 +52,16 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 y.Property(x => x.PostCode).HasColumnName("PostCode");
             });
 
-            builder.Property<PhysicalState>("_physicalState")
-                .HasColumnName("PhysicalStatusOfMeteringPoint")
-                .HasConversion(
+            builder.OwnsOne<ConnectionState>("ConnectionState", config =>
+            {
+                config.Property(x => x.PhysicalState)
+                    .HasColumnName("ConnectionState_PhysicalState")
+                    .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<PhysicalState>(fromDbValue));
+                config.Property(x => x.EffectiveDate)
+                    .HasColumnName("ConnectionState_EffectiveDate");
+            });
 
             builder.Property<MeteringPointSubType>("_meteringPointSubType")
                 .HasColumnName("MeteringPointSubType")
@@ -115,6 +120,25 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.Property("_occurenceDate")
                 .HasColumnName("OccurenceDate");
+        }
+    }
+
+    public class MarketMeteringPointEntityConfiguration : IEntityTypeConfiguration<MarketMeteringPoint>
+    {
+        public void Configure(EntityTypeBuilder<MarketMeteringPoint> builder)
+        {
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            builder.ToTable("MarketMeteringPoints", "dbo");
+
+            builder.OwnsOne<EnergySupplierDetails>("EnergySupplierDetails", config =>
+            {
+                config.Property(x => x.StartOfSupply)
+                    .HasColumnName("StartOfSupplyDate");
+            });
         }
     }
 

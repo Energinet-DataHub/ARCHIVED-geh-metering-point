@@ -36,6 +36,11 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Model\202106221537 Add Correlation to OutboxMessages.sql" />
     <EmbeddedResource Include="Scripts\Model\202107060948 Add IncomingMessages.sql" />
     <EmbeddedResource Include="Scripts\Model\202105181215 Create MeteringPoints tables.sql" />
+    <EmbeddedResource Include="Scripts\Model\202108121231 Add QueuedInternalCommands.sql" />
+    <EmbeddedResource Include="Scripts\Model\202108171120 Update column data types.sql" />
+    <EmbeddedResource Include="Scripts\Model\202108171412 Change data type for energy supplier details.sql" />
+    <EmbeddedResource Include="Scripts\Model\202108171611 Change columns for connection state.sql" />
+    <EmbeddedResource Include="Scripts\Model\202108191611 Update Production Metering Point Column Data Type.sql" />
   </ItemGroup>
 
 </Project>

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Create;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Authorization.AuthorizationHandlers
 {

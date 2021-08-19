@@ -1,9 +1,13 @@
 {
   "IsEncrypted": false,
   "Values": {
-    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+       "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-    "METERINGPOINT_DB_CONNECTION_STRING": "",
+    "APPINSIGHTS_INSTRUMENTATIONKEY": "<Azure application insights instrumentation key>",
+    "SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING": "<Shared Azure Service Bus connection string>",
+    "METERING_POINT_CREATED_TOPIC": "<Topic name for MeteringPointCreated events>",
+    "METERING_POINT_CONNECTED_TOPIC": "<Topic name for MeteringPointConnected events>",
+    "METERINGPOINT_DB_CONNECTION_STRING": "<Main SQL database connection string>",
     "EVENT_MESSAGE_DISPATCH_TRIGGER_TIMER": "*/10 * * * * *",
     "ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER": "*/10 * * * * *",
     "TEMP_POST_OFFICE_CONNECTION_STRING": "",

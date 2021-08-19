@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -38,7 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             {
                 RuleFor(request => request.NetSettlementGroup)
                     .Empty()
-                    .WithState(createMeteringPoint => new NetSettlementGroupNotAllowedValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.TypeOfMeteringPoint));
+                    .WithState(createMeteringPoint => new NetSettlementGroupNotAllowedValidationError(createMeteringPoint.TypeOfMeteringPoint, createMeteringPoint.NetSettlementGroup!));
             });
         }
 

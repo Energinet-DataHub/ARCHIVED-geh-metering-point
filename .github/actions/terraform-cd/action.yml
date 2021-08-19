@@ -84,7 +84,7 @@ runs:
           echo "Storage exists";
           exit;
         fi
-        az storage account create --resource-group ${{ inputs.ENVIRONMENT_LONG }} --name ${{ env.TERRAFORM_STORAGE_NAME }} --sku Standard_LRS --encryption-services blob
+        az storage account create --resource-group ${{ inputs.ENVIRONMENT_LONG }} --name ${{ env.TERRAFORM_STORAGE_NAME }} --sku Standard_LRS --min-tls-version TLS1_2 --encryption-services blob
         account_key=$(az storage account keys list --resource-group ${{ inputs.ENVIRONMENT_LONG }} --account-name ${{ env.TERRAFORM_STORAGE_NAME }} --query '[0].value' -o tsv)
         az storage container create --name tfstate --account-name ${{ env.TERRAFORM_STORAGE_NAME }} --account-key $account_key
 
@@ -109,18 +109,18 @@ runs:
 
     - name: Terraform Init
       shell: bash
-      working-directory: ./build/infrastructure
+      working-directory: ./build/infrastructure/main
       run: terraform init
 
     - name: Terraform Plan
       shell: bash
-      working-directory: ./build/infrastructure
+      working-directory: ./build/infrastructure/main
       run: terraform plan
 
     - name: Terraform Apply
       shell: bash
       id: terraform-apply
-      working-directory: ./build/infrastructure
+      working-directory: ./build/infrastructure/main
       run: | 
         terraform apply -no-color -auto-approve
         echo "::set-output name=sql-server-connectionstring::$(terraform output metering_point_connection_string)"

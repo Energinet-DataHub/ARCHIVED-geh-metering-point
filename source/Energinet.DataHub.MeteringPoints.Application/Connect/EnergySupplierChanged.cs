@@ -14,11 +14,14 @@
 
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using MediatR;
+using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
     public class EnergySupplierChanged : INotification, IInboundMessage
     {
         public string GsrnNumber { get; set; } = string.Empty;
+
+        public Instant StartOfSupply { get; set; }
     }
 }
