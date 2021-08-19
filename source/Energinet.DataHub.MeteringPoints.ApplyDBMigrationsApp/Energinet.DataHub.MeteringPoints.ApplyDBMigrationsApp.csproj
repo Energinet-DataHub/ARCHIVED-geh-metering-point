@@ -40,6 +40,7 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Model\202108171120 Update column data types.sql" />
     <EmbeddedResource Include="Scripts\Model\202108171412 Change data type for energy supplier details.sql" />
     <EmbeddedResource Include="Scripts\Model\202108171611 Change columns for connection state.sql" />
+    <EmbeddedResource Include="Scripts\Model\202108191611 Update Production Metering Point Column Data Type.sql" />
   </ItemGroup>
 
 </Project>
