@@ -1,8 +1,6 @@
-ALTER TABLE [dbo].[MeteringPoints] 
-    DROP COLUMN PhysicalStatusOfMeteringPoint
+EXEC sp_rename '.MeteringPoints.PhysicalStatusOfMeteringPoint', 'ConnectionState_PhysicalState', 'COLUMN';
 GO
 ALTER TABLE [dbo].[MeteringPoints]
-ADD 
-    ConnectionState_PhysicalState NVARCHAR(255) NOT NULL,
+    ADD
     ConnectionState_EffectiveDate DATETIME2(7) NULL;
 GO
