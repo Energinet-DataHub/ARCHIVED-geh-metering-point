@@ -18,7 +18,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using NodaTime.Serialization.SystemTextJson;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Helpers
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Serialization
 {
     /// <summary>
     /// JSON serializer that specifically support NodaTime's <see cref="NodaTime.Instant"/>.
@@ -35,18 +35,20 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Helpers
 
         public async ValueTask<object> DeserializeAsync(Stream utf8Json, Type returnType)
         {
-            return await System.Text.Json.JsonSerializer.DeserializeAsync(utf8Json, returnType, _options)
-                .ConfigureAwait(false) ?? throw new InvalidOperationException();
+            return await System.Text.Json.JsonSerializer.DeserializeAsync(utf8Json, returnType, _options).ConfigureAwait(false)
+                   ?? throw new InvalidOperationException();
         }
 
         public TValue Deserialize<TValue>(string json)
         {
-            return System.Text.Json.JsonSerializer.Deserialize<TValue>(json, _options) ?? throw new InvalidOperationException();
+            return System.Text.Json.JsonSerializer.Deserialize<TValue>(json, _options)
+                   ?? throw new InvalidOperationException();
         }
 
         public object Deserialize(string json, Type returnType)
         {
-            return System.Text.Json.JsonSerializer.Deserialize(json, returnType, _options) ?? throw new InvalidOperationException();
+            return System.Text.Json.JsonSerializer.Deserialize(json, returnType, _options)
+                   ?? throw new InvalidOperationException();
         }
 
         public string Serialize<TValue>(TValue value)
