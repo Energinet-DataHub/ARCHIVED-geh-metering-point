@@ -50,13 +50,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice
             {
                 var bytes = Encoding.ASCII.GetBytes(message.Content);
 
-                var fileName = Guid.NewGuid().ToString() + ".json";
+                var fileName = $"{Guid.NewGuid()}.xml";
                 var fileClient = await shareDirectoryClient.CreateFileAsync(fileName, bytes.LongLength).ConfigureAwait(false);
-                using (var fileShareStream = await fileClient.Value.OpenWriteAsync(false, 0).ConfigureAwait(false))
-                using (var localStream = new MemoryStream(bytes))
-                {
-                    await localStream.CopyToAsync(fileShareStream).ConfigureAwait(false);
-                }
+                await using var fileShareStream = await fileClient.Value.OpenWriteAsync(false, 0).ConfigureAwait(false);
+                await using var localStream = new MemoryStream(bytes);
+                await localStream.CopyToAsync(fileShareStream).ConfigureAwait(false);
             }
         }
     }
