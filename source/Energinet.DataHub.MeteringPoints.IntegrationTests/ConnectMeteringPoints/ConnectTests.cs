@@ -167,7 +167,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
                 SampleData.DisconnectionType,
                 SampleData.Occurrence,
                 SampleData.MeterNumber,
-                string.Empty,
+                SampleData.Transaction,
                 SampleData.PhysicalState,
                 SampleData.NetSettlementGroup,
                 SampleData.ConnectionType,
