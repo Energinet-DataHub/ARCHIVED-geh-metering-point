@@ -38,7 +38,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 
         private bool IsValidGsrnNumber()
         {
-            return LengthIsValid() && StartDigitsAreValid() && CheckSumIsValid();
+            return IsAllDigits() && LengthIsValid() && StartDigitsAreValid() && CheckSumIsValid();
+        }
+
+        private bool IsAllDigits()
+        {
+            return long.TryParse(_gsrnValue, System.Globalization.NumberStyles.Integer, System.Globalization.NumberFormatInfo.InvariantInfo, out _);
         }
 
         private bool LengthIsValid()
