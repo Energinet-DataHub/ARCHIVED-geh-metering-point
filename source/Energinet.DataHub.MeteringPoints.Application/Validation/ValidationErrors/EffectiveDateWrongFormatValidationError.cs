@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class OccurenceRequiredErrorConverter : ErrorConverter<OccurenceRequiredValidationError>
+    public class EffectiveDateWrongFormatValidationError : ValidationError
     {
-        protected override ErrorMessage Convert(OccurenceRequiredValidationError validationError)
+        public EffectiveDateWrongFormatValidationError(string occurenceDate)
         {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-
-            return new("D02", $"Occurrence date is missing");
+            OccurenceDate = occurenceDate;
         }
+
+        public string OccurenceDate { get; }
     }
 }

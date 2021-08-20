@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using System;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class OccurenceDateWrongFormatValidationError : ValidationError
+    public class EffectiveDateWrongFormatErrorConverter : ErrorConverter<EffectiveDateWrongFormatValidationError>
     {
-        public OccurenceDateWrongFormatValidationError(string occurenceDate)
+        protected override ErrorMessage Convert(EffectiveDateWrongFormatValidationError validationError)
         {
-            OccurenceDate = occurenceDate;
-        }
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-        public string OccurenceDate { get; }
+            return new("E86", $"Date time {validationError.OccurenceDate} must have UTC+0 format 'YYYY-MM-DD HH:MI:SS'");
+        }
     }
 }

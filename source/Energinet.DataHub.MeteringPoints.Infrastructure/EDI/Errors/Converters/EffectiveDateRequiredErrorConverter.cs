@@ -17,13 +17,13 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class OccurenceDateWrongFormatErrorConverter : ErrorConverter<OccurenceDateWrongFormatValidationError>
+    public class EffectiveDateRequiredErrorConverter : ErrorConverter<EffectiveDateRequiredValidationError>
     {
-        protected override ErrorMessage Convert(OccurenceDateWrongFormatValidationError validationError)
+        protected override ErrorMessage Convert(EffectiveDateRequiredValidationError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("E86", $"Date time {validationError.OccurenceDate} must have UTC+0 format 'YYYY-MM-DD HH:MI:SS'");
+            return new("D02", $"Occurrence date is missing");
         }
     }
 }

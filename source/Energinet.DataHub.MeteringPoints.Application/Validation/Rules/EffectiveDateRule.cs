@@ -18,28 +18,28 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class OccurenceDateMustBeValidRule : AbstractValidator<CreateMeteringPoint>
+    public class EffectiveDateRule : AbstractValidator<string>
     {
-        private const string OccurenceDateFormatRegEx = @"^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(\.\d{2,3})?Z$";
+        private const string EffectiveDateFormatRegEx = @"^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(\.\d{2,3})?Z$";
 
-        public OccurenceDateMustBeValidRule()
+        public EffectiveDateRule()
         {
-            OccurenceDateRequired();
-            OccurenceDateFormat();
+            EffectiveDateRequired();
+            EffectiveDateFormat();
         }
 
-        private void OccurenceDateRequired()
+        private void EffectiveDateRequired()
         {
-            RuleFor(createMeteringPoint => createMeteringPoint.OccurenceDate)
+            RuleFor(effectiveDate => effectiveDate)
                 .NotEmpty()
-                .WithState(createMeteringPoint => new OccurenceRequiredValidationError(createMeteringPoint.GsrnNumber));
+                .WithState(createMeteringPoint => new EffectiveDateRequiredValidationError());
         }
 
-        private void OccurenceDateFormat()
+        private void EffectiveDateFormat()
         {
-            RuleFor(createMeteringPoint => createMeteringPoint.OccurenceDate)
-                .Matches(OccurenceDateFormatRegEx)
-                .WithState(createMeteringPoint => new OccurenceDateWrongFormatValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.OccurenceDate));
+            RuleFor(effectiveDate => effectiveDate)
+                .Matches(EffectiveDateFormatRegEx)
+                .WithState(effectiveDate => new EffectiveDateWrongFormatValidationError(effectiveDate));
         }
     }
 }
