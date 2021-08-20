@@ -17,13 +17,13 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class MeteringPointMustBeKnownRuleErrorConverter : ErrorConverter<MeteringPointMustBeKnownRuleError>
+    public class MeteringPointMustBeKnownRuleErrorConverter : ErrorConverter<MeteringPointMustNotBeKnownRuleError>
     {
-        protected override ErrorMessage Convert(MeteringPointMustBeKnownRuleError validationError)
+        protected override ErrorMessage Convert(MeteringPointMustNotBeKnownRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new ErrorMessage("E10", $"Metering point {validationError.GsrnNumber} does not exist");
+            return new ErrorMessage("E10", $"Metering point {validationError.GsrnNumber} already exists");
         }
     }
 }
