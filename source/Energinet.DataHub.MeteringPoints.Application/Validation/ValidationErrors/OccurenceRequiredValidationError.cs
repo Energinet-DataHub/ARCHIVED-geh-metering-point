@@ -18,11 +18,5 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class OccurenceRequiredValidationError : ValidationError
     {
-        public OccurenceRequiredValidationError(string gsrnNumber)
-        {
-            GsrnNumber = gsrnNumber;
-        }
-
-        public string GsrnNumber { get; }
     }
 }

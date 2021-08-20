@@ -19,13 +19,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class OccurenceDateWrongFormatValidationError : ValidationError
     {
-        public OccurenceDateWrongFormatValidationError(string gsrnNumber, string occurenceDate)
+        public OccurenceDateWrongFormatValidationError(string occurenceDate)
         {
-            GsrnNumber = gsrnNumber;
             OccurenceDate = occurenceDate;
         }
-
-        public string GsrnNumber { get; }
 
         public string OccurenceDate { get; }
     }
