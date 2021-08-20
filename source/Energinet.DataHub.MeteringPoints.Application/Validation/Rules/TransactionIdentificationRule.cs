@@ -12,19 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class OccurenceRequiredErrorConverter : ErrorConverter<OccurenceRequiredValidationError>
+    public class TransactionIdentificationRule : AbstractValidator<string>
     {
-        // TODO: This is an example, redo when we know what/how etc.
-        protected override ErrorMessage Convert(OccurenceRequiredValidationError validationError)
+        public TransactionIdentificationRule()
         {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-
-            return new("D02", $"Occurrence date is missing for metering point {validationError.GsrnNumber}");
+            RuleFor(transaction => transaction)
+                .NotEmpty()
+                .WithState(_ => new TransactionIdentificationValidationError());
         }
     }
 }

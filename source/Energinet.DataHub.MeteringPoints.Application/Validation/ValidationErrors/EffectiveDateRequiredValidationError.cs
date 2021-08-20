@@ -16,13 +16,7 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class OccurenceRequiredValidationError : ValidationError
+    public class EffectiveDateRequiredValidationError : ValidationError
     {
-        public OccurenceRequiredValidationError(string gsrnNumber)
-        {
-            GsrnNumber = gsrnNumber;
-        }
-
-        public string GsrnNumber { get; }
     }
 }
