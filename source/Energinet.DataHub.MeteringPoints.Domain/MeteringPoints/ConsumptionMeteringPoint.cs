@@ -117,7 +117,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GsrnNumber? powerPlantGSRN,
             Address address)
         {
-            var rules = new List<IBusinessRule>()
+            var rules = new Collection<IBusinessRule>()
             {
                 new PowerPlantIsRequiredForNetSettlementGroupRule(meteringPointGSRN, netSettlementGroup, powerPlantGSRN),
                 new StreetNameIsRequiredRule(meteringPointGSRN, address),
