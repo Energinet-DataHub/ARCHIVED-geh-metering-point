@@ -22,28 +22,33 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class EffectiveDate : ValueObject
     {
-        private EffectiveDate(Instant date)
+        private EffectiveDate(Instant dateInUtc)
         {
-            Date = date;
+            DateInUtc = dateInUtc;
         }
 
-        public Instant Date { get; }
+        public Instant DateInUtc { get; }
 
-        public static BusinessRulesValidationResult CheckRules(string date)
+        public static BusinessRulesValidationResult CheckRules(string dateInUtc)
         {
             var rules = new Collection<IBusinessRule>()
             {
-                new DateFormatMustBeUTCRule(date),
+                new DateFormatMustBeUTCRule(dateInUtc),
             };
             return new BusinessRulesValidationResult(rules);
         }
 
-        public static EffectiveDate Create(string date)
+        public static EffectiveDate Create(string dateInUtc)
         {
-            var parseResult = InstantPattern.General.Parse(date);
+            if (CheckRules(dateInUtc).Success == false)
+            {
+                throw new InvalidEffectiveDateFormat(dateInUtc);
+            }
+
+            var parseResult = InstantPattern.General.Parse(dateInUtc);
             if (parseResult.Success == false)
             {
-                throw new InvalidEffectiveDateFormat(date);
+                throw new InvalidEffectiveDateFormat(dateInUtc);
             }
 
             return new EffectiveDate(parseResult.Value);
@@ -51,7 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public override string ToString()
         {
-            return Date.ToString();
+            return DateInUtc.ToString();
         }
     }
 }
