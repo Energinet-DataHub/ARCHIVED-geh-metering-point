@@ -136,7 +136,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<INotificationReceiver, NotificationReceiver>(Lifestyle.Scoped);
 
             container.AddValidationErrorConversion(
-                validateRegistrations: true,
+                validateRegistrations: false,
                 typeof(CreateMeteringPoint).Assembly, // Application
                 typeof(MeteringPoint).Assembly, // Domain
                 typeof(ErrorMessageFactory).Assembly); // Infrastructure

@@ -103,7 +103,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(ConnectionString), Lifestyle.Scoped);
 
             _container.AddValidationErrorConversion(
-                validateRegistrations: true,
+                validateRegistrations: false,
                 typeof(CreateMeteringPoint).Assembly, // Application
                 typeof(MeteringPoint).Assembly, // Domain
                 typeof(ErrorMessageFactory).Assembly); // Infrastructure
