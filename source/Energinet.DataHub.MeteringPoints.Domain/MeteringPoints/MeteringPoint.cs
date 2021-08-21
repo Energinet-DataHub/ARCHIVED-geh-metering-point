@@ -36,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private GsrnNumber? _powerPlantGsrnNumber;
         private string? _locationDescription;
         private MeasurementUnitType _unitType;
-        private Instant? _occurenceDate;
+        private EffectiveDate _effectiveDate;
         private string? _parentRelatedMeteringPoint;
         private string _meterNumber;
 
@@ -60,7 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             ReadingOccurrence meterReadingOccurrence,
             int maximumCurrent,
             int maximumPower,
-            Instant? occurenceDate,
+            EffectiveDate effectiveDate,
             string? parentRelatedMeteringPoint)
         {
             Id = id;
@@ -77,7 +77,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _meterReadingOccurrence = meterReadingOccurrence;
             _maximumCurrent = maximumCurrent;
             _maximumPower = maximumPower;
-            _occurenceDate = occurenceDate;
+            _effectiveDate = effectiveDate;
             _parentRelatedMeteringPoint = parentRelatedMeteringPoint;
 
             AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaId, meteringPointSubType, ConnectionState.PhysicalState, meterReadingOccurrence, ProductType.Tariff, unitType));

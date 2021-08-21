@@ -12,17 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Text.RegularExpressions;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
-    public class OccurenceRequiredValidationError : ValidationError
+    public class DateFormatMustBeUTCRule : IBusinessRule
     {
-        public OccurenceRequiredValidationError(string gsrnNumber)
+        private const string FormatRegEx = @"\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2]\d|3[0-1])T00:00:00Z";
+        private readonly string _date;
+
+        public DateFormatMustBeUTCRule(string date)
         {
-            GsrnNumber = gsrnNumber;
+            _date = date;
+            IsBroken = !Regex.IsMatch(date, FormatRegEx);
         }
 
-        public string GsrnNumber { get; }
+        public bool IsBroken { get; }
+
+        public ValidationError ValidationError => new DateFormatMustBeUTCRuleError(_date);
     }
 }

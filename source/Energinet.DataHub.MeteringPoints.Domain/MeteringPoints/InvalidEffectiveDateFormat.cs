@@ -12,21 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using System;
+using System.Runtime.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public class OccurenceDateWrongFormatValidationError : ValidationError
+    [Serializable]
+    public class InvalidEffectiveDateFormat : BusinessRuleException
     {
-        public OccurenceDateWrongFormatValidationError(string gsrnNumber, string occurenceDate)
+        public InvalidEffectiveDateFormat()
         {
-            GsrnNumber = gsrnNumber;
-            OccurenceDate = occurenceDate;
         }
 
-        public string GsrnNumber { get; }
+        public InvalidEffectiveDateFormat(string? message)
+            : base(message)
+        {
+        }
 
-        public string OccurenceDate { get; }
+        public InvalidEffectiveDateFormat(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+
+        protected InvalidEffectiveDateFormat(SerializationInfo serializationInfo, StreamingContext streamingContext)
+        {
+        }
     }
 }

@@ -55,7 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public static int MaximumPower => 230;
 
-        public static Instant? OccurenceDate => SystemClock.Instance.GetCurrentInstant();
+        public static string EffectiveDate => EffectiveDateNow();
 
         public static string SettlementMethod => Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.SettlementMethod.Flex.Name;
 
@@ -66,5 +66,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests
         public static string ConnectionType => string.Empty;
 
         public static string AssetType => string.Empty;
+
+        private static string EffectiveDateNow()
+        {
+            var currentDate = SystemClock.Instance.GetCurrentInstant().InUtc();
+            var effectiveDate = Instant.FromUtc(currentDate.Year, currentDate.Month, currentDate.Day, 0, 0, 0);
+            return effectiveDate.ToString();
+        }
     }
 }

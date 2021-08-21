@@ -60,6 +60,7 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="EDI\Errors\Converters\Common" />
       <Folder Include="Messaging\Incoming\Protobuf\Contracts" />
     </ItemGroup>
 

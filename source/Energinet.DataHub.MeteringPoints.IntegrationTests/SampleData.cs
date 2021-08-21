@@ -39,7 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string AssetType => Domain.MeteringPoints.AssetType.GasTurbine.Name;
 
-        public static string Occurrence => "2021-05-05T10:10:10Z";
+        public static string Occurrence => "2021-05-05T00:00:00Z";
 
         public static string MeasurementUnitType => Domain.MeteringPoints.MeasurementUnitType.KWh.Name;
 

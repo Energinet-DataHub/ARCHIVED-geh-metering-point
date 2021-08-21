@@ -14,32 +14,31 @@
 
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class OccurenceDateMustBeValidRule : AbstractValidator<CreateMeteringPoint>
+    public class EffectiveDateMustBeValidRule : AbstractValidator<CreateMeteringPoint>
     {
-        private const string OccurenceDateFormatRegEx = @"^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(\.\d{2,3})?Z$";
-
-        public OccurenceDateMustBeValidRule()
+        public EffectiveDateMustBeValidRule()
         {
-            OccurenceDateRequired();
-            OccurenceDateFormat();
+            EffectiveDateRequired();
+            EffectiveDateFormat();
         }
 
-        private void OccurenceDateRequired()
+        private void EffectiveDateRequired()
         {
-            RuleFor(createMeteringPoint => createMeteringPoint.OccurenceDate)
+            RuleFor(createMeteringPoint => createMeteringPoint.EffectiveDate)
                 .NotEmpty()
-                .WithState(createMeteringPoint => new OccurenceRequiredValidationError(createMeteringPoint.GsrnNumber));
+                .WithState(createMeteringPoint => new EffectiveDateRequiredValidationError(createMeteringPoint.GsrnNumber));
         }
 
-        private void OccurenceDateFormat()
+        private void EffectiveDateFormat()
         {
-            RuleFor(createMeteringPoint => createMeteringPoint.OccurenceDate)
-                .Matches(OccurenceDateFormatRegEx)
-                .WithState(createMeteringPoint => new OccurenceDateWrongFormatValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.OccurenceDate));
+            RuleFor(createMeteringPoint => createMeteringPoint.EffectiveDate)
+                .Must(effectiveDate => EffectiveDate.CheckRules(effectiveDate).Success)
+                .WithState(createMeteringPoint => new EffectiveDateWrongFormatValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.EffectiveDate));
         }
     }
 }

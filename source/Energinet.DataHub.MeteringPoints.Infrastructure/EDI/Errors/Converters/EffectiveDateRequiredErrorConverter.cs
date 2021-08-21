@@ -17,10 +17,10 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class OccurenceRequiredErrorConverter : ErrorConverter<OccurenceRequiredValidationError>
+    public class EffectiveDateRequiredErrorConverter : ErrorConverter<EffectiveDateRequiredValidationError>
     {
         // TODO: This is an example, redo when we know what/how etc.
-        protected override ErrorMessage Convert(OccurenceRequiredValidationError validationError)
+        protected override ErrorMessage Convert(EffectiveDateRequiredValidationError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 

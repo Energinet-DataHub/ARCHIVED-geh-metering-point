@@ -91,7 +91,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
 
             command.LocationDescription.Should().Be("String");
             command.MeterNumber.Should().Be("123456789");
-            command.OccurenceDate.Should().Be("2021-07-13T22:00:00Z");
+            command.EffectiveDate.Should().Be("2021-07-13T22:00:00Z");
             command.MeteringGridArea.Should().Be("870");
             command.NetSettlementGroup.Should().Be("Zero");
             command.MaximumCurrent.Should().Be(5000);
