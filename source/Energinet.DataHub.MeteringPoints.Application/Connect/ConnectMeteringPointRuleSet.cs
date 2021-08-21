@@ -12,12 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation
+namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
     public class ConnectMeteringPointRuleSet : AbstractValidator<ConnectMeteringPoint>
     {
