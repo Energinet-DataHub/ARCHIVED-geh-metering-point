@@ -12,11 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class EffectiveDateRequiredValidationError : ValidationError
+    public class MeteringPointGsrnMustBeUniqueRule : IBusinessRule
     {
+        private readonly string _gsrnNumber;
+
+        public MeteringPointGsrnMustBeUniqueRule(bool gsrnNumberExists, string gsrnNumber)
+        {
+            _gsrnNumber = gsrnNumber;
+            IsBroken = gsrnNumberExists;
+        }
+
+        public bool IsBroken { get; }
+
+        public ValidationError ValidationError => new MeteringPointMustBeKnownRuleError(_gsrnNumber);
     }
 }

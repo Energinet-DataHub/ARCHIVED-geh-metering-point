@@ -85,9 +85,14 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == nameof(CreateMeteringPointRejected));
         }
 
-        [Fact(Skip = "Not implemented yet")]
-        public void CreateMeteringPoint_WithAlreadyExistingGsrnNumber_ShouldGenerateRejectMessageInOutbox()
+        [Fact]
+        public async Task CreateMeteringPoint_WithAlreadyExistingGsrnNumber_ShouldGenerateRejectMessageInOutbox()
         {
+            var request = CreateRequest();
+            await _mediator.Send(request, CancellationToken.None).ConfigureAwait(false);
+            await _mediator.Send(request, CancellationToken.None).ConfigureAwait(false);
+
+            AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == nameof(CreateMeteringPointRejected));
         }
 
         [Fact(Skip = "Not implemented yet")]
@@ -138,7 +143,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SampleData.DisconnectionType,
                 SampleData.Occurrence,
                 SampleData.MeterNumber,
-                string.Empty,
+                SampleData.Transaction,
                 SampleData.PhysicalState,
                 SampleData.NetSettlementGroup,
                 SampleData.ConnectionType,

@@ -13,34 +13,47 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Queries;
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using MediatR;
+using ConsumptionMeteringPoint = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ConsumptionMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Create
 {
     public class CreateMeteringPointHandler : IBusinessRequestHandler<CreateMeteringPoint>
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
+        private readonly IMediator _mediator;
 
-        public CreateMeteringPointHandler(IMeteringPointRepository meteringPointRepository)
+        public CreateMeteringPointHandler(IMeteringPointRepository meteringPointRepository, IMediator mediator)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
+            _mediator = mediator;
         }
 
-        public Task<BusinessProcessResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
+        public async Task<BusinessProcessResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
+
+            var validationResult = await ValidateAsync(request, cancellationToken).ConfigureAwait(false);
+            if (!validationResult.Success)
+            {
+                return validationResult;
+            }
 
             var meteringPointType = EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint);
 
             var rulesCheckResult = CheckBusinessRules(request);
             if (!rulesCheckResult.Success)
             {
-                return Task.FromResult(rulesCheckResult);
+                return rulesCheckResult;
             }
 
             MeteringPoint meteringPoint;
@@ -63,7 +76,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
 
             _meteringPointRepository.Add(meteringPoint);
 
-            return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
+            return BusinessProcessResult.Ok(request.TransactionId);
         }
 
         private static BusinessProcessResult CheckBusinessRules(CreateMeteringPoint request)
@@ -166,6 +179,18 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 request.PostCode,
                 request.CityName,
                 request.CountryCode);
+        }
+
+        private async Task<BusinessProcessResult> ValidateAsync(CreateMeteringPoint request, CancellationToken cancellationToken)
+        {
+            var gsrnNumberExists = await _mediator.Send(new MeteringPointGsrnExistsQuery(request.GsrnNumber), cancellationToken).ConfigureAwait(false);
+
+            var validationRules = new List<IBusinessRule>
+            {
+                new MeteringPointGsrnMustBeUniqueRule(gsrnNumberExists, request.GsrnNumber),
+            };
+
+            return new BusinessProcessResult(request.TransactionId, validationRules);
         }
     }
 }

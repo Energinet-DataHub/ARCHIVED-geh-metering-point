@@ -167,7 +167,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
                 SampleData.DisconnectionType,
                 SampleData.Occurrence,
                 SampleData.MeterNumber,
-                string.Empty,
+                SampleData.Transaction,
                 SampleData.PhysicalState,
                 SampleData.NetSettlementGroup,
                 SampleData.ConnectionType,
@@ -183,7 +183,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
 
         private ConnectMeteringPoint CreateConnectMeteringPointRequest()
         {
-            return new(SampleData.GsrnNumber, _dateTimeProvider.Now().ToString(), string.Empty);
+            return new(SampleData.GsrnNumber, _dateTimeProvider.Now().ToString(), SampleData.Transaction);
         }
 
         private async Task MarkAsEnergySupplierAssigned(Instant startOfSupply)

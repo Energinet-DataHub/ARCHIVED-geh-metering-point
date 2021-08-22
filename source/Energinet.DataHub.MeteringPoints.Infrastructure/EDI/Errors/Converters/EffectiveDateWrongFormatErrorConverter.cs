@@ -19,12 +19,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
     public class EffectiveDateWrongFormatErrorConverter : ErrorConverter<EffectiveDateWrongFormatValidationError>
     {
-        // TODO: This is an example, redo when we know what/how etc.
         protected override ErrorMessage Convert(EffectiveDateWrongFormatValidationError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("E86", $"Date time {validationError.OccurenceDate} for metering point {validationError.GsrnNumber} must have UTC+0 format 'YYYY-MM-DD HH:MI:SS'");
+            return new("E86", $"Date time {validationError.OccurenceDate} must have UTC+0 format 'YYYY-MM-DD HH:MI:SS'");
         }
     }
 }

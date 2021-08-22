@@ -19,12 +19,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
     public class EffectiveDateRequiredErrorConverter : ErrorConverter<EffectiveDateRequiredValidationError>
     {
-        // TODO: This is an example, redo when we know what/how etc.
         protected override ErrorMessage Convert(EffectiveDateRequiredValidationError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D02", $"Occurrence date is missing for metering point {validationError.GsrnNumber}");
+            return new("D02", $"Occurrence date is missing");
         }
     }
 }

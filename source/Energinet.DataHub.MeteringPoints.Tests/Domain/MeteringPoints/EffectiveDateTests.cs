@@ -24,6 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
     {
         [Theory]
         [InlineData("2021-06-01T00:00:00Z", true)]
+        [InlineData("2021-06-01T00:00:00.000Z", true)]
         [InlineData("2021-06-01", false)]
         public void Date_format_must_be_UTC_at_midnight(string dateString, bool isValid)
         {

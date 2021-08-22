@@ -12,11 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using System;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class EffectiveDateRequiredValidationError : ValidationError
+    public class TransactionIdentificationErrorConverter : ErrorConverter<TransactionIdentificationValidationError>
     {
+        protected override ErrorMessage Convert(TransactionIdentificationValidationError validationError)
+        {
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new("E10", "Identification is missing, metering point can not be processed");
+        }
     }
 }

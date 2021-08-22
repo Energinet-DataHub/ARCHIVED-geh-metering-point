@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -62,7 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SampleData.DisconnectionType,
                 SampleData.Occurrence,
                 string.Empty,
-                string.Empty,
+                Guid.NewGuid().ToString(),
                 SampleData.PhysicalState,
                 NetSettlementGroup.Six.Name,
                 SampleData.ConnectionType,

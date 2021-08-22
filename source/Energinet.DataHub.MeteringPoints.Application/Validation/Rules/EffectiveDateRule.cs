@@ -19,9 +19,9 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class EffectiveDateMustBeValidRule : AbstractValidator<CreateMeteringPoint>
+    public class EffectiveDateRule : AbstractValidator<string>
     {
-        public EffectiveDateMustBeValidRule()
+        public EffectiveDateRule()
         {
             EffectiveDateRequired();
             EffectiveDateFormat();
@@ -29,16 +29,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
         private void EffectiveDateRequired()
         {
-            RuleFor(createMeteringPoint => createMeteringPoint.EffectiveDate)
+            RuleFor(effectiveDate => effectiveDate)
                 .NotEmpty()
-                .WithState(createMeteringPoint => new EffectiveDateRequiredValidationError(createMeteringPoint.GsrnNumber));
+                .WithState(createMeteringPoint => new EffectiveDateRequiredValidationError());
         }
 
         private void EffectiveDateFormat()
         {
-            RuleFor(createMeteringPoint => createMeteringPoint.EffectiveDate)
+            RuleFor(effectiveDate => effectiveDate)
                 .Must(effectiveDate => EffectiveDate.CheckRules(effectiveDate).Success)
-                .WithState(createMeteringPoint => new EffectiveDateWrongFormatValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.EffectiveDate));
+                .WithState(effectiveDate => new EffectiveDateWrongFormatValidationError(effectiveDate));
         }
     }
 }

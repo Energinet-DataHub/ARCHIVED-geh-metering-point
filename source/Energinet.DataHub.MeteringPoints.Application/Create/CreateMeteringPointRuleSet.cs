@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Create
+namespace Energinet.DataHub.MeteringPoints.Application.Validation
 {
     public class CreateMeteringPointRuleSet : AbstractValidator<CreateMeteringPoint>
     {
@@ -24,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberMustBeValidRule());
             RuleFor(request => request).SetValidator(new SettlementMethodMustBeValidRule());
             RuleFor(request => request).SetValidator(new MeteringGridAreaValidRule());
-            RuleFor(request => request).SetValidator(new EffectiveDateMustBeValidRule());
+            RuleFor(request => request.EffectiveDate).SetValidator(new EffectiveDateRule());
             RuleFor(request => request).SetValidator(new MeteringPointTypeValidRule());
             RuleFor(request => request).SetValidator(new AddressRule());
             RuleFor(request => request).SetValidator(new MeteringPointSubTypeMustBeValidRule());
@@ -40,6 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             RuleFor(request => request).SetValidator(new AssetTypeRule());
             RuleFor(request => request).SetValidator(new PowerLimitRule());
             RuleFor(request => request).SetValidator(new PhysicalStateRule());
+            RuleFor(request => request.TransactionId).SetValidator(new TransactionIdentificationRule());
         }
     }
 }
