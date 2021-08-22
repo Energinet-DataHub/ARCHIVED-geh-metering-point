@@ -19,7 +19,6 @@ using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Create
 {
@@ -37,6 +36,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var meteringPointType = EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint);
+
+            var rulesCheckResult = CheckBusinessRules(request);
+            if (!rulesCheckResult.Success)
+            {
+                return Task.FromResult(rulesCheckResult);
+            }
 
             MeteringPoint meteringPoint;
 
@@ -59,6 +64,23 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             _meteringPointRepository.Add(meteringPoint);
 
             return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
+        }
+
+        private static BusinessProcessResult CheckBusinessRules(CreateMeteringPoint request)
+        {
+            var meteringPointType = EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint);
+            if (meteringPointType != MeteringPointType.Consumption)
+            {
+                return BusinessProcessResult.Ok(request.TransactionId);
+            }
+
+            var validationResult = ConsumptionMeteringPoint.CanCreate(
+                GsrnNumber.Create(request.GsrnNumber),
+                EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup!),
+                string.IsNullOrWhiteSpace(request.PowerPlant) ? null : GsrnNumber.Create(request.PowerPlant!),
+                CreateAddress(request));
+
+            return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
         }
 
         private static ProductionMeteringPoint CreateProductionMeteringPoint(CreateMeteringPoint request, MeteringPointType meteringPointType)

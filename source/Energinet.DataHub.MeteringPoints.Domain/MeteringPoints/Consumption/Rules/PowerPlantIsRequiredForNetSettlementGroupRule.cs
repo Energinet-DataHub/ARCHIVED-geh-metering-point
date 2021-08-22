@@ -27,7 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rul
             _meteringPointGSRN = meteringPointGSRN;
             _netSettlementGroup = netSettlementGroup;
             _powerPlant = powerPlant;
-            IsBroken = _netSettlementGroup != NetSettlementGroup.Zero && powerPlant is null;
+            IsBroken = (_netSettlementGroup != NetSettlementGroup.Zero || _netSettlementGroup != NetSettlementGroup.Zero) && powerPlant is null;
         }
 
         public bool IsBroken { get; }
