@@ -27,12 +27,17 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rul
             _meteringPointGSRN = meteringPointGSRN;
             _netSettlementGroup = netSettlementGroup;
             _powerPlant = powerPlant;
-            IsBroken = (_netSettlementGroup != NetSettlementGroup.Zero || _netSettlementGroup != NetSettlementGroup.Zero) && powerPlant is null;
+            IsBroken = PowerPlantIsRequiredFor(netSettlementGroup) && powerPlant == null;
         }
 
         public bool IsBroken { get; }
 
         public ValidationError ValidationError =>
             new PowerPlantIsRequiredForNetSettlementGroupRuleError(_meteringPointGSRN, _netSettlementGroup);
+
+        private static bool PowerPlantIsRequiredFor(NetSettlementGroup netSettlementGroup)
+        {
+            return !(netSettlementGroup == NetSettlementGroup.Zero || netSettlementGroup == NetSettlementGroup.Ninetynine);
+        }
     }
 }
