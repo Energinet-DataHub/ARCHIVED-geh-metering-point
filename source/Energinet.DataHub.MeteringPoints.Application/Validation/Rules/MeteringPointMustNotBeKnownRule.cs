@@ -30,6 +30,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
         public bool IsBroken { get; }
 
-        public ValidationError ValidationError => new MeteringPointMustNotBeKnownRuleError(_gsrnNumber);
+        public ValidationError ValidationError => new MeteringPointMustNotBeKnownValidationError(_gsrnNumber);
     }
 }
