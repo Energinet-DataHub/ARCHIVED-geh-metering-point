@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
@@ -154,6 +155,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
         {
             return Domain.MeteringPoints.Address.Create(
                 request.StreetName,
+                request.StreetCode,
                 request.PostCode,
                 request.CityName,
                 request.CountryCode);

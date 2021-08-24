@@ -12,15 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.ObjectModel;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class Address : ValueObject
     {
-        private Address(string? streetName, string? postCode, string? cityName, string? countryCode)
+        private Address(string? streetName, string streetCode, string? postCode, string? cityName, string? countryCode)
         {
             StreetName = streetName;
+            StreetCode = streetCode;
             PostCode = postCode;
             CityName = cityName;
             CountryCode = countryCode;
@@ -28,15 +31,30 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public string? StreetName { get; }
 
+        public string StreetCode { get; }
+
         public string? PostCode { get; }
 
         public string? CityName { get; }
 
         public string? CountryCode { get; }
 
-        public static Address Create(string? streetName, string? postCode, string? cityName, string? countryCode)
+        public static Address Create(string? streetName, string streetCode, string? postCode, string? cityName, string? countryCode)
         {
-            return new(streetName, postCode, cityName, countryCode);
+            if (CheckRules(streetCode).Success == false)
+            {
+                throw new InvalidAddressException();
+            }
+
+            return new(streetName, streetCode, postCode, cityName, countryCode);
+        }
+
+        public static BusinessRulesValidationResult CheckRules(string streetCode)
+        {
+            return new BusinessRulesValidationResult(new Collection<IBusinessRule>()
+            {
+                new StreetCodeRule(streetCode),
+            });
         }
     }
 }
