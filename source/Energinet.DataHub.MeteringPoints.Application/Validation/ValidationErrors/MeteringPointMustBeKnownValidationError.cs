@@ -16,9 +16,9 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class MeteringPointMustNotBeKnownValidationError : ValidationError
+    public class MeteringPointMustBeKnownValidationError : ValidationError
     {
-        public MeteringPointMustNotBeKnownValidationError(string gsrnNumber)
+        public MeteringPointMustBeKnownValidationError(string gsrnNumber)
         {
             GsrnNumber = gsrnNumber;
         }
