@@ -17,13 +17,13 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Extensions;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using MediatR;
-using NodaTime;
 using ConsumptionMeteringPoint = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ConsumptionMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Create
@@ -91,7 +91,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
                 request.MaximumCurrent,
                 request.MaximumPower,
-                SystemClock.Instance.GetCurrentInstant(), // TODO: Parse date in correct format when implemented in Input Validation
+                request.OccurenceDate.ToInstant(),
                 EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup!),
                 EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
                 EnumerationType.FromName<ConnectionType>(request.ConnectionType!),
@@ -116,7 +116,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
                 request.MaximumCurrent,
                 request.MaximumPower,
-                SystemClock.Instance.GetCurrentInstant(), // TODO: Parse date in correct format when implemented in Input Validation
+                request.OccurenceDate.ToInstant(),
                 request.ToGrid,
                 request.FromGrid,
                 request.ParentRelatedMeteringPoint,
@@ -140,7 +140,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
                 request.MaximumCurrent,
                 request.MaximumPower,
-                SystemClock.Instance.GetCurrentInstant(), // TODO: Parse date in correct format when implemented in Input Validation
+                request.OccurenceDate.ToInstant(),
                 EnumerationType.FromName<SettlementMethod>(request.SettlementMethod!),
                 EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup!),
                 EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
