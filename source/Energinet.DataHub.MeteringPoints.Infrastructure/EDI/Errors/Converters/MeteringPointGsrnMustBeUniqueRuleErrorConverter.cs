@@ -12,23 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class MeteringPointGsrnMustBeUniqueRule : IBusinessRule
+    public class MeteringPointGsrnMustBeUniqueRuleErrorConverter : ErrorConverter<MeteringPointGsrnMustBeUniqueValidationError>
     {
-        private readonly string _gsrnNumber;
-
-        public MeteringPointGsrnMustBeUniqueRule(bool gsrnNumberExists, string gsrnNumber)
+        protected override ErrorMessage Convert(MeteringPointGsrnMustBeUniqueValidationError validationError)
         {
-            _gsrnNumber = gsrnNumber;
-            IsBroken = gsrnNumberExists;
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new ErrorMessage("E10", $"Metering point {validationError.GsrnNumber} already exists");
         }
-
-        public bool IsBroken { get; }
-
-        public ValidationError ValidationError => new MeteringPointGsrnMustBeUniqueValidationError(_gsrnNumber);
     }
 }

@@ -63,7 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
         {
             var validationRules = new List<IBusinessRule>()
             {
-                new MeteringPointMustNotBeKnownRule(meteringPoint, request.GsrnNumber),
+                new MeteringPointMustBeKnownRule(meteringPoint, request.GsrnNumber),
             };
 
             return new BusinessProcessResult(request.TransactionId, validationRules);
