@@ -12,20 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class OccurenceDateWrongFormatValidationError : ValidationError
+    public class EffectiveDateWrongFormatValidationError : ValidationError
     {
-        public OccurenceDateWrongFormatValidationError(string gsrnNumber, string occurenceDate)
+        public EffectiveDateWrongFormatValidationError(string occurenceDate)
         {
-            GsrnNumber = gsrnNumber;
             OccurenceDate = occurenceDate;
         }
-
-        public string GsrnNumber { get; }
 
         public string OccurenceDate { get; }
     }

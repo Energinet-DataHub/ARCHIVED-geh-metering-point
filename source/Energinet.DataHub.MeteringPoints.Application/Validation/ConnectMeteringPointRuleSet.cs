@@ -14,7 +14,6 @@
 
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation
@@ -24,8 +23,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation
         public ConnectMeteringPointRuleSet()
         {
             RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberMustBeValidRule());
-
-            // TODO: add rules to fulfill a complete validation
+            RuleFor(request => request.EffectiveDate).SetValidator(request => new EffectiveDateRule());
+            RuleFor(request => request.TransactionId).SetValidator(new TransactionIdentificationRule());
         }
     }
 }
