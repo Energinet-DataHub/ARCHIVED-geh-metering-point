@@ -19,7 +19,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
     public class DateFormatMustBeUTCRule : IBusinessRule
     {
-        private const string FormatRegEx = @"\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2]\d|3[0-1])T00:00:00Z";
+        private const string FormatRegEx = @"\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2]\d|3[0-1])T22:00:00(.000)?Z$";
         private readonly string _date;
 
         public DateFormatMustBeUTCRule(string date)

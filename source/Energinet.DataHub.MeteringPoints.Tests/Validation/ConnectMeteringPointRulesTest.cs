@@ -26,8 +26,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
     public class ConnectMeteringPointRulesTest : RuleSetTest<ConnectMeteringPoint, ConnectMeteringPointRuleSet>
     {
         [Theory]
-        [InlineData("571234567891234568", "2021-05-05T10:10:10Z", "a9932d11-3884-4257-8c69-09d4d88302fa")]
-        [InlineData("571234567891234568", "2021-05-05T10:10:10.000Z", "a9932d11-3884-4257-8c69-09d4d88302fa")]
+        [InlineData("571234567891234568", "2021-05-05T22:00:00Z", "a9932d11-3884-4257-8c69-09d4d88302fa")]
+        [InlineData("571234567891234568", "2021-05-05T22:00:00.000Z", "a9932d11-3884-4257-8c69-09d4d88302fa")]
         public void ShouldValidate(string gsrn, string effectiveDate, string transaction)
         {
             var request = CreateRequest(gsrn, effectiveDate, transaction);

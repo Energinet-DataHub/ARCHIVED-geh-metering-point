@@ -23,22 +23,24 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
     public class EffectiveDateTests
     {
         [Theory]
-        [InlineData("2021-06-01T00:00:00Z", true)]
-        [InlineData("2021-06-01T00:00:00.000Z", true)]
+        [InlineData("2021-06-01T22:00:00Z", true)]
+        [InlineData("2021-06-01T22:00:00.000Z", true)]
+        [InlineData("2021-06-01T22:00:00.100Z", false)]
+        [InlineData("2021-06-01T22:01:00Z", false)]
+        [InlineData("2021-06-01T00:00:00Z", false)]
+        [InlineData("2021-06-01T00:00:00.000Z", false)]
         [InlineData("2021-06-01", false)]
-        public void Date_format_must_be_UTC_at_midnight(string dateString, bool isValid)
+        public void Date_format_must_be_22_00_00_UTC(string dateString, bool isValid)
         {
             var result = EffectiveDate.CheckRules(dateString);
 
             Assert.Equal(isValid, result.Success);
-
-            LocalDatePattern.CreateWithInvariantCulture("yyyy-MM-dd 00:00:00");
         }
 
         [Fact]
         public void Create_should_succeed_when_date_format_is_valid()
         {
-            var dateString = "2021-06-01T00:00:00Z";
+            var dateString = "2021-06-01T22:00:00Z";
             var effectiveDate = EffectiveDate.Create(dateString);
 
             Assert.NotNull(effectiveDate);

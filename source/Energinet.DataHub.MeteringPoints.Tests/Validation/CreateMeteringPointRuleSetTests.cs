@@ -89,14 +89,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 
         [Theory]
         [InlineData("", typeof(EffectiveDateRequiredValidationError), true)]
-        [InlineData("2021-11-12T12:12:12Z", typeof(EffectiveDateWrongFormatValidationError), false)]
-        [InlineData("12-12-2021T12:12:12Z", typeof(EffectiveDateWrongFormatValidationError), true)]
-        [InlineData("12-12-2021T12:12:12", typeof(EffectiveDateWrongFormatValidationError), true)]
-        [InlineData("YYYY-12-12T12:12:12Z", typeof(EffectiveDateWrongFormatValidationError), true)]
-        [InlineData("2021-12-12T12:12:12.12Z", typeof(EffectiveDateWrongFormatValidationError), false)]
-        [InlineData("2021-12-12T12:12:12.123Z", typeof(EffectiveDateWrongFormatValidationError), false)]
-        [InlineData("2021-12-12T12:12:12:1234Z", typeof(EffectiveDateWrongFormatValidationError), true)]
-        public void Validate_OccurenceDateMandatoryAndFormat(string occurenceDate, System.Type validationError, bool expectedError)
+        [InlineData("2021-11-12T22:00:00Z", typeof(EffectiveDateWrongFormatValidationError), false)]
+        [InlineData("12-12-2021T22:00:00Z", typeof(EffectiveDateWrongFormatValidationError), true)]
+        [InlineData("12-12-2021T22:00:00", typeof(EffectiveDateWrongFormatValidationError), true)]
+        [InlineData("YYYY-12-12T22:00:00Z", typeof(EffectiveDateWrongFormatValidationError), true)]
+        [InlineData("2021-12-12T22:00:00.000Z", typeof(EffectiveDateWrongFormatValidationError), false)]
+        [InlineData("2021-12-12T22:00:00:1234Z", typeof(EffectiveDateWrongFormatValidationError), true)]
+        public void Validate_EffectiveDateMandatoryAndFormat(string occurenceDate, System.Type validationError, bool expectedError)
         {
             var businessRequest = CreateRequest() with
             {

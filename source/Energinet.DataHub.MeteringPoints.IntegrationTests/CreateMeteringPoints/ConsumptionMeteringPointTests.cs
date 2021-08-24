@@ -61,7 +61,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SampleData.SettlementMethod,
                 SampleData.MeasurementUnitType,
                 SampleData.DisconnectionType,
-                SampleData.Occurrence,
+                SampleData.EffectiveDate,
                 string.Empty,
                 Guid.NewGuid().ToString(),
                 SampleData.PhysicalState,
