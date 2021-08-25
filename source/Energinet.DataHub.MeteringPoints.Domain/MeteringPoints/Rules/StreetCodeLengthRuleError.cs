@@ -16,9 +16,14 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
-    public class InvalidStreetCodeError : ValidationError
+    public class StreetCodeLengthRuleError : ValidationError
     {
-        public InvalidStreetCodeError(string streetCode)
+        public StreetCodeLengthRuleError()
+        {
+            StreetCode = string.Empty;
+        }
+
+        public StreetCodeLengthRuleError(string streetCode)
         {
             StreetCode = streetCode;
         }

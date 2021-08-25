@@ -20,7 +20,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class Address : ValueObject
     {
-        private Address(string? streetName, string streetCode, string? postCode, string? cityName, string? countryCode)
+        private Address(string? streetName, string? streetCode, string? postCode, string? cityName, string? countryCode)
         {
             StreetName = streetName;
             StreetCode = streetCode;
@@ -31,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public string? StreetName { get; }
 
-        public string StreetCode { get; }
+        public string? StreetCode { get; }
 
         public string? PostCode { get; }
 
@@ -39,9 +39,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public string? CountryCode { get; }
 
-        public static Address Create(string? streetName, string streetCode, string? postCode, string? cityName, string? countryCode)
+        public static Address Create(string? streetName, string? streetCode, string? postCode, string? cityName, string? countryCode)
         {
-            if (CheckRules(streetCode).Success == false)
+            if (CheckRules(streetName, streetCode).Success == false)
             {
                 throw new InvalidAddressException();
             }
@@ -49,11 +49,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             return new(streetName, streetCode, postCode, cityName, countryCode);
         }
 
-        public static BusinessRulesValidationResult CheckRules(string streetCode)
+        public static BusinessRulesValidationResult CheckRules(string? streetName, string? streetCode)
         {
             return new BusinessRulesValidationResult(new Collection<IBusinessRule>()
             {
-                new StreetCodeRule(streetCode),
+                new StreetNameLengthRule(streetName),
+                new StreetCodeLengthRule(streetCode),
             });
         }
     }

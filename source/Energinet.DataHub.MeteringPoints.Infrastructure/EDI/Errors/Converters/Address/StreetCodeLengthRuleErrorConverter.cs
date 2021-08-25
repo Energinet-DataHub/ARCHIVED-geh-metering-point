@@ -14,16 +14,17 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Address
 {
-    public class StreetCodeErrorConverter : ErrorConverter<StreetCodeValidationError>
+    public class StreetCodeLengthRuleErrorConverter : ErrorConverter<StreetCodeLengthRuleError>
     {
-        protected override ErrorMessage Convert(StreetCodeValidationError validationError)
+        protected override ErrorMessage Convert(StreetCodeLengthRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new ErrorMessage("E86", $"Street code {validationError.StreetCode} for metering point {validationError.GsrnNumber} is out of range or contains a non-digit character or has a length that does not equal 4");
+            return new ErrorMessage("E86", $"Street code {validationError.StreetCode} is out of range or contains a non-digit character or has a length that does not equal 4");
         }
     }
 }

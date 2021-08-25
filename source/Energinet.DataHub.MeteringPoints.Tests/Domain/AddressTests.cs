@@ -12,10 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Linq;
+using System.Text;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Microsoft.Diagnostics.Tracing.Parsers.MicrosoftWindowsTCPIP;
 using Xunit;
 using Xunit.Categories;
@@ -33,24 +36,47 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
         [InlineData("Abc", false)]
         public void Street_code_must_be_between_1_and_9999(string streetCode, bool isValid)
         {
-            var checkResult = Address.CheckRules(streetCode);
+            var checkResult = CheckRules(streetCode: streetCode);
 
-            var hasError = checkResult.Errors.Any(error => error is InvalidStreetCodeError);
+            var hasError = checkResult.Errors.Any(error => error is StreetCodeLengthRuleError);
             Assert.Equal(isValid, !hasError);
         }
 
         [Fact]
-        public void Street_code_should_consist_of_exactly_4_characters()
+        public void Street_code_can_be_empty()
         {
-            var streetName = "Fake";
-            var streetCode = "0001";
-            var cityName = "Fake";
-            var postCode = "Fake";
-            var countryCode = "Fake";
+            var address = Address.Create(string.Empty, string.Empty, string.Empty, string.Empty, string.Empty);
 
-            var address = Address.Create(streetName, streetCode, cityName, postCode, countryCode);
+            Assert.Equal(string.Empty, address.StreetCode);
+        }
 
-            Assert.Equal("0001", address.StreetCode);
+        [Fact]
+        public void Street_name_can_be_empty()
+        {
+            var address = Create();
+
+            Assert.Equal(string.Empty, address.StreetName);
+        }
+
+        [Theory]
+        [InlineData("Test street", true)]
+        [InlineData("This street name is longer than 40 characters", false)]
+        public void Street_name_should_be_max_40_characters_if_specified(string streetName, bool isValid)
+        {
+            var checkRules = CheckRules(streetName);
+
+            var hasError = checkRules.Errors.Any(error => error is StreetNameLengthRuleError);
+            Assert.Equal(isValid, !hasError);
+        }
+
+        private static Address Create(string? streetName = "", string? streetCode = "", string? cityName = "", string? postCode = "", string? countryCode = "")
+        {
+            return Address.Create(streetName, streetCode, cityName, postCode, countryCode);
+        }
+
+        private static BusinessRulesValidationResult CheckRules(string? streetName = "", string? streetCode = "")
+        {
+            return Address.CheckRules(streetName, streetCode);
         }
     }
 }

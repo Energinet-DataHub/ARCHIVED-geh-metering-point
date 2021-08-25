@@ -16,22 +16,24 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
-    public class StreetCodeRule : IBusinessRule
+    public class StreetCodeLengthRule : IBusinessRule
     {
-        private readonly string _streetCode;
+        private const int Length = 4;
+        private const int MinNumber = 1;
+        private const int MaxNumber = 9999;
 
-        public StreetCodeRule(string streetCode)
+        public StreetCodeLengthRule(string? streetCode)
         {
-            _streetCode = streetCode;
+            Validate(streetCode);
         }
 
-        public bool IsBroken => !IsDarCompliant(_streetCode);
+        public bool IsBroken { get; private set; }
 
-        public ValidationError ValidationError => new InvalidStreetCodeError(_streetCode);
+        public ValidationError ValidationError { get; private set; } = new StreetCodeLengthRuleError();
 
         private static bool IsDarCompliant(string streetCode)
         {
-            if (streetCode.Length != 4)
+            if (streetCode.Length != Length)
             {
                 return false;
             }
@@ -41,7 +43,20 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
                 return false;
             }
 
-            return numericStreetCode is > 0 and <= 9999;
+            return numericStreetCode is >= MinNumber and <= MaxNumber;
+        }
+
+        private void Validate(string? streetCode)
+        {
+            if (string.IsNullOrWhiteSpace(streetCode))
+            {
+                return;
+            }
+
+            if (!IsDarCompliant(streetCode))
+            {
+                IsBroken = true;
+            }
         }
     }
 }
