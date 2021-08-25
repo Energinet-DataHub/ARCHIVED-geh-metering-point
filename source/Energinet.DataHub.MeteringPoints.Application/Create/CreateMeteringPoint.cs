@@ -41,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             string? SettlementMethod = null,
             string UnitType = "",
             string DisconnectionType = "",
-            string OccurenceDate = "",
+            string EffectiveDate = "",
             string MeterNumber = "",
             string TransactionId = "",
             string PhysicalStatusOfMeteringPoint = "",

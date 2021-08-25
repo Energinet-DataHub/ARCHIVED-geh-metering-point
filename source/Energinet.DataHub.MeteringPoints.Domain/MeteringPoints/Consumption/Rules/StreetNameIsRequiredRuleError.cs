@@ -12,19 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Contracts;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules
 {
-    public record CreateMeteringPointRejected(
-        string TransactionId,
-        string Status, // TODO: Is status implicit in Rejected from type?
-        string GsrnNumber,
-        string Reason,
-        IReadOnlyList<ErrorMessage> Errors)
-        : IRejectMessage;
+    public class StreetNameIsRequiredRuleError : ValidationError
+    {
+        public StreetNameIsRequiredRuleError(GsrnNumber meteringPointGSRN)
+        {
+            MeteringPointGSRN = meteringPointGSRN;
+        }
 
-    // TODO: Reference to original document?
+        public GsrnNumber MeteringPointGSRN { get; }
+    }
 }

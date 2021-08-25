@@ -25,10 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
     public class PowerPlantRuleTests : CreateMeteringPointRulesTest<PowerPlantMustBeValidRule>
     {
         [Theory]
-        [InlineData("571234567891234568", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.One))]
         [InlineData("571234567891234568", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One))]
-        [InlineData("", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.Zero))]
-        [InlineData("", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.Ninetynine))]
         public void PowerPlantShouldValidate(string powerPlant, string meteringPointType, string netSettlementGroup)
         {
             var request = CreateRequest() with
@@ -43,9 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 
         [Theory]
         [InlineData("", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError))]
-        [InlineData("", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError))]
         [InlineData("8891928731459", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(PowerPlantGsrnEan18ValidValidationError))]
-        [InlineData("561234567891234568", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.One), typeof(PowerPlantGsrnEan18ValidValidationError))]
         [InlineData("571234567891234568", nameof(MeteringPointType.Analysis), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError))]
         [InlineData("571234567891234568", nameof(MeteringPointType.Exchange), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError))]
         [InlineData("571234567891234568", nameof(MeteringPointType.ExchangeReactiveEnergy), nameof(NetSettlementGroup.One), typeof(PowerPlantValidationError))]

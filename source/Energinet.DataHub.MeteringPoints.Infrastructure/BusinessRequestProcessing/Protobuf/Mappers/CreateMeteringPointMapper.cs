@@ -50,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcess
                 SettlementMethod: obj.SettlementMethod,
                 UnitType: obj.UnitType,
                 DisconnectionType: obj.DisconnectionType,
-                OccurenceDate: obj.OccurenceDate,
+                EffectiveDate: obj.OccurenceDate,
                 MeterNumber: obj.MeterNumber,
                 TransactionId: obj.TransactionId,
                 PhysicalStatusOfMeteringPoint: obj.PhysicalStatusOfMeteringPoint,

@@ -14,14 +14,13 @@
 
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
     public class EffectiveDateRule : AbstractValidator<string>
     {
-        private const string EffectiveDateFormatRegEx = @"^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(\.\d{2,3})?Z$";
-
         public EffectiveDateRule()
         {
             EffectiveDateRequired();
@@ -38,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         private void EffectiveDateFormat()
         {
             RuleFor(effectiveDate => effectiveDate)
-                .Matches(EffectiveDateFormatRegEx)
+                .Must(effectiveDate => EffectiveDate.CheckRules(effectiveDate).Success)
                 .WithState(effectiveDate => new EffectiveDateWrongFormatValidationError(effectiveDate));
         }
     }
