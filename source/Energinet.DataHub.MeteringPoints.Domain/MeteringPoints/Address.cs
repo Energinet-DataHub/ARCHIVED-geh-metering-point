@@ -39,9 +39,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public string? CountryCode { get; }
 
-        public static Address Create(string? streetName, string? streetCode, string? postCode, string? cityName, string? countryCode)
+        public static Address Create(string? streetName, string? streetCode, string? buildingNumber, string? postCode, string? cityName, string? countryCode)
         {
-            if (CheckRules(streetName, streetCode).Success == false)
+            if (CheckRules(streetName, streetCode, buildingNumber, countryCode).Success == false)
             {
                 throw new InvalidAddressException();
             }
@@ -49,12 +49,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             return new(streetName, streetCode, postCode, cityName, countryCode);
         }
 
-        public static BusinessRulesValidationResult CheckRules(string? streetName, string? streetCode)
+        public static BusinessRulesValidationResult CheckRules(string? streetName, string? streetCode, string? buildingNumber, string? countryCode)
         {
             return new BusinessRulesValidationResult(new Collection<IBusinessRule>()
             {
                 new StreetNameLengthRule(streetName),
                 new StreetCodeLengthRule(streetCode),
+                new BuildingNumberFormatRule(buildingNumber, countryCode),
             });
         }
     }

@@ -156,6 +156,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             return Domain.MeteringPoints.Address.Create(
                 request.StreetName,
                 request.StreetCode,
+                request.BuildingNumber,
                 request.PostCode,
                 request.CityName,
                 request.CountryCode);
