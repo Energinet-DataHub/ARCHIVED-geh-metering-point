@@ -157,18 +157,69 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             AssertError<CityNameLengthRuleError>(checkResult, expectError);
         }
 
-        private static Address Create(string streetName = "", string streetCode = "", string buildingNumber = "", string cityName = "", string postCode = "", string countryCode = "", string floor = "", string room = "")
+        [Theory]
+        [InlineData("0000", false)]
+        [InlineData("9999", false)]
+        [InlineData("6690", false)]
+        [InlineData("11", true)]
+        [InlineData("ABE", true)]
+        public void Post_code_should_be_restricted_to_0000_to_9999_when_country_code_is_DK(string postCode, bool expectError)
         {
-            return Address.Create(streetName, streetCode, buildingNumber, postCode, cityName, countryCode, floor, room);
+            var checkResult = CheckRules(
+                streetName: string.Empty,
+                streetCode: string.Empty,
+                buildingNumber: string.Empty,
+                city: string.Empty,
+                postCode: postCode,
+                countryCode: "DK",
+                floor: string.Empty,
+                room: string.Empty);
+
+            AssertError<PostCodeFormatRuleError>(checkResult, expectError);
         }
 
-        private static BusinessRulesValidationResult CheckRules(string? streetName = "", string? streetCode = "", string? buildingNumber = "", string? city = "", string? countryCode = "", string? floor = "", string? room = "")
+        [Theory]
+        [InlineData("0000", false)]
+        [InlineData("9999", false)]
+        [InlineData("6690", false)]
+        [InlineData("1111111111", false)]
+        [InlineData("11111111111", true)]
+        public void Post_code_should_be_restricted_to_10_characters(string postCode, bool expectError)
+        {
+            var checkResult = CheckRules(
+                streetName: string.Empty,
+                streetCode: string.Empty,
+                buildingNumber: string.Empty,
+                city: string.Empty,
+                postCode: postCode,
+                countryCode: string.Empty,
+                floor: string.Empty,
+                room: string.Empty);
+
+            AssertError<PostCodeFormatRuleError>(checkResult, expectError);
+        }
+
+        private static Address Create(string streetName = "", string streetCode = "", string buildingNumber = "", string city = "", string postCode = "", string countryCode = "", string floor = "", string room = "")
+        {
+            return Address.Create(
+               streetName: streetName,
+               streetCode: streetCode,
+               buildingNumber: buildingNumber,
+               city: city,
+               postCode: postCode,
+               countryCode: countryCode,
+               floor: floor,
+               room: room);
+        }
+
+        private static BusinessRulesValidationResult CheckRules(string? streetName = "", string? streetCode = "", string? buildingNumber = "", string? city = "", string? postCode = "", string? countryCode = "", string? floor = "", string? room = "")
         {
             return Address.CheckRules(
                 streetName: streetName,
                 streetCode: streetCode,
                 buildingNumber: buildingNumber,
                 city: city,
+                postCode: postCode,
                 countryCode: countryCode,
                 floor: floor,
                 room: room);
