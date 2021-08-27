@@ -222,7 +222,31 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             AssertError<CitySubdivisionRuleError>(checkResult, expectError);
         }
 
-        private static Address Create(string streetName = "", string streetCode = "", string buildingNumber = "", string city = "", string citySubDivision = "", string postCode = "", string countryCode = "", string floor = "", string room = "")
+        [Theory]
+        [InlineData(100, false)]
+        [InlineData(999, false)]
+        [InlineData(250, false)]
+        [InlineData(1000, true)]
+        [InlineData(50, true)]
+        [InlineData(0, false)]
+        public void Municipality_code_should_be_3_digits_from_100_999(int municipalityCode, bool expectError)
+        {
+            var checkResult = CheckRules(
+                streetName: string.Empty,
+                streetCode: string.Empty,
+                buildingNumber: string.Empty,
+                city: string.Empty,
+                citySubDivision: string.Empty,
+                postCode: string.Empty,
+                countryCode: string.Empty,
+                floor: string.Empty,
+                room: string.Empty,
+                municipalityCode: municipalityCode);
+
+            AssertError<MunicipalityCodeRuleError>(checkResult, expectError);
+        }
+
+        private static Address Create(string streetName = "", string streetCode = "", string buildingNumber = "", string city = "", string citySubDivision = "", string postCode = "", string countryCode = "", string floor = "", string room = "", int municipalityCode = default(int))
         {
             return Address.Create(
                streetName: streetName,
@@ -233,10 +257,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                postCode: postCode,
                countryCode: countryCode,
                floor: floor,
-               room: room);
+               room: room,
+               municipalityCode: municipalityCode);
         }
 
-        private static BusinessRulesValidationResult CheckRules(string? streetName = "", string? streetCode = "", string? buildingNumber = "", string? city = "", string? citySubDivision = "", string? postCode = "", string? countryCode = "", string? floor = "", string? room = "")
+        private static BusinessRulesValidationResult CheckRules(string? streetName = "", string? streetCode = "", string? buildingNumber = "", string? city = "", string? citySubDivision = "", string? postCode = "", string? countryCode = "", string? floor = "", string room = "", int municipalityCode = default(int))
         {
             return Address.CheckRules(
                 streetName: streetName,
@@ -247,7 +272,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 postCode: postCode,
                 countryCode: countryCode,
                 floor: floor,
-                room: room);
+                room: room,
+                municipalityCode: municipalityCode);
         }
 
         private static void AssertError<TRuleError>(BusinessRulesValidationResult rulesValidationResult, bool errorExpected)

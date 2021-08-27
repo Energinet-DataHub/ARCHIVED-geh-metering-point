@@ -162,7 +162,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 request.CitySubDivisionName,
                 request.CountryCode,
                 request.FloorIdentification,
-                request.RoomIdentification);
+                request.RoomIdentification,
+                string.IsNullOrWhiteSpace(request.MunicipalityCode) ? default : int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()));
         }
 
         private async Task<BusinessProcessResult> ValidateAsync(CreateMeteringPoint request, CancellationToken cancellationToken)
