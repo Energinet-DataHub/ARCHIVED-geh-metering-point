@@ -55,7 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             return new MarketMeteringPointMock(
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
-                Address.Create(SampleData.StreetName, "0001", "1000", SampleData.PostCode, SampleData.CityName, SampleData.CountryCode),
+                Address.Create(SampleData.StreetName, SampleData.StreetCode, SampleData.BuildingNumber, SampleData.PostCode, SampleData.CityName, SampleData.CountryCode, SampleData.Floor, SampleData.Room),
                 EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
                 EnumerationType.FromName<MeteringPointType>(SampleData.TypeName),
                 GridAreaId.New(),

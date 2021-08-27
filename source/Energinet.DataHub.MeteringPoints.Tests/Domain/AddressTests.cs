@@ -73,6 +73,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
         [InlineData("999", false)]
         [InlineData("999A", false)]
         [InlineData("ABCD", false)]
+        [InlineData("1000", true)]
         [InlineData("ABCDE", true)]
         [InlineData("A BE", true)]
         public void Building_number_format_is_restricted_when_country_code_is_DK(string buildingNumber, bool expectError)
@@ -102,14 +103,49 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             AssertError<BuildingNumberFormatRuleError>(checkResult, expectError);
         }
 
-        private static Address Create(string streetName = "", string streetCode = "", string buildingNumber = "", string cityName = "", string postCode = "", string countryCode = "")
+        [Theory]
+        [InlineData("1", false)]
+        [InlineData("", false)]
+        [InlineData("ABCD", false)]
+        [InlineData("ABCDE", true)]
+        public void Floor_must_not_exceed_4_characters(string floor, bool expectError)
         {
-            return Address.Create(streetName, streetCode, buildingNumber, postCode, cityName, countryCode);
+            var checkResult = CheckRules(
+                streetName: string.Empty,
+                streetCode: string.Empty,
+                buildingNumber: string.Empty,
+                countryCode: string.Empty,
+                floor: floor);
+
+            AssertError<FloorLengthRuleError>(checkResult, expectError);
         }
 
-        private static BusinessRulesValidationResult CheckRules(string? streetName = "", string? streetCode = "", string? buildingNumber = "", string? countryCode = "")
+        [Theory]
+        [InlineData("1", false)]
+        [InlineData("", false)]
+        [InlineData("ABCD", false)]
+        [InlineData("ABCDE", true)]
+        public void Room_must_not_exceed_4_characters(string room, bool expectError)
         {
-            return Address.CheckRules(streetName, streetCode, buildingNumber, countryCode);
+            var checkResult = CheckRules(
+                streetName: string.Empty,
+                streetCode: string.Empty,
+                buildingNumber: string.Empty,
+                countryCode: string.Empty,
+                floor: string.Empty,
+                room: room);
+
+            AssertError<RoomLengthRuleError>(checkResult, expectError);
+        }
+
+        private static Address Create(string streetName = "", string streetCode = "", string buildingNumber = "", string cityName = "", string postCode = "", string countryCode = "", string floor = "", string room = "")
+        {
+            return Address.Create(streetName, streetCode, buildingNumber, postCode, cityName, countryCode, floor, room);
+        }
+
+        private static BusinessRulesValidationResult CheckRules(string? streetName = "", string? streetCode = "", string? buildingNumber = "", string? countryCode = "", string? floor = "", string? room = "")
+        {
+            return Address.CheckRules(streetName, streetCode, buildingNumber, countryCode, floor, room);
         }
 
         private static void AssertError<TRuleError>(BusinessRulesValidationResult rulesValidationResult, bool errorExpected)

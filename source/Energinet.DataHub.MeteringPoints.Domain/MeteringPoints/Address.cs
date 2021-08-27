@@ -20,13 +20,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class Address : ValueObject
     {
-        private Address(string? streetName, string? streetCode, string? postCode, string? cityName, string? countryCode)
+        private Address(string? streetName, string? streetCode, string? postCode, string? cityName, string? countryCode, string? floor, string? room)
         {
             StreetName = streetName;
             StreetCode = streetCode;
             PostCode = postCode;
             CityName = cityName;
             CountryCode = countryCode;
+            Floor = floor;
+            Room = room;
         }
 
         public string? StreetName { get; }
@@ -39,23 +41,29 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public string? CountryCode { get; }
 
-        public static Address Create(string? streetName, string? streetCode, string? buildingNumber, string? postCode, string? cityName, string? countryCode)
+        public string? Floor { get; }
+
+        public string? Room { get; }
+
+        public static Address Create(string? streetName, string? streetCode, string? buildingNumber, string? postCode, string? cityName, string? countryCode, string? floor, string? room)
         {
-            if (CheckRules(streetName, streetCode, buildingNumber, countryCode).Success == false)
+            if (CheckRules(streetName, streetCode, buildingNumber, countryCode, floor, room).Success == false)
             {
                 throw new InvalidAddressException();
             }
 
-            return new(streetName, streetCode, postCode, cityName, countryCode);
+            return new(streetName, streetCode, postCode, cityName, countryCode, floor, room);
         }
 
-        public static BusinessRulesValidationResult CheckRules(string? streetName, string? streetCode, string? buildingNumber, string? countryCode)
+        public static BusinessRulesValidationResult CheckRules(string? streetName, string? streetCode, string? buildingNumber, string? countryCode, string? floor, string? room)
         {
             return new BusinessRulesValidationResult(new Collection<IBusinessRule>()
             {
                 new StreetNameLengthRule(streetName),
                 new StreetCodeLengthRule(streetCode),
                 new BuildingNumberFormatRule(buildingNumber, countryCode),
+                new FloorLengthRule(floor),
+                new RoomLengthRule(room),
             });
         }
     }

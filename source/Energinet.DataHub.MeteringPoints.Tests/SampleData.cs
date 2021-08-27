@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using NodaTime;
 
@@ -66,5 +67,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests
         public static string ConnectionType => string.Empty;
 
         public static string AssetType => string.Empty;
+
+        public static string Floor => string.Empty;
+
+        public static string StreetCode => string.Empty;
+
+        public static string BuildingNumber => string.Empty;
+
+        public static string Room => string.Empty;
     }
 }
