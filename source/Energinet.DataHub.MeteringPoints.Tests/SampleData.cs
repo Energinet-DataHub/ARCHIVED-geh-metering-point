@@ -75,5 +75,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
         public static string BuildingNumber => string.Empty;
 
         public static string Room => string.Empty;
+
+        public static string CitySubdivision => string.Empty;
     }
 }

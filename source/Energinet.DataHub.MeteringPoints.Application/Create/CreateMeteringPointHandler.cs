@@ -159,6 +159,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 request.BuildingNumber,
                 request.PostCode,
                 request.CityName,
+                request.CitySubDivisionName,
                 request.CountryCode,
                 request.FloorIdentification,
                 request.RoomIdentification);

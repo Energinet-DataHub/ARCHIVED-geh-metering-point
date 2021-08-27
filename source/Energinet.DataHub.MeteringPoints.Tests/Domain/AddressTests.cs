@@ -199,26 +199,51 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             AssertError<PostCodeFormatRuleError>(checkResult, expectError);
         }
 
-        private static Address Create(string streetName = "", string streetCode = "", string buildingNumber = "", string city = "", string postCode = "", string countryCode = "", string floor = "", string room = "")
+        [Theory]
+        [InlineData("", false)]
+        [InlineData("0000", false)]
+        [InlineData("9999", false)]
+        [InlineData("6690", false)]
+        [InlineData("1111111111", false)]
+        [InlineData("12345678901234567890123456789012345", true)]
+        public void City_sub_division_should_be_restricted_to_max_34_characters(string citySubDivision, bool expectError)
+        {
+            var checkResult = CheckRules(
+                streetName: string.Empty,
+                streetCode: string.Empty,
+                buildingNumber: string.Empty,
+                city: string.Empty,
+                citySubDivision: citySubDivision,
+                postCode: string.Empty,
+                countryCode: string.Empty,
+                floor: string.Empty,
+                room: string.Empty);
+
+            AssertError<CitySubdivisionRuleError>(checkResult, expectError);
+        }
+
+        private static Address Create(string streetName = "", string streetCode = "", string buildingNumber = "", string city = "", string citySubDivision = "", string postCode = "", string countryCode = "", string floor = "", string room = "")
         {
             return Address.Create(
                streetName: streetName,
                streetCode: streetCode,
                buildingNumber: buildingNumber,
                city: city,
+               citySubDivision: citySubDivision,
                postCode: postCode,
                countryCode: countryCode,
                floor: floor,
                room: room);
         }
 
-        private static BusinessRulesValidationResult CheckRules(string? streetName = "", string? streetCode = "", string? buildingNumber = "", string? city = "", string? postCode = "", string? countryCode = "", string? floor = "", string? room = "")
+        private static BusinessRulesValidationResult CheckRules(string? streetName = "", string? streetCode = "", string? buildingNumber = "", string? city = "", string? citySubDivision = "", string? postCode = "", string? countryCode = "", string? floor = "", string? room = "")
         {
             return Address.CheckRules(
                 streetName: streetName,
                 streetCode: streetCode,
                 buildingNumber: buildingNumber,
                 city: city,
+                citySubDivision: citySubDivision,
                 postCode: postCode,
                 countryCode: countryCode,
                 floor: floor,
