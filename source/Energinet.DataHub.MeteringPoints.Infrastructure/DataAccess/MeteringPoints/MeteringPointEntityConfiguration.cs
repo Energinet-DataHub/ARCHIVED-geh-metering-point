@@ -47,7 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             builder.OwnsOne<Address>("_address", y =>
             {
                 y.Property(x => x.StreetName).HasColumnName("StreetName");
-                y.Property(x => x.CityName).HasColumnName("CityName");
+                y.Property(x => x.City).HasColumnName("CityName");
                 y.Property(x => x.CountryCode).HasColumnName("CountryCode");
                 y.Property(x => x.PostCode).HasColumnName("PostCode");
             });

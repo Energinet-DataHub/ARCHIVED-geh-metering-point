@@ -138,14 +138,40 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             AssertError<RoomLengthRuleError>(checkResult, expectError);
         }
 
+        [Theory]
+        [InlineData("A", false)]
+        [InlineData("", false)]
+        [InlineData("Test city", false)]
+        [InlineData("The name of this city is just too long", true)]
+        public void City_name_must_not_exceed_25_characters(string city, bool expectError)
+        {
+            var checkResult = CheckRules(
+                streetName: string.Empty,
+                streetCode: string.Empty,
+                buildingNumber: string.Empty,
+                city: city,
+                countryCode: string.Empty,
+                floor: string.Empty,
+                room: string.Empty);
+
+            AssertError<CityNameLengthRuleError>(checkResult, expectError);
+        }
+
         private static Address Create(string streetName = "", string streetCode = "", string buildingNumber = "", string cityName = "", string postCode = "", string countryCode = "", string floor = "", string room = "")
         {
             return Address.Create(streetName, streetCode, buildingNumber, postCode, cityName, countryCode, floor, room);
         }
 
-        private static BusinessRulesValidationResult CheckRules(string? streetName = "", string? streetCode = "", string? buildingNumber = "", string? countryCode = "", string? floor = "", string? room = "")
+        private static BusinessRulesValidationResult CheckRules(string? streetName = "", string? streetCode = "", string? buildingNumber = "", string? city = "", string? countryCode = "", string? floor = "", string? room = "")
         {
-            return Address.CheckRules(streetName, streetCode, buildingNumber, countryCode, floor, room);
+            return Address.CheckRules(
+                streetName: streetName,
+                streetCode: streetCode,
+                buildingNumber: buildingNumber,
+                city: city,
+                countryCode: countryCode,
+                floor: floor,
+                room: room);
         }
 
         private static void AssertError<TRuleError>(BusinessRulesValidationResult rulesValidationResult, bool errorExpected)
