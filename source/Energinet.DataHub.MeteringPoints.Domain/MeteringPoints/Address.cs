@@ -76,7 +76,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public static BusinessRulesValidationResult CheckRules(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, string? countryCode, string? floor, string? room, int? municipalityCode)
         {
-            return new BusinessRulesValidationResult(new Collection<IBusinessRule>()
+            return new(new Collection<IBusinessRule>()
             {
                 new StreetNameLengthRule(streetName),
                 new StreetCodeLengthRule(streetCode),

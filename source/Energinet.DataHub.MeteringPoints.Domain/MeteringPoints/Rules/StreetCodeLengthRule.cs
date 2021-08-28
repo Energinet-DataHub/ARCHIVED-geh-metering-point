@@ -56,6 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
             if (!IsDarCompliant(streetCode))
             {
                 IsBroken = true;
+                ValidationError = new StreetCodeLengthRuleError(streetCode);
             }
         }
     }

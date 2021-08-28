@@ -246,6 +246,44 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             AssertError<MunicipalityCodeRuleError>(checkResult, expectError);
         }
 
+        [Fact]
+        public void Should_create()
+        {
+            var streetName = "Testing Street";
+            var streetCode = "0005";
+            var buildingNumber = "10";
+            var city = "Test City";
+            var citySubdivision = "Test subdivision";
+            var postCode = "9000";
+            var countryCode = "DK";
+            var floor = "1";
+            var room = "tv";
+            var municipalityCode = 100;
+
+            var address = Create(
+                streetName: streetName,
+                streetCode: streetCode,
+                buildingNumber: buildingNumber,
+                city: city,
+                citySubDivision: citySubdivision,
+                postCode: postCode,
+                countryCode: countryCode,
+                floor: floor,
+                room: room,
+                municipalityCode: municipalityCode);
+
+            Assert.Equal(streetName, address.StreetName);
+            Assert.Equal(streetCode, address.StreetCode);
+            Assert.Equal(buildingNumber, address.BuildingNumber);
+            Assert.Equal(city, address.City);
+            Assert.Equal(citySubdivision, address.CitySubDivision);
+            Assert.Equal(postCode, address.PostCode);
+            Assert.Equal(countryCode, address.CountryCode);
+            Assert.Equal(floor, address.Floor);
+            Assert.Equal(room, address.Room);
+            Assert.Equal(municipalityCode, address.MunicipalityCode);
+        }
+
         private static Address Create(string streetName = "", string streetCode = "", string buildingNumber = "", string city = "", string citySubDivision = "", string postCode = "", string countryCode = "", string floor = "", string room = "", int municipalityCode = default(int))
         {
             return Address.Create(
