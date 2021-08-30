@@ -49,6 +49,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 return validationResult;
             }
 
+            var addressValidationResult = ValidateAddress(request);
+            if (!addressValidationResult.Success)
+            {
+                return new BusinessProcessResult(request.TransactionId, addressValidationResult.Errors);
+            }
+
             var meteringPointType = EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint);
 
             var rulesCheckResult = CheckBusinessRules(request);
@@ -186,6 +192,22 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 floor: request.FloorIdentification,
                 room: request.RoomIdentification,
                 municipalityCode: string.IsNullOrWhiteSpace(request.MunicipalityCode) ? default : int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()));
+        }
+
+        private static BusinessRulesValidationResult ValidateAddress(CreateMeteringPoint request)
+        {
+            var municipalityCode = int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo());
+            return Domain.Addresses.Address.CheckRules(
+                streetName: request.StreetName,
+                streetCode: request.StreetCode,
+                buildingNumber: request.BuildingNumber,
+                city: request.CityName,
+                citySubDivision: request.CitySubDivisionName,
+                postCode: request.PostCode,
+                countryCode: request.CountryCode,
+                floor: request.FloorIdentification,
+                room: request.RoomIdentification,
+                municipalityCode: municipalityCode);
         }
 
         private async Task<BusinessProcessResult> ValidateAsync(CreateMeteringPoint request, CancellationToken cancellationToken)
