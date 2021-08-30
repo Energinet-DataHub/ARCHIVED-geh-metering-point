@@ -79,7 +79,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 RatedCurrent: null);
             await _mediator.Send(requestWithoutPowerPlantGSRN).ConfigureAwait(false);
 
-            AssertValidationError<CreateMeteringPointRejected>("D57", $"Power plant for Consumption metering point (E17) {requestWithoutPowerPlantGSRN.GsrnNumber} which is not in net settlement group 0 or 99, is missing.");
+            AssertValidationError<CreateMeteringPointRejected>("D57");
         }
     }
 }
