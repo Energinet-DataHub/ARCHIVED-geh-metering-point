@@ -81,5 +81,63 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             AssertValidationError<CreateMeteringPointRejected>("D57");
         }
+
+        [Fact]
+        public async Task Should_reject_when_street_name_is_missing()
+        {
+            var request = CreateReqeust()
+                with
+                {
+                    StreetName = string.Empty,
+                };
+
+            await _mediator.Send(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("E86");
+        }
+
+        private static CreateMeteringPoint CreateReqeust()
+        {
+            return new CreateMeteringPoint(
+                SampleData.StreetName,
+                SampleData.BuildingNumber,
+                SampleData.PostCode,
+                SampleData.CityName,
+                SampleData.CitySubDivisionName,
+                SampleData.MunicipalityCode,
+                SampleData.CountryCode,
+                SampleData.StreetCode,
+                SampleData.FloorIdentification,
+                SampleData.RoomIdentification,
+                SampleData.IsWashable,
+                SampleData.GsrnNumber,
+                SampleData.TypeOfMeteringPoint,
+                MeteringPointSubType.Calculated.Name,
+                SampleData.ReadingOccurrence,
+                0,
+                0,
+                SampleData.MeteringGridArea,
+                string.Empty,
+                string.Empty,
+                SampleData.SettlementMethod,
+                SampleData.MeasurementUnitType,
+                SampleData.DisconnectionType,
+                SampleData.EffectiveDate,
+                string.Empty,
+                Guid.NewGuid().ToString(),
+                SampleData.PhysicalState,
+                NetSettlementGroup.Six.Name,
+                SampleData.ConnectionType,
+                SampleData.AssetType,
+                "123",
+                ToGrid: "456",
+                ParentRelatedMeteringPoint: null,
+                SampleData.ProductType,
+                "0",
+                SampleData.GeoInfoReference,
+                SampleData.MeasurementUnitType,
+                ContractedConnectionCapacity: null,
+                RatedCurrent: null);
+        }
     }
 }
