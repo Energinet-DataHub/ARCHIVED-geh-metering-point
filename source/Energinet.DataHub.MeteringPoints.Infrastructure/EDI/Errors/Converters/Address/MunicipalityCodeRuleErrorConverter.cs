@@ -12,20 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Address
 {
-    public class MunicipalityCodeMustBeValidValidationError : ValidationError
+    public class MunicipalityCodeRuleErrorConverter : ErrorConverter<MunicipalityCodeRuleError>
     {
-        public MunicipalityCodeMustBeValidValidationError(string grsnNumber, string municipalityCode)
+        protected override ErrorMessage Convert(MunicipalityCodeRuleError validationError)
         {
-            GrsnNumber = grsnNumber;
-            MunicipalityCode = municipalityCode;
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+            return new("E86", $"Municipality code {validationError.MunicipalityCode} is out of range or contains a non-digit character or has a length that does not equal 3");
         }
-
-        public string GrsnNumber { get; }
-
-        public string MunicipalityCode { get; }
     }
 }

@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
                 return;
             }
 
-            ValidationError = new StreetNameLengthRuleError(_streetName);
+            ValidationError = new StreetNameLengthRuleError(_streetName, MaxLength);
             IsBroken = _streetName.Length > MaxLength;
         }
     }

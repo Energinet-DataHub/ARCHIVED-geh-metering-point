@@ -12,23 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Address
 {
-    public class CityNameMaximumLengthValidationError : ValidationError
+    public class PostCodeFormatRuleErrorConverter : ErrorConverter<PostCodeFormatRuleError>
     {
-        public CityNameMaximumLengthValidationError(string gsrnNumber, string cityName, int maxLength)
+        protected override ErrorMessage Convert(PostCodeFormatRuleError validationError)
         {
-            CityName = cityName;
-            MaxLength = maxLength;
-            GsrnNumber = gsrnNumber;
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new("E86", $"Post code {validationError.PostCode} is out of range maximum length is {validationError.MaxLength}.");
         }
-
-        public string GsrnNumber { get; }
-
-        public string CityName { get; }
-
-        public int MaxLength { get; }
     }
 }

@@ -23,11 +23,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
             PostCode = string.Empty;
         }
 
-        public PostCodeFormatRuleError(string postCode)
+        public PostCodeFormatRuleError(string postCode, int maxLength)
         {
             PostCode = postCode;
+            MaxLength = maxLength;
         }
 
         public string PostCode { get; }
+
+        public int MaxLength { get; }
     }
 }

@@ -154,16 +154,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
         private static Domain.MeteringPoints.Address CreateAddress(CreateMeteringPoint request)
         {
             return Domain.MeteringPoints.Address.Create(
-                request.StreetName,
-                request.StreetCode,
-                request.BuildingNumber,
-                request.PostCode,
-                request.CityName,
-                request.CitySubDivisionName,
-                request.CountryCode,
-                request.FloorIdentification,
-                request.RoomIdentification,
-                string.IsNullOrWhiteSpace(request.MunicipalityCode) ? default : int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()));
+                streetName: request.StreetName,
+                streetCode: request.StreetCode,
+                buildingNumber: request.BuildingNumber,
+                postCode: request.PostCode,
+                city: request.CityName,
+                citySubDivision: request.CitySubDivisionName,
+                countryCode: request.CountryCode,
+                floor: request.FloorIdentification,
+                room: request.RoomIdentification,
+                municipalityCode: string.IsNullOrWhiteSpace(request.MunicipalityCode) ? default : int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()));
         }
 
         private async Task<BusinessProcessResult> ValidateAsync(CreateMeteringPoint request, CancellationToken cancellationToken)

@@ -65,7 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
             if (Regex.IsMatch(postCode!, DanishRegExRule) == false)
             {
                 IsBroken = true;
-                ValidationError = new PostCodeFormatRuleError(postCode);
+                ValidationError = new PostCodeFormatRuleError(postCode, MaxLength);
             }
         }
 
@@ -74,7 +74,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
             if (postCode.Length > MaxLength)
             {
                 IsBroken = true;
-                ValidationError = new PostCodeFormatRuleError(postCode);
+                ValidationError = new PostCodeFormatRuleError(postCode, MaxLength);
             }
         }
     }

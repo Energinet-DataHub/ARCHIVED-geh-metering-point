@@ -12,20 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Address
 {
-    public class RoomIdentificationValidationError : ValidationError
+    public class StreetNameLengthRuleErrorConverter : ErrorConverter<StreetNameLengthRuleError>
     {
-        public RoomIdentificationValidationError(string gsrnNumber, string roomIdentification)
+        protected override ErrorMessage Convert(StreetNameLengthRuleError validationError)
         {
-            GsrnNumber = gsrnNumber;
-            RoomIdentification = roomIdentification;
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new("E86", $"Street name {validationError.StreetName} has a length that exceeds {validationError.MaxLength}");
         }
-
-        public string GsrnNumber { get; }
-
-        public string RoomIdentification { get; }
     }
 }

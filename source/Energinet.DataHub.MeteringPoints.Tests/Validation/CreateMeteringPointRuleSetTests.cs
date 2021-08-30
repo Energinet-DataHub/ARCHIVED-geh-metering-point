@@ -264,22 +264,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         }
 
         [Theory]
-        [InlineData("123", typeof(MunicipalityCodeMustBeValidValidationError), false)]
-        [InlineData("999", typeof(MunicipalityCodeMustBeValidValidationError), false)]
-        [InlineData("1234", typeof(MunicipalityCodeMustBeValidValidationError), true)]
-        [InlineData("12", typeof(MunicipalityCodeMustBeValidValidationError), true)]
-        public void Validate_Municipality_Code(string municipalityCode, System.Type validationError, bool expectedError)
-        {
-            var businessRequest = CreateRequest() with
-            {
-                GsrnNumber = SampleData.GsrnNumber,
-                MunicipalityCode = municipalityCode,
-            };
-
-            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
-        }
-
-        [Theory]
         [InlineData(nameof(MeteringPointType.Consumption), "gridArea", typeof(SourceMeteringGridAreaNotAllowedValidationError), false)]
         [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), "gridArea", typeof(SourceMeteringGridAreaNotAllowedValidationError), true)]
         [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), "", typeof(SourceMeteringGridAreaNotAllowedValidationError), false)]

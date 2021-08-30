@@ -13,17 +13,16 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Address
 {
-    public class PostCodeWrongFormatErrorConverter : ErrorConverter<PostCodeWrongFormatValidationError>
+    public class BuildingNumberFormatRuleErrorConverter : ErrorConverter<BuildingNumberFormatRuleError>
     {
-        protected override ErrorMessage Convert(PostCodeWrongFormatValidationError validationError)
+        protected override ErrorMessage Convert(BuildingNumberFormatRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-
-            return new("E86", $"Post code {validationError.PostCode} for metering point {validationError.GsrnNumber} is not in correct format it should be equal 4 (if country code is DK) or maximum 10.");
+            return new("E86", $"Building number {validationError.BuildingNumber} has an incorrect format: the length exceeds 4 characters or is not in the range 1-999, optionally with a capital letter (if country code is DK) or the length exceeds 6 characters (if other country)");
         }
     }
 }

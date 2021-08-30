@@ -13,17 +13,17 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Address
 {
-    public class CityNameMaximumLengthErrorConverter : ErrorConverter<CityNameMaximumLengthValidationError>
+    public class CityNameLengthRuleErrorConverter : ErrorConverter<CityNameLengthRuleError>
     {
-        protected override ErrorMessage Convert(CityNameMaximumLengthValidationError validationError)
+        protected override ErrorMessage Convert(CityNameLengthRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("E86", $"City name {validationError.CityName} for metering point {validationError.GsrnNumber} has a length that exceeds {validationError.MaxLength}");
+            return new("E86", $"City name {validationError.City} has a length that exceeds {validationError.MaxLength}");
         }
     }
 }

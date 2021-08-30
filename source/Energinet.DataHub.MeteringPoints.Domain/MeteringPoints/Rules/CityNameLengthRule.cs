@@ -27,7 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 
         public bool IsBroken { get; private set; }
 
-        public ValidationError ValidationError { get; private set; } = new FloorLengthRuleError();
+        public ValidationError ValidationError { get; private set; } = new CityNameLengthRuleError();
 
         private void Validate(string? city)
         {
@@ -39,7 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
             if (city.Length <= MaxLength) return;
 
             IsBroken = true;
-            ValidationError = new CityNameLengthRuleError(city);
+            ValidationError = new CityNameLengthRuleError(city, MaxLength);
         }
     }
 }

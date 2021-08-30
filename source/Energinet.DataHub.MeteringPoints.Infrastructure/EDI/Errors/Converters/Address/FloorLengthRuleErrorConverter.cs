@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Address
 {
-    public class PostCodeMandatoryForMeteringPointTypeValidationError : ValidationError
+    public class FloorLengthRuleErrorConverter : ErrorConverter<FloorLengthRuleError>
     {
-        public PostCodeMandatoryForMeteringPointTypeValidationError(string gsrnNumber)
+        protected override ErrorMessage Convert(FloorLengthRuleError validationError)
         {
-            GsrnNumber = gsrnNumber;
-        }
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-        public string GsrnNumber { get; }
+            return new ErrorMessage("E86", $"Floor identification {validationError.Floor} has a length that exceeds 4");
+        }
     }
 }

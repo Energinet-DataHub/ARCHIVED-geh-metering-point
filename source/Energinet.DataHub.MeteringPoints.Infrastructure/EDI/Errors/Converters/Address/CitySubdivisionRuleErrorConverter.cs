@@ -12,20 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Address
 {
-    public class CitySubDivisionNameMaximumLengthValidationError : ValidationError
+    public class CitySubdivisionRuleErrorConverter : ErrorConverter<CitySubdivisionRuleError>
     {
-        public CitySubDivisionNameMaximumLengthValidationError(string gsrnNumber, string citySubDivisionName)
+        protected override ErrorMessage Convert(CitySubdivisionRuleError validationError)
         {
-            CitySubDivisionName = citySubDivisionName;
-            GsrnNumber = gsrnNumber;
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+            return new("E86", $"City sub division name {validationError.CitySubdivision} has a length that exceeds 34.");
         }
-
-        public string GsrnNumber { get; }
-
-        public string CitySubDivisionName { get; set; }
     }
 }

@@ -23,11 +23,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
             City = string.Empty;
         }
 
-        public CityNameLengthRuleError(string city)
+        public CityNameLengthRuleError(string city, int maxLength)
         {
             City = city;
+            MaxLength = maxLength;
         }
 
         public string City { get; }
+
+        public int MaxLength { get; }
     }
 }
