@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -58,7 +59,17 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 meteringPointGSRN: GsrnNumber.Create(SampleData.GsrnNumber),
                 netSettlementGroup: netSettlementGroup,
                 powerPlantGSRN: null,
-                address: Address.Create(null, null, null, null));
+                address: Address.Create(
+                    streetName: string.Empty,
+                    streetCode: string.Empty,
+                    buildingNumber: string.Empty,
+                    city: string.Empty,
+                    citySubDivision: string.Empty,
+                    countryCode: string.Empty,
+                    postCode: string.Empty,
+                    floor: string.Empty,
+                    room: string.Empty,
+                    municipalityCode: default));
         }
 
         private static void AssertContainsValidationError<TValidationError>(BusinessRulesValidationResult result)
