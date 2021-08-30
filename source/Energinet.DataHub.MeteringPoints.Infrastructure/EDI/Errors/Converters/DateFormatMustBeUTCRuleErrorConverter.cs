@@ -14,16 +14,17 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class EffectiveDateWrongFormatErrorConverter : ErrorConverter<EffectiveDateWrongFormatValidationError>
+    public class DateFormatMustBeUTCRuleErrorConverter : ErrorConverter<DateFormatMustBeUTCRuleError>
     {
-        protected override ErrorMessage Convert(EffectiveDateWrongFormatValidationError validationError)
+        protected override ErrorMessage Convert(DateFormatMustBeUTCRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("E86", $"Date time {validationError.OccurenceDate} must have UTC+0 format 'YYYY-MM-DD HH:MI:SS'");
+            return new("E86", $"Date time {validationError.Date} must have UTC+0 format 'YYYY-MM-DD HH:MI:SS'");
         }
     }
 }
