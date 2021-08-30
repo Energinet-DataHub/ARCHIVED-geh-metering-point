@@ -58,6 +58,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError<CreateMeteringPointRejected>("E86");
         }
 
+        [Fact]
+        public async Task Should_reject_when_post_code_is_missing()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    PostCode = string.Empty,
+                };
+
+            await _mediator.Send(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("E86");
+        }
+
         private static CreateMeteringPoint CreateRequest()
         {
             return new CreateMeteringPoint(

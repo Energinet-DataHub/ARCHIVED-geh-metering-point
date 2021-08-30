@@ -54,6 +54,30 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Contains(checkResult.Errors, error => error is StreetNameIsRequiredRuleError);
         }
 
+        [Fact]
+        public void Should_return_error_when_post_code_is_missing()
+        {
+            var address = Address.Create(
+                streetName: string.Empty,
+                streetCode: string.Empty,
+                buildingNumber: string.Empty,
+                city: string.Empty,
+                citySubDivision: string.Empty,
+                postCode: string.Empty,
+                countryCode: string.Empty,
+                floor: string.Empty,
+                room: string.Empty,
+                municipalityCode: default);
+
+            var checkResult = ConsumptionMeteringPoint.CanCreate(
+                meteringPointGSRN: GsrnNumber.Create(SampleData.GsrnNumber),
+                NetSettlementGroup.One,
+                null,
+                address);
+
+            Assert.Contains(checkResult.Errors, error => error is PostCodeIsRequiredRuleError);
+        }
+
         private static BusinessRulesValidationResult CreateRequest(NetSettlementGroup netSettlementGroup)
         {
             return ConsumptionMeteringPoint.CanCreate(
@@ -61,16 +85,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 netSettlementGroup: netSettlementGroup,
                 powerPlantGSRN: null,
                 address: Address.Create(
-                    streetName: string.Empty,
-                    streetCode: string.Empty,
-                    buildingNumber: string.Empty,
-                    city: string.Empty,
-                    citySubDivision: string.Empty,
-                    countryCode: string.Empty,
-                    postCode: string.Empty,
-                    floor: string.Empty,
-                    room: string.Empty,
-                    municipalityCode: default));
+                streetName: string.Empty,
+                streetCode: string.Empty,
+                buildingNumber: string.Empty,
+                city: string.Empty,
+                citySubDivision: string.Empty,
+                countryCode: string.Empty,
+                postCode: string.Empty,
+                floor: string.Empty,
+                room: string.Empty,
+                municipalityCode: default));
         }
 
         private static void AssertContainsValidationError<TValidationError>(BusinessRulesValidationResult result)

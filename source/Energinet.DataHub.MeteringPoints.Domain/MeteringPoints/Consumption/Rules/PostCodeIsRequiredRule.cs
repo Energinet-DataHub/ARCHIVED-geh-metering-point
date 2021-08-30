@@ -12,17 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules
 {
-    public class EffectiveDateWrongFormatValidationError : ValidationError
+    public class PostCodeIsRequiredRule : IBusinessRule
     {
-        public EffectiveDateWrongFormatValidationError(string occurenceDate)
+        public PostCodeIsRequiredRule(Address address)
         {
-            OccurenceDate = occurenceDate;
+            if (address == null) throw new ArgumentNullException(nameof(address));
+            IsBroken = string.IsNullOrWhiteSpace(address.PostCode);
         }
 
-        public string OccurenceDate { get; }
+        public bool IsBroken { get; }
+
+        public ValidationError ValidationError => new PostCodeIsRequiredRuleError();
     }
 }
