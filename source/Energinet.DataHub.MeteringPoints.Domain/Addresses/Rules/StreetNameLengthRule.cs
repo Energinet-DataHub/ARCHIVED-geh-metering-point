@@ -12,36 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Runtime.CompilerServices;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules
 {
-    public class FloorLengthRule : IBusinessRule
+    public class StreetNameLengthRule : IBusinessRule
     {
-        private const int MaxLength = 4;
+        private const int MaxLength = 40;
+        private readonly string? _streetName;
 
-        public FloorLengthRule(string? floor)
+        public StreetNameLengthRule(string? streetName)
         {
-            Validate(floor);
+            _streetName = streetName;
+            Validate();
         }
 
         public bool IsBroken { get; private set; }
 
-        public ValidationError ValidationError { get; private set; } = new FloorLengthRuleError();
+        public ValidationError ValidationError { get; private set; } = new StreetNameLengthRuleError();
 
-        private void Validate(string? floor)
+        private void Validate()
         {
-            if (string.IsNullOrWhiteSpace(floor))
+            if (string.IsNullOrWhiteSpace(_streetName))
             {
                 return;
             }
 
-            if (floor.Length > MaxLength)
-            {
-                IsBroken = true;
-                ValidationError = new FloorLengthRuleError(floor);
-            }
+            ValidationError = new StreetNameLengthRuleError(_streetName, MaxLength);
+            IsBroken = _streetName.Length > MaxLength;
         }
     }
 }

@@ -14,20 +14,20 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules
 {
-    public class StreetCodeLengthRuleError : ValidationError
+    public class FloorLengthRuleError : ValidationError
     {
-        public StreetCodeLengthRuleError()
+        public FloorLengthRuleError()
         {
-            StreetCode = string.Empty;
+            Floor = string.Empty;
         }
 
-        public StreetCodeLengthRuleError(string streetCode)
+        public FloorLengthRuleError(string floor)
         {
-            StreetCode = streetCode;
+            Floor = floor;
         }
 
-        public string StreetCode { get; }
+        public string Floor { get; }
     }
 }

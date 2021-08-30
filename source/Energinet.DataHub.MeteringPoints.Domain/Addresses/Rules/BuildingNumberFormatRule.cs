@@ -16,22 +16,22 @@ using System;
 using System.Text.RegularExpressions;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules
 {
-    public class PostCodeFormatRule : IBusinessRule
+    public class BuildingNumberFormatRule : IBusinessRule
     {
-        private const int MaxLength = 10;
+        private const int MaxLength = 6;
         private const string DanishCountryCode = "DK";
-        private const string DanishRegExRule = @"^([0-9]{4})$";
+        private const string DanishRegExRule = @"^(?=.{1,4}$)((([1-9][0-9]{0,2})?[A-ZÆØÅ]*)|([A-ZÆØÅ]*([1-9][0-9]{0,2})?))$";
 
-        public PostCodeFormatRule(string? postCode, string? countryCode)
+        public BuildingNumberFormatRule(string? buildingNumber, string? countryCode)
         {
-            Validate(postCode, countryCode);
+            Validate(buildingNumber, countryCode);
         }
 
         public bool IsBroken { get; private set; }
 
-        public ValidationError ValidationError { get; private set; } = new PostCodeFormatRuleError();
+        public ValidationError ValidationError { get; private set; } = new BuildingNumberFormatRuleError();
 
         private static bool IsDanish(string? countryCode)
         {
@@ -43,38 +43,38 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
             return countryCode.Equals(DanishCountryCode, StringComparison.OrdinalIgnoreCase);
         }
 
-        private void Validate(string? postCode, string? countryCode)
+        private void Validate(string? buildingNumber, string? countryCode)
         {
-            if (string.IsNullOrWhiteSpace(postCode))
+            if (string.IsNullOrWhiteSpace(buildingNumber))
             {
                 return;
             }
 
             if (IsDanish(countryCode))
             {
-                ValidateDanishPostCode(postCode);
+                ValidateDanishBuildingNumber(buildingNumber);
             }
             else
             {
-                ValidatePostCode(postCode);
+                ValidateGeneralBuildingNumber(buildingNumber);
             }
         }
 
-        private void ValidateDanishPostCode(string postCode)
+        private void ValidateDanishBuildingNumber(string buildingNumber)
         {
-            if (Regex.IsMatch(postCode!, DanishRegExRule) == false)
+            if (Regex.IsMatch(buildingNumber!, DanishRegExRule) == false)
             {
                 IsBroken = true;
-                ValidationError = new PostCodeFormatRuleError(postCode, MaxLength);
+                ValidationError = new BuildingNumberFormatRuleError(buildingNumber);
             }
         }
 
-        private void ValidatePostCode(string postCode)
+        private void ValidateGeneralBuildingNumber(string buildingNumber)
         {
-            if (postCode.Length > MaxLength)
+            if (buildingNumber.Length > MaxLength)
             {
                 IsBroken = true;
-                ValidationError = new PostCodeFormatRuleError(postCode, MaxLength);
+                ValidationError = new BuildingNumberFormatRuleError(buildingNumber);
             }
         }
     }

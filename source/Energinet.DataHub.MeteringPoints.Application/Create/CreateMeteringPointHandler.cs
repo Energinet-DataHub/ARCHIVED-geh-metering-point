@@ -173,9 +173,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 EnumerationType.FromName<ProductType>(request.ProductType));
         }
 
-        private static Domain.MeteringPoints.Address CreateAddress(CreateMeteringPoint request)
+        private static Domain.Addresses.Address CreateAddress(CreateMeteringPoint request)
         {
-            return Domain.MeteringPoints.Address.Create(
+            return Domain.Addresses.Address.Create(
                 streetName: request.StreetName,
                 streetCode: request.StreetCode,
                 buildingNumber: request.BuildingNumber,

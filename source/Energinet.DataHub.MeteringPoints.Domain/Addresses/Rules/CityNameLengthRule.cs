@@ -14,32 +14,32 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules
 {
-    public class StreetNameLengthRule : IBusinessRule
+    public class CityNameLengthRule : IBusinessRule
     {
-        private const int MaxLength = 40;
-        private readonly string? _streetName;
+        private const int MaxLength = 25;
 
-        public StreetNameLengthRule(string? streetName)
+        public CityNameLengthRule(string? city)
         {
-            _streetName = streetName;
-            Validate();
+            Validate(city);
         }
 
         public bool IsBroken { get; private set; }
 
-        public ValidationError ValidationError { get; private set; } = new StreetNameLengthRuleError();
+        public ValidationError ValidationError { get; private set; } = new CityNameLengthRuleError();
 
-        private void Validate()
+        private void Validate(string? city)
         {
-            if (string.IsNullOrWhiteSpace(_streetName))
+            if (string.IsNullOrWhiteSpace(city))
             {
                 return;
             }
 
-            ValidationError = new StreetNameLengthRuleError(_streetName, MaxLength);
-            IsBroken = _streetName.Length > MaxLength;
+            if (city.Length <= MaxLength) return;
+
+            IsBroken = true;
+            ValidationError = new CityNameLengthRuleError(city, MaxLength);
         }
     }
 }

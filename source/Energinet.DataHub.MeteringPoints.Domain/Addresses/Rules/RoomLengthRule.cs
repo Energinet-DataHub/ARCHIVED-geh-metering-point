@@ -14,32 +14,33 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules
 {
-    public class CitySubdivisionRule : IBusinessRule
+    public class RoomLengthRule : IBusinessRule
     {
-        private const int MaxLength = 34;
+        private const int MaxLength = 4;
 
-        public CitySubdivisionRule(string? citySubDivision)
+        public RoomLengthRule(string? room)
         {
-            Validate(citySubDivision);
+            Validate(room);
         }
 
         public bool IsBroken { get; private set; }
 
-        public ValidationError ValidationError { get; private set; } = new CitySubdivisionRuleError();
+        public ValidationError ValidationError { get; private set; } = new RoomLengthRuleError();
 
-        private void Validate(string? citySubDivision)
+        private void Validate(string? room)
         {
-            if (string.IsNullOrWhiteSpace(citySubDivision))
+            if (string.IsNullOrWhiteSpace(room))
             {
                 return;
             }
 
-            if (citySubDivision.Length <= MaxLength) return;
-
-            IsBroken = true;
-            ValidationError = new CitySubdivisionRuleError(citySubDivision);
+            if (room.Length > MaxLength)
+            {
+                IsBroken = true;
+                ValidationError = new RoomLengthRuleError(room);
+            }
         }
     }
 }

@@ -14,20 +14,20 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules
 {
-    public class MunicipalityCodeRuleError : ValidationError
+    public class CitySubdivisionRuleError : ValidationError
     {
-        public MunicipalityCodeRuleError()
+        public CitySubdivisionRuleError()
         {
-            MunicipalityCode = default;
+            CitySubdivision = string.Empty;
         }
 
-        public MunicipalityCodeRuleError(int municipalityCode)
+        public CitySubdivisionRuleError(string citySubdivision)
         {
-            MunicipalityCode = municipalityCode;
+            CitySubdivision = citySubdivision;
         }
 
-        public int MunicipalityCode { get; }
+        public string CitySubdivision { get; }
     }
 }

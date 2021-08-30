@@ -12,22 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules
 {
-    public class BuildingNumberFormatRuleError : ValidationError
+    public class StreetNameLengthRuleError : ValidationError
     {
-        public BuildingNumberFormatRuleError()
+        public StreetNameLengthRuleError()
         {
+            StreetName = string.Empty;
         }
 
-        public BuildingNumberFormatRuleError(string buildingNumber)
+        public StreetNameLengthRuleError(string streetName, int maxLength)
         {
-            BuildingNumber = buildingNumber;
+            StreetName = streetName;
+            MaxLength = maxLength;
         }
 
-        public string BuildingNumber { get; } = string.Empty;
+        public string StreetName { get; }
+
+        public int MaxLength { get; }
     }
 }
