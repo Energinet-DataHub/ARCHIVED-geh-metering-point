@@ -141,7 +141,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SampleData.SettlementMethod,
                 SampleData.MeasurementUnitType,
                 SampleData.DisconnectionType,
-                SampleData.Occurrence,
+                SampleData.EffectiveDate,
                 SampleData.MeterNumber,
                 SampleData.Transaction,
                 SampleData.PhysicalState,

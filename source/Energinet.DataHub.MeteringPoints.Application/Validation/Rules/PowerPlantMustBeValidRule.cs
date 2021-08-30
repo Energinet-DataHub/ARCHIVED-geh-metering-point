@@ -24,8 +24,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
     public class PowerPlantMustBeValidRule : AbstractValidator<CreateMeteringPoint>
     {
-        private const int RequiredIdLength = 18;
-
         public PowerPlantMustBeValidRule()
         {
             When(
@@ -46,32 +44,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                         MeteringPointType.Production.Name,
                         MeteringPointType.VEProduction.Name,
                     }
-                .Contains(createMeteringPoint.TypeOfMeteringPoint) ||
-                IsConsumptionAndNotZeroOrNinetyNine(createMeteringPoint);
-        }
-
-        private static bool IsConsumptionAndNotZeroOrNinetyNine(CreateMeteringPoint createMeteringPoint)
-        {
-            return IsConsumption(createMeteringPoint) &&
-             !IsNetSettlementGroupZero(createMeteringPoint) &&
-             !IsNetSettlementGroupNinetyNine(createMeteringPoint);
-        }
-
-        private static bool IsConsumption(CreateMeteringPoint createMeteringPoint)
-        {
-            return createMeteringPoint.TypeOfMeteringPoint.Equals(
-                MeteringPointType.Consumption.Name,
-                StringComparison.Ordinal);
-        }
-
-        private static bool IsNetSettlementGroupZero(CreateMeteringPoint createMeteringPoint)
-        {
-            return createMeteringPoint.NetSettlementGroup != null && createMeteringPoint.NetSettlementGroup.Equals(NetSettlementGroup.Zero.Name, StringComparison.Ordinal);
-        }
-
-        private static bool IsNetSettlementGroupNinetyNine(CreateMeteringPoint createMeteringPoint)
-        {
-            return createMeteringPoint.NetSettlementGroup != null && createMeteringPoint.NetSettlementGroup.Equals(NetSettlementGroup.Ninetynine.Name, StringComparison.Ordinal);
+                .Contains(createMeteringPoint.TypeOfMeteringPoint);
         }
 
         private static bool NotAllowedGroupOfMeteringPointTypes(CreateMeteringPoint createMeteringPoint)
@@ -85,42 +58,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                         MeteringPointType.NetConsumption.Name,
                     }
                 .Contains(createMeteringPoint.TypeOfMeteringPoint);
-        }
-
-        private static int Parse(string input)
-        {
-            return int.Parse(input, System.Globalization.NumberStyles.Integer, System.Globalization.NumberFormatInfo.InvariantInfo);
-        }
-
-        private static bool CheckSumIsValid(string powerPlantGsrn)
-        {
-            int definedChecksumDigit = Parse(powerPlantGsrn.Substring(powerPlantGsrn.Length - 1));
-            int calculatedChecksum = CalculateChecksum(powerPlantGsrn);
-            return calculatedChecksum == definedChecksumDigit;
-        }
-
-        private static int CalculateChecksum(string powerPlantGsrn)
-        {
-            int sum = 0;
-            bool positionIsOdd = true;
-            for (int currentPosition = 1; currentPosition < RequiredIdLength; currentPosition++)
-            {
-                int currentValueAtPosition = Parse(powerPlantGsrn.Substring(currentPosition - 1, 1));
-                if (positionIsOdd)
-                {
-                    sum = sum + (currentValueAtPosition * 3);
-                }
-                else
-                {
-                    sum = sum + (currentValueAtPosition * 1);
-                }
-
-                positionIsOdd = !positionIsOdd;
-            }
-
-            int equalOrHigherMultipleOf = (int)(Math.Ceiling(sum / 10.0) * 10);
-
-            return equalOrHigherMultipleOf - sum;
         }
 
         private void PowerPlantMustBeEmpty()
@@ -141,17 +78,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         {
             RuleFor(createMeteringPoint => createMeteringPoint.PowerPlant)
                 .Cascade(CascadeMode.Stop)
-                .Must(powerPlant => !string.IsNullOrEmpty(powerPlant) && powerPlant.StartsWith("57", StringComparison.Ordinal))
+                .Must(powerPlantGsrn => GsrnNumber.CheckRules(powerPlantGsrn!).Success)
                 .WithState(
                     createMeteringPoint =>
                         new PowerPlantGsrnEan18ValidValidationError(
                             createMeteringPoint.GsrnNumber,
-                            createMeteringPoint.PowerPlant!))
-                .Must(powerPlant => powerPlant?.Length == RequiredIdLength && CheckSumIsValid(powerPlant))
-                .WithState(createMeteringPoint =>
-                    new PowerPlantGsrnEan18ValidValidationError(
-                        createMeteringPoint.GsrnNumber,
-                        createMeteringPoint.PowerPlant!));
+                            createMeteringPoint.PowerPlant!));
         }
     }
 }

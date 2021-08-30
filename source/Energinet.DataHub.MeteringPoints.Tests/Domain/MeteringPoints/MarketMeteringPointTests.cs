@@ -66,7 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 ReadingOccurrence.Hourly,
                 SampleData.MaximumCurrent,
                 SampleData.MaximumPower,
-                SampleData.OccurenceDate,
+                EffectiveDate.Create(SampleData.EffectiveDate),
                 parentRelatedMeteringPoint: null);
         }
     }

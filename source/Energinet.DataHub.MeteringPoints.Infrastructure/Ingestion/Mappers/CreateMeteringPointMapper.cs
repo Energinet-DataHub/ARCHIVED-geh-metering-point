@@ -57,7 +57,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
                     SettlementMethod = obj.SettlementMethod,
                     UnitType = obj.UnitType,
                     DisconnectionType = obj.DisconnectionType,
-                    OccurenceDate = obj.OccurenceDate,
+                    OccurenceDate = obj.EffectiveDate,
                     MeterNumber = obj.MeterNumber,
                     TransactionId = obj.TransactionId,
                     PhysicalStatusOfMeteringPoint = obj.PhysicalStatusOfMeteringPoint,
