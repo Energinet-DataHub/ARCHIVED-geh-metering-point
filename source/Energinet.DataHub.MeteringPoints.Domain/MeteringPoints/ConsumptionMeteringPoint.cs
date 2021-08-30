@@ -13,8 +13,10 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -47,7 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             ReadingOccurrence meterReadingOccurrence,
             int maximumCurrent,
             int maximumPower,
-            Instant? occurenceDate,
+            EffectiveDate effectiveDate,
             SettlementMethod settlementMethod,
             NetSettlementGroup netSettlementGroup,
             DisconnectionType disconnectionType,
@@ -69,7 +71,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 meterReadingOccurrence,
                 maximumCurrent,
                 maximumPower,
-                occurenceDate,
+                effectiveDate,
                 parentRelatedMeteringPoint)
         {
             _settlementMethod = settlementMethod;
@@ -107,6 +109,21 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
             ConnectionState = ConnectionState.Connected(connectionDetails.EffectiveDate);
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
+        }
+
+        public static BusinessRulesValidationResult CanCreate(
+            GsrnNumber meteringPointGSRN,
+            NetSettlementGroup netSettlementGroup,
+            GsrnNumber? powerPlantGSRN,
+            Address address)
+        {
+            var rules = new Collection<IBusinessRule>()
+            {
+                new PowerPlantIsRequiredForNetSettlementGroupRule(meteringPointGSRN, netSettlementGroup, powerPlantGSRN),
+                new StreetNameIsRequiredRule(meteringPointGSRN, address),
+            };
+
+            return new BusinessRulesValidationResult(rules);
         }
     }
 }

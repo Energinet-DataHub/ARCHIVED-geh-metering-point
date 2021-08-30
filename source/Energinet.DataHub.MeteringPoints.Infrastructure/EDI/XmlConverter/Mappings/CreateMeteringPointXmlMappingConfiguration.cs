@@ -34,7 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 .AddProperty(x => x.SettlementMethod, TranslateSettlementMethod, "MarketEvaluationPoint", "settlementMethod")
                 .AddProperty(x => x.UnitType, "MarketEvaluationPoint", "Series", "quantity_Measure_Unit.name")
                 .AddProperty(x => x.DisconnectionType, TranslateDisconnectionType, "MarketEvaluationPoint", "disconnectionMethod")
-                .AddProperty(x => x.OccurenceDate, "validityStart_DateAndOrTime.dateTime")
+                .AddProperty(x => x.EffectiveDate, "validityStart_DateAndOrTime.dateTime")
                 .AddProperty(x => x.MeterNumber, "MarketEvaluationPoint", "meter.mRID")
                 .AddProperty(x => x.TransactionId, "mRID")
                 .AddProperty(x => x.PhysicalStatusOfMeteringPoint, TranslatePhysicalState, "MarketEvaluationPoint", "connectionState")

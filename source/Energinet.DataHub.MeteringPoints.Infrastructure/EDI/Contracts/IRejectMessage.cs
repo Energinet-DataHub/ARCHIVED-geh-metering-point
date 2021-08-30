@@ -13,18 +13,18 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Contracts;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Contracts
 {
-    public record CreateMeteringPointRejected(
-        string TransactionId,
-        string Status, // TODO: Is status implicit in Rejected from type?
-        string GsrnNumber,
-        string Reason,
-        IReadOnlyList<ErrorMessage> Errors)
-        : IRejectMessage;
-
-    // TODO: Reference to original document?
+    /// <summary>
+    /// Reject actor message
+    /// </summary>
+    public interface IRejectMessage
+    {
+        /// <summary>
+        /// List of validation errors
+        /// </summary>
+        IReadOnlyList<ErrorMessage> Errors { get; }
+    }
 }

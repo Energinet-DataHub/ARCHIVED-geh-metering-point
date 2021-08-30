@@ -124,8 +124,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             builder.Property("_maximumPower")
                 .HasColumnName("MaximumPower");
 
-            builder.Property("_occurenceDate")
-                .HasColumnName("OccurenceDate");
+            builder.Property<EffectiveDate>("_effectiveDate")
+                .HasColumnName("EffectiveDate")
+                .HasConversion(toDbValue => toDbValue.ToString(), fromDbValue => EffectiveDate.Create(fromDbValue));
         }
     }
 

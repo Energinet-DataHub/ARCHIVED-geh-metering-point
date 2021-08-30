@@ -16,9 +16,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
+using Energinet.DataHub.MeteringPoints.Application.Connect;
+using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -31,7 +32,9 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Contracts;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
@@ -44,12 +47,14 @@ using FluentAssertions;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Xunit;
 using Xunit.Categories;
 using ConnectMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Connect.ConnectMeteringPoint;
 using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Create.CreateMeteringPoint;
+using JsonSerializer = Energinet.DataHub.MeteringPoints.Infrastructure.Serialization.JsonSerializer;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
@@ -103,7 +108,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(ConnectionString), Lifestyle.Scoped);
 
             _container.AddValidationErrorConversion(
-                validateRegistrations: true,
+                validateRegistrations: false,
                 typeof(CreateMeteringPoint).Assembly, // Application
                 typeof(MeteringPoint).Assembly, // Domain
                 typeof(ErrorMessageFactory).Assembly); // Infrastructure
@@ -188,6 +193,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             message.Should().NotBeNull();
             message.Should().BeOfType<TMessage>();
+        }
+
+        protected void AssertValidationError<TRejectMessage>(string expectedErrorCode, string expectedDescription)
+            where TRejectMessage : IRejectMessage
+        {
+            var message = GetOutboxMessages
+                    <PostOfficeEnvelope>()
+                .First(msg => msg.MessageType.Equals(typeof(TRejectMessage).Name, StringComparison.Ordinal));
+
+            var rejectMessage = JsonConvert.DeserializeObject<TRejectMessage>(message.Content);
+            var validationError = rejectMessage.Errors
+                .First(error => error.Code == expectedErrorCode && error.Description ==
+                    expectedDescription);
+
+            Assert.NotNull(validationError);
         }
 
         private void CleanupDatabase()

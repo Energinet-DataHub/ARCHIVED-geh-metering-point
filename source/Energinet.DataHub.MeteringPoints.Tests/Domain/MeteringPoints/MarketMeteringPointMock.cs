@@ -35,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             ReadingOccurrence meterReadingOccurrence,
             int maximumCurrent,
             int maximumPower,
-            Instant? occurenceDate,
+            EffectiveDate effectiveDate,
             string? parentRelatedMeteringPoint)
             : base(
                 id,
@@ -51,7 +51,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 meterReadingOccurrence,
                 maximumCurrent,
                 maximumPower,
-                occurenceDate,
+                effectiveDate,
                 parentRelatedMeteringPoint)
         {
         }

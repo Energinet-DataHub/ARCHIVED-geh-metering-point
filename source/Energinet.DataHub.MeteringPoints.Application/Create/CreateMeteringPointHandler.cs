@@ -24,7 +24,6 @@ using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using MediatR;
-using NodaTime;
 using ConsumptionMeteringPoint = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ConsumptionMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Create
@@ -52,6 +51,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
 
             var meteringPointType = EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint);
 
+            var rulesCheckResult = CheckBusinessRules(request);
+            if (!rulesCheckResult.Success)
+            {
+                return rulesCheckResult;
+            }
+
             MeteringPoint meteringPoint;
 
             switch (meteringPointType.Name)
@@ -75,6 +80,23 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             return BusinessProcessResult.Ok(request.TransactionId);
         }
 
+        private static BusinessProcessResult CheckBusinessRules(CreateMeteringPoint request)
+        {
+            var meteringPointType = EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint);
+            if (meteringPointType != MeteringPointType.Consumption)
+            {
+                return BusinessProcessResult.Ok(request.TransactionId);
+            }
+
+            var validationResult = ConsumptionMeteringPoint.CanCreate(
+                GsrnNumber.Create(request.GsrnNumber),
+                EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup!),
+                string.IsNullOrWhiteSpace(request.PowerPlant) ? null : GsrnNumber.Create(request.PowerPlant!),
+                CreateAddress(request));
+
+            return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
+        }
+
         private static ProductionMeteringPoint CreateProductionMeteringPoint(CreateMeteringPoint request, MeteringPointType meteringPointType)
         {
            return new(
@@ -92,7 +114,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
                 request.MaximumCurrent,
                 request.MaximumPower,
-                SystemClock.Instance.GetCurrentInstant(), // TODO: Parse date in correct format when implemented in Input Validation
+                EffectiveDate.Create(request.EffectiveDate),
                 EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup!),
                 EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
                 EnumerationType.FromName<ConnectionType>(request.ConnectionType!),
@@ -117,7 +139,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
                 request.MaximumCurrent,
                 request.MaximumPower,
-                SystemClock.Instance.GetCurrentInstant(), // TODO: Parse date in correct format when implemented in Input Validation
+                EffectiveDate.Create(request.EffectiveDate), // TODO: Parse date in correct format when implemented in Input Validation
                 request.ToGrid,
                 request.FromGrid,
                 request.ParentRelatedMeteringPoint,
@@ -141,7 +163,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
                 request.MaximumCurrent,
                 request.MaximumPower,
-                SystemClock.Instance.GetCurrentInstant(), // TODO: Parse date in correct format when implemented in Input Validation
+                EffectiveDate.Create(request.EffectiveDate),
                 EnumerationType.FromName<SettlementMethod>(request.SettlementMethod!),
                 EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup!),
                 EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),

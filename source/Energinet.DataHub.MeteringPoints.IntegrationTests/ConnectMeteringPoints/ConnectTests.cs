@@ -165,7 +165,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
                 SampleData.SettlementMethod,
                 SampleData.MeasurementUnitType,
                 SampleData.DisconnectionType,
-                SampleData.Occurrence,
+                SampleData.EffectiveDate,
                 SampleData.MeterNumber,
                 SampleData.Transaction,
                 SampleData.PhysicalState,
@@ -183,7 +183,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
 
         private ConnectMeteringPoint CreateConnectMeteringPointRequest()
         {
-            return new(SampleData.GsrnNumber, _dateTimeProvider.Now().ToString(), SampleData.Transaction);
+            var currentDate = _dateTimeProvider.Now().ToDateTimeUtc();
+            var effectiveDate = Instant.FromUtc(currentDate.Year, currentDate.Month, currentDate.Day, 22, 0);
+            return new(SampleData.GsrnNumber, effectiveDate.ToString(), SampleData.Transaction);
         }
 
         private async Task MarkAsEnergySupplierAssigned(Instant startOfSupply)

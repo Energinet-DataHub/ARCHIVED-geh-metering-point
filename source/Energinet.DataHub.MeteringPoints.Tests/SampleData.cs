@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using NodaTime;
 
@@ -56,7 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public static int MaximumPower => 230;
 
-        public static Instant? OccurenceDate => SystemClock.Instance.GetCurrentInstant();
+        public static string EffectiveDate => EffectiveDateNow();
 
         public static string SettlementMethod => Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.SettlementMethod.Flex.Name;
 
@@ -79,5 +78,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests
         public static string CitySubdivision => string.Empty;
 
         public static int MunicipalityCode => default;
+
+        private static string EffectiveDateNow()
+        {
+            var currentDate = SystemClock.Instance.GetCurrentInstant().InUtc();
+            var effectiveDate = Instant.FromUtc(currentDate.Year, currentDate.Month, currentDate.Day, 22, 0, 0);
+            return effectiveDate.ToString();
+        }
     }
 }
