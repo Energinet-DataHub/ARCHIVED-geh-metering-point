@@ -12,12 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.ObjectModel;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules.Connect;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
@@ -79,8 +75,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _maximumPower = maximumPower;
             _effectiveDate = effectiveDate;
             _parentRelatedMeteringPoint = parentRelatedMeteringPoint;
-
-            AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaId, meteringPointSubType, ConnectionState.PhysicalState, meterReadingOccurrence, ProductType.Tariff, unitType));
         }
 
         public MeteringPointId Id { get; }

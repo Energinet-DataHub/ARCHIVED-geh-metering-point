@@ -14,13 +14,21 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class MeteringPointCreated : DomainEventBase
     {
-        public MeteringPointCreated(MeteringPointId meteringPointId, GsrnNumber gsrnNumber, MeteringPointType meteringPointType, GridAreaId gridAreaId, MeteringPointSubType meteringPointSubType, PhysicalState physicalState, ReadingOccurrence readingOccurrence, ProductType productType, MeasurementUnitType measurementUnitType)
+        public MeteringPointCreated(
+            MeteringPointId meteringPointId,
+            GsrnNumber gsrnNumber,
+            MeteringPointType meteringPointType,
+            GridAreaId gridAreaId,
+            MeteringPointSubType meteringPointSubType,
+            PhysicalState physicalState,
+            ReadingOccurrence readingOccurrence,
+            ProductType productType,
+            MeasurementUnitType measurementUnitType)
         {
             MeteringPointId = meteringPointId;
             GsrnNumber = gsrnNumber;
@@ -31,6 +39,58 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             ReadingOccurrence = readingOccurrence;
             ProductType = productType;
             MeasurementUnitType = measurementUnitType;
+        }
+
+        public MeteringPointCreated(
+            MeteringPointId meteringPointId,
+            GsrnNumber gsrnNumber,
+            MeteringPointType meteringPointType,
+            GridAreaId gridAreaId,
+            MeteringPointSubType meteringPointSubType,
+            PhysicalState connectionStatePhysicalState,
+            ReadingOccurrence meterReadingOccurrence,
+            ProductType productType,
+            MeasurementUnitType measurementUnitType,
+            string? toGrid,
+            string? fromGrid)
+            : this(meteringPointId, gsrnNumber, meteringPointType, gridAreaId, meteringPointSubType, connectionStatePhysicalState, meterReadingOccurrence, productType, measurementUnitType)
+        {
+            ToGrid = toGrid;
+            FromGrid = fromGrid;
+        }
+
+        public MeteringPointCreated(
+            MeteringPointId meteringPointId,
+            GsrnNumber gsrnNumber,
+            MeteringPointType meteringPointType,
+            GridAreaId gridAreaId,
+            MeteringPointSubType meteringPointSubType,
+            PhysicalState connectionStatePhysicalState,
+            ReadingOccurrence meterReadingOccurrence,
+            ProductType productType,
+            MeasurementUnitType measurementUnitType,
+            NetSettlementGroup netSettlementGroup)
+            : this(meteringPointId, gsrnNumber, meteringPointType, gridAreaId, meteringPointSubType, connectionStatePhysicalState, meterReadingOccurrence, productType, measurementUnitType)
+        {
+            NetSettlementGroup = netSettlementGroup;
+        }
+
+        public MeteringPointCreated(
+            MeteringPointId meteringPointId,
+            GsrnNumber gsrnNumber,
+            MeteringPointType meteringPointType,
+            GridAreaId gridAreaId,
+            MeteringPointSubType meteringPointSubType,
+            PhysicalState connectionStatePhysicalState,
+            ReadingOccurrence meterReadingOccurrence,
+            ProductType productType,
+            MeasurementUnitType measurementUnitType,
+            SettlementMethod settlementMethod,
+            NetSettlementGroup netSettlementGroup)
+            : this(meteringPointId, gsrnNumber, meteringPointType, gridAreaId, meteringPointSubType, connectionStatePhysicalState, meterReadingOccurrence, productType, measurementUnitType)
+        {
+            SettlementMethod = settlementMethod;
+            NetSettlementGroup = netSettlementGroup;
         }
 
         public MeteringPointId MeteringPointId { get; }
@@ -50,5 +110,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public MeteringPointType MeteringPointType { get; }
 
         public GridAreaId GridAreaId { get; }
+
+        public SettlementMethod? SettlementMethod { get; }
+
+        public NetSettlementGroup? NetSettlementGroup { get; }
+
+        public string? FromGrid { get; }
+
+        public string? ToGrid { get; }
     }
 }
