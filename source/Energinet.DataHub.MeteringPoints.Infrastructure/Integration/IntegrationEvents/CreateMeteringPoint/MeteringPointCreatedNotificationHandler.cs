@@ -16,8 +16,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
-using MediatR;
-using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint
 {
@@ -37,17 +35,17 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 notification.GsrnNumber.Value,
                 notification.MeteringPointType.Name,
                 notification.GridAreaId.Value.ToString(),
-                string.Empty,
+                notification.SettlementMethod?.Name ?? string.Empty,
                 notification.MeteringPointSubType.Name,
                 notification.PhysicalState.Name,
                 notification.ReadingOccurrence.Name,
-                string.Empty,
-                string.Empty,
-                string.Empty,
+                notification.NetSettlementGroup?.Name ?? string.Empty,
+                notification.ToGrid ?? string.Empty,
+                notification.FromGrid ?? string.Empty,
                 notification.ProductType.Name,
                 notification.MeasurementUnitType.Name,
                 string.Empty,
-                SystemClock.Instance.GetCurrentInstant().ToString());  // TODO: Use actual input properties for this and other missing fields
+                notification.OccurredOn.ToString());
 
             CreateAndAddOutboxMessage(message);
 

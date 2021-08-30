@@ -73,6 +73,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _productionObligation = false;
             _productType = productType;
             _isAddressWashable = isAddressWashable;
+
+            AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaId, meteringPointSubType, ConnectionState.PhysicalState, meterReadingOccurrence, ProductType.Tariff, unitType, netSettlementGroup));
         }
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor

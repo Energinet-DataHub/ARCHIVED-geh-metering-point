@@ -17,9 +17,9 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class MeteringPointMustBeKnownRuleErrorConverter : ErrorConverter<MeteringPointMustBeKnownRuleError>
+    public class MeteringPointMustBeKnownRuleErrorConverter : ErrorConverter<MeteringPointMustBeKnownValidationError>
     {
-        protected override ErrorMessage Convert(MeteringPointMustBeKnownRuleError validationError)
+        protected override ErrorMessage Convert(MeteringPointMustBeKnownValidationError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
