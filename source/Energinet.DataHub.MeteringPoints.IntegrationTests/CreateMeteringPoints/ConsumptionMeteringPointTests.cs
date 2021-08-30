@@ -37,47 +37,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task Should_reject_when_powerplant_is_not_specified_and_netsettlementgroup_is_not_0_or_99()
         {
-            var requestWithoutPowerPlantGSRN = new CreateMeteringPoint(
-                SampleData.StreetName,
-                SampleData.BuildingNumber,
-                SampleData.PostCode,
-                SampleData.CityName,
-                SampleData.CitySubDivisionName,
-                SampleData.MunicipalityCode,
-                SampleData.CountryCode,
-                SampleData.StreetCode,
-                SampleData.FloorIdentification,
-                SampleData.RoomIdentification,
-                SampleData.IsWashable,
-                SampleData.GsrnNumber,
-                SampleData.TypeOfMeteringPoint,
-                MeteringPointSubType.Calculated.Name,
-                SampleData.ReadingOccurrence,
-                0,
-                0,
-                SampleData.MeteringGridArea,
-                string.Empty,
-                string.Empty,
-                SampleData.SettlementMethod,
-                SampleData.MeasurementUnitType,
-                SampleData.DisconnectionType,
-                SampleData.EffectiveDate,
-                string.Empty,
-                Guid.NewGuid().ToString(),
-                SampleData.PhysicalState,
-                NetSettlementGroup.Six.Name,
-                SampleData.ConnectionType,
-                SampleData.AssetType,
-                "123",
-                ToGrid: "456",
-                ParentRelatedMeteringPoint: null,
-                SampleData.ProductType,
-                "0",
-                SampleData.GeoInfoReference,
-                SampleData.MeasurementUnitType,
-                ContractedConnectionCapacity: null,
-                RatedCurrent: null);
-            await _mediator.Send(requestWithoutPowerPlantGSRN).ConfigureAwait(false);
+            var request = CreateRequest();
+
+            await _mediator.Send(request).ConfigureAwait(false);
 
             AssertValidationError<CreateMeteringPointRejected>("D57");
         }
@@ -85,7 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task Should_reject_when_street_name_is_missing()
         {
-            var request = CreateReqeust()
+            var request = CreateRequest()
                 with
                 {
                     StreetName = string.Empty,
@@ -96,7 +58,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError<CreateMeteringPointRejected>("E86");
         }
 
-        private static CreateMeteringPoint CreateReqeust()
+        private static CreateMeteringPoint CreateRequest()
         {
             return new CreateMeteringPoint(
                 SampleData.StreetName,
