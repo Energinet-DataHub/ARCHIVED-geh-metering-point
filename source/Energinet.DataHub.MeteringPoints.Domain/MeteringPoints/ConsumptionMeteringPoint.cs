@@ -123,6 +123,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 new PowerPlantIsRequiredForNetSettlementGroupRule(meteringPointGSRN, netSettlementGroup, powerPlantGSRN),
                 new StreetNameIsRequiredRule(meteringPointGSRN, address),
                 new PostCodeIsRequiredRule(address),
+                new CityIsRequiredRule(address),
             };
 
             return new BusinessRulesValidationResult(rules);

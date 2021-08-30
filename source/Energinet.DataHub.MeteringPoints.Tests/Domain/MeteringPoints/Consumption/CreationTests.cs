@@ -78,6 +78,30 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Contains(checkResult.Errors, error => error is PostCodeIsRequiredRuleError);
         }
 
+        [Fact]
+        public void Should_return_error_when_city_is_missing()
+        {
+            var address = Address.Create(
+                streetName: string.Empty,
+                streetCode: string.Empty,
+                buildingNumber: string.Empty,
+                city: string.Empty,
+                citySubDivision: string.Empty,
+                postCode: string.Empty,
+                countryCode: string.Empty,
+                floor: string.Empty,
+                room: string.Empty,
+                municipalityCode: default);
+
+            var checkResult = ConsumptionMeteringPoint.CanCreate(
+                meteringPointGSRN: GsrnNumber.Create(SampleData.GsrnNumber),
+                NetSettlementGroup.One,
+                null,
+                address);
+
+            Assert.Contains(checkResult.Errors, error => error is CityIsRequiredRuleError);
+        }
+
         private static BusinessRulesValidationResult CreateRequest(NetSettlementGroup netSettlementGroup)
         {
             return ConsumptionMeteringPoint.CanCreate(

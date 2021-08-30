@@ -72,6 +72,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError<CreateMeteringPointRejected>("E86");
         }
 
+        [Fact]
+        public async Task Should_reject_when_city_is_missing()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    CityName = string.Empty,
+                };
+
+            await _mediator.Send(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("E86");
+        }
+
         private static CreateMeteringPoint CreateRequest()
         {
             return new CreateMeteringPoint(
