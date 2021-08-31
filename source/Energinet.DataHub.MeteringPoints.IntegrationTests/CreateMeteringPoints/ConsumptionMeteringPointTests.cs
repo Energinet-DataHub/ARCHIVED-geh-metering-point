@@ -100,6 +100,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError<CreateMeteringPointRejected>("D02");
         }
 
+        [Fact]
+        public async Task Should_reject_when_settlement_method_is_invalid()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    SettlementMethod = "Invalid_Method_Name",
+                };
+
+            await _mediator.Send(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D15");
+        }
+
         private static CreateMeteringPoint CreateRequest()
         {
             return new CreateMeteringPoint(
