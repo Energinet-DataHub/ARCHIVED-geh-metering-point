@@ -20,7 +20,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class MeteringPointCreated : DomainEventBase
     {
-        public MeteringPointCreated(MeteringPointId meteringPointId, GsrnNumber gsrnNumber, MeteringPointType meteringPointType, GridAreaId gridAreaId, MeteringPointSubType meteringPointSubType, PhysicalState physicalState, ReadingOccurrence readingOccurrence, ProductType productType, MeasurementUnitType measurementUnitType)
+        public MeteringPointCreated(MeteringPointId meteringPointId, GsrnNumber gsrnNumber, MeteringPointType meteringPointType, GridAreaId gridAreaId, MeteringPointSubType meteringPointSubType, PhysicalState physicalState, ReadingOccurrence readingOccurrence, ProductType productType, MeasurementUnitType measurementUnitType, string effectiveDate)
         {
             MeteringPointId = meteringPointId;
             GsrnNumber = gsrnNumber;
@@ -31,7 +31,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             ReadingOccurrence = readingOccurrence;
             ProductType = productType;
             MeasurementUnitType = measurementUnitType;
+            EffectiveDate = effectiveDate;
         }
+
+        public string EffectiveDate { get; }
 
         public MeteringPointId MeteringPointId { get; }
 

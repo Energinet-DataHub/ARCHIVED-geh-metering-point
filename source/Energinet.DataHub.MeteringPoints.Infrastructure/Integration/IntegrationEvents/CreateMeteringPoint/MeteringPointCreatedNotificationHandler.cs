@@ -47,7 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 notification.ProductType.Name,
                 notification.MeasurementUnitType.Name,
                 string.Empty,
-                SystemClock.Instance.GetCurrentInstant().ToString());  // TODO: Use actual input properties for this and other missing fields
+                notification.EffectiveDate);
 
             CreateAndAddOutboxMessage(message);
 

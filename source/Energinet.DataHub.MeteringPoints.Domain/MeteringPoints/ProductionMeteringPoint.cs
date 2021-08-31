@@ -43,7 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             ReadingOccurrence meterReadingOccurrence,
             int maximumCurrent,
             int maximumPower,
-            Instant? occurenceDate,
+            Instant? effectiveDate,
             NetSettlementGroup netSettlementGroup,
             DisconnectionType disconnectionType,
             ConnectionType connectionType,
@@ -63,7 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 meterReadingOccurrence,
                 maximumCurrent,
                 maximumPower,
-                occurenceDate,
+                effectiveDate,
                 parentRelatedMeteringPoint)
         {
             _netSettlementGroup = netSettlementGroup;
