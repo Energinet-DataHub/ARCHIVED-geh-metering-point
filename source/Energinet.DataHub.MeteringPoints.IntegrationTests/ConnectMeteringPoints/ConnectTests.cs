@@ -22,6 +22,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
+using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using MediatR;
 using NodaTime;
 using Xunit;
@@ -36,7 +37,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
         private readonly IMediator _mediator;
         private readonly ISystemDateTimeProvider _dateTimeProvider;
 
-        public ConnectTests()
+        public ConnectTests(DatabaseFixture databaseFixture)
+            : base(databaseFixture)
         {
             _mediator = GetService<IMediator>();
             _dateTimeProvider = GetService<ISystemDateTimeProvider>();
