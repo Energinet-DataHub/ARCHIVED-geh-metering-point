@@ -15,15 +15,15 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Create
 {
-    public class SettlementMethodMissingRequiredDomainValuesErrorConverter : ErrorConverter<SettlementMethodMissingRequiredDomainValuesValidationError>
+    public class SettlementMethodRequiredErrorConverter : ErrorConverter<SettlementMethodRequiredValidationError>
     {
-        protected override ErrorMessage Convert(SettlementMethodMissingRequiredDomainValuesValidationError validationError)
+        protected override ErrorMessage Convert(SettlementMethodRequiredValidationError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D15", $"Settlement method {validationError.SettlementMethod} for metering point {validationError.GsrnNumber} is missing (type E17) or not allowed (other types)");
+            return new("D02", $"Settlement method is missing (type E17) or not allowed (other types)");
         }
     }
 }
