@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules.Connect;
@@ -123,6 +124,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             {
                 new PowerPlantIsRequiredForNetSettlementGroupRule(meteringPointGSRN, netSettlementGroup, powerPlantGSRN),
                 new StreetNameIsRequiredRule(meteringPointGSRN, address),
+                new PostCodeIsRequiredRule(address),
+                new CityIsRequiredRule(address),
             };
 
             return new BusinessRulesValidationResult(rules);

@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentAssertions;
 using Xunit;
@@ -89,12 +90,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 
         [Theory]
         [InlineData("", typeof(EffectiveDateRequiredValidationError), true)]
-        [InlineData("2021-11-12T22:00:00Z", typeof(EffectiveDateWrongFormatValidationError), false)]
-        [InlineData("12-12-2021T22:00:00Z", typeof(EffectiveDateWrongFormatValidationError), true)]
-        [InlineData("12-12-2021T22:00:00", typeof(EffectiveDateWrongFormatValidationError), true)]
-        [InlineData("YYYY-12-12T22:00:00Z", typeof(EffectiveDateWrongFormatValidationError), true)]
-        [InlineData("2021-12-12T22:00:00.000Z", typeof(EffectiveDateWrongFormatValidationError), false)]
-        [InlineData("2021-12-12T22:00:00:1234Z", typeof(EffectiveDateWrongFormatValidationError), true)]
+        [InlineData("2021-11-12T22:00:00Z", typeof(DateFormatMustBeUTCRuleError), false)]
+        [InlineData("12-12-2021T22:00:00Z", typeof(DateFormatMustBeUTCRuleError), true)]
+        [InlineData("12-12-2021T22:00:00", typeof(DateFormatMustBeUTCRuleError), true)]
+        [InlineData("YYYY-12-12T22:00:00Z", typeof(DateFormatMustBeUTCRuleError), true)]
+        [InlineData("2021-12-12T22:00:00.000Z", typeof(DateFormatMustBeUTCRuleError), false)]
+        [InlineData("2021-12-12T22:00:00:1234Z", typeof(DateFormatMustBeUTCRuleError), true)]
         public void Validate_EffectiveDateMandatoryAndFormat(string occurenceDate, System.Type validationError, bool expectedError)
         {
             var businessRequest = CreateRequest() with
@@ -257,22 +258,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             {
                 MeterReadingOccurrence = meterReadingOccurence,
                 TypeOfMeteringPoint = meteringPointType,
-            };
-
-            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
-        }
-
-        [Theory]
-        [InlineData("123", typeof(MunicipalityCodeMustBeValidValidationError), false)]
-        [InlineData("999", typeof(MunicipalityCodeMustBeValidValidationError), false)]
-        [InlineData("1234", typeof(MunicipalityCodeMustBeValidValidationError), true)]
-        [InlineData("12", typeof(MunicipalityCodeMustBeValidValidationError), true)]
-        public void Validate_Municipality_Code(string municipalityCode, System.Type validationError, bool expectedError)
-        {
-            var businessRequest = CreateRequest() with
-            {
-                GsrnNumber = SampleData.GsrnNumber,
-                MunicipalityCode = municipalityCode,
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);

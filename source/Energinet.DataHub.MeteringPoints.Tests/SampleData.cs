@@ -67,6 +67,18 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public static string AssetType => string.Empty;
 
+        public static string Floor => string.Empty;
+
+        public static string StreetCode => string.Empty;
+
+        public static string BuildingNumber => string.Empty;
+
+        public static string Room => string.Empty;
+
+        public static string CitySubdivision => string.Empty;
+
+        public static int MunicipalityCode => default;
+
         private static string EffectiveDateNow()
         {
             var currentDate = SystemClock.Instance.GetCurrentInstant().InUtc();
