@@ -27,26 +27,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
     {
         public NetSettlementGroupRule()
         {
-            When(MeteringPointTypeIsProductionOrConsumption, () =>
-            {
-                RuleFor(request => request.NetSettlementGroup)
-                    .Cascade(CascadeMode.Stop)
-                    .NotEmpty()
-                    .WithState(createMeteringPoint => new NetSettlementGroupMandatoryValidationError(createMeteringPoint.TypeOfMeteringPoint))
-                    .Must(netSettlementGroup => AllowedNetSettlementGroupValues().Contains(netSettlementGroup!))
-                    .WithState(createMeteringPoint => new NetSettlementGroupInvalidValueValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.TypeOfMeteringPoint));
-            }).Otherwise(() =>
-            {
-                RuleFor(request => request.NetSettlementGroup)
-                    .Empty()
-                    .WithState(createMeteringPoint => new NetSettlementGroupNotAllowedValidationError(createMeteringPoint.TypeOfMeteringPoint, createMeteringPoint.NetSettlementGroup!));
-            });
-        }
-
-        private static bool MeteringPointTypeIsProductionOrConsumption(CreateMeteringPoint createMeteringPoint)
-        {
-            return createMeteringPoint.TypeOfMeteringPoint.Equals(MeteringPointType.Consumption.Name, StringComparison.Ordinal)
-                   || createMeteringPoint.TypeOfMeteringPoint.Equals(MeteringPointType.Production.Name, StringComparison.Ordinal);
+            RuleFor(request => request.NetSettlementGroup)
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty()
+                .WithState(createMeteringPoint => new NetSettlementGroupMandatoryValidationError(createMeteringPoint.TypeOfMeteringPoint))
+                .Must(netSettlementGroup => AllowedNetSettlementGroupValues().Contains(netSettlementGroup!))
+                .WithState(createMeteringPoint => new NetSettlementGroupInvalidValueValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.TypeOfMeteringPoint));
         }
 
         private static HashSet<string> AllowedNetSettlementGroupValues()
