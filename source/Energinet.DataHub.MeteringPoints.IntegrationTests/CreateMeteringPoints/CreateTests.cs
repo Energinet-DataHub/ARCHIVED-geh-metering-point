@@ -20,6 +20,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
+using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using MediatR;
 using Xunit;
 using Xunit.Categories;
@@ -33,7 +34,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         private readonly IMediator _mediator;
         private readonly IMeteringPointRepository _meteringPointRepository;
 
-        public CreateTests()
+        public CreateTests(DatabaseFixture databaseFixture)
+            : base(databaseFixture)
         {
             _mediator = GetService<IMediator>();
             _meteringPointRepository = GetService<IMeteringPointRepository>();
