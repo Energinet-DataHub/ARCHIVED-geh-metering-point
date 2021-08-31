@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
@@ -46,6 +47,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             if (!validationResult.Success)
             {
                 return validationResult;
+            }
+
+            var addressValidationResult = ValidateAddress(request);
+            if (!addressValidationResult.Success)
+            {
+                return new BusinessProcessResult(request.TransactionId, addressValidationResult.Errors);
             }
 
             var meteringPointType = EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint);
@@ -172,13 +179,35 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 EnumerationType.FromName<ProductType>(request.ProductType));
         }
 
-        private static Domain.MeteringPoints.Address CreateAddress(CreateMeteringPoint request)
+        private static Domain.Addresses.Address CreateAddress(CreateMeteringPoint request)
         {
-            return Domain.MeteringPoints.Address.Create(
-                request.StreetName,
-                request.PostCode,
-                request.CityName,
-                request.CountryCode);
+            return Domain.Addresses.Address.Create(
+                streetName: request.StreetName,
+                streetCode: request.StreetCode,
+                buildingNumber: request.BuildingNumber,
+                postCode: request.PostCode,
+                city: request.CityName,
+                citySubDivision: request.CitySubDivisionName,
+                countryCode: request.CountryCode,
+                floor: request.FloorIdentification,
+                room: request.RoomIdentification,
+                municipalityCode: string.IsNullOrWhiteSpace(request.MunicipalityCode) ? default : int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()));
+        }
+
+        private static BusinessRulesValidationResult ValidateAddress(CreateMeteringPoint request)
+        {
+            var municipalityCode = int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo());
+            return Domain.Addresses.Address.CheckRules(
+                streetName: request.StreetName,
+                streetCode: request.StreetCode,
+                buildingNumber: request.BuildingNumber,
+                city: request.CityName,
+                citySubDivision: request.CitySubDivisionName,
+                postCode: request.PostCode,
+                countryCode: request.CountryCode,
+                floor: request.FloorIdentification,
+                room: request.RoomIdentification,
+                municipalityCode: municipalityCode);
         }
 
         private async Task<BusinessProcessResult> ValidateAsync(CreateMeteringPoint request, CancellationToken cancellationToken)

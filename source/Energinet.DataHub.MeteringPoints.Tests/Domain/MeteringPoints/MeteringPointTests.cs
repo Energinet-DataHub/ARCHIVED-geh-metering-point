@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System.Linq;
+using Azure.Core;
+using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -39,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             return new ConsumptionMeteringPoint(
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
-                Address.Create(SampleData.StreetName, SampleData.PostCode, SampleData.CityName, SampleData.CountryCode),
+                Address.Create(SampleData.StreetName, SampleData.StreetCode, SampleData.BuildingNumber, SampleData.CityName, SampleData.CitySubdivision, SampleData.PostCode, SampleData.CountryCode, SampleData.Floor, SampleData.Room, SampleData.MunicipalityCode),
                 SampleData.IsAddressWashable,
                 EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
                 EnumerationType.FromName<MeteringPointType>(SampleData.TypeName),

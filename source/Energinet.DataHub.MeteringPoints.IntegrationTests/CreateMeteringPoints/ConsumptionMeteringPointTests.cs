@@ -37,7 +37,58 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task Should_reject_when_powerplant_is_not_specified_and_netsettlementgroup_is_not_0_or_99()
         {
-            var requestWithoutPowerPlantGSRN = new CreateMeteringPoint(
+            var request = CreateRequest();
+
+            await _mediator.Send(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D57");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_street_name_is_missing()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    StreetName = string.Empty,
+                };
+
+            await _mediator.Send(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("E86");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_post_code_is_missing()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    PostCode = string.Empty,
+                };
+
+            await _mediator.Send(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("E86");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_city_is_missing()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    CityName = string.Empty,
+                };
+
+            await _mediator.Send(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("E86");
+        }
+
+        private static CreateMeteringPoint CreateRequest()
+        {
+            return new CreateMeteringPoint(
                 SampleData.StreetName,
                 SampleData.BuildingNumber,
                 SampleData.PostCode,
@@ -77,9 +128,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SampleData.MeasurementUnitType,
                 ContractedConnectionCapacity: null,
                 RatedCurrent: null);
-            await _mediator.Send(requestWithoutPowerPlantGSRN).ConfigureAwait(false);
-
-            AssertValidationError<CreateMeteringPointRejected>("D57", $"Power plant for Consumption metering point (E17) {requestWithoutPowerPlantGSRN.GsrnNumber} which is not in net settlement group 0 or 99, is missing.");
         }
     }
 }

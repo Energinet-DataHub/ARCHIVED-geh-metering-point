@@ -15,6 +15,7 @@
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
@@ -38,7 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         {
             RuleFor(effectiveDate => effectiveDate)
                 .Must(effectiveDate => EffectiveDate.CheckRules(effectiveDate).Success)
-                .WithState(effectiveDate => new EffectiveDateWrongFormatValidationError(effectiveDate));
+                .WithState(effectiveDate => new DateFormatMustBeUTCRuleError(effectiveDate));
         }
     }
 }

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -47,9 +48,15 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             builder.OwnsOne<Address>("_address", y =>
             {
                 y.Property(x => x.StreetName).HasColumnName("StreetName");
-                y.Property(x => x.CityName).HasColumnName("CityName");
+                y.Property(x => x.StreetCode).HasColumnName("StreetCode");
+                y.Property(x => x.City).HasColumnName("CityName");
                 y.Property(x => x.CountryCode).HasColumnName("CountryCode");
                 y.Property(x => x.PostCode).HasColumnName("PostCode");
+                y.Property(x => x.CitySubDivision).HasColumnName("CitySubdivision");
+                y.Property(x => x.Floor).HasColumnName("Floor");
+                y.Property(x => x.Room).HasColumnName("Room");
+                y.Property(x => x.BuildingNumber).HasColumnName("BuildingNumber");
+                y.Property(x => x.MunicipalityCode).HasColumnName("MunicipalityCode");
             });
 
             builder.OwnsOne<ConnectionState>("ConnectionState", config =>

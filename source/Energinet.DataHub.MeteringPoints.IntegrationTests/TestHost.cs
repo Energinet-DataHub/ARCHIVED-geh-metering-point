@@ -108,7 +108,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(ConnectionString), Lifestyle.Scoped);
 
             _container.AddValidationErrorConversion(
-                validateRegistrations: false,
+                validateRegistrations: true,
                 typeof(CreateMeteringPoint).Assembly, // Application
                 typeof(MeteringPoint).Assembly, // Domain
                 typeof(ErrorMessageFactory).Assembly); // Infrastructure
@@ -195,7 +195,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             message.Should().BeOfType<TMessage>();
         }
 
-        protected void AssertValidationError<TRejectMessage>(string expectedErrorCode, string expectedDescription)
+        protected void AssertValidationError<TRejectMessage>(string expectedErrorCode)
             where TRejectMessage : IRejectMessage
         {
             var message = GetOutboxMessages
@@ -204,8 +204,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             var rejectMessage = JsonConvert.DeserializeObject<TRejectMessage>(message.Content);
             var validationError = rejectMessage.Errors
-                .First(error => error.Code == expectedErrorCode && error.Description ==
-                    expectedDescription);
+                .First(error => error.Code == expectedErrorCode);
 
             Assert.NotNull(validationError);
         }

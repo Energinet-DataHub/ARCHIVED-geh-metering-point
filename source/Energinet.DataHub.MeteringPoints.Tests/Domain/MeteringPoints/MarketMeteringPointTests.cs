@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Linq;
+using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -21,7 +22,6 @@ using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 {
-    #pragma warning disable
     [UnitTest]
     public class MarketMeteringPointTests
     {
@@ -55,7 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             return new MarketMeteringPointMock(
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
-                Address.Create(SampleData.StreetName, SampleData.PostCode, SampleData.CityName, SampleData.CountryCode),
+                Address.Create(SampleData.StreetName, SampleData.StreetCode, SampleData.BuildingNumber, SampleData.CityName, SampleData.CitySubdivision, SampleData.PostCode, SampleData.CountryCode, SampleData.Floor, SampleData.Room, SampleData.MunicipalityCode),
                 EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
                 EnumerationType.FromName<MeteringPointType>(SampleData.TypeName),
                 GridAreaId.New(),
