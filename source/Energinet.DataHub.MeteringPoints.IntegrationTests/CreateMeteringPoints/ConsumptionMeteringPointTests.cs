@@ -86,6 +86,34 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError<CreateMeteringPointRejected>("E86");
         }
 
+        [Fact]
+        public async Task Should_reject_when_reading_occurence_is_missing()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    MeterReadingOccurrence = string.Empty,
+                };
+
+            await _mediator.Send(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_reading_occurence_is_not_a_valid_value()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    MeterReadingOccurrence = "Not_valid_Reading_occurence_value",
+                };
+
+            await _mediator.Send(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
+        }
+
         private static CreateMeteringPoint CreateRequest()
         {
             return new CreateMeteringPoint(

@@ -22,8 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         protected override ErrorMessage Convert(MeterReadingOccurenceInvalidValueValidationError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-
-            return new ErrorMessage("D23", $"Meter reading occurrence '{validationError.MeterReadingOccurence}' is not allowed for metering point {validationError.GsrnNumber} of type {validationError.MeteringPointType}. Allowed values are: {string.Join(", ", validationError.AllowedValues)}");
+            return new ErrorMessage("D02", $"Meter reading occurrence {validationError.MeterReadingOccurence} has wrong value (outside domain)");
         }
     }
 }
