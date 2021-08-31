@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
@@ -84,7 +85,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _isAddressWashable = isAddressWashable;
             ConnectionState = ConnectionState.New();
 
-            AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaId, meteringPointSubType, ConnectionState.PhysicalState, meterReadingOccurrence, ProductType.Tariff, unitType, settlementMethod, netSettlementGroup));
+            AddDomainEvent(new ConsumptionMeteringPointCreated(id.Value, GsrnNumber.Value, gridAreaId.Value, meteringPointSubType.Name, productType.Name, meterReadingOccurrence.Name, unitType.Name, settlementMethod.Name, netSettlementGroup.Name));
         }
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
@@ -129,6 +130,56 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             };
 
             return new BusinessRulesValidationResult(rules);
+        }
+
+        public static ConsumptionMeteringPoint Create(
+            MeteringPointId id,
+            GsrnNumber meteringPointGsrn,
+            bool addressIsWashable,
+            MeteringPointSubType meteringPointSubType,
+            GridAreaId gridAreaId,
+            NetSettlementGroup netSettlementGroup,
+            GsrnNumber powerPlantGsrn,
+            Address address,
+            string locationDescription,
+            MeasurementUnitType measurementUnitType,
+            string meterNumber,
+            ReadingOccurrence readingOccurrence,
+            int maximumCurrent,
+            int maximumPower,
+            EffectiveDate effectiveDate,
+            SettlementMethod settlementMethod,
+            DisconnectionType disconnectionType,
+            ConnectionType connectionType,
+            AssetType assetType)
+        {
+            if (!CanCreate(meteringPointGsrn, netSettlementGroup, powerPlantGsrn, address).Success)
+            {
+                throw new ConsumptionMeteringPointException($"Cannot create consumption metering point due to violation of one or more business rules.");
+            }
+            return new ConsumptionMeteringPoint(
+                id,
+                meteringPointGsrn,
+                address,
+                addressIsWashable,
+                meteringPointSubType,
+                MeteringPointType.Consumption,
+                gridAreaId,
+                powerPlantGsrn,
+                locationDescription,
+                measurementUnitType,
+                meterNumber,
+                readingOccurrence,
+                maximumCurrent,
+                maximumPower,
+                effectiveDate,
+                settlementMethod,
+                netSettlementGroup,
+                disconnectionType,
+                connectionType,
+                assetType,
+                null,
+                ProductType.EnergyActive);
         }
     }
 }

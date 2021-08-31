@@ -13,8 +13,11 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
@@ -100,6 +103,46 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 address);
 
             Assert.Contains(checkResult.Errors, error => error is CityIsRequiredRuleError);
+        }
+
+        [Fact]
+        public void Product_type_should_be_set_to_active_energy()
+        {
+            var address = Address.Create(
+                SampleData.StreetName,
+                SampleData.StreetCode,
+                string.Empty,
+                SampleData.CityName,
+                string.Empty,
+                SampleData.PostCode,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                default);
+            var meteringPoint = ConsumptionMeteringPoint.Create(
+                id: MeteringPointId.New(),
+                GsrnNumber.Create(SampleData.GsrnNumber),
+                true,
+                MeteringPointSubType.Physical,
+                GridAreaId.New(),
+                NetSettlementGroup.Three,
+                GsrnNumber.Create(SampleData.PowerPlant),
+                address,
+                SampleData.LocationDescription,
+                MeasurementUnitType.KWh,
+                SampleData.MeterNumber,
+                ReadingOccurrence.Hourly,
+                SampleData.MaximumCurrent,
+                SampleData.MaximumPower,
+                EffectiveDate.Create(SampleData.EffectiveDate),
+                SettlementMethod.Flex,
+                DisconnectionType.Manual,
+                ConnectionType.Installation,
+                AssetType.GasTurbine);
+
+            var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is ConsumptionMeteringPointCreated) as ConsumptionMeteringPointCreated;
+
+            Assert.Equal(ProductType.EnergyActive.Name, createdEvent!.ProductType);
         }
 
         private static BusinessRulesValidationResult CreateRequest(NetSettlementGroup netSettlementGroup)
