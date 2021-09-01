@@ -61,6 +61,16 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals
             return (T)GetFromCache<T>().FromValue(value);
         }
 
+        internal override bool ContainsName<T>(string name)
+        {
+            return GetFromCache<T>().ContainsName(name);
+        }
+
+        internal override bool ContainsValue<T>(int value)
+        {
+            return GetFromCache<T>().ContainsValue(value);
+        }
+
         private EnumerationReflection GetFromCache<T>()
             where T : EnumerationType
         {

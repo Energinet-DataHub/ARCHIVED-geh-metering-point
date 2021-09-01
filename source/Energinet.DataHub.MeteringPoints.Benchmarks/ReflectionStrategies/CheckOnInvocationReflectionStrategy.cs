@@ -44,6 +44,19 @@ namespace Energinet.DataHub.MeteringPoints.Benchmarks.ReflectionStrategies
             return matchingItem;
         }
 
+        internal override bool ContainsName<T>(string name)
+        {
+            var matchingItem = GetAll<T>()
+                .FirstOrDefault(item => item.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            return matchingItem is not null;
+        }
+
+        internal override bool ContainsValue<T>(int value)
+        {
+            var matchingItem = GetAll<T>().FirstOrDefault(item => item.Id == value);
+            return matchingItem is not null;
+        }
+
         private T Parse<T, TValue>(TValue value, string description, Func<T, bool> predicate)
             where T : EnumerationType
         {

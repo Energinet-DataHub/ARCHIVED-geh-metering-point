@@ -26,5 +26,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals
 
         internal abstract T FromValue<T>(int value)
             where T : EnumerationType;
+
+        internal abstract bool ContainsName<T>(string name)
+            where T : EnumerationType;
+
+        internal abstract bool ContainsValue<T>(int value)
+            where T : EnumerationType;
     }
 }

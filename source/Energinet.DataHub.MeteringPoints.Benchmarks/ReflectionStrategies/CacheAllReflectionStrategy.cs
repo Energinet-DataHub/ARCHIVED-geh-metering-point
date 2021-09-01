@@ -48,6 +48,19 @@ namespace Energinet.DataHub.MeteringPoints.Benchmarks.ReflectionStrategies
             return matchingItem;
         }
 
+        internal override bool ContainsName<T>(string name)
+        {
+            var element = GetAll<T>()
+                .FirstOrDefault(item => item.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            return element is not null;
+        }
+
+        internal override bool ContainsValue<T>(int value)
+        {
+            var element = GetAll<T>().FirstOrDefault(item => item.Id == value);
+            return element is not null;
+        }
+
         private IEnumerable<T> GetFieldsFrom<T>(int index)
         {
             lock (_resizeLock)
