@@ -28,6 +28,90 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
     [UnitTest]
     public class CreationTests
     {
+        [Fact]
+        public void Should_succeed()
+        {
+            var meteringPointId = MeteringPointId.New();
+            var meteringPointGsrn = GsrnNumber.Create(SampleData.GsrnNumber);
+            var isOfficielAddress = SampleData.IsOfficielAddress;
+            var meteringPointSubtype = MeteringPointSubType.Physical;
+            var gridAreadId = GridAreaId.New();
+            var powerPlanGsrn = GsrnNumber.Create(SampleData.PowerPlant);
+            var netSettlementGroup = NetSettlementGroup.Three;
+            var locationDescription = "Test";
+            var measurementUnitType = MeasurementUnitType.KWh;
+            var meterNumber = "1";
+            var readingOccurrence = ReadingOccurrence.Hourly;
+            var maximumCurrent = 1;
+            var maximumPower = 2;
+            var effectiveDate = EffectiveDate.Create(SampleData.EffectiveDate);
+            var settlementMethod = SettlementMethod.Flex;
+            var disconnectionType = DisconnectionType.Manual;
+            var connectionType = ConnectionType.Direct;
+            var assetType = AssetType.GasTurbine;
+            var address = Address.Create(
+                streetName: "Test Street",
+                streetCode: "1000",
+                buildingNumber: string.Empty,
+                city: "Test City",
+                citySubDivision: string.Empty,
+                postCode: "8000",
+                countryCode: string.Empty,
+                floor: string.Empty,
+                room: string.Empty,
+                municipalityCode: null);
+            var meteringPoint = ConsumptionMeteringPoint.Create(
+                meteringPointId,
+                meteringPointGsrn: meteringPointGsrn,
+                addressIsWashable: isOfficielAddress,
+                meteringPointSubtype,
+                gridAreadId,
+                netSettlementGroup: netSettlementGroup,
+                powerPlanGsrn,
+                address: address,
+                locationDescription: locationDescription,
+                measurementUnitType: measurementUnitType,
+                meterNumber,
+                readingOccurrence: readingOccurrence,
+                maximumCurrent: maximumCurrent,
+                maximumPower: maximumPower,
+                effectiveDate: effectiveDate,
+                settlementMethod: settlementMethod,
+                disconnectionType: disconnectionType,
+                connectionType: connectionType,
+                assetType: assetType);
+
+            var createdEvent = meteringPoint.DomainEvents.First(e => e is ConsumptionMeteringPointCreated) as ConsumptionMeteringPointCreated;
+            Assert.Equal(address.City, createdEvent!.City);
+            Assert.Equal(address.Floor, createdEvent.Floor);
+            Assert.Equal(address.Room, createdEvent.Room);
+            Assert.Equal(address.BuildingNumber, createdEvent.BuildingNumber);
+            Assert.Equal(address.CountryCode, createdEvent.CountryCode);
+            Assert.Equal(address.MunicipalityCode, createdEvent.MunicipalityCode);
+            Assert.Equal(address.PostCode, createdEvent.PostCode);
+            Assert.Equal(address.StreetCode, createdEvent.StreetCode);
+            Assert.Equal(address.StreetName, createdEvent.StreetName);
+            Assert.Equal(address.CitySubDivision, createdEvent.CitySubDivision);
+            Assert.Equal(meteringPointId.Value, createdEvent.MeteringPointId);
+            Assert.Equal(meteringPointGsrn.Value, createdEvent.GsrnNumber);
+            Assert.Equal(isOfficielAddress, createdEvent.IsOfficielAddress);
+            Assert.Equal(meteringPointSubtype.Name, createdEvent.MeteringPointSubType);
+            Assert.Equal(gridAreadId.Value, createdEvent.GridAreaId);
+            Assert.Equal(netSettlementGroup.Name, createdEvent.NetSettlementGroup);
+            Assert.Equal(powerPlanGsrn.Value, createdEvent.PowerPlantGsrnNumber);
+            Assert.Equal(locationDescription, createdEvent.LocationDescription);
+            Assert.Equal(measurementUnitType.Name, createdEvent.UnitType);
+            Assert.Equal(meterNumber, createdEvent.MeterNumber);
+            Assert.Equal(readingOccurrence.Name, createdEvent.ReadingOccurrence);
+            Assert.Equal(maximumCurrent, createdEvent.MaximumCurrent);
+            Assert.Equal(maximumPower, createdEvent.MaximumPower);
+            Assert.Equal(effectiveDate.DateInUtc, createdEvent.EffectiveDate);
+            Assert.Equal(settlementMethod.Name, createdEvent.SettlementMethod);
+            Assert.Equal(disconnectionType.Name, createdEvent.DisconnectionType);
+            Assert.Equal(connectionType.Name, createdEvent.ConnectionType);
+            Assert.Equal(assetType.Name, createdEvent.AssetType);
+        }
+
         [Theory]
         [InlineData(nameof(NetSettlementGroup.Six))]
         public void Powerplant_GSRN_is_required_when_netsettlementgroup_is_other_than_0_or_99(string netSettlementGroupName)

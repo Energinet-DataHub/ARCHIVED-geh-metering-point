@@ -57,7 +57,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             DisconnectionType disconnectionType,
             ConnectionType connectionType,
             AssetType? assetType,
-            string? parentRelatedMeteringPoint,
             ProductType productType)
             : base(
                 id,
@@ -74,7 +73,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 maximumCurrent,
                 maximumPower,
                 effectiveDate,
-                parentRelatedMeteringPoint)
+                null)
         {
             _settlementMethod = settlementMethod;
             _netSettlementGroup = netSettlementGroup;
@@ -85,7 +84,39 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _isAddressWashable = isAddressWashable;
             ConnectionState = ConnectionState.New();
 
-            AddDomainEvent(new ConsumptionMeteringPointCreated(id.Value, GsrnNumber.Value, gridAreaId.Value, meteringPointSubType.Name, productType.Name, meterReadingOccurrence.Name, unitType.Name, settlementMethod.Name, netSettlementGroup.Name));
+            var @event = new ConsumptionMeteringPointCreated(
+                id.Value,
+                GsrnNumber.Value,
+                gridAreaId.Value,
+                meteringPointSubType.Name,
+                _productType.Name,
+                meterReadingOccurrence.Name,
+                unitType.Name,
+                _settlementMethod.Name,
+                netSettlementGroup.Name,
+                address.City,
+                address.Floor,
+                address.Room,
+                address.BuildingNumber,
+                address.CountryCode,
+                address.MunicipalityCode,
+                address.PostCode,
+                address.StreetCode,
+                address.StreetName,
+                address.CitySubDivision,
+                isAddressWashable,
+                powerPlantGsrnNumber.Value,
+                locationDescription,
+                meterNumber,
+                maximumCurrent,
+                maximumPower,
+                effectiveDate.DateInUtc,
+                _disconnectionType.Name,
+                _connectionType.Name,
+                _assetType.Name,
+                ConnectionState.PhysicalState.Name);
+
+            AddDomainEvent(@event);
         }
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
@@ -178,7 +209,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 disconnectionType,
                 connectionType,
                 assetType,
-                null,
                 ProductType.EnergyActive);
         }
     }

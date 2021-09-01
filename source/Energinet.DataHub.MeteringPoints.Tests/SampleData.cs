@@ -29,7 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public static string CountryCode => "DK";
 
-        public static bool IsAddressWashable => true;
+        public static bool IsOfficielAddress => true;
 
         public static string PhysicalStateName => PhysicalState.Connected.Name;
 

@@ -13,13 +13,15 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 {
     public class ConsumptionMeteringPointCreated : DomainEventBase
     {
-        public ConsumptionMeteringPointCreated(Guid meteringPointId, string gsrnNumber, Guid gridAreaId, string meteringPointSubType, string productType, string readingOccurrence, string unitType, string settlementMethod, string netSettlementGroup)
+        public ConsumptionMeteringPointCreated(Guid meteringPointId, string gsrnNumber, Guid gridAreaId, string meteringPointSubType, string productType, string readingOccurrence, string unitType, string settlementMethod, string netSettlementGroup, string city, string floor, string room, string buildingNumber, string countryCode, int? municipalityCode, string postCode, string streetCode, string streetName, string citySubDivision, bool isOfficielAddress, string powerPlantGsrnNumber, string locationDescription, string meterNumber, int maximumCurrent, int maximumPower, Instant effectiveDate, string disconnectionType, string connectionType, string assetType, string physicalState)
         {
             MeteringPointId = meteringPointId;
             GsrnNumber = gsrnNumber;
@@ -30,6 +32,27 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             UnitType = unitType;
             SettlementMethod = settlementMethod;
             NetSettlementGroup = netSettlementGroup;
+            City = city;
+            Floor = floor;
+            Room = room;
+            BuildingNumber = buildingNumber;
+            CountryCode = countryCode;
+            MunicipalityCode = municipalityCode;
+            PostCode = postCode;
+            StreetCode = streetCode;
+            StreetName = streetName;
+            CitySubDivision = citySubDivision;
+            IsOfficielAddress = isOfficielAddress;
+            PowerPlantGsrnNumber = powerPlantGsrnNumber;
+            LocationDescription = locationDescription;
+            MeterNumber = meterNumber;
+            MaximumCurrent = maximumCurrent;
+            MaximumPower = maximumPower;
+            EffectiveDate = effectiveDate;
+            DisconnectionType = disconnectionType;
+            ConnectionType = connectionType;
+            AssetType = assetType;
+            PhysicalState = physicalState;
         }
 
         public Guid MeteringPointId { get; }
@@ -49,5 +72,47 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         public string SettlementMethod { get; }
 
         public string NetSettlementGroup { get; }
+
+        public string City { get; }
+
+        public string Floor { get; }
+
+        public string Room { get; }
+
+        public string BuildingNumber { get; }
+
+        public string CountryCode { get; }
+
+        public int? MunicipalityCode { get; }
+
+        public string PostCode { get; }
+
+        public string StreetCode { get; }
+
+        public string StreetName { get; }
+
+        public string CitySubDivision { get; }
+
+        public bool IsOfficielAddress { get; }
+
+        public string PowerPlantGsrnNumber { get; }
+
+        public string LocationDescription { get; }
+
+        public string MeterNumber { get; }
+
+        public int MaximumCurrent { get; }
+
+        public int MaximumPower { get; }
+
+        public Instant EffectiveDate { get; }
+
+        public string DisconnectionType { get; }
+
+        public string ConnectionType { get; }
+
+        public string AssetType { get; }
+
+        public string PhysicalState { get; }
     }
 }

@@ -68,7 +68,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             switch (meteringPointType.Name)
             {
                 case nameof(MeteringPointType.Consumption):
-                    meteringPoint = CreateConsumptionMeteringPoint(request, meteringPointType);
+                    meteringPoint = CreateConsumptionMeteringPoint(request);
                     break;
                 case nameof(MeteringPointType.Exchange):
                     meteringPoint = CreateExchangeMeteringPoint(request, meteringPointType);
@@ -152,18 +152,18 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 EnumerationType.FromName<ProductType>(request.ProductType));
         }
 
-        private static ConsumptionMeteringPoint CreateConsumptionMeteringPoint(CreateMeteringPoint request, MeteringPointType meteringPointType)
+        private static ConsumptionMeteringPoint CreateConsumptionMeteringPoint(CreateMeteringPoint request)
         {
-            return new(
-                MeteringPointId.New(),
+            return ConsumptionMeteringPoint.Create(
+                id: MeteringPointId.New(),
                 GsrnNumber.Create(request.GsrnNumber),
-                CreateAddress(request),
-                request.IsOfficialAddress.GetValueOrDefault(), // TODO: change to boolean in domain?
+                request.IsOfficialAddress.GetValueOrDefault(),
                 EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
-                meteringPointType,
-                new GridAreaId(Guid.NewGuid()),
-                !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null,
-                request.LocationDescription,
+                GridAreaId.New(),
+                EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup!),
+                !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null !,
+                CreateAddress(request),
+                request.LocationDescription!,
                 EnumerationType.FromName<MeasurementUnitType>(request.UnitType),
                 request.MeterNumber,
                 EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
@@ -171,12 +171,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 request.MaximumPower,
                 EffectiveDate.Create(request.EffectiveDate),
                 EnumerationType.FromName<SettlementMethod>(request.SettlementMethod!),
-                EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup!),
                 EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
                 EnumerationType.FromName<ConnectionType>(request.ConnectionType!),
-                assetType: !string.IsNullOrEmpty(request.AssetType) ? EnumerationType.FromName<AssetType>(request.AssetType) : null,
-                request.ParentRelatedMeteringPoint,
-                EnumerationType.FromName<ProductType>(request.ProductType));
+                assetType: !string.IsNullOrEmpty(request.AssetType) ? EnumerationType.FromName<AssetType>(request.AssetType) : null !);
         }
 
         private static Domain.Addresses.Address CreateAddress(CreateMeteringPoint request)

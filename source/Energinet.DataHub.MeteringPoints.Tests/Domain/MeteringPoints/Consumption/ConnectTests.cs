@@ -97,7 +97,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 Address.Create(SampleData.StreetName, SampleData.StreetCode, SampleData.BuildingNumber, SampleData.CityName, SampleData.CitySubdivision, SampleData.PostCode, SampleData.CountryCode, SampleData.Floor, SampleData.Room, SampleData.MunicipalityCode),
-                SampleData.IsAddressWashable,
+                SampleData.IsOfficielAddress,
                 EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
                 EnumerationType.FromName<MeteringPointType>(SampleData.TypeName),
                 GridAreaId.New(),
@@ -114,7 +114,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 DisconnectionType.Manual,
                 ConnectionType.Direct,
                 AssetType.Boiler,
-                parentRelatedMeteringPoint: null,
                 ProductType.PowerActive);
         }
 
