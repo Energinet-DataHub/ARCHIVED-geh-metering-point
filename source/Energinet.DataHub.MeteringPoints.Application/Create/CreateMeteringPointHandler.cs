@@ -22,6 +22,7 @@ using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using MediatR;
 using ConsumptionMeteringPoint = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ConsumptionMeteringPoint;
@@ -43,6 +44,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
+            var meteringPointDetails = CreateDetails(request);
+
             var validationResult = await ValidateAsync(request, cancellationToken).ConfigureAwait(false);
             if (!validationResult.Success)
             {
@@ -57,7 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
 
             var meteringPointType = EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint);
 
-            var rulesCheckResult = CheckBusinessRules(request);
+            var rulesCheckResult = CheckBusinessRules(request, meteringPointDetails);
             if (!rulesCheckResult.Success)
             {
                 return rulesCheckResult;
@@ -86,7 +89,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             return BusinessProcessResult.Ok(request.TransactionId);
         }
 
-        private static BusinessProcessResult CheckBusinessRules(CreateMeteringPoint request)
+        private static BusinessProcessResult CheckBusinessRules(CreateMeteringPoint request, MeteringPointDetails meteringPointDetails)
         {
             var meteringPointType = EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint);
             if (meteringPointType != MeteringPointType.Consumption)
@@ -94,11 +97,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 return BusinessProcessResult.Ok(request.TransactionId);
             }
 
-            var validationResult = ConsumptionMeteringPoint.CanCreate(
-                GsrnNumber.Create(request.GsrnNumber),
-                EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup!),
-                string.IsNullOrWhiteSpace(request.PowerPlant) ? null : GsrnNumber.Create(request.PowerPlant!),
-                CreateAddress(request));
+            var validationResult = ConsumptionMeteringPoint.CanCreate(meteringPointDetails);
 
             return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
         }
@@ -154,16 +153,21 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
 
         private static ConsumptionMeteringPoint CreateConsumptionMeteringPoint(CreateMeteringPoint request)
         {
-            return ConsumptionMeteringPoint.Create(
-                id: MeteringPointId.New(),
+            var meteringPointDetails = CreateDetails(request);
+            return ConsumptionMeteringPoint.Create(meteringPointDetails);
+        }
+
+        private static MeteringPointDetails CreateDetails(CreateMeteringPoint request)
+        {
+            return new MeteringPointDetails(
+                MeteringPointId.New(),
                 GsrnNumber.Create(request.GsrnNumber),
+                CreateAddress(request),
                 request.IsOfficialAddress.GetValueOrDefault(),
                 EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
                 GridAreaId.New(),
-                EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup!),
                 !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null !,
-                CreateAddress(request),
-                request.LocationDescription!,
+                request.LocationDescription,
                 EnumerationType.FromName<MeasurementUnitType>(request.UnitType),
                 request.MeterNumber,
                 EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
@@ -171,9 +175,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 request.MaximumPower,
                 EffectiveDate.Create(request.EffectiveDate),
                 EnumerationType.FromName<SettlementMethod>(request.SettlementMethod!),
+                EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup!),
                 EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
                 EnumerationType.FromName<ConnectionType>(request.ConnectionType!),
-                assetType: !string.IsNullOrEmpty(request.AssetType) ? EnumerationType.FromName<AssetType>(request.AssetType) : null !);
+                !string.IsNullOrEmpty(request.AssetType) ? EnumerationType.FromName<AssetType>(request.AssetType) : null !);
         }
 
         private static Domain.Addresses.Address CreateAddress(CreateMeteringPoint request)

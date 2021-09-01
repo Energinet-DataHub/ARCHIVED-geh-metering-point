@@ -15,6 +15,7 @@
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
@@ -93,13 +94,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
 
         private static ConsumptionMeteringPoint CreateConsumptionMeteringPoint()
         {
-            return new ConsumptionMeteringPoint(
+            var meteringPointDetails = new MeteringPointDetails(
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 Address.Create(SampleData.StreetName, SampleData.StreetCode, SampleData.BuildingNumber, SampleData.CityName, SampleData.CitySubdivision, SampleData.PostCode, SampleData.CountryCode, SampleData.Floor, SampleData.Room, SampleData.MunicipalityCode),
                 SampleData.IsOfficielAddress,
                 EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
-                EnumerationType.FromName<MeteringPointType>(SampleData.TypeName),
                 GridAreaId.New(),
                 GsrnNumber.Create(SampleData.PowerPlant),
                 SampleData.LocationDescription,
@@ -109,12 +109,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 SampleData.MaximumCurrent,
                 SampleData.MaximumPower,
                 EffectiveDate.Create(SampleData.EffectiveDate),
-                SettlementMethod.Flex,
-                NetSettlementGroup.Zero,
+                EnumerationType.FromName<SettlementMethod>(SampleData.SettlementMethod!),
+                EnumerationType.FromName<NetSettlementGroup>(SampleData.NetSettlementGroup!),
                 DisconnectionType.Manual,
-                ConnectionType.Direct,
-                AssetType.Boiler,
-                ProductType.PowerActive);
+                ConnectionType.Installation,
+                AssetType.Boiler);
+
+            return ConsumptionMeteringPoint.Create(meteringPointDetails);
         }
 
         private ConnectionDetails ConnectNow()

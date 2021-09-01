@@ -65,7 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public static string ConnectionType => string.Empty;
 
-        public static string AssetType => string.Empty;
+        public static string AssetType => "KWh";
 
         public static string Floor => string.Empty;
 

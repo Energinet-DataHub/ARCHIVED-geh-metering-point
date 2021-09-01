@@ -36,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private AssetType? _assetType;
         private bool _isAddressWashable;
 
-        public ConsumptionMeteringPoint(
+        private ConsumptionMeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
@@ -146,69 +146,46 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
 
-        public static BusinessRulesValidationResult CanCreate(
-            GsrnNumber meteringPointGSRN,
-            NetSettlementGroup netSettlementGroup,
-            GsrnNumber? powerPlantGSRN,
-            Address address)
+        public static BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
         {
             var rules = new Collection<IBusinessRule>()
             {
-                new PowerPlantIsRequiredForNetSettlementGroupRule(meteringPointGSRN, netSettlementGroup, powerPlantGSRN),
-                new StreetNameIsRequiredRule(meteringPointGSRN, address),
-                new PostCodeIsRequiredRule(address),
-                new CityIsRequiredRule(address),
+                new PowerPlantIsRequiredForNetSettlementGroupRule(meteringPointDetails.GsrnNumber, meteringPointDetails.NetSettlementGroup, meteringPointDetails.PowerPlantGsrnNumber),
+                new StreetNameIsRequiredRule(meteringPointDetails.GsrnNumber, meteringPointDetails.Address),
+                new PostCodeIsRequiredRule(meteringPointDetails.Address),
+                new CityIsRequiredRule(meteringPointDetails.Address),
             };
 
             return new BusinessRulesValidationResult(rules);
         }
 
-        public static ConsumptionMeteringPoint Create(
-            MeteringPointId id,
-            GsrnNumber meteringPointGsrn,
-            bool addressIsWashable,
-            MeteringPointSubType meteringPointSubType,
-            GridAreaId gridAreaId,
-            NetSettlementGroup netSettlementGroup,
-            GsrnNumber powerPlantGsrn,
-            Address address,
-            string locationDescription,
-            MeasurementUnitType measurementUnitType,
-            string meterNumber,
-            ReadingOccurrence readingOccurrence,
-            int maximumCurrent,
-            int maximumPower,
-            EffectiveDate effectiveDate,
-            SettlementMethod settlementMethod,
-            DisconnectionType disconnectionType,
-            ConnectionType connectionType,
-            AssetType assetType)
+        public static ConsumptionMeteringPoint Create(MeteringPointDetails meteringPointDetails)
         {
-            if (!CanCreate(meteringPointGsrn, netSettlementGroup, powerPlantGsrn, address).Success)
+            if (!CanCreate(meteringPointDetails).Success)
             {
                 throw new ConsumptionMeteringPointException($"Cannot create consumption metering point due to violation of one or more business rules.");
             }
             return new ConsumptionMeteringPoint(
-                id,
-                meteringPointGsrn,
-                address,
-                addressIsWashable,
-                meteringPointSubType,
+                meteringPointDetails.Id,
+                meteringPointDetails.GsrnNumber,
+                meteringPointDetails.Address,
+                meteringPointDetails.IsAddressWashable,
+                meteringPointDetails.MeteringPointSubType,
                 MeteringPointType.Consumption,
-                gridAreaId,
-                powerPlantGsrn,
-                locationDescription,
-                measurementUnitType,
-                meterNumber,
-                readingOccurrence,
-                maximumCurrent,
-                maximumPower,
-                effectiveDate,
-                settlementMethod,
-                netSettlementGroup,
-                disconnectionType,
-                connectionType,
-                assetType,
+                meteringPointDetails.GridAreaId,
+                meteringPointDetails.PowerPlantGsrnNumber,
+                meteringPointDetails.LocationDescription,
+                meteringPointDetails.UnitType,
+                meteringPointDetails.MeterNumber,
+                meteringPointDetails.ReadingOccurrence,
+                meteringPointDetails.MaximumCurrent,
+                meteringPointDetails.MaximumPower,
+                meteringPointDetails.EffectiveDate,
+                meteringPointDetails.SettlementMethod,
+                meteringPointDetails.NetSettlementGroup,
+                meteringPointDetails.DisconnectionType,
+                meteringPointDetails.ConnectionType,
+                meteringPointDetails.AssetType,
                 ProductType.EnergyActive);
         }
     }

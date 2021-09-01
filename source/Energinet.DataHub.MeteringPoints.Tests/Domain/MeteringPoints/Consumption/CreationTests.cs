@@ -60,26 +60,22 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 floor: string.Empty,
                 room: string.Empty,
                 municipalityCode: null);
-            var meteringPoint = ConsumptionMeteringPoint.Create(
-                meteringPointId,
-                meteringPointGsrn: meteringPointGsrn,
-                addressIsWashable: isOfficielAddress,
-                meteringPointSubtype,
-                gridAreadId,
-                netSettlementGroup: netSettlementGroup,
-                powerPlanGsrn,
-                address: address,
-                locationDescription: locationDescription,
-                measurementUnitType: measurementUnitType,
-                meterNumber,
-                readingOccurrence: readingOccurrence,
-                maximumCurrent: maximumCurrent,
-                maximumPower: maximumPower,
-                effectiveDate: effectiveDate,
-                settlementMethod: settlementMethod,
-                disconnectionType: disconnectionType,
-                connectionType: connectionType,
-                assetType: assetType);
+
+            var meteringPointDetails = CreateDetails()
+                with
+                {
+                    Id = meteringPointId,
+                    Address = address,
+                    GridAreaId = gridAreadId,
+                    LocationDescription = locationDescription,
+                    MeterNumber = meterNumber,
+                    MaximumCurrent = maximumCurrent,
+                    MaximumPower = maximumPower,
+                    DisconnectionType = disconnectionType,
+                    ConnectionType = connectionType,
+                };
+
+            var meteringPoint = ConsumptionMeteringPoint.Create(meteringPointDetails);
 
             var createdEvent = meteringPoint.DomainEvents.First(e => e is ConsumptionMeteringPointCreated) as ConsumptionMeteringPointCreated;
             Assert.Equal(address.City, createdEvent!.City);
@@ -117,7 +113,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         public void Powerplant_GSRN_is_required_when_netsettlementgroup_is_other_than_0_or_99(string netSettlementGroupName)
         {
             var netSettlementGroup = NetSettlementGroup.FromName<NetSettlementGroup>(netSettlementGroupName);
-            var checkResult = CreateRequest(netSettlementGroup);
+            var meteringPointDetails = CreateDetails()
+                with
+                {
+                    PowerPlantGsrnNumber = null,
+                    NetSettlementGroup = netSettlementGroup,
+                };
+
+            var checkResult = CreateRequest(meteringPointDetails);
 
             AssertContainsValidationError<PowerPlantIsRequiredForNetSettlementGroupRuleError>(checkResult);
         }
@@ -128,7 +131,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         public void Powerplant_GSRN_is_not_required_when_netsettlementgroup_is_0_or_99(string netSettlementGroupName)
         {
             var netSettlementGroup = NetSettlementGroup.FromName<NetSettlementGroup>(netSettlementGroupName);
-            var checkResult = CreateRequest(netSettlementGroup);
+            var meteringPointDetails = CreateDetails()
+                with
+                {
+                    NetSettlementGroup = netSettlementGroup,
+                };
+
+            var checkResult = CreateRequest(meteringPointDetails);
 
             AssertDoesNotContainValidationError<PowerPlantIsRequiredForNetSettlementGroupRuleError>(checkResult);
         }
@@ -136,9 +145,26 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         [Fact]
         public void Street_name_is_required()
         {
-            var checkResult = CreateRequest(NetSettlementGroup.One);
+            var address = Address.Create(
+                streetName: string.Empty,
+                streetCode: string.Empty,
+                buildingNumber: string.Empty,
+                city: string.Empty,
+                citySubDivision: string.Empty,
+                postCode: string.Empty,
+                countryCode: string.Empty,
+                floor: string.Empty,
+                room: string.Empty,
+                municipalityCode: default);
+
+            var meteringPointDetails = CreateDetails()
+                with
+                {
+                    Address = address,
+                };
+
+            var checkResult = CreateRequest(meteringPointDetails);
             AssertContainsValidationError<StreetNameIsRequiredRuleError>(checkResult);
-            Assert.Contains(checkResult.Errors, error => error is StreetNameIsRequiredRuleError);
         }
 
         [Fact]
@@ -156,11 +182,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 room: string.Empty,
                 municipalityCode: default);
 
-            var checkResult = ConsumptionMeteringPoint.CanCreate(
-                meteringPointGSRN: GsrnNumber.Create(SampleData.GsrnNumber),
-                NetSettlementGroup.One,
-                null,
-                address);
+            var meteringPointDetails = CreateDetails()
+                with
+                {
+                    Address = address,
+                };
+
+            var checkResult = ConsumptionMeteringPoint.CanCreate(meteringPointDetails);
 
             Assert.Contains(checkResult.Errors, error => error is PostCodeIsRequiredRuleError);
         }
@@ -180,11 +208,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 room: string.Empty,
                 municipalityCode: default);
 
-            var checkResult = ConsumptionMeteringPoint.CanCreate(
-                meteringPointGSRN: GsrnNumber.Create(SampleData.GsrnNumber),
-                NetSettlementGroup.One,
-                null,
-                address);
+            var meteringPointDetails = CreateDetails()
+                with
+                {
+                    Address = address,
+                };
+
+            var checkResult = ConsumptionMeteringPoint.CanCreate(meteringPointDetails);
 
             Assert.Contains(checkResult.Errors, error => error is CityIsRequiredRuleError);
         }
@@ -203,15 +233,41 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 string.Empty,
                 string.Empty,
                 default);
-            var meteringPoint = ConsumptionMeteringPoint.Create(
-                id: MeteringPointId.New(),
+            var meteringPointDetails = CreateDetails()
+                with
+                {
+                    Address = address,
+                };
+
+            var meteringPoint = ConsumptionMeteringPoint.Create(meteringPointDetails);
+
+            var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is ConsumptionMeteringPointCreated) as ConsumptionMeteringPointCreated;
+
+            Assert.Equal(ProductType.EnergyActive.Name, createdEvent!.ProductType);
+        }
+
+        private static MeteringPointDetails CreateDetails()
+        {
+            var address = Address.Create(
+                SampleData.StreetName,
+                SampleData.StreetCode,
+                string.Empty,
+                SampleData.CityName,
+                string.Empty,
+                SampleData.PostCode,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                default);
+
+            return new MeteringPointDetails(
+                MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
-                true,
+                address,
+                SampleData.IsOfficielAddress,
                 MeteringPointSubType.Physical,
                 GridAreaId.New(),
-                NetSettlementGroup.Three,
                 GsrnNumber.Create(SampleData.PowerPlant),
-                address,
                 SampleData.LocationDescription,
                 MeasurementUnitType.KWh,
                 SampleData.MeterNumber,
@@ -220,32 +276,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 SampleData.MaximumPower,
                 EffectiveDate.Create(SampleData.EffectiveDate),
                 SettlementMethod.Flex,
+                NetSettlementGroup.Three,
                 DisconnectionType.Manual,
                 ConnectionType.Installation,
                 AssetType.GasTurbine);
-
-            var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is ConsumptionMeteringPointCreated) as ConsumptionMeteringPointCreated;
-
-            Assert.Equal(ProductType.EnergyActive.Name, createdEvent!.ProductType);
         }
 
-        private static BusinessRulesValidationResult CreateRequest(NetSettlementGroup netSettlementGroup)
+        private static BusinessRulesValidationResult CreateRequest(MeteringPointDetails meteringPointDetails)
         {
-            return ConsumptionMeteringPoint.CanCreate(
-                meteringPointGSRN: GsrnNumber.Create(SampleData.GsrnNumber),
-                netSettlementGroup: netSettlementGroup,
-                powerPlantGSRN: null,
-                address: Address.Create(
-                streetName: string.Empty,
-                streetCode: string.Empty,
-                buildingNumber: string.Empty,
-                city: string.Empty,
-                citySubDivision: string.Empty,
-                countryCode: string.Empty,
-                postCode: string.Empty,
-                floor: string.Empty,
-                room: string.Empty,
-                municipalityCode: default));
+            // var meteringPointDetails = CreateDetails()
+            //     with
+            //     {
+            //         NetSettlementGroup = netSettlementGroup,
+            //     };
+            return ConsumptionMeteringPoint.CanCreate(meteringPointDetails);
         }
 
         private static void AssertContainsValidationError<TValidationError>(BusinessRulesValidationResult result)
