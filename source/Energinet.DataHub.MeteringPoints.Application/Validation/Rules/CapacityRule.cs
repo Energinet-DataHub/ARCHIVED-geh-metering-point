@@ -21,7 +21,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class CapacityRule : AbstractValidator<CreateMeteringPoint>
+    public class CapacityRule : AbstractValidator<CreateConsumptionMeteringPoint>
     {
         private const int CapacityMaximumLength = 8;
 
@@ -52,13 +52,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             });
         }
 
-        private static bool IsProductionOrConsumptionWithNetSettlementGroupNotZero(CreateMeteringPoint request)
+        private static bool IsProductionOrConsumptionWithNetSettlementGroupNotZero(CreateConsumptionMeteringPoint request)
         {
             return request.TypeOfMeteringPoint == MeteringPointType.Production.Name ||
                    (request.TypeOfMeteringPoint == MeteringPointType.Consumption.Name && request.NetSettlementGroup != NetSettlementGroup.Zero.Name);
         }
 
-        private static bool IsNotAllowedType(CreateMeteringPoint request)
+        private static bool IsNotAllowedType(CreateConsumptionMeteringPoint request)
         {
             var notAllowedMeteringPointTypes = new HashSet<string>
             {

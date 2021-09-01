@@ -19,7 +19,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class MeterReadingOccurenceRule : AbstractValidator<CreateMeteringPoint>
+    public class MeterReadingOccurenceRule : AbstractValidator<CreateConsumptionMeteringPoint>
     {
         public MeterReadingOccurenceRule()
         {

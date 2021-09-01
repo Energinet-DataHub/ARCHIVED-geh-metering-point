@@ -20,7 +20,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class MeterNumberMustBeValidRule : AbstractValidator<CreateMeteringPoint>
+    public class MeterNumberMustBeValidRule : AbstractValidator<CreateConsumptionMeteringPoint>
     {
         private const int MeterNumberMaximumLength = 15;
 
@@ -43,7 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             });
         }
 
-        private static bool MeteringPointSubTypeIsPhysical(CreateMeteringPoint createMeteringPoint)
+        private static bool MeteringPointSubTypeIsPhysical(CreateConsumptionMeteringPoint createMeteringPoint)
         {
             return createMeteringPoint.SubTypeOfMeteringPoint.Equals(MeteringPointSubType.Physical.Name, StringComparison.OrdinalIgnoreCase);
         }

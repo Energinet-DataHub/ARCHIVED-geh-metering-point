@@ -20,7 +20,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class MeasureUnitTypeRule : AbstractValidator<CreateMeteringPoint>
+    public class MeasureUnitTypeRule : AbstractValidator<CreateConsumptionMeteringPoint>
     {
         public MeasureUnitTypeRule()
         {

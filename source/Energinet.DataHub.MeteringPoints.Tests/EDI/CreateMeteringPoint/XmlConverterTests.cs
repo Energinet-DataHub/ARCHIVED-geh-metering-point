@@ -54,7 +54,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
 
             var stream = GetResourceStream("ConnectMeteringPointCimXml.xml");
             var commandsRaw = await xmlConverter.DeserializeAsync(stream).ConfigureAwait(false);
-            var commands = commandsRaw.Cast<ConnectMeteringPoint>();
+            var commands = commandsRaw.Cast<B2B.Messaging.ConnectMeteringPoint>();
 
             var command = commands.First();
 
@@ -71,7 +71,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
             var xmlConverter = new XmlDeserializer(xmlMapper);
 
             var commandsRaw = await xmlConverter.DeserializeAsync(_xmlStream).ConfigureAwait(false);
-            var commands = commandsRaw.Cast<MeteringPoints.Application.Create.CreateMeteringPoint>();
+            var commands = commandsRaw.Cast<B2B.Messaging.CreateMeteringPoint>();
 
             var command = commands.First();
 
@@ -116,7 +116,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
 
             var xmlConverter = new XmlDeserializer(xmlMapper);
             var commandsRaw = await xmlConverter.DeserializeAsync(_xmlStream).ConfigureAwait(false);
-            var commands = commandsRaw.Cast<MeteringPoints.Application.Create.CreateMeteringPoint>();
+            var commands = commandsRaw.Cast<B2B.Messaging.CreateMeteringPoint>();
 
             var command = commands.First();
 

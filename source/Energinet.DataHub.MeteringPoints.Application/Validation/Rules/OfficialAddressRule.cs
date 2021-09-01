@@ -13,8 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -22,7 +20,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class OfficialAddressRule : AbstractValidator<CreateMeteringPoint>
+    public class OfficialAddressRule : AbstractValidator<CreateConsumptionMeteringPoint>
     {
         public OfficialAddressRule()
         {
@@ -38,12 +36,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 });
         }
 
-        private static bool HasGeoInfoReference(CreateMeteringPoint request)
+        private static bool HasGeoInfoReference(CreateConsumptionMeteringPoint request)
         {
             return !string.IsNullOrWhiteSpace(request.GeoInfoReference);
         }
 
-        private static bool IsOfficialAddress(CreateMeteringPoint request)
+        private static bool IsOfficialAddress(CreateConsumptionMeteringPoint request)
         {
             return request.IsOfficialAddress.GetValueOrDefault();
         }
@@ -53,7 +51,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             return !string.IsNullOrWhiteSpace(reference) && Guid.TryParseExact(reference, "D", out _);
         }
 
-        private static bool IsProductionOrConsumption(CreateMeteringPoint request)
+        private static bool IsProductionOrConsumption(CreateConsumptionMeteringPoint request)
         {
             return request.TypeOfMeteringPoint == MeteringPointType.Production.Name ||
                    request.TypeOfMeteringPoint == MeteringPointType.Consumption.Name;

@@ -20,7 +20,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class PowerLimitRule : AbstractValidator<CreateMeteringPoint>
+    public class PowerLimitRule : AbstractValidator<CreateConsumptionMeteringPoint>
     {
         public PowerLimitRule()
         {

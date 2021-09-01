@@ -12,13 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.Common.Transport
+namespace Energinet.DataHub.B2B.Messaging
 {
-    /// <summary>
-    /// Marker interface for outgoing messages
-    /// </summary>
-    #pragma warning disable CA1040 // Marker interface
-    public interface IOutboundMessage
-    {
-    }
+    public record ConnectMeteringPoint(
+        string GsrnNumber = "",
+        string EffectiveDate = "",
+        string TransactionId = "")
+        : IRsmMessage;
 }

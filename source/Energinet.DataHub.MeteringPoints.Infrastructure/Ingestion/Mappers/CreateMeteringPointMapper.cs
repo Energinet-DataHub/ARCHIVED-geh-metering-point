@@ -13,16 +13,17 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Google.Protobuf;
-using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Create.CreateMeteringPoint;
+using Address = Energinet.DataHub.MeteringPoints.Contracts.Address;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
 {
-    public class CreateMeteringPointMapper : ProtobufOutboundMapper<CreateMeteringPoint>
+    public class CreateMeteringPointMapper : ProtobufOutboundMapper<CreateConsumptionMeteringPoint>
     {
-        protected override IMessage Convert(CreateMeteringPoint obj)
+        protected override IMessage Convert(CreateConsumptionMeteringPoint obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 

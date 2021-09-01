@@ -31,6 +31,7 @@ limitations under the License.
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Energinet.DataHub.B2B.Messaging\Energinet.DataHub.B2B.Messaging.csproj" />
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Application\Energinet.DataHub.MeteringPoints.Application.csproj" />
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Domain\Energinet.DataHub.MeteringPoints.Domain.csproj" />
   </ItemGroup>

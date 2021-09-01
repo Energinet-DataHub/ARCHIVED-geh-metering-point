@@ -12,26 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Abstractions;
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
-using MediatR;
-
-namespace Energinet.DataHub.MeteringPoints.Application.Common.Commands
+namespace Energinet.DataHub.MeteringPoints.Abstractions
 {
-    #pragma warning disable CA1040
     /// <summary>
-    /// CQRS command object
+    /// Marker interface for outgoing messages
     /// </summary>
-    public interface ICommand : IRequest, IOutboundMessage, IInboundMessage
+    #pragma warning disable CA1040 // Marker interface
+    public interface IOutboundMessage
     {
     }
-
-    /// <summary>
-    /// CQRS command with result
-    /// </summary>
-    /// <typeparam name="TResult"><see cref="IRequest"/></typeparam>
-    public interface ICommand<out TResult> : IRequest<TResult>, IOutboundMessage, IInboundMessage
-    {
-    }
-    #pragma warning restore
 }

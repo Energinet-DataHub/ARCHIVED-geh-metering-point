@@ -15,7 +15,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.B2B.Messaging;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 {
@@ -29,6 +29,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
         /// </summary>
         /// <param name="body"></param>
         /// <returns>A generic collection</returns>
-        public Task<IEnumerable<IBusinessRequest>> DeserializeAsync(Stream body);
+        public Task<IEnumerable<IRsmMessage>> DeserializeAsync(Stream body);
     }
 }

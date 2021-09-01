@@ -14,6 +14,7 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Contracts.CreateMeteringPoint;
 
@@ -25,7 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcess
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 
-            return new Application.Create.CreateMeteringPoint(
+            return new CreateConsumptionMeteringPoint(
                 StreetName: obj.InstallationLocationAddress.StreetName,
                 BuildingNumber: obj.InstallationLocationAddress.BuildingNumber,
                 PostCode: obj.InstallationLocationAddress.PostCode,

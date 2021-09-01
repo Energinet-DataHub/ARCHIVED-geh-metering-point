@@ -41,6 +41,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher", "Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher\Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher.csproj", "{00AD3FF1-2571-4D5C-9BFC-1BC927AE7911}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.B2B.Messaging", "Energinet.DataHub.B2B.Messaging\Energinet.DataHub.B2B.Messaging.csproj", "{3380915F-B8D9-4249-8D84-B5F9A3EBD2D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.Abstractions", "Energinet.DataHub.MeteringPoints.Abstractions\Energinet.DataHub.MeteringPoints.Abstractions.csproj", "{8E3CAD34-3186-4FAB-95D8-5598BA809DCF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +99,14 @@ Global
 		{00AD3FF1-2571-4D5C-9BFC-1BC927AE7911}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00AD3FF1-2571-4D5C-9BFC-1BC927AE7911}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00AD3FF1-2571-4D5C-9BFC-1BC927AE7911}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3380915F-B8D9-4249-8D84-B5F9A3EBD2D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3380915F-B8D9-4249-8D84-B5F9A3EBD2D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3380915F-B8D9-4249-8D84-B5F9A3EBD2D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3380915F-B8D9-4249-8D84-B5F9A3EBD2D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E3CAD34-3186-4FAB-95D8-5598BA809DCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E3CAD34-3186-4FAB-95D8-5598BA809DCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E3CAD34-3186-4FAB-95D8-5598BA809DCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E3CAD34-3186-4FAB-95D8-5598BA809DCF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{9E85728F-B8F0-49EE-AAC6-922AD394CFBA} = {251113C8-9673-45D2-AFA6-2D53AF6E8756}

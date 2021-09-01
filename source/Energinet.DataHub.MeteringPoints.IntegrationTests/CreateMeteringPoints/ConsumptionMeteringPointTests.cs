@@ -116,9 +116,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError<CreateMeteringPointRejected>("D15");
         }
 
-        private static CreateMeteringPoint CreateRequest()
+        private static CreateConsumptionMeteringPoint CreateRequest()
         {
-            return new CreateMeteringPoint(
+            return new CreateConsumptionMeteringPoint(
                 SampleData.StreetName,
                 SampleData.BuildingNumber,
                 SampleData.PostCode,

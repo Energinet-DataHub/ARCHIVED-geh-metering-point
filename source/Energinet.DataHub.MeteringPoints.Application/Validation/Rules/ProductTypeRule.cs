@@ -22,7 +22,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class ProductTypeRule : AbstractValidator<CreateMeteringPoint>
+    public class ProductTypeRule : AbstractValidator<CreateConsumptionMeteringPoint>
     {
         public ProductTypeRule()
         {
@@ -49,7 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             });
         }
 
-        private static bool IsMeteringPointTypeWithDefaultProductType(CreateMeteringPoint createMeteringPoint)
+        private static bool IsMeteringPointTypeWithDefaultProductType(CreateConsumptionMeteringPoint createMeteringPoint)
         {
             var includedMeteringPointTypes = new HashSet<string>
             {

@@ -15,6 +15,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Energinet.DataHub.B2B.Messaging;
+using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
@@ -59,8 +61,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 
         private static IEnumerable<Type> GetBusinessRequests()
         {
-            return typeof(Application.Create.CreateMeteringPoint).Assembly.GetTypes()
-                .Where(p => typeof(IBusinessRequest).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
+            return typeof(Application.Create.Address).Assembly.GetTypes()
+                .Where(p => typeof(IRsmMessage).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
                 .ToList();
         }
     }

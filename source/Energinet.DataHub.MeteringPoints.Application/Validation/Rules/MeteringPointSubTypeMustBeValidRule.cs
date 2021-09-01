@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -22,7 +21,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class MeteringPointSubTypeMustBeValidRule : AbstractValidator<CreateMeteringPoint>
+    public class MeteringPointSubTypeMustBeValidRule : AbstractValidator<CreateConsumptionMeteringPoint>
     {
         public MeteringPointSubTypeMustBeValidRule()
         {
@@ -69,7 +68,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             });
         }
 
-        private static bool ExpectedValueForAllOtherMeteringPointTypes(CreateMeteringPoint createMeteringPoint)
+        private static bool ExpectedValueForAllOtherMeteringPointTypes(CreateConsumptionMeteringPoint createMeteringPoint)
         {
             return !GroupOfMeteringPointTypesThatMustBeSubtypePhysicalOrVirtual(createMeteringPoint) &&
                    !GroupOfMeteringPointTypesThatMustBeSubTypeVirtualOrCalculated(createMeteringPoint) &&
@@ -77,14 +76,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                    !IsMeteringPointExchangeReactiveEnergy(createMeteringPoint);
         }
 
-        private static bool IsMeteringPointExchangeReactiveEnergy(CreateMeteringPoint createMeteringPoint)
+        private static bool IsMeteringPointExchangeReactiveEnergy(CreateConsumptionMeteringPoint createMeteringPoint)
         {
             return MeteringPointType.ExchangeReactiveEnergy.Name.Equals(
                 createMeteringPoint.TypeOfMeteringPoint,
                 StringComparison.Ordinal);
         }
 
-        private static bool GroupOfMeteringPointTypesThatMustBeSubTypeVirtualOrCalculated(CreateMeteringPoint createMeteringPoint)
+        private static bool GroupOfMeteringPointTypesThatMustBeSubTypeVirtualOrCalculated(CreateConsumptionMeteringPoint createMeteringPoint)
         {
             return new HashSet<string>
                 {
@@ -98,7 +97,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         }
 
         private static bool GroupOfMeteringPointTypesThatMustBeSubtypePhysicalOrVirtual(
-            CreateMeteringPoint createMeteringPoint)
+            CreateConsumptionMeteringPoint createMeteringPoint)
         {
             return new HashSet<string>
                 {
@@ -110,13 +109,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         }
 
         private static bool MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNine(
-            CreateMeteringPoint createMeteringPoint)
+            CreateConsumptionMeteringPoint createMeteringPoint)
         {
             return IsProductionOrConsumption(createMeteringPoint) &&
                    !NetSettlementGroupIsZeroOrNinetyNine(createMeteringPoint.NetSettlementGroup);
         }
 
-        private static bool IsProductionOrConsumption(CreateMeteringPoint createMeteringPoint)
+        private static bool IsProductionOrConsumption(CreateConsumptionMeteringPoint createMeteringPoint)
         {
             return new HashSet<string>
                     {
@@ -138,19 +137,19 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 .Contains(netSettlement);
         }
 
-        private static bool SubTypeIsVirtualOrCalculated(CreateMeteringPoint createMeteringPoint)
+        private static bool SubTypeIsVirtualOrCalculated(CreateConsumptionMeteringPoint createMeteringPoint)
         {
             return Virtual(createMeteringPoint.SubTypeOfMeteringPoint) ||
                    Calculated(createMeteringPoint.SubTypeOfMeteringPoint);
         }
 
-        private static bool SubTypeIsVirtualOrPhysical(CreateMeteringPoint createMeteringPoint)
+        private static bool SubTypeIsVirtualOrPhysical(CreateConsumptionMeteringPoint createMeteringPoint)
         {
             return Virtual(createMeteringPoint.SubTypeOfMeteringPoint) ||
                    Physical(createMeteringPoint.SubTypeOfMeteringPoint);
         }
 
-        private static bool ExpectedSubTypes(CreateMeteringPoint createMeteringPoint)
+        private static bool ExpectedSubTypes(CreateConsumptionMeteringPoint createMeteringPoint)
         {
             return new HashSet<string>
                     {

@@ -23,7 +23,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class SettlementMethodMustBeValidRule : AbstractValidator<CreateMeteringPoint>
+    public class SettlementMethodMustBeValidRule : AbstractValidator<CreateConsumptionMeteringPoint>
     {
         private readonly List<string> _allowedDomainValuesForConsumptionAndNetLossCorrection =
             EnumerationType.GetAll<SettlementMethod>()

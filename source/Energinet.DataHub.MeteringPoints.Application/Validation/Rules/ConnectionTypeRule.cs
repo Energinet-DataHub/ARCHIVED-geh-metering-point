@@ -21,7 +21,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class ConnectionTypeRule : AbstractValidator<CreateMeteringPoint>
+    public class ConnectionTypeRule : AbstractValidator<CreateConsumptionMeteringPoint>
     {
         public ConnectionTypeRule()
         {
@@ -63,7 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             });
         }
 
-        private static bool ConnectionTypeIsNotAllowed(CreateMeteringPoint createMeteringPoint)
+        private static bool ConnectionTypeIsNotAllowed(CreateConsumptionMeteringPoint createMeteringPoint)
         {
             return NetSettlementGroupIsZero(createMeteringPoint) &&
                    ProductOrConsumptionMeteringPointTypes(createMeteringPoint);
@@ -81,34 +81,34 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 .Contains(connectionType);
         }
 
-        private static bool ConnectionTypeIsMandatory(CreateMeteringPoint createMeteringPoint)
+        private static bool ConnectionTypeIsMandatory(CreateConsumptionMeteringPoint createMeteringPoint)
         {
             return ProductOrConsumptionMeteringPointTypes(createMeteringPoint) &&
                    !NetSettlementGroupIsZero(createMeteringPoint);
         }
 
-        private static bool NetSettlementGroupIsZero(CreateMeteringPoint createMeteringPoint)
+        private static bool NetSettlementGroupIsZero(CreateConsumptionMeteringPoint createMeteringPoint)
         {
             return NetSettlementGroup.Zero.Name.Equals(createMeteringPoint.NetSettlementGroup, StringComparison.Ordinal);
         }
 
-        private static bool NetSettlementGroupIsThreeOrSix(CreateMeteringPoint createMeteringPoint)
+        private static bool NetSettlementGroupIsThreeOrSix(CreateConsumptionMeteringPoint createMeteringPoint)
         {
             return NetSettlementGroupIsThree(createMeteringPoint)
                    || NetSettlementGroupIsSix(createMeteringPoint);
         }
 
-        private static bool NetSettlementGroupIsThree(CreateMeteringPoint createMeteringPoint)
+        private static bool NetSettlementGroupIsThree(CreateConsumptionMeteringPoint createMeteringPoint)
         {
             return NetSettlementGroup.Three.Name.Equals(createMeteringPoint.NetSettlementGroup, StringComparison.Ordinal);
         }
 
-        private static bool NetSettlementGroupIsSix(CreateMeteringPoint createMeteringPoint)
+        private static bool NetSettlementGroupIsSix(CreateConsumptionMeteringPoint createMeteringPoint)
         {
             return NetSettlementGroup.Six.Name.Equals(createMeteringPoint.NetSettlementGroup, StringComparison.Ordinal);
         }
 
-        private static bool ProductOrConsumptionMeteringPointTypes(CreateMeteringPoint createMeteringPoint)
+        private static bool ProductOrConsumptionMeteringPointTypes(CreateConsumptionMeteringPoint createMeteringPoint)
         {
             return new HashSet<string>
                 {

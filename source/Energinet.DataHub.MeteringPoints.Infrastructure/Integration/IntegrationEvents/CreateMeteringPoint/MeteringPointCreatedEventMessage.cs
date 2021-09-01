@@ -12,12 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+using Energinet.DataHub.MeteringPoints.Abstractions;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint
 {
-    public record MeteringPointCreatedEventMessage(string Gsrn, string MeteringPointType, string GridAreaId,
-        string SettlementMethod, string MeteringMethod, string ConnectionState, string MeterReadingPeriodicity, string NetSettlementGroup, string ToGrid, string FromGrid,
-        string Product, string QuantityUnit, string ParentGsrn, string EffectiveDate) : IOutboundMessage, IRequest, IIntegrationEvent;
+    public record MeteringPointCreatedEventMessage(
+        string Gsrn,
+        string MeteringPointType,
+        string GridAreaId,
+        string SettlementMethod,
+        string MeteringMethod,
+        string ConnectionState,
+        string MeterReadingPeriodicity,
+        string NetSettlementGroup,
+        string ToGrid,
+        string FromGrid,
+        string Product,
+        string QuantityUnit,
+        string ParentGsrn,
+        string EffectiveDate) : IOutboundMessage, IRequest, IIntegrationEvent;
 }

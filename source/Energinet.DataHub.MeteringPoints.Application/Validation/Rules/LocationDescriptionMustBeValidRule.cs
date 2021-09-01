@@ -18,7 +18,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class LocationDescriptionMustBeValidRule : AbstractValidator<CreateMeteringPoint>
+    public class LocationDescriptionMustBeValidRule : AbstractValidator<CreateConsumptionMeteringPoint>
     {
         private const int LocationDescriptionMaximumLength = 60;
 

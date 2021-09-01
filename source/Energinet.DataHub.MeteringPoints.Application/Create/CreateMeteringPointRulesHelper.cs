@@ -19,7 +19,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
 {
     public static class CreateMeteringPointRulesHelper
     {
-        public static bool MeteringPointTypeIsProductionOrConsumption(CreateMeteringPoint createMeteringPoint)
+        public static bool MeteringPointTypeIsProductionOrConsumption(CreateConsumptionMeteringPoint createMeteringPoint)
         {
             if (createMeteringPoint is null) throw new ArgumentNullException(nameof(createMeteringPoint));
 

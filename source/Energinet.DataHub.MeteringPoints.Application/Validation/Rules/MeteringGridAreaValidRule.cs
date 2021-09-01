@@ -19,7 +19,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class MeteringGridAreaValidRule : AbstractValidator<CreateMeteringPoint>
+    public class MeteringGridAreaValidRule : AbstractValidator<CreateConsumptionMeteringPoint>
     {
         private const int ExactGridAreaLengthAllowed = 3;
 

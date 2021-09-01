@@ -23,7 +23,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class NetSettlementGroupRule : AbstractValidator<CreateMeteringPoint>
+    public class NetSettlementGroupRule : AbstractValidator<CreateConsumptionMeteringPoint>
     {
         public NetSettlementGroupRule()
         {
@@ -43,7 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             });
         }
 
-        private static bool MeteringPointTypeIsProductionOrConsumption(CreateMeteringPoint createMeteringPoint)
+        private static bool MeteringPointTypeIsProductionOrConsumption(CreateConsumptionMeteringPoint createMeteringPoint)
         {
             return createMeteringPoint.TypeOfMeteringPoint.Equals(MeteringPointType.Consumption.Name, StringComparison.Ordinal)
                    || createMeteringPoint.TypeOfMeteringPoint.Equals(MeteringPointType.Production.Name, StringComparison.Ordinal);

@@ -17,9 +17,9 @@ using Energinet.DataHub.MeteringPoints.Application.Create;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Authorization.AuthorizationHandlers
 {
-    public class ExampleAuthorizationHandler : IAuthorizationHandler<CreateMeteringPoint, BusinessProcessResult>
+    public class ExampleAuthorizationHandler : IAuthorizationHandler<CreateConsumptionMeteringPoint, BusinessProcessResult>
     {
-        public AuthorizationResult Authorize(CreateMeteringPoint command)
+        public AuthorizationResult Authorize(CreateConsumptionMeteringPoint command)
         {
             // if (!IsValidFormat(command.OccurenceDate))
             // {

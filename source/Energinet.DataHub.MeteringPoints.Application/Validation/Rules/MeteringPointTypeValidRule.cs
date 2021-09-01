@@ -21,7 +21,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class MeteringPointTypeValidRule : AbstractValidator<CreateMeteringPoint>
+    public class MeteringPointTypeValidRule : AbstractValidator<CreateConsumptionMeteringPoint>
     {
         public MeteringPointTypeValidRule()
         {

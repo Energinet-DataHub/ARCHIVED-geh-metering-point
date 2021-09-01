@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.B2B.Messaging;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 {
@@ -30,7 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             _mappingConfigurationFactory = mappingConfigurationFactory;
         }
 
-        public IEnumerable<IBusinessRequest> Map(XElement rootElement)
+        public IEnumerable<IRsmMessage> Map(XElement rootElement)
         {
             if (rootElement == null) throw new ArgumentNullException(nameof(rootElement));
 
@@ -73,13 +73,13 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             return hierarchyQueue.Any() ? GetXmlElement(element, hierarchyQueue, ns) : element;
         }
 
-        private static IEnumerable<IBusinessRequest> InternalMap(XmlMappingConfigurationBase xmlMappingConfigurationBase, XElement rootElement, XNamespace ns)
+        private static IEnumerable<IRsmMessage> InternalMap(XmlMappingConfigurationBase xmlMappingConfigurationBase, XElement rootElement, XNamespace ns)
         {
             var configuration = xmlMappingConfigurationBase.Configuration;
 
             var properties = configuration.Properties;
 
-            var messages = new List<IBusinessRequest>();
+            var messages = new List<IRsmMessage>();
 
             var elements = rootElement.Elements(ns + configuration.XmlElementName);
 
@@ -98,7 +98,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
                     return Convert(correspondingXmlElement, property.Value.PropertyInfo.PropertyType, property.Value.TranslatorFunc);
                 }).ToArray();
 
-                if (configuration.CreateInstance(args) is not IBusinessRequest instance)
+                if (configuration.CreateInstance(args) is not IRsmMessage instance)
                 {
                     throw new InvalidOperationException("Could not create instance");
                 }

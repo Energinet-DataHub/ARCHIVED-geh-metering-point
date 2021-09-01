@@ -18,10 +18,10 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 {
-    public abstract class CreateMeteringPointRulesTest<TRuleSet> : RuleSetTest<CreateMeteringPoint, TRuleSet>
-        where TRuleSet : AbstractValidator<CreateMeteringPoint>, new()
+    public abstract class CreateMeteringPointRulesTest<TRuleSet> : RuleSetTest<CreateConsumptionMeteringPoint, TRuleSet>
+        where TRuleSet : AbstractValidator<CreateConsumptionMeteringPoint>, new()
     {
-        protected CreateMeteringPoint CreateRequest()
+        protected CreateConsumptionMeteringPoint CreateRequest()
         {
             return new();
         }

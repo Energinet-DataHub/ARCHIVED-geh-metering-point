@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Data;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -21,7 +20,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class DisconnectionRule : AbstractValidator<CreateMeteringPoint>
+    public class DisconnectionRule : AbstractValidator<CreateConsumptionMeteringPoint>
     {
         public DisconnectionRule()
         {
@@ -45,7 +44,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             }.Contains(disconnectionType);
         }
 
-        private static bool MandatoryMeteringPointTypes(CreateMeteringPoint createMeteringPoint)
+        private static bool MandatoryMeteringPointTypes(CreateConsumptionMeteringPoint createMeteringPoint)
         {
             return new HashSet<string>
             {

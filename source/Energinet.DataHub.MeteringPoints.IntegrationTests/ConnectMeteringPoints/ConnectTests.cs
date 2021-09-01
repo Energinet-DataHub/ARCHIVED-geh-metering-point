@@ -141,7 +141,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
         {
         }
 
-        private static CreateMeteringPoint CreateMeteringPointRequest()
+        private static CreateConsumptionMeteringPoint CreateMeteringPointRequest()
         {
             return new(
                 SampleData.StreetName,

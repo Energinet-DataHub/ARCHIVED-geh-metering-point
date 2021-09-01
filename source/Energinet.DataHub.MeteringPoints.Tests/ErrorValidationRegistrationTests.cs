@@ -59,7 +59,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
             using var container = new Container();
             container.AddValidationErrorConversion(
                 validateRegistrations: true,
-                typeof(CreateMeteringPoint).Assembly, // Application
+                typeof(Address).Assembly, // Application
                 typeof(GsrnNumberMustBeValidValidationError).Assembly, // Domain
                 typeof(ErrorMessageFactory).Assembly); // Infrastructure
         }

@@ -22,7 +22,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class AssetTypeRule : AbstractValidator<CreateMeteringPoint>
+    public class AssetTypeRule : AbstractValidator<CreateConsumptionMeteringPoint>
     {
         public AssetTypeRule()
         {
@@ -52,12 +52,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 .WithState(request => new AssetTypeWrongValueValidationError(request.GsrnNumber, request.AssetType));
         }
 
-        private static bool IsConsumptionWithNetSettlementGroupNotZero(CreateMeteringPoint request)
+        private static bool IsConsumptionWithNetSettlementGroupNotZero(CreateConsumptionMeteringPoint request)
         {
             return request.TypeOfMeteringPoint == MeteringPointType.Consumption.Name && request.NetSettlementGroup != NetSettlementGroup.Zero.Name;
         }
 
-        private static bool IsProduction(CreateMeteringPoint request)
+        private static bool IsProduction(CreateConsumptionMeteringPoint request)
         {
             return request.TypeOfMeteringPoint == MeteringPointType.Production.Name;
         }
@@ -71,7 +71,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             return allAssetTypes.Contains(assetType);
         }
 
-        private static bool IsNotAllowedType(CreateMeteringPoint request)
+        private static bool IsNotAllowedType(CreateConsumptionMeteringPoint request)
         {
             var notAllowedMeteringPointTypes = new HashSet<string>
             {

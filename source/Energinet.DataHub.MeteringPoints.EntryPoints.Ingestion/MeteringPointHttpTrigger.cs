@@ -17,8 +17,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+using Energinet.DataHub.B2B.Messaging;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
@@ -56,10 +55,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            IEnumerable<IBusinessRequest> commands;
+            IEnumerable<IRsmMessage> messages;
             try
             {
-               commands = await DeserializeInputAsync(request.Body).ConfigureAwait(false);
+               messages = await DeserializeInputAsync(request.Body).ConfigureAwait(false);
             }
             #pragma warning disable CA1031 // TODO: We'll allow catching Exception in the entrypoint, I guess?
             catch (Exception exception)
@@ -69,7 +68,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
                 return request.CreateResponse(HttpStatusCode.BadRequest);
             }
 
-            await DispatchCommandsAsync(commands).ConfigureAwait(false);
+            await DispatchCommandsAsync(messages).ConfigureAwait(false);
             return await CreateOkResponseAsync(request).ConfigureAwait(false);
         }
 
@@ -84,16 +83,16 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             return response;
         }
 
-        private async Task<IEnumerable<IBusinessRequest>> DeserializeInputAsync(Stream stream)
+        private async Task<IEnumerable<IRsmMessage>> DeserializeInputAsync(Stream stream)
         {
             return await _xmlConverter.DeserializeAsync(stream).ConfigureAwait(false);
         }
 
-        private async Task DispatchCommandsAsync(IEnumerable<IBusinessRequest> commands)
+        private async Task DispatchCommandsAsync(IEnumerable<IRsmMessage> commands)
         {
             foreach (var command in commands)
             {
-                await _dispatcher.DispatchAsync((IOutboundMessage)command).ConfigureAwait(false);
+                await _dispatcher.DispatchAsync(command).ConfigureAwait(false);
             }
         }
     }

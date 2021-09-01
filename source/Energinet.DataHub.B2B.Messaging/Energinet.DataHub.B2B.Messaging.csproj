@@ -15,19 +15,12 @@ limitations under the License.
 -->
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.0.90" />
-    <PackageReference Include="FluentValidation" Version="10.3.0" />
-    <PackageReference Include="MediatR" Version="9.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Abstractions\Energinet.DataHub.MeteringPoints.Abstractions.csproj" />
-    <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Domain\Energinet.DataHub.MeteringPoints.Domain.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Abstractions\Energinet.DataHub.MeteringPoints.Abstractions.csproj" />
+    </ItemGroup>
 
 </Project>

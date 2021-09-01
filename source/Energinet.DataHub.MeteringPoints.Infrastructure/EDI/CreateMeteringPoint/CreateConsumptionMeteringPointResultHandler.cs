@@ -16,6 +16,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
@@ -24,7 +25,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint
 {
-    public class CreateMeteringPointResultHandler : IBusinessProcessResultHandler<Application.Create.CreateMeteringPoint>
+    public class CreateConsumptionMeteringPointResultHandler : IBusinessProcessResultHandler<CreateConsumptionMeteringPoint>
     {
         private readonly ErrorMessageFactory _errorMessageFactory;
         private readonly IOutbox _outbox;
@@ -32,7 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
         private readonly IJsonSerializer _jsonSerializer;
         private readonly ICorrelationContext _correlationContext;
 
-        public CreateMeteringPointResultHandler(
+        public CreateConsumptionMeteringPointResultHandler(
             ErrorMessageFactory errorMessageFactory,
             IOutbox outbox,
             IOutboxMessageFactory outboxMessageFactory,
@@ -46,7 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
             _correlationContext = correlationContext;
         }
 
-        public Task HandleAsync(Application.Create.CreateMeteringPoint request, BusinessProcessResult result)
+        public Task HandleAsync(CreateConsumptionMeteringPoint request, BusinessProcessResult result)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (result == null) throw new ArgumentNullException(nameof(result));
@@ -56,7 +57,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
                 : CreateRejectResponseAsync(request, result);
         }
 
-        private Task CreateAcceptResponseAsync(Application.Create.CreateMeteringPoint request, BusinessProcessResult result)
+        private Task CreateAcceptResponseAsync(CreateConsumptionMeteringPoint request, BusinessProcessResult result)
         {
             var ediMessage = new CreateMeteringPointAccepted(
                 TransactionId: result.TransactionId,
@@ -68,7 +69,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
             return Task.CompletedTask;
         }
 
-        private Task CreateRejectResponseAsync(Application.Create.CreateMeteringPoint request, BusinessProcessResult result)
+        private Task CreateRejectResponseAsync(CreateConsumptionMeteringPoint request, BusinessProcessResult result)
         {
             var errors = result.ValidationErrors
                 .Select(error => _errorMessageFactory.GetErrorMessage(error))
