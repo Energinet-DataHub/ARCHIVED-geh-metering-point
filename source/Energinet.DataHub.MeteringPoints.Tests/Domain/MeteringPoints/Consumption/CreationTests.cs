@@ -143,7 +143,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         }
 
         [Fact]
-        public void Street_name_is_required()
+        public void Should_return_error_when_street_name_is_missing()
         {
             var address = Address.Create(
                 streetName: string.Empty,
