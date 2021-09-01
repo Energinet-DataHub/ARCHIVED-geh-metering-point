@@ -14,42 +14,30 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
     public class SettlementMethodMustBeValidRule : AbstractValidator<CreateMeteringPoint>
     {
-        private readonly List<string> _allowedDomainValuesForConsumptionAndNetLossCorrection = new()
-        {
-            SettlementMethod.NonProfiled.Name,
-            SettlementMethod.Flex.Name,
-        };
+        private readonly List<string> _allowedDomainValuesForConsumptionAndNetLossCorrection =
+            EnumerationType.GetAll<SettlementMethod>()
+                .Select(item => item.Name)
+                .ToList();
 
         public SettlementMethodMustBeValidRule()
         {
-            When(TypeOgMeteringPointIsConsumptionOrGridLossCorrection, () =>
-            {
-                RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
-                    .Cascade(CascadeMode.Stop)
-                    .NotEmpty()
-                    .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SettlementMethod))
-                    .Must(settlementMethod => _allowedDomainValuesForConsumptionAndNetLossCorrection.Contains(settlementMethod!))
-                    .WithState(createMeteringPoint => new SettlementMethodMissingRequiredDomainValuesValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SettlementMethod!));
-            }).Otherwise(() =>
-            {
-                RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
-                    .Empty()
-                    .WithState(createMeteringPoint => new SettlementMethodNotAllowedValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SettlementMethod, createMeteringPoint.TypeOfMeteringPoint));
-            });
-        }
-
-        private static bool TypeOgMeteringPointIsConsumptionOrGridLossCorrection(CreateMeteringPoint createMeteringPoint)
-        {
-            return createMeteringPoint.TypeOfMeteringPoint.Equals(MeteringPointType.Consumption.Name, StringComparison.OrdinalIgnoreCase) || createMeteringPoint.TypeOfMeteringPoint.Equals(MeteringPointType.GridLossCorrection.Name, StringComparison.OrdinalIgnoreCase);
+            RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty()
+                .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError())
+                .Must(settlementMethod => _allowedDomainValuesForConsumptionAndNetLossCorrection.Contains(settlementMethod!))
+                .WithState(createMeteringPoint => new SettlementMethodMissingRequiredDomainValuesValidationError(createMeteringPoint.SettlementMethod!));
         }
     }
 }

@@ -19,7 +19,6 @@ using System.Text;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
-using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -42,6 +41,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
+using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentAssertions;
 using FluentValidation;
@@ -68,10 +68,14 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         private readonly IServiceProvider _serviceProvider;
         private bool _disposed;
 
-        protected TestHost()
+        protected TestHost(DatabaseFixture databaseFixture)
         {
+            if (databaseFixture == null) throw new ArgumentNullException(nameof(databaseFixture));
+
             _container = new Container();
             _container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
+
+            var connectionString = databaseFixture.GetConnectionString();
 
             var serviceCollection = new ServiceCollection();
 
@@ -83,7 +87,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.SendProtobuf<MeteringPointEnvelope>();
 
             serviceCollection.AddDbContext<MeteringPointContext>(x =>
-                x.UseSqlServer(ConnectionString, y => y.UseNodaTime()));
+                x.UseSqlServer(connectionString, y => y.UseNodaTime()));
             serviceCollection.AddSimpleInjector(_container);
             _serviceProvider = serviceCollection.BuildServiceProvider().UseSimpleInjector(_container);
 
@@ -105,7 +109,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Singleton);
             _container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
 
-            _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(ConnectionString), Lifestyle.Scoped);
+            _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
 
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
@@ -137,10 +141,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             CleanupDatabase();
         }
-
-        private static string ConnectionString =>
-            Environment.GetEnvironmentVariable("MeteringPoints_IntegrationTests_ConnectionString")
-            ?? throw new InvalidOperationException("MeteringPoints_IntegrationTests_ConnectionString config not set");
 
         public void Dispose()
         {

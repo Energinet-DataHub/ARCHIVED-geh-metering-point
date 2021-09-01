@@ -12,17 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Xunit;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
 {
-    public class SettlementMethodMissingRequiredDomainValuesValidationError : ValidationError
+    [CollectionDefinition("IntegrationTest")]
+    public class IntegrationTestDatabaseFixture : ICollectionFixture<DatabaseFixture>
     {
-        public SettlementMethodMissingRequiredDomainValuesValidationError(string settlementMethod)
-        {
-            SettlementMethod = settlementMethod;
-        }
-
-        public string SettlementMethod { get; }
+        // This class has no code, and is never created. Its purpose is simply
+        // to be the place to apply [CollectionDefinition] and all the
+        // ICollectionFixture<> interfaces.
     }
 }
