@@ -54,26 +54,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         }
 
         [Theory]
-        [InlineData("Consumption", "Flex", typeof(SettlementMethodRequiredValidationError), false)]
-        [InlineData("GridLossCorrection", "Flex", typeof(SettlementMethodRequiredValidationError), false)]
-        [InlineData("Consumption", "", typeof(SettlementMethodRequiredValidationError), true)]
-        [InlineData("GridLossCorrection", "", typeof(SettlementMethodRequiredValidationError), true)]
-        [InlineData("SettlementMethodNotAllowedForMP", "Flex", typeof(SettlementMethodNotAllowedValidationError), true)]
-        [InlineData("SettlementMethodNotAllowedForMPEmpty", "", typeof(SettlementMethodNotAllowedValidationError), false)]
-        [InlineData("Consumption", "WrongDomainName", typeof(SettlementMethodMissingRequiredDomainValuesValidationError), true)]
-        public void Validate_MandatorySettlementMethodForConsumptionAndNetLossCorrectionMeteringType(string meteringPointType, string settlementMethod, System.Type errorType, bool expectedError)
-        {
-            var businessRequest = CreateRequest() with
-            {
-                GsrnNumber = SampleData.GsrnNumber,
-                TypeOfMeteringPoint = meteringPointType,
-                SettlementMethod = settlementMethod,
-            };
-
-            ValidateCreateMeteringPoint(businessRequest, errorType, expectedError);
-        }
-
-        [Theory]
         [InlineData("***", typeof(MeteringGridAreaMandatoryValidationError), false)]
         [InlineData("", typeof(MeteringGridAreaMandatoryValidationError), true)]
         [InlineData("****", typeof(MeteringGridAreaLengthValidationError), true)]
@@ -174,10 +154,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         [InlineData(nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.Ninetynine), typeof(NetSettlementGroupMandatoryValidationError), false)]
         [InlineData(nameof(MeteringPointType.Production), nameof(NetSettlementGroup.Ninetynine), typeof(NetSettlementGroupMandatoryValidationError), false)]
         [InlineData(nameof(MeteringPointType.Production), "InvalidNetSettlementGroupValue", typeof(NetSettlementGroupInvalidValueValidationError), true)]
-        [InlineData(nameof(MeteringPointType.Exchange), nameof(NetSettlementGroup.Ninetynine), typeof(NetSettlementGroupNotAllowedValidationError), true)]
         [InlineData(nameof(MeteringPointType.Consumption), "", typeof(NetSettlementGroupMandatoryValidationError), true)]
         [InlineData(nameof(MeteringPointType.Production), "", typeof(NetSettlementGroupMandatoryValidationError), true)]
-        [InlineData(nameof(MeteringPointType.Exchange), "", typeof(NetSettlementGroupMandatoryValidationError), false)]
         public void Validate_NetSettlementGroup(string meteringPointType, string netSettlementGroup, System.Type validationError, bool expectedError)
         {
             var businessRequest = CreateRequest() with
