@@ -19,20 +19,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class MeterReadingOccurenceInvalidValueValidationError : ValidationError
     {
-        public MeterReadingOccurenceInvalidValueValidationError(string gsrnNumber, string meteringPointType, string meterReadingOccurence, params string[] allowedValues)
+        public MeterReadingOccurenceInvalidValueValidationError(string meterReadingOccurence)
         {
-            GsrnNumber = gsrnNumber;
-            MeteringPointType = meteringPointType;
             MeterReadingOccurence = meterReadingOccurence;
-            AllowedValues = allowedValues;
         }
 
-        public string GsrnNumber { get; }
-
-        public string MeteringPointType { get; }
-
         public string MeterReadingOccurence { get; }
-
-        public IEnumerable<string> AllowedValues { get; }
     }
 }
