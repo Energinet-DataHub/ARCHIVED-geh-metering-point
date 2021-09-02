@@ -13,12 +13,15 @@
 // limitations under the License.
 
 using System;
+using System.Globalization;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints
 {
@@ -127,7 +130,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.Property<EffectiveDate>("_effectiveDate")
                 .HasColumnName("EffectiveDate")
-                .HasConversion(toDbValue => toDbValue.ToString(), fromDbValue => EffectiveDate.Create(fromDbValue));
+                .HasConversion<DateTime>(toDbValue => toDbValue.DateInUtc.ToDateTimeUtc(), fromDbValue => EffectiveDate.Create(fromDbValue));
         }
     }
 
