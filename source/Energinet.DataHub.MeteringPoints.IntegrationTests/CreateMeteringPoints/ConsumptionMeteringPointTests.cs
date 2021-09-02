@@ -144,6 +144,34 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError<CreateMeteringPointRejected>("D15");
         }
 
+        [Fact]
+        public async Task Should_reject_when_net_settlement_group_is_missing()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    NetSettlementGroup = string.Empty,
+                };
+
+            await _mediator.Send(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_net_settlement_group_is_invalid()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    NetSettlementGroup = "Invalid_netsettlement_group_value",
+                };
+
+            await _mediator.Send(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
+        }
+
         private static CreateMeteringPoint CreateRequest()
         {
             return new CreateMeteringPoint(
