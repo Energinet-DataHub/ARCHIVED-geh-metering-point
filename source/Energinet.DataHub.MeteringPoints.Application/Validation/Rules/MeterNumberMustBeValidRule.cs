@@ -34,7 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
                 RuleFor(createMeteringPoint => createMeteringPoint.MeterNumber)
                     .MaximumLength(MeterNumberMaximumLength)
-                    .WithState(createMeteringPoint => new MeterNumberMaximumLengthValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.MeterNumber, MeterNumberMaximumLength));
+                    .WithState(createMeteringPoint => new MeterNumberMaximumLengthValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.MeterNumber!, MeterNumberMaximumLength));
             }).Otherwise(() =>
             {
                 RuleFor(createMeteringPoint => createMeteringPoint.MeterNumber)
