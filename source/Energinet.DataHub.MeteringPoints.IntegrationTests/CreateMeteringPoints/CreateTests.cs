@@ -31,13 +31,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
     public class CreateTests
         : TestHost
     {
-        private readonly IMediator _mediator;
         private readonly IMeteringPointRepository _meteringPointRepository;
 
         public CreateTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
         {
-            _mediator = GetService<IMediator>();
             _meteringPointRepository = GetService<IMeteringPointRepository>();
         }
 
@@ -46,7 +44,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         {
             var request = CreateRequest();
 
-            await _mediator.Send(request, CancellationToken.None).ConfigureAwait(false);
+            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
 
             var gsrnNumber = GsrnNumber.Create(request.GsrnNumber);
             var found = await _meteringPointRepository.GetByGsrnNumberAsync(gsrnNumber).ConfigureAwait(false);
@@ -58,7 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         {
             var request = CreateRequest();
 
-            await _mediator.Send(request, CancellationToken.None).ConfigureAwait(false);
+            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
 
             AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == nameof(CreateMeteringPointAccepted));
         }
@@ -68,7 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         {
             var request = CreateRequest();
 
-            await _mediator.Send(request, CancellationToken.None).ConfigureAwait(false);
+            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
 
             AssertOutboxMessage<MeteringPointCreatedEventMessage>();
         }
@@ -82,7 +80,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SettlementMethod = "WrongSettlementMethod",
             };
 
-            await _mediator.Send(request, CancellationToken.None).ConfigureAwait(false);
+            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
 
             AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == nameof(CreateMeteringPointRejected));
         }
@@ -91,8 +89,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         public async Task CreateMeteringPoint_WithAlreadyExistingGsrnNumber_ShouldGenerateRejectMessageInOutbox()
         {
             var request = CreateRequest();
-            await _mediator.Send(request, CancellationToken.None).ConfigureAwait(false);
-            await _mediator.Send(request, CancellationToken.None).ConfigureAwait(false);
+            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
+            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
 
             AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == nameof(CreateMeteringPointRejected));
         }

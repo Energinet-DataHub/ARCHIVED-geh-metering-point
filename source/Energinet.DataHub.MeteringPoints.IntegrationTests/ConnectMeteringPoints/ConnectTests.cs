@@ -34,13 +34,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
     public class ConnectTests
         : TestHost
     {
-        private readonly IMediator _mediator;
         private readonly ISystemDateTimeProvider _dateTimeProvider;
 
         public ConnectTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
         {
-            _mediator = GetService<IMediator>();
             _dateTimeProvider = GetService<ISystemDateTimeProvider>();
         }
 
@@ -50,9 +48,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             var createMeteringPointRequest = CreateMeteringPointRequest();
             var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
 
-            await _mediator.Send(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await SendCommandAsync(createMeteringPointRequest).ConfigureAwait(false);
             await MarkAsEnergySupplierAssigned(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
-            await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await SendCommandAsync(connectMeteringPointRequest).ConfigureAwait(false);
 
             AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == typeof(ConnectMeteringPointAccepted).FullName);
         }
@@ -63,9 +61,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             var createMeteringPointRequest = CreateMeteringPointRequest();
             var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
 
-            await _mediator.Send(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await SendCommandAsync(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
             await MarkAsEnergySupplierAssigned(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
-            await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
             AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == typeof(AccountingPointCharacteristicsMessage).FullName);
         }
@@ -76,8 +74,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             var createMeteringPointRequest = CreateMeteringPointRequest();
             var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
 
-            await _mediator.Send(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
-            await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await SendCommandAsync(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
             AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == typeof(ConnectMeteringPointRejected).FullName);
         }
@@ -88,9 +86,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             var createMeteringPointRequest = CreateMeteringPointRequest();
             var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
 
-            await _mediator.Send(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await SendCommandAsync(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
             await MarkAsEnergySupplierAssigned(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
-            await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
             AssertOutboxMessage<MeteringPointConnectedIntegrationEvent>();
         }
@@ -105,8 +103,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
                 GsrnNumber = "This is not a valid GSRN number",
             };
 
-            await _mediator.Send(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
-            await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await SendCommandAsync(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
             AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == typeof(ConnectMeteringPointRejected).FullName!);
         }
@@ -116,7 +114,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
         {
             var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
 
-            await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
             AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == typeof(ConnectMeteringPointRejected).FullName!);
         }
@@ -128,10 +126,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
 
             var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
 
-            await _mediator.Send(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await SendCommandAsync(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
             await MarkAsEnergySupplierAssigned(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
-            await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
-            await _mediator.Send(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
             AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == typeof(ConnectMeteringPointRejected).FullName!);
         }
@@ -193,7 +191,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
         private async Task MarkAsEnergySupplierAssigned(Instant startOfSupply)
         {
             var setEnergySupplierAssigned = new SetEnergySupplierInfo(SampleData.GsrnNumber, startOfSupply);
-            await _mediator.Send(setEnergySupplierAssigned).ConfigureAwait(false);
+            await SendCommandAsync(setEnergySupplierAssigned).ConfigureAwait(false);
         }
     }
 }

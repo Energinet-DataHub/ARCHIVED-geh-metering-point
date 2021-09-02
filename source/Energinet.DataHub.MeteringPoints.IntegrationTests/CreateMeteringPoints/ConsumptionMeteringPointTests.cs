@@ -28,12 +28,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
     public class ConsumptionMeteringPointTests
         : TestHost
     {
-        private readonly IMediator _mediator;
-
         public ConsumptionMeteringPointTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
         {
-            _mediator = GetService<IMediator>();
         }
 
         [Fact]
@@ -41,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         {
             var request = CreateRequest();
 
-            await _mediator.Send(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError<CreateMeteringPointRejected>("D57");
         }
@@ -55,7 +52,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                     StreetName = string.Empty,
                 };
 
-            await _mediator.Send(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError<CreateMeteringPointRejected>("E86");
         }
@@ -69,7 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                     PostCode = string.Empty,
                 };
 
-            await _mediator.Send(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError<CreateMeteringPointRejected>("E86");
         }
@@ -83,7 +80,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                     CityName = string.Empty,
                 };
 
-            await _mediator.Send(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError<CreateMeteringPointRejected>("E86");
         }
@@ -97,7 +94,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                     SettlementMethod = string.Empty,
                 };
 
-            await _mediator.Send(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError<CreateMeteringPointRejected>("D02");
         }
@@ -111,7 +108,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                     SettlementMethod = "Invalid_Method_Name",
                 };
 
-            await _mediator.Send(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError<CreateMeteringPointRejected>("D15");
         }
