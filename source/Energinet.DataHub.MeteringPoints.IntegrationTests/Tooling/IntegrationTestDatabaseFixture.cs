@@ -12,17 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Xunit;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
 {
-    public class MeterReadingOccurenceMandatoryValidationError : ValidationError
+    [CollectionDefinition("IntegrationTest")]
+    public class IntegrationTestDatabaseFixture : ICollectionFixture<DatabaseFixture>
     {
-        public MeterReadingOccurenceMandatoryValidationError(string meteringPointType)
-        {
-            MeteringPointType = meteringPointType;
-        }
-
-        public string MeteringPointType { get; }
+        // This class has no code, and is never created. Its purpose is simply
+        // to be the place to apply [CollectionDefinition] and all the
+        // ICollectionFixture<> interfaces.
     }
 }
