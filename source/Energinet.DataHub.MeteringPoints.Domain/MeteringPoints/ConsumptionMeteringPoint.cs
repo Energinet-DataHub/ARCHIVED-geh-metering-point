@@ -56,8 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             NetSettlementGroup netSettlementGroup,
             DisconnectionType disconnectionType,
             ConnectionType connectionType,
-            AssetType? assetType,
-            ProductType productType)
+            AssetType? assetType)
             : base(
                 id,
                 gsrnNumber,
@@ -80,7 +79,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _disconnectionType = disconnectionType;
             _connectionType = connectionType;
             _assetType = assetType;
-            _productType = productType;
+            _productType = ProductType.EnergyActive;
             _isAddressWashable = isAddressWashable;
             ConnectionState = ConnectionState.New();
 
@@ -185,8 +184,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 meteringPointDetails.NetSettlementGroup,
                 meteringPointDetails.DisconnectionType,
                 meteringPointDetails.ConnectionType,
-                meteringPointDetails.AssetType,
-                ProductType.EnergyActive);
+                meteringPointDetails.AssetType);
         }
     }
 }

@@ -108,6 +108,17 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(assetType.Name, createdEvent.AssetType);
         }
 
+        [Fact]
+        public void Product_type_should_as_default_be_active_energy()
+        {
+            var details = CreateDetails();
+
+            var meteringPoint = ConsumptionMeteringPoint.Create(details);
+
+            var createdEvent = meteringPoint.DomainEvents.First(e => e is ConsumptionMeteringPointCreated) as ConsumptionMeteringPointCreated;
+            Assert.Equal(ProductType.EnergyActive.Name, createdEvent!.ProductType);
+        }
+
         [Theory]
         [InlineData(nameof(NetSettlementGroup.Six))]
         public void Powerplant_GSRN_is_required_when_netsettlementgroup_is_other_than_0_or_99(string netSettlementGroupName)
