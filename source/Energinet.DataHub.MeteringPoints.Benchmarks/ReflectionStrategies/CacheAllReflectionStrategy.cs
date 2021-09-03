@@ -49,17 +49,10 @@ namespace Energinet.DataHub.MeteringPoints.Benchmarks.ReflectionStrategies
         }
 
         internal override bool ContainsName<T>(string name)
-        {
-            var element = GetAll<T>()
-                .FirstOrDefault(item => item.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-            return element is not null;
-        }
+            => GetAll<T>().Any(item => item.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
         internal override bool ContainsValue<T>(int value)
-        {
-            var element = GetAll<T>().FirstOrDefault(item => item.Id == value);
-            return element is not null;
-        }
+            => GetAll<T>().Any(item => item.Id == value);
 
         private IEnumerable<T> GetFieldsFrom<T>(int index)
         {

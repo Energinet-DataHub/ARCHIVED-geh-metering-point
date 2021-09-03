@@ -45,17 +45,10 @@ namespace Energinet.DataHub.MeteringPoints.Benchmarks.ReflectionStrategies
         }
 
         internal override bool ContainsName<T>(string name)
-        {
-            var matchingItem = GetAll<T>()
-                .FirstOrDefault(item => item.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-            return matchingItem is not null;
-        }
+            => GetAll<T>().Any(item => item.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
         internal override bool ContainsValue<T>(int value)
-        {
-            var matchingItem = GetAll<T>().FirstOrDefault(item => item.Id == value);
-            return matchingItem is not null;
-        }
+            => GetAll<T>().Any(item => item.Id == value);
 
         private T Parse<T, TValue>(TValue value, string description, Func<T, bool> predicate)
             where T : EnumerationType
