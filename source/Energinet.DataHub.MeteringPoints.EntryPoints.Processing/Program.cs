@@ -110,7 +110,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                                        "Metering point db connection string not found.");
             container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
 
-            // container.Register<IntegrationEventReceiver>(Lifestyle.Scoped);
+            container.Register<IntegrationEventReceiver>(Lifestyle.Scoped);
             container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
             container.Register<IMarketMeteringPointRepository, MarketMeteringPointRepository>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);

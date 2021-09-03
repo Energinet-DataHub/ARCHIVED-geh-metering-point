@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
@@ -25,25 +27,31 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         {
             RuleFor(request => request.MeterReadingOccurrence)
                 .NotEmpty()
-                .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.TypeOfMeteringPoint));
+                .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError(createMeteringPoint.TypeOfMeteringPoint));
 
+            RuleFor(request => request.MeterReadingOccurrence)
+                .Must(value => EnumerationType.GetAll<ReadingOccurrence>().Select(item => item.Name).Contains(value))
+                .WithState(request =>
+                    new MeterReadingOccurenceInvalidValueValidationError(request.MeterReadingOccurrence));
+
+            //TODO: The remaining rules should be moved to domain layer
             When(createMeteringPoint => createMeteringPoint.TypeOfMeteringPoint == MeteringPointType.SurplusProductionGroup.Name || createMeteringPoint.TypeOfMeteringPoint == MeteringPointType.NetConsumption.Name, () =>
             {
                 RuleFor(request => request.MeterReadingOccurrence)
                     .Must(meterReadingOccurrence => meterReadingOccurrence == ReadingOccurrence.Hourly.Name)
-                    .WithState(createMeteringPoint => new MeterReadingOccurenceInvalidValueValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.ProductType, ReadingOccurrence.Hourly.Name));
+                    .WithState(createMeteringPoint => new MeterReadingOccurenceInvalidValueValidationError(createMeteringPoint.MeterReadingOccurrence));
             });
 
             When(createMeteringPoint => createMeteringPoint.TypeOfMeteringPoint == MeteringPointType.VEProduction.Name || createMeteringPoint.TypeOfMeteringPoint == MeteringPointType.Analysis.Name, () =>
             {
                 RuleFor(request => request.MeterReadingOccurrence)
                     .Must(meterReadingOccurrence => meterReadingOccurrence == ReadingOccurrence.Hourly.Name || meterReadingOccurrence == ReadingOccurrence.Quarterly.Name || meterReadingOccurrence == ReadingOccurrence.Monthly.Name)
-                    .WithState(createMeteringPoint => new MeterReadingOccurenceInvalidValueValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.ProductType, ReadingOccurrence.Hourly.Name, ReadingOccurrence.Quarterly.Name, ReadingOccurrence.Monthly.Name));
+                    .WithState(createMeteringPoint => new MeterReadingOccurenceInvalidValueValidationError(createMeteringPoint.MeterReadingOccurrence));
             }).Otherwise(() =>
             {
                 RuleFor(request => request.MeterReadingOccurrence)
                     .Must(meterReadingOccurrence => meterReadingOccurrence == ReadingOccurrence.Hourly.Name || meterReadingOccurrence == ReadingOccurrence.Quarterly.Name)
-                    .WithState(createMeteringPoint => new MeterReadingOccurenceInvalidValueValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.ProductType, ReadingOccurrence.Hourly.Name, ReadingOccurrence.Quarterly.Name));
+                    .WithState(createMeteringPoint => new MeterReadingOccurenceInvalidValueValidationError(createMeteringPoint.MeterReadingOccurrence));
             });
         }
     }
