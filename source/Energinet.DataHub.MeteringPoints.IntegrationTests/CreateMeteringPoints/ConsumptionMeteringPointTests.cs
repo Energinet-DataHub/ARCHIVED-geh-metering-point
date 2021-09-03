@@ -94,7 +94,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                     MeterReadingOccurrence = string.Empty,
                 };
 
-            await _mediator.Send(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError<CreateMeteringPointRejected>("D02");
         }
@@ -108,7 +108,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                     MeterReadingOccurrence = "Not_valid_Reading_occurence_value",
                 };
 
-            await _mediator.Send(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError<CreateMeteringPointRejected>("D02");
         }
@@ -150,7 +150,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                     NetSettlementGroup = string.Empty,
                 };
 
-            await _mediator.Send(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError<CreateMeteringPointRejected>("D02");
         }
@@ -164,7 +164,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                     NetSettlementGroup = "Invalid_netsettlement_group_value",
                 };
 
-            await _mediator.Send(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError<CreateMeteringPointRejected>("D02");
         }
