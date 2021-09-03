@@ -28,12 +28,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
     public class ConsumptionMeteringPointTests
         : TestHost
     {
-        private readonly IMediator _mediator;
-
         public ConsumptionMeteringPointTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
         {
-            _mediator = GetService<IMediator>();
         }
 
         [Fact]
@@ -41,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         {
             var request = CreateRequest();
 
-            await _mediator.Send(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError<CreateMeteringPointRejected>("D57");
         }
@@ -55,7 +52,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                     StreetName = string.Empty,
                 };
 
-            await _mediator.Send(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError<CreateMeteringPointRejected>("E86");
         }
@@ -69,7 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                     PostCode = string.Empty,
                 };
 
-            await _mediator.Send(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError<CreateMeteringPointRejected>("E86");
         }
@@ -83,9 +80,37 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                     CityName = string.Empty,
                 };
 
-            await _mediator.Send(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError<CreateMeteringPointRejected>("E86");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_reading_occurence_is_missing()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    MeterReadingOccurrence = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_reading_occurence_is_not_a_valid_value()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    MeterReadingOccurrence = "Not_valid_Reading_occurence_value",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
         }
 
         [Fact]
@@ -97,7 +122,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                     SettlementMethod = string.Empty,
                 };
 
-            await _mediator.Send(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError<CreateMeteringPointRejected>("D02");
         }
@@ -111,9 +136,37 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                     SettlementMethod = "Invalid_Method_Name",
                 };
 
-            await _mediator.Send(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError<CreateMeteringPointRejected>("D15");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_net_settlement_group_is_missing()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    NetSettlementGroup = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_net_settlement_group_is_invalid()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    NetSettlementGroup = "Invalid_netsettlement_group_value",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
         }
 
         private static CreateMeteringPoint CreateRequest()
