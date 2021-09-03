@@ -16,6 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
@@ -45,6 +48,7 @@ using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentAssertions;
 using FluentValidation;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -86,8 +90,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                     .WithParser(() => MeteringPointEnvelope.Parser));
             _container.SendProtobuf<MeteringPointEnvelope>();
 
-            serviceCollection.AddDbContext<MeteringPointContext>(x =>
-                x.UseSqlServer(connectionString, y => y.UseNodaTime()));
+            serviceCollection.AddDbContext<MeteringPointContext>(
+                x =>
+                x.UseSqlServer(connectionString, y => y.UseNodaTime()),
+                ServiceLifetime.Scoped);
             serviceCollection.AddSimpleInjector(_container);
             _serviceProvider = serviceCollection.BuildServiceProvider().UseSimpleInjector(_container);
 
@@ -207,6 +213,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 .First(error => error.Code == expectedErrorCode);
 
             Assert.NotNull(validationError);
+        }
+
+        protected async Task SendCommandAsync(object command, CancellationToken cancellationToken = default)
+        {
+            await using var scope = AsyncScopedLifestyle.BeginScope(_container);
+            await scope.GetInstance<IMediator>().Send(command, cancellationToken).ConfigureAwait(false);
         }
 
         private void CleanupDatabase()
