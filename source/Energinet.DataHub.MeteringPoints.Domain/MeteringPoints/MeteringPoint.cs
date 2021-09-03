@@ -35,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private MeasurementUnitType _unitType;
         private EffectiveDate _effectiveDate;
         private string? _parentRelatedMeteringPoint;
-        private string _meterNumber;
+        private string? _meterNumber;
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
         protected MeteringPoint() { }
@@ -53,7 +53,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GsrnNumber? powerPlantGsrnNumber,
             string? locationDescription,
             MeasurementUnitType unitType,
-            string meterNumber,
+            string? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
             int maximumCurrent,
             int maximumPower,
