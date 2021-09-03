@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.ObjectModel;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -36,6 +37,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 new DateFormatMustBeUTCRule(dateInUtc),
             };
             return new BusinessRulesValidationResult(rules);
+        }
+
+        public static EffectiveDate Create(DateTime date)
+        {
+            var utcDate = Instant.FromDateTimeUtc(DateTime.SpecifyKind(date, DateTimeKind.Utc));
+            return Create(utcDate.ToString());
         }
 
         public static EffectiveDate Create(string dateInUtc)
