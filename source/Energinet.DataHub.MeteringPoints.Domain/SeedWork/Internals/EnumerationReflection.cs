@@ -52,6 +52,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals
             throw new InvalidOperationException();
         }
 
+        public bool ContainsName(string name)
+        {
+            return _nameLookup.ContainsKey(name.ToUpperInvariant());
+        }
+
+        public bool ContainsValue(int value) => _valueLookup.ContainsKey(value);
+
         internal static EnumerationReflection Create<T>()
             where T : EnumerationType
         {

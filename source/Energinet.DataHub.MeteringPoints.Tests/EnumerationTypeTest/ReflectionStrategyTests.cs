@@ -14,9 +14,11 @@
 
 using System;
 using System.Linq;
+using System.Reflection.Metadata;
 using Energinet.DataHub.MeteringPoints.Benchmarks.ReflectionStrategies;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals;
 using Energinet.DataHub.MeteringPoints.Tests.Assets;
+using Microsoft.Diagnostics.Tracing.Analysis.JIT;
 using Xunit;
 using Xunit.Categories;
 
@@ -72,6 +74,31 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EnumerationTypeTest
             Assert.NotEmpty(fields);
             Assert.Equal(5, fields.Length);
             Assert.Contains(DocumentTypes.Lens, fields);
+        }
+
+        [Theory]
+        [InlineData(nameof(DocumentTypes.Lens), true)]
+        [InlineData("name-not-known", false)]
+        public void Given_a_document_type_When_contains_name_is_invoked_Then_it_match_the_result(string documentType, bool expected)
+        {
+            var sut = CreateStrategy();
+
+            var result = sut.ContainsName<DocumentTypes>(documentType);
+
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(5, true)]
+        [InlineData(-1, false)]
+        public void Given_a_document_type_When_contains_value_is_invoked_Then_it_match_the_result(
+            int value,
+            bool expected)
+        {
+            var sut = CreateStrategy();
+            var result = sut.ContainsValue<DocumentTypes>(value);
+
+            Assert.Equal(expected, result);
         }
 
         protected abstract ReflectionStrategy CreateStrategy();
