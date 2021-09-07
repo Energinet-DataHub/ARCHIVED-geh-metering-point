@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappings
 {
