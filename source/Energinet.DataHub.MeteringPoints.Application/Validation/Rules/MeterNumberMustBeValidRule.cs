@@ -29,10 +29,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             When(MeteringPointSubTypeIsPhysical, () =>
             {
                 RuleFor(createMeteringPoint => createMeteringPoint.MeterNumber)
+                    .Cascade(CascadeMode.Stop)
                     .NotEmpty()
-                    .WithState(createMeteringPoint => new MeterNumberMandatoryValidationError(createMeteringPoint.GsrnNumber));
-
-                RuleFor(createMeteringPoint => createMeteringPoint.MeterNumber)
+                    .WithState(createMeteringPoint => new MeterNumberMandatoryValidationError(createMeteringPoint.GsrnNumber))
                     .MaximumLength(MeterNumberMaximumLength)
                     .WithState(createMeteringPoint => new MeterNumberMaximumLengthValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.MeterNumber!, MeterNumberMaximumLength));
             }).Otherwise(() =>
