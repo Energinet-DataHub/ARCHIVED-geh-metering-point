@@ -48,6 +48,12 @@ namespace Energinet.DataHub.MeteringPoints.Benchmarks.ReflectionStrategies
             return matchingItem;
         }
 
+        internal override bool ContainsName<T>(string name)
+            => GetAll<T>().Any(item => item.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+
+        internal override bool ContainsValue<T>(int value)
+            => GetAll<T>().Any(item => item.Id == value);
+
         private IEnumerable<T> GetFieldsFrom<T>(int index)
         {
             lock (_resizeLock)
