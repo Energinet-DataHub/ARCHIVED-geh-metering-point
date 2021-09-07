@@ -70,8 +70,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meterReadingOccurrence,
                 maximumCurrent,
                 maximumPower,
-                effectiveDate,
-                null)
+                effectiveDate)
         {
             _settlementMethod = settlementMethod;
             _netSettlementGroup = netSettlementGroup;

@@ -123,7 +123,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup!),
                 EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
                 EnumerationType.FromName<ConnectionType>(request.ConnectionType!),
-                request.ParentRelatedMeteringPoint,
                 EnumerationType.FromName<ProductType>(request.ProductType));
         }
 
@@ -147,7 +146,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 EffectiveDate.Create(request.EffectiveDate), // TODO: Parse date in correct format when implemented in Input Validation
                 request.ToGrid,
                 request.FromGrid,
-                request.ParentRelatedMeteringPoint,
                 EnumerationType.FromName<ProductType>(request.ProductType));
         }
 

@@ -105,9 +105,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<ProductType>(fromDbValue));
 
-            builder.Property("_parentRelatedMeteringPoint")
-                .HasColumnName("ParentRelatedMeteringPoint");
-
             builder.Property<MeasurementUnitType>("_unitType")
                 .HasColumnName("UnitType")
                 .HasConversion(

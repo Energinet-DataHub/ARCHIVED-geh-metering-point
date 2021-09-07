@@ -34,7 +34,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private string? _locationDescription;
         private MeasurementUnitType _unitType;
         private EffectiveDate _effectiveDate;
-        private string? _parentRelatedMeteringPoint;
         private string _meterNumber;
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
@@ -57,8 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             ReadingOccurrence meterReadingOccurrence,
             int maximumCurrent,
             int maximumPower,
-            EffectiveDate effectiveDate,
-            string? parentRelatedMeteringPoint)
+            EffectiveDate effectiveDate)
         {
             Id = id;
             GsrnNumber = gsrnNumber;
@@ -75,7 +73,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _maximumCurrent = maximumCurrent;
             _maximumPower = maximumPower;
             _effectiveDate = effectiveDate;
-            _parentRelatedMeteringPoint = parentRelatedMeteringPoint;
         }
 
         public MeteringPointId Id { get; }
