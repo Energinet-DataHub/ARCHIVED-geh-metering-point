@@ -178,7 +178,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup!),
                 EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
                 EnumerationType.FromName<ConnectionType>(request.ConnectionType!),
-                !string.IsNullOrEmpty(request.AssetType) ? EnumerationType.FromName<AssetType>(request.AssetType) : null !);
+                !string.IsNullOrEmpty(request.AssetType) ? EnumerationType.FromName<AssetType>(request.AssetType) : null !,
+                ScheduledMeterReadingDate.Create(request.ScheduledMeterReadingDate !));
         }
 
         private static Domain.Addresses.Address CreateAddress(CreateMeteringPoint request)

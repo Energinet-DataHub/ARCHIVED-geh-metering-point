@@ -178,7 +178,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
                 SampleData.ProductType,
                 null,
                 SampleData.GeoInfoReference,
-                SampleData.MeasurementUnitType);
+                SampleData.MeasurementUnitType,
+                null,
+                null,
+                SampleData.ScheduledMeterReadingDate);
         }
 
         private ConnectMeteringPoint CreateConnectMeteringPointRequest()

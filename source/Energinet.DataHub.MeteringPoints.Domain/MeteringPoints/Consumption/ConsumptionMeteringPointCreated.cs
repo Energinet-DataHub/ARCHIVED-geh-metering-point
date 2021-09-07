@@ -21,7 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 {
     public class ConsumptionMeteringPointCreated : DomainEventBase
     {
-        public ConsumptionMeteringPointCreated(Guid meteringPointId, string gsrnNumber, Guid gridAreaId, string meteringPointSubType, string productType, string readingOccurrence, string unitType, string settlementMethod, string netSettlementGroup, string city, string floor, string room, string buildingNumber, string countryCode, int? municipalityCode, string postCode, string streetCode, string streetName, string citySubDivision, bool isOfficielAddress, string powerPlantGsrnNumber, string locationDescription, string meterNumber, int maximumCurrent, int maximumPower, Instant effectiveDate, string disconnectionType, string connectionType, string assetType, string physicalState)
+        public ConsumptionMeteringPointCreated(Guid meteringPointId, string gsrnNumber, Guid gridAreaId, string meteringPointSubType, string productType, string readingOccurrence, string unitType, string settlementMethod, string netSettlementGroup, string city, string floor, string room, string buildingNumber, string countryCode, int? municipalityCode, string postCode, string streetCode, string streetName, string citySubDivision, bool isOfficielAddress, string powerPlantGsrnNumber, string locationDescription, string meterNumber, int maximumCurrent, int maximumPower, Instant effectiveDate, string disconnectionType, string connectionType, string assetType, string physicalState, string scheduledMeterReadingDate)
         {
             MeteringPointId = meteringPointId;
             GsrnNumber = gsrnNumber;
@@ -53,6 +53,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             ConnectionType = connectionType;
             AssetType = assetType;
             PhysicalState = physicalState;
+            ScheduledMeterReadingDate = scheduledMeterReadingDate;
         }
 
         public Guid MeteringPointId { get; }
@@ -114,5 +115,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         public string AssetType { get; }
 
         public string PhysicalState { get; }
+
+        public string ScheduledMeterReadingDate { get; }
     }
 }

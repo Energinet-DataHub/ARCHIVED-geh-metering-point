@@ -17,6 +17,7 @@ using System.Globalization;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -195,6 +196,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<NetSettlementGroup>(fromDbValue));
+
+            builder.Property<ScheduledMeterReadingDate>("_scheduledMeterReadingDate")
+                .HasColumnName("ScheduledMeterReadingDate")
+                .HasConversion(
+                    toDbValue => toDbValue.MonthAndDay,
+                    fromDbValue => ScheduledMeterReadingDate.Create(fromDbValue));
         }
     }
 

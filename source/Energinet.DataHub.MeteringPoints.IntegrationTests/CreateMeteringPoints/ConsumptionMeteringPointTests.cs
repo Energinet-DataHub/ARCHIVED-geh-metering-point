@@ -169,6 +169,49 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError<CreateMeteringPointRejected>("D02");
         }
 
+        [Fact]
+        public async Task Should_reject_when_scheduled_meter_reading_date_is_missing()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    ScheduledMeterReadingDate = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_day_of_scheduled_meter_reading_date_is_not_01_and_net_settlement_group_is_6()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    ScheduledMeterReadingDate = "0502",
+                    NetSettlementGroup = NetSettlementGroup.Six.Name,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_scheduled_meter_reading_date_is_invalid()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    ScheduledMeterReadingDate = "0631",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("E86");
+        }
+
         private static CreateMeteringPoint CreateRequest()
         {
             return new CreateMeteringPoint(
@@ -210,7 +253,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SampleData.GeoInfoReference,
                 SampleData.MeasurementUnitType,
                 ContractedConnectionCapacity: null,
-                RatedCurrent: null);
+                RatedCurrent: null,
+                SampleData.ScheduledMeterReadingDate);
         }
     }
 }

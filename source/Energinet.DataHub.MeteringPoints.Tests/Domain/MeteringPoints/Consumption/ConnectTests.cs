@@ -113,7 +113,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 EnumerationType.FromName<NetSettlementGroup>(SampleData.NetSettlementGroup!),
                 DisconnectionType.Manual,
                 ConnectionType.Installation,
-                AssetType.Boiler);
+                AssetType.Boiler,
+                ScheduledMeterReadingDate.Create(SampleData.ScheduledMeterReadingDate));
 
             return ConsumptionMeteringPoint.Create(meteringPointDetails);
         }

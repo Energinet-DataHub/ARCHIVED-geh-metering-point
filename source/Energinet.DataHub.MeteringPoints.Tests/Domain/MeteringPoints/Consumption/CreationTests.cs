@@ -60,6 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 floor: string.Empty,
                 room: string.Empty,
                 municipalityCode: null);
+            var scheduledMeterReadingDate = ScheduledMeterReadingDate.Create("0101");
 
             var meteringPointDetails = CreateDetails()
                 with
@@ -73,6 +74,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                     MaximumPower = maximumPower,
                     DisconnectionType = disconnectionType,
                     ConnectionType = connectionType,
+                    ScheduledMeterReadingDate = scheduledMeterReadingDate,
                 };
 
             var meteringPoint = ConsumptionMeteringPoint.Create(meteringPointDetails);
@@ -106,6 +108,22 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(disconnectionType.Name, createdEvent.DisconnectionType);
             Assert.Equal(connectionType.Name, createdEvent.ConnectionType);
             Assert.Equal(assetType.Name, createdEvent.AssetType);
+            Assert.Equal(scheduledMeterReadingDate.MonthAndDay, createdEvent.ScheduledMeterReadingDate);
+        }
+
+        [Fact]
+        public void Day_of_scheduled_meter_reading_date_must_be_01_when_net_settlement_group_is_6()
+        {
+            var details = CreateDetails()
+                with
+                {
+                    ScheduledMeterReadingDate = ScheduledMeterReadingDate.Create("0512"),
+                    NetSettlementGroup = NetSettlementGroup.Six,
+                };
+
+            var checkResult = ConsumptionMeteringPoint.CanCreate(details);
+
+            AssertContainsValidationError<InvalidScheduledMeterReadingDateNetSettlementGroupRuleError>(checkResult);
         }
 
         [Fact]
@@ -290,7 +308,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 NetSettlementGroup.Three,
                 DisconnectionType.Manual,
                 ConnectionType.Installation,
-                AssetType.GasTurbine);
+                AssetType.GasTurbine,
+                ScheduledMeterReadingDate.Create(SampleData.ScheduledMeterReadingDate));
         }
 
         private static BusinessRulesValidationResult CreateRequest(MeteringPointDetails meteringPointDetails)

@@ -79,6 +79,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public static int MunicipalityCode => default;
 
+        public static string ScheduledMeterReadingDate => "0101";
+
         private static string EffectiveDateNow()
         {
             var currentDate = SystemClock.Instance.GetCurrentInstant().InUtc();

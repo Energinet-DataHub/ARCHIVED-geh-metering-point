@@ -35,6 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private ConnectionType _connectionType;
         private AssetType? _assetType;
         private bool _isAddressWashable;
+        private ScheduledMeterReadingDate _scheduledMeterReadingDate;
 
         private ConsumptionMeteringPoint(
             MeteringPointId id,
@@ -56,7 +57,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             NetSettlementGroup netSettlementGroup,
             DisconnectionType disconnectionType,
             ConnectionType connectionType,
-            AssetType? assetType)
+            AssetType? assetType,
+            ScheduledMeterReadingDate scheduledMeterReadingDate)
             : base(
                 id,
                 gsrnNumber,
@@ -82,6 +84,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _productType = ProductType.EnergyActive;
             _isAddressWashable = isAddressWashable;
             ConnectionState = ConnectionState.New();
+            _scheduledMeterReadingDate = scheduledMeterReadingDate;
 
             var @event = new ConsumptionMeteringPointCreated(
                 id.Value,
@@ -113,7 +116,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 _disconnectionType.Name,
                 _connectionType.Name,
                 _assetType.Name,
-                ConnectionState.PhysicalState.Name);
+                ConnectionState.PhysicalState.Name,
+                _scheduledMeterReadingDate.MonthAndDay);
 
             AddDomainEvent(@event);
         }
@@ -153,6 +157,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 new StreetNameIsRequiredRule(meteringPointDetails.GsrnNumber, meteringPointDetails.Address),
                 new PostCodeIsRequiredRule(meteringPointDetails.Address),
                 new CityIsRequiredRule(meteringPointDetails.Address),
+                new ScheduledMeterReadingDateRule(meteringPointDetails.ScheduledMeterReadingDate, meteringPointDetails.NetSettlementGroup),
             };
 
             return new BusinessRulesValidationResult(rules);
@@ -184,7 +189,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 meteringPointDetails.NetSettlementGroup,
                 meteringPointDetails.DisconnectionType,
                 meteringPointDetails.ConnectionType,
-                meteringPointDetails.AssetType);
+                meteringPointDetails.AssetType,
+                meteringPointDetails.ScheduledMeterReadingDate);
         }
     }
 }
