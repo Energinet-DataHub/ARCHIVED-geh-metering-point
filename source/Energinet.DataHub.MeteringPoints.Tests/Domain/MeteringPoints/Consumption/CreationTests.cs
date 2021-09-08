@@ -33,7 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         {
             var meteringPointId = MeteringPointId.New();
             var meteringPointGsrn = GsrnNumber.Create(SampleData.GsrnNumber);
-            var isOfficielAddress = SampleData.IsOfficielAddress;
+            var isOfficielAddress = SampleData.IsOfficialAddress;
             var meteringPointSubtype = MeteringPointSubType.Physical;
             var gridAreadId = GridAreaId.New();
             var powerPlanGsrn = GsrnNumber.Create(SampleData.PowerPlant);
@@ -293,7 +293,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 address,
-                SampleData.IsOfficielAddress,
+                SampleData.IsOfficialAddress,
                 MeteringPointSubType.Physical,
                 GridAreaId.New(),
                 GsrnNumber.Create(SampleData.PowerPlant),

@@ -98,7 +98,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 Address.Create(SampleData.StreetName, SampleData.StreetCode, SampleData.BuildingNumber, SampleData.CityName, SampleData.CitySubdivision, SampleData.PostCode, SampleData.CountryCode, SampleData.Floor, SampleData.Room, SampleData.MunicipalityCode),
-                SampleData.IsOfficielAddress,
+                SampleData.IsOfficialAddress,
                 EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
                 GridAreaId.New(),
                 GsrnNumber.Create(SampleData.PowerPlant),
