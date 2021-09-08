@@ -314,11 +314,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
 
         private static BusinessRulesValidationResult CreateRequest(MeteringPointDetails meteringPointDetails)
         {
-            // var meteringPointDetails = CreateDetails()
-            //     with
-            //     {
-            //         NetSettlementGroup = netSettlementGroup,
-            //     };
             return ConsumptionMeteringPoint.CanCreate(meteringPointDetails);
         }
 
