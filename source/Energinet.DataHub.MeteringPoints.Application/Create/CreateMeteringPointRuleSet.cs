@@ -33,9 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation
                 RuleFor(request => request.ScheduledMeterReadingDate)
                     .Cascade(CascadeMode.Stop)
                     .NotEmpty()
-                    .WithState(request => new ScheduledMeterReadingDateIsRequiredRuleError());
-
-                RuleFor(request => request.ScheduledMeterReadingDate)
+                    .WithState(request => new ScheduledMeterReadingDateIsRequiredRuleError())
                     .Must(value => ScheduledMeterReadingDate.CheckRules(value !).Success)
                     .WithState(value => new InvalidScheduledMeterReadingDateRuleError());
             });
