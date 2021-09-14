@@ -32,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         private ConnectionType _connectionType;
         private AssetType? _assetType;
         private bool _isAddressWashable;
-        private ScheduledMeterReadingDate _scheduledMeterReadingDate;
+        private ScheduledMeterReadingDate? _scheduledMeterReadingDate;
 
         private ConsumptionMeteringPoint(
             MeteringPointId id,
@@ -55,7 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             DisconnectionType disconnectionType,
             ConnectionType connectionType,
             AssetType? assetType,
-            ScheduledMeterReadingDate scheduledMeterReadingDate)
+            ScheduledMeterReadingDate? scheduledMeterReadingDate)
             : base(
                 id,
                 gsrnNumber,
@@ -113,7 +113,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 _connectionType.Name,
                 _assetType.Name,
                 ConnectionState.PhysicalState.Name,
-                _scheduledMeterReadingDate.MonthAndDay);
+                _scheduledMeterReadingDate?.MonthAndDay);
 
             AddDomainEvent(@event);
         }

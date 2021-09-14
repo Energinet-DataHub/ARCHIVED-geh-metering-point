@@ -77,6 +77,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string PhysicalState => Domain.MeteringPoints.PhysicalState.New.Name;
 
-        public static string ScheduledMeterReadingDate => "0101";
+        public static string ScheduledMeterReadingDate => string.Empty;
     }
 }

@@ -199,6 +199,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
+        public async Task Should_reject_if_scheduled_meter_reading_date_is_specified_and_net_settlement_group_is_not_6()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    PowerPlant = SampleData.PowerPlantGsrnNumber,
+                    NetSettlementGroup = NetSettlementGroup.One.Name,
+                    ScheduledMeterReadingDate = "0101",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
+        }
+
+        [Fact]
         public async Task Should_reject_when_scheduled_meter_reading_date_is_invalid()
         {
             var request = CreateRequest()

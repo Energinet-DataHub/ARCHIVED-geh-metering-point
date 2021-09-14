@@ -30,12 +30,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation
             // Rules for Consumption metering points
             When(request => request.TypeOfMeteringPoint.Equals(MeteringPointType.Consumption.Name, StringComparison.OrdinalIgnoreCase), () =>
             {
-                RuleFor(request => request.ScheduledMeterReadingDate)
-                    .Cascade(CascadeMode.Stop)
-                    .NotEmpty()
-                    .WithState(request => new ScheduledMeterReadingDateIsRequiredRuleError())
-                    .Must(value => ScheduledMeterReadingDate.CheckRules(value !).Success)
-                    .WithState(value => new InvalidScheduledMeterReadingDateRuleError());
+                When(request => !string.IsNullOrEmpty(request.ScheduledMeterReadingDate), () =>
+                {
+                    RuleFor(request => request.ScheduledMeterReadingDate)
+                        .Must(value => ScheduledMeterReadingDate.CheckRules(value !).Success)
+                        .WithState(value => new InvalidScheduledMeterReadingDateRuleError());
+                });
             });
             RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberMustBeValidRule());
             RuleFor(request => request).SetValidator(new SettlementMethodMustBeValidRule());

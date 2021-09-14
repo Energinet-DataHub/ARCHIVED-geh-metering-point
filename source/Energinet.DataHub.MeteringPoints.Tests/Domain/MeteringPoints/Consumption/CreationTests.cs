@@ -95,7 +95,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(isOfficielAddress, createdEvent.IsOfficielAddress);
             Assert.Equal(meteringPointSubtype.Name, createdEvent.MeteringPointSubType);
             Assert.Equal(gridAreadId.Value, createdEvent.GridAreaId);
-            Assert.Equal(netSettlementGroup.Name, createdEvent.NetSettlementGroup);
+            Assert.Equal(meteringPointDetails.NetSettlementGroup.Name, createdEvent.NetSettlementGroup);
             Assert.Equal(powerPlanGsrn.Value, createdEvent.PowerPlantGsrnNumber);
             Assert.Equal(locationDescription, createdEvent.LocationDescription);
             Assert.Equal(measurementUnitType.Name, createdEvent.UnitType);
@@ -119,6 +119,21 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 {
                     ScheduledMeterReadingDate = ScheduledMeterReadingDate.Create("0512"),
                     NetSettlementGroup = NetSettlementGroup.Six,
+                };
+
+            var checkResult = ConsumptionMeteringPoint.CanCreate(details);
+
+            AssertContainsValidationError<InvalidScheduledMeterReadingDateNetSettlementGroupRuleError>(checkResult);
+        }
+
+        [Fact]
+        public void Scheduled_meter_reading_date_is_not_allowed_for_other_than_net_settlement_group_6()
+        {
+            var details = CreateDetails()
+                with
+                {
+                    ScheduledMeterReadingDate = ScheduledMeterReadingDate.Create("0512"),
+                    NetSettlementGroup = NetSettlementGroup.One,
                 };
 
             var checkResult = ConsumptionMeteringPoint.CanCreate(details);
@@ -305,7 +320,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 SampleData.MaximumPower,
                 EffectiveDate.Create(SampleData.EffectiveDate),
                 SettlementMethod.Flex,
-                NetSettlementGroup.Three,
+                NetSettlementGroup.Six,
                 DisconnectionType.Manual,
                 ConnectionType.Installation,
                 AssetType.GasTurbine,
