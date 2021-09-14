@@ -26,26 +26,24 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rul
 
         public bool IsBroken { get; private set; }
 
-        public ValidationError ValidationError => new InvalidScheduledMeterReadingDateNetSettlementGroupRuleError();
+        public ValidationError ValidationError { get; private set; } =
+            new InvalidScheduledMeterReadingDateNetSettlementGroupRuleError();
 
         private void Validate(NetSettlementGroup netSettlementGroup, ScheduledMeterReadingDate? scheduledMeterReadingDate)
         {
             if (netSettlementGroup == NetSettlementGroup.Six)
             {
-                if (scheduledMeterReadingDate is null)
+                if (scheduledMeterReadingDate is null || scheduledMeterReadingDate!.Day != "01")
                 {
                     IsBroken = true;
+                    ValidationError = new InvalidScheduledMeterReadingDateNetSettlementGroupRuleError();
                     return;
                 }
-
-                IsBroken = scheduledMeterReadingDate!.Day != "01";
-                return;
             }
 
-            if (netSettlementGroup != NetSettlementGroup.Six)
-            {
-                IsBroken = !(scheduledMeterReadingDate == null);
-            }
+            if (netSettlementGroup == NetSettlementGroup.Six) return;
+            IsBroken = !(scheduledMeterReadingDate == null);
+            ValidationError = new ScheduledMeterReadingDateNotAllowedRuleError();
         }
     }
 }

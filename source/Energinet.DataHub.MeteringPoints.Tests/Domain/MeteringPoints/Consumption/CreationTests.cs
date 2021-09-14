@@ -138,7 +138,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
 
             var checkResult = ConsumptionMeteringPoint.CanCreate(details);
 
-            AssertContainsValidationError<InvalidScheduledMeterReadingDateNetSettlementGroupRuleError>(checkResult);
+            AssertContainsValidationError<ScheduledMeterReadingDateNotAllowedRuleError>(checkResult);
         }
 
         [Fact]
