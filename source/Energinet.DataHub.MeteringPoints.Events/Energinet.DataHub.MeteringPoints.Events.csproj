@@ -16,9 +16,47 @@ limitations under the License.
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <ProjectGuid>{eb91d7d5-9444-4307-b6e8-6477024022d5}</ProjectGuid>
+    <AssemblyName>Energinet.DataHub.MeteringPoints.Events</AssemblyName>
+    <RootNamespace>Energinet.DataHub.MeteringPoints.Events</RootNamespace>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>Energinet.DataHub.MeteringPoints.Events</PackageId>
+    <PackageVersion>1.0.0(VersionSuffix)</PackageVersion>
+    <Title>Green Energy Hub - Metering points - integration events</Title>
+    <Company>Energinet-DataHub</Company>
+    <Authors>BATMAN</Authors>
+    <RepositoryUrl>https://github.com/Energinet-DataHub/geh-metering-point</RepositoryUrl>
+    <!-- PackageReleaseNotes:
+      Is shown in Azure DevOps artifacts Release Notes section.
+    -->
+    <PackageReleaseNotes>
+      Add release notes
+    </PackageReleaseNotes>
+    <!-- PackageDescription:
+      Is shown in GitHub packages "About this package" section,
+      and in Visual Studio package manager view.
+    -->
+    <PackageDescription>
+      Add description
+    </PackageDescription>
+    <Description>Share and version integration events</Description>
+    <PackageTags>geh;metering point;integration events</PackageTags>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
   
   <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="Google.Protobuf" Version="3.15.8" />
     <PackageReference Include="Grpc.Tools" Version="2.37.0" PrivateAssets="All" />
   </ItemGroup>
