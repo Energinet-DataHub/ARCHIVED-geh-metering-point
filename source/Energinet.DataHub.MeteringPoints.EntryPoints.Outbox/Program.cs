@@ -21,6 +21,7 @@ using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
+using Energinet.DataHub.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
