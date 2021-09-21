@@ -21,7 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 {
     public class ConsumptionMeteringPointCreated : DomainEventBase
     {
-        public ConsumptionMeteringPointCreated(Guid meteringPointId, string gsrnNumber, Guid gridAreaId, string meteringPointSubType, string productType, string readingOccurrence, string unitType, string settlementMethod, string netSettlementGroup, string city, string floor, string room, string buildingNumber, string countryCode, int? municipalityCode, string postCode, string streetCode, string streetName, string citySubDivision, bool isOfficielAddress, string powerPlantGsrnNumber, string locationDescription, string meterNumber, int maximumCurrent, int maximumPower, Instant effectiveDate, string disconnectionType, string connectionType, string assetType, string physicalState, string scheduledMeterReadingDate)
+        public ConsumptionMeteringPointCreated(Guid meteringPointId, string gsrnNumber, Guid gridAreaId, string meteringPointSubType, string productType, string readingOccurrence, string unitType, string settlementMethod, string netSettlementGroup, string city, string floor, string room, string buildingNumber, string countryCode, int? municipalityCode, string postCode, string streetCode, string streetName, string citySubDivision, bool isOfficialAddress, string powerPlantGsrnNumber, string locationDescription, string meterNumber, int maximumCurrent, int maximumPower, Instant effectiveDate, string disconnectionType, string connectionType, string assetType, string physicalState, string scheduledMeterReadingDate)
         {
             MeteringPointId = meteringPointId;
             GsrnNumber = gsrnNumber;
@@ -42,7 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             StreetCode = streetCode;
             StreetName = streetName;
             CitySubDivision = citySubDivision;
-            IsOfficielAddress = isOfficielAddress;
+            IsOfficialAddress = isOfficialAddress;
             PowerPlantGsrnNumber = powerPlantGsrnNumber;
             LocationDescription = locationDescription;
             MeterNumber = meterNumber;
@@ -94,7 +94,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 
         public string CitySubDivision { get; }
 
-        public bool IsOfficielAddress { get; }
+        public bool IsOfficialAddress { get; }
 
         public string PowerPlantGsrnNumber { get; }
 

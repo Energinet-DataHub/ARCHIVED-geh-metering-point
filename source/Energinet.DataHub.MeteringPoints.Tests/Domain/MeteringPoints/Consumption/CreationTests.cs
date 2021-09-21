@@ -92,7 +92,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(address.CitySubDivision, createdEvent.CitySubDivision);
             Assert.Equal(meteringPointId.Value, createdEvent.MeteringPointId);
             Assert.Equal(meteringPointGsrn.Value, createdEvent.GsrnNumber);
-            Assert.Equal(isOfficielAddress, createdEvent.IsOfficielAddress);
+            Assert.Equal(isOfficielAddress, createdEvent.IsOfficialAddress);
             Assert.Equal(meteringPointSubtype.Name, createdEvent.MeteringPointSubType);
             Assert.Equal(gridAreadId.Value, createdEvent.GridAreaId);
             Assert.Equal(meteringPointDetails.NetSettlementGroup.Name, createdEvent.NetSettlementGroup);
