@@ -313,7 +313,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 GridAreaId.New(),
                 GsrnNumber.Create(SampleData.PowerPlant),
                 SampleData.LocationDescription,
-                MeasurementUnitType.KWh,
                 SampleData.MeterNumber,
                 ReadingOccurrence.Hourly,
                 SampleData.MaximumCurrent,

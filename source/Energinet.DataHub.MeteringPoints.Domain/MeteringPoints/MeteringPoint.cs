@@ -23,6 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         #pragma warning disable SA1401, CA1051 // Field cannot be private since it is set by derivatives
         protected MeteringPointType _meteringPointType;
         protected ProductType _productType;
+        protected MeasurementUnitType _unitType;
 #pragma warning restore
         private Address _address;
         private GridAreaId _gridAreaId;
@@ -32,7 +33,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private int _maximumPower;
         private GsrnNumber? _powerPlantGsrnNumber;
         private string? _locationDescription;
-        private MeasurementUnitType _unitType;
         private EffectiveDate _effectiveDate;
         private string? _meterNumber;
 
