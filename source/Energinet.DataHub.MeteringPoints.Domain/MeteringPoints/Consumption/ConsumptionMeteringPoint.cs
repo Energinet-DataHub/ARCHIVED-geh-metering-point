@@ -45,7 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             GsrnNumber? powerPlantGsrnNumber,
             string? locationDescription,
             MeasurementUnitType unitType,
-            string meterNumber,
+            string? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
             int maximumCurrent,
             int maximumPower,
