@@ -29,7 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public static string CountryCode => "DK";
 
-        public static bool IsAddressWashable => true;
+        public static bool IsOfficialAddress => true;
 
         public static string PhysicalStateName => PhysicalState.Connected.Name;
 
@@ -57,15 +57,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public static string EffectiveDate => EffectiveDateNow();
 
-        public static string SettlementMethod => Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.SettlementMethod.Flex.Name;
+        public static string SettlementMethod => MeteringPoints.Domain.MeteringPoints.Consumption.SettlementMethod.Flex.Name;
 
-        public static string NetSettlementGroup => Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.NetSettlementGroup.Zero.Name;
+        public static string NetSettlementGroup => Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.NetSettlementGroup.Six.Name;
 
         public static string DisconnectionType => string.Empty;
 
         public static string ConnectionType => string.Empty;
 
-        public static string AssetType => string.Empty;
+        public static string AssetType => "KWh";
 
         public static string Floor => string.Empty;
 
@@ -78,6 +78,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests
         public static string CitySubdivision => string.Empty;
 
         public static int MunicipalityCode => default;
+
+        public static string ScheduledMeterReadingDate => "0101";
 
         private static string EffectiveDateNow()
         {

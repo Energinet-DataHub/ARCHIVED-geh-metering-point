@@ -56,7 +56,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             string? GeoInfoReference = null,
             string MeasureUnitType = "",
             string? ContractedConnectionCapacity = null,
-            string? RatedCurrent = null)
+            string? RatedCurrent = null,
+            string? ScheduledMeterReadingDate = "")
         : IBusinessRequest,
             IOutboundMessage,
             IInboundMessage;
