@@ -57,11 +57,24 @@ jobs:
           NC='\033[0m' # No Color
           packageVersion=$(xmllint --xpath 'string(//Project/PropertyGroup[2]/PackageVersion)' ${{ env.CSPROJ_FILE_PATH }})
           packageId=$(xmllint --xpath 'string(//Project/PropertyGroup[2]/PackageId)' ${{ env.CSPROJ_FILE_PATH }})
+
+          if [[ ${{env.BRANCH}} != 'main' ]]
+          then
+            packageVersion=$packageVersion-alpha-$(date +'%Y%m%dT%H%M%S')
+          fi
+          
           httpCode=$(curl -s -o /dev/null -i -w "%{http_code}" https://api.nuget.org/v3-flatcontainer/$packageId/$packageVersion/$packageId.nuspec)
           if [[ $httpCode == '200' ]]
           then
             echo -e "${RED}Error: $packageId@$packageVersion already exists!!!${NC}"
             exit -1
           else
-            echo -e "${GREEN}Ok: $packageId@$packageVersion is not published :-)${NC}"
+            echo -e "${GREEN}Ok: $packageId@$packageVersion is not published :0)${NC}"
           fi
+        env:
+          BRANCH: ${GITHUB_REF#refs/heads/}
+
+      - name: Pack project
+        shell: bash
+        run: |
+          dotnet pack ${{ env.CSPROJ_FILE_PATH }} --configuration Release --include-symbols -p:SymbolPackageFormat=snupkg -p:RepositoryCommit=${{ github.sha }} -p:PackageVersion=$packageVersion
