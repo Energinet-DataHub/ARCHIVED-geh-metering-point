@@ -52,10 +52,22 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 
         private static MarketMeteringPoint CreateMarketMeteringPoint()
         {
+            var address = Address.Create(
+                SampleData.StreetName,
+                SampleData.StreetCode,
+                SampleData.BuildingNumber,
+                SampleData.CityName,
+                SampleData.CitySubdivision,
+                SampleData.PostCode,
+                EnumerationType.FromName<CountryCode>(SampleData.CountryCode),
+                SampleData.Floor,
+                SampleData.Room,
+                SampleData.MunicipalityCode);
+
             return new MarketMeteringPointMock(
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
-                Address.Create(SampleData.StreetName, SampleData.StreetCode, SampleData.BuildingNumber, SampleData.CityName, SampleData.CitySubdivision, SampleData.PostCode, SampleData.CountryCode, SampleData.Floor, SampleData.Room, SampleData.MunicipalityCode),
+                address,
                 EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
                 EnumerationType.FromName<MeteringPointType>(SampleData.TypeName),
                 GridAreaId.New(),

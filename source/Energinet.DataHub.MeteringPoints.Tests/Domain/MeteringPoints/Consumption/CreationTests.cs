@@ -64,7 +64,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 city: string.Empty,
                 citySubDivision: string.Empty,
                 postCode: string.Empty,
-                countryCode: string.Empty,
+                countryCode: null,
                 floor: string.Empty,
                 room: string.Empty,
                 municipalityCode: default);
@@ -88,7 +88,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 city: string.Empty,
                 citySubDivision: string.Empty,
                 postCode: string.Empty,
-                countryCode: string.Empty,
+                countryCode: null,
                 floor: string.Empty,
                 room: string.Empty,
                 municipalityCode: default);
@@ -114,7 +114,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 buildingNumber: string.Empty,
                 city: string.Empty,
                 citySubDivision: string.Empty,
-                countryCode: string.Empty,
+                countryCode: null,
                 postCode: string.Empty,
                 floor: string.Empty,
                 room: string.Empty,

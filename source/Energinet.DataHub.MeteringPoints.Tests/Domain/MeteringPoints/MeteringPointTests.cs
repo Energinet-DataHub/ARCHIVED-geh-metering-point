@@ -38,10 +38,22 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 
         private static MeteringPoint CreateConsumptionMeteringPoint()
         {
+            var address = Address.Create(
+                SampleData.StreetName,
+                SampleData.StreetCode,
+                SampleData.BuildingNumber,
+                SampleData.CityName,
+                SampleData.CitySubdivision,
+                SampleData.PostCode,
+                EnumerationType.FromName<CountryCode>(SampleData.CountryCode),
+                SampleData.Floor,
+                SampleData.Room,
+                SampleData.MunicipalityCode);
+
             return new ConsumptionMeteringPoint(
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
-                Address.Create(SampleData.StreetName, SampleData.StreetCode, SampleData.BuildingNumber, SampleData.CityName, SampleData.CitySubdivision, SampleData.PostCode, SampleData.CountryCode, SampleData.Floor, SampleData.Room, SampleData.MunicipalityCode),
+                address,
                 SampleData.IsAddressWashable,
                 EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
                 EnumerationType.FromName<MeteringPointType>(SampleData.TypeName),
