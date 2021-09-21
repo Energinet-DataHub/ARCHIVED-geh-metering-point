@@ -14,17 +14,9 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Validation
 {
-    public class SettlementMethod : EnumerationType
+    public class ScheduledMeterReadingDateIsRequiredRuleError : ValidationError
     {
-        public static readonly SettlementMethod Flex = new SettlementMethod(0, nameof(Flex));
-        public static readonly SettlementMethod Profiled = new SettlementMethod(1, nameof(Profiled));
-        public static readonly SettlementMethod NonProfiled = new SettlementMethod(2, nameof(NonProfiled));
-
-        public SettlementMethod(int id, string name)
-            : base(id, name)
-        {
-        }
     }
 }

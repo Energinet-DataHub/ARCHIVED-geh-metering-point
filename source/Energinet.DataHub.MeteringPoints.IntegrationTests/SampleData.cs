@@ -27,7 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string SubTypeOfMeteringPoint => MeteringPointSubType.Physical.Name;
 
-        public static string SettlementMethod => Domain.MeteringPoints.SettlementMethod.Flex.Name;
+        public static string SettlementMethod => Domain.MeteringPoints.Consumption.SettlementMethod.Flex.Name;
 
         public static string DisconnectionType => Domain.MeteringPoints.DisconnectionType.Manual.Name;
 
@@ -76,5 +76,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         public static string GeoInfoReference => Guid.NewGuid().ToString();
 
         public static string PhysicalState => Domain.MeteringPoints.PhysicalState.New.Name;
+
+        public static string ScheduledMeterReadingDate => string.Empty;
     }
 }

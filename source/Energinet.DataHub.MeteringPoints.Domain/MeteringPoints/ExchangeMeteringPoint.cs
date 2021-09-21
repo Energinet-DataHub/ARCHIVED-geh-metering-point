@@ -41,7 +41,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             EffectiveDate effectiveDate,
             string? toGrid,
             string? fromGrid,
-            string? parentRelatedMeteringPoint,
             ProductType productType)
             : base(
                 id,
@@ -57,8 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 meterReadingOccurrence,
                 maximumCurrent,
                 maximumPower,
-                effectiveDate,
-                parentRelatedMeteringPoint)
+                effectiveDate)
         {
             _toGrid = toGrid;
             _fromGrid = fromGrid;

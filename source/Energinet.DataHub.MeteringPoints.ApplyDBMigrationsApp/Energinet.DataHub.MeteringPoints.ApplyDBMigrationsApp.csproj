@@ -43,6 +43,7 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Model\202108191611 Update Production Metering Point Column Data Type.sql" />
     <EmbeddedResource Include="Scripts\Model\202108301200 Add address columns.sql" />
     <EmbeddedResource Include="Scripts\Model\202108210931 Rename Occurence to EffectiveDate.sql" />
+    <EmbeddedResource Include="Scripts\Model\202109071000 Add ScheduledMeterReadingDate.sql" />
   </ItemGroup>
 
 </Project>
