@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-name: pack integration events
+name: 'Check, pack and publish nuget package'
 
 on:
   pull_request:
@@ -75,8 +75,7 @@ jobs:
           NC='\033[0m' # No Color
           
           packageVersion=${{ steps.determine_version_suffix.outputs.version_number }}
-          packageId=$(xmllint --xpath 'string(//Project/PropertyGroup[2]/PackageId)' ${{ env.CSPROJ_FILE_PATH }})
-          
+          packageId=$(xmllint --xpath 'string(//Project/PropertyGroup[2]/PackageId)' ${{ env.CSPROJ_FILE_PATH }})          
           httpCode=$(curl -s -o /dev/null -i -w "%{http_code}" https://api.nuget.org/v3-flatcontainer/$packageId/$packageVersion/$packageId.nuspec)
           if [[ $httpCode == '200' ]]
           then
@@ -90,3 +89,11 @@ jobs:
         shell: bash
         run: |
           dotnet pack ${{ env.CSPROJ_FILE_PATH  }} --configuration Release --include-symbols -p:SymbolPackageFormat=snupkg -p:RepositoryCommit=${{ github.sha }} -p:PackageVersion=${{ steps.determine_version_suffix.outputs.version_number }}
+
+      - name: Push to NuGet.org
+        shell: bash
+        run: |
+          dotnet nuget push ${{ env.BINARY_PATH }} --api-key ${{ secrets.NUGET_TOKEN }} --source ${{ env.NUGET_FEED_PATH }}
+        env:
+          NUGET_FEED_PATH: 'https://api.nuget.org/v3/index.json'
+          BINARY_PATH: 'source/Energinet.DataHub.MeteringPoints.Events/bin/Release/*.nupkg'
