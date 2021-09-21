@@ -52,11 +52,13 @@ jobs:
         shell: bash
         run: |
           sudo apt-get install libxml2-utils
+          RED='\033[0;31m'
+          NC='\033[0m' # No Color
           packageVersion=$(xmllint --xpath 'string(//Project/PropertyGroup[2]/PackageVersion)' ${{ env.CSPROJ_FILE_PATH }})
           packageId=$(xmllint --xpath 'string(//Project/PropertyGroup[2]/PackageId)' ${{ env.CSPROJ_FILE_PATH }})
           httpCode=$(curl -s -o /dev/null -i -w "%{http_code}" https://api.nuget.org/v3-flatcontainer/$packageId/$packageVersion/$packageId.nuspec)
           if [[ $httpCode == '404' ]]
           then
-            echo Error: $packageId@$packageVersion already exists!!!
+            echo -e "${RED}Error:${NC} $packageId@$packageVersion already exists!!!""
             exit -1
           fi
