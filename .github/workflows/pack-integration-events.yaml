@@ -89,4 +89,4 @@ jobs:
       - name: Pack project
         shell: bash
         run: |
-          dotnet pack ${{ env.CSPROJ_FILE_PATH  }} --configuration Release --include-symbols -p:SymbolPackageFormat=snupkg -p:RepositoryCommit=${{ github.sha }} ${{ steps.determine_version_suffix.outputs.version_number }}
+          dotnet pack ${{ env.CSPROJ_FILE_PATH  }} --configuration Release --include-symbols -p:SymbolPackageFormat=snupkg -p:RepositoryCommit=${{ github.sha }} -p:PackageVersion=${{ steps.determine_version_suffix.outputs.version_number }}
