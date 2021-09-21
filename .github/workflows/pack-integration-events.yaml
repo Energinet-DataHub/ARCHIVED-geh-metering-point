@@ -59,6 +59,6 @@ jobs:
           httpCode=$(curl -s -o /dev/null -i -w "%{http_code}" https://api.nuget.org/v3-flatcontainer/$packageId/$packageVersion/$packageId.nuspec)
           if [[ $httpCode == '404' ]]
           then
-            echo -e "${RED}Error:${NC} $packageId@$packageVersion already exists!!!""
+            echo -e "${RED}Error:${NC} $packageId@$packageVersion already exists!!!"
             exit -1
           fi
