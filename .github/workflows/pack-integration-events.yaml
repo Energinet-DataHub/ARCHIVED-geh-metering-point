@@ -62,7 +62,7 @@ jobs:
           then
             packageVersion=$packageVersion-alpha-$(date +'%Y%m%dT%H%M%S')
           fi
-          
+          echo "##[set-output name=version_number;]$(echo $packageVersion)"
           httpCode=$(curl -s -o /dev/null -i -w "%{http_code}" https://api.nuget.org/v3-flatcontainer/$packageId/$packageVersion/$packageId.nuspec)
           if [[ $httpCode == '200' ]]
           then
@@ -77,4 +77,4 @@ jobs:
       - name: Pack project
         shell: bash
         run: |
-          dotnet pack ${{ env.CSPROJ_FILE_PATH }} --configuration Release --include-symbols -p:SymbolPackageFormat=snupkg -p:RepositoryCommit=${{ github.sha }} -p:PackageVersion=$packageVersion
+          echo $packageVersion
