@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -24,7 +25,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         public CountryCodeRule()
         {
             RuleFor(countryCode => countryCode)
-                .Must(countryCode => EnumerationType.GetAll<CountryCode>().Select(item => item.Name).Contains(countryCode))
+                .Must(countryCode => EnumerationType
+                    .GetAll<CountryCode>()
+                    .Select(item => item.Name)
+                    .Contains(countryCode, StringComparer.OrdinalIgnoreCase))
                 .WithState(_ => new CountryCodeRuleError());
         }
     }
