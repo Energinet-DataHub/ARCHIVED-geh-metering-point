@@ -72,6 +72,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
                     PhysicalConnectionCapacity = obj.PhysicalConnectionCapacity,
                     ContractedConnectionCapacity = obj.ContractedConnectionCapacity,
                     RatedCurrent = obj.RatedCurrent,
+                    ScheduledMeterReadingDate = obj.ScheduledMeterReadingDate,
                 },
             };
         }

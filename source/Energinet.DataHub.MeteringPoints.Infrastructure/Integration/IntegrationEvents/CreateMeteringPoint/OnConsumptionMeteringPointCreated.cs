@@ -20,34 +20,31 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint
 {
-    public class MeteringPointCreatedNotificationHandler
-        : IntegrationEventPublisher<Domain.MeteringPoints.MeteringPointCreated>
+    public class OnConsumptionMeteringPointCreated : IntegrationEventPublisher<ConsumptionMeteringPointCreated>
     {
-        public MeteringPointCreatedNotificationHandler(IOutbox outbox, IOutboxMessageFactory outboxMessageFactory)
+        public OnConsumptionMeteringPointCreated(IOutbox outbox, IOutboxMessageFactory outboxMessageFactory)
             : base(outbox, outboxMessageFactory)
         {
         }
 
-        public override Task Handle(
-            Domain.MeteringPoints.MeteringPointCreated notification,
-            CancellationToken cancellationToken)
+        public override Task Handle(ConsumptionMeteringPointCreated notification, CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
             var message = new MeteringPointCreatedEventMessage(
-                notification.GsrnNumber.Value,
-                notification.MeteringPointType.Name,
-                notification.GridAreaId.Value.ToString(),
-                notification.SettlementMethod?.Name ?? string.Empty,
-                notification.MeteringPointSubType.Name,
-                notification.PhysicalState.Name,
-                notification.ReadingOccurrence.Name,
-                notification.NetSettlementGroup?.Name ?? string.Empty,
-                notification.ToGrid ?? string.Empty,
-                notification.FromGrid ?? string.Empty,
-                notification.ProductType.Name,
-                notification.MeasurementUnitType.Name,
+                notification.GsrnNumber,
+                "Consumption",
+                notification.GridAreaId.ToString(),
+                notification.SettlementMethod,
+                notification.MeteringPointSubType,
+                notification.PhysicalState,
+                notification.ReadingOccurrence,
+                notification.NetSettlementGroup,
                 string.Empty,
-                notification.OccurredOn.ToString());
+                string.Empty,
+                notification.ProductType,
+                notification.UnitType,
+                string.Empty,
+                notification.EffectiveDate.ToString());
 
             CreateAndAddOutboxMessage(message);
 

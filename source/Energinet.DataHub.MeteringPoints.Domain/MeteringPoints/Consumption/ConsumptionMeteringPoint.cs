@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
@@ -21,9 +20,8 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 {
     #pragma warning disable
     public class ConsumptionMeteringPoint : MarketMeteringPoint
@@ -34,8 +32,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private ConnectionType _connectionType;
         private AssetType? _assetType;
         private bool _isAddressWashable;
+        private ScheduledMeterReadingDate? _scheduledMeterReadingDate;
 
-        public ConsumptionMeteringPoint(
+        private ConsumptionMeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
@@ -56,8 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             DisconnectionType disconnectionType,
             ConnectionType connectionType,
             AssetType? assetType,
-            string? parentRelatedMeteringPoint,
-            ProductType productType)
+            ScheduledMeterReadingDate? scheduledMeterReadingDate)
             : base(
                 id,
                 gsrnNumber,
@@ -72,19 +70,52 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 meterReadingOccurrence,
                 maximumCurrent,
                 maximumPower,
-                effectiveDate,
-                parentRelatedMeteringPoint)
+                effectiveDate)
         {
             _settlementMethod = settlementMethod;
             _netSettlementGroup = netSettlementGroup;
             _disconnectionType = disconnectionType;
             _connectionType = connectionType;
             _assetType = assetType;
-            _productType = productType;
+            _productType = ProductType.EnergyActive;
             _isAddressWashable = isAddressWashable;
             ConnectionState = ConnectionState.New();
+            _scheduledMeterReadingDate = scheduledMeterReadingDate;
 
-            AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaId, meteringPointSubType, ConnectionState.PhysicalState, meterReadingOccurrence, ProductType.Tariff, unitType, settlementMethod, netSettlementGroup));
+            var @event = new ConsumptionMeteringPointCreated(
+                id.Value,
+                GsrnNumber.Value,
+                gridAreaId.Value,
+                meteringPointSubType.Name,
+                _productType.Name,
+                meterReadingOccurrence.Name,
+                unitType.Name,
+                _settlementMethod.Name,
+                netSettlementGroup.Name,
+                address.City,
+                address.Floor,
+                address.Room,
+                address.BuildingNumber,
+                address.CountryCode,
+                address.MunicipalityCode,
+                address.PostCode,
+                address.StreetCode,
+                address.StreetName,
+                address.CitySubDivision,
+                isAddressWashable,
+                powerPlantGsrnNumber.Value,
+                locationDescription,
+                meterNumber,
+                maximumCurrent,
+                maximumPower,
+                effectiveDate.DateInUtc,
+                _disconnectionType.Name,
+                _connectionType.Name,
+                _assetType.Name,
+                ConnectionState.PhysicalState.Name,
+                _scheduledMeterReadingDate?.MonthAndDay);
+
+            AddDomainEvent(@event);
         }
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
@@ -114,21 +145,48 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
 
-        public static BusinessRulesValidationResult CanCreate(
-            GsrnNumber meteringPointGSRN,
-            NetSettlementGroup netSettlementGroup,
-            GsrnNumber? powerPlantGSRN,
-            Address address)
+        public static BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
         {
             var rules = new Collection<IBusinessRule>()
             {
-                new PowerPlantIsRequiredForNetSettlementGroupRule(meteringPointGSRN, netSettlementGroup, powerPlantGSRN),
-                new StreetNameIsRequiredRule(meteringPointGSRN, address),
-                new PostCodeIsRequiredRule(address),
-                new CityIsRequiredRule(address),
+                new PowerPlantIsRequiredForNetSettlementGroupRule(meteringPointDetails.GsrnNumber, meteringPointDetails.NetSettlementGroup, meteringPointDetails.PowerPlantGsrnNumber),
+                new StreetNameIsRequiredRule(meteringPointDetails.GsrnNumber, meteringPointDetails.Address),
+                new PostCodeIsRequiredRule(meteringPointDetails.Address),
+                new CityIsRequiredRule(meteringPointDetails.Address),
+                new ScheduledMeterReadingDateRule(meteringPointDetails.ScheduledMeterReadingDate, meteringPointDetails.NetSettlementGroup),
             };
 
             return new BusinessRulesValidationResult(rules);
+        }
+
+        public static ConsumptionMeteringPoint Create(MeteringPointDetails meteringPointDetails)
+        {
+            if (!CanCreate(meteringPointDetails).Success)
+            {
+                throw new ConsumptionMeteringPointException($"Cannot create consumption metering point due to violation of one or more business rules.");
+            }
+            return new ConsumptionMeteringPoint(
+                meteringPointDetails.Id,
+                meteringPointDetails.GsrnNumber,
+                meteringPointDetails.Address,
+                meteringPointDetails.IsAddressWashable,
+                meteringPointDetails.MeteringPointSubType,
+                MeteringPointType.Consumption,
+                meteringPointDetails.GridAreaId,
+                meteringPointDetails.PowerPlantGsrnNumber,
+                meteringPointDetails.LocationDescription,
+                meteringPointDetails.UnitType,
+                meteringPointDetails.MeterNumber,
+                meteringPointDetails.ReadingOccurrence,
+                meteringPointDetails.MaximumCurrent,
+                meteringPointDetails.MaximumPower,
+                meteringPointDetails.EffectiveDate,
+                meteringPointDetails.SettlementMethod,
+                meteringPointDetails.NetSettlementGroup,
+                meteringPointDetails.DisconnectionType,
+                meteringPointDetails.ConnectionType,
+                meteringPointDetails.AssetType,
+                meteringPointDetails.ScheduledMeterReadingDate);
         }
     }
 }

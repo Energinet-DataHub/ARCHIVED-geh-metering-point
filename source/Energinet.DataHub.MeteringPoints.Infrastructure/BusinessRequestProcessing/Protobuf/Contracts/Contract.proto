@@ -64,6 +64,7 @@ message CreateMeteringPoint {
   google.protobuf.StringValue physicalConnectionCapacity = 26;
   google.protobuf.StringValue contractedConnectionCapacity = 27;
   google.protobuf.StringValue ratedCurrent = 28;
+  google.protobuf.StringValue scheduledMeterReadingDate = 29;
 }
 
 message ConnectMeteringPoint {
