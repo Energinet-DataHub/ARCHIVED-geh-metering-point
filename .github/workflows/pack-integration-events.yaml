@@ -53,12 +53,15 @@ jobs:
         run: |
           sudo apt-get install libxml2-utils
           RED='\033[0;31m'
+          GREEN='\033[0;32m'
           NC='\033[0m' # No Color
           packageVersion=$(xmllint --xpath 'string(//Project/PropertyGroup[2]/PackageVersion)' ${{ env.CSPROJ_FILE_PATH }})
           packageId=$(xmllint --xpath 'string(//Project/PropertyGroup[2]/PackageId)' ${{ env.CSPROJ_FILE_PATH }})
           httpCode=$(curl -s -o /dev/null -i -w "%{http_code}" https://api.nuget.org/v3-flatcontainer/$packageId/$packageVersion/$packageId.nuspec)
           if [[ $httpCode == '200' ]]
           then
-            echo -e "${RED}Error:${NC} $packageId@$packageVersion already exists!!!"
+            echo -e "${RED}Error: $packageId@$packageVersion already exists!!!${NC}"
             exit -1
+          else
+            echo -e "${GREEN}Ok: $packageId@$packageVersion is not published :-)${NC}"
           fi
