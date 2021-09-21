@@ -48,9 +48,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                     .WithState(createMeteringPoint => new MeterReadingOccurenceInvalidValueValidationError(createMeteringPoint.MeterReadingOccurrence));
             }).Otherwise(() =>
             {
-                // RuleFor(request => request.MeterReadingOccurrence)
-                //     .Must(meterReadingOccurrence => meterReadingOccurrence == ReadingOccurrence.Hourly.Name || meterReadingOccurrence == ReadingOccurrence.Quarterly.Name)
-                //     .WithState(createMeteringPoint => new MeterReadingOccurenceInvalidValueValidationError(createMeteringPoint.MeterReadingOccurrence));
+                When(createMeteringPoint => createMeteringPoint.TypeOfMeteringPoint != MeteringPointType.Consumption.Name, () =>
+                    {
+                        RuleFor(request => request.MeterReadingOccurrence)
+                            .Must(meterReadingOccurrence => meterReadingOccurrence == ReadingOccurrence.Hourly.Name || meterReadingOccurrence == ReadingOccurrence.Quarterly.Name)
+                            .WithState(createMeteringPoint => new MeterReadingOccurenceInvalidValueValidationError(createMeteringPoint.MeterReadingOccurrence));
+                    });
             });
         }
     }

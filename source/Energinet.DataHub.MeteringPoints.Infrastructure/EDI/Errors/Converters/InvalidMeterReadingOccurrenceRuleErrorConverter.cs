@@ -18,12 +18,12 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class MeterReadingOccurenceInvalidValueErrorConverter : ErrorConverter<MeterReadingOccurenceInvalidValueValidationError>
+    public class InvalidMeterReadingOccurenceRuleErrorConverter : ErrorConverter<InvalidMeterReadingOccurrenceRuleError>
     {
-        protected override ErrorMessage Convert(MeterReadingOccurenceInvalidValueValidationError validationError)
+        protected override ErrorMessage Convert(InvalidMeterReadingOccurrenceRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-            return new ErrorMessage("D02", $"Meter reading occurrence {validationError.MeterReadingOccurrence} has wrong value (outside domain)");
+            return new ErrorMessage("D02", $"Meter reading occurrence {validationError.MeterReadingOccurrence} is not valid for this type of metering point.");
         }
     }
 }

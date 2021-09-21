@@ -247,6 +247,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError<CreateMeteringPointRejected>("D02");
         }
 
+        [Fact]
+        public async Task Should_reject_if_meter_reading_occurrence_is_not_quarterly_or_hourly()
+        {
+            var invalidReadingOccurrence = ReadingOccurrence.Yearly.Name;
+            var request = CreateRequest()
+                with
+                {
+                    MeterReadingOccurrence = invalidReadingOccurrence,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
+        }
+
         private static CreateMeteringPoint CreateRequest()
         {
             return new CreateMeteringPoint(

@@ -14,11 +14,11 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules
 {
-    public class MeterReadingOccurenceInvalidValueValidationError : ValidationError
+    public class InvalidMeterReadingOccurrenceRuleError : ValidationError
     {
-        public MeterReadingOccurenceInvalidValueValidationError(string meterReadingOccurrence)
+        public InvalidMeterReadingOccurrenceRuleError(string meterReadingOccurrence)
         {
             MeterReadingOccurrence = meterReadingOccurrence;
         }
