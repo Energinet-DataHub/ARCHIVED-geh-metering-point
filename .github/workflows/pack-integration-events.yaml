@@ -52,4 +52,5 @@ jobs:
         shell: bash
         run: |
           sudo apt-get install libxml2-utils
-          xmllint --xpath 'string(//Project/PropertyGroup[2]/Version)' ${{ env.CSPROJ_FILE_PATH }}
+          packageVersion=$(xmllint --xpath 'string(//Project/PropertyGroup[2]/PackageVersion)' ${{ env.CSPROJ_FILE_PATH }})
+          echo $packageVersion
