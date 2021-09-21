@@ -166,7 +166,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 GridAreaId.New(),
                 !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null !,
                 request.LocationDescription,
-                EnumerationType.FromName<MeasurementUnitType>(request.UnitType),
                 request.MeterNumber,
                 EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
                 request.MaximumCurrent,
