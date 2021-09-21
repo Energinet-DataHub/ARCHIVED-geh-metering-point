@@ -25,7 +25,7 @@ limitations under the License.
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>Energinet.DataHub.MeteringPoints.Events</PackageId>
+    <PackageId>GreenEneergyHub.MeteringPoints.Events</PackageId>
     <PackageVersion>1.0.0</PackageVersion>
     <Title>Green Energy Hub - Metering points - integration events</Title>
     <Company>Energinet-DataHub</Company>
