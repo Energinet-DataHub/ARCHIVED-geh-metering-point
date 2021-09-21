@@ -48,21 +48,35 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@master
-      - name: Get package version
+
+      - name: Setup tools
+        shell: bash
+        run: sudo apt-get install libxml2-utils
+
+      - name: Determine version
+        id: determine_version_suffix
+        shell: bash
+        run: |
+          packageVersion=$(xmllint --xpath 'string(//Project/PropertyGroup[2]/PackageVersion)' ${{ env.CSPROJ_FILE_PATH }})
+          if [[ ${{env.BRANCH}} != 'main' ]]
+          then
+            packageVersion=$packageVersion-alpha-$(date +'%Y%m%dT%H%M%S')
+          fi
+          echo "##[set-output name=version_number;]$(echo $packageVersion)"
+        env:
+          BRANCH: ${GITHUB_REF#refs/heads/}
+
+      - name: Check package version
         shell: bash
         run: |
           sudo apt-get install libxml2-utils
           RED='\033[0;31m'
           GREEN='\033[0;32m'
           NC='\033[0m' # No Color
-          packageVersion=$(xmllint --xpath 'string(//Project/PropertyGroup[2]/PackageVersion)' ${{ env.CSPROJ_FILE_PATH }})
+          
+          packageVersion=${{ steps.determine_version_suffix.outputs.version_number }}
           packageId=$(xmllint --xpath 'string(//Project/PropertyGroup[2]/PackageId)' ${{ env.CSPROJ_FILE_PATH }})
-
-          if [[ ${{env.BRANCH}} != 'main' ]]
-          then
-            packageVersion=$packageVersion-alpha-$(date +'%Y%m%dT%H%M%S')
-          fi
-          echo "##[set-output name=version_number;]$(echo $packageVersion)"
+          
           httpCode=$(curl -s -o /dev/null -i -w "%{http_code}" https://api.nuget.org/v3-flatcontainer/$packageId/$packageVersion/$packageId.nuspec)
           if [[ $httpCode == '200' ]]
           then
@@ -71,10 +85,8 @@ jobs:
           else
             echo -e "${GREEN}Ok: $packageId@$packageVersion is not published :0)${NC}"
           fi
-        env:
-          BRANCH: ${GITHUB_REF#refs/heads/}
 
       - name: Pack project
         shell: bash
         run: |
-          echo $packageVersion
+          echo ${{ steps.determine_version_suffix.outputs.version_number }}
