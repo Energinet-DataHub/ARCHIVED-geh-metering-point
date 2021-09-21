@@ -36,7 +36,8 @@ jobs:
         with:
           github_token: ${{ github.token }}
           paths: '[
-            "source/Energinet.DataHub.MeteringPoints.Events"
+            "source/Energinet.DataHub.MeteringPoints.Events",
+            ".github/workflows/pack-integration-events.yaml"
           ]'
 
   check_if_package_version_is_correct:
