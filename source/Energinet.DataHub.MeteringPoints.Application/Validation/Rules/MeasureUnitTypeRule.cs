@@ -25,10 +25,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         public MeasureUnitTypeRule()
         {
             RuleFor(request => request.MeasureUnitType)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .WithState(createMeteringPoint => new MeasureUnitTypeMandatoryValidationError(createMeteringPoint.GsrnNumber));
-
-            RuleFor(request => request.MeasureUnitType)
+                .WithState(createMeteringPoint => new MeasureUnitTypeMandatoryValidationError(createMeteringPoint.GsrnNumber))
                 .Must(measureUnitType => AllowedMeasureUnitTypes().Contains(measureUnitType))
                 .WithState(createMeteringPoint => new MeasureUnitTypeInvalidValueValidationError(createMeteringPoint.MeasureUnitType, createMeteringPoint.GsrnNumber));
 
