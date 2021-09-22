@@ -40,10 +40,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
             _priceAreaCode = priceAreaCode;
         }
 
-#pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
-        private GridArea() { }
-#pragma warning restore 8618
-
         public static BusinessRulesValidationResult CanCreate(GridAreaDetails gridAreaDetails)
         {
             if (gridAreaDetails == null) throw new ArgumentNullException(nameof(gridAreaDetails));
