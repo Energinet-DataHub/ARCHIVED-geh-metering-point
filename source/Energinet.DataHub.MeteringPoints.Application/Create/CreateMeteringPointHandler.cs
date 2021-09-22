@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
@@ -188,7 +189,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 postCode: request.PostCode,
                 city: request.CityName,
                 citySubDivision: request.CitySubDivisionName,
-                countryCode: request.CountryCode,
+                countryCode: EnumerationType.FromName<CountryCode>(request.CountryCode),
                 floor: request.FloorIdentification,
                 room: request.RoomIdentification,
                 municipalityCode: string.IsNullOrWhiteSpace(request.MunicipalityCode) ? default : int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()));
@@ -204,7 +205,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 city: request.CityName,
                 citySubDivision: request.CitySubDivisionName,
                 postCode: request.PostCode,
-                countryCode: request.CountryCode,
+                countryCode: EnumerationType.FromName<CountryCode>(request.CountryCode),
                 floor: request.FloorIdentification,
                 room: request.RoomIdentification,
                 municipalityCode: municipalityCode);

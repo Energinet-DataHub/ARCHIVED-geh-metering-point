@@ -94,10 +94,21 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
 
         private static ConsumptionMeteringPoint CreateConsumptionMeteringPoint()
         {
+            var address = Address.Create(
+                SampleData.StreetName,
+                SampleData.StreetCode,
+                SampleData.BuildingNumber,
+                SampleData.CityName,
+                SampleData.CitySubdivision,
+                SampleData.PostCode,
+                EnumerationType.FromName<CountryCode>(SampleData.CountryCode),
+                SampleData.Floor,
+                SampleData.Room,
+                SampleData.MunicipalityCode);
             var meteringPointDetails = new MeteringPointDetails(
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
-                Address.Create(SampleData.StreetName, SampleData.StreetCode, SampleData.BuildingNumber, SampleData.CityName, SampleData.CitySubdivision, SampleData.PostCode, SampleData.CountryCode, SampleData.Floor, SampleData.Room, SampleData.MunicipalityCode),
+                Address.Create(SampleData.StreetName, SampleData.StreetCode, SampleData.BuildingNumber, SampleData.CityName, SampleData.CitySubdivision, SampleData.PostCode, CountryCode.DK, SampleData.Floor, SampleData.Room, SampleData.MunicipalityCode),
                 SampleData.IsOfficialAddress,
                 EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
                 GridAreaId.New(),

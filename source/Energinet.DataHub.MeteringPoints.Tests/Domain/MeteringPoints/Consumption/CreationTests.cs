@@ -56,7 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 city: "Test City",
                 citySubDivision: string.Empty,
                 postCode: "8000",
-                countryCode: string.Empty,
+                countryCode: CountryCode.DK,
                 floor: string.Empty,
                 room: string.Empty,
                 municipalityCode: null);
@@ -84,7 +84,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(address.Floor, createdEvent.Floor);
             Assert.Equal(address.Room, createdEvent.Room);
             Assert.Equal(address.BuildingNumber, createdEvent.BuildingNumber);
-            Assert.Equal(address.CountryCode, createdEvent.CountryCode);
+            Assert.Equal(address.CountryCode?.Name, createdEvent.CountryCode);
             Assert.Equal(address.MunicipalityCode, createdEvent.MunicipalityCode);
             Assert.Equal(address.PostCode, createdEvent.PostCode);
             Assert.Equal(address.StreetCode, createdEvent.StreetCode);
@@ -196,7 +196,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 city: string.Empty,
                 citySubDivision: string.Empty,
                 postCode: string.Empty,
-                countryCode: string.Empty,
+                countryCode: null,
                 floor: string.Empty,
                 room: string.Empty,
                 municipalityCode: default);
@@ -221,7 +221,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 city: string.Empty,
                 citySubDivision: string.Empty,
                 postCode: string.Empty,
-                countryCode: string.Empty,
+                countryCode: null,
                 floor: string.Empty,
                 room: string.Empty,
                 municipalityCode: default);
@@ -238,32 +238,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         }
 
         [Fact]
-        public void Should_return_error_when_city_is_missing()
-        {
-            var address = Address.Create(
-                streetName: string.Empty,
-                streetCode: string.Empty,
-                buildingNumber: string.Empty,
-                city: string.Empty,
-                citySubDivision: string.Empty,
-                postCode: string.Empty,
-                countryCode: string.Empty,
-                floor: string.Empty,
-                room: string.Empty,
-                municipalityCode: default);
-
-            var meteringPointDetails = CreateDetails()
-                with
-                {
-                    Address = address,
-                };
-
-            var checkResult = ConsumptionMeteringPoint.CanCreate(meteringPointDetails);
-
-            Assert.Contains(checkResult.Errors, error => error is CityIsRequiredRuleError);
-        }
-
-        [Fact]
         public void Product_type_should_be_set_to_active_energy()
         {
             var address = Address.Create(
@@ -273,7 +247,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 SampleData.CityName,
                 string.Empty,
                 SampleData.PostCode,
-                string.Empty,
+                null,
                 string.Empty,
                 string.Empty,
                 default);
@@ -312,7 +286,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 SampleData.CityName,
                 string.Empty,
                 SampleData.PostCode,
-                string.Empty,
+                null,
                 string.Empty,
                 string.Empty,
                 default);
