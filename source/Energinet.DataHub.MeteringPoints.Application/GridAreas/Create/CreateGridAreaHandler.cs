@@ -82,11 +82,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.GridAreas.Create
 
             // TODO: convert to value objects.
             return new GridAreaDetails(
-                request.Name!,
+                GridAreaName.Create(request.Name),
                 GridAreaCode.Create(request.Code),
                 request.OperatorName!,
                 request.OperatorId!,
-                request.PriceAreaCode!);
+                EnumerationType.FromName<PriceAreaCode>(request.PriceAreaCode ?? string.Empty));
         }
     }
 }

@@ -63,11 +63,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
             }
 
             return new GridArea(
-                GridAreaName.Create(gridAreaDetails.Name),
+                gridAreaDetails.Name,
                 gridAreaDetails.Code,
                 gridAreaDetails.OperatorName,
                 gridAreaDetails.OperatorId,
-                EnumerationType.FromName<PriceAreaCode>(gridAreaDetails.PriceAreaCode));
+                gridAreaDetails.PriceAreaCode);
         }
     }
 }

@@ -37,8 +37,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
             return new BusinessRulesValidationResult(rules);
         }
 
-        public static GridAreaName Create(string name)
+        public static GridAreaName Create(string? name)
         {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace", nameof(name));
+            }
+
             if (CheckRules(name).Success == false)
             {
                 throw new FormatException(name);

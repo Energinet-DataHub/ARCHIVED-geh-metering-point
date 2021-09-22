@@ -19,7 +19,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
     public class PriceAreaCode : EnumerationType
     {
         public static readonly PriceAreaCode DK1 = new(0, nameof(DK1), "DK1");
-        public static readonly PriceAreaCode DK2 = new(0, nameof(DK2), "DK2");
+        public static readonly PriceAreaCode DK2 = new(1, nameof(DK2), "DK2");
 
         private PriceAreaCode(int id, string name, string code)
             : base(id, name)
