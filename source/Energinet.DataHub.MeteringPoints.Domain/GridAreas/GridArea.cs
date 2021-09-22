@@ -20,14 +20,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 {
     public class GridArea
     {
-        private readonly string _name;
+        private readonly GridAreaName _name;
         private readonly string _code;
         private readonly string _operatorName;
         private readonly string _operatorId;
         private readonly string _priceAreaCode;
 
         private GridArea(
-            string name,
+            GridAreaName name,
             string code,
             string operatorName,
             string operatorId,
@@ -61,7 +61,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
             }
 
             return new GridArea(
-                gridAreaDetails.Name,
+                GridAreaName.Create(gridAreaDetails.Name),
                 gridAreaDetails.Code,
                 gridAreaDetails.OperatorName,
                 gridAreaDetails.OperatorId,
