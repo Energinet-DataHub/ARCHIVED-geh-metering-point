@@ -27,7 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.GridAreas
     public class CreateGridAreaTests
         : TestHost
     {
-        private IGridAreaRepository _gridAreaRepository;
+        private readonly IGridAreaRepository _gridAreaRepository;
 
         public CreateGridAreaTests(
             DatabaseFixture databaseFixture)

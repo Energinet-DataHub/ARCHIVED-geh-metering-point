@@ -78,10 +78,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.GridAreas.Create
 
         private static GridAreaDetails CreateDetails(CreateGridArea request)
         {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
             // TODO: convert to value objects.
             return new GridAreaDetails(
                 request.Name!,
-                request.Code!,
+                GridAreaCode.Create(request.Code),
                 request.OperatorName!,
                 request.OperatorId!,
                 request.PriceAreaCode!);

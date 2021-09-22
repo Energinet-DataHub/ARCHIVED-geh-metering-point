@@ -21,14 +21,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
     public class GridArea
     {
         private readonly GridAreaName _name;
-        private readonly string _code;
+        private readonly GridAreaCode _code;
         private readonly string _operatorName;
         private readonly string _operatorId;
         private readonly string _priceAreaCode;
 
         private GridArea(
             GridAreaName name,
-            string code,
+            GridAreaCode code,
             string operatorName,
             string operatorId,
             string priceAreaCode)
