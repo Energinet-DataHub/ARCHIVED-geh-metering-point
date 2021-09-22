@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
@@ -21,9 +24,20 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDi
 {
     public class MeteringPointConnectedDispatcher : IntegrationEventDispatcher<MeteringPointConnectedTopic, MeteringPointConnectedIntegrationEvent>
     {
-        public MeteringPointConnectedDispatcher(ITopicSender<MeteringPointConnectedTopic> topicSender, ProtobufOutboundMapper<MeteringPointConnectedIntegrationEvent> mapper)
-            : base(topicSender, mapper)
+        private readonly ITopicSender<MeteringPointConnectedTopic> _topicSender;
+
+        public MeteringPointConnectedDispatcher(ITopicSender<MeteringPointConnectedTopic> topicSender, ProtobufOutboundMapper<MeteringPointConnectedIntegrationEvent> mapper, IIntegrationMetaDataContext integrationMetaDataContext)
+            : base(mapper, integrationMetaDataContext)
         {
+            _topicSender = topicSender;
+        }
+
+        protected override async Task DispatchMessageAsync(ServiceBusMessage serviceBusMessage)
+        {
+            serviceBusMessage.ApplicationProperties.Add("MessageVersion", 1);
+            serviceBusMessage.ApplicationProperties.Add("MessageType", "MeteringPointConnected");
+
+            await _topicSender.SendMessageAsync(serviceBusMessage).ConfigureAwait(false);
         }
     }
 }
