@@ -24,14 +24,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
         private readonly GridAreaCode _code;
         private readonly string _operatorName;
         private readonly string _operatorId;
-        private readonly string _priceAreaCode;
+        private readonly PriceAreaCode _priceAreaCode;
 
         private GridArea(
             GridAreaName name,
             GridAreaCode code,
             string operatorName,
             string operatorId,
-            string priceAreaCode)
+            PriceAreaCode priceAreaCode)
         {
             _name = name;
             _code = code;
@@ -65,7 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
                 gridAreaDetails.Code,
                 gridAreaDetails.OperatorName,
                 gridAreaDetails.OperatorId,
-                gridAreaDetails.PriceAreaCode);
+                EnumerationType.FromName<PriceAreaCode>(gridAreaDetails.PriceAreaCode));
         }
     }
 }
