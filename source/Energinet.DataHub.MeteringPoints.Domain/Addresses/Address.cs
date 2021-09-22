@@ -15,14 +15,13 @@
 using System.Collections.ObjectModel;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
 {
     public class Address : ValueObject
     {
-        private Address(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, string? countryCode, string? floor, string? room, int? municipalityCode)
+        private Address(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode)
         {
             StreetName = streetName;
             StreetCode = streetCode;
@@ -48,7 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
 
         public string? CitySubDivision { get; }
 
-        public string? CountryCode { get; }
+        public CountryCode? CountryCode { get; }
 
         public string? Floor { get; }
 
@@ -56,7 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
 
         public int? MunicipalityCode { get; }
 
-        public static Address Create(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, string? countryCode, string? floor, string? room, int? municipalityCode)
+        public static Address Create(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode)
         {
             if (CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode).Success == false)
             {
@@ -76,7 +75,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
                 municipalityCode: municipalityCode);
         }
 
-        public static BusinessRulesValidationResult CheckRules(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, string? countryCode, string? floor, string? room, int? municipalityCode)
+        public static BusinessRulesValidationResult CheckRules(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode)
         {
             return new(new Collection<IBusinessRule>()
             {

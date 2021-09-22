@@ -54,7 +54,13 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 y.Property(x => x.StreetName).HasColumnName("StreetName");
                 y.Property(x => x.StreetCode).HasColumnName("StreetCode");
                 y.Property(x => x.City).HasColumnName("CityName");
-                y.Property(x => x.CountryCode).HasColumnName("CountryCode");
+                y.Property(x => x.CountryCode)
+                    .HasColumnName("CountryCode")
+                    .HasConversion(
+                        toDbValue => toDbValue! == null! ? null : toDbValue.Name,
+                        fromDbValue => !string.IsNullOrWhiteSpace(fromDbValue)
+                            ? EnumerationType.FromName<CountryCode>(fromDbValue)
+                            : null);
                 y.Property(x => x.PostCode).HasColumnName("PostCode");
                 y.Property(x => x.CitySubDivision).HasColumnName("CitySubdivision");
                 y.Property(x => x.Floor).HasColumnName("Floor");

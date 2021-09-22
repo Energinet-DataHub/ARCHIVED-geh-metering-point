@@ -170,6 +170,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
+        public async Task Should_reject_when_country_code_is_not_dk()
+        {
+            var invalidCountryCode = "SE";
+            var request = CreateRequest()
+                with
+                {
+                    CountryCode = invalidCountryCode,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("E86");
+        }
+
+        [Fact]
         public async Task Should_reject_when_scheduled_meter_reading_date_is_missing()
         {
             var request = CreateRequest()
