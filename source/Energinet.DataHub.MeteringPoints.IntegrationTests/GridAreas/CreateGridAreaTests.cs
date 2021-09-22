@@ -29,7 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.GridAreas
     {
         private IGridAreaRepository _gridAreaRepository;
 
-        protected CreateGridAreaTests(
+        public CreateGridAreaTests(
             DatabaseFixture databaseFixture)
             : base(databaseFixture)
         {
