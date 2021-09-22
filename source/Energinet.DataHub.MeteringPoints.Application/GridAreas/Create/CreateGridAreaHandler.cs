@@ -80,7 +80,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.GridAreas.Create
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            // TODO: convert to value objects.
             return new GridAreaDetails(
                 GridAreaName.Create(request.Name),
                 GridAreaCode.Create(request.Code),
