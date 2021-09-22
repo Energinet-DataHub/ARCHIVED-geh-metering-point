@@ -28,11 +28,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 
         public string Value { get; }
 
-        public static GridAreaId New()
-        {
-            return new GridAreaId(Guid.NewGuid());
-        }
-
         public static GridAreaCode Create(string? gridAreaCode)
         {
             if (string.IsNullOrWhiteSpace(gridAreaCode))

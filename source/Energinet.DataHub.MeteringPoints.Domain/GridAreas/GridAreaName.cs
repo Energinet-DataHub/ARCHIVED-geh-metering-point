@@ -14,9 +14,8 @@
 
 using System;
 using System.Collections.ObjectModel;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 {
@@ -33,15 +32,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
         {
             var rules = new Collection<IBusinessRule>()
             {
-                new DateFormatMustBeUTCRule(name),
+                new GridAreaNameMaxLengthRule(name),
             };
             return new BusinessRulesValidationResult(rules);
-        }
-
-        public static GridAreaName Create(DateTime date)
-        {
-            var utcDate = Instant.FromDateTimeUtc(DateTime.SpecifyKind(date, DateTimeKind.Utc));
-            return Create(utcDate.ToString());
         }
 
         public static GridAreaName Create(string name)

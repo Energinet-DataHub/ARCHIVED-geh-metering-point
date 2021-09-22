@@ -40,6 +40,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
             _priceAreaCode = priceAreaCode;
         }
 
+        public GridAreaCode Code => _code;
+
         public static BusinessRulesValidationResult CanCreate(GridAreaDetails gridAreaDetails)
         {
             if (gridAreaDetails == null) throw new ArgumentNullException(nameof(gridAreaDetails));

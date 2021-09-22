@@ -12,15 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Create;
-using FluentValidation;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create;
+using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 
-namespace Energinet.DataHub.MeteringPoints.Application.GridAreas.Create
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GridAreas
 {
-    public class CreateGridAreaRuleSet : AbstractValidator<CreateGridArea>
+    public sealed class CreateGridAreaNullResultHandler : IBusinessProcessResultHandler<CreateGridArea>
     {
-        public CreateGridAreaRuleSet()
+        public Task HandleAsync(CreateGridArea request, BusinessProcessResult result)
         {
+            return Task.CompletedTask;
         }
     }
 }

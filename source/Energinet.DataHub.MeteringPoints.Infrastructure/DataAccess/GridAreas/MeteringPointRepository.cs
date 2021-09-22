@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
@@ -22,6 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas
     public class GridAreaRepository : IGridAreaRepository
     {
         private readonly MeteringPointContext _meteringPointContext;
+        private readonly List<GridArea> _gridAreas = new();
 
         public GridAreaRepository(MeteringPointContext meteringPointContext)
         {
@@ -30,11 +33,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas
 
         public void Add(GridArea gridArea)
         {
+            _gridAreas.Add(gridArea);
         }
 
         public Task<GridArea?> GetByCodeAsync(GridAreaCode code)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(_gridAreas.SingleOrDefault(area => area.Code == code));
         }
     }
 }

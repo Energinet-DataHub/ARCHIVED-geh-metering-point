@@ -12,20 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules
 {
     public class GridAreaCodeFormatRule : IBusinessRule
     {
+        private readonly string _gridAreaCodeValue;
+
         public GridAreaCodeFormatRule(string gridAreaCodeValue)
         {
-            throw new NotImplementedException();
+            _gridAreaCodeValue = gridAreaCodeValue;
         }
 
-        public bool IsBroken => true;
+        public bool IsBroken => !IsValid;
 
         public ValidationError ValidationError => new GridAreaCodeFormatRuleError();
+
+        private bool IsValid => HasCorrectLength() && IsDigits();
+
+        private bool HasCorrectLength()
+        {
+            return _gridAreaCodeValue.Length == 3;
+        }
+
+        private bool IsDigits()
+        {
+            return long.TryParse(
+                _gridAreaCodeValue,
+                System.Globalization.NumberStyles.Integer,
+                System.Globalization.NumberFormatInfo.InvariantInfo,
+                out _);
+        }
     }
 }
