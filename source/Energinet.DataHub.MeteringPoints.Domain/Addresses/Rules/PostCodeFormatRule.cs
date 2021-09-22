@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Text.RegularExpressions;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -21,10 +20,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules
     public class PostCodeFormatRule : IBusinessRule
     {
         private const int MaxLength = 10;
-        private const string DanishCountryCode = "DK";
-        private const string DanishRegExRule = @"^([0-9]{4})$";
+        private const string DanishFormat = @"^([0-9]{4})$";
 
-        public PostCodeFormatRule(string? postCode, string? countryCode)
+        public PostCodeFormatRule(string? postCode, CountryCode? countryCode)
         {
             Validate(postCode, countryCode);
         }
@@ -33,17 +31,17 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules
 
         public ValidationError ValidationError { get; private set; } = new PostCodeFormatRuleError();
 
-        private static bool IsDanish(string? countryCode)
+        private static bool IsDanish(CountryCode? countryCode)
         {
-            if (string.IsNullOrWhiteSpace(countryCode))
+            if (countryCode is null)
             {
                 return false;
             }
 
-            return countryCode.Equals(DanishCountryCode, StringComparison.OrdinalIgnoreCase);
+            return countryCode == CountryCode.DK;
         }
 
-        private void Validate(string? postCode, string? countryCode)
+        private void Validate(string? postCode, CountryCode? countryCode)
         {
             if (string.IsNullOrWhiteSpace(postCode))
             {
@@ -62,7 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules
 
         private void ValidateDanishPostCode(string postCode)
         {
-            if (Regex.IsMatch(postCode!, DanishRegExRule) == false)
+            if (Regex.IsMatch(postCode!, DanishFormat) == false)
             {
                 IsBroken = true;
                 ValidationError = new PostCodeFormatRuleError(postCode, MaxLength);

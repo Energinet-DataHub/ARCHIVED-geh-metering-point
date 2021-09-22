@@ -56,6 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation
             RuleFor(request => request).SetValidator(new PowerLimitRule());
             RuleFor(request => request).SetValidator(new PhysicalStateRule());
             RuleFor(request => request.TransactionId).SetValidator(new TransactionIdentificationRule());
+            RuleFor(request => request.CountryCode).SetValidator(new CountryCodeRule());
         }
     }
 }

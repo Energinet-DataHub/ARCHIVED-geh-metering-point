@@ -21,10 +21,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules
     public class BuildingNumberFormatRule : IBusinessRule
     {
         private const int MaxLength = 6;
-        private const string DanishCountryCode = "DK";
-        private const string DanishRegExRule = @"^(?=.{1,4}$)((([1-9][0-9]{0,2})?[A-ZÆØÅ]*)|([A-ZÆØÅ]*([1-9][0-9]{0,2})?))$";
+        private const string DanishFormat = @"^(?=.{1,4}$)((([1-9][0-9]{0,2})?[A-ZÆØÅ]*)|([A-ZÆØÅ]*([1-9][0-9]{0,2})?))$";
 
-        public BuildingNumberFormatRule(string? buildingNumber, string? countryCode)
+        public BuildingNumberFormatRule(string? buildingNumber, CountryCode? countryCode)
         {
             Validate(buildingNumber, countryCode);
         }
@@ -33,17 +32,17 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules
 
         public ValidationError ValidationError { get; private set; } = new BuildingNumberFormatRuleError();
 
-        private static bool IsDanish(string? countryCode)
+        private static bool IsDanish(CountryCode? countryCode)
         {
-            if (string.IsNullOrWhiteSpace(countryCode))
+            if (countryCode is null)
             {
                 return false;
             }
 
-            return countryCode.Equals(DanishCountryCode, StringComparison.OrdinalIgnoreCase);
+            return countryCode == CountryCode.DK;
         }
 
-        private void Validate(string? buildingNumber, string? countryCode)
+        private void Validate(string? buildingNumber, CountryCode? countryCode)
         {
             if (string.IsNullOrWhiteSpace(buildingNumber))
             {
@@ -62,7 +61,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules
 
         private void ValidateDanishBuildingNumber(string buildingNumber)
         {
-            if (Regex.IsMatch(buildingNumber!, DanishRegExRule) == false)
+            if (Regex.IsMatch(buildingNumber!, DanishFormat) == false)
             {
                 IsBroken = true;
                 ValidationError = new BuildingNumberFormatRuleError(buildingNumber);

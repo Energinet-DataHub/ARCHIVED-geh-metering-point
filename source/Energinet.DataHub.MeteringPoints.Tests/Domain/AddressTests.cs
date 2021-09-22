@@ -84,23 +84,21 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 streetName: string.Empty,
                 streetCode: string.Empty,
                 buildingNumber: buildingNumber,
-                countryCode: "DK");
+                countryCode: CountryCode.DK);
 
             AssertError<BuildingNumberFormatRuleError>(checkResult, expectError);
         }
 
         [Theory]
         [InlineData("123456", "", false)]
-        [InlineData("123456", "SE", false)]
         [InlineData("1234567", "", true)]
-        [InlineData("1234567", "SE", true)]
         public void Building_number_lenght_should_be_6_characters(string buildingNumber, string countryCode, bool expectError)
         {
             var checkResult = CheckRules(
                 streetName: string.Empty,
                 streetCode: string.Empty,
                 buildingNumber: buildingNumber,
-                countryCode: countryCode);
+                countryCode: !string.IsNullOrWhiteSpace(countryCode) ? EnumerationType.FromName<CountryCode>(countryCode) : null);
 
             AssertError<BuildingNumberFormatRuleError>(checkResult, expectError);
         }
@@ -116,7 +114,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 streetName: string.Empty,
                 streetCode: string.Empty,
                 buildingNumber: string.Empty,
-                countryCode: string.Empty,
+                countryCode: null,
                 floor: floor);
 
             AssertError<FloorLengthRuleError>(checkResult, expectError);
@@ -133,7 +131,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 streetName: string.Empty,
                 streetCode: string.Empty,
                 buildingNumber: string.Empty,
-                countryCode: string.Empty,
+                countryCode: null,
                 floor: string.Empty,
                 room: room);
 
@@ -152,7 +150,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 streetCode: string.Empty,
                 buildingNumber: string.Empty,
                 city: city,
-                countryCode: string.Empty,
+                countryCode: null,
                 floor: string.Empty,
                 room: string.Empty);
 
@@ -173,7 +171,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 buildingNumber: string.Empty,
                 city: string.Empty,
                 postCode: postCode,
-                countryCode: "DK",
+                countryCode: CountryCode.DK,
                 floor: string.Empty,
                 room: string.Empty);
 
@@ -194,7 +192,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 buildingNumber: string.Empty,
                 city: string.Empty,
                 postCode: postCode,
-                countryCode: string.Empty,
+                countryCode: null,
                 floor: string.Empty,
                 room: string.Empty);
 
@@ -217,7 +215,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 city: string.Empty,
                 citySubDivision: citySubDivision,
                 postCode: string.Empty,
-                countryCode: string.Empty,
+                countryCode: null,
                 floor: string.Empty,
                 room: string.Empty);
 
@@ -240,7 +238,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 city: string.Empty,
                 citySubDivision: string.Empty,
                 postCode: string.Empty,
-                countryCode: string.Empty,
+                countryCode: null,
                 floor: string.Empty,
                 room: string.Empty,
                 municipalityCode: municipalityCode);
@@ -257,7 +255,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             var city = "Test City";
             var citySubdivision = "Test subdivision";
             var postCode = "9000";
-            var countryCode = "DK";
+            var countryCode = CountryCode.DK;
             var floor = "1";
             var room = "tv";
             var municipalityCode = 100;
@@ -286,7 +284,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             Assert.Equal(municipalityCode, address.MunicipalityCode);
         }
 
-        private static Address Create(string streetName = "", string streetCode = "", string buildingNumber = "", string city = "", string citySubDivision = "", string postCode = "", string countryCode = "", string floor = "", string room = "", int municipalityCode = default(int))
+        private static Address Create(string streetName = "", string streetCode = "", string buildingNumber = "", string city = "", string citySubDivision = "", string postCode = "", CountryCode? countryCode = null, string floor = "", string room = "", int municipalityCode = default(int))
         {
             return Address.Create(
                streetName: streetName,
@@ -301,7 +299,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                municipalityCode: municipalityCode);
         }
 
-        private static BusinessRulesValidationResult CheckRules(string? streetName = "", string? streetCode = "", string? buildingNumber = "", string? city = "", string? citySubDivision = "", string? postCode = "", string? countryCode = "", string? floor = "", string room = "", int municipalityCode = default(int))
+        private static BusinessRulesValidationResult CheckRules(string? streetName = "", string? streetCode = "", string? buildingNumber = "", string? city = "", string? citySubDivision = "", string? postCode = "", CountryCode? countryCode = null, string? floor = "", string room = "", int municipalityCode = default(int))
         {
             return Address.CheckRules(
                 streetName: streetName,
