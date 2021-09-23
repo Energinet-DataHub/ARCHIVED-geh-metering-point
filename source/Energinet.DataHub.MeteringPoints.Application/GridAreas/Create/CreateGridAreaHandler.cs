@@ -81,11 +81,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.GridAreas.Create
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             return new GridAreaDetails(
-                GridAreaName.Create(request.Name),
-                GridAreaCode.Create(request.Code),
-                request.OperatorName!,
-                request.OperatorId!,
-                EnumerationType.FromName<PriceAreaCode>(request.PriceAreaCode ?? string.Empty));
+                request.Name ?? string.Empty,
+                request.Code ?? string.Empty,
+                request.OperatorName ?? string.Empty,
+                request.OperatorId ?? string.Empty,
+                request.PriceAreaCode ?? string.Empty);
         }
     }
 }

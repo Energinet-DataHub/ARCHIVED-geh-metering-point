@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GridAreas;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
@@ -64,7 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.GridAreas
             await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
 
             var resultHandler = GetService<IBusinessProcessResultHandler<CreateGridArea>>() as CreateGridAreaNullResultHandler;
-            resultHandler!.Errors.Should().BeEmpty();
+            resultHandler!.Errors.Should().ContainSingle().Which.Should().BeOfType<GridAreaNameMaxLengthRuleError>();
         }
 
         [Theory]
@@ -82,7 +83,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.GridAreas
             await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
 
             var resultHandler = GetService<IBusinessProcessResultHandler<CreateGridArea>>() as CreateGridAreaNullResultHandler;
-            resultHandler!.Errors.Should().BeEmpty();
+            resultHandler!.Errors.Should().ContainSingle().Which.Should().BeOfType<GridAreaCodeFormatRuleError>();
         }
 
         private static CreateGridArea CreateRequest()

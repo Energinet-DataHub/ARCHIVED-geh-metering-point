@@ -15,9 +15,9 @@
 namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 {
     public record GridAreaDetails(
-        GridAreaName Name,
-        GridAreaCode Code,
+        string Name,
+        string Code,
         string OperatorName,
         string OperatorId,
-        PriceAreaCode PriceAreaCode);
+        string PriceAreaCode);
 }
