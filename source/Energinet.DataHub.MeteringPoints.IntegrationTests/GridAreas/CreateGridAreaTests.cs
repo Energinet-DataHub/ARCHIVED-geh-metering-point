@@ -86,6 +86,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.GridAreas
             resultHandler!.Errors.Should().ContainSingle().Which.Should().BeOfType<GridAreaCodeFormatRuleError>();
         }
 
+        [Theory]
+        [InlineData("123456789012")]
+        [InlineData("12345678901234")]
+        public async Task Grid_area_with_invalid_operator_id_should_be_rejected(string id)
+        {
+            var request = CreateRequest() with
+            {
+                OperatorId = id,
+            };
+
+            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
+
+            var resultHandler = GetService<IBusinessProcessResultHandler<CreateGridArea>>() as CreateGridAreaNullResultHandler;
+            resultHandler!.Errors.Should().ContainSingle().Which.Should().BeOfType<GlnNumberFormatRuleError>();
+        }
+
         private static CreateGridArea CreateRequest()
         {
             return new CreateGridArea(

@@ -51,6 +51,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
             {
                 new GridAreaCodeFormatRule(gridAreaDetails.Code),
                 new GridAreaNameMaxLengthRule(gridAreaDetails.Name),
+                new GlnNumberFormatRule(gridAreaDetails.OperatorId),
             };
 
             return new BusinessRulesValidationResult(rules);

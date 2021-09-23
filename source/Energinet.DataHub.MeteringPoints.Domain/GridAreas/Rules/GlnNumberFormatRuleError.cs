@@ -12,22 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.GridAreas
+namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules
 {
-    public static class SampleData
+    public class GlnNumberFormatRuleError : ValidationError
     {
-        public static string GridAreaName => "N1";
-
-        public static string GridAreaCode => "007";
-
-        public static string OperatorName => "op";
-
-        public static string OperatorId => "5799999911118";
-
-        public static string PriceAreaCode => "DK1";
-
-        public static string Transaction => Guid.NewGuid().ToString();
     }
 }

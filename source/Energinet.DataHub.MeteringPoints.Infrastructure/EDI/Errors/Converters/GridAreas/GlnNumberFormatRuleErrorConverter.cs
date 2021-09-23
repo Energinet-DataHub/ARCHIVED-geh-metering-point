@@ -12,22 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.Diagnostics.CodeAnalysis;
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.GridAreas
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.GridAreas
 {
-    public static class SampleData
+    public class GlnNumberFormatRuleErrorConverter : ErrorConverter<GlnNumberFormatRuleError>
     {
-        public static string GridAreaName => "N1";
-
-        public static string GridAreaCode => "007";
-
-        public static string OperatorName => "op";
-
-        public static string OperatorId => "5799999911118";
-
-        public static string PriceAreaCode => "DK1";
-
-        public static string Transaction => Guid.NewGuid().ToString();
+        protected override ErrorMessage Convert([NotNull] GlnNumberFormatRuleError validationError)
+        {
+            return new("D02", $"Invalid GLN number");
+        }
     }
 }
