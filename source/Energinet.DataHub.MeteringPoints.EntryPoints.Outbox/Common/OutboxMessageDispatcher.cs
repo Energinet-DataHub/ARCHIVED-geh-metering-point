@@ -22,7 +22,7 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
 {
-    internal class OutboxMessageDispatcher : IOutboxMessageDispatcher
+    public class OutboxMessageDispatcher : IOutboxMessageDispatcher
     {
         private readonly IMediator _mediator;
         private readonly IJsonSerializer _jsonSerializer;

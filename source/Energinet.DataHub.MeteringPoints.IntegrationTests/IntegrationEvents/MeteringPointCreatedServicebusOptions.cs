@@ -12,20 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using System;
+using Squadron;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.IntegrationEvents
 {
-    /// <summary>
-    /// Service for dispatching actor messages.
-    /// </summary>
-    public interface IOutboxMessageDispatcher
+    public class ServiceBusOptions : AzureCloudServiceBusOptions
     {
-        /// <summary>
-        /// Dispatch single message.
-        /// </summary>
-        /// <param name="message">Message to process.</param>
-        Task DispatchMessageAsync(OutboxMessage message);
+        public const string ServiceBusTopic = "metering-point-created";
+        public const string ServiceBusTopicSubscriber = "subscriber";
+
+        public override void Configure(ServiceBusOptionsBuilder builder)
+        {
+            if (builder == null) throw new ArgumentNullException(nameof(builder));
+            builder.AddTopic(ServiceBusTopic)
+                .AddSubscription(ServiceBusTopicSubscriber);
+        }
     }
 }
