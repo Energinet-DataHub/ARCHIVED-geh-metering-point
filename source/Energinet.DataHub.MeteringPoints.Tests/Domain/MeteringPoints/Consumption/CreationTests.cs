@@ -264,19 +264,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(ProductType.EnergyActive.Name, createdEvent!.ProductType);
         }
 
-        [Fact]
-        public void Should_return_error_if_meter_reading_occurrence_is_not_quarterly_or_hourly()
-        {
-            var details = CreateDetails()
-                with
-                {
-                    ReadingOccurrence = ReadingOccurrence.Yearly,
-                };
-
-            var checkResult = ConsumptionMeteringPoint.CanCreate(details);
-            AssertContainsValidationError<InvalidMeterReadingOccurrenceRuleError>(checkResult);
-        }
-
         private static MeteringPointDetails CreateDetails()
         {
             var address = Address.Create(

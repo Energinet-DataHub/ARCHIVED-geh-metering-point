@@ -12,22 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
 {
-    public class MeteringReadingOccurrenceRule : IBusinessRule
+    public class InvalidMeterReadingOccurrenceRuleError : ValidationError
     {
-        public MeteringReadingOccurrenceRule(ReadingOccurrence readingOccurrence)
+        public InvalidMeterReadingOccurrenceRuleError(string meterReadingOccurrence)
         {
-            if (readingOccurrence == null!) throw new ArgumentNullException(nameof(readingOccurrence));
-            IsBroken = !(readingOccurrence == ReadingOccurrence.Hourly || readingOccurrence == ReadingOccurrence.Quarterly);
-            ValidationError = new InvalidMeterReadingOccurrenceRuleError(readingOccurrence.Name);
+            MeterReadingOccurrence = meterReadingOccurrence;
         }
 
-        public bool IsBroken { get; }
-
-        public ValidationError ValidationError { get; }
+        public string MeterReadingOccurrence { get; }
     }
 }
