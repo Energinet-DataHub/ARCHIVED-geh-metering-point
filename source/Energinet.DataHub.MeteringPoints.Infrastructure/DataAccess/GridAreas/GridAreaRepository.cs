@@ -33,9 +33,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas
         {
             if (gridArea is null) throw new ArgumentNullException(nameof(gridArea));
 
-            var gridAreaLink = new GridAreaLink(GridAreaLinkId.New(), gridArea.Id);
-
-            _meteringPointContext.GridAreaLinks.Add(gridAreaLink);
             _meteringPointContext.GridAreas.Add(gridArea);
         }
 

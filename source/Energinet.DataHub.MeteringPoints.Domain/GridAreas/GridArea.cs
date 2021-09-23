@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -25,6 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
         private readonly string _operatorName;
         private readonly string _operatorId;
         private readonly PriceAreaCode _priceAreaCode;
+        private readonly List<GridAreaLink> _gridAreaLinks = new();
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind complex types in constructor
         private GridArea() { }
@@ -44,6 +46,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
             _operatorName = operatorName;
             _operatorId = operatorId;
             _priceAreaCode = priceAreaCode;
+
+            AddDefaultLink();
         }
 
         public GridAreaCode Code { get; }
@@ -80,6 +84,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
                 gridAreaDetails.OperatorName,
                 gridAreaDetails.OperatorId,
                 EnumerationType.FromName<PriceAreaCode>(gridAreaDetails.PriceAreaCode));
+        }
+
+        private void AddDefaultLink()
+        {
+            _gridAreaLinks.Add(new GridAreaLink(GridAreaLinkId.New(), Id));
         }
     }
 }
