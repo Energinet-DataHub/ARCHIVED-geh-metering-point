@@ -49,15 +49,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas
                     toDbValue => toDbValue.Name,
                     fromDbValue => GridAreaName.Create(fromDbValue));
 
-            builder.Property<string>("_operatorName")
-                .HasColumnName("OperatorName");
-
-            builder.Property<string>("_operatorName")
-                .HasColumnName("OperatorName");
-
-            builder.Property<string>("_operatorId")
-                .HasColumnName("OperatorId");
-
             builder.Property<PriceAreaCode>("_priceAreaCode")
                 .HasColumnName("PriceAreaCode")
                 .HasConversion(
