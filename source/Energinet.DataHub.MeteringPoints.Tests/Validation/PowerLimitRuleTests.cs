@@ -46,27 +46,5 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 
             errors.Should().BeEmpty();
         }
-
-        [Theory]
-        [InlineData("123.456", null, typeof(KilowattPowerLimitValidationError))]
-        [InlineData("1234567", null, typeof(KilowattPowerLimitValidationError))]
-        [InlineData("-1", null, typeof(KilowattPowerLimitValidationError))]
-        [InlineData(null, "123.456", typeof(AmperePowerLimitValidationError))]
-        [InlineData(null, "1234567", typeof(AmperePowerLimitValidationError))]
-        [InlineData(null, "-1", typeof(AmperePowerLimitValidationError))]
-        [InlineData(null, "123N", typeof(AmperePowerLimitValidationError))]
-        public void ShouldResultInError(string contractedConnectionCapacity, string ratedCurrent, Type expectedError)
-        {
-            var request = CreateRequest() with
-            {
-                ContractedConnectionCapacity = contractedConnectionCapacity,
-                RatedCurrent = ratedCurrent,
-                TypeOfMeteringPoint = MeteringPointType.Consumption.Name,
-            };
-
-            var errors = Validate(request);
-
-            errors.Should().ContainSingle(error => error.GetType() == expectedError);
-        }
     }
 }

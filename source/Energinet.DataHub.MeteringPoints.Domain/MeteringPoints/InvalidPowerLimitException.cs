@@ -13,17 +13,30 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using System.Runtime.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public class AmperePowerLimitErrorConverter : ErrorConverter<AmperePowerLimitValidationError>
+    [Serializable]
+    public class InvalidPowerLimitException : BusinessRuleException
     {
-        protected override ErrorMessage Convert(AmperePowerLimitValidationError validationError)
+        public InvalidPowerLimitException()
         {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+        }
 
-            return new("E86", $"Power limit A {validationError.AmperePowerLimit} for metering point {validationError.GsrnNumber} contains a non-digit character or has a length that exceeds 6");
+        public InvalidPowerLimitException(string? message)
+            : base(message)
+        {
+        }
+
+        public InvalidPowerLimitException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+
+        protected InvalidPowerLimitException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
         }
     }
 }
