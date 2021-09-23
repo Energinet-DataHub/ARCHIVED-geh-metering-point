@@ -239,6 +239,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             cleanupStatement.AppendLine($"DELETE FROM MeteringPoints");
             cleanupStatement.AppendLine($"DELETE FROM OutboxMessages");
             cleanupStatement.AppendLine($"DELETE FROM QueuedInternalCommands");
+            cleanupStatement.AppendLine($"DELETE FROM GridAreaLinks");
+            cleanupStatement.AppendLine($"DELETE FROM GridAreas");
 
             _container.GetInstance<MeteringPointContext>()
                 .Database.ExecuteSqlRaw(cleanupStatement.ToString());
