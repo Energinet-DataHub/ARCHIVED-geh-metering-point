@@ -17,6 +17,7 @@ using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create;
+using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
@@ -34,6 +35,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GridAreas;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
@@ -69,30 +71,23 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI", Version = "v1" });
             });
 
+            var connectionString = Configuration.GetConnectionString("METERINGPOINT_DB_CONNECTION_STRING") ?? throw new InvalidOperationException("Metering point db connection string not found.");
+
             services.AddDbContext<MeteringPointContext>(x =>
             {
-                var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")
-                                       ?? throw new InvalidOperationException(
-                                           "Metering point db connection string not found.");
-
                 x.UseSqlServer(connectionString, y => y.UseNodaTime());
             });
 
             services.AddLogging();
             services.AddSimpleInjector(_container, options =>
             {
-                options.AddAspNetCore();
+                options.AddAspNetCore()
+                    .AddControllerActivation();
                 options.AddLogging();
             });
             services.UseSimpleInjectorAspNetRequestScoping(_container);
 
-            services.AddApplicationInsightsTelemetry(
-                Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY"));
-
-            var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")
-                                   ?? throw new InvalidOperationException(
-                                       "Metering point db connection string not found.");
-
+            services.AddApplicationInsightsTelemetry(Configuration.GetSection("Settings")["APPINSIGHTS_INSTRUMENTATIONKEY"]);
             _container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
             _container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
             _container.Register<IGridAreaRepository, GridAreaRepository>(Lifestyle.Scoped);
@@ -120,22 +115,16 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
                 typeof(ErrorMessageFactory).Assembly); // Infrastructure
 
             _container.BuildMediator(
-                new[]
-                {
-                    typeof(CreateGridArea).Assembly,
-                    typeof(GridAreaRepository).Assembly,
-                },
+                new[] { typeof(CreateGridArea).Assembly, typeof(GridAreaRepository).Assembly, },
                 new[]
                 {
                     typeof(UnitOfWorkBehavior<,>),
                     // typeof(AuthorizationBehavior<,>),
-                    typeof(InputValidationBehavior<,>),
-                    typeof(DomainEventsDispatcherBehaviour<,>),
-                    typeof(InternalCommandHandlingBehaviour<,>),
-                    // typeof(BusinessProcessResultBehavior<,>),
+                    typeof(InputValidationBehavior<,>), typeof(DomainEventsDispatcherBehaviour<,>), typeof(InternalCommandHandlingBehaviour<,>),
+                    typeof(BusinessProcessResultBehavior<,>),
                 });
 
-            _container.Verify();
+            _container.SendProtobuf<MeteringPointEnvelope>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -158,6 +147,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             {
                 endpoints.MapControllers();
             });
+
+            app.UseSimpleInjector(_container);
+            _container.Verify();
         }
 
         public void Dispose()
