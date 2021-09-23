@@ -95,7 +95,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 address.Floor,
                 address.Room,
                 address.BuildingNumber,
-                address.CountryCode,
+                address.CountryCode?.Name,
                 address.MunicipalityCode,
                 address.PostCode,
                 address.StreetCode,
