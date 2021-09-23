@@ -17,7 +17,7 @@ using Squadron;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.IntegrationEvents
 {
-    public class ServiceBusOptions : AzureCloudServiceBusOptions
+    public class MeteringPointCreatedServicebusOptions : AzureCloudServiceBusOptions
     {
         public const string ServiceBusTopic = "metering-point-created";
         public const string ServiceBusTopicSubscriber = "subscriber";
