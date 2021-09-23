@@ -36,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.GridAreas.Create
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var validationResult = await ValidateInputAsync(request, cancellationToken).ConfigureAwait(false);
+            var validationResult = await ValidateInputAsync(request).ConfigureAwait(false);
             if (!validationResult.Success)
             {
                 return validationResult;
@@ -64,16 +64,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.GridAreas.Create
             return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
         }
 
-        private static async Task<BusinessProcessResult> ValidateInputAsync(CreateGridArea request, CancellationToken cancellationToken)
+        private static Task<BusinessProcessResult> ValidateInputAsync(CreateGridArea request)
         {
-            // TODO: implement
-            await Task.Delay(0, cancellationToken).ConfigureAwait(false);
-
             var validationRules = new List<IBusinessRule>
             {
             };
 
-            return new BusinessProcessResult(request.TransactionId, validationRules);
+            return Task.FromResult(new BusinessProcessResult(request.TransactionId, validationRules));
         }
 
         private static GridAreaDetails CreateDetails(CreateGridArea request)
@@ -83,8 +80,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.GridAreas.Create
             return new GridAreaDetails(
                 request.Name ?? string.Empty,
                 request.Code ?? string.Empty,
-                request.OperatorName ?? string.Empty,
-                request.OperatorId ?? string.Empty,
                 request.PriceAreaCode ?? string.Empty);
         }
     }

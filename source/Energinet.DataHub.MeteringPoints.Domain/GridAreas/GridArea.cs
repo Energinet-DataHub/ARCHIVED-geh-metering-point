@@ -22,8 +22,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
     public class GridArea
     {
         private readonly GridAreaName _name;
-        private readonly string _operatorName;
-        private readonly string _operatorId;
         private readonly PriceAreaCode _priceAreaCode;
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind complex types in constructor
@@ -34,15 +32,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
             GridAreaId gridAreaId,
             GridAreaName name,
             GridAreaCode code,
-            string operatorName,
-            string operatorId,
             PriceAreaCode priceAreaCode)
         {
             Id = gridAreaId;
             Code = code;
             _name = name;
-            _operatorName = operatorName;
-            _operatorId = operatorId;
             _priceAreaCode = priceAreaCode;
         }
 
@@ -58,7 +52,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
             {
                 new GridAreaCodeFormatRule(gridAreaDetails.Code),
                 new GridAreaNameMaxLengthRule(gridAreaDetails.Name),
-                new GlnNumberFormatRule(gridAreaDetails.OperatorId),
             };
 
             return new BusinessRulesValidationResult(rules);
@@ -77,8 +70,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
                 GridAreaId.New(),
                 GridAreaName.Create(gridAreaDetails.Name),
                 GridAreaCode.Create(gridAreaDetails.Code),
-                gridAreaDetails.OperatorName,
-                gridAreaDetails.OperatorId,
                 EnumerationType.FromName<PriceAreaCode>(gridAreaDetails.PriceAreaCode));
         }
     }
