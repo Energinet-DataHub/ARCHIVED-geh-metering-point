@@ -185,8 +185,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 null,
                 SampleData.GeoInfoReference,
                 SampleData.MeasurementUnitType,
-                ContractedConnectionCapacity: null,
-                RatedCurrent: null,
                 SampleData.ScheduledMeterReadingDate);
         }
     }
