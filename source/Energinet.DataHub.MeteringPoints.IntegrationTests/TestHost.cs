@@ -151,8 +151,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _scope = AsyncScopedLifestyle.BeginScope(_container);
 
             _container.GetInstance<ICorrelationContext>().SetId(Guid.NewGuid().ToString().Replace("-", string.Empty, StringComparison.Ordinal));
-
-            CleanupDatabase();
         }
 
         public void Dispose()

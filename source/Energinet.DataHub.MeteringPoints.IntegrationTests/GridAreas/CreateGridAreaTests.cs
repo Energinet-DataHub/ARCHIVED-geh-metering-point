@@ -43,8 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.GridAreas
 
             await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
 
-            var gridAreaCode = GridAreaCode.Create(request.Code);
-            var found = await _gridAreaRepository.GetByCodeAsync(gridAreaCode).ConfigureAwait(false);
+            var found = await _gridAreaRepository.GetByCodeAsync(request.Code!).ConfigureAwait(false);
 
             // TODO: compare values
             Assert.NotNull(found);

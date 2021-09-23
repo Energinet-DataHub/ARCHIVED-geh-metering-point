@@ -153,7 +153,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 new PostCodeIsRequiredRule(meteringPointDetails.Address),
                 new CityIsRequiredRule(meteringPointDetails.Address),
                 new ScheduledMeterReadingDateRule(meteringPointDetails.ScheduledMeterReadingDate, meteringPointDetails.NetSettlementGroup),
-
+                new GridAreaMustExistRule(meteringPointDetails.GridAreaId),
             };
 
             return new BusinessRulesValidationResult(rules);

@@ -12,26 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
+using System;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.GridAreas
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
-    /// <summary>
-    /// Repository for grid areas.
-    /// </summary>
-    public interface IGridAreaRepository
+    internal class GridAreaMustExistRule : IBusinessRule
     {
-        /// <summary>
-        /// Add new grid area to repository.
-        /// </summary>
-        /// <param name="gridArea"></param>
-        void Add(GridArea gridArea);
+        private readonly GridAreaId? _gridAreaId;
 
-        /// <summary>
-        /// Get grid area by grid area code.
-        /// </summary>
-        /// <param name="code"></param>
-        Task<GridArea?> GetByCodeAsync(string code);
+        public GridAreaMustExistRule(GridAreaId? gridAreaId)
+        {
+            _gridAreaId = gridAreaId;
+        }
+
+        public bool IsBroken => _gridAreaId == null;
+
+        public ValidationError ValidationError => new GridAreaMustExistRuleError();
     }
 }
