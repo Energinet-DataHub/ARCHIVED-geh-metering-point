@@ -12,17 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GridAreas
 {
     public sealed class CreateGridAreaNullResultHandler : IBusinessProcessResultHandler<CreateGridArea>
     {
+        private readonly List<ValidationError> _errors = new();
+
+        public IReadOnlyCollection<ValidationError> Errors => _errors;
+
         public Task HandleAsync(CreateGridArea request, BusinessProcessResult result)
         {
+            if (result == null) throw new ArgumentNullException(nameof(result));
+
+            if (!result.Success)
+            {
+                _errors.AddRange(result.ValidationErrors);
+            }
+
             return Task.CompletedTask;
         }
     }

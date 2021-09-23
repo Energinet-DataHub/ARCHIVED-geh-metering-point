@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Create;
+using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create.Validation.Rules;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.GridAreas.Create
@@ -21,6 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.GridAreas.Create
     {
         public CreateGridAreaRuleSet()
         {
+            RuleFor(request => request).SetValidator(new PriceAreaCodeRule());
         }
     }
 }

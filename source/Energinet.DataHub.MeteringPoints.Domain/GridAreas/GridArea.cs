@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.ObjectModel;
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
@@ -46,8 +47,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
         {
             if (gridAreaDetails == null) throw new ArgumentNullException(nameof(gridAreaDetails));
 
-            var rules = new Collection<IBusinessRule>()
+            var rules = new Collection<IBusinessRule>
             {
+                new GridAreaCodeFormatRule(gridAreaDetails.Code.Value),
             };
 
             return new BusinessRulesValidationResult(rules);

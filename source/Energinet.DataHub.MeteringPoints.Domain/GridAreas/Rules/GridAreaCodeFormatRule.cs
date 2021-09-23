@@ -18,9 +18,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules
 {
     public class GridAreaCodeFormatRule : IBusinessRule
     {
-        private readonly string _gridAreaCodeValue;
+        private readonly string? _gridAreaCodeValue;
 
-        public GridAreaCodeFormatRule(string gridAreaCodeValue)
+        public GridAreaCodeFormatRule(string? gridAreaCodeValue)
         {
             _gridAreaCodeValue = gridAreaCodeValue;
         }
@@ -33,12 +33,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules
 
         private bool HasCorrectLength()
         {
-            return _gridAreaCodeValue.Length == 3;
+            return _gridAreaCodeValue?.Length == 3;
         }
 
         private bool IsDigits()
         {
-            return long.TryParse(
+            return short.TryParse(
                 _gridAreaCodeValue,
                 System.Globalization.NumberStyles.Integer,
                 System.Globalization.NumberFormatInfo.InvariantInfo,

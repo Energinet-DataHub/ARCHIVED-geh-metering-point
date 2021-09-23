@@ -44,7 +44,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
             return new GridAreaCode(gridAreaCode);
         }
 
-        public static BusinessRulesValidationResult CheckRules(string gridAreaCodeValue)
+        public static BusinessRulesValidationResult CheckRules(string? gridAreaCodeValue)
         {
             return new BusinessRulesValidationResult(new List<IBusinessRule>()
             {
