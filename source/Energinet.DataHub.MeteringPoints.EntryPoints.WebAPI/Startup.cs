@@ -12,20 +12,50 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
+using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
+using Energinet.DataHub.MeteringPoints.Application.GridAreas;
+using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
+using Energinet.DataHub.MeteringPoints.Infrastructure;
+using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
+using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
+using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GridAreas;
+using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
+using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using SimpleInjector;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
 {
-    public class Startup
+    public class Startup : System.IDisposable
     {
+        private readonly Container _container;
+        private bool _disposed;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            _container = new Container();
         }
 
         public IConfiguration Configuration { get; }
@@ -38,6 +68,73 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI", Version = "v1" });
             });
+
+            services.AddDbContext<MeteringPointContext>(x =>
+            {
+                var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")
+                                       ?? throw new InvalidOperationException(
+                                           "Metering point db connection string not found.");
+
+                x.UseSqlServer(connectionString, y => y.UseNodaTime());
+            });
+
+            services.AddLogging();
+            services.AddSimpleInjector(_container, options =>
+            {
+                options.AddAspNetCore();
+                options.AddLogging();
+            });
+            services.UseSimpleInjectorAspNetRequestScoping(_container);
+
+            services.AddApplicationInsightsTelemetry(
+                Environment.GetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY"));
+
+            var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")
+                                   ?? throw new InvalidOperationException(
+                                       "Metering point db connection string not found.");
+
+            _container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
+            _container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
+            _container.Register<IGridAreaRepository, GridAreaRepository>(Lifestyle.Scoped);
+            _container.Register<IMarketMeteringPointRepository, MarketMeteringPointRepository>(Lifestyle.Scoped);
+            _container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
+            _container.Register<IOutboxManager, OutboxManager>(Lifestyle.Scoped);
+            _container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Singleton);
+            _container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
+            _container.Register<ISystemDateTimeProvider, SystemDateTimeProvider>(Lifestyle.Singleton);
+            _container.Register(typeof(IBusinessProcessResultHandler<CreateGridArea>), typeof(CreateGridAreaNullResultHandler), Lifestyle.Scoped);
+            _container.Register<IValidator<CreateGridArea>, CreateGridAreaRuleSet>(Lifestyle.Scoped);
+            _container.Register<IDomainEventsAccessor, DomainEventsAccessor>();
+            _container.Register<IDomainEventsDispatcher, DomainEventsDispatcher>();
+            _container.Register<IDomainEventPublisher, DomainEventPublisher>();
+            _container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Singleton);
+            _container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
+
+            _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
+
+            _container.AddValidationErrorConversion(
+                validateRegistrations: true,
+                typeof(CreateGridArea).Assembly, // Application
+                typeof(MeteringPoint).Assembly, // Domain
+                typeof(ErrorMessageFactory).Assembly); // Infrastructure
+
+            _container.BuildMediator(
+                new[]
+                {
+                    typeof(CreateGridArea).Assembly,
+                    typeof(GridAreaRepository).Assembly,
+                },
+                new[]
+                {
+                    typeof(UnitOfWorkBehavior<,>),
+                    // typeof(AuthorizationBehavior<,>),
+                    typeof(InputValidationBehavior<,>),
+                    typeof(DomainEventsDispatcherBehaviour<,>),
+                    typeof(InternalCommandHandlingBehaviour<,>),
+                    // typeof(BusinessProcessResultBehavior<,>),
+                });
+
+            _container.Verify();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,6 +157,20 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             {
                 endpoints.MapControllers();
             });
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+
+            _container.Dispose();
+            _disposed = true;
         }
     }
 }
