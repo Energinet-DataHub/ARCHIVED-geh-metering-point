@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,18 +26,28 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.Controllers
     public class GridAreaController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly ErrorMessageFactory _errorMessageFactory;
 
-        public GridAreaController(IMediator mediator)
+        public GridAreaController(IMediator mediator, ErrorMessageFactory errorMessageFactory)
         {
             _mediator = mediator;
+            _errorMessageFactory = errorMessageFactory;
         }
 
         [HttpPost("Create")]
-        public async Task<IActionResult> CreateAsync(CreateGridArea createGridArea)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateGridArea createGridArea)
         {
             var result = await _mediator.Send(createGridArea).ConfigureAwait(false);
 
-            return Ok(result);
+            var errors = result.ValidationErrors
+                .Select(error => _errorMessageFactory.GetErrorMessage(error))
+                .ToArray();
+
+            return Ok(new
+            {
+                Errors = errors,
+                result.Success,
+            });
         }
     }
 }
