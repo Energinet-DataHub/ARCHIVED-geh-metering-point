@@ -112,6 +112,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
 
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
 
+            // TODO: Probably not needed
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
                 typeof(CreateGridArea).Assembly, // Application
