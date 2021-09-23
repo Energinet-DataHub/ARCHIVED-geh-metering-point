@@ -33,23 +33,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
         public string? CorrelationId { get; }
 
         /// <summary>
-        /// Get the MessageVersion.
-        /// </summary>
-        public int MessageVersion { get; }
-
-        /// <summary>
         /// Get the EventId.
         /// </summary>
         public Guid EventId { get; }
 
         /// <summary>
-        /// Get the MessageType.
+        /// Set the initial meta data.
         /// </summary>
-        public string? MessageType { get; }
-
-        /// <summary>
-        /// Sets the meta data.
-        /// </summary>
-        public void SetMetaData(Instant timestamp, string? correlationId, int messageVersion, Guid eventId, string? messageType);
+        public void SetInitialMetaData(Instant timestamp, string? correlationId, Guid eventId);
     }
 }

@@ -15,6 +15,7 @@
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using Microsoft.Extensions.DependencyInjection;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 
@@ -24,14 +25,12 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOutboxManager _outbox;
-        private readonly IOutboxMessageDispatcher _outboxMessageDispatcher;
         private readonly Container _container;
 
-        public OutboxOrchestrator(IUnitOfWork unitOfWork, IOutboxManager outbox, IOutboxMessageDispatcher outboxMessageDispatcher, Container container)
+        public OutboxOrchestrator(IUnitOfWork unitOfWork, IOutboxManager outbox, Container container)
         {
             _unitOfWork = unitOfWork;
             _outbox = outbox;
-            _outboxMessageDispatcher = outboxMessageDispatcher;
             _container = container;
         }
 
@@ -40,12 +39,14 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
             // Keep iterating as long as we have a message
             while (true)
             {
-                await using (Scope scope = AsyncScopedLifestyle.BeginScope(_container))
-                {
-                    var message = _outbox.GetNext();
-                    if (message == null) break;
+                await using var scope = AsyncScopedLifestyle.BeginScope(_container);
+                var message = _outbox.GetNext();
+                if (message == null) break;
 
-                    await _outboxMessageDispatcher.DispatchMessageAsync(message).ConfigureAwait(false);
+                var dispatcher = scope.GetService<IOutboxMessageDispatcher>();
+                if (dispatcher != null)
+                {
+                    await dispatcher.DispatchMessageAsync(message).ConfigureAwait(false);
 
                     _outbox.MarkProcessed(message);
 

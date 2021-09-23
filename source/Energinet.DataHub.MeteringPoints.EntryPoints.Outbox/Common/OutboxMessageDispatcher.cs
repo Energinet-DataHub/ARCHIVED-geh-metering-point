@@ -46,8 +46,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
                 message.Data,
                 OutboxTypeFactory.GetType(message.Type));
 
-            _integrationMetaDataContext.SetMetaData(message.CreationDate, message.Correlation, 1, Guid.NewGuid(), string.Empty);
-
+            _integrationMetaDataContext.SetInitialMetaData(message.CreationDate, message.Correlation, Guid.NewGuid());
             await _mediator.Send(parsedCommand, CancellationToken.None).ConfigureAwait(false);
         }
     }

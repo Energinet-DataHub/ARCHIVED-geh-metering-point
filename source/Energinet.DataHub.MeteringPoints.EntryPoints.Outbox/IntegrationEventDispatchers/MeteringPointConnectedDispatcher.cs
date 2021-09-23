@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
@@ -34,6 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDi
 
         protected override async Task DispatchMessageAsync(ServiceBusMessage serviceBusMessage)
         {
+            if (serviceBusMessage == null) throw new ArgumentNullException(nameof(serviceBusMessage));
             serviceBusMessage.ApplicationProperties.Add("MessageVersion", 1);
             serviceBusMessage.ApplicationProperties.Add("MessageType", "MeteringPointConnected");
 

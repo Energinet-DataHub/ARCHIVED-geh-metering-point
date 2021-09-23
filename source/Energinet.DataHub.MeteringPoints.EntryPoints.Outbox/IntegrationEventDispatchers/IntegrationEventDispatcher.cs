@@ -45,9 +45,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDi
             {
                 ContentType = "application/octet-stream;charset=utf-8",
             };
-            serviceBusMessage.ApplicationProperties.Add("Timestamp", _integrationMetaDataContext.Timestamp);
+            serviceBusMessage.ApplicationProperties.Add("Timestamp", _integrationMetaDataContext.Timestamp.ToString());
             serviceBusMessage.ApplicationProperties.Add("CorrelationId", _integrationMetaDataContext.CorrelationId);
-            serviceBusMessage.ApplicationProperties.Add("EventIdentifier", _integrationMetaDataContext.EventId);
+            serviceBusMessage.ApplicationProperties.Add("EventIdentifier", _integrationMetaDataContext.EventId.ToString());
 
             await DispatchMessageAsync(serviceBusMessage).ConfigureAwait(false);
             return Unit.Value;
