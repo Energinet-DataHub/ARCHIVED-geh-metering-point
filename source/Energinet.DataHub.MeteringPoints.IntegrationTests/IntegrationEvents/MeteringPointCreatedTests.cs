@@ -31,11 +31,14 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integra
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
+using FluentAssertions;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Azure.ServiceBus.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using NodaTime;
+using NodaTime.Text;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Squadron;
@@ -58,8 +61,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.IntegrationEvents
         [Fact]
         public async Task DispatchMeteringPointCreatedAndConsumeWithReceiverAndAssertMessageContent()
         {
+            // Setup
             var serviceCollection = new ServiceCollection();
-            // Send setup
             await using var sendingContainer = new Container();
             sendingContainer.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
             serviceCollection.AddDbContext<MeteringPointContext>(x =>
@@ -102,11 +105,15 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.IntegrationEvents
                 Array.Empty<Type>());
             sendingContainer.Verify();
 
-            // Arrange
-
-            // Act
             await using (AsyncScopedLifestyle.BeginScope(sendingContainer))
             {
+                // Arrange
+                var outBoxManager = sendingContainer.GetRequiredService<IOutboxManager>();
+                outBoxManager.Add(CreateOutboxMessage());
+                var unitOfWork = sendingContainer.GetRequiredService<IUnitOfWork>();
+                await unitOfWork.CommitAsync().ConfigureAwait(false);
+
+                // Act
                 var orchestrator = sendingContainer.GetRequiredService<OutboxOrchestrator>();
                 await orchestrator.ProcessOutboxMessagesAsync().ConfigureAwait(false);
 
@@ -115,18 +122,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.IntegrationEvents
                     "metering-point-created",
                     MeteringPointCreatedServicebusOptions.ServiceBusTopicSubscriber);
 
-                var result = await queueClient.AwaitMessageAsync(GetMessage, TimeSpan.FromSeconds(5)).ConfigureAwait(false);
-
-                var completion = new TaskCompletionSource<ServiceBusMessage>();
-                RegisterSubscriberMessageHandler(queueClient, completion);
+                var result = await queueClient.AwaitMessageAsync(GetMessage).ConfigureAwait(false);
 
                 // Assert
-                ServiceBusMessage message = await completion.Task.ConfigureAwait(false);
+                Assert.NotNull(result);
+                Assert.NotNull(result.UserProperties["EventIdentifier"]);
+                result.UserProperties["Timestamp"].Should().Be("2021-09-02T07:11:34Z");
+                result.UserProperties["CorrelationId"].Should().Be("00-2f06a6b44f129b4e90a4985a82e77ff5-56e1ec72800dde48-00");
+                result.UserProperties["MessageVersion"].Should().Be(1);
+                result.UserProperties["MessageType"].Should().Be("MeteringPointCreated");
             }
-
-            // await using var receivingContainer = new Container();
-            // receivingContainer.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
-            // receivingContainer.Verify();
         }
 
         private static Task<Message> GetMessage(Message msg, CancellationToken cancellationToken)
@@ -134,31 +139,14 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.IntegrationEvents
             return Task.FromResult(msg);
         }
 
-        private void RegisterSubscriberMessageHandler<T>(IReceiverClient queueClient, TaskCompletionSource<T> completion)
+        private static OutboxMessage CreateOutboxMessage()
         {
-            queueClient.RegisterMessageHandler(
-                (message, _) =>
-            {
-                try
-                {
-                    var eventDataString = Encoding.UTF8.GetString(message.Body);
-                    var received = JsonConvert.DeserializeObject<T>(eventDataString);
-                    completion.SetResult(received);
-                }
-                catch (Exception exception)
-                {
-                    completion.SetException(exception);
-                    throw new InvalidOperationException(exception.Message);
-                }
-
-                return Task.CompletedTask;
-            },
-                new MessageHandlerOptions(ExceptionReceivedHandler));
-        }
-
-        private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs arg)
-        {
-            throw new NotImplementedException();
+            return new(
+                "Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.MeteringPointCreatedEventMessage",
+                @"{""Gsrn"":""574591757409421563"",""MeteringPointType"":""Consumption"",""GridAreaId"":""a64278ed-1fa2-4d34-bb50-161f04f09eb0"",""SettlementMethod"":""NonProfiled"",""MeteringMethod"":""Physical"",""ConnectionState"":""New"",""MeterReadingPeriodicity"":""Hourly"",""NetSettlementGroup"":""Zero"",""ToGrid"":"""",""FromGrid"":"""",""Product"":""Tariff"",""QuantityUnit"":""KWh"",""ParentGsrn"":"""",""EffectiveDate"":""2021-09-02T07:11:34Z""}",
+                "00-2f06a6b44f129b4e90a4985a82e77ff5-56e1ec72800dde48-00",
+                OutboxMessageCategory.IntegrationEvent,
+                InstantPattern.General.Parse("2021-09-02T07:11:34Z").Value);
         }
     }
 }
