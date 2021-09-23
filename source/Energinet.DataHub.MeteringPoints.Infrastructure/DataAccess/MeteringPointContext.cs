@@ -53,8 +53,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
 
         public DbSet<GridArea> GridAreas { get; private set; }
 
-        public DbSet<GridAreaLink> GridAreaLinks { get; private set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             if (modelBuilder == null) throw new ArgumentNullException(nameof(modelBuilder));
