@@ -22,26 +22,33 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
     public class GridArea
     {
         private readonly GridAreaName _name;
-        private readonly GridAreaCode _code;
         private readonly string _operatorName;
         private readonly string _operatorId;
         private readonly PriceAreaCode _priceAreaCode;
 
+#pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind complex types in constructor
+        private GridArea() { }
+#pragma warning restore 8618
+
         private GridArea(
+            GridAreaId gridAreaId,
             GridAreaName name,
             GridAreaCode code,
             string operatorName,
             string operatorId,
             PriceAreaCode priceAreaCode)
         {
+            Id = gridAreaId;
+            Code = code;
             _name = name;
-            _code = code;
             _operatorName = operatorName;
             _operatorId = operatorId;
             _priceAreaCode = priceAreaCode;
         }
 
-        public GridAreaCode Code => _code;
+        public GridAreaCode Code { get; }
+
+        public GridAreaId Id { get; }
 
         public static BusinessRulesValidationResult CanCreate(GridAreaDetails gridAreaDetails)
         {
@@ -66,6 +73,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
             }
 
             return new GridArea(
+                GridAreaId.New(),
                 GridAreaName.Create(gridAreaDetails.Name),
                 GridAreaCode.Create(gridAreaDetails.Code),
                 gridAreaDetails.OperatorName,
