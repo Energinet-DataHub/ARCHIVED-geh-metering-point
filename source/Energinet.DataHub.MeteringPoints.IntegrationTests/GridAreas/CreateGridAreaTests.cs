@@ -17,11 +17,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
-using Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules;
-using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GridAreas;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
-using FluentAssertions;
 using Xunit;
 using Xunit.Categories;
 
@@ -52,38 +48,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.GridAreas
 
             // TODO: compare values
             Assert.NotNull(found);
-        }
-
-        [Fact]
-        public async Task Grid_area_with_invalid_name_should_be_rejected()
-        {
-            var request = CreateRequest() with
-            {
-                Name = new string('x', 51),
-            };
-
-            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
-
-            var resultHandler = GetService<IBusinessProcessResultHandler<CreateGridArea>>() as CreateGridAreaNullResultHandler;
-            resultHandler!.Errors.Should().ContainSingle().Which.Should().BeOfType<GridAreaNameMaxLengthRuleError>();
-        }
-
-        [Theory]
-        [InlineData("abc")]
-        [InlineData("00x")]
-        [InlineData("00")]
-        [InlineData("0000")]
-        public async Task Grid_area_with_invalid_code_should_be_rejected(string code)
-        {
-            var request = CreateRequest() with
-            {
-                Code = code,
-            };
-
-            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
-
-            var resultHandler = GetService<IBusinessProcessResultHandler<CreateGridArea>>() as CreateGridAreaNullResultHandler;
-            resultHandler!.Errors.Should().ContainSingle().Which.Should().BeOfType<GridAreaCodeFormatRuleError>();
         }
 
         private static CreateGridArea CreateRequest()
