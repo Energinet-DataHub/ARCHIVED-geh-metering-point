@@ -36,7 +36,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task Should_reject_when_powerplant_is_not_specified_and_netsettlementgroup_is_not_0_or_99()
         {
-            var request = CreateRequest();
+            var request = CreateRequest()
+                with
+                {
+                    PowerPlant = string.Empty,
+                    NetSettlementGroup = NetSettlementGroup.Six.Name,
+                };
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
@@ -278,7 +283,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 0,
                 0,
                 SampleData.MeteringGridArea,
-                string.Empty,
+                SampleData.PowerPlantGsrnNumber,
                 string.Empty,
                 SampleData.SettlementMethod,
                 SampleData.MeasurementUnitType,
@@ -299,7 +304,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SampleData.MeasurementUnitType,
                 ContractedConnectionCapacity: null,
                 RatedCurrent: null,
-                SampleData.ScheduledMeterReadingDate);
+                "0101");
         }
     }
 }
