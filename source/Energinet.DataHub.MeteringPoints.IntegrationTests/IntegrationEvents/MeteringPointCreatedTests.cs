@@ -13,47 +13,28 @@
 // limitations under the License.
 
 using System;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
-using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
-using Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
-using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
-using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
-using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentAssertions;
 using Microsoft.Azure.ServiceBus;
-using Microsoft.Azure.ServiceBus.Core;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using NodaTime;
 using NodaTime.Text;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Squadron;
 using Xunit;
-using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.IntegrationEvents
 {
     [Trait("Category", "Integration")]
-    public class MeteringPointCreatedTests
-    : IClassFixture<AzureCloudServiceBusResource<MeteringPointCreatedServicebusOptions>>
+    public class MeteringPointCreatedTests : IClassFixture<AzureCloudServiceBusResource<MeteringPointCreatedServiceBusOptions>>
     {
-        private readonly AzureCloudServiceBusResource<MeteringPointCreatedServicebusOptions> _serviceBusResource;
+        private readonly AzureCloudServiceBusResource<MeteringPointCreatedServiceBusOptions> _serviceBusResource;
 
-        public MeteringPointCreatedTests(AzureCloudServiceBusResource<MeteringPointCreatedServicebusOptions> serviceBusResource)
+        public MeteringPointCreatedTests(AzureCloudServiceBusResource<MeteringPointCreatedServiceBusOptions> serviceBusResource)
         {
             _serviceBusResource = serviceBusResource;
         }
@@ -62,48 +43,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.IntegrationEvents
         public async Task DispatchMeteringPointCreatedAndConsumeWithReceiverAndAssertMessageContent()
         {
             // Setup
-            var serviceCollection = new ServiceCollection();
             await using var sendingContainer = new Container();
-            sendingContainer.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
-            serviceCollection.AddDbContext<MeteringPointContext>(x =>
-            {
-                var connectionString = "Server=localhost;Database=MeteringPointTestDB;Trusted_Connection=True;";
-
-                x.UseSqlServer(connectionString, y => y.UseNodaTime());
-            });
-
-            serviceCollection.AddSimpleInjector(sendingContainer);
-            serviceCollection.BuildServiceProvider().UseSimpleInjector(sendingContainer);
-            sendingContainer.Register(
-                () => new PostOfficeStorageClientSettings(
-                    "DefaultEndpointsProtocol=https;AccountName=stormeteringpointtmpu;AccountKey=KwFnZJh3Tv/am6o8SdPeA/GplYwitkCsFt6GajCpRY1zoRkdyCrpfASWegYDYRlI+saRBY4ecL4+27D4sTFoQA==;EndpointSuffix=core.windows.net",
-                    "temppostoffice"));
-            sendingContainer.Register<IOutboxMessageDispatcher, OutboxMessageDispatcher>(Lifestyle.Scoped);
-            sendingContainer.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
-            sendingContainer.Register<ISystemDateTimeProvider, SystemDateTimeProviderStub>(Lifestyle.Scoped);
-            sendingContainer.Register<IOutboxManager, OutboxManager>(Lifestyle.Scoped);
-            sendingContainer.Register<OutboxOrchestrator>(Lifestyle.Scoped);
-            sendingContainer.Register<IPostOfficeStorageClient, TempPostOfficeStorageClient>(Lifestyle.Scoped);
-            sendingContainer.Register<IIntegrationMetaDataContext, IntegrationMetaDataContext>(Lifestyle.Scoped);
-            sendingContainer.Register<IJsonSerializer, Energinet.DataHub.MeteringPoints.Infrastructure.Serialization.JsonSerializer>(Lifestyle.Scoped);
-            sendingContainer.Register<ServiceBusClient>(
-                () => new ServiceBusClient(_serviceBusResource.ConnectionString),
-                Lifestyle.Singleton);
-            sendingContainer.Register(
-                () => new MeteringPointCreatedTopic("metering-point-created"),
-                Lifestyle.Singleton);
-            sendingContainer.Register(
-                () => new MeteringPointConnectedTopic("metering-point-connected"),
-                Lifestyle.Singleton);
-            sendingContainer.Register(typeof(ITopicSender<>), typeof(TopicSender<>), Lifestyle.Singleton);
-            sendingContainer.SendProtobuf<IntegrationEventEnvelope>();
-            sendingContainer.BuildMediator(
-                new[]
-                {
-                    typeof(OutboxWatcher).Assembly,
-                },
-                Array.Empty<Type>());
-            sendingContainer.Verify();
+            ContainerHelper.CreateContainer(sendingContainer);
+            ContainerHelper.RegisterServiceBusService(sendingContainer, _serviceBusResource);
+            ContainerHelper.VerifyContainer(sendingContainer);
 
             await using (AsyncScopedLifestyle.BeginScope(sendingContainer))
             {
@@ -118,10 +61,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.IntegrationEvents
                 await orchestrator.ProcessOutboxMessagesAsync().ConfigureAwait(false);
 
                 // Get client for consuming events from a Service Bus queue
-                var queueClient = _serviceBusResource.GetSubscriptionClient(
-                    "metering-point-created",
-                    MeteringPointCreatedServicebusOptions.ServiceBusTopicSubscriber);
-
+                var queueClient = _serviceBusResource.GetSubscriptionClient(MeteringPointCreatedServiceBusOptions.ServiceBusTopic, MeteringPointCreatedServiceBusOptions.ServiceBusTopicSubscriber);
                 var result = await queueClient.AwaitMessageAsync(GetMessage).ConfigureAwait(false);
 
                 // Assert
@@ -131,6 +71,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.IntegrationEvents
                 result.UserProperties["CorrelationId"].Should().Be("00-2f06a6b44f129b4e90a4985a82e77ff5-56e1ec72800dde48-00");
                 result.UserProperties["MessageVersion"].Should().Be(1);
                 result.UserProperties["MessageType"].Should().Be("MeteringPointCreated");
+
+                ContainerHelper.CleanupDatabase(sendingContainer);
             }
         }
 
