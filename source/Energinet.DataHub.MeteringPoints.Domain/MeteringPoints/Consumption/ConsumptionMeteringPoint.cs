@@ -16,7 +16,6 @@ using System;
 using System.Collections.ObjectModel;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -146,16 +145,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 
         public static BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
         {
-            var rules = new Collection<IBusinessRule>()
-            {
-                new PowerPlantIsRequiredForNetSettlementGroupRule(meteringPointDetails.GsrnNumber, meteringPointDetails.NetSettlementGroup, meteringPointDetails.PowerPlantGsrnNumber),
-                new StreetNameIsRequiredRule(meteringPointDetails.GsrnNumber, meteringPointDetails.Address),
-                new PostCodeIsRequiredRule(meteringPointDetails.Address),
-                new CityIsRequiredRule(meteringPointDetails.Address),
-                new ScheduledMeterReadingDateRule(meteringPointDetails.ScheduledMeterReadingDate, meteringPointDetails.NetSettlementGroup),
-            };
+            if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
+            var creationRules = new CreationRules(meteringPointDetails);
 
-            return new BusinessRulesValidationResult(rules);
+            return new BusinessRulesValidationResult(creationRules.Rules);
         }
 
         public static ConsumptionMeteringPoint Create(MeteringPointDetails meteringPointDetails)
