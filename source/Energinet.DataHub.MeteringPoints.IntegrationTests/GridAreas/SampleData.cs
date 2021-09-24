@@ -20,7 +20,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.GridAreas
     {
         public static string GridAreaName => "N1";
 
-        public static string GridAreaCode => "007";
+        public static string GridAreaCode => "870";
 
         public static string OperatorName => "op";
 
