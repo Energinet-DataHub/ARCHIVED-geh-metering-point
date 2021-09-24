@@ -17,16 +17,15 @@ using Squadron;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.IntegrationEvents
 {
-    public class ServiceBusOptions : AzureCloudServiceBusOptions
+    public class MeteringPointCreatedServiceBusOptions : AzureCloudServiceBusOptions
     {
+        public const string ServiceBusTopic = "metering-point-created";
         public const string ServiceBusTopicSubscriber = "subscriber";
 
         public override void Configure(ServiceBusOptionsBuilder builder)
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder));
-            builder.AddTopic("metering-point-created")
-                .AddSubscription(ServiceBusTopicSubscriber);
-            builder.AddTopic("metering-point-connected")
+            builder.AddTopic(ServiceBusTopic)
                 .AddSubscription(ServiceBusTopicSubscriber);
         }
     }
