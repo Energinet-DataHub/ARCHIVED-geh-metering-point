@@ -30,38 +30,28 @@ using Xunit;
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.IntegrationEvents
 {
     [Trait("Category", "Integration")]
-    public class MeteringPointCreatedTests : IClassFixture<AzureCloudServiceBusResource<MeteringPointCreatedServiceBusOptions>>
+    public class MeteringPointCreatedTests : OutboxHost<MeteringPointCreatedServiceBusOptions>
     {
-        private readonly AzureCloudServiceBusResource<MeteringPointCreatedServiceBusOptions> _serviceBusResource;
-
-        public MeteringPointCreatedTests(AzureCloudServiceBusResource<MeteringPointCreatedServiceBusOptions> serviceBusResource)
+        public MeteringPointCreatedTests(AzureCloudServiceBusResource<MeteringPointCreatedServiceBusOptions> resource)
+            : base(resource)
         {
-            _serviceBusResource = serviceBusResource;
         }
 
         [Fact]
         public async Task DispatchMeteringPointCreatedAndConsumeWithReceiverAndAssertMessageContent()
         {
-            // Setup
-            await using var sendingContainer = new Container();
-            ContainerHelper.CreateContainer(sendingContainer);
-            ContainerHelper.RegisterServiceBusService(sendingContainer, _serviceBusResource);
-            ContainerHelper.VerifyContainer(sendingContainer);
-
-            await using (AsyncScopedLifestyle.BeginScope(sendingContainer))
-            {
                 // Arrange
-                var outBoxManager = sendingContainer.GetRequiredService<IOutboxManager>();
+                var outBoxManager = GetService<IOutboxManager>();
                 outBoxManager.Add(CreateOutboxMessage());
-                var unitOfWork = sendingContainer.GetRequiredService<IUnitOfWork>();
+                var unitOfWork = GetService<IUnitOfWork>();
                 await unitOfWork.CommitAsync().ConfigureAwait(false);
 
                 // Act
-                var orchestrator = sendingContainer.GetRequiredService<OutboxOrchestrator>();
+                var orchestrator = GetService<OutboxOrchestrator>();
                 await orchestrator.ProcessOutboxMessagesAsync().ConfigureAwait(false);
 
                 // Get client for consuming events from a Service Bus queue
-                var queueClient = _serviceBusResource.GetSubscriptionClient(MeteringPointCreatedServiceBusOptions.ServiceBusTopic, MeteringPointCreatedServiceBusOptions.ServiceBusTopicSubscriber);
+                var queueClient = GetSubscription(MeteringPointCreatedServiceBusOptions.ServiceBusTopic, MeteringPointCreatedServiceBusOptions.ServiceBusTopicSubscriber);
                 var result = await queueClient.AwaitMessageAsync(GetMessage).ConfigureAwait(false);
 
                 // Assert
@@ -71,10 +61,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.IntegrationEvents
                 result.UserProperties["CorrelationId"].Should().Be("00-2f06a6b44f129b4e90a4985a82e77ff5-56e1ec72800dde48-00");
                 result.UserProperties["MessageVersion"].Should().Be(1);
                 result.UserProperties["MessageType"].Should().Be("MeteringPointCreated");
-
-                ContainerHelper.CleanupDatabase(sendingContainer);
             }
-        }
 
         private static Task<Message> GetMessage(Message msg, CancellationToken cancellationToken)
         {
