@@ -60,6 +60,7 @@ using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Xunit;
 using Xunit.Categories;
+using Xunit.Sdk;
 using ConnectMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Connect.ConnectMeteringPoint;
 using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Create.CreateMeteringPoint;
 using JsonSerializer = Energinet.DataHub.MeteringPoints.Infrastructure.Serialization.JsonSerializer;
@@ -214,6 +215,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 .First(msg => msg.MessageType.Equals(typeof(TRejectMessage).Name, StringComparison.Ordinal));
 
             var rejectMessage = JsonConvert.DeserializeObject<TRejectMessage>(message.Content);
+
+            var errorCount = rejectMessage.Errors.Count;
+            if (errorCount > 1)
+            {
+                var errorMessage = new StringBuilder();
+                errorMessage.AppendLine($"Reject message contains more ({errorCount}) than 1 error:");
+                foreach (var error in rejectMessage.Errors)
+                {
+                    errorMessage.AppendLine($"Code: {error.Code}. Description: {error.Description}.");
+                }
+
+                throw new XunitException(errorMessage.ToString());
+            }
+
             var validationError = rejectMessage.Errors
                 .First(error => error.Code == expectedErrorCode);
 

@@ -16,9 +16,8 @@ using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMeteringPoints
 {
     public class MarketMeteringPointMock : MarketMeteringPoint
     {
