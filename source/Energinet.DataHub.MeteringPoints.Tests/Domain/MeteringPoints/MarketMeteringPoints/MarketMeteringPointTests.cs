@@ -76,8 +76,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 MeasurementUnitType.KWh,
                 SampleData.MeterNumber,
                 ReadingOccurrence.Hourly,
-                SampleData.MaximumCurrent,
-                SampleData.MaximumPower,
+                PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
                 EffectiveDate.Create(SampleData.EffectiveDate));
         }
     }

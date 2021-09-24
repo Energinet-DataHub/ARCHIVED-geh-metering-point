@@ -36,8 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeasurementUnitType unitType,
             string? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
-            int maximumCurrent,
-            int maximumPower,
+            PowerLimit powerLimit,
             EffectiveDate effectiveDate,
             string? toGrid,
             string? fromGrid,
@@ -54,8 +53,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 unitType,
                 meterNumber,
                 meterReadingOccurrence,
-                maximumCurrent,
-                maximumPower,
+                powerLimit,
                 effectiveDate)
         {
             _toGrid = toGrid;

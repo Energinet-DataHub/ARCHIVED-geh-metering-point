@@ -126,11 +126,13 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<ReadingOccurrence>(fromDbValue));
 
-            builder.Property("_maximumCurrent")
-                .HasColumnName("MaximumCurrent");
-
-            builder.Property("_maximumPower")
-                .HasColumnName("MaximumPower");
+            builder.OwnsOne<PowerLimit>("_powerLimit", mapper =>
+            {
+                mapper.Property(x => x.Ampere)
+                    .HasColumnName("MaximumCurrent");
+                mapper.Property(x => x.Kwh)
+                    .HasColumnName("MaximumPower");
+            });
 
             builder.Property<EffectiveDate>("_effectiveDate")
                 .HasColumnName("EffectiveDate")
