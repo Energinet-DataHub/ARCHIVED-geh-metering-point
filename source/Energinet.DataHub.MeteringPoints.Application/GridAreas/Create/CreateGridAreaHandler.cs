@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -64,23 +65,26 @@ namespace Energinet.DataHub.MeteringPoints.Application.GridAreas.Create
             return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
         }
 
-        private static Task<BusinessProcessResult> ValidateInputAsync(CreateGridArea request)
-        {
-            var validationRules = new List<IBusinessRule>
-            {
-            };
-
-            return Task.FromResult(new BusinessProcessResult(request.TransactionId, validationRules));
-        }
-
         private static GridAreaDetails CreateDetails(CreateGridArea request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             return new GridAreaDetails(
-                request.Name ?? string.Empty,
-                request.Code ?? string.Empty,
-                request.PriceAreaCode ?? string.Empty);
+                request.Name,
+                request.Code,
+                request.PriceAreaCode);
+        }
+
+        private async Task<BusinessProcessResult> ValidateInputAsync(CreateGridArea request)
+        {
+            var existingGridArea = await _gridAreaRepository.GetByCodeAsync(request.Code).ConfigureAwait(false);
+
+            var validationRules = new List<IBusinessRule>
+            {
+                new GridAreaCodeUniqueRule(existingGridArea, request.Code),
+            };
+
+            return new BusinessProcessResult(request.TransactionId, validationRules);
         }
     }
 }

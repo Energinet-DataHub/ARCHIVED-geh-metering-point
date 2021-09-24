@@ -16,8 +16,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create;
-using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GridAreas;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
+using FluentAssertions;
 using Xunit;
 using Xunit.Categories;
 
@@ -39,14 +42,25 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.GridAreas
         [Fact]
         public async Task Created_grid_area_should_be_retrievable_from_repository()
         {
-            var request = CreateRequest();
+            var request = CreateRequest() with { Code = "123" };
 
             await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
 
             var found = await _gridAreaRepository.GetByCodeAsync(request.Code!).ConfigureAwait(false);
 
-            // TODO: compare values
-            Assert.NotNull(found);
+            found.Should().NotBeNull();
+            found!.Code.Value.Should().Be(request.Code);
+        }
+
+        [Fact]
+        public async Task Creating_grid_area_with_existing_code_should_be_rejected()
+        {
+            var request = CreateRequest();
+
+            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
+
+            var resultHandler = GetService<IBusinessProcessResultHandler<CreateGridArea>>() as CreateGridAreaNullResultHandler;
+            resultHandler!.Errors.Should().ContainSingle().Which.Should().BeOfType<GridAreaCodeUniqueRuleError>();
         }
 
         private static CreateGridArea CreateRequest()

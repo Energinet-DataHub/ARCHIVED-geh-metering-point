@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+using System;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
-namespace Energinet.DataHub.MeteringPoints.Application.GridAreas.Create
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public record CreateGridArea(
-            string Name = "",
-            string Code = "",
-            string PriceAreaCode = "",
-            string TransactionId = "")
-        : IBusinessRequest,
-            IOutboundMessage,
-            IInboundMessage;
+    public class GridAreaCodeUniqueRuleErrorConverter : ErrorConverter<GridAreaCodeUniqueRuleError>
+    {
+        protected override ErrorMessage Convert(GridAreaCodeUniqueRuleError validationError)
+        {
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new("?", $"The grid area code {validationError.Code} already exists");
+        }
+    }
 }
