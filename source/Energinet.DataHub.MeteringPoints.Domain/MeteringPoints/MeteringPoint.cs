@@ -29,8 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private GridAreaId _gridAreaId;
         private MeteringPointSubType _meteringPointSubType;
         private ReadingOccurrence _meterReadingOccurrence;
-        private int _maximumCurrent;
-        private int _maximumPower;
+        private PowerLimit _powerLimit;
         private GsrnNumber? _powerPlantGsrnNumber;
         private string? _locationDescription;
         private EffectiveDate _effectiveDate;
@@ -54,8 +53,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeasurementUnitType unitType,
             string? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
-            int maximumCurrent,
-            int maximumPower,
+            PowerLimit powerLimit,
             EffectiveDate effectiveDate)
         {
             Id = id;
@@ -70,8 +68,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _unitType = unitType;
             _meterNumber = meterNumber;
             _meterReadingOccurrence = meterReadingOccurrence;
-            _maximumCurrent = maximumCurrent;
-            _maximumPower = maximumPower;
+            _powerLimit = powerLimit;
             _effectiveDate = effectiveDate;
         }
 

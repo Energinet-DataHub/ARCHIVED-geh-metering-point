@@ -18,13 +18,13 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class KilowattPowerLimitErrorConverter : ErrorConverter<InvalidKwhPowerLimitRuleError>
+    public class AmperePowerLimitErrorConverter : ErrorConverter<InvalidAmperePowerLimitRuleError>
     {
-        protected override ErrorMessage Convert(InvalidKwhPowerLimitRuleError validationError)
+        protected override ErrorMessage Convert(InvalidAmperePowerLimitRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("E86", $"Power limit KW {validationError.Kwh} contains a non-digit character or has a length that exceeds 6");
+            return new("E86", $"Power limit A {validationError.Ampere} contains a non-digit character or has a length that exceeds 6");
         }
     }
 }
