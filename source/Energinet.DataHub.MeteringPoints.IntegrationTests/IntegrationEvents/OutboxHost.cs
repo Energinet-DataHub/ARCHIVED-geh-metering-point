@@ -37,6 +37,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice;
@@ -110,6 +111,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.IntegrationEvents
                     Lifestyle.Scoped);
                 _container.Register(
                     () => new MeteringPointConnectedTopic("metering-point-connected"),
+                    Lifestyle.Scoped);
+                _container.Register(
+                    () => new ConsumptionMeteringPointCreatedTopic("consumption-metering-point-created"),
                     Lifestyle.Scoped);
                 _container.Register(typeof(ITopicSender<>), typeof(TopicSender<>), Lifestyle.Scoped);
 

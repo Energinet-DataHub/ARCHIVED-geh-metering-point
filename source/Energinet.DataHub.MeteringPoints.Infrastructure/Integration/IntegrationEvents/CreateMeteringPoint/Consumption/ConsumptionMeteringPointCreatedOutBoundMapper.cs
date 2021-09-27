@@ -14,6 +14,7 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
+using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using Google.Protobuf;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption
@@ -23,12 +24,17 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         protected override IMessage Convert(ConsumptionMeteringPointCreatedIntegrationEvent obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
-            return new IntegrationEventContracts.ConsumptionMeteringPointCreated
+            return new ConsumptionMeteringPointCreated
             {
-                MeteringPointId = obj.MeteringPointId.ToString(),
-                Gsrn = obj.GsrnNumber.Value,
+                MeteringPointId = obj.MeteringPointId,
+                GsrnNumber = obj.GsrnNumber,
                 GridAreaCode = obj.GridAreaCode,
-                MeterReadingPeriodicity = obj.MeterReadingPeriodicity,
+                SettlementMethod = Enum.Parse<ConsumptionMeteringPointCreated.Types.SettlementMethod>(obj.SettlementMethod),
+                MeteringMethod = Enum.Parse<ConsumptionMeteringPointCreated.Types.MeteringMethod>(obj.MeteringMethod),
+                MeterReadingPeriodicity = Enum.Parse<ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity>(obj.MeterReadingPeriodicity),
+                NetSettlementGroup = Enum.Parse<ConsumptionMeteringPointCreated.Types.NetSettlementGroup>(obj.NetSettlementGroup),
+                Product = Enum.Parse<ConsumptionMeteringPointCreated.Types.ProductType>(obj.ProductType),
+                EffectiveDate = obj.EffectiveDate,
             };
         }
     }

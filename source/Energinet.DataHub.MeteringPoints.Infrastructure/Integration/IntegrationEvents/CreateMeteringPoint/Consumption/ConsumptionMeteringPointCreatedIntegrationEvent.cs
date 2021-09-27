@@ -21,14 +21,14 @@ using MediatR;
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption
 {
     public record ConsumptionMeteringPointCreatedIntegrationEvent(
-            Guid MeteringPointId,
-            GsrnNumber GsrnNumber,
+            string MeteringPointId,
+            string GsrnNumber,
             string GridAreaCode,
-            SettlementMethod SettlementMethod,
-            MeteringPointSubType MeteringMethod,
-            ReadingOccurrence MeterReadingPeriodicity,
-            NetSettlementGroup NetSettlementGroup,
-            ProductType ProductType,
-            EffectiveDate EffectiveDate)
+            string SettlementMethod,
+            string MeteringMethod,
+            string MeterReadingPeriodicity,
+            string NetSettlementGroup,
+            string ProductType,
+            string EffectiveDate)
         : IIntegrationEvent, IRequest, IOutboundMessage;
 }

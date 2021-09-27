@@ -22,7 +22,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDispatchers
 {
-    public class CreateMeteringPointDispatcher : IntegrationEventDispatcher<MeteringPointCreatedTopic, MeteringPointCreatedEventMessage>
+    public class CreateMeteringPointDispatcher : IntegrationEventDispatcher<MeteringPointCreatedEventMessage>
     {
         private readonly ITopicSender<MeteringPointCreatedTopic> _topicSender;
 

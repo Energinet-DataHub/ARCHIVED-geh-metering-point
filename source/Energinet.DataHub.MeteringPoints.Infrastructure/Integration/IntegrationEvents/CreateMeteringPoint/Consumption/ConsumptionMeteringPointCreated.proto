@@ -22,49 +22,49 @@ option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEventCont
  */
 message ConsumptionMeteringPointCreated {
   enum NetSettlementGroup {
-    NSG_ZERO = 0;
-    NSG_ONE = 1;
-    NSG_TWO = 2;
-    NSG_THREE = 3;
-    NSG_SIX = 4;
-    NSG_NINETYNINE = 5;
+    ZERO = 0;
+    ONE = 1;
+    TWO = 2;
+    THREE = 3;
+    SIX = 4;
+    NINETYNINE = 5;
   }
   
   enum ProductType {
-    PT_TARIFF = 0;
-    PT_FUELQUANTITY = 1;
-    PT_POWERACTIVE = 2;
-    PT_POWERREACTIVE = 3;
-    PT_ENERGYACTIVE = 4;
-    PT_ENERGYREACTIVE = 5;
+    TARIFF = 0;
+    FUELQUANTITY = 1;
+    POWERACTIVE = 2;
+    POWERREACTIVE = 3;
+    ENERGYACTIVE = 4;
+    ENERGYREACTIVE = 5;
   }
   
   enum SettlementMethod {
-    SM_FLEX = 0;
-    SM_PROFILED = 1;
-    SM_NONPROFILED = 2;  
+    FLEX = 0;
+    PROFILED = 1;
+    NONPROFILED = 2;  
   }
   
-  enum MeteringPointSubType {
-    MPS_PHYSICAL = 0;
-    MPS_VIRTUAL = 1;
-    MPS_CALCULATED =2;
+  enum MeteringMethod {
+    PHYSICAL = 0;
+    VIRTUAL = 1;
+    CALCULATED =2;
   }
   
-  enum ReadingOccurrence {
-    RO_YEARLY = 0;
-    RO_MONTHLY = 1;
-    RO_HOURLY = 2;
-    RO_QUARTERLY = 3;
+  enum MeterReadingPeriodicity {
+    YEARLY = 0;
+    MONTHLY = 1;
+    HOURLY = 2;
+    QUARTERLY = 3;
   }
   
-  string MeteringPointId = 1;
-  string Gsrn = 2;
-  string GridAreaCode = 3;
+  string Metering_Point_Id = 1;
+  string Gsrn_Number = 2;
+  string Grid_Area_Code = 3;
   SettlementMethod Settlement_Method = 4;
-  MeteringPointSubType MeteringMethod = 5;
-  ReadingOccurrence MeterReadingPeriodicity = 6;
-  NetSettlementGroup NetSettlement_Group = 7;
+  MeteringMethod Metering_Method = 5;
+  MeterReadingPeriodicity Meter_Reading_Periodicity = 6;
+  NetSettlementGroup Net_Settlement_Group = 7;
   ProductType Product = 8;  
-  string EffectiveDate = 9;
+  string Effective_Date = 9;
 }

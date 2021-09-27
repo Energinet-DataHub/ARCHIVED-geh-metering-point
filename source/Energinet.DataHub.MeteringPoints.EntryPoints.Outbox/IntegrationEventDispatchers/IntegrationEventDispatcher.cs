@@ -24,8 +24,7 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDispatchers
 {
-    public abstract class IntegrationEventDispatcher<TTopic, TEvent> : IRequestHandler<TEvent>
-        where TTopic : Topic
+    public abstract class IntegrationEventDispatcher<TEvent> : IRequestHandler<TEvent>
         where TEvent : IOutboundMessage, IRequest<Unit>
     {
         private readonly ProtobufOutboundMapper<TEvent> _mapper;
