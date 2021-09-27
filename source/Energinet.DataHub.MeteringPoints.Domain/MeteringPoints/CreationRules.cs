@@ -15,18 +15,26 @@
 using System;
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    internal class CreationRules : MeteringPoints.CreationRules
+    internal class CreationRules
     {
+        private readonly List<IBusinessRule> _rules = new List<IBusinessRule>();
+
         public CreationRules(MeteringPointDetails meteringPointDetails)
-            : base(meteringPointDetails)
         {
             if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
-            Add(new MeterReadingOccurrenceRule(meteringPointDetails.ReadingOccurrence));
+            Add(new MeterIdRequirementRule(meteringPointDetails.MeterNumber, meteringPointDetails.MeteringPointSubType));
+        }
+
+        public IEnumerable<IBusinessRule> Rules => _rules.AsReadOnly();
+
+        protected void Add(IBusinessRule rule)
+        {
+            _rules.Add(rule);
         }
     }
 }

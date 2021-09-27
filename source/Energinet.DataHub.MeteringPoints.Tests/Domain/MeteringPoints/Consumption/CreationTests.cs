@@ -26,7 +26,7 @@ using Xunit.Categories;
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumption
 {
     [UnitTest]
-    public class CreationTests
+    public class CreationTests : TestBase
     {
         [Fact]
         public void Should_succeed()
@@ -40,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             var netSettlementGroup = NetSettlementGroup.Three;
             var locationDescription = LocationDescription.Create(string.Empty);
             var measurementUnitType = MeasurementUnitType.KWh;
-            var meterNumber = "1";
+            var meterNumber = MeterId.Create("A1234");
             var readingOccurrence = ReadingOccurrence.Hourly;
             var powerLimit = PowerLimit.Create(0, 0);
             var effectiveDate = EffectiveDate.Create(SampleData.EffectiveDate);
@@ -97,7 +97,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(powerPlanGsrn.Value, createdEvent.PowerPlantGsrnNumber);
             Assert.Equal(locationDescription.Value, createdEvent.LocationDescription);
             Assert.Equal(measurementUnitType.Name, createdEvent.UnitType);
-            Assert.Equal(meterNumber, createdEvent.MeterNumber);
+            Assert.Equal(meterNumber.Value, createdEvent.MeterNumber);
             Assert.Equal(readingOccurrence.Name, createdEvent.ReadingOccurrence);
             Assert.Equal(powerLimit.Ampere, createdEvent.MaximumCurrent);
             Assert.Equal(powerLimit.Kwh, createdEvent.MaximumPower);
@@ -260,41 +260,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is ConsumptionMeteringPointCreated) as ConsumptionMeteringPointCreated;
 
             Assert.Equal(ProductType.EnergyActive.Name, createdEvent!.ProductType);
-        }
-
-        private static MeteringPointDetails CreateDetails()
-        {
-            var address = Address.Create(
-                SampleData.StreetName,
-                SampleData.StreetCode,
-                string.Empty,
-                SampleData.CityName,
-                string.Empty,
-                SampleData.PostCode,
-                null,
-                string.Empty,
-                string.Empty,
-                default);
-
-            return new MeteringPointDetails(
-                MeteringPointId.New(),
-                GsrnNumber.Create(SampleData.GsrnNumber),
-                address,
-                SampleData.IsOfficialAddress,
-                MeteringPointSubType.Physical,
-                GridAreaId.New(),
-                GsrnNumber.Create(SampleData.PowerPlant),
-                LocationDescription.Create(SampleData.LocationDescription),
-                SampleData.MeterNumber,
-                ReadingOccurrence.Hourly,
-                PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
-                EffectiveDate.Create(SampleData.EffectiveDate),
-                SettlementMethod.Flex,
-                NetSettlementGroup.Six,
-                DisconnectionType.Manual,
-                ConnectionType.Installation,
-                AssetType.GasTurbine,
-                ScheduledMeterReadingDate.Create(SampleData.ScheduledMeterReadingDate));
         }
 
         private static BusinessRulesValidationResult CreateRequest(MeteringPointDetails meteringPointDetails)

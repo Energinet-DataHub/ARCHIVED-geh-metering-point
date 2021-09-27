@@ -26,7 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         GridAreaId GridAreaId,
         GsrnNumber? PowerPlantGsrnNumber,
         LocationDescription? LocationDescription,
-        string? MeterNumber,
+        MeterId? MeterNumber,
         ReadingOccurrence ReadingOccurrence,
         PowerLimit PowerLimit,
         EffectiveDate EffectiveDate,

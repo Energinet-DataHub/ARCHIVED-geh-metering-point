@@ -12,16 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
+using System;
+using System.Runtime.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public class MeterNumberNotAllowedErrorConverter : ErrorConverter<MeterIdIsNotAllowedRuleError>
+    [Serializable]
+    public class InvalidMeterIdException : BusinessRuleException
     {
-        protected override ErrorMessage Convert(MeterIdIsNotAllowedRuleError validationError)
+        public InvalidMeterIdException()
         {
-            return new("E86", "Meter number is not allowed for sub types other than physical");
+        }
+
+        public InvalidMeterIdException(string? message)
+            : base(message)
+        {
+        }
+
+        public InvalidMeterIdException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+
+        protected InvalidMeterIdException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
         }
     }
 }

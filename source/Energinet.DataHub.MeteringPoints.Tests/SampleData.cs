@@ -47,7 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public static string UnitType => string.Empty;
 
-        public static string MeterNumber => string.Empty;
+        public static string MeterNumber => "123456";
 
         public static string MeterReadingOccurence => string.Empty;
 
