@@ -62,9 +62,7 @@ message CreateMeteringPoint {
   string productType = 24;
   string measureUnitType = 25;
   google.protobuf.StringValue physicalConnectionCapacity = 26;
-  google.protobuf.StringValue contractedConnectionCapacity = 27;
-  google.protobuf.StringValue ratedCurrent = 28;
-  google.protobuf.StringValue scheduledMeterReadingDate = 29;
+  google.protobuf.StringValue scheduledMeterReadingDate = 27;
 }
 
 message ConnectMeteringPoint {
