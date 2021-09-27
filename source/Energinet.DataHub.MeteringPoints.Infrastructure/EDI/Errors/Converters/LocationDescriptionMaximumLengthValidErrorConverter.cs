@@ -14,15 +14,16 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class LocationDescriptionMaximumLengthValidErrorConverter : ErrorConverter<LocationDescriptionMaximumLengthValidationError>
+    public class LocationDescriptionMaximumLengthValidErrorConverter : ErrorConverter<InvalidLocationDescriptionRuleError>
     {
-        protected override ErrorMessage Convert(LocationDescriptionMaximumLengthValidationError validationError)
+        protected override ErrorMessage Convert(InvalidLocationDescriptionRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-            return new("E86", $"Location description {validationError.LocationDescription} for metering point {validationError.GsrnNumber} has a length that exceeds 60");
+            return new("E86", $"Location description {validationError.LocationDescription} has a length that exceeds 60");
         }
     }
 }

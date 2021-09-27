@@ -72,12 +72,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 EnumerationType.FromName<MeteringPointType>(SampleData.TypeName),
                 GridAreaId.New(),
                 GsrnNumber.Create(SampleData.PowerPlant),
-                SampleData.LocationDescription,
+                LocationDescription.Create(SampleData.LocationDescription),
                 MeasurementUnitType.KWh,
                 SampleData.MeterNumber,
                 ReadingOccurrence.Hourly,
-                SampleData.MaximumCurrent,
-                SampleData.MaximumPower,
+                PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
                 EffectiveDate.Create(SampleData.EffectiveDate));
         }
     }

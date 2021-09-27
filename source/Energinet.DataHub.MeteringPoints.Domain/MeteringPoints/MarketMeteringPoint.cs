@@ -35,12 +35,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointType meteringPointType,
             GridAreaId gridAreaId,
             GsrnNumber? powerPlantGsrnNumber,
-            string? locationDescription,
+            LocationDescription? locationDescription,
             MeasurementUnitType unitType,
             string meterNumber,
             ReadingOccurrence meterReadingOccurrence,
-            int maximumCurrent,
-            int maximumPower,
+            PowerLimit powerLimit,
             EffectiveDate effectiveDate)
             : base(
                 id,
@@ -54,8 +53,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 unitType,
                 meterNumber,
                 meterReadingOccurrence,
-                maximumCurrent,
-                maximumPower,
+                powerLimit,
                 effectiveDate)
         {
         }
