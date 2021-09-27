@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Extensions
         {
             return ruleBuilder.Custom((property, context) =>
             {
-                var businessRulesValidationResult = func.Invoke(property);
+                var businessRulesValidationResult = func(property);
                 foreach (var validationError in businessRulesValidationResult.Errors)
                 {
                     var validationFailure = new ValidationFailure(nameof(TProperty), string.Empty)
