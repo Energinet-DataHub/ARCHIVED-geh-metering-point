@@ -67,6 +67,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 y.Property(x => x.Room).HasColumnName("Room");
                 y.Property(x => x.BuildingNumber).HasColumnName("BuildingNumber");
                 y.Property(x => x.MunicipalityCode).HasColumnName("MunicipalityCode");
+                y.Property(x => x.IsOfficial).HasColumnName("IsOfficialAddress");
             });
 
             builder.OwnsOne<ConnectionState>("ConnectionState", config =>

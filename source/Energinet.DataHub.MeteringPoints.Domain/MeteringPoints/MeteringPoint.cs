@@ -44,7 +44,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            // bool isAddressWashable,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
             GridAreaId gridAreaId,
@@ -59,7 +58,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             Id = id;
             GsrnNumber = gsrnNumber;
             _address = address;
-            // _isAddressWashable = isAddressWashable;
             _meteringPointSubType = meteringPointSubType;
             _meteringPointType = meteringPointType;
             _gridAreaId = gridAreaId;

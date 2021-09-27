@@ -259,6 +259,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             var floor = "1";
             var room = "tv";
             var municipalityCode = 100;
+            var isOfficial = true;
 
             var address = Create(
                 streetName: streetName,
@@ -270,7 +271,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 countryCode: countryCode,
                 floor: floor,
                 room: room,
-                municipalityCode: municipalityCode);
+                municipalityCode: municipalityCode,
+                isOfficial: isOfficial);
 
             Assert.Equal(streetName, address.StreetName);
             Assert.Equal(streetCode, address.StreetCode);
@@ -284,7 +286,18 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             Assert.Equal(municipalityCode, address.MunicipalityCode);
         }
 
-        private static Address Create(string streetName = "", string streetCode = "", string buildingNumber = "", string city = "", string citySubDivision = "", string postCode = "", CountryCode? countryCode = null, string floor = "", string room = "", int municipalityCode = default(int))
+        private static Address Create(
+            string streetName = "",
+            string streetCode = "",
+            string buildingNumber = "",
+            string city = "",
+            string citySubDivision = "",
+            string postCode = "",
+            CountryCode? countryCode = null,
+            string floor = "",
+            string room = "",
+            int municipalityCode = default(int),
+            bool isOfficial = false)
         {
             return Address.Create(
                streetName: streetName,
@@ -296,7 +309,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                countryCode: countryCode,
                floor: floor,
                room: room,
-               municipalityCode: municipalityCode);
+               municipalityCode: municipalityCode,
+               isOfficial: isOfficial);
         }
 
         private static BusinessRulesValidationResult CheckRules(string? streetName = "", string? streetCode = "", string? buildingNumber = "", string? city = "", string? citySubDivision = "", string? postCode = "", CountryCode? countryCode = null, string? floor = "", string room = "", int municipalityCode = default(int))

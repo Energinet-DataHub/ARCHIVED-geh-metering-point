@@ -189,7 +189,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 countryCode: EnumerationType.FromName<CountryCode>(request.CountryCode),
                 floor: request.FloorIdentification,
                 room: request.RoomIdentification,
-                municipalityCode: string.IsNullOrWhiteSpace(request.MunicipalityCode) ? default : int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()));
+                municipalityCode: string.IsNullOrWhiteSpace(request.MunicipalityCode) ? default : int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()),
+                isOfficial: request.IsOfficialAddress.GetValueOrDefault());
         }
 
         private static BusinessRulesValidationResult ValidateAddress(CreateMeteringPoint request)

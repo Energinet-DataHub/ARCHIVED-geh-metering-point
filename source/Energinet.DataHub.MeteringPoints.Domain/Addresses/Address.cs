@@ -21,7 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
 {
     public class Address : ValueObject
     {
-        private Address(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode)
+        private Address(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode, bool isOfficial)
         {
             StreetName = streetName;
             StreetCode = streetCode;
@@ -33,6 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
             Floor = floor;
             Room = room;
             MunicipalityCode = municipalityCode;
+            IsOfficial = isOfficial;
         }
 
         public string? StreetName { get; }
@@ -55,7 +56,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
 
         public int? MunicipalityCode { get; }
 
-        public static Address Create(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode)
+        public bool IsOfficial { get; }
+
+        public static Address Create(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode, bool isOfficial)
         {
             if (CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode).Success == false)
             {
@@ -72,7 +75,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
                 countryCode: countryCode,
                 floor: floor,
                 room: room,
-                municipalityCode: municipalityCode);
+                municipalityCode: municipalityCode,
+                isOfficial: isOfficial);
         }
 
         public static BusinessRulesValidationResult CheckRules(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode)
