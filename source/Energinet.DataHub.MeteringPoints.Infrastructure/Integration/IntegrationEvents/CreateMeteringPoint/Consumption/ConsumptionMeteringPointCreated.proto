@@ -18,7 +18,7 @@ syntax = "proto3";
 option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEventContracts";
 
 /**
- * This message is sent out when a metering point is connected.
+ * This message is sent out when a Consumption metering point is created.
  */
 message ConsumptionMeteringPointCreated {
   enum NetSettlementGroup {
@@ -45,12 +45,25 @@ message ConsumptionMeteringPointCreated {
     SM_NONPROFILED = 2;  
   }
   
+  enum MeteringPointSubType {
+    MPS_PHYSICAL = 0;
+    MPS_VIRTUAL = 1;
+    MPS_CALCULATED =2;
+  }
+  
+  enum ReadingOccurrence {
+    RO_YEARLY = 0;
+    RO_MONTHLY = 1;
+    RO_HOURLY = 2;
+    RO_QUARTERLY = 3;
+  }
+  
   string MeteringPointId = 1;
   string Gsrn = 2;
   string GridAreaCode = 3;
   SettlementMethod Settlement_Method = 4;
-  string MeteringMethod = 5;
-  string MeterReadingPeriodicity = 6;
+  MeteringPointSubType MeteringMethod = 5;
+  ReadingOccurrence MeterReadingPeriodicity = 6;
   NetSettlementGroup NetSettlement_Group = 7;
   ProductType Product = 8;  
   string EffectiveDate = 9;

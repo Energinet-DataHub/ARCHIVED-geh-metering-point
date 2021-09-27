@@ -25,8 +25,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
             GsrnNumber GsrnNumber,
             string GridAreaCode,
             SettlementMethod SettlementMethod,
-            string MeteringMethod,
-            string MeterReadingPeriodicity,
+            MeteringPointSubType MeteringMethod,
+            ReadingOccurrence MeterReadingPeriodicity,
             NetSettlementGroup NetSettlementGroup,
             ProductType ProductType,
             EffectiveDate EffectiveDate)

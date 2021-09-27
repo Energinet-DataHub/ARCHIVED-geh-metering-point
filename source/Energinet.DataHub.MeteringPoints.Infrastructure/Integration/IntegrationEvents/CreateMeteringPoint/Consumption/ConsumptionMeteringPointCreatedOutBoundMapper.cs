@@ -12,9 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
+using Google.Protobuf;
+
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption
 {
-    public class ConsumptionMeteringPointCreatedOutBoundMapper
+    public class ConsumptionMeteringPointCreatedOutBoundMapper : ProtobufOutboundMapper<ConsumptionMeteringPointCreatedIntegrationEvent>
     {
+        protected override IMessage Convert(ConsumptionMeteringPointCreatedIntegrationEvent obj)
+        {
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
+            return new IntegrationEventContracts.ConsumptionMeteringPointCreated
+            {
+                MeteringPointId = obj.MeteringPointId.ToString(),
+                Gsrn = obj.GsrnNumber.Value,
+                GridAreaCode = obj.GridAreaCode,
+                MeterReadingPeriodicity = obj.MeterReadingPeriodicity,
+            };
+        }
     }
 }
