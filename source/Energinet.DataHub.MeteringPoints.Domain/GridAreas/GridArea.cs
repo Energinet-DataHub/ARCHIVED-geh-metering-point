@@ -54,8 +54,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 
             var rules = new Collection<IBusinessRule>
             {
-                new GridAreaCodeFormatRule(gridAreaDetails.Code),
-                new GridAreaNameMaxLengthRule(gridAreaDetails.Name),
+                // new GridAreaCodeFormatRule(gridAreaDetails.Code),
+                // new GridAreaNameMaxLengthRule(gridAreaDetails.Name),
             };
 
             return new BusinessRulesValidationResult(rules);
@@ -72,9 +72,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 
             return new GridArea(
                 GridAreaId.New(),
-                GridAreaName.Create(gridAreaDetails.Name),
-                GridAreaCode.Create(gridAreaDetails.Code),
-                EnumerationType.FromName<PriceAreaCode>(gridAreaDetails.PriceAreaCode));
+                gridAreaDetails.Name,
+                gridAreaDetails.Code,
+                gridAreaDetails.PriceAreaCode);
         }
 
         private void AddDefaultLink()

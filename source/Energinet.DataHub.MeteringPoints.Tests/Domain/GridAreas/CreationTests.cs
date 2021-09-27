@@ -34,36 +34,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.GridAreas
             gridArea.Should().NotBeNull();
         }
 
-        [Fact]
-        public void Grid_area_with_invalid_name_should_be_rejected()
-        {
-            var details = CreateDetails() with { Name = new string('x', 51) };
-
-            var result = GridArea.CanCreate(details);
-
-            AssertContainsValidationError<GridAreaNameMaxLengthRuleError>(result);
-        }
-
-        [Theory]
-        [InlineData("abc")]
-        [InlineData("00x")]
-        [InlineData("00")]
-        [InlineData("0000")]
-        public void Grid_area_with_invalid_code_should_be_rejected(string code)
-        {
-            var details = CreateDetails() with { Code = code };
-
-            var result = GridArea.CanCreate(details);
-
-            AssertContainsValidationError<GridAreaCodeFormatRuleError>(result);
-        }
-
         private static GridAreaDetails CreateDetails()
         {
             return new GridAreaDetails(
-                SampleData.GridAreaName,
-                SampleData.GridAreaCode,
-                SampleData.PriceAreaCode);
+                GridAreaName.Create(SampleData.GridAreaName),
+                GridAreaCode.Create(SampleData.GridAreaCode),
+                EnumerationType.FromName<PriceAreaCode>(SampleData.PriceAreaCode));
         }
 
         private static void AssertContainsValidationError<TValidationError>(BusinessRulesValidationResult result)

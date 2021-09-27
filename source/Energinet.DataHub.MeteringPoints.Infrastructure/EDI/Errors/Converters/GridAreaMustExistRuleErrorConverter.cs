@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Application.Validation;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class GridAreaMustExistRuleErrorConverter : ErrorConverter<Domain.MeteringPoints.Rules.GridAreaMustExistRuleError>
+    public class GridAreaMustExistRuleErrorConverter : ErrorConverter<GridAreaMustExistRuleError>
     {
-        protected override ErrorMessage Convert(Domain.MeteringPoints.Rules.GridAreaMustExistRuleError validationError)
+        protected override ErrorMessage Convert(GridAreaMustExistRuleError validationError)
         {
             return new("E10", $"A metering point cannot be registered in GEH without a valid identification");
         }

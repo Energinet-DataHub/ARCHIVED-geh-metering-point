@@ -70,9 +70,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.GridAreas.Create
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             return new GridAreaDetails(
-                request.Name,
-                request.Code,
-                request.PriceAreaCode);
+                GridAreaName.Create(request.Name),
+                GridAreaCode.Create(request.Code),
+                EnumerationType.FromName<PriceAreaCode>(request.PriceAreaCode));
         }
 
         private async Task<BusinessProcessResult> ValidateInputAsync(CreateGridArea request)

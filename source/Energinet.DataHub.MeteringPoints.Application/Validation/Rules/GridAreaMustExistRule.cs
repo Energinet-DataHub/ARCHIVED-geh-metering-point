@@ -12,22 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
     internal class GridAreaMustExistRule : IBusinessRule
     {
-        private readonly GridAreaId? _gridAreaId;
+        private readonly GridArea? _gridArea;
 
-        public GridAreaMustExistRule(GridAreaId? gridAreaId)
+        public GridAreaMustExistRule(GridArea? gridArea)
         {
-            _gridAreaId = gridAreaId;
+            _gridArea = gridArea;
         }
 
-        public bool IsBroken => _gridAreaId == null;
+        public bool IsBroken => _gridArea?.Id == null;
 
         public ValidationError ValidationError => new GridAreaMustExistRuleError();
     }

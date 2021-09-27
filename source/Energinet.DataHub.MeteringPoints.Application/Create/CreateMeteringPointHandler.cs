@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
+using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
@@ -66,9 +67,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             var meteringPointType = EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint);
 
             var gridArea = await GetGridAreaAsync(request).ConfigureAwait(false);
+            var gridAreaValidationResult = ValidateGridArea(request, gridArea);
+            if (!gridAreaValidationResult.Success)
+            {
+                return new BusinessProcessResult(request.TransactionId, gridAreaValidationResult.ValidationErrors);
+            }
 
-            var meteringPointDetails = CreateDetails(request, gridArea?.Id);
-
+            var meteringPointDetails = CreateDetails(request, gridArea!.Id);
             var rulesCheckResult = CheckBusinessRules(request, meteringPointDetails);
             if (!rulesCheckResult.Success)
             {
@@ -96,6 +101,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             _meteringPointRepository.Add(meteringPoint);
 
             return BusinessProcessResult.Ok(request.TransactionId);
+        }
+
+        private static BusinessProcessResult ValidateGridArea(CreateMeteringPoint request, GridArea? gridArea)
+        {
+            var validationRules = new List<IBusinessRule>
+            {
+                new GridAreaMustExistRule(gridArea),
+            };
+
+            return new BusinessProcessResult(request.TransactionId, validationRules);
         }
 
         private static BusinessProcessResult CheckBusinessRules(CreateMeteringPoint request, MeteringPointDetails meteringPointDetails)
@@ -163,7 +178,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             return ConsumptionMeteringPoint.Create(meteringPointDetails);
         }
 
-        private static MeteringPointDetails CreateDetails(CreateMeteringPoint request, GridAreaId? gridAreaId)
+        private static MeteringPointDetails CreateDetails(CreateMeteringPoint request, GridAreaId gridAreaId)
         {
             return new MeteringPointDetails(
                 MeteringPointId.New(),
