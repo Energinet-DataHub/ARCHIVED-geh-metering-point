@@ -29,11 +29,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 MeteringPointId = obj.MeteringPointId,
                 GsrnNumber = obj.GsrnNumber,
                 GridAreaCode = obj.GridAreaCode,
-                SettlementMethod = Enum.Parse<ConsumptionMeteringPointCreated.Types.SettlementMethod>(obj.SettlementMethod),
-                MeteringMethod = Enum.Parse<ConsumptionMeteringPointCreated.Types.MeteringMethod>(obj.MeteringMethod),
-                MeterReadingPeriodicity = Enum.Parse<ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity>(obj.MeterReadingPeriodicity),
-                NetSettlementGroup = Enum.Parse<ConsumptionMeteringPointCreated.Types.NetSettlementGroup>(obj.NetSettlementGroup),
-                Product = Enum.Parse<ConsumptionMeteringPointCreated.Types.ProductType>(obj.ProductType),
+                SettlementMethod = obj.GetSettlementMethod(),
+                MeteringMethod = obj.GetMeteringMethod(),
+                MeterReadingPeriodicity = obj.GetMeterReadingPeriodicity(),
+                NetSettlementGroup = obj.GetNetSettlementGroup(),
+                Product = obj.GetProductType(),
                 EffectiveDate = obj.EffectiveDate,
             };
         }

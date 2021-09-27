@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
 {
@@ -25,6 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
         private static readonly Dictionary<string, Type> _types = new()
         {
             { typeof(MeteringPointCreatedEventMessage).FullName!, typeof(MeteringPointCreatedEventMessage) },
+            { typeof(ConsumptionMeteringPointCreatedIntegrationEvent).FullName!, typeof(ConsumptionMeteringPointCreatedIntegrationEvent) },
             { typeof(MeteringPointConnectedIntegrationEvent).FullName!, typeof(MeteringPointConnectedIntegrationEvent) },
             { typeof(PostOfficeEnvelope).FullName!, typeof(PostOfficeEnvelope) },
         };
