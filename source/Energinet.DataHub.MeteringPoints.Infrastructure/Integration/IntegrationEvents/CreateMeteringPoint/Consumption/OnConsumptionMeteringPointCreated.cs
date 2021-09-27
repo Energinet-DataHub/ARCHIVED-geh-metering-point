@@ -30,20 +30,15 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         public override Task Handle(ConsumptionMeteringPointCreated notification, CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
-            var message = new MeteringPointCreatedEventMessage(
+            var message = new ConsumptionMeteringPointCreatedIntegrationEvent(
+                notification.MeteringPointId.ToString(),
                 notification.GsrnNumber,
-                "Consumption",
                 notification.GridAreaId.ToString(),
                 notification.SettlementMethod,
                 notification.MeteringPointSubType,
-                notification.PhysicalState,
                 notification.ReadingOccurrence,
                 notification.NetSettlementGroup,
-                string.Empty,
-                string.Empty,
                 notification.ProductType,
-                notification.UnitType,
-                string.Empty,
                 notification.EffectiveDate.ToString());
 
             CreateAndAddOutboxMessage(message);
