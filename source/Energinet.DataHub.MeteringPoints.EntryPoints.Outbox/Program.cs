@@ -103,6 +103,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                     "No MeteringPointCreated Topic found")),
                 Lifestyle.Singleton);
             container.Register(
+                () => new MeteringPointConnectedTopic(Environment.GetEnvironmentVariable("CONSUMPTION_METERING_POINT_CREATED_TOPIC") ?? throw new InvalidOperationException(
+                    "No Consumption Metering Point Created Topic found")),
+                Lifestyle.Singleton);
+            container.Register(
                 () => new MeteringPointConnectedTopic(Environment.GetEnvironmentVariable("METERING_POINT_CONNECTED_TOPIC") ?? throw new InvalidOperationException(
                     "No MeteringPointConnected Topic found")),
                 Lifestyle.Singleton);
