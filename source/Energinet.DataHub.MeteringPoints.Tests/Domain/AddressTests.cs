@@ -260,6 +260,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             var room = "tv";
             var municipalityCode = 100;
             var isOfficial = true;
+            var geoInfoReference = Guid.Parse("5B736036-7612-4350-A73D-058560350E32");
 
             var address = Create(
                 streetName: streetName,
@@ -272,7 +273,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 floor: floor,
                 room: room,
                 municipalityCode: municipalityCode,
-                isOfficial: isOfficial);
+                isOfficial: isOfficial,
+                geoInfoReference: geoInfoReference);
 
             Assert.Equal(streetName, address.StreetName);
             Assert.Equal(streetCode, address.StreetCode);
@@ -284,6 +286,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             Assert.Equal(floor, address.Floor);
             Assert.Equal(room, address.Room);
             Assert.Equal(municipalityCode, address.MunicipalityCode);
+            Assert.Equal(geoInfoReference, address.GeoInfoReference);
         }
 
         private static Address Create(
@@ -297,7 +300,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             string floor = "",
             string room = "",
             int municipalityCode = default(int),
-            bool isOfficial = false)
+            bool isOfficial = false,
+            Guid? geoInfoReference = null)
         {
             return Address.Create(
                streetName: streetName,
@@ -310,7 +314,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                floor: floor,
                room: room,
                municipalityCode: municipalityCode,
-               isOfficial: isOfficial);
+               isOfficial: isOfficial,
+               geoInfoReference: geoInfoReference);
         }
 
         private static BusinessRulesValidationResult CheckRules(string? streetName = "", string? streetCode = "", string? buildingNumber = "", string? city = "", string? citySubDivision = "", string? postCode = "", CountryCode? countryCode = null, string? floor = "", string room = "", int municipalityCode = default(int))

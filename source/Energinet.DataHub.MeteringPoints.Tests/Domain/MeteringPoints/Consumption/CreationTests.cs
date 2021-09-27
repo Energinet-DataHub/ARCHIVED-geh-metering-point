@@ -59,7 +59,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 floor: string.Empty,
                 room: string.Empty,
                 municipalityCode: null,
-                isOfficial: true);
+                isOfficial: true,
+                geoInfoReference: Guid.NewGuid());
             var scheduledMeterReadingDate = ScheduledMeterReadingDate.Create("0101");
 
             var meteringPointDetails = CreateDetails()
@@ -89,6 +90,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(address.StreetCode, createdEvent.StreetCode);
             Assert.Equal(address.StreetName, createdEvent.StreetName);
             Assert.Equal(address.CitySubDivision, createdEvent.CitySubDivision);
+            Assert.Equal(address.IsOfficial, createdEvent.IsOfficialAddress);
+            Assert.Equal(address.GeoInfoReference, createdEvent.GeoInfoReference);
             Assert.Equal(meteringPointId.Value, createdEvent.MeteringPointId);
             Assert.Equal(meteringPointGsrn.Value, createdEvent.GsrnNumber);
             Assert.Equal(isOfficielAddress, createdEvent.IsOfficialAddress);
@@ -199,7 +202,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 string.Empty,
                 string.Empty,
                 default,
-                isOfficial: true);
+                isOfficial: true,
+                geoInfoReference: Guid.NewGuid());
 
             var meteringPointDetails = CreateDetails()
                 with
@@ -225,7 +229,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 string.Empty,
                 string.Empty,
                 default,
-                isOfficial: true);
+                isOfficial: true,
+                geoInfoReference: Guid.NewGuid());
 
             var meteringPointDetails = CreateDetails()
                 with
@@ -264,7 +269,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 address,
-                SampleData.IsOfficialAddress,
                 MeteringPointSubType.Physical,
                 GridAreaId.New(),
                 GsrnNumber.Create(SampleData.PowerPlant),
@@ -294,7 +298,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 string.Empty,
                 string.Empty,
                 default,
-                isOfficial: true);
+                isOfficial: true,
+                geoInfoReference: Guid.NewGuid());
         }
 
         private static BusinessRulesValidationResult CreateRequest(MeteringPointDetails meteringPointDetails)

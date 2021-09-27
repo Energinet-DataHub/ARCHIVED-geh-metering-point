@@ -56,13 +56,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 SampleData.Floor,
                 SampleData.Room,
                 SampleData.MunicipalityCode,
-                SampleData.IsOfficialAddress);
+                SampleData.IsOfficialAddress,
+                SampleData.GeoInfoReference);
 
             var details = new MeteringPointDetails(
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 address,
-                SampleData.IsOfficialAddress,
                 EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
                 GridAreaId.New(),
                 GsrnNumber.Create(SampleData.PowerPlant),

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.ObjectModel;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -21,7 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
 {
     public class Address : ValueObject
     {
-        private Address(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode, bool isOfficial)
+        private Address(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode, bool isOfficial, Guid? geoInfoReference)
         {
             StreetName = streetName;
             StreetCode = streetCode;
@@ -34,6 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
             Room = room;
             MunicipalityCode = municipalityCode;
             IsOfficial = isOfficial;
+            GeoInfoReference = geoInfoReference;
         }
 
         public string? StreetName { get; }
@@ -58,7 +60,21 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
 
         public bool IsOfficial { get; }
 
-        public static Address Create(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode, bool isOfficial)
+        public Guid? GeoInfoReference { get; }
+
+        public static Address Create(
+            string? streetName,
+            string? streetCode,
+            string? buildingNumber,
+            string? city,
+            string? citySubDivision,
+            string? postCode,
+            CountryCode? countryCode,
+            string? floor,
+            string? room,
+            int? municipalityCode,
+            bool isOfficial,
+            Guid? geoInfoReference)
         {
             if (CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode).Success == false)
             {
@@ -76,7 +92,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
                 floor: floor,
                 room: room,
                 municipalityCode: municipalityCode,
-                isOfficial: isOfficial);
+                isOfficial: isOfficial,
+                geoInfoReference: geoInfoReference);
         }
 
         public static BusinessRulesValidationResult CheckRules(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode)

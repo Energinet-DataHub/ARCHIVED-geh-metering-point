@@ -63,7 +63,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 SampleData.Floor,
                 SampleData.Room,
                 SampleData.MunicipalityCode,
-                SampleData.IsOfficialAddress);
+                SampleData.IsOfficialAddress,
+                SampleData.GeoInfoReference);
 
             return new MarketMeteringPointMock(
                 MeteringPointId.New(),
