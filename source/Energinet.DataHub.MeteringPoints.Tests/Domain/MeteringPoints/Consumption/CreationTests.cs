@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             var gridAreadId = GridAreaId.New();
             var powerPlanGsrn = GsrnNumber.Create(SampleData.PowerPlant);
             var netSettlementGroup = NetSettlementGroup.Three;
-            var locationDescription = "Test";
+            var locationDescription = LocationDescription.Create(string.Empty);
             var measurementUnitType = MeasurementUnitType.KWh;
             var meterNumber = "1";
             var readingOccurrence = ReadingOccurrence.Hourly;
@@ -95,7 +95,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(gridAreadId.Value, createdEvent.GridAreaId);
             Assert.Equal(meteringPointDetails.NetSettlementGroup.Name, createdEvent.NetSettlementGroup);
             Assert.Equal(powerPlanGsrn.Value, createdEvent.PowerPlantGsrnNumber);
-            Assert.Equal(locationDescription, createdEvent.LocationDescription);
+            Assert.Equal(locationDescription.Value, createdEvent.LocationDescription);
             Assert.Equal(measurementUnitType.Name, createdEvent.UnitType);
             Assert.Equal(meterNumber, createdEvent.MeterNumber);
             Assert.Equal(readingOccurrence.Name, createdEvent.ReadingOccurrence);
@@ -284,7 +284,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 MeteringPointSubType.Physical,
                 GridAreaId.New(),
                 GsrnNumber.Create(SampleData.PowerPlant),
-                SampleData.LocationDescription,
+                LocationDescription.Create(SampleData.LocationDescription),
                 SampleData.MeterNumber,
                 ReadingOccurrence.Hourly,
                 PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),

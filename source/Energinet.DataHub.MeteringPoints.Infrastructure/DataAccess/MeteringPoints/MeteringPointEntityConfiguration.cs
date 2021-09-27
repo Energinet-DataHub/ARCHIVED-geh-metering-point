@@ -102,8 +102,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 .HasColumnName("PowerPlant")
                 .HasConversion(toDbValue => toDbValue.Value, fromDbValue => GsrnNumber.Create(fromDbValue));
 
-            builder.Property<string>("_locationDescription")
-                .HasColumnName("LocationDescription");
+            builder.Property<LocationDescription>("_locationDescription")
+                .HasColumnName("LocationDescription")
+                .HasConversion(toDbValue => toDbValue.Value, fromDbValue => LocationDescription.Create(fromDbValue));
 
             builder.Property<ProductType>("_productType")
                 .HasColumnName("ProductType")
