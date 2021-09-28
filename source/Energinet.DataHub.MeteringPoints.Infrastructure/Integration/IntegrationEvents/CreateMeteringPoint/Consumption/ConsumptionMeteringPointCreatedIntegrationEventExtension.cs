@@ -13,75 +13,76 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using ConsumptionMeteringPointCreated = Energinet.DataHub.MeteringPoints.IntegrationEventContracts.ConsumptionMeteringPointCreated;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption
 {
     internal static class ConsumptionMeteringPointCreatedIntegrationEventExtension
     {
         public static ConsumptionMeteringPointCreated.Types.SettlementMethod GetSettlementMethod(
-            this ConsumptionMeteringPointCreatedIntegrationEvent ev)
+            this ConsumptionMeteringPointCreatedIntegrationEvent @event)
         {
-            return ev.SettlementMethod switch
+            return @event.SettlementMethod switch
             {
-                "Flex" => ConsumptionMeteringPointCreated.Types.SettlementMethod.Flex,
-                "NonProfiled" => ConsumptionMeteringPointCreated.Types.SettlementMethod.Nonprofiled,
-                "Profiled" => ConsumptionMeteringPointCreated.Types.SettlementMethod.Profiled,
+                "Flex" => ConsumptionMeteringPointCreated.Types.SettlementMethod.SmFlex,
+                "NonProfiled" => ConsumptionMeteringPointCreated.Types.SettlementMethod.SmNonprofiled,
+                "Profiled" => ConsumptionMeteringPointCreated.Types.SettlementMethod.SmProfiled,
                 _ => throw new ArgumentException("Settlement method is not recognized."),
             };
         }
 
         public static ConsumptionMeteringPointCreated.Types.NetSettlementGroup GetNetSettlementGroup(
-            this ConsumptionMeteringPointCreatedIntegrationEvent ev)
+            this ConsumptionMeteringPointCreatedIntegrationEvent @event)
         {
-            return ev.NetSettlementGroup switch
+            return @event.NetSettlementGroup switch
             {
-                "Zero" => ConsumptionMeteringPointCreated.Types.NetSettlementGroup.Zero,
-                "One" => ConsumptionMeteringPointCreated.Types.NetSettlementGroup.One,
-                "Two" => ConsumptionMeteringPointCreated.Types.NetSettlementGroup.Two,
-                "Three" => ConsumptionMeteringPointCreated.Types.NetSettlementGroup.Three,
-                "Six" => ConsumptionMeteringPointCreated.Types.NetSettlementGroup.Six,
-                "NinetyNine" => ConsumptionMeteringPointCreated.Types.NetSettlementGroup.Ninetynine,
+                "Zero" => ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgZero,
+                "One" => ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgOne,
+                "Two" => ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgTwo,
+                "Three" => ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgThree,
+                "Six" => ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgSix,
+                "NinetyNine" => ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgNinetynine,
                 _ => throw new ArgumentException("Net settlement group is not recognized."),
             };
         }
 
         public static ConsumptionMeteringPointCreated.Types.ProductType GetProductType(
-            this ConsumptionMeteringPointCreatedIntegrationEvent ev)
+            this ConsumptionMeteringPointCreatedIntegrationEvent @event)
         {
-            return ev.ProductType switch
+            return @event.ProductType switch
             {
-                "Tariff" => ConsumptionMeteringPointCreated.Types.ProductType.Tariff,
-                "FuelQuantity" => ConsumptionMeteringPointCreated.Types.ProductType.Fuelquantity,
-                "PowerActive" => ConsumptionMeteringPointCreated.Types.ProductType.Poweractive,
-                "PowerReactive" => ConsumptionMeteringPointCreated.Types.ProductType.Powerreactive,
-                "EnergyActive" => ConsumptionMeteringPointCreated.Types.ProductType.Energyactive,
-                "EnergyReactive" => ConsumptionMeteringPointCreated.Types.ProductType.Energyreactive,
+                "Tariff" => ConsumptionMeteringPointCreated.Types.ProductType.PtTariff,
+                "FuelQuantity" => ConsumptionMeteringPointCreated.Types.ProductType.PtFuelquantity,
+                "PowerActive" => ConsumptionMeteringPointCreated.Types.ProductType.PtPoweractive,
+                "PowerReactive" => ConsumptionMeteringPointCreated.Types.ProductType.PtPowerreactive,
+                "EnergyActive" => ConsumptionMeteringPointCreated.Types.ProductType.PtEnergyactive,
+                "EnergyReactive" => ConsumptionMeteringPointCreated.Types.ProductType.PtEnergyreactive,
                 _ => throw new ArgumentException("Product type is not recognized."),
             };
         }
 
         public static ConsumptionMeteringPointCreated.Types.MeteringMethod GetMeteringMethod(
-            this ConsumptionMeteringPointCreatedIntegrationEvent ev)
+            this ConsumptionMeteringPointCreatedIntegrationEvent @event)
         {
-            return ev.MeteringMethod switch
+            return @event.MeteringMethod switch
             {
-                "Physical" => ConsumptionMeteringPointCreated.Types.MeteringMethod.Physical,
-                "Virtual" => ConsumptionMeteringPointCreated.Types.MeteringMethod.Virtual,
-                "Calculated" => ConsumptionMeteringPointCreated.Types.MeteringMethod.Calculated,
+                "Physical" => ConsumptionMeteringPointCreated.Types.MeteringMethod.MmPhysical,
+                "Virtual" => ConsumptionMeteringPointCreated.Types.MeteringMethod.MmVirtual,
+                "Calculated" => ConsumptionMeteringPointCreated.Types.MeteringMethod.MmCalculated,
                 _ => throw new ArgumentException("Metering method is not recognized."),
             };
         }
 
         public static ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity GetMeterReadingPeriodicity(
-            this ConsumptionMeteringPointCreatedIntegrationEvent ev)
+            this ConsumptionMeteringPointCreatedIntegrationEvent @event)
         {
-            return ev.MeterReadingPeriodicity switch
+            return @event.MeterReadingPeriodicity switch
             {
-                "Yearly" => ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity.Yearly,
-                "Monthly" => ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity.Monthly,
-                "Hourly" => ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity.Hourly,
-                "Quarterly" => ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity.Quarterly,
+                "Yearly" => ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity.MrpYearly,
+                "Monthly" => ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity.MrpMonthly,
+                "Hourly" => ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity.MrpHourly,
+                "Quarterly" => ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity.MrpQuarterly,
                 _ => throw new ArgumentException("Meter reading periodicity is not recognized."),
             };
         }

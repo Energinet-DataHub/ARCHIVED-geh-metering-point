@@ -17,19 +17,25 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using FluentAssertions;
 using Microsoft.Azure.ServiceBus;
 using NodaTime.Text;
 using Squadron;
 using Xunit;
+using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.IntegrationEvents.ConsumptionMeteringPointCreated
 {
+    [IntegrationTest]
     public class ConsumptionMeteringPointCreatedTests : OutboxHost<ConsumptionMeteringPointCreatedServiceBusOptions>
     {
+        private readonly AzureCloudServiceBusResource<ConsumptionMeteringPointCreatedServiceBusOptions> _serviceBusResource;
+
         public ConsumptionMeteringPointCreatedTests(AzureCloudServiceBusResource<ConsumptionMeteringPointCreatedServiceBusOptions> serviceBusResource)
             : base(serviceBusResource)
         {
+            _serviceBusResource = serviceBusResource;
         }
 
         [Fact]
@@ -46,7 +52,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.IntegrationEvents.Co
                 await orchestrator.ProcessOutboxMessagesAsync().ConfigureAwait(false);
 
                 // Get client for consuming events from a Service Bus queue
-                var queueClient = GetSubscription(ConsumptionMeteringPointCreatedServiceBusOptions.ServiceBusTopic, ConsumptionMeteringPointCreatedServiceBusOptions.ServiceBusTopicSubscriber);
+                var queueClient = _serviceBusResource.GetSubscriptionClient(ConsumptionMeteringPointCreatedServiceBusOptions.ServiceBusTopic, ConsumptionMeteringPointCreatedServiceBusOptions.ServiceBusTopicSubscriber);
                 var result = await queueClient.AwaitMessageAsync(GetMessage).ConfigureAwait(false);
 
                 // Assert

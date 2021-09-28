@@ -59,7 +59,7 @@ using ConnectMeteringPoint = Energinet.DataHub.MeteringPoints.Contracts.ConnectM
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.IntegrationEvents
 {
-        [IntegrationTest]
+        [Collection("IntegrationTest")]
         public abstract class OutboxHost<TAzureCloudServiceBusOptions> : IDisposable, IClassFixture<
         AzureCloudServiceBusResource<TAzureCloudServiceBusOptions>>
             where TAzureCloudServiceBusOptions : AzureCloudServiceBusOptions, new()
@@ -73,17 +73,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.IntegrationEvents
             protected OutboxHost(AzureCloudServiceBusResource<TAzureCloudServiceBusOptions> serviceBusResource)
             {
                 _serviceBusResource = serviceBusResource;
-
                 _container = new Container();
                 _container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
 
-                var databaseFixture = new DatabaseFixture();
-                var connectionString = databaseFixture.GetConnectionString();
+                // var databaseFixture = new DatabaseFixture();
+                // var connectionString = databaseFixture.GetConnectionString();
                 var serviceCollection = new ServiceCollection();
 
                 serviceCollection.AddDbContext<MeteringPointContext>(
                     x =>
-                        x.UseSqlServer(connectionString, y => y.UseNodaTime()),
+                        x.UseSqlServer("Server=localhost;Database=MeteringPointTestDB;Trusted_Connection=True;", y => y.UseNodaTime()),
                     ServiceLifetime.Scoped);
 
                 serviceCollection.AddSimpleInjector(_container);
