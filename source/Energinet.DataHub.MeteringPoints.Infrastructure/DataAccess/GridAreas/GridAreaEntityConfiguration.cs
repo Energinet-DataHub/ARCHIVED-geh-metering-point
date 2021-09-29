@@ -54,6 +54,25 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<PriceAreaCode>(fromDbValue));
+
+            builder
+                .OwnsMany<GridAreaLink>("_gridAreaLinks", area =>
+                {
+                    area.ToTable("GridAreaLinks")
+                        .WithOwner()
+                        .HasForeignKey("_gridAreaId");
+
+                    area.Property(x => x.Id)
+                        .HasConversion(
+                            toDbValue => toDbValue.Value,
+                            fromDbValue => new GridAreaLinkId(fromDbValue));
+
+                    area.Property<GridAreaId>("_gridAreaId")
+                        .HasColumnName("GridAreaId")
+                        .HasConversion(
+                            toDbValue => toDbValue.Value,
+                            fromDbValue => new GridAreaId(fromDbValue));
+                });
         }
     }
 }

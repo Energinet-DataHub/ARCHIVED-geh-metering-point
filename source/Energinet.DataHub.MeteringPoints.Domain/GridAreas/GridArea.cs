@@ -15,7 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules;
+using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
@@ -48,14 +48,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 
         public GridAreaId Id { get; }
 
+        public GridAreaLink DefaultLink => _gridAreaLinks.First(); // TODO: Add metering points via Grid Area instead
+
         public static BusinessRulesValidationResult CanCreate(GridAreaDetails gridAreaDetails)
         {
             if (gridAreaDetails == null) throw new ArgumentNullException(nameof(gridAreaDetails));
 
             var rules = new Collection<IBusinessRule>
             {
-                // new GridAreaCodeFormatRule(gridAreaDetails.Code),
-                // new GridAreaNameMaxLengthRule(gridAreaDetails.Name),
             };
 
             return new BusinessRulesValidationResult(rules);

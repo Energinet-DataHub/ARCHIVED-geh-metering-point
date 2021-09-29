@@ -73,7 +73,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 return new BusinessProcessResult(request.TransactionId, gridAreaValidationResult.ValidationErrors);
             }
 
-            var meteringPointDetails = CreateDetails(request, gridArea!.Id);
+            var meteringPointDetails = CreateDetails(request, gridArea?.DefaultLink.Id!);
             var rulesCheckResult = CheckBusinessRules(request, meteringPointDetails);
             if (!rulesCheckResult.Success)
             {
@@ -135,7 +135,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 request.IsOfficialAddress.GetValueOrDefault(), // TODO: change to boolean in domain?
                 EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
                 meteringPointType,
-                new GridAreaId(Guid.NewGuid()),
+                new GridAreaLinkId(Guid.NewGuid()),
                 !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null,
                 LocationDescription.Create(request.LocationDescription!),
                 EnumerationType.FromName<MeasurementUnitType>(request.UnitType),
@@ -158,7 +158,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 //PhysicalState.New,
                 EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
                 meteringPointType,
-                new GridAreaId(Guid.NewGuid()),
+                new GridAreaLinkId(Guid.NewGuid()), // TODO: Use links correct
                 !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null,
                 LocationDescription.Create(request.LocationDescription!),
                 EnumerationType.FromName<MeasurementUnitType>(request.UnitType),
@@ -176,7 +176,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             return ConsumptionMeteringPoint.Create(meteringPointDetails);
         }
 
-        private static MeteringPointDetails CreateDetails(CreateMeteringPoint request, GridAreaId gridAreaId)
+        private static MeteringPointDetails CreateDetails(CreateMeteringPoint request, GridAreaLinkId gridAreaLinkId)
         {
             return new MeteringPointDetails(
                 MeteringPointId.New(),
@@ -184,7 +184,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 CreateAddress(request),
                 request.IsOfficialAddress.GetValueOrDefault(),
                 EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
-                gridAreaId,
+                gridAreaLinkId,
                 !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null !,
                 LocationDescription.Create(request.LocationDescription!),
                 request.MeterNumber,
