@@ -35,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             var meteringPointGsrn = GsrnNumber.Create(SampleData.GsrnNumber);
             var isOfficielAddress = SampleData.IsOfficialAddress;
             var meteringPointSubtype = MeteringPointSubType.Physical;
-            var gridAreadId = GridAreaId.New();
+            var gridAreadLinkId = new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId));
             var powerPlanGsrn = GsrnNumber.Create(SampleData.PowerPlant);
             var netSettlementGroup = NetSettlementGroup.Three;
             var locationDescription = LocationDescription.Create(string.Empty);
@@ -66,7 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 {
                     Id = meteringPointId,
                     Address = address,
-                    GridAreaId = gridAreadId,
+                    GridAreaLinkId = gridAreadLinkId,
                     LocationDescription = locationDescription,
                     MeterNumber = meterNumber,
                     PowerLimit = powerLimit,
@@ -92,7 +92,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(meteringPointGsrn.Value, createdEvent.GsrnNumber);
             Assert.Equal(isOfficielAddress, createdEvent.IsOfficialAddress);
             Assert.Equal(meteringPointSubtype.Name, createdEvent.MeteringPointSubType);
-            Assert.Equal(gridAreadId.Value, createdEvent.GridAreaId);
+            Assert.Equal(gridAreadLinkId.Value, createdEvent.GridAreaLinkId);
             Assert.Equal(meteringPointDetails.NetSettlementGroup.Name, createdEvent.NetSettlementGroup);
             Assert.Equal(powerPlanGsrn.Value, createdEvent.PowerPlantGsrnNumber);
             Assert.Equal(locationDescription.Value, createdEvent.LocationDescription);
@@ -282,7 +282,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 address,
                 SampleData.IsOfficialAddress,
                 MeteringPointSubType.Physical,
-                GridAreaId.New(),
+                new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
                 GsrnNumber.Create(SampleData.PowerPlant),
                 LocationDescription.Create(SampleData.LocationDescription),
                 SampleData.MeterNumber,

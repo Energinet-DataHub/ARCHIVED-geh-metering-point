@@ -23,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         Address Address,
         bool IsAddressWashable,
         MeteringPointSubType MeteringPointSubType,
-        GridAreaId GridAreaId,
+        GridAreaLinkId GridAreaLinkId,
         GsrnNumber? PowerPlantGsrnNumber,
         LocationDescription? LocationDescription,
         string? MeterNumber,

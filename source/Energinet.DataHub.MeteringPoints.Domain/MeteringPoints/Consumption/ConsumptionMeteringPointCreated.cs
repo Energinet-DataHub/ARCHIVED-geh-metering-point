@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         {
             MeteringPointId = meteringPointId;
             GsrnNumber = gsrnNumber;
-            GridAreaId = gridAreaId;
+            GridAreaLinkId = gridAreaId;
             MeteringPointSubType = meteringPointSubType;
             ProductType = productType;
             ReadingOccurrence = readingOccurrence;
@@ -60,7 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 
         public string GsrnNumber { get; }
 
-        public Guid GridAreaId { get; }
+        public Guid GridAreaLinkId { get; }
 
         public string MeteringPointSubType { get; }
 
