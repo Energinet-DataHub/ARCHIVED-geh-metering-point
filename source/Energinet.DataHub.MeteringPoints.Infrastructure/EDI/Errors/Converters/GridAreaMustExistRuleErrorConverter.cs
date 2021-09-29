@@ -21,7 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
     {
         protected override ErrorMessage Convert(GridAreaMustExistRuleError validationError)
         {
-            return new("E10", $"A metering point cannot be registered in GEH without a valid identification");
+            return new("E10", $"A metering point cannot be registered in GEH without belonging to an existing grid area");
         }
     }
 }
