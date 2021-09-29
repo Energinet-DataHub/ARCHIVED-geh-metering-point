@@ -12,16 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.IntegrationEvents.ConsumptionMeteringPointCreated;
-using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
-using FluentAssertions;
-using Microsoft.Azure.ServiceBus;
-using NodaTime.Text;
 using Squadron;
 using Xunit;
 
