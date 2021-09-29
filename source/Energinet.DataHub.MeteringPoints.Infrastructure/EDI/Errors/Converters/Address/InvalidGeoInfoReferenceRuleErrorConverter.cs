@@ -15,15 +15,15 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Address
 {
-    public class GeoInfoReferenceIsMandatoryErrorConverter : ErrorConverter<GeoInfoReferenceIsMandatoryValidationError>
+    public class InvalidGeoInfoReferenceRuleErrorConverter : ErrorConverter<InvalidGeoInfoReferenceRuleError>
     {
-        protected override ErrorMessage Convert(GeoInfoReferenceIsMandatoryValidationError validationError)
+        protected override ErrorMessage Convert(InvalidGeoInfoReferenceRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("E86", $"The format of the metering point DAR reference {validationError.Reference} for metering point {validationError.GsrnNumber} must comply with the generic UUID format");
+            return new("E86", $"The format of the metering point DAR reference {validationError.GeoInfoReference} must comply with the generic UUID format");
         }
     }
 }

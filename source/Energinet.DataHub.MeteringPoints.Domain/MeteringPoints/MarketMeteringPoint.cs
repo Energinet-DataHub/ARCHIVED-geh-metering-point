@@ -13,9 +13,11 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
@@ -59,6 +61,18 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         }
 
         protected EnergySupplierDetails? EnergySupplierDetails { get; private set; }
+
+        public static BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
+        {
+            if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
+            var rules = new List<IBusinessRule>()
+            {
+                new MeterReadingOccurrenceRule(meteringPointDetails.ReadingOccurrence),
+                new GeoInfoReferenceRequirementRule(meteringPointDetails.Address),
+            };
+
+            return new BusinessRulesValidationResult(rules);
+        }
 
         public void SetEnergySupplierDetails(EnergySupplierDetails energySupplierDetails)
         {

@@ -24,7 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
             // TODO: What is the correct error code?
-            return new("TODO", $"The official address indicator is mandatory when a geo info reference ({validationError.Reference}) is provided, for metering point {validationError.GsrnNumber}");
+            return new("E87", $"The official address indicator is mandatory when a geo info reference ({validationError.Reference}) is provided, for metering point {validationError.GsrnNumber}");
         }
     }
 }

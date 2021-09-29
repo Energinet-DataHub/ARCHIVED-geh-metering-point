@@ -16,16 +16,13 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class GeoInfoReferenceIsMandatoryValidationError : ValidationError
+    public class InvalidGeoInfoReferenceRuleError : ValidationError
     {
-        public GeoInfoReferenceIsMandatoryValidationError(string gsrnNumber, string? reference)
+        public InvalidGeoInfoReferenceRuleError(string geoInfoReference)
         {
-            GsrnNumber = gsrnNumber;
-            Reference = reference;
+            GeoInfoReference = geoInfoReference;
         }
 
-        public string GsrnNumber { get; }
-
-        public string? Reference { get; }
+        public string GeoInfoReference { get; }
     }
 }
