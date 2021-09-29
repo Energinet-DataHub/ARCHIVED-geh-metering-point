@@ -26,7 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         protected MeasurementUnitType _unitType;
 #pragma warning restore
         private Address _address;
-        private GridAreaId _gridAreaId;
+        private GridAreaLinkId _gridAreaLinkId;
         private MeteringPointSubType _meteringPointSubType;
         private ReadingOccurrence _meterReadingOccurrence;
         private PowerLimit _powerLimit;
@@ -47,7 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             // bool isAddressWashable,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
-            GridAreaId gridAreaId,
+            GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
             LocationDescription? locationDescription,
             MeasurementUnitType unitType,
@@ -62,7 +62,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             // _isAddressWashable = isAddressWashable;
             _meteringPointSubType = meteringPointSubType;
             _meteringPointType = meteringPointType;
-            _gridAreaId = gridAreaId;
+            _gridAreaLinkId = gridAreaLinkId;
             _powerPlantGsrnNumber = powerPlantGsrnNumber;
             _locationDescription = locationDescription;
             _unitType = unitType;

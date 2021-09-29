@@ -86,6 +86,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
+        public async Task Should_reject_when_grid_area_doesnt_exist()
+        {
+            var request = CreateRequest() with { MeteringGridArea = "foo" };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("E10");
+        }
+
+        [Fact]
         public async Task CreateMeteringPoint_WithAlreadyExistingGsrnNumber_ShouldGenerateRejectMessageInOutbox()
         {
             var request = CreateRequest();
