@@ -16,7 +16,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 {
     public class GridAreaLink
     {
-        private GridAreaId _gridAreaId;
+        private readonly GridAreaId _gridAreaId;
 
         public GridAreaLink(GridAreaLinkId id, GridAreaId gridAreaId)
         {

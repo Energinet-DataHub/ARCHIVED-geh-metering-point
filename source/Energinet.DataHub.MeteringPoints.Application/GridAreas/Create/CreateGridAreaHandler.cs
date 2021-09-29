@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.GridAreas.Create
 {
     public class CreateGridAreaHandler : IBusinessRequestHandler<CreateGridArea>
     {
-        private IGridAreaRepository _gridAreaRepository;
+        private readonly IGridAreaRepository _gridAreaRepository;
 
         public CreateGridAreaHandler(
             IGridAreaRepository gridAreaRepository)

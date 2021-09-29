@@ -135,7 +135,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 request.IsOfficialAddress.GetValueOrDefault(), // TODO: change to boolean in domain?
                 EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
                 meteringPointType,
-                new GridAreaLinkId(Guid.NewGuid()),
+                new GridAreaLinkId(Guid.NewGuid()), // TODO: Use links correct, when updating creation of production metering pints
                 !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null,
                 LocationDescription.Create(request.LocationDescription!),
                 EnumerationType.FromName<MeasurementUnitType>(request.UnitType),
@@ -158,7 +158,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 //PhysicalState.New,
                 EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
                 meteringPointType,
-                new GridAreaLinkId(Guid.NewGuid()), // TODO: Use links correct
+                new GridAreaLinkId(Guid.NewGuid()), // TODO: Use links correct, when updating creation of exchange metering pints
                 !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null,
                 LocationDescription.Create(request.LocationDescription!),
                 EnumerationType.FromName<MeasurementUnitType>(request.UnitType),

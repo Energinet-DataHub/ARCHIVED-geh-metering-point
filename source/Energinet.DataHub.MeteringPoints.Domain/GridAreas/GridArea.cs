@@ -56,6 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 
             var rules = new Collection<IBusinessRule>
             {
+                // Note: For now, all rules are enforced by value objects.
             };
 
             return new BusinessRulesValidationResult(rules);

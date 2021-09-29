@@ -44,7 +44,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace", nameof(name));
             }
 
-            if (CheckRules(name).Success == false)
+            if (!CheckRules(name).Success)
             {
                 throw new FormatException(name);
             }
