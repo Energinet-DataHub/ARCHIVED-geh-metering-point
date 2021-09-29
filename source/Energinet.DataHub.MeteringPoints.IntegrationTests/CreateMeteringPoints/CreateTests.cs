@@ -172,7 +172,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError<CreateMeteringPointRejected>("E87");
+            AssertValidationError<CreateMeteringPointRejected>("D63");
         }
 
         private static CreateMeteringPoint CreateRequest()
