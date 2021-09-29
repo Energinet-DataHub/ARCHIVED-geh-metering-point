@@ -20,7 +20,6 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoint
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Categories;
-using CreationRules = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.CreationRules;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMeteringPoints
 {
@@ -36,8 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                     ReadingOccurrence = ReadingOccurrence.Yearly,
                 };
 
-            var creationRules = new CreationRules(details);
-            var result = new BusinessRulesValidationResult(creationRules.Rules);
+            var result = MarketMeteringPoint.CanCreate(details);
 
             Assert.False(result.Success);
             Assert.Contains(result.Errors, e => e is InvalidMeterReadingOccurrenceRuleError);
