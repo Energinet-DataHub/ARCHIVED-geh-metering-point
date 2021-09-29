@@ -14,16 +14,17 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class MeterNumberMandatoryErrorConverter : ErrorConverter<MeterNumberMandatoryValidationError>
+    public class MeterNumberMandatoryErrorConverter : ErrorConverter<MeterIdIsRequiredRuleError>
     {
-        protected override ErrorMessage Convert(MeterNumberMandatoryValidationError validationError)
+        protected override ErrorMessage Convert(MeterIdIsRequiredRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D02", $"Meter number is mandatory for sub type physical for metering point {validationError.GsrnNumber}");
+            return new("D02", $"Meter number is mandatory for sub type physical.");
         }
     }
 }

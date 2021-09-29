@@ -14,21 +14,9 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
-    public class MeterNumberMaximumLengthValidationError : ValidationError
+    public class MeterIdIsRequiredRuleError : ValidationError
     {
-        public MeterNumberMaximumLengthValidationError(string gsrnNumber, string meterNumber, int maximumLength)
-        {
-            GsrnNumber = gsrnNumber;
-            MeterNumber = meterNumber;
-            MaximumLength = maximumLength;
-        }
-
-        public string GsrnNumber { get; }
-
-        public int MaximumLength { get; }
-
-        public string MeterNumber { get; }
     }
 }
