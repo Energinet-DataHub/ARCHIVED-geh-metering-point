@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using NodaTime;
 
@@ -82,6 +83,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests
         public static int MunicipalityCode => default;
 
         public static string ScheduledMeterReadingDate => "0101";
+
+        public static Guid GeoInfoReference => Guid.Parse("EB0ECFD2-97AD-48E3-8502-04C36AA7ACF8");
 
         private static string EffectiveDateNow()
         {
