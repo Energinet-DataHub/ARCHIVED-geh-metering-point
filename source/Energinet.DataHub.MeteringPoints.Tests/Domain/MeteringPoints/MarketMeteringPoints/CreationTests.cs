@@ -21,7 +21,6 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoint
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Categories;
-using CreationRules = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.CreationRules;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMeteringPoints
 {
@@ -37,8 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                     ReadingOccurrence = ReadingOccurrence.Yearly,
                 };
 
-            var creationRules = new CreationRules(details);
-            var result = new BusinessRulesValidationResult(creationRules.Rules);
+            var result = MarketMeteringPoint.CanCreate(details);
 
             Assert.False(result.Success);
             Assert.Contains(result.Errors, e => e is InvalidMeterReadingOccurrenceRuleError);
@@ -56,13 +54,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 EnumerationType.FromName<CountryCode>(SampleData.CountryCode),
                 SampleData.Floor,
                 SampleData.Room,
-                SampleData.MunicipalityCode);
+                SampleData.MunicipalityCode,
+                SampleData.IsOfficialAddress,
+                SampleData.GeoInfoReference);
 
             var details = new MeteringPointDetails(
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 address,
-                SampleData.IsOfficialAddress,
                 EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
                 GsrnNumber.Create(SampleData.PowerPlant),

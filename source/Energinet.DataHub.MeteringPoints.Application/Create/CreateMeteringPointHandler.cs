@@ -182,7 +182,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 MeteringPointId.New(),
                 GsrnNumber.Create(request.GsrnNumber),
                 CreateAddress(request),
-                request.IsOfficialAddress.GetValueOrDefault(),
                 EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
                 gridAreaLinkId,
                 !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null !,
@@ -205,13 +204,15 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 streetName: request.StreetName,
                 streetCode: request.StreetCode,
                 buildingNumber: request.BuildingNumber,
-                postCode: request.PostCode,
                 city: request.CityName,
                 citySubDivision: request.CitySubDivisionName,
+                postCode: request.PostCode,
                 countryCode: EnumerationType.FromName<CountryCode>(request.CountryCode),
                 floor: request.FloorIdentification,
                 room: request.RoomIdentification,
-                municipalityCode: string.IsNullOrWhiteSpace(request.MunicipalityCode) ? default : int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()));
+                municipalityCode: string.IsNullOrWhiteSpace(request.MunicipalityCode) ? default : int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()),
+                isOfficial: request.IsOfficialAddress.GetValueOrDefault(),
+                geoInfoReference: string.IsNullOrWhiteSpace(request.GeoInfoReference) ? default : Guid.Parse(request.GeoInfoReference));
         }
 
         private static BusinessRulesValidationResult ValidateAddress(CreateMeteringPoint request)

@@ -17,6 +17,8 @@ using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Categories;
@@ -24,7 +26,7 @@ using Xunit.Categories;
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMeteringPoints
 {
     [UnitTest]
-    public class MarketMeteringPointTests
+    public class MarketMeteringPointTests : TestBase
     {
         private readonly SystemDateTimeProviderStub _systemDateTimeProvider;
 
@@ -51,6 +53,47 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             Assert.Equal(1, marketMeteringPoint.DomainEvents.Count(e => e is EnergySupplierDetailsChanged));
         }
 
+        [Fact]
+        public void Should_return_error_when_geo_info_reference_is_undefined()
+        {
+            var address = Address.Create(
+                SampleData.StreetName,
+                SampleData.StreetCode,
+                SampleData.BuildingNumber,
+                SampleData.CityName,
+                SampleData.CitySubdivision,
+                SampleData.PostCode,
+                EnumerationType.FromName<CountryCode>(SampleData.CountryCode),
+                SampleData.Floor,
+                SampleData.Room,
+                SampleData.MunicipalityCode,
+                SampleData.IsOfficialAddress,
+                null);
+
+            var details = new MeteringPointDetails(
+                MeteringPointId.New(),
+                GsrnNumber.Create(SampleData.GsrnNumber),
+                address,
+                EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
+                GridAreaLinkId.New(),
+                GsrnNumber.Create(SampleData.PowerPlant),
+                LocationDescription.Create(SampleData.LocationDescription),
+                MeterId.Create(SampleData.MeterNumber),
+                ReadingOccurrence.Hourly,
+                PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
+                EffectiveDate.Create(SampleData.EffectiveDate),
+                SettlementMethod.Flex,
+                NetSettlementGroup.Six,
+                DisconnectionType.Remote,
+                ConnectionType.Installation,
+                AssetType.Boiler,
+                ScheduledMeterReadingDate.Create("0101"));
+
+            var checkResult = MarketMeteringPoint.CanCreate(details);
+
+            AssertError<GeoInfoReferenceIsRequiredRuleError>(checkResult, true);
+        }
+
         private static MarketMeteringPoint CreateMarketMeteringPoint()
         {
             var address = Address.Create(
@@ -63,7 +106,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 EnumerationType.FromName<CountryCode>(SampleData.CountryCode),
                 SampleData.Floor,
                 SampleData.Room,
-                SampleData.MunicipalityCode);
+                SampleData.MunicipalityCode,
+                SampleData.IsOfficialAddress,
+                SampleData.GeoInfoReference);
 
             return new MarketMeteringPointMock(
                 MeteringPointId.New(),
