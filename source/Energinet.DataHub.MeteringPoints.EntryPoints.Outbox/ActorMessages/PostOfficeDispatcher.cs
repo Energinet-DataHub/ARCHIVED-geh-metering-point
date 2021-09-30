@@ -16,26 +16,25 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
-using Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice;
+using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
 {
-    public class PostOfficeDispatcher : IRequestHandler<PostOfficeEnvelope>
+    public class PostOfficeDispatcher : IRequestHandler<PostOfficeMessageEnvelope>
     {
-        private readonly IPostOfficeStorageClient _postOfficeStorageClient;
+        private readonly ISubPostOfficeClient _subPostOfficeClient;
 
-        public PostOfficeDispatcher(
-            IPostOfficeStorageClient postOfficeStorageClient)
+        public PostOfficeDispatcher(ISubPostOfficeClient subPostOfficeClient)
         {
-            _postOfficeStorageClient = postOfficeStorageClient;
+            _subPostOfficeClient = subPostOfficeClient;
         }
 
-        public async Task<Unit> Handle(PostOfficeEnvelope request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(PostOfficeMessageEnvelope request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            await _postOfficeStorageClient.WriteAsync(request).ConfigureAwait(false);
+            await _subPostOfficeClient.DispatchAsync(request).ConfigureAwait(false);
 
             return Unit.Value;
         }

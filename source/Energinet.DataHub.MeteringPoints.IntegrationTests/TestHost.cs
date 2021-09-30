@@ -18,7 +18,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
@@ -211,7 +210,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             where TRejectMessage : IRejectMessage
         {
             var message = GetOutboxMessages
-                    <PostOfficeEnvelope>()
+                    <PostOfficeMessageEnvelope>()
                 .First(msg => msg.MessageType.Equals(typeof(TRejectMessage).Name, StringComparison.Ordinal));
 
             var rejectMessage = JsonConvert.DeserializeObject<TRejectMessage>(message.Content);

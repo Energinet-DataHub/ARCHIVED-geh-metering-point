@@ -14,14 +14,12 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
-using MediatR;
 using Xunit;
 using Xunit.Categories;
 
@@ -58,7 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
 
-            AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == nameof(CreateMeteringPointAccepted));
+            AssertOutboxMessage<PostOfficeMessageEnvelope>(envelope => envelope.MessageType == nameof(CreateMeteringPointAccepted));
         }
 
         [Fact]
@@ -82,7 +80,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
 
-            AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == nameof(CreateMeteringPointRejected));
+            AssertOutboxMessage<PostOfficeMessageEnvelope>(envelope => envelope.MessageType == nameof(CreateMeteringPointRejected));
         }
 
         [Fact]
@@ -102,7 +100,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
             await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
 
-            AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == nameof(CreateMeteringPointRejected));
+            AssertOutboxMessage<PostOfficeMessageEnvelope>(envelope => envelope.MessageType == nameof(CreateMeteringPointRejected));
         }
 
         [Fact(Skip = "Not implemented yet")]

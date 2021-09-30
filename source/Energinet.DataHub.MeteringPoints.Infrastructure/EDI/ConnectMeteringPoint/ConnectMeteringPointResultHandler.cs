@@ -18,7 +18,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
@@ -85,7 +84,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
             AddToOutbox(accountingPointCharacteristicsMessage);
         }
 
-        private PostOfficeEnvelope? CreateConfirmMessage(Application.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
+        private PostOfficeMessageEnvelope? CreateConfirmMessage(Application.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
         {
             var confirmMessage = new ConnectMeteringPointAccepted(
                 TransactionId: result.TransactionId,
@@ -94,8 +93,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
 
             var serializedMessage = _jsonSerializer.Serialize(confirmMessage);
 
-            var envelope = new PostOfficeEnvelope(
-                string.Empty,
+            var envelope = new PostOfficeMessageEnvelope(
                 string.Empty,
                 serializedMessage,
                 typeof(ConnectMeteringPointAccepted).FullName!,
@@ -104,7 +102,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
             return envelope;
         }
 
-        private PostOfficeEnvelope CreateAccountingPointCharacteristicsMessage(
+        private PostOfficeMessageEnvelope CreateAccountingPointCharacteristicsMessage(
             Application.Connect.ConnectMeteringPoint request,
             ConsumptionMeteringPoint meteringPoint)
         {
@@ -193,8 +191,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
 
             var serializedMessage = AccountingPointCharacteristicsXmlSerializer.Serialize(accountingPointCharacteristicsMessage, XmlNamespace);
 
-            var postOfficeEnvelope = new PostOfficeEnvelope(
-                string.Empty,
+            var postOfficeEnvelope = new PostOfficeMessageEnvelope(
                 string.Empty,
                 _jsonSerializer.Serialize(serializedMessage),
                 typeof(AccountingPointCharacteristicsMessage).FullName!,
@@ -216,7 +213,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
                 Reason: "TODO",
                 Errors: errors);
 
-            var envelope = new PostOfficeEnvelope(string.Empty, string.Empty, _jsonSerializer.Serialize(ediMessage), typeof(ConnectMeteringPointRejected).FullName!, _correlationContext.AsTraceContext());
+            var envelope = new PostOfficeMessageEnvelope(string.Empty, _jsonSerializer.Serialize(ediMessage), typeof(ConnectMeteringPointRejected).FullName!, _correlationContext.AsTraceContext());
             AddToOutbox(envelope);
 
             return Task.CompletedTask;

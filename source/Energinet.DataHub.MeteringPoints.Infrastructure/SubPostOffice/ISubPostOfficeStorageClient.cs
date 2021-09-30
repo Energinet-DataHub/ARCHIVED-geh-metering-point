@@ -14,19 +14,24 @@
 
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
     /// <summary>
     /// Basic file management for PostOffice communication.
     /// </summary>
-    public interface IPostOfficeStorageClient
+    public interface ISubPostOfficeStorageClient
     {
         /// <summary>
         /// Write file.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task WriteAsync(PostOfficeEnvelope message);
+        Task WriteAsync(PostOfficeMessageEnvelope message);
+
+        /// <summary>
+        /// Read file.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        Task<string> ReadAsync(string id);
     }
 }

@@ -52,7 +52,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             await MarkAsEnergySupplierAssigned(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
             await SendCommandAsync(connectMeteringPointRequest).ConfigureAwait(false);
 
-            AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == typeof(ConnectMeteringPointAccepted).FullName);
+            AssertOutboxMessage<PostOfficeMessageEnvelope>(envelope => envelope.MessageType == typeof(ConnectMeteringPointAccepted).FullName);
         }
 
         [Fact]
@@ -65,7 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             await MarkAsEnergySupplierAssigned(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
             await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
-            AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == typeof(AccountingPointCharacteristicsMessage).FullName);
+            AssertOutboxMessage<PostOfficeMessageEnvelope>(envelope => envelope.MessageType == typeof(AccountingPointCharacteristicsMessage).FullName);
         }
 
         [Fact]
@@ -77,7 +77,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             await SendCommandAsync(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
             await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
-            AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == typeof(ConnectMeteringPointRejected).FullName);
+            AssertOutboxMessage<PostOfficeMessageEnvelope>(envelope => envelope.MessageType == typeof(ConnectMeteringPointRejected).FullName);
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             await SendCommandAsync(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
             await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
-            AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == typeof(ConnectMeteringPointRejected).FullName!);
+            AssertOutboxMessage<PostOfficeMessageEnvelope>(envelope => envelope.MessageType == typeof(ConnectMeteringPointRejected).FullName!);
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
 
             await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
-            AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == typeof(ConnectMeteringPointRejected).FullName!);
+            AssertOutboxMessage<PostOfficeMessageEnvelope>(envelope => envelope.MessageType == typeof(ConnectMeteringPointRejected).FullName!);
         }
 
         [Fact]
@@ -131,7 +131,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
             await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
-            AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == typeof(ConnectMeteringPointRejected).FullName!);
+            AssertOutboxMessage<PostOfficeMessageEnvelope>(envelope => envelope.MessageType == typeof(ConnectMeteringPointRejected).FullName!);
         }
 
         [Fact(Skip = "Not implemented yet")]
