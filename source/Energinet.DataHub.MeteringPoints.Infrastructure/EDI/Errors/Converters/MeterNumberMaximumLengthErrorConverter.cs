@@ -14,16 +14,17 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class MeterNumberMaximumLengthErrorConverter : ErrorConverter<MeterNumberMaximumLengthValidationError>
+    public class MeterNumberMaximumLengthErrorConverter : ErrorConverter<InvalidMeterIdRuleError>
     {
-        protected override ErrorMessage Convert(MeterNumberMaximumLengthValidationError validationError)
+        protected override ErrorMessage Convert(InvalidMeterIdRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("E86", $"Meter number {validationError.MeterNumber} for metering point {validationError.GsrnNumber} has a length that exceeds {validationError.MaximumLength}");
+            return new("E86", $"Meter number {validationError.MeterId} has a length that exceeds {validationError.MaximumLength}");
         }
     }
 }

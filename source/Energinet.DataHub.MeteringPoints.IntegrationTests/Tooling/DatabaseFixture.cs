@@ -47,8 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
 
         private static void UpdateDatabase(string connectionString)
         {
-            var upgrader = UpgradeFactory.GetUpgradeEngine(connectionString, x => true, false);
-            var result = upgrader.PerformUpgrade();
+            var result = DefaultUpgrader.Upgrade(connectionString);
             if (!result.Successful)
             {
                 throw new InvalidOperationException("Couldn't start test SQL server");

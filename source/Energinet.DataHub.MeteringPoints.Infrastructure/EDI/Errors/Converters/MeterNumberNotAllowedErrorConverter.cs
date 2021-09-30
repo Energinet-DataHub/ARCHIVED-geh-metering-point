@@ -13,12 +13,13 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class MeterNumberNotAllowedErrorConverter : ErrorConverter<MeterNumberNotAllowedValidationError>
+    public class MeterNumberNotAllowedErrorConverter : ErrorConverter<MeterIdIsNotAllowedRuleError>
     {
-        protected override ErrorMessage Convert(MeterNumberNotAllowedValidationError validationError)
+        protected override ErrorMessage Convert(MeterIdIsNotAllowedRuleError validationError)
         {
             return new("E86", "Meter number is not allowed for sub types other than physical");
         }

@@ -26,14 +26,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         protected MeasurementUnitType _unitType;
 #pragma warning restore
         private Address _address;
-        private GridAreaId _gridAreaId;
+        private GridAreaLinkId _gridAreaLinkId;
         private MeteringPointSubType _meteringPointSubType;
         private ReadingOccurrence _meterReadingOccurrence;
         private PowerLimit _powerLimit;
         private GsrnNumber? _powerPlantGsrnNumber;
         private LocationDescription? _locationDescription;
         private EffectiveDate _effectiveDate;
-        private string? _meterNumber;
+        private MeterId? _meterNumber;
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
         protected MeteringPoint() { }
@@ -47,11 +47,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             // bool isAddressWashable,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
-            GridAreaId gridAreaId,
+            GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
             LocationDescription? locationDescription,
             MeasurementUnitType unitType,
-            string? meterNumber,
+            MeterId? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit powerLimit,
             EffectiveDate effectiveDate)
@@ -62,7 +62,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             // _isAddressWashable = isAddressWashable;
             _meteringPointSubType = meteringPointSubType;
             _meteringPointType = meteringPointType;
-            _gridAreaId = gridAreaId;
+            _gridAreaLinkId = gridAreaLinkId;
             _powerPlantGsrnNumber = powerPlantGsrnNumber;
             _locationDescription = locationDescription;
             _unitType = unitType;

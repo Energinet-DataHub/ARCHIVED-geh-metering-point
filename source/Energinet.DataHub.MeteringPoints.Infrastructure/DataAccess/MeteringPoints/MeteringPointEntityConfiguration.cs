@@ -118,8 +118,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<MeasurementUnitType>(fromDbValue));
 
-            builder.Property("_meterNumber")
-                .HasColumnName("MeterNumber");
+            builder.Property<MeterId>("_meterNumber")
+                .HasColumnName("MeterNumber")
+                .HasConversion(toDbValue => toDbValue.Value, fromDbValue => MeterId.Create(fromDbValue));
 
             builder.Property<ReadingOccurrence>("_meterReadingOccurrence")
                 .HasColumnName("MeterReadingOccurrence")
