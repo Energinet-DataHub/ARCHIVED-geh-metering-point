@@ -22,43 +22,43 @@ option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEventCont
  */
 message ProductionMeteringPointCreated {
   enum NetSettlementGroup {
-    ZERO = 0;
-    ONE = 1;
-    TWO = 2;
-    THREE = 3;
-    SIX = 4;
-    NINETYNINE = 5;
+    NSG_ZERO = 0;
+    NSG_ONE = 1;
+    NSG_TWO = 2;
+    NSG_THREE = 3;
+    NSG_SIX = 4;
+    NSG_NINETYNINE = 5;
   }
 
   enum ProductType {
-    TARIFF = 0;
-    FUELQUANTITY = 1;
-    POWERACTIVE = 2;
-    POWERREACTIVE = 3;
-    ENERGYACTIVE = 4;
-    ENERGYREACTIVE = 5;
+    PT_TARIFF = 0;
+    PT_FUELQUANTITY = 1;
+    PT_POWERACTIVE = 2;
+    PT_POWERREACTIVE = 3;
+    PT_ENERGYACTIVE = 4;
+    PT_ENERGYREACTIVE = 5;
   }
 
   enum MeteringMethod {
-    PHYSICAL = 0; // Has a physical meter associated with it
-    VIRTUAL = 1; // Does not have a physical meter associated with it
-    CALCULATED =2; // Does not have a physical meter associated with it
+    MM_PHYSICAL = 0; // Has a physical meter associated with it
+    MM_VIRTUAL = 1; // Does not have a physical meter associated with it
+    MM_CALCULATED =2; // Does not have a physical meter associated with it
   }
 
   enum MeterReadingPeriodicity {
-    HOURLY = 0; // Read every hour
-    QUARTERLY = 1; // Read every 15 minutes
+    MRP_HOURLY = 0; // Read every hour
+    MRP_QUARTERLY = 1; // Read every 15 minutes
   }
   
   enum ConnectionState {
-    NEW = 0; // Always created with connection state new
+    CS_NEW = 0; // Always created with connection state new
   }
   
   enum UnitType {
-      WH = 0; // Watt per hour
-      KWH = 1; // Kilowatt per hour
-      MWH = 2; // Megawatt per hour
-      GWH = 3; // Gigawatt per hour
+      UT_WH = 0; // Watt per hour
+      UT_KWH = 1; // Kilowatt per hour
+      UT_MWH = 2; // Megawatt per hour
+      UT_GWH = 3; // Gigawatt per hour
   }
 
   string Metering_Point_Id = 1; // Unique identification for metering point
