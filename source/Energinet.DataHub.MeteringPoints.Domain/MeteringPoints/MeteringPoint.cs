@@ -12,8 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
@@ -44,7 +48,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            // bool isAddressWashable,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
@@ -59,7 +62,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             Id = id;
             GsrnNumber = gsrnNumber;
             _address = address;
-            // _isAddressWashable = isAddressWashable;
             _meteringPointSubType = meteringPointSubType;
             _meteringPointType = meteringPointType;
             _gridAreaLinkId = gridAreaLinkId;
@@ -77,6 +79,17 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public GsrnNumber GsrnNumber { get; }
 
         protected ConnectionState ConnectionState { get; set; } = ConnectionState.New();
+
+        public static BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
+        {
+            if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
+            var rules = new List<IBusinessRule>()
+            {
+                new MeterIdRequirementRule(meteringPointDetails.MeterNumber, meteringPointDetails.MeteringPointSubType),
+            };
+
+            return new BusinessRulesValidationResult(rules);
+        }
 
         public abstract BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails);
 

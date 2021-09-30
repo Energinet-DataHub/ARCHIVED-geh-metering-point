@@ -21,7 +21,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         MeteringPointId Id,
         GsrnNumber GsrnNumber,
         Address Address,
-        bool IsAddressWashable,
         MeteringPointSubType MeteringPointSubType,
         GridAreaLinkId GridAreaLinkId,
         GsrnNumber? PowerPlantGsrnNumber,

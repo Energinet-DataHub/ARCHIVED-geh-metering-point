@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,6 +23,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
             public BusinessRulesValidationResult(IEnumerable<IBusinessRule> rules)
             {
                 SetValidationErrors(rules);
+            }
+
+            public BusinessRulesValidationResult(IEnumerable<ValidationError> errors)
+            {
+                if (errors == null) throw new ArgumentNullException(nameof(errors));
+                Errors = errors.ToList();
             }
 
             public bool Success => !Errors.Any();
