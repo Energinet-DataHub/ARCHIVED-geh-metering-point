@@ -14,7 +14,6 @@
 
 using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
