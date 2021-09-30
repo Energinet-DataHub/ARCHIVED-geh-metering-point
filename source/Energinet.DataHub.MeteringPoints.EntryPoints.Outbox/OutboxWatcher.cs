@@ -21,7 +21,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
 {
-    public class OutboxWatcher
+    internal class OutboxWatcher
     {
         private readonly ILogger _logger;
         private readonly OutboxOrchestrator _outboxOrchestrator;

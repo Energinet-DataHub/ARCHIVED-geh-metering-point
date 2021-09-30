@@ -21,7 +21,7 @@ using SimpleInjector.Lifestyles;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
 {
-    public class OutboxOrchestrator
+    internal class OutboxOrchestrator
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOutboxManager _outbox;
