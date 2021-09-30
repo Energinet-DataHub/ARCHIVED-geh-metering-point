@@ -64,4 +64,8 @@ limitations under the License.
       <Folder Include="Messaging\Incoming\Protobuf\Contracts" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="DataAccess\GridAreas\GridAreaLinkEntityConfiguration.cs" />
+    </ItemGroup>
+
 </Project>

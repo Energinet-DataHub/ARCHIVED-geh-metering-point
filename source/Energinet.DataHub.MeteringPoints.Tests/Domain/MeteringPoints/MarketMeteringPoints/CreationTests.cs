@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -63,10 +64,10 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 address,
                 SampleData.IsOfficialAddress,
                 EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
-                GridAreaId.New(),
+                new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
                 GsrnNumber.Create(SampleData.PowerPlant),
                 LocationDescription.Create(SampleData.LocationDescription),
-                SampleData.MeterNumber,
+                string.IsNullOrWhiteSpace(SampleData.MeterNumber) ? null : MeterId.Create(SampleData.MeterNumber),
                 ReadingOccurrence.Hourly,
                 PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
                 EffectiveDate.Create(SampleData.EffectiveDate),

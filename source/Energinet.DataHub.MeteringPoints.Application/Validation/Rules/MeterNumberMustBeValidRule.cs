@@ -13,38 +13,34 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
+using FluentValidation.Results;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
     public class MeterNumberMustBeValidRule : AbstractValidator<CreateMeteringPoint>
     {
-        private const int MeterNumberMaximumLength = 15;
+        private BusinessRulesValidationResult? _result;
 
         public MeterNumberMustBeValidRule()
         {
-            When(MeteringPointSubTypeIsPhysical, () =>
+            When(request => !string.IsNullOrWhiteSpace(request.MeterNumber), () =>
             {
-                RuleFor(createMeteringPoint => createMeteringPoint.MeterNumber)
-                    .Cascade(CascadeMode.Stop)
-                    .NotEmpty()
-                    .WithState(createMeteringPoint => new MeterNumberMandatoryValidationError(createMeteringPoint.GsrnNumber))
-                    .MaximumLength(MeterNumberMaximumLength)
-                    .WithState(createMeteringPoint => new MeterNumberMaximumLengthValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.MeterNumber!, MeterNumberMaximumLength));
-            }).Otherwise(() =>
-            {
-                RuleFor(createMeteringPoint => createMeteringPoint.MeterNumber)
-                    .Empty()
-                    .WithState(createMeteringPoint => new MeterNumberNotAllowedValidationError(createMeteringPoint.GsrnNumber));
+                RuleFor(request => request.MeterNumber)
+                    .Must(meterId =>
+                    {
+                        _result = MeterId.CheckRules(meterId!);
+                        return _result.Success;
+                    })
+                    .WithState(request => _result!.Errors.First());
             });
-        }
-
-        private static bool MeteringPointSubTypeIsPhysical(CreateMeteringPoint createMeteringPoint)
-        {
-            return createMeteringPoint.SubTypeOfMeteringPoint.Equals(MeteringPointSubType.Physical.Name, StringComparison.OrdinalIgnoreCase);
         }
     }
 }
