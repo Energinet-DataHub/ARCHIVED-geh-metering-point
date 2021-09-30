@@ -26,7 +26,7 @@ on:
 
 env:
   CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI/Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.csproj'
-  # SOLUTION_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.sln'
+  SOLUTION_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.sln'
   DOTNET_VERSION: '5.0.202'
   ORGANISATION_NAME: 'endk'
   AZURE_APP_NAME: 'webapi'
@@ -55,7 +55,7 @@ jobs:
         uses: ./.github/actions/dotnet-build-and-test
         with:
           CSPROJ_FILE_PATH: ${{ env.CSPROJ_FILE_PATH }}
-          # SOLUTION_FILE_PATH: ${{ env.SOLUTION_FILE_PATH }}
+          SOLUTION_FILE_PATH: ${{ env.SOLUTION_FILE_PATH }}
           OUTPUT_PATH: '${{ github.workspace }}/output'
 
       - name: Publish artifact
