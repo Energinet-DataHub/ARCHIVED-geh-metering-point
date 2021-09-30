@@ -23,21 +23,26 @@ resource "azurerm_app_service" "webapi" {
   }
 
   app_settings = {
-      ConnectionStrings: {
-        METERINGPOINT_DB_CONNECTION_STRING = local.METERING_POINT_CONNECTION_STRING,
-        INTEGRATION_EVENT_QUEUE_CONNECTION = data.azurerm_key_vault_secret.INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING.value,
-        METERINGPOINT_QUEUE_CONNECTION_STRING = module.sbnar_meteringpoint_listener.primary_connection_string
-      },
-      Settings: {
-        METERINGPOINT_QUEUE_TOPIC_NAME: module.sbq_meteringpoint.name,
-        INTEGRATION_EVENT_QUEUE: data.azurerm_key_vault_secret.INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING.value
+      METERINGPOINT_QUEUE_TOPIC_NAME: module.sbq_meteringpoint.name,
+      INTEGRATION_EVENT_QUEUE: data.azurerm_key_vault_secret.INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING.value
       }
+
+  connection_string {
+    name  = "METERINGPOINT_DB_CONNECTION_STRING"
+    type  = "SQLServer"
+    value = "Server=some-server.mydomain.com;Integrated Security=SSPI"
   }
 
-# may not be used?
-#   connection_string {
-#     name  = "Database"
-#     type  = "SQLServer"
-#     value = "Server=some-server.mydomain.com;Integrated Security=SSPI"
-#   }
+  connection_string {
+    name  = "INTEGRATION_EVENT_QUEUE_CONNECTION"
+    type  = "Custom"
+    value = data.azurerm_key_vault_secret.INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING.value
+  }
+
+  connection_string {
+    name  = "METERINGPOINT_QUEUE_CONNECTION_STRING"
+    type  = "Custom"
+    value = module.sbnar_meteringpoint_listener.primary_connection_string
+  }
+
 }
