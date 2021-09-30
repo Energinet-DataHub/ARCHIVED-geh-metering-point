@@ -36,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             var meteringPointGsrn = GsrnNumber.Create(SampleData.GsrnNumber);
             var isOfficielAddress = SampleData.IsOfficialAddress;
             var meteringPointSubtype = MeteringPointSubType.Physical;
-            var gridAreadId = GridAreaId.New();
+            var gridAreadLinkId = new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId));
             var powerPlanGsrn = GsrnNumber.Create(SampleData.PowerPlant);
             var netSettlementGroup = NetSettlementGroup.Three;
             var locationDescription = LocationDescription.Create(string.Empty);
@@ -59,7 +59,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 countryCode: CountryCode.DK,
                 floor: string.Empty,
                 room: string.Empty,
-                municipalityCode: null);
+                municipalityCode: null,
+                isOfficial: true,
+                geoInfoReference: Guid.NewGuid());
             var scheduledMeterReadingDate = ScheduledMeterReadingDate.Create("0101");
 
             var meteringPointDetails = CreateDetails()
@@ -67,7 +69,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 {
                     Id = meteringPointId,
                     Address = address,
-                    GridAreaId = gridAreadId,
+                    GridAreaLinkId = gridAreadLinkId,
                     LocationDescription = locationDescription,
                     MeterNumber = meterNumber,
                     PowerLimit = powerLimit,
@@ -89,11 +91,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(address.StreetCode, createdEvent.StreetCode);
             Assert.Equal(address.StreetName, createdEvent.StreetName);
             Assert.Equal(address.CitySubDivision, createdEvent.CitySubDivision);
+            Assert.Equal(address.IsOfficial, createdEvent.IsOfficialAddress);
+            Assert.Equal(address.GeoInfoReference, createdEvent.GeoInfoReference);
             Assert.Equal(meteringPointId.Value, createdEvent.MeteringPointId);
             Assert.Equal(meteringPointGsrn.Value, createdEvent.GsrnNumber);
             Assert.Equal(isOfficielAddress, createdEvent.IsOfficialAddress);
             Assert.Equal(meteringPointSubtype.Name, createdEvent.MeteringPointSubType);
-            Assert.Equal(gridAreadId.Value, createdEvent.GridAreaId);
+            Assert.Equal(gridAreadLinkId.Value, createdEvent.GridAreaLinkId);
             Assert.Equal(meteringPointDetails.NetSettlementGroup.Name, createdEvent.NetSettlementGroup);
             Assert.Equal(powerPlanGsrn.Value, createdEvent.PowerPlantGsrnNumber);
             Assert.Equal(locationDescription.Value, createdEvent.LocationDescription);
@@ -189,16 +193,18 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         public void Should_return_error_when_street_name_is_missing()
         {
             var address = Address.Create(
-                streetName: string.Empty,
-                streetCode: string.Empty,
-                buildingNumber: string.Empty,
-                city: string.Empty,
-                citySubDivision: string.Empty,
-                postCode: string.Empty,
-                countryCode: null,
-                floor: string.Empty,
-                room: string.Empty,
-                municipalityCode: default);
+                string.Empty,
+                SampleData.StreetCode,
+                string.Empty,
+                SampleData.CityName,
+                string.Empty,
+                string.Empty,
+                null,
+                string.Empty,
+                string.Empty,
+                default,
+                isOfficial: true,
+                geoInfoReference: Guid.NewGuid());
 
             var meteringPointDetails = CreateDetails()
                 with
@@ -214,16 +220,18 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         public void Should_return_error_when_post_code_is_missing()
         {
             var address = Address.Create(
-                streetName: string.Empty,
-                streetCode: string.Empty,
-                buildingNumber: string.Empty,
-                city: string.Empty,
-                citySubDivision: string.Empty,
-                postCode: string.Empty,
-                countryCode: null,
-                floor: string.Empty,
-                room: string.Empty,
-                municipalityCode: default);
+                SampleData.StreetName,
+                SampleData.StreetCode,
+                string.Empty,
+                SampleData.CityName,
+                string.Empty,
+                string.Empty,
+                null,
+                string.Empty,
+                string.Empty,
+                default,
+                isOfficial: true,
+                geoInfoReference: Guid.NewGuid());
 
             var meteringPointDetails = CreateDetails()
                 with
@@ -239,17 +247,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         [Fact]
         public void Product_type_should_be_set_to_active_energy()
         {
-            var address = Address.Create(
-                SampleData.StreetName,
-                SampleData.StreetCode,
-                string.Empty,
-                SampleData.CityName,
-                string.Empty,
-                SampleData.PostCode,
-                null,
-                string.Empty,
-                string.Empty,
-                default);
+            var address = CreateAddress();
+
             var meteringPointDetails = CreateDetails()
                 with
                 {

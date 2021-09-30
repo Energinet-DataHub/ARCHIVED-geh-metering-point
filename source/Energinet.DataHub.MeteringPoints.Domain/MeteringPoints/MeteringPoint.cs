@@ -14,11 +14,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -32,7 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         protected MeasurementUnitType _unitType;
 #pragma warning restore
         private Address _address;
-        private GridAreaId _gridAreaId;
+        private GridAreaLinkId _gridAreaLinkId;
         private MeteringPointSubType _meteringPointSubType;
         private ReadingOccurrence _meterReadingOccurrence;
         private PowerLimit _powerLimit;
@@ -50,10 +48,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            // bool isAddressWashable,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
-            GridAreaId gridAreaId,
+            GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
             LocationDescription? locationDescription,
             MeasurementUnitType unitType,
@@ -65,10 +62,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             Id = id;
             GsrnNumber = gsrnNumber;
             _address = address;
-            // _isAddressWashable = isAddressWashable;
             _meteringPointSubType = meteringPointSubType;
             _meteringPointType = meteringPointType;
-            _gridAreaId = gridAreaId;
+            _gridAreaLinkId = gridAreaLinkId;
             _powerPlantGsrnNumber = powerPlantGsrnNumber;
             _locationDescription = locationDescription;
             _unitType = unitType;

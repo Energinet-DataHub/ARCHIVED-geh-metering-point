@@ -12,12 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.Addresses;
-using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Categories;
 

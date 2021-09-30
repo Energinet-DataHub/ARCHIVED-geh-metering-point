@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using NodaTime;
 
@@ -20,6 +21,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests
     public static class SampleData
     {
         public static string GsrnNumber => "571234567891234568";
+
+        public static string GridAreaLinkId => "10A9E0E7-3906-4DC0-8CBD-A5C042A5C484";
 
         public static string StreetName => "Test Road 1";
 
@@ -80,6 +83,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests
         public static int MunicipalityCode => default;
 
         public static string ScheduledMeterReadingDate => "0101";
+
+        public static Guid GeoInfoReference => Guid.Parse("EB0ECFD2-97AD-48E3-8502-04C36AA7ACF8");
 
         public static string Capacity => "1.2";
 

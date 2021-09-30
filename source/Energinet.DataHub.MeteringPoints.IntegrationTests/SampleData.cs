@@ -43,7 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string MeasurementUnitType => Domain.MeteringPoints.MeasurementUnitType.KWh.Name;
 
-        public static string MeteringGridArea => "990";
+        public static string MeteringGridArea => "870";
 
         public static string StreetName => "Test Road 1";
 

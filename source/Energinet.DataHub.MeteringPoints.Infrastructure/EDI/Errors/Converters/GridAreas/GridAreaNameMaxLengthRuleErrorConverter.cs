@@ -13,17 +13,17 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.GridAreas
 {
-    public class GeoInfoReferenceIsMandatoryErrorConverter : ErrorConverter<GeoInfoReferenceIsMandatoryValidationError>
+    public class GridAreaNameMaxLengthRuleErrorConverter : ErrorConverter<GridAreaNameMaxLengthRuleError>
     {
-        protected override ErrorMessage Convert(GeoInfoReferenceIsMandatoryValidationError validationError)
+        protected override ErrorMessage Convert(GridAreaNameMaxLengthRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("E86", $"The format of the metering point DAR reference {validationError.Reference} for metering point {validationError.GsrnNumber} must comply with the generic UUID format");
+            return new("?", $"Name of the Grid Area must have length of maximum {validationError.MaxLength} characters.");
         }
     }
 }

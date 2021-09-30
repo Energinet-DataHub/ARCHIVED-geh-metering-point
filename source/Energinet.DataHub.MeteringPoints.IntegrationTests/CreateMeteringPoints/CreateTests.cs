@@ -86,6 +86,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
+        public async Task Should_reject_when_grid_area_doesnt_exist()
+        {
+            var request = CreateRequest() with { MeteringGridArea = "foo" };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("E10");
+        }
+
+        [Fact]
         public async Task CreateMeteringPoint_WithAlreadyExistingGsrnNumber_ShouldGenerateRejectMessageInOutbox()
         {
             var request = CreateRequest();
@@ -222,6 +232,36 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError<CreateMeteringPointRejected>("E86");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_geo_info_reference_is_invalid()
+        {
+            var invalidGeoInfoReference = "xxxxxxx";
+            var request = CreateRequest()
+                with
+                {
+                    GeoInfoReference = invalidGeoInfoReference,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("E86");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_geo_info_reference_is_specified_and_official_address_is_empty()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    GeoInfoReference = SampleData.GeoInfoReference,
+                    IsOfficialAddress = null,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D63");
         }
 
         private static CreateMeteringPoint CreateRequest()

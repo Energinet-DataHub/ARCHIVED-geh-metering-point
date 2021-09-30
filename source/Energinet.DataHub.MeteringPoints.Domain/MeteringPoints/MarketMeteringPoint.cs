@@ -35,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             Address address,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
-            GridAreaId gridAreaId,
+            GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
             LocationDescription? locationDescription,
             MeasurementUnitType unitType,
@@ -49,7 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 address,
                 meteringPointSubType,
                 meteringPointType,
-                gridAreaId,
+                gridAreaLinkId,
                 powerPlantGsrnNumber,
                 locationDescription,
                 unitType,
@@ -69,6 +69,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             var rules = new List<IBusinessRule>()
             {
                 new MeterReadingOccurrenceRule(meteringPointDetails.ReadingOccurrence),
+                new GeoInfoReferenceRequirementRule(meteringPointDetails.Address),
             };
 
             return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));

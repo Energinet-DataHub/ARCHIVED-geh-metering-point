@@ -40,10 +40,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            bool isAddressWashable,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
-            GridAreaId gridAreaId,
+            GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
             LocationDescription? locationDescription,
             MeterId? meterNumber,
@@ -62,7 +61,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 address,
                 meteringPointSubType,
                 meteringPointType,
-                gridAreaId,
+                gridAreaLinkId,
                 powerPlantGsrnNumber,
                 locationDescription,
                 MeasurementUnitType.KWh,
@@ -77,14 +76,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             _connectionType = connectionType;
             _assetType = assetType;
             _productType = ProductType.EnergyActive;
-            _isAddressWashable = isAddressWashable;
             ConnectionState = ConnectionState.New();
             _scheduledMeterReadingDate = scheduledMeterReadingDate;
 
             var @event = new ConsumptionMeteringPointCreated(
                 id.Value,
                 GsrnNumber.Value,
-                gridAreaId.Value,
+                gridAreaLinkId.Value,
                 meteringPointSubType.Name,
                 _productType.Name,
                 meterReadingOccurrence.Name,
@@ -101,7 +99,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 address.StreetCode,
                 address.StreetName,
                 address.CitySubDivision,
-                isAddressWashable,
+                address.IsOfficial,
+                address.GeoInfoReference,
                 powerPlantGsrnNumber.Value,
                 locationDescription.Value,
                 meterNumber.Value,
@@ -173,10 +172,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointDetails.Id,
                 meteringPointDetails.GsrnNumber,
                 meteringPointDetails.Address,
-                meteringPointDetails.IsAddressWashable,
                 meteringPointDetails.MeteringPointSubType,
                 MeteringPointType.Consumption,
-                meteringPointDetails.GridAreaId,
+                meteringPointDetails.GridAreaLinkId,
                 meteringPointDetails.PowerPlantGsrnNumber,
                 meteringPointDetails.LocationDescription,
                 meteringPointDetails.MeterNumber,
