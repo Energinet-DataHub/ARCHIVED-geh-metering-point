@@ -101,7 +101,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 
         public string LocationDescription { get; }
 
-        public string MeterNumber { get; }
+        public string? MeterNumber { get; }
 
         public int MaximumCurrent { get; }
 

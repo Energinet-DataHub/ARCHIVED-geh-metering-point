@@ -103,7 +103,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 address.GeoInfoReference,
                 powerPlantGsrnNumber.Value,
                 locationDescription.Value,
-                meterNumber.Value,
+                meterNumber?.Value,
                 powerLimit.Ampere,
                 powerLimit.Kwh,
                 effectiveDate.DateInUtc,
