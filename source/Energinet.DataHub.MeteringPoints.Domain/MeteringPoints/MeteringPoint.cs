@@ -12,8 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
@@ -26,14 +30,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         protected MeasurementUnitType _unitType;
 #pragma warning restore
         private Address _address;
-        private GridAreaId _gridAreaId;
+        private GridAreaLinkId _gridAreaLinkId;
         private MeteringPointSubType _meteringPointSubType;
         private ReadingOccurrence _meterReadingOccurrence;
         private PowerLimit _powerLimit;
         private GsrnNumber? _powerPlantGsrnNumber;
-        private string? _locationDescription;
+        private LocationDescription? _locationDescription;
         private EffectiveDate _effectiveDate;
-        private string? _meterNumber;
+        private MeterId? _meterNumber;
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
         protected MeteringPoint() { }
@@ -46,11 +50,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             Address address,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
-            GridAreaId gridAreaId,
+            GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
-            string? locationDescription,
+            LocationDescription? locationDescription,
             MeasurementUnitType unitType,
-            string? meterNumber,
+            MeterId? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit powerLimit,
             EffectiveDate effectiveDate)
@@ -60,7 +64,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _address = address;
             _meteringPointSubType = meteringPointSubType;
             _meteringPointType = meteringPointType;
-            _gridAreaId = gridAreaId;
+            _gridAreaLinkId = gridAreaLinkId;
             _powerPlantGsrnNumber = powerPlantGsrnNumber;
             _locationDescription = locationDescription;
             _unitType = unitType;
@@ -75,6 +79,17 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public GsrnNumber GsrnNumber { get; }
 
         protected ConnectionState ConnectionState { get; set; } = ConnectionState.New();
+
+        public static BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
+        {
+            if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
+            var rules = new List<IBusinessRule>()
+            {
+                new MeterIdRequirementRule(meteringPointDetails.MeterNumber, meteringPointDetails.MeteringPointSubType),
+            };
+
+            return new BusinessRulesValidationResult(rules);
+        }
 
         public abstract BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails);
 

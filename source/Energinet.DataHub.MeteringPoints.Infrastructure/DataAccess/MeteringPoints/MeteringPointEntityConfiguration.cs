@@ -104,8 +104,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 .HasColumnName("PowerPlant")
                 .HasConversion(toDbValue => toDbValue.Value, fromDbValue => GsrnNumber.Create(fromDbValue));
 
-            builder.Property<string>("_locationDescription")
-                .HasColumnName("LocationDescription");
+            builder.Property<LocationDescription>("_locationDescription")
+                .HasColumnName("LocationDescription")
+                .HasConversion(toDbValue => toDbValue.Value, fromDbValue => LocationDescription.Create(fromDbValue));
 
             builder.Property<ProductType>("_productType")
                 .HasColumnName("ProductType")
@@ -119,8 +120,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<MeasurementUnitType>(fromDbValue));
 
-            builder.Property("_meterNumber")
-                .HasColumnName("MeterNumber");
+            builder.Property<MeterId>("_meterNumber")
+                .HasColumnName("MeterNumber")
+                .HasConversion(toDbValue => toDbValue.Value, fromDbValue => MeterId.Create(fromDbValue));
 
             builder.Property<ReadingOccurrence>("_meterReadingOccurrence")
                 .HasColumnName("MeterReadingOccurrence")

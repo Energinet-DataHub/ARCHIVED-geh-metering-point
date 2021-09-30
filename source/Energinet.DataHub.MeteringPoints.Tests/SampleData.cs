@@ -22,6 +22,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests
     {
         public static string GsrnNumber => "571234567891234568";
 
+        public static string GridAreaLinkId => "10A9E0E7-3906-4DC0-8CBD-A5C042A5C484";
+
         public static string StreetName => "Test Road 1";
 
         public static string PostCode => "8000";
@@ -48,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public static string UnitType => string.Empty;
 
-        public static string MeterNumber => string.Empty;
+        public static string MeterNumber => "123456";
 
         public static string MeterReadingOccurence => string.Empty;
 

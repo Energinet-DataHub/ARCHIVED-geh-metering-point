@@ -33,7 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
             var message = new MeteringPointCreatedEventMessage(
                 notification.GsrnNumber,
                 "Consumption",
-                notification.GridAreaId.ToString(),
+                notification.GridAreaLinkId.ToString(),
                 notification.SettlementMethod,
                 notification.MeteringPointSubType,
                 notification.PhysicalState,

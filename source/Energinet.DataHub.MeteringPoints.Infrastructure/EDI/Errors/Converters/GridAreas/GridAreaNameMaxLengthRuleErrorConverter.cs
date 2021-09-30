@@ -12,23 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.GridAreas
 {
-    public class MeterNumberMaximumLengthValidationError : ValidationError
+    public class GridAreaNameMaxLengthRuleErrorConverter : ErrorConverter<GridAreaNameMaxLengthRuleError>
     {
-        public MeterNumberMaximumLengthValidationError(string gsrnNumber, string meterNumber, int maximumLength)
+        protected override ErrorMessage Convert(GridAreaNameMaxLengthRuleError validationError)
         {
-            GsrnNumber = gsrnNumber;
-            MeterNumber = meterNumber;
-            MaximumLength = maximumLength;
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new("?", $"Name of the Grid Area must have length of maximum {validationError.MaxLength} characters.");
         }
-
-        public string GsrnNumber { get; }
-
-        public int MaximumLength { get; }
-
-        public string MeterNumber { get; }
     }
 }

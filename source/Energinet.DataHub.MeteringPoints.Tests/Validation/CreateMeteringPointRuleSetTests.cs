@@ -105,38 +105,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         }
 
         [Theory]
-        [InlineData("1234", "Physical", typeof(MeterNumberMandatoryValidationError), false)]
-        [InlineData("", "Physical", typeof(MeterNumberMandatoryValidationError), true)]
-        [InlineData("1234", "OtherSubType", typeof(MeterNumberNotAllowedValidationError), true)]
-        [InlineData("", "OtherSubType", typeof(MeterNumberNotAllowedValidationError), false)]
-        public void Validate_MeterNumberMandatoryForPhysicalMP_MeterNumberNotAllowedForOtherMPTypes(string meterNumber, string subTypeOfMeteringPoint, System.Type validationError, bool expectedError)
-        {
-            var businessRequest = CreateRequest() with
-            {
-                GsrnNumber = SampleData.GsrnNumber,
-                MeterNumber = meterNumber,
-                SubTypeOfMeteringPoint = subTypeOfMeteringPoint,
-            };
-
-            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
-        }
-
-        [Theory]
-        [InlineData("1234", "Physical", typeof(MeterNumberMaximumLengthValidationError), false)]
-        [InlineData("1234567890000000", "Physical", typeof(MeterNumberMaximumLengthValidationError), true)]
-        public void Validate_MeterNumberMaximumLength(string meterNumber, string subTypeOfMeteringPoint, System.Type validationError, bool expectedError)
-        {
-            var businessRequest = CreateRequest() with
-            {
-                GsrnNumber = SampleData.GsrnNumber,
-                MeterNumber = meterNumber,
-                SubTypeOfMeteringPoint = subTypeOfMeteringPoint,
-            };
-
-            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
-        }
-
-        [Theory]
         [InlineData("Physical", typeof(MeteringPointSubTypeMandatoryValidationError), false)]
         [InlineData("", typeof(MeteringPointSubTypeMandatoryValidationError), true)]
         public void Validate_MandatorySubTypeOfMP(string subTypeOfMeteringPoint, System.Type validationError, bool expectedError)

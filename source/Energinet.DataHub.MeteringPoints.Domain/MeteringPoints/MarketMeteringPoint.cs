@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
@@ -35,11 +36,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             Address address,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
-            GridAreaId gridAreaId,
+            GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
-            string? locationDescription,
+            LocationDescription? locationDescription,
             MeasurementUnitType unitType,
-            string meterNumber,
+            MeterId? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit powerLimit,
             EffectiveDate effectiveDate)
@@ -49,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 address,
                 meteringPointSubType,
                 meteringPointType,
-                gridAreaId,
+                gridAreaLinkId,
                 powerPlantGsrnNumber,
                 locationDescription,
                 unitType,
@@ -62,16 +63,17 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         protected EnergySupplierDetails? EnergySupplierDetails { get; private set; }
 
-        public static BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
+        public static new BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
         {
             if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
+            var generalRuleCheckResult = MeteringPoint.CanCreate(meteringPointDetails);
             var rules = new List<IBusinessRule>()
             {
                 new MeterReadingOccurrenceRule(meteringPointDetails.ReadingOccurrence),
                 new GeoInfoReferenceRequirementRule(meteringPointDetails.Address),
             };
 
-            return new BusinessRulesValidationResult(rules);
+            return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
         }
 
         public void SetEnergySupplierDetails(EnergySupplierDetails energySupplierDetails)

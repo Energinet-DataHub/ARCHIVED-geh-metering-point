@@ -14,8 +14,13 @@
 
 using System;
 using System.Linq;
+using Energinet.DataHub.MeteringPoints.Domain.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain
 {
@@ -26,6 +31,47 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             if (rulesValidationResult == null) throw new ArgumentNullException(nameof(rulesValidationResult));
             var hasError = rulesValidationResult.Errors.Any(error => error is TRuleError);
             Assert.Equal(errorExpected, hasError);
+        }
+
+        protected static MeteringPointDetails CreateDetails()
+        {
+            var address = CreateAddress();
+
+            return new MeteringPointDetails(
+                MeteringPointId.New(),
+                GsrnNumber.Create(SampleData.GsrnNumber),
+                address,
+                MeteringPointSubType.Physical,
+                new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
+                GsrnNumber.Create(SampleData.PowerPlant),
+                LocationDescription.Create(SampleData.LocationDescription),
+                string.IsNullOrWhiteSpace(SampleData.MeterNumber) ? null : MeterId.Create(SampleData.MeterNumber),
+                ReadingOccurrence.Hourly,
+                PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
+                EffectiveDate.Create(SampleData.EffectiveDate),
+                SettlementMethod.Flex,
+                NetSettlementGroup.Six,
+                DisconnectionType.Manual,
+                ConnectionType.Installation,
+                AssetType.GasTurbine,
+                ScheduledMeterReadingDate.Create(SampleData.ScheduledMeterReadingDate));
+        }
+
+        protected static Address CreateAddress()
+        {
+            return Address.Create(
+                SampleData.StreetName,
+                SampleData.StreetCode,
+                string.Empty,
+                SampleData.CityName,
+                string.Empty,
+                SampleData.PostCode,
+                null,
+                string.Empty,
+                string.Empty,
+                default,
+                isOfficial: true,
+                geoInfoReference: Guid.NewGuid());
         }
     }
 }

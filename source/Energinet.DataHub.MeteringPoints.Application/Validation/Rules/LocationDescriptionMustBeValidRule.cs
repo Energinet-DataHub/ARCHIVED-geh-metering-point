@@ -14,19 +14,22 @@
 
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
     public class LocationDescriptionMustBeValidRule : AbstractValidator<CreateMeteringPoint>
     {
-        private const int LocationDescriptionMaximumLength = 60;
-
         public LocationDescriptionMustBeValidRule()
         {
-            RuleFor(createMeteringPoint => createMeteringPoint.LocationDescription)
-                .MaximumLength(LocationDescriptionMaximumLength)
-                .WithState(createMeteringPoint => new LocationDescriptionMaximumLengthValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.LocationDescription!));
+            When(request => !string.IsNullOrWhiteSpace(request.LocationDescription), () =>
+            {
+                RuleFor(createMeteringPoint => createMeteringPoint.LocationDescription)
+                    .Must(value => LocationDescription.CheckRules(value!).Success)
+                    .WithState(createMeteringPoint => new InvalidLocationDescriptionRuleError(createMeteringPoint.LocationDescription!));
+            });
         }
     }
 }

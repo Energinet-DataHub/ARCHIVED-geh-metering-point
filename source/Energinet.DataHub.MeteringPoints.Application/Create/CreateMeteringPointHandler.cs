@@ -18,7 +18,9 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
+using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
@@ -33,19 +35,22 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
     public class CreateMeteringPointHandler : IBusinessRequestHandler<CreateMeteringPoint>
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
+        private readonly IGridAreaRepository _gridAreaRepository;
         private readonly IMediator _mediator;
 
-        public CreateMeteringPointHandler(IMeteringPointRepository meteringPointRepository, IMediator mediator)
+        public CreateMeteringPointHandler(
+            IMeteringPointRepository meteringPointRepository,
+            IGridAreaRepository gridAreaRepository,
+            IMediator mediator)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
+            _gridAreaRepository = gridAreaRepository;
             _mediator = mediator;
         }
 
         public async Task<BusinessProcessResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-
-            var meteringPointDetails = CreateDetails(request);
 
             var validationResult = await ValidateAsync(request, cancellationToken).ConfigureAwait(false);
             if (!validationResult.Success)
@@ -61,6 +66,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
 
             var meteringPointType = EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint);
 
+            var gridArea = await GetGridAreaAsync(request).ConfigureAwait(false);
+            var gridAreaValidationResult = ValidateGridArea(request, gridArea);
+            if (!gridAreaValidationResult.Success)
+            {
+                return new BusinessProcessResult(request.TransactionId, gridAreaValidationResult.ValidationErrors);
+            }
+
+            var meteringPointDetails = CreateDetails(request, gridArea?.DefaultLink.Id!);
             var rulesCheckResult = CheckBusinessRules(request, meteringPointDetails);
             if (!rulesCheckResult.Success)
             {
@@ -72,7 +85,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             switch (meteringPointType.Name)
             {
                 case nameof(MeteringPointType.Consumption):
-                    meteringPoint = CreateConsumptionMeteringPoint(request);
+                    meteringPoint = CreateConsumptionMeteringPoint(meteringPointDetails);
                     break;
                 case nameof(MeteringPointType.Exchange):
                     meteringPoint = CreateExchangeMeteringPoint(request, meteringPointType);
@@ -88,6 +101,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             _meteringPointRepository.Add(meteringPoint);
 
             return BusinessProcessResult.Ok(request.TransactionId);
+        }
+
+        private static BusinessProcessResult ValidateGridArea(CreateMeteringPoint request, GridArea? gridArea)
+        {
+            var validationRules = new List<IBusinessRule>
+            {
+                new GridAreaMustExistRule(gridArea),
+            };
+
+            return new BusinessProcessResult(request.TransactionId, validationRules);
         }
 
         private static BusinessProcessResult CheckBusinessRules(CreateMeteringPoint request, MeteringPointDetails meteringPointDetails)
@@ -112,11 +135,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 request.IsOfficialAddress.GetValueOrDefault(), // TODO: change to boolean in domain?
                 EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
                 meteringPointType,
-                new GridAreaId(Guid.NewGuid()),
+                new GridAreaLinkId(Guid.NewGuid()), // TODO: Use links correct, when updating creation of production metering pints
                 !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null,
-                request.LocationDescription,
+                LocationDescription.Create(request.LocationDescription!),
                 EnumerationType.FromName<MeasurementUnitType>(request.UnitType),
-                request.MeterNumber,
+                string.IsNullOrWhiteSpace(request.MeterNumber) ? null : MeterId.Create(request.MeterNumber),
                 EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
                 PowerLimit.Create(request.MaximumPower, request.MaximumCurrent),
                 EffectiveDate.Create(request.EffectiveDate),
@@ -135,11 +158,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 //PhysicalState.New,
                 EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
                 meteringPointType,
-                new GridAreaId(Guid.NewGuid()),
+                new GridAreaLinkId(Guid.NewGuid()), // TODO: Use links correct, when updating creation of exchange metering pints
                 !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null,
-                request.LocationDescription,
+                LocationDescription.Create(request.LocationDescription!),
                 EnumerationType.FromName<MeasurementUnitType>(request.UnitType),
-                request.MeterNumber,
+                string.IsNullOrWhiteSpace(request.MeterNumber) ? null : MeterId.Create(request.MeterNumber),
                 EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
                 PowerLimit.Create(request.MaximumPower, request.MaximumCurrent),
                 EffectiveDate.Create(request.EffectiveDate), // TODO: Parse date in correct format when implemented in Input Validation
@@ -148,23 +171,22 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 EnumerationType.FromName<ProductType>(request.ProductType));
         }
 
-        private static ConsumptionMeteringPoint CreateConsumptionMeteringPoint(CreateMeteringPoint request)
+        private static ConsumptionMeteringPoint CreateConsumptionMeteringPoint(MeteringPointDetails meteringPointDetails)
         {
-            var meteringPointDetails = CreateDetails(request);
             return ConsumptionMeteringPoint.Create(meteringPointDetails);
         }
 
-        private static MeteringPointDetails CreateDetails(CreateMeteringPoint request)
+        private static MeteringPointDetails CreateDetails(CreateMeteringPoint request, GridAreaLinkId gridAreaLinkId)
         {
             return new MeteringPointDetails(
                 MeteringPointId.New(),
                 GsrnNumber.Create(request.GsrnNumber),
                 CreateAddress(request),
                 EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
-                GridAreaId.New(),
+                gridAreaLinkId,
                 !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null !,
-                request.LocationDescription,
-                request.MeterNumber,
+                LocationDescription.Create(request.LocationDescription!),
+                string.IsNullOrWhiteSpace(request.MeterNumber) ? null : MeterId.Create(request.MeterNumber),
                 EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
                 PowerLimit.Create(request.MaximumPower, request.MaximumCurrent),
                 EffectiveDate.Create(request.EffectiveDate),
@@ -207,6 +229,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 floor: request.FloorIdentification,
                 room: request.RoomIdentification,
                 municipalityCode: municipalityCode);
+        }
+
+        private Task<GridArea?> GetGridAreaAsync(CreateMeteringPoint request)
+        {
+            return _gridAreaRepository.GetByCodeAsync(request.MeteringGridArea);
         }
 
         private async Task<BusinessProcessResult> ValidateAsync(CreateMeteringPoint request, CancellationToken cancellationToken)
