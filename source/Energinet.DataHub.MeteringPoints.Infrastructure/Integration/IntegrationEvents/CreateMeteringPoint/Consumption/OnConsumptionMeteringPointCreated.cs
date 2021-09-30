@@ -26,13 +26,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
 {
     public class OnConsumptionMeteringPointCreated : IntegrationEventPublisher<ConsumptionMeteringPointCreated>
     {
-        private readonly IMediator _mediator;
         private readonly IDbConnectionFactory _connectionFactory;
 
-        public OnConsumptionMeteringPointCreated(IOutbox outbox, IOutboxMessageFactory outboxMessageFactory, IMediator mediator, IDbConnectionFactory connectionFactory)
+        public OnConsumptionMeteringPointCreated(IOutbox outbox, IOutboxMessageFactory outboxMessageFactory, IDbConnectionFactory connectionFactory)
             : base(outbox, outboxMessageFactory)
         {
-            _mediator = mediator;
             _connectionFactory = connectionFactory;
         }
 
