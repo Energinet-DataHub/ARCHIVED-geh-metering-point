@@ -31,8 +31,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 {
                     MeterNumber = null, MeteringPointSubType = MeteringPointSubType.Physical,
                 };
-            var creationRules = new CreationRules(details);
-            var result = new BusinessRulesValidationResult(creationRules.Rules);
+
+            var result = MeteringPoint.CanCreate(details);
 
             AssertError<MeterIdIsRequiredRuleError>(result, true);
         }
@@ -46,8 +46,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                     MeterNumber = MeterId.Create("A1234"),
                     MeteringPointSubType = MeteringPointSubType.Virtual,
                 };
-            var creationRules = new CreationRules(details);
-            var result = new BusinessRulesValidationResult(creationRules.Rules);
+
+            var result = MeteringPoint.CanCreate(details);
 
             AssertError<MeterIdIsNotAllowedRuleError>(result, true);
         }
