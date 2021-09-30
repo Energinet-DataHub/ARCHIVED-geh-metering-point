@@ -168,6 +168,36 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError<CreateMeteringPointRejected>("E86");
         }
 
+        [Fact]
+        public async Task Should_reject_if_subtype_is_physical_and_meter_identification_is_undefined()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    MeterNumber = null,
+                    SubTypeOfMeteringPoint = MeteringPointSubType.Physical.Name,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
+        }
+
+        [Fact]
+        public async Task Should_reject_if_subtype_is_not_physical_and_meter_identification_is_defined()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    MeterNumber = SampleData.MeterNumber,
+                    SubTypeOfMeteringPoint = MeteringPointSubType.Virtual.Name,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("E86");
+        }
+
         private static CreateMeteringPoint CreateRequest()
         {
             return new(
