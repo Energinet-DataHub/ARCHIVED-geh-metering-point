@@ -56,7 +56,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
 
         private async Task<int> GetGridAreaCodeAsync(Guid gridAreaLinkId)
         {
-            MeteringPointGridAreaCodeQuery meteringPointGridAreaCodeQuery = new(gridAreaLinkId.ToString());
             var sql = @"SELECT GridAreas.Code FROM GridAreas
                         INNER JOIN GridAreaLinks ON GridAreas.Id = GridAreaLinks.GridAreaId
                         WHERE GridAreaLinks.Id =@GridAreaLinkId";
@@ -65,7 +64,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 .ExecuteScalarAsync<int?>(sql, new { gridAreaLinkId })
                 .ConfigureAwait(false);
 
-            // var code = await _mediator.Send(meteringPointGridAreaCodeQuery).ConfigureAwait(false);
             return result ?? throw new InvalidOperationException("Grid Area Code not found");
         }
     }
