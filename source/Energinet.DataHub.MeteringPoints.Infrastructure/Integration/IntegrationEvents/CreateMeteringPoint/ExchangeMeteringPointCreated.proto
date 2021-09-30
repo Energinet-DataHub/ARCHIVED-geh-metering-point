@@ -1,0 +1,66 @@
+/* Copyright 2020 Energinet DataHub A/S
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License2");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+syntax = "proto3";
+
+option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEventContracts";
+
+/**
+ * This message is sent out when a Consumption metering point is created.
+ */
+message ExchangeMeteringPointCreated {
+  enum ProductType {
+    TARIFF = 0;
+    FUELQUANTITY = 1;
+    POWERACTIVE = 2;
+    POWERREACTIVE = 3;
+    ENERGYACTIVE = 4;
+    ENERGYREACTIVE = 5;
+  }
+
+  enum MeteringMethod {
+    PHYSICAL = 0; // Has a physical meter associated with it
+    VIRTUAL = 1; // Does not have a physical meter associated with it
+    CALCULATED =2; // Does not have a physical meter associated with it
+  }
+
+  enum MeterReadingPeriodicity {
+    HOURLY = 0; // Read every hour
+    QUARTERLY = 1; // Read every 15 minutes
+  }
+
+  enum ConnectionState {
+    NEW = 0; // Always created with connection state new
+  }
+
+  enum UnitType {
+    WH = 0; // Watt per hour
+    KWH = 1; // Kilowatt per hour
+    MWH = 2; // Megawatt per hour
+    GWH = 3; // Gigawatt per hour
+  }
+
+  string Metering_Point_Id = 1; // Unique identification for metering point
+  string Gsrn_Number = 2; // Business facing metering point identifier
+  string Grid_Area_Code = 3; // Signifies which grid area a metering point belongs to
+  string To_Grid_Area_Code = 4; // Denotes which grid area energy is exchanged to
+  string From_Grid_Area_Code = 5; // Denotes which grid area energy is exchange from
+  MeteringMethod Metering_Method = 6; // Metering method denotes how energy quantity is calculated in other domain
+  MeterReadingPeriodicity Meter_Reading_Periodicity = 7; // Denotes how often a energy quantity is read on a metering point
+  ProductType Product = 8; // Denotes the product type
+  ConnectionState Connection_State = 9; // Denotes which connection state a metering point is created with. For a production metering point this is always "New"
+  UnitType Unit_Type = 10; // Denotes the unit type. For a production metering point this is always a variation of watt/hour 
+  string Effective_Date = 11; // The date on which the metering point is created
+}
