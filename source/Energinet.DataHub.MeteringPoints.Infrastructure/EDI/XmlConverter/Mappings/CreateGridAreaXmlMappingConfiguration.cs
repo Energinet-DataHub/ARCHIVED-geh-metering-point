@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappings
 {
-    public class MeterNumberMandatoryValidationError : ValidationError
+    public class CreateGridAreaXmlMappingConfiguration : XmlMappingConfigurationBase
     {
-        public MeterNumberMandatoryValidationError(string gsrnNumber)
+        public CreateGridAreaXmlMappingConfiguration()
         {
-            GsrnNumber = gsrnNumber;
+            CreateMapping<Application.GridAreas.Create.CreateGridArea>("MktActivityRecord", mapper => mapper
+                .AddProperty(x => x.Code, "TODO")
+                .AddProperty(x => x.Name, "TODO")
+                .AddProperty(x => x.PriceAreaCode, "TODO")
+                .AddProperty(x => x.TransactionId, "mRID"));
         }
-
-        public string GsrnNumber { get; }
     }
 }

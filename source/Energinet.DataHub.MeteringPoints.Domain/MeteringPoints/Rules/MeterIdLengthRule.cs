@@ -13,20 +13,23 @@
 // limitations under the License.
 
 using System;
-using Squadron;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.IntegrationEvents.ConsumptionMeteringPointCreated
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
-    public class ConsumptionMeteringPointCreatedServiceBusOptions : AzureCloudServiceBusOptions
+    public class MeterIdLengthRule : IBusinessRule
     {
-        public const string ServiceBusTopic = "consumption-metering-point-created";
-        public const string ServiceBusTopicSubscriber = "subscriber";
+        private const int MaxLength = 15;
 
-        public override void Configure(ServiceBusOptionsBuilder builder)
+        public MeterIdLengthRule(string meterId)
         {
-            if (builder == null) throw new ArgumentNullException(nameof(builder));
-            builder.AddTopic(ServiceBusTopic)
-                .AddSubscription(ServiceBusTopicSubscriber);
+            if (meterId == null) throw new ArgumentNullException(nameof(meterId));
+            IsBroken = meterId.Length > MaxLength;
+            ValidationError = new InvalidMeterIdRuleError(meterId, MaxLength);
         }
+
+        public bool IsBroken { get; }
+
+        public ValidationError ValidationError { get; }
     }
 }

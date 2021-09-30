@@ -79,8 +79,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         {
             return @event.MeterReadingPeriodicity switch
             {
-                "Yearly" => ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity.MrpYearly,
-                "Monthly" => ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity.MrpMonthly,
                 "Hourly" => ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity.MrpHourly,
                 "Quarterly" => ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity.MrpQuarterly,
                 _ => throw new ArgumentException("Meter reading periodicity is not recognized."),

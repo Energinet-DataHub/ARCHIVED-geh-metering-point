@@ -15,25 +15,35 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Dapper;
+using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption
 {
     public class OnConsumptionMeteringPointCreated : IntegrationEventPublisher<ConsumptionMeteringPointCreated>
     {
-        public OnConsumptionMeteringPointCreated(IOutbox outbox, IOutboxMessageFactory outboxMessageFactory)
+        private readonly IMediator _mediator;
+        private readonly IDbConnectionFactory _connectionFactory;
+
+        public OnConsumptionMeteringPointCreated(IOutbox outbox, IOutboxMessageFactory outboxMessageFactory, IMediator mediator, IDbConnectionFactory connectionFactory)
             : base(outbox, outboxMessageFactory)
         {
+            _mediator = mediator;
+            _connectionFactory = connectionFactory;
         }
 
-        public override Task Handle(ConsumptionMeteringPointCreated notification, CancellationToken cancellationToken)
+        public override async Task Handle(ConsumptionMeteringPointCreated notification, CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
+            var gridAreaCode = await GetGridAreaCodeAsync(notification.GridAreaLinkId).ConfigureAwait(false);
             var message = new ConsumptionMeteringPointCreatedIntegrationEvent(
                 notification.MeteringPointId.ToString(),
                 notification.GsrnNumber,
-                notification.GridAreaId.ToString(),
+                $"{gridAreaCode}",
                 notification.SettlementMethod,
                 notification.MeteringPointSubType,
                 notification.ReadingOccurrence,
@@ -42,8 +52,21 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 notification.EffectiveDate.ToString());
 
             CreateAndAddOutboxMessage(message);
+        }
 
-            return Task.CompletedTask;
+        private async Task<int> GetGridAreaCodeAsync(Guid gridAreaLinkId)
+        {
+            MeteringPointGridAreaCodeQuery meteringPointGridAreaCodeQuery = new(gridAreaLinkId.ToString());
+            var sql = @"SELECT GridAreas.Code FROM GridAreas
+                        INNER JOIN GridAreaLinks ON GridAreas.Id = GridAreaLinks.GridAreaId
+                        WHERE GridAreaLinks.Id =@GridAreaLinkId";
+            var result = await _connectionFactory
+                .GetOpenConnection()
+                .ExecuteScalarAsync<int?>(sql, new { gridAreaLinkId })
+                .ConfigureAwait(false);
+
+            // var code = await _mediator.Send(meteringPointGridAreaCodeQuery).ConfigureAwait(false);
+            return result ?? throw new InvalidOperationException("Grid Area Code not found");
         }
     }
 }

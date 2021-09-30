@@ -20,21 +20,13 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints
 {
-    internal class CreationRules
+    internal class CreationRules : MeteringPoints.CreationRules
     {
-        private readonly List<IBusinessRule> _rules = new List<IBusinessRule>();
-
         public CreationRules(MeteringPointDetails meteringPointDetails)
+            : base(meteringPointDetails)
         {
             if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
             Add(new MeterReadingOccurrenceRule(meteringPointDetails.ReadingOccurrence));
-        }
-
-        public IEnumerable<IBusinessRule> Rules => _rules.AsReadOnly();
-
-        protected void Add(IBusinessRule rule)
-        {
-            _rules.Add(rule);
         }
     }
 }

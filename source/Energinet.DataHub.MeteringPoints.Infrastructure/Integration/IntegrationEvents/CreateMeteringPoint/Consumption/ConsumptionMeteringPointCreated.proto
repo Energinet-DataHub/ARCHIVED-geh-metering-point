@@ -52,10 +52,8 @@ message ConsumptionMeteringPointCreated {
   }
   
   enum MeterReadingPeriodicity {
-    MRP_YEARLY = 0;
-    MRP_MONTHLY = 1;
-    MRP_HOURLY = 2;
-    MRP_QUARTERLY = 3;
+    MRP_HOURLY = 0;
+    MRP_QUARTERLY = 1;
   }
   
   string metering_point_id = 1;

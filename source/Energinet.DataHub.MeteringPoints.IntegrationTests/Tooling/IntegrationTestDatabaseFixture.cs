@@ -16,7 +16,7 @@ using Xunit;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
 {
-    [CollectionDefinition("IntegrationTest45")]
+    [CollectionDefinition("IntegrationTest")]
     public class IntegrationTestDatabaseFixture : ICollectionFixture<DatabaseFixture>
     {
         // This class has no code, and is never created. Its purpose is simply
