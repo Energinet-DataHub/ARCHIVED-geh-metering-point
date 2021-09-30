@@ -16,6 +16,7 @@ name: WebAPI CD
 on:
   push:
     branches:
+      - main
       - xtban/gridarea-webapi
     paths:
       - source/**
