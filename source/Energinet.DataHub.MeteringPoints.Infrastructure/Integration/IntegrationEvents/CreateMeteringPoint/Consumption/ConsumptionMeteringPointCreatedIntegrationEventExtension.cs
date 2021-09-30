@@ -84,5 +84,28 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 _ => throw new ArgumentException("Meter reading periodicity is not recognized."),
             };
         }
+
+        public static ConsumptionMeteringPointCreated.Types.ConnectionState GetConnectionState(
+            this ConsumptionMeteringPointCreatedIntegrationEvent @event)
+        {
+            return @event.ConnectionState switch
+            {
+                "New" => ConsumptionMeteringPointCreated.Types.ConnectionState.CsNew,
+                _ => throw new ArgumentException("Meter reading periodicity is not recognized."),
+            };
+        }
+
+        public static ConsumptionMeteringPointCreated.Types.UnitType GetUnitType(
+            this ConsumptionMeteringPointCreatedIntegrationEvent @event)
+        {
+            return @event.UnitType switch
+            {
+                "Wh" => ConsumptionMeteringPointCreated.Types.UnitType.UtWh,
+                "KWh" => ConsumptionMeteringPointCreated.Types.UnitType.UtKwh,
+                "MWh" => ConsumptionMeteringPointCreated.Types.UnitType.UtMwh,
+                "GWh" => ConsumptionMeteringPointCreated.Types.UnitType.UtGwh,
+                _ => throw new ArgumentException("Meter reading periodicity is not recognized."),
+            };
+        }
     }
 }

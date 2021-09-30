@@ -29,6 +29,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
             string MeterReadingPeriodicity,
             string NetSettlementGroup,
             string ProductType,
-            string EffectiveDate)
+            string EffectiveDate,
+            string UnitType,
+            string ConnectionState)
         : IIntegrationEvent, IRequest, IOutboundMessage;
 }
