@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
@@ -25,13 +26,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOutboxManager _outbox;
-        private readonly Container _container;
+        private readonly IOutboxMessageDispatcher _outboxMessageDispatcher;
 
-        public OutboxOrchestrator(IUnitOfWork unitOfWork, IOutboxManager outbox, Container container)
+        public OutboxOrchestrator(IUnitOfWork unitOfWork, IOutboxManager outbox, IOutboxMessageDispatcher outboxMessageDispatcher)
         {
             _unitOfWork = unitOfWork;
             _outbox = outbox;
-            _container = container;
+            _outboxMessageDispatcher = outboxMessageDispatcher;
         }
 
         public async Task ProcessOutboxMessagesAsync()
@@ -39,19 +40,14 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
             // Keep iterating as long as we have a message
             while (true)
             {
-                await using var scope = AsyncScopedLifestyle.BeginScope(_container);
                 var message = _outbox.GetNext();
                 if (message == null) break;
 
-                var dispatcher = scope.GetService<IOutboxMessageDispatcher>();
-                if (dispatcher != null)
-                {
-                    await dispatcher.DispatchMessageAsync(message).ConfigureAwait(false);
+                await _outboxMessageDispatcher.DispatchMessageAsync(message).ConfigureAwait(false);
 
-                    _outbox.MarkProcessed(message);
+                _outbox.MarkProcessed(message);
 
-                    await _unitOfWork.CommitAsync().ConfigureAwait(false);
-                }
+                await _unitOfWork.CommitAsync().ConfigureAwait(false);
             }
         }
     }

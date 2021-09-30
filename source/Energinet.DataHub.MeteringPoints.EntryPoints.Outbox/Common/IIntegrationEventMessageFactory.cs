@@ -12,34 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using NodaTime;
+using Azure.Messaging.ServiceBus;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
 {
     /// <summary>
-    /// Context for the current fetched integration event scope
+    /// Creates the integration message to be dispatched
     /// </summary>
-    public interface IIntegrationMetaDataContext
+    public interface IIntegrationEventMessageFactory
     {
         /// <summary>
-        /// Get the Timestamp.
+        /// Creates the message
         /// </summary>
-        public Instant Timestamp { get; }
+        public ServiceBusMessage CreateMessage(byte[] bytes);
 
         /// <summary>
-        /// Get the CorrelationId.
+        /// Enrich the message
         /// </summary>
-        public string? CorrelationId { get; }
-
-        /// <summary>
-        /// Get the EventId.
-        /// </summary>
-        public Guid EventId { get; }
-
-        /// <summary>
-        /// Set the initial meta data.
-        /// </summary>
-        public void SetInitialMetaData(Instant timestamp, string? correlationId, Guid eventId);
+        public ServiceBusMessage EnrichMessage(ServiceBusMessage message, string messageType, int version);
     }
 }

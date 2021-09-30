@@ -58,6 +58,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common
                     services.AddSimpleInjector(_container, options =>
                     {
                         options.AddLogging(); // Allow use non-generic ILogger interface
+                        options.CrossWire<IServiceScopeFactory>();
                     });
                 })
                 .Build()

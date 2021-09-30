@@ -41,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
             var message = new ConsumptionMeteringPointCreatedIntegrationEvent(
                 notification.MeteringPointId.ToString(),
                 notification.GsrnNumber,
-                $"{gridAreaCode}",
+                gridAreaCode,
                 notification.SettlementMethod,
                 notification.MeteringPointSubType,
                 notification.ReadingOccurrence,
@@ -54,14 +54,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
             CreateAndAddOutboxMessage(message);
         }
 
-        private async Task<int> GetGridAreaCodeAsync(Guid gridAreaLinkId)
+        private async Task<string> GetGridAreaCodeAsync(Guid gridAreaLinkId)
         {
             var sql = @"SELECT GridAreas.Code FROM GridAreas
                         INNER JOIN GridAreaLinks ON GridAreas.Id = GridAreaLinks.GridAreaId
                         WHERE GridAreaLinks.Id =@GridAreaLinkId";
             var result = await _connectionFactory
                 .GetOpenConnection()
-                .ExecuteScalarAsync<int?>(sql, new { gridAreaLinkId })
+                .ExecuteScalarAsync<string?>(sql, new { gridAreaLinkId })
                 .ConfigureAwait(false);
 
             return result ?? throw new InvalidOperationException("Grid Area Code not found");

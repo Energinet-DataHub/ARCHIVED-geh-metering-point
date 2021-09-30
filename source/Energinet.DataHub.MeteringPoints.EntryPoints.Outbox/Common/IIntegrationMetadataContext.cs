@@ -12,32 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
+using System;
+using NodaTime;
+
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
 {
     /// <summary>
-    /// Transactional outbox manipulation
+    /// Context for the current fetched integration event scope
     /// </summary>
-    public interface IOutboxManager
+    public interface IIntegrationMetadataContext
     {
         /// <summary>
-        /// Get next unprocessed message
+        /// Get the Timestamp.
         /// </summary>
-        OutboxMessage? GetNext();
+        public Instant Timestamp { get; }
 
         /// <summary>
-        /// Get next unprocessed message based on category
+        /// Get the CorrelationId.
         /// </summary>
-        OutboxMessage? GetNext(OutboxMessageCategory category);
+        public string? CorrelationId { get; }
 
         /// <summary>
-        /// Get next unprocessed message based on category and type
+        /// Get the EventId.
         /// </summary>
-        OutboxMessage? GetNext(OutboxMessageCategory category, string type);
+        public Guid EventId { get; }
 
         /// <summary>
-        /// Mark message as processed
+        /// Set the initial meta data.
         /// </summary>
-        /// <param name="outboxMessage"></param>
-        void MarkProcessed(OutboxMessage outboxMessage);
+        public void SetMetadata(Instant timestamp, string? correlationId, Guid eventId);
     }
 }

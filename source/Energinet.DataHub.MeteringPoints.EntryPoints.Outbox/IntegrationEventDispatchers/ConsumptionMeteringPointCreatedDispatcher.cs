@@ -15,6 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
@@ -23,23 +24,22 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDispatchers
 {
-    public class ConsumptionMeteringPointCreatedDispatcher : IntegrationEventDispatcher<ConsumptionMeteringPointCreatedIntegrationEvent>
+    public class ConsumptionMeteringPointCreatedDispatcher : IntegrationEventDispatcher<ConsumptionMeteringPointCreatedTopic, ConsumptionMeteringPointCreatedIntegrationEvent>
     {
-        private readonly ITopicSender<ConsumptionMeteringPointCreatedTopic> _topicSender;
+        private readonly IIntegrationEventMessageFactory _integrationEventMessageFactory;
 
-        public ConsumptionMeteringPointCreatedDispatcher(ITopicSender<ConsumptionMeteringPointCreatedTopic> topicSender, ProtobufOutboundMapper<ConsumptionMeteringPointCreatedIntegrationEvent> mapper, IIntegrationMetaDataContext integrationMetaDataContext)
-            : base(mapper, integrationMetaDataContext)
+        public ConsumptionMeteringPointCreatedDispatcher(ITopicSender<ConsumptionMeteringPointCreatedTopic> topicSender, ProtobufOutboundMapper<ConsumptionMeteringPointCreatedIntegrationEvent> mapper, IIntegrationEventMessageFactory integrationEventMessageFactory)
+            : base(topicSender, mapper, integrationEventMessageFactory)
         {
-            _topicSender = topicSender;
+            _integrationEventMessageFactory = integrationEventMessageFactory;
         }
 
-        protected override async Task DispatchMessageAsync(ServiceBusMessage serviceBusMessage)
+        protected override ServiceBusMessage EnrichMessage(ServiceBusMessage serviceBusMessage)
         {
-            if (serviceBusMessage == null) throw new ArgumentNullException(nameof(serviceBusMessage));
-            serviceBusMessage.ApplicationProperties.Add("MessageVersion", 1);
-            serviceBusMessage.ApplicationProperties.Add("MessageType", "ConsumptionMeteringPointCreated");
-
-            await _topicSender.SendMessageAsync(serviceBusMessage).ConfigureAwait(false);
+            return _integrationEventMessageFactory.EnrichMessage(
+                serviceBusMessage,
+                nameof(ConsumptionMeteringPointCreated),
+                1);
         }
     }
 }

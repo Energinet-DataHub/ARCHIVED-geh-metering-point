@@ -17,7 +17,7 @@ using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
 {
-    public class IntegrationMetaDataContext : IIntegrationMetaDataContext
+    public class IntegrationMetadataContext : IIntegrationMetadataContext
     {
         public Instant Timestamp { get; private set; }
 
@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
 
         public Guid EventId { get; private set; }
 
-        public void SetInitialMetaData(Instant timestamp, string? correlationId, Guid eventId)
+        public void SetMetadata(Instant timestamp, string? correlationId, Guid eventId)
         {
             Timestamp = timestamp;
             CorrelationId = correlationId;

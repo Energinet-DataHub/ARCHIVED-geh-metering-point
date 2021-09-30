@@ -24,34 +24,32 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDispatchers
 {
-    public abstract class IntegrationEventDispatcher<TEvent> : IRequestHandler<TEvent>
+    public abstract class IntegrationEventDispatcher<TTopic, TEvent> : IRequestHandler<TEvent>
+        where TTopic : Topic
         where TEvent : IOutboundMessage, IRequest<Unit>
     {
+        private readonly ITopicSender<TTopic> _topicSender;
         private readonly ProtobufOutboundMapper<TEvent> _mapper;
-        private readonly IIntegrationMetaDataContext _integrationMetaDataContext;
+        private readonly IIntegrationEventMessageFactory _integrationEventMessageFactory;
 
-        protected IntegrationEventDispatcher(ProtobufOutboundMapper<TEvent> mapper, IIntegrationMetaDataContext integrationMetaDataContext)
+        protected IntegrationEventDispatcher(ITopicSender<TTopic> topicSender, ProtobufOutboundMapper<TEvent> mapper, IIntegrationEventMessageFactory integrationEventMessageFactory)
         {
+            _topicSender = topicSender;
             _mapper = mapper;
-            _integrationMetaDataContext = integrationMetaDataContext;
+            _integrationEventMessageFactory = integrationEventMessageFactory;
         }
 
         public async Task<Unit> Handle(TEvent request, CancellationToken cancellationToken)
         {
             var message = _mapper.Convert(request);
             var bytes = message.ToByteArray();
-            ServiceBusMessage serviceBusMessage = new(bytes)
-            {
-                ContentType = "application/octet-stream;charset=utf-8",
-            };
-            serviceBusMessage.ApplicationProperties.Add("Timestamp", _integrationMetaDataContext.Timestamp.ToString());
-            serviceBusMessage.ApplicationProperties.Add("CorrelationId", _integrationMetaDataContext.CorrelationId);
-            serviceBusMessage.ApplicationProperties.Add("EventIdentifier", _integrationMetaDataContext.EventId.ToString());
+            var serviceBusMessage = _integrationEventMessageFactory.CreateMessage(bytes);
+            serviceBusMessage = EnrichMessage(serviceBusMessage);
 
-            await DispatchMessageAsync(serviceBusMessage).ConfigureAwait(false);
+            await _topicSender.SendMessageAsync(serviceBusMessage).ConfigureAwait(false);
             return Unit.Value;
         }
 
-        protected abstract Task DispatchMessageAsync(ServiceBusMessage serviceBusMessage);
+        protected abstract ServiceBusMessage EnrichMessage(ServiceBusMessage serviceBusMessage);
     }
 }
