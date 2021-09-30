@@ -35,6 +35,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 NetSettlementGroup = obj.GetNetSettlementGroup(),
                 Product = obj.GetProductType(),
                 EffectiveDate = obj.EffectiveDate,
+                UnitType = obj.GetUnitType(),
+                ConnectionState = obj.GetConnectionState(),
             };
         }
     }
