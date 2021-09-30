@@ -29,6 +29,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public float Kwh { get; }
 
+        public static Capacity Create(float capacityInKwh)
+        {
+            var capacityAsString = capacityInKwh.ToString(CultureInfo.InvariantCulture);
+            return Create(capacityAsString);
+        }
+
         public static Capacity Create(string capacityInKwh)
         {
             if (CheckRules(capacityInKwh).Success == false)
@@ -44,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             var rules = new List<IBusinessRule>()
             {
-                new CapcityFormatRule(capacityInKwh),
+                new CapacityFormatRule(capacityInKwh),
             };
 
             return new BusinessRulesValidationResult(rules);

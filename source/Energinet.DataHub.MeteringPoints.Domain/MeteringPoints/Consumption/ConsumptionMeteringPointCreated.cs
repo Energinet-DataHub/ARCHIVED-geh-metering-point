@@ -21,7 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 {
     public class ConsumptionMeteringPointCreated : DomainEventBase
     {
-        public ConsumptionMeteringPointCreated(Guid meteringPointId, string gsrnNumber, Guid gridAreaId, string meteringPointSubType, string productType, string readingOccurrence, string unitType, string settlementMethod, string netSettlementGroup, string city, string floor, string room, string buildingNumber, string countryCode, int? municipalityCode, string postCode, string streetCode, string streetName, string citySubDivision, bool isOfficialAddress, Guid? geoInfoReference, string powerPlantGsrnNumber, string locationDescription, string meterNumber, int maximumCurrent, int maximumPower, Instant effectiveDate, string disconnectionType, string connectionType, string assetType, string physicalState, string scheduledMeterReadingDate)
+        public ConsumptionMeteringPointCreated(Guid meteringPointId, string gsrnNumber, Guid gridAreaId, string meteringPointSubType, string productType, string readingOccurrence, string unitType, string settlementMethod, string netSettlementGroup, string city, string floor, string room, string buildingNumber, string countryCode, int? municipalityCode, string postCode, string streetCode, string streetName, string citySubDivision, bool isOfficialAddress, Guid? geoInfoReference, string powerPlantGsrnNumber, string locationDescription, string meterNumber, int maximumCurrent, int maximumPower, Instant effectiveDate, string disconnectionType, string connectionType, string assetType, string physicalState, string scheduledMeterReadingDate, float? capacity)
         {
             MeteringPointId = meteringPointId;
             GsrnNumber = gsrnNumber;
@@ -55,6 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             AssetType = assetType;
             PhysicalState = physicalState;
             ScheduledMeterReadingDate = scheduledMeterReadingDate;
+            Capacity = capacity;
         }
 
         public Guid MeteringPointId { get; }
@@ -120,5 +121,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         public string ScheduledMeterReadingDate { get; }
 
         public Guid? GeoInfoReference { get; }
+
+        public float? Capacity { get; }
     }
 }

@@ -63,6 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 isOfficial: true,
                 geoInfoReference: Guid.NewGuid());
             var scheduledMeterReadingDate = ScheduledMeterReadingDate.Create("0101");
+            var capacity = Capacity.Create(SampleData.Capacity);
 
             var meteringPointDetails = CreateDetails()
                 with
@@ -76,6 +77,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                     DisconnectionType = disconnectionType,
                     ConnectionType = connectionType,
                     ScheduledMeterReadingDate = scheduledMeterReadingDate,
+                    Capacity = capacity,
                 };
 
             var meteringPoint = ConsumptionMeteringPoint.Create(meteringPointDetails);
@@ -112,6 +114,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(connectionType.Name, createdEvent.ConnectionType);
             Assert.Equal(assetType.Name, createdEvent.AssetType);
             Assert.Equal(scheduledMeterReadingDate.MonthAndDay, createdEvent.ScheduledMeterReadingDate);
+            Assert.Equal(capacity.Kwh, createdEvent.Capacity);
         }
 
         [Fact]

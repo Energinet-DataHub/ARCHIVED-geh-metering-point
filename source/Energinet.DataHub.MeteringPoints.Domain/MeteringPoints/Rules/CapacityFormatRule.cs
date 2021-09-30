@@ -18,11 +18,11 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
-    public class CapcityFormatRule : IBusinessRule
+    public class CapacityFormatRule : IBusinessRule
     {
         private const int MaxLength = 9;
 
-        public CapcityFormatRule(string capacityInKwh)
+        public CapacityFormatRule(string capacityInKwh)
         {
             if (capacityInKwh == null) throw new ArgumentNullException(nameof(capacityInKwh));
             ValidationError = new InvalidCapacityFormatRuleError(capacityInKwh);

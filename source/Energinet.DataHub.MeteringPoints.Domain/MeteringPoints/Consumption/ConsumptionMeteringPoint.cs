@@ -54,7 +54,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             DisconnectionType disconnectionType,
             ConnectionType connectionType,
             AssetType? assetType,
-            ScheduledMeterReadingDate? scheduledMeterReadingDate)
+            ScheduledMeterReadingDate? scheduledMeterReadingDate,
+            Capacity? capacity)
             : base(
                 id,
                 gsrnNumber,
@@ -68,7 +69,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meterNumber,
                 meterReadingOccurrence,
                 powerLimit,
-                effectiveDate)
+                effectiveDate,
+                capacity)
         {
             _settlementMethod = settlementMethod;
             _netSettlementGroup = netSettlementGroup;
@@ -111,7 +113,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 _connectionType.Name,
                 _assetType.Name,
                 ConnectionState.PhysicalState.Name,
-                _scheduledMeterReadingDate?.MonthAndDay);
+                _scheduledMeterReadingDate?.MonthAndDay,
+                capacity?.Kwh);
 
             AddDomainEvent(@event);
         }
@@ -186,7 +189,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointDetails.DisconnectionType,
                 meteringPointDetails.ConnectionType,
                 meteringPointDetails.AssetType,
-                meteringPointDetails.ScheduledMeterReadingDate);
+                meteringPointDetails.ScheduledMeterReadingDate,
+                meteringPointDetails.Capacity);
         }
     }
 }

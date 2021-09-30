@@ -127,7 +127,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 MeterId.Create(SampleData.MeterNumber),
                 ReadingOccurrence.Hourly,
                 PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
-                EffectiveDate.Create(SampleData.EffectiveDate));
+                EffectiveDate.Create(SampleData.EffectiveDate),
+                Capacity.Create(SampleData.Capacity));
         }
     }
 }
