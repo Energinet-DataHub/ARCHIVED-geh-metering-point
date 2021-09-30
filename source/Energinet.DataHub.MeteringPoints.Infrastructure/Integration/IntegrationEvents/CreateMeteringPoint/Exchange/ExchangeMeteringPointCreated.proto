@@ -52,15 +52,15 @@ message ExchangeMeteringPointCreated {
     UT_GWH = 3; // Gigawatt per hour
   }
 
-  string Metering_Point_Id = 1; // Unique identification for metering point
-  string Gsrn_Number = 2; // Business facing metering point identifier
-  string Grid_Area_Code = 3; // Signifies which grid area a metering point belongs to
-  string To_Grid_Area_Code = 4; // Denotes which grid area energy is exchanged to
-  string From_Grid_Area_Code = 5; // Denotes which grid area energy is exchange from
-  MeteringMethod Metering_Method = 6; // Metering method denotes how energy quantity is calculated in other domain
-  MeterReadingPeriodicity Meter_Reading_Periodicity = 7; // Denotes how often a energy quantity is read on a metering point
-  ProductType Product = 8; // Denotes the product type
-  ConnectionState Connection_State = 9; // Denotes which connection state a metering point is created with. For a production metering point this is always "New"
-  UnitType Unit_Type = 10; // Denotes the unit type. For a production metering point this is always a variation of watt/hour 
-  string Effective_Date = 11; // The date on which the metering point is created
+  string metering_point_id = 1; // Unique identification for metering point
+  string gsrn_number = 2; // Business facing metering point identifier
+  string grid_area_code = 3; // Signifies which grid area a metering point belongs to
+  string to_grid_area_code = 4; // Denotes which grid area energy is exchanged to
+  string from_grid_area_code = 5; // Denotes which grid area energy is exchange from
+  MeteringMethod metering_method = 6; // Metering method denotes how energy quantity is calculated in other domain
+  MeterReadingPeriodicity meter_reading_periodicity = 7; // Denotes how often a energy quantity is read on a metering point
+  ProductType product = 8; // Denotes the product type
+  ConnectionState connection_state = 9; // Denotes which connection state a metering point is created with. For a production metering point this is always "New"
+  UnitType unit_type = 10; // Denotes the unit type. For a production metering point this is always a variation of watt/hour 
+  string effective_date = 11; // The date on which the metering point is created
 }

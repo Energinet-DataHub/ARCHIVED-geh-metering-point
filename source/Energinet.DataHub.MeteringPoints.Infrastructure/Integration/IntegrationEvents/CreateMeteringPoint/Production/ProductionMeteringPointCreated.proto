@@ -61,14 +61,14 @@ message ProductionMeteringPointCreated {
       UT_GWH = 3; // Gigawatt per hour
   }
 
-  string Metering_Point_Id = 1; // Unique identification for metering point
-  string Gsrn_Number = 2; // Business facing metering point identifier
-  string Grid_Area_Code = 3; // Signifies which grid area a metering point belongs to
-  MeteringMethod Metering_Method = 4; // Metering method denotes how energy quantity is calculated in other domain
-  MeterReadingPeriodicity Meter_Reading_Periodicity = 5; // Denotes how often a energy quantity is read on a metering point
-  NetSettlementGroup Net_Settlement_Group = 6; // Denotes the net settlement group
-  ProductType Product = 7; // Denotes the product type
-  ConnectionState Connection_State = 8; // Denotes which connection state a metering point is created with. For a production metering point this is always "New"
-  UnitType Unit_Type = 9; // Denotes the unit type. For a production metering point this is always a variation of watt/hour 
-  string Effective_Date = 10; // The date on which the metering point is created
+  string metering_point_id = 1; // Unique identification for metering point
+  string gsrn_number = 2; // Business facing metering point identifier
+  string grid_area_code = 3; // Signifies which grid area a metering point belongs to
+  MeteringMethod metering_method = 4; // Metering method denotes how energy quantity is calculated in other domain
+  MeterReadingPeriodicity meter_reading_periodicity = 5; // Denotes how often a energy quantity is read on a metering point
+  NetSettlementGroup net_settlement_group = 6; // Denotes the net settlement group
+  ProductType product = 7; // Denotes the product type
+  ConnectionState connection_state = 8; // Denotes which connection state a metering point is created with. For a production metering point this is always "New"
+  UnitType unit_type = 9; // Denotes the unit type. For a production metering point this is always a variation of watt/hour 
+  string effective_Date = 10; // The date on which the metering point is created
 }
