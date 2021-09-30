@@ -105,12 +105,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 EnumerationType.FromName<CountryCode>(SampleData.CountryCode),
                 SampleData.Floor,
                 SampleData.Room,
-                SampleData.MunicipalityCode);
+                SampleData.MunicipalityCode,
+                SampleData.IsOfficialAddress,
+                SampleData.GeoInfoReference);
+
             var meteringPointDetails = new MeteringPointDetails(
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
-                Address.Create(SampleData.StreetName, SampleData.StreetCode, SampleData.BuildingNumber, SampleData.CityName, SampleData.CitySubdivision, SampleData.PostCode, CountryCode.DK, SampleData.Floor, SampleData.Room, SampleData.MunicipalityCode),
-                SampleData.IsOfficialAddress,
+                address,
                 EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
                 GsrnNumber.Create(SampleData.PowerPlant),

@@ -12,20 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class GeoInfoReferenceIsMandatoryValidationError : ValidationError
+    public class GeoInfoReferenceRequirementRuleErrorConveter : ErrorConverter<GeoInfoReferenceIsRequiredRuleError>
     {
-        public GeoInfoReferenceIsMandatoryValidationError(string gsrnNumber, string? reference)
+        protected override ErrorMessage Convert(GeoInfoReferenceIsRequiredRuleError validationError)
         {
-            GsrnNumber = gsrnNumber;
-            Reference = reference;
+            return new ErrorMessage("E86", "Geo info reference is required for this type of metering point.");
         }
-
-        public string GsrnNumber { get; }
-
-        public string? Reference { get; }
     }
 }

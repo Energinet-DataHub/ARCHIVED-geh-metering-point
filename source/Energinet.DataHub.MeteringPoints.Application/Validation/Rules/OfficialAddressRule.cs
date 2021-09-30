@@ -13,8 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -26,16 +24,20 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
     {
         public OfficialAddressRule()
         {
-            When(request => IsProductionOrConsumption(request) || IsOfficialAddress(request) || HasGeoInfoReference(request), () =>
-                {
-                    RuleFor(request => request.GeoInfoReference)
-                        .Must(IsValidReference)
-                        .WithState(request => new GeoInfoReferenceIsMandatoryValidationError(request.GsrnNumber, request.GeoInfoReference));
+            When(request => !string.IsNullOrWhiteSpace(request.GeoInfoReference), () =>
+            {
+                RuleFor(request => request.GeoInfoReference)
+                    .Must(value => IsGuid(value!))
+                    .WithState(request => new InvalidGeoInfoReferenceRuleError(request.GeoInfoReference !));
+                RuleFor(request => request.IsOfficialAddress)
+                    .NotNull()
+                    .WithState(request => new OfficialAddressIsMandatoryWhenGeoInfoReferenceIsPresentValidationError(request.GsrnNumber, request.GeoInfoReference));
+            });
+        }
 
-                    RuleFor(request => request.IsOfficialAddress)
-                        .NotNull()
-                        .WithState(request => new OfficialAddressIsMandatoryWhenGeoInfoReferenceIsPresentValidationError(request.GsrnNumber, request.GeoInfoReference));
-                });
+        private static bool IsGuid(string value)
+        {
+            return Guid.TryParse(value, out _);
         }
 
         private static bool HasGeoInfoReference(CreateMeteringPoint request)

@@ -35,23 +35,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
 
         protected static MeteringPointDetails CreateDetails()
         {
-            var address = Address.Create(
-                SampleData.StreetName,
-                SampleData.StreetCode,
-                string.Empty,
-                SampleData.CityName,
-                string.Empty,
-                SampleData.PostCode,
-                null,
-                string.Empty,
-                string.Empty,
-                default);
+            var address = CreateAddress();
 
             return new MeteringPointDetails(
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 address,
-                SampleData.IsOfficialAddress,
                 MeteringPointSubType.Physical,
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
                 GsrnNumber.Create(SampleData.PowerPlant),
@@ -66,6 +55,23 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 ConnectionType.Installation,
                 AssetType.GasTurbine,
                 ScheduledMeterReadingDate.Create(SampleData.ScheduledMeterReadingDate));
+        }
+
+        protected static Address CreateAddress()
+        {
+            return Address.Create(
+                SampleData.StreetName,
+                SampleData.StreetCode,
+                string.Empty,
+                SampleData.CityName,
+                string.Empty,
+                SampleData.PostCode,
+                null,
+                string.Empty,
+                string.Empty,
+                default,
+                isOfficial: true,
+                geoInfoReference: Guid.NewGuid());
         }
     }
 }
