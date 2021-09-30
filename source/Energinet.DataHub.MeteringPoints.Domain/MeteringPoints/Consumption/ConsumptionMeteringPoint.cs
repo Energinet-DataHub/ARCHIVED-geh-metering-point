@@ -13,9 +13,12 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -144,9 +147,20 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         public static BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
         {
             if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
-            var creationRules = new CreationRules(meteringPointDetails);
+            var generalRuleCheckResult= MarketMeteringPoint.CanCreate(meteringPointDetails);
+            var rules = new List<IBusinessRule>()
+            {
+                new PowerPlantIsRequiredForNetSettlementGroupRule(meteringPointDetails.GsrnNumber,
+                    meteringPointDetails.NetSettlementGroup, meteringPointDetails.PowerPlantGsrnNumber),
+                new StreetNameIsRequiredRule(meteringPointDetails.GsrnNumber, meteringPointDetails.Address),
+                new PostCodeIsRequiredRule(meteringPointDetails.Address),
+                new CityIsRequiredRule(meteringPointDetails.Address),
+                new ScheduledMeterReadingDateRule(meteringPointDetails.ScheduledMeterReadingDate,
+                    meteringPointDetails.NetSettlementGroup),
+                new CapacityRequirementRule(meteringPointDetails.Capacity, meteringPointDetails.NetSettlementGroup),
+            };
 
-            return new BusinessRulesValidationResult(creationRules.Rules);
+            return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
         }
 
         public static ConsumptionMeteringPoint Create(MeteringPointDetails meteringPointDetails)

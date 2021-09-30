@@ -81,6 +81,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public static string ScheduledMeterReadingDate => "0101";
 
+        public static string Capacity => "1.2";
+
         private static string EffectiveDateNow()
         {
             var currentDate = SystemClock.Instance.GetCurrentInstant().InUtc();

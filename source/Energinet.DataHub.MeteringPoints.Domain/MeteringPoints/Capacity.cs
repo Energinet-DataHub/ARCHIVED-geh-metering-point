@@ -14,27 +14,40 @@
 
 using System;
 using System.Collections.Generic;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using System.Globalization;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    internal class CreationRules
+    public class Capacity : ValueObject
     {
-        private readonly List<IBusinessRule> _rules = new List<IBusinessRule>();
-
-        public CreationRules(MeteringPointDetails meteringPointDetails)
+        private Capacity(float kwh)
         {
-            if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
-            Add(new MeterIdRequirementRule(meteringPointDetails.MeterNumber, meteringPointDetails.MeteringPointSubType));
+            Kwh = kwh;
         }
 
-        public IEnumerable<IBusinessRule> Rules => _rules.AsReadOnly();
+        public float Kwh { get; }
 
-        protected void Add(IBusinessRule rule)
+        public static Capacity Create(string capacityInKwh)
         {
-            _rules.Add(rule);
+            if (CheckRules(capacityInKwh).Success == false)
+            {
+                throw new InvalidCapacityExeception(capacityInKwh);
+            }
+
+            var convertedValue = float.Parse(capacityInKwh, CultureInfo.InvariantCulture);
+            return new Capacity(convertedValue);
+        }
+
+        public static BusinessRulesValidationResult CheckRules(string capacityInKwh)
+        {
+            var rules = new List<IBusinessRule>()
+            {
+                new CapcityFormatRule(capacityInKwh),
+            };
+
+            return new BusinessRulesValidationResult(rules);
         }
     }
 }

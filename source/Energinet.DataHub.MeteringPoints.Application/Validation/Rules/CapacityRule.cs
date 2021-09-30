@@ -23,33 +23,36 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
     public class CapacityRule : AbstractValidator<CreateMeteringPoint>
     {
-        private const int CapacityMaximumLength = 8;
-
+        //private const int CapacityMaximumLength = 8;
         public CapacityRule()
         {
-            When(IsProductionOrConsumptionWithNetSettlementGroupNotZero, () =>
-            {
-                RuleFor(request => request.PhysicalConnectionCapacity)
-                    .Must(capacity => !string.IsNullOrWhiteSpace(capacity))
-                    .WithState(request => new CapacityIsMandatoryValidationError(request.GsrnNumber, request.PhysicalConnectionCapacity));
-            });
+            // When(request => string.IsNullOrWhiteSpace(request.PhysicalConnectionCapacity) == false, () =>
+            // {
+            //     RuleFor(request => request.PhysicalConnectionCapacity)
+            // });
 
-            When(IsNotAllowedType, () =>
-            {
-                RuleFor(request => request.PhysicalConnectionCapacity)
-                    .Null()
-                    .WithState(request => new CapacityIsNotAllowedValidationError(request.GsrnNumber, request.PhysicalConnectionCapacity));
-            });
-
-            When(request => request.PhysicalConnectionCapacity?.Length > 0, () =>
-            {
-                RuleFor(request => request.PhysicalConnectionCapacity)
-                    .Cascade(CascadeMode.Stop)
-                    .MaximumLength(CapacityMaximumLength)
-                    .WithState(request => new CapacityMaximumLengthValidationError(request.GsrnNumber, request.PhysicalConnectionCapacity))
-                    .Must(capacity => capacity.Length <= CapacityMaximumLength && float.TryParse(capacity, NumberStyles.AllowDecimalPoint, NumberFormatInfo.InvariantInfo, out _))
-                    .WithState(request => new CapacityMaximumLengthValidationError(request.GsrnNumber, request.PhysicalConnectionCapacity));
-            });
+            // When(IsProductionOrConsumptionWithNetSettlementGroupNotZero, () =>
+            // {
+            //     RuleFor(request => request.PhysicalConnectionCapacity)
+            //         .Must(capacity => !string.IsNullOrWhiteSpace(capacity))
+            //         .WithState(request => new CapacityIsMandatoryValidationError(request.GsrnNumber, request.PhysicalConnectionCapacity));
+            // });
+            // When(IsNotAllowedType, () =>
+            // {
+            //     RuleFor(request => request.PhysicalConnectionCapacity)
+            //         .Null()
+            //         .WithState(request => new CapacityIsNotAllowedValidationError(request.GsrnNumber, request.PhysicalConnectionCapacity));
+            // });
+            //
+            // When(request => request.PhysicalConnectionCapacity?.Length > 0, () =>
+            // {
+            //     RuleFor(request => request.PhysicalConnectionCapacity)
+            //         .Cascade(CascadeMode.Stop)
+            //         .MaximumLength(CapacityMaximumLength)
+            //         .WithState(request => new CapacityMaximumLengthValidationError(request.GsrnNumber, request.PhysicalConnectionCapacity))
+            //         .Must(capacity => capacity.Length <= CapacityMaximumLength && float.TryParse(capacity, NumberStyles.AllowDecimalPoint, NumberFormatInfo.InvariantInfo, out _))
+            //         .WithState(request => new CapacityMaximumLengthValidationError(request.GsrnNumber, request.PhysicalConnectionCapacity));
+            // });
         }
 
         private static bool IsProductionOrConsumptionWithNetSettlementGroupNotZero(CreateMeteringPoint request)

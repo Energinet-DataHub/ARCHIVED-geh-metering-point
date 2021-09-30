@@ -14,16 +14,17 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class CapacityMaximumLengthErrorConverter : ErrorConverter<CapacityMaximumLengthValidationError>
+    public class InvalidCapacityFormatRuleErrorConverter : ErrorConverter<InvalidCapacityFormatRuleError>
     {
-        protected override ErrorMessage Convert(CapacityMaximumLengthValidationError validationError)
+        protected override ErrorMessage Convert(InvalidCapacityFormatRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("E86", $"Capacity {validationError.Capacity} for metering point {validationError.GsrnNumber} contains a non-digit character other than a decimal point or has a length that exceeds 8.");
+            return new("E86", $"Capacity {validationError.Capacity} contains a non-digit character other than a decimal point or has a length that exceeds 9.");
         }
     }
 }

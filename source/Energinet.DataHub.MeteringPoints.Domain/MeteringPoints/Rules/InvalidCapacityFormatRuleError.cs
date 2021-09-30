@@ -12,21 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
-    internal class CreationRules : MeteringPoints.CreationRules
+    public class InvalidCapacityFormatRuleError : ValidationError
     {
-        public CreationRules(MeteringPointDetails meteringPointDetails)
-            : base(meteringPointDetails)
+        public InvalidCapacityFormatRuleError(string capacity)
         {
-            if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
-            Add(new MeterReadingOccurrenceRule(meteringPointDetails.ReadingOccurrence));
+            Capacity = capacity;
         }
+
+        public string Capacity { get; }
     }
 }

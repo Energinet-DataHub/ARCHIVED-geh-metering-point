@@ -44,16 +44,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         }
 
         [Theory]
-        [InlineData("423456789", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(CapacityMaximumLengthValidationError))]
-        [InlineData("5234.5678", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(CapacityMaximumLengthValidationError))]
-        [InlineData("1,2", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(CapacityMaximumLengthValidationError))]
-        [InlineData("1.2.3", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(CapacityMaximumLengthValidationError))]
-
-        [InlineData(null, nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(CapacityIsMandatoryValidationError))]
-        [InlineData("", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(CapacityIsMandatoryValidationError))]
-        [InlineData(null, nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.One), typeof(CapacityIsMandatoryValidationError))]
-        [InlineData("", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.One), typeof(CapacityIsMandatoryValidationError))]
-
+        // [InlineData("423456789", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(CapacityMaximumLengthValidationError))]
+        // [InlineData("5234.5678", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(CapacityMaximumLengthValidationError))]
+        // [InlineData("1,2", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(CapacityMaximumLengthValidationError))]
+        // [InlineData("1.2.3", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(CapacityMaximumLengthValidationError))]
+        // [InlineData(null, nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(CapacityIsMandatoryValidationError))]
+        // [InlineData("", nameof(MeteringPointType.Production), nameof(NetSettlementGroup.One), typeof(CapacityIsMandatoryValidationError))]
+        // [InlineData(null, nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.One), typeof(CapacityIsMandatoryValidationError))]
+        // [InlineData("", nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.One), typeof(CapacityIsMandatoryValidationError))]
         [InlineData("", nameof(MeteringPointType.Exchange), nameof(NetSettlementGroup.One), typeof(CapacityIsNotAllowedValidationError))]
         [InlineData("", nameof(MeteringPointType.Analysis), nameof(NetSettlementGroup.One), typeof(CapacityIsNotAllowedValidationError))]
         [InlineData("", nameof(MeteringPointType.NetConsumption), nameof(NetSettlementGroup.One), typeof(CapacityIsNotAllowedValidationError))]
