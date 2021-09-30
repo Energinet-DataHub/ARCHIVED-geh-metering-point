@@ -28,7 +28,7 @@ env:
   SOLUTION_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.sln'
   DOTNET_VERSION: '5.0.202'
   ORGANISATION_NAME: 'endk'
-  AZURE_FUNCTIONAPP_NAME: 'webapi'
+  AZURE_APP_NAME: 'webapi'
   PROJECT_NAME: meteringpoint
   REPOSITORY_NAME: Energinet-DataHub/geh-metering-point
 
@@ -111,12 +111,12 @@ jobs:
       - name: Get function publish profile
         id: get-publish-profile
         run: |
-          publish_profile=$(az webapp deployment list-publishing-profiles --name azfun-${{ env.AZURE_FUNCTIONAPP_NAME }}-${{ env.PROJECT_NAME }}-${{ env.ORGANISATION_NAME }}-${{ matrix.environment.short }} --resource-group ${{ matrix.environment.long }} --subscription ${{ secrets.SUBSCRIPTION_ID }} --xml)
+          publish_profile=$(az webapp deployment list-publishing-profiles --name azfun-${{ env.AZURE_APP_NAME }}-${{ env.PROJECT_NAME }}-${{ env.ORGANISATION_NAME }}-${{ matrix.environment.short }} --resource-group ${{ matrix.environment.long }} --subscription ${{ secrets.SUBSCRIPTION_ID }} --xml)
           echo "::set-output name=publish-profile::${publish_profile}"
 
-      - name: Deploy function
-        uses: Azure/functions-action@v1
+      - name: Deploy App Service
+        uses: azure/webapps-deploy@v2
         with:
-          app-name: "azfun-${{ env.AZURE_FUNCTIONAPP_NAME }}"
+          app-name: "azfun-${{ env.AZURE_APP_NAME }}"
           package: ${{ github.workspace }}/drop
           publish-profile: ${{ steps.get-publish-profile.outputs.publish-profile }}
