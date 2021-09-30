@@ -36,14 +36,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             bool isAddressWashable,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
-            GridAreaId gridAreaId,
+            GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
-            string? locationDescription,
+            LocationDescription? locationDescription,
             MeasurementUnitType unitType,
             string? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
-            int maximumCurrent,
-            int maximumPower,
+            PowerLimit powerLimit,
             EffectiveDate effectiveDate,
             NetSettlementGroup netSettlementGroup,
             DisconnectionType disconnectionType,
@@ -55,14 +54,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 address,
                 meteringPointSubType,
                 meteringPointType,
-                gridAreaId,
+                gridAreaLinkId,
                 powerPlantGsrnNumber,
                 locationDescription,
                 unitType,
                 meterNumber,
                 meterReadingOccurrence,
-                maximumCurrent,
-                maximumPower,
+                powerLimit,
                 effectiveDate)
         {
             _netSettlementGroup = netSettlementGroup;
@@ -72,7 +70,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _productType = productType;
             _isAddressWashable = isAddressWashable;
 
-            AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaId, meteringPointSubType, ConnectionState.PhysicalState, meterReadingOccurrence, ProductType.Tariff, unitType, netSettlementGroup));
+            AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaLinkId, meteringPointSubType, ConnectionState.PhysicalState, meterReadingOccurrence, ProductType.Tariff, unitType, netSettlementGroup));
         }
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor

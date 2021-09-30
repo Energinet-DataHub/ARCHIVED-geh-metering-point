@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create.Validation.Rules;
+using Energinet.DataHub.MeteringPoints.Application.Validation.Extensions;
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.GridAreas.Create
@@ -22,6 +24,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.GridAreas.Create
         public CreateGridAreaRuleSet()
         {
             RuleFor(request => request).SetValidator(new PriceAreaCodeRule());
+
+            RuleFor(request => request.Name)
+                .CheckRules(GridAreaName.CheckRules);
+
+            RuleFor(request => request.Code)
+                .CheckRules(GridAreaCode.CheckRules);
         }
     }
 }

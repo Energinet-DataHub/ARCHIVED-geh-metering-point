@@ -16,9 +16,8 @@ using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMeteringPoints
 {
     public class MarketMeteringPointMock : MarketMeteringPoint
     {
@@ -28,14 +27,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             Address address,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
-            GridAreaId gridAreaId,
+            GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
-            string? locationDescription,
+            LocationDescription? locationDescription,
             MeasurementUnitType unitType,
             string meterNumber,
             ReadingOccurrence meterReadingOccurrence,
-            int maximumCurrent,
-            int maximumPower,
+            PowerLimit powerLimit,
             EffectiveDate effectiveDate)
             : base(
                 id,
@@ -43,14 +41,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 address,
                 meteringPointSubType,
                 meteringPointType,
-                gridAreaId,
+                gridAreaLinkId,
                 powerPlantGsrnNumber,
                 locationDescription,
                 unitType,
                 meterNumber,
                 meterReadingOccurrence,
-                maximumCurrent,
-                maximumPower,
+                powerLimit,
                 effectiveDate)
         {
         }

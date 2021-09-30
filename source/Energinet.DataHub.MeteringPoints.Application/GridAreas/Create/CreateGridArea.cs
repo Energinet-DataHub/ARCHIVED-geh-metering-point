@@ -18,9 +18,9 @@ using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 namespace Energinet.DataHub.MeteringPoints.Application.GridAreas.Create
 {
     public record CreateGridArea(
-            string? Name = null,
-            string? Code = null,
-            string? PriceAreaCode = null,
+            string Name = "",
+            string Code = "",
+            string PriceAreaCode = "",
             string TransactionId = "")
         : IBusinessRequest,
             IOutboundMessage,

@@ -22,11 +22,6 @@ limitations under the License.
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Scripts\Seed" />
-    <Folder Include="Scripts\Test" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="dbup-sqlserver" Version="4.5.0" />
   </ItemGroup>
 
@@ -45,6 +40,9 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Model\202108210931 Rename Occurence to EffectiveDate.sql" />
     <EmbeddedResource Include="Scripts\Model\202109071000 Add ScheduledMeterReadingDate.sql" />
     <EmbeddedResource Include="Scripts\Model\202109230930 Create Grid Area tables.sql" />
+    <EmbeddedResource Include="Scripts\Seed\202109232130 Create Grid Area seed data.sql" />
+    <EmbeddedResource Include="Scripts\Test\202109232129 Clean database.sql" />
+    <EmbeddedResource Include="Scripts\Test\202109232130 Create Grid Area test data.sql" />
   </ItemGroup>
 
 </Project>

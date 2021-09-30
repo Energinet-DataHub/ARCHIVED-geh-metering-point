@@ -18,7 +18,6 @@ using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
-using MediatR;
 using Xunit;
 using Xunit.Categories;
 
@@ -34,19 +33,14 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task Should_reject_when_grid_area_doesnt_exist()
-        {
-            var request = CreateRequest() with { MeteringGridArea = "foo" };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError<CreateMeteringPointRejected>("E10");
-        }
-
-        [Fact]
         public async Task Should_reject_when_powerplant_is_not_specified_and_netsettlementgroup_is_not_0_or_99()
         {
-            var request = CreateRequest() with { PowerPlant = string.Empty };
+            var request = CreateRequest()
+                with
+                {
+                    PowerPlant = string.Empty,
+                    NetSettlementGroup = NetSettlementGroup.Six.Name,
+                };
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
@@ -307,9 +301,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 "0",
                 SampleData.GeoInfoReference,
                 SampleData.MeasurementUnitType,
-                ContractedConnectionCapacity: null,
-                RatedCurrent: null,
-                SampleData.ScheduledMeterReadingDate);
+                "0101");
         }
     }
 }

@@ -16,8 +16,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create;
-using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules;
+using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GridAreas;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
+using FluentAssertions;
 using Xunit;
 using Xunit.Categories;
 
@@ -39,15 +43,51 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.GridAreas
         [Fact]
         public async Task Created_grid_area_should_be_retrievable_from_repository()
         {
+            var request = CreateRequest() with { Code = "123" };
+
+            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
+
+            var found = await _gridAreaRepository.GetByCodeAsync(request.Code!).ConfigureAwait(false);
+
+            found.Should().NotBeNull();
+            found!.Code.Value.Should().Be(request.Code);
+        }
+
+        [Fact]
+        public async Task Creating_grid_area_with_existing_code_should_be_rejected()
+        {
             var request = CreateRequest();
 
             await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
 
-            var gridAreaCode = GridAreaCode.Create(request.Code);
-            var found = await _gridAreaRepository.GetByCodeAsync(gridAreaCode).ConfigureAwait(false);
+            var resultHandler = GetService<IBusinessProcessResultHandler<CreateGridArea>>() as CreateGridAreaNullResultHandler;
+            resultHandler!.Errors.Should().ContainSingle().Which.Should().BeOfType<GridAreaCodeUniqueRuleError>();
+        }
 
-            // TODO: compare values
-            Assert.NotNull(found);
+        [Fact]
+        public async Task Grid_area_with_invalid_name_should_be_rejected()
+        {
+            var request = CreateRequest() with { Name = new string('x', 51) };
+
+            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
+
+            var resultHandler = GetService<IBusinessProcessResultHandler<CreateGridArea>>() as CreateGridAreaNullResultHandler;
+            resultHandler!.Errors.Should().ContainSingle().Which.Should().BeOfType<GridAreaNameMaxLengthRuleError>();
+        }
+
+        [Theory]
+        [InlineData("abc")]
+        [InlineData("00x")]
+        [InlineData("00")]
+        [InlineData("0000")]
+        public async Task Grid_area_with_invalid_code_should_be_rejected(string code)
+        {
+            var request = CreateRequest() with { Code = code };
+
+            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
+
+            var resultHandler = GetService<IBusinessProcessResultHandler<CreateGridArea>>() as CreateGridAreaNullResultHandler;
+            resultHandler!.Errors.Should().ContainSingle().Which.Should().BeOfType<GridAreaCodeFormatRuleError>();
         }
 
         private static CreateGridArea CreateRequest()

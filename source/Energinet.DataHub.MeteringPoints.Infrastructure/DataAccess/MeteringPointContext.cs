@@ -66,7 +66,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
             modelBuilder.ApplyConfiguration(new IncomingMessageEntityConfiguration());
             modelBuilder.ApplyConfiguration(new QueuedInternalCommandEntityConfiguration());
             modelBuilder.ApplyConfiguration(new GridAreaEntityConfiguration());
-            modelBuilder.ApplyConfiguration(new GridAreaLinkEntityConfiguration());
         }
     }
 }

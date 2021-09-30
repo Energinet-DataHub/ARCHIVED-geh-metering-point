@@ -26,13 +26,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         protected MeasurementUnitType _unitType;
 #pragma warning restore
         private Address _address;
-        private GridAreaId _gridAreaId;
+        private GridAreaLinkId _gridAreaLinkId;
         private MeteringPointSubType _meteringPointSubType;
         private ReadingOccurrence _meterReadingOccurrence;
-        private int _maximumCurrent;
-        private int _maximumPower;
+        private PowerLimit _powerLimit;
         private GsrnNumber? _powerPlantGsrnNumber;
-        private string? _locationDescription;
+        private LocationDescription? _locationDescription;
         private EffectiveDate _effectiveDate;
         private string? _meterNumber;
 
@@ -48,14 +47,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             // bool isAddressWashable,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
-            GridAreaId gridAreaId,
+            GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
-            string? locationDescription,
+            LocationDescription? locationDescription,
             MeasurementUnitType unitType,
             string? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
-            int maximumCurrent,
-            int maximumPower,
+            PowerLimit powerLimit,
             EffectiveDate effectiveDate)
         {
             Id = id;
@@ -64,14 +62,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             // _isAddressWashable = isAddressWashable;
             _meteringPointSubType = meteringPointSubType;
             _meteringPointType = meteringPointType;
-            _gridAreaId = gridAreaId;
+            _gridAreaLinkId = gridAreaLinkId;
             _powerPlantGsrnNumber = powerPlantGsrnNumber;
             _locationDescription = locationDescription;
             _unitType = unitType;
             _meterNumber = meterNumber;
             _meterReadingOccurrence = meterReadingOccurrence;
-            _maximumCurrent = maximumCurrent;
-            _maximumPower = maximumPower;
+            _powerLimit = powerLimit;
             _effectiveDate = effectiveDate;
         }
 

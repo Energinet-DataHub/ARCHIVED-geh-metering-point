@@ -16,16 +16,13 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class LocationDescriptionMaximumLengthValidationError : ValidationError
+    public class GridAreaCodeUniqueRuleError : ValidationError
     {
-        public LocationDescriptionMaximumLengthValidationError(string gsrnNumber, string locationDescription)
+        public GridAreaCodeUniqueRuleError(string code)
         {
-            GsrnNumber = gsrnNumber;
-            LocationDescription = locationDescription;
+            Code = code;
         }
 
-        public string GsrnNumber { get; }
-
-        public string LocationDescription { get; }
+        public string Code { get; }
     }
 }

@@ -14,6 +14,7 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
@@ -22,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         protected override ErrorMessage Convert(MeterReadingOccurenceInvalidValueValidationError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-            return new ErrorMessage("D02", $"Meter reading occurrence {validationError.MeterReadingOccurence} has wrong value (outside domain)");
+            return new ErrorMessage("D02", $"Meter reading occurrence {validationError.MeterReadingOccurrence} has wrong value (outside domain)");
         }
     }
 }

@@ -60,6 +60,7 @@ using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Xunit;
 using Xunit.Categories;
+using Xunit.Sdk;
 using ConnectMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Connect.ConnectMeteringPoint;
 using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Create.CreateMeteringPoint;
 using JsonSerializer = Energinet.DataHub.MeteringPoints.Infrastructure.Serialization.JsonSerializer;
@@ -112,7 +113,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<ISystemDateTimeProvider, SystemDateTimeProviderStub>(Lifestyle.Singleton);
             _container.Register(typeof(IBusinessProcessResultHandler<CreateMeteringPoint>), typeof(CreateMeteringPointResultHandler), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<ConnectMeteringPoint>), typeof(ConnectMeteringPointResultHandler), Lifestyle.Scoped);
-            _container.Register(typeof(IBusinessProcessResultHandler<CreateGridArea>), typeof(CreateGridAreaNullResultHandler), Lifestyle.Scoped);
+            _container.Register(typeof(IBusinessProcessResultHandler<CreateGridArea>), typeof(CreateGridAreaNullResultHandler), Lifestyle.Singleton);
             _container.Register<IValidator<CreateMeteringPoint>, CreateMeteringPointRuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<ConnectMeteringPoint>, ConnectMeteringPointRuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<CreateGridArea>, CreateGridAreaRuleSet>(Lifestyle.Scoped);
@@ -151,8 +152,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _scope = AsyncScopedLifestyle.BeginScope(_container);
 
             _container.GetInstance<ICorrelationContext>().SetId(Guid.NewGuid().ToString().Replace("-", string.Empty, StringComparison.Ordinal));
-
-            CleanupDatabase();
         }
 
         public void Dispose()
@@ -216,6 +215,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 .First(msg => msg.MessageType.Equals(typeof(TRejectMessage).Name, StringComparison.Ordinal));
 
             var rejectMessage = JsonConvert.DeserializeObject<TRejectMessage>(message.Content);
+
+            var errorCount = rejectMessage.Errors.Count;
+            if (errorCount > 1)
+            {
+                var errorMessage = new StringBuilder();
+                errorMessage.AppendLine($"Reject message contains more ({errorCount}) than 1 error:");
+                foreach (var error in rejectMessage.Errors)
+                {
+                    errorMessage.AppendLine($"Code: {error.Code}. Description: {error.Description}.");
+                }
+
+                throw new XunitException(errorMessage.ToString());
+            }
+
             var validationError = rejectMessage.Errors
                 .First(error => error.Code == expectedErrorCode);
 

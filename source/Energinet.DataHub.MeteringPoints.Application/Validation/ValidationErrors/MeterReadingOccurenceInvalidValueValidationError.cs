@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
     public class MeterReadingOccurenceInvalidValueValidationError : ValidationError
     {
-        public MeterReadingOccurenceInvalidValueValidationError(string meterReadingOccurence)
+        public MeterReadingOccurenceInvalidValueValidationError(string meterReadingOccurrence)
         {
-            MeterReadingOccurence = meterReadingOccurence;
+            MeterReadingOccurrence = meterReadingOccurrence;
         }
 
-        public string MeterReadingOccurence { get; }
+        public string MeterReadingOccurrence { get; }
     }
 }

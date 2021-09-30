@@ -115,12 +115,19 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
                 typeof(ErrorMessageFactory).Assembly); // Infrastructure
 
             _container.BuildMediator(
-                new[] { typeof(CreateGridArea).Assembly, typeof(GridAreaRepository).Assembly, },
+                new[]
+                {
+                    typeof(CreateGridArea).Assembly,
+                    typeof(GridAreaRepository).Assembly,
+                },
                 new[]
                 {
                     typeof(UnitOfWorkBehavior<,>),
+
                     // typeof(AuthorizationBehavior<,>),
-                    typeof(InputValidationBehavior<,>), typeof(DomainEventsDispatcherBehaviour<,>), typeof(InternalCommandHandlingBehaviour<,>),
+                    typeof(InputValidationBehavior<,>),
+                    typeof(DomainEventsDispatcherBehaviour<,>),
+                    typeof(InternalCommandHandlingBehaviour<,>),
                     typeof(BusinessProcessResultBehavior<,>),
                 });
 

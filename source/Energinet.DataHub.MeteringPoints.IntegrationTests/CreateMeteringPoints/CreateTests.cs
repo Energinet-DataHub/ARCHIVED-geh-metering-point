@@ -86,6 +86,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
+        public async Task Should_reject_when_grid_area_doesnt_exist()
+        {
+            var request = CreateRequest() with { MeteringGridArea = "foo" };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("E10");
+        }
+
+        [Fact]
         public async Task CreateMeteringPoint_WithAlreadyExistingGsrnNumber_ShouldGenerateRejectMessageInOutbox()
         {
             var request = CreateRequest();
@@ -113,6 +123,51 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact(Skip = "Not implemented yet")]
         public void CreateMeteringPoint_WhenEffectiveDateIsOutOfScope_ShouldGenerateRejectMessageInOutbox()
         {
+        }
+
+        [Fact]
+        public async Task Should_reject_when_maximum_power_is_invalid()
+        {
+            var invalidPowerLimit = 12345567;
+            var request = CreateRequest()
+                with
+                {
+                    MaximumPower = invalidPowerLimit,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("E86");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_maximum_current_is_invalid()
+        {
+            var invalidCurrent = 12345567;
+            var request = CreateRequest()
+                with
+                {
+                    MaximumCurrent = invalidCurrent,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("E86");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_location_description_is_invalid()
+        {
+            var invalidLocationDescription = "1234567890123456789012345678901234567890123456789012345678901234567890";
+            var request = CreateRequest()
+                with
+                {
+                    LocationDescription = invalidLocationDescription,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("E86");
         }
 
         private static CreateMeteringPoint CreateRequest()
@@ -155,8 +210,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 null,
                 SampleData.GeoInfoReference,
                 SampleData.MeasurementUnitType,
-                ContractedConnectionCapacity: null,
-                RatedCurrent: null,
                 SampleData.ScheduledMeterReadingDate);
         }
     }

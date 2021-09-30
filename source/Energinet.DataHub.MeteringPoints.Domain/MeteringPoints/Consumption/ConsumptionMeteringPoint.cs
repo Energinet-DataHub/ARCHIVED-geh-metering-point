@@ -16,7 +16,6 @@ using System;
 using System.Collections.ObjectModel;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -41,13 +40,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             bool isAddressWashable,
             MeteringPointSubType meteringPointSubType,
             MeteringPointType meteringPointType,
-            GridAreaId gridAreaId,
+            GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
-            string? locationDescription,
+            LocationDescription? locationDescription,
             string? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
-            int maximumCurrent,
-            int maximumPower,
+            PowerLimit powerLimit,
             EffectiveDate effectiveDate,
             SettlementMethod settlementMethod,
             NetSettlementGroup netSettlementGroup,
@@ -61,14 +59,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 address,
                 meteringPointSubType,
                 meteringPointType,
-                gridAreaId,
+                gridAreaLinkId,
                 powerPlantGsrnNumber,
                 locationDescription,
                 MeasurementUnitType.KWh,
                 meterNumber,
                 meterReadingOccurrence,
-                maximumCurrent,
-                maximumPower,
+                powerLimit,
                 effectiveDate)
         {
             _settlementMethod = settlementMethod;
@@ -84,7 +81,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             var @event = new ConsumptionMeteringPointCreated(
                 id.Value,
                 GsrnNumber.Value,
-                gridAreaId.Value,
+                gridAreaLinkId.Value,
                 meteringPointSubType.Name,
                 _productType.Name,
                 meterReadingOccurrence.Name,
@@ -103,10 +100,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 address.CitySubDivision,
                 isAddressWashable,
                 powerPlantGsrnNumber.Value,
-                locationDescription,
+                locationDescription.Value,
                 meterNumber,
-                maximumCurrent,
-                maximumPower,
+                powerLimit.Ampere,
+                powerLimit.Kwh,
                 effectiveDate.DateInUtc,
                 _disconnectionType.Name,
                 _connectionType.Name,
@@ -146,17 +143,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 
         public static BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
         {
-            var rules = new Collection<IBusinessRule>()
-            {
-                new PowerPlantIsRequiredForNetSettlementGroupRule(meteringPointDetails.GsrnNumber, meteringPointDetails.NetSettlementGroup, meteringPointDetails.PowerPlantGsrnNumber),
-                new StreetNameIsRequiredRule(meteringPointDetails.GsrnNumber, meteringPointDetails.Address),
-                new PostCodeIsRequiredRule(meteringPointDetails.Address),
-                new CityIsRequiredRule(meteringPointDetails.Address),
-                new ScheduledMeterReadingDateRule(meteringPointDetails.ScheduledMeterReadingDate, meteringPointDetails.NetSettlementGroup),
+            if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
+            var creationRules = new CreationRules(meteringPointDetails);
 
-            };
-
-            return new BusinessRulesValidationResult(rules);
+            return new BusinessRulesValidationResult(creationRules.Rules);
         }
 
         public static ConsumptionMeteringPoint Create(MeteringPointDetails meteringPointDetails)
@@ -172,13 +162,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointDetails.IsAddressWashable,
                 meteringPointDetails.MeteringPointSubType,
                 MeteringPointType.Consumption,
-                meteringPointDetails.GridAreaId,
+                meteringPointDetails.GridAreaLinkId,
                 meteringPointDetails.PowerPlantGsrnNumber,
                 meteringPointDetails.LocationDescription,
                 meteringPointDetails.MeterNumber,
                 meteringPointDetails.ReadingOccurrence,
-                meteringPointDetails.MaximumCurrent,
-                meteringPointDetails.MaximumPower,
+                meteringPointDetails.PowerLimit,
                 meteringPointDetails.EffectiveDate,
                 meteringPointDetails.SettlementMethod,
                 meteringPointDetails.NetSettlementGroup,

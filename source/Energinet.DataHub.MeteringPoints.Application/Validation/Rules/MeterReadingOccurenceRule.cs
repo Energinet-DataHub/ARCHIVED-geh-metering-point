@@ -26,10 +26,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         public MeterReadingOccurenceRule()
         {
             RuleFor(request => request.MeterReadingOccurrence)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError(createMeteringPoint.TypeOfMeteringPoint));
-
-            RuleFor(request => request.MeterReadingOccurrence)
+                .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError(createMeteringPoint.TypeOfMeteringPoint))
                 .Must(value => EnumerationType.GetAll<ReadingOccurrence>().Select(item => item.Name).Contains(value))
                 .WithState(request =>
                     new MeterReadingOccurenceInvalidValueValidationError(request.MeterReadingOccurrence));
@@ -49,9 +48,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                     .WithState(createMeteringPoint => new MeterReadingOccurenceInvalidValueValidationError(createMeteringPoint.MeterReadingOccurrence));
             }).Otherwise(() =>
             {
-                RuleFor(request => request.MeterReadingOccurrence)
-                    .Must(meterReadingOccurrence => meterReadingOccurrence == ReadingOccurrence.Hourly.Name || meterReadingOccurrence == ReadingOccurrence.Quarterly.Name)
-                    .WithState(createMeteringPoint => new MeterReadingOccurenceInvalidValueValidationError(createMeteringPoint.MeterReadingOccurrence));
+                When(createMeteringPoint => createMeteringPoint.TypeOfMeteringPoint != MeteringPointType.Consumption.Name, () =>
+                    {
+                        RuleFor(request => request.MeterReadingOccurrence)
+                            .Must(meterReadingOccurrence => meterReadingOccurrence == ReadingOccurrence.Hourly.Name || meterReadingOccurrence == ReadingOccurrence.Quarterly.Name)
+                            .WithState(createMeteringPoint => new MeterReadingOccurenceInvalidValueValidationError(createMeteringPoint.MeterReadingOccurrence));
+                    });
             });
         }
     }

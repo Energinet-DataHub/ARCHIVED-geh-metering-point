@@ -14,18 +14,15 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
-    public class AmperePowerLimitValidationError : ValidationError
+    public class InvalidAmperePowerLimitRuleError : ValidationError
     {
-        public AmperePowerLimitValidationError(string gsrnNumber, string? amperePowerLimit)
+        public InvalidAmperePowerLimitRuleError(int ampere)
         {
-            GsrnNumber = gsrnNumber;
-            AmperePowerLimit = amperePowerLimit;
+            Ampere = ampere;
         }
 
-        public string GsrnNumber { get; }
-
-        public string? AmperePowerLimit { get; }
+        public int Ampere { get; }
     }
 }

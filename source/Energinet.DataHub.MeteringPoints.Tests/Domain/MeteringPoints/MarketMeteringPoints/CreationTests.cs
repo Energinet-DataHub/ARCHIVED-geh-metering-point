@@ -12,45 +12,39 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
+using System;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Categories;
+using CreationRules = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.CreationRules;
 
-namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMeteringPoints
 {
     [UnitTest]
-    public class MarketMeteringPointTests
+    public class CreationTests
     {
-        private readonly SystemDateTimeProviderStub _systemDateTimeProvider;
-
-        public MarketMeteringPointTests()
-        {
-            _systemDateTimeProvider = new SystemDateTimeProviderStub();
-        }
-
         [Fact]
-        public void Should_set_energy_supplier_details()
+        public void Should_return_error__meter_reading_occurrence_is_not_quarterly_or_hourly()
         {
-            var marketMeteringPoint = CreateMarketMeteringPoint();
-            marketMeteringPoint.SetEnergySupplierDetails(EnergySupplierDetails.Create(_systemDateTimeProvider.Now()));
+            var details = CreateDetails()
+                with
+                {
+                    ReadingOccurrence = ReadingOccurrence.Yearly,
+                };
 
-            Assert.Contains(marketMeteringPoint.DomainEvents, e => e is EnergySupplierDetailsChanged);
+            var creationRules = new CreationRules(details);
+            var result = new BusinessRulesValidationResult(creationRules.Rules);
+
+            Assert.False(result.Success);
+            Assert.Contains(result.Errors, e => e is InvalidMeterReadingOccurrenceRuleError);
         }
 
-        [Fact]
-        public void Does_not_change_energy_supplier_details_when_details_are_the_same()
-        {
-            var marketMeteringPoint = CreateMarketMeteringPoint();
-            marketMeteringPoint.SetEnergySupplierDetails(EnergySupplierDetails.Create(_systemDateTimeProvider.Now()));
-
-            Assert.Equal(1, marketMeteringPoint.DomainEvents.Count(e => e is EnergySupplierDetailsChanged));
-        }
-
-        private static MarketMeteringPoint CreateMarketMeteringPoint()
+        private static MeteringPointDetails CreateDetails()
         {
             var address = Address.Create(
                 SampleData.StreetName,
@@ -64,21 +58,27 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 SampleData.Room,
                 SampleData.MunicipalityCode);
 
-            return new MarketMeteringPointMock(
+            var details = new MeteringPointDetails(
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 address,
+                SampleData.IsOfficialAddress,
                 EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
-                EnumerationType.FromName<MeteringPointType>(SampleData.TypeName),
-                GridAreaId.New(),
+                new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
                 GsrnNumber.Create(SampleData.PowerPlant),
-                SampleData.LocationDescription,
-                MeasurementUnitType.KWh,
+                LocationDescription.Create(SampleData.LocationDescription),
                 SampleData.MeterNumber,
                 ReadingOccurrence.Hourly,
-                SampleData.MaximumCurrent,
-                SampleData.MaximumPower,
-                EffectiveDate.Create(SampleData.EffectiveDate));
+                PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
+                EffectiveDate.Create(SampleData.EffectiveDate),
+                SettlementMethod.Flex,
+                NetSettlementGroup.Six,
+                DisconnectionType.Remote,
+                ConnectionType.Installation,
+                AssetType.WindTurbines,
+                ScheduledMeterReadingDate.Create("0101"));
+
+            return details;
         }
     }
 }

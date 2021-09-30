@@ -35,15 +35,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             var meteringPointGsrn = GsrnNumber.Create(SampleData.GsrnNumber);
             var isOfficielAddress = SampleData.IsOfficialAddress;
             var meteringPointSubtype = MeteringPointSubType.Physical;
-            var gridAreadId = GridAreaId.New();
+            var gridAreadLinkId = new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId));
             var powerPlanGsrn = GsrnNumber.Create(SampleData.PowerPlant);
             var netSettlementGroup = NetSettlementGroup.Three;
-            var locationDescription = "Test";
+            var locationDescription = LocationDescription.Create(string.Empty);
             var measurementUnitType = MeasurementUnitType.KWh;
             var meterNumber = "1";
             var readingOccurrence = ReadingOccurrence.Hourly;
-            var maximumCurrent = 1;
-            var maximumPower = 2;
+            var powerLimit = PowerLimit.Create(0, 0);
             var effectiveDate = EffectiveDate.Create(SampleData.EffectiveDate);
             var settlementMethod = SettlementMethod.Flex;
             var disconnectionType = DisconnectionType.Manual;
@@ -67,11 +66,10 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 {
                     Id = meteringPointId,
                     Address = address,
-                    GridAreaId = gridAreadId,
+                    GridAreaLinkId = gridAreadLinkId,
                     LocationDescription = locationDescription,
                     MeterNumber = meterNumber,
-                    MaximumCurrent = maximumCurrent,
-                    MaximumPower = maximumPower,
+                    PowerLimit = powerLimit,
                     DisconnectionType = disconnectionType,
                     ConnectionType = connectionType,
                     ScheduledMeterReadingDate = scheduledMeterReadingDate,
@@ -94,15 +92,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(meteringPointGsrn.Value, createdEvent.GsrnNumber);
             Assert.Equal(isOfficielAddress, createdEvent.IsOfficialAddress);
             Assert.Equal(meteringPointSubtype.Name, createdEvent.MeteringPointSubType);
-            Assert.Equal(gridAreadId.Value, createdEvent.GridAreaId);
+            Assert.Equal(gridAreadLinkId.Value, createdEvent.GridAreaLinkId);
             Assert.Equal(meteringPointDetails.NetSettlementGroup.Name, createdEvent.NetSettlementGroup);
             Assert.Equal(powerPlanGsrn.Value, createdEvent.PowerPlantGsrnNumber);
-            Assert.Equal(locationDescription, createdEvent.LocationDescription);
+            Assert.Equal(locationDescription.Value, createdEvent.LocationDescription);
             Assert.Equal(measurementUnitType.Name, createdEvent.UnitType);
             Assert.Equal(meterNumber, createdEvent.MeterNumber);
             Assert.Equal(readingOccurrence.Name, createdEvent.ReadingOccurrence);
-            Assert.Equal(maximumCurrent, createdEvent.MaximumCurrent);
-            Assert.Equal(maximumPower, createdEvent.MaximumPower);
+            Assert.Equal(powerLimit.Ampere, createdEvent.MaximumCurrent);
+            Assert.Equal(powerLimit.Kwh, createdEvent.MaximumPower);
             Assert.Equal(effectiveDate.DateInUtc, createdEvent.EffectiveDate);
             Assert.Equal(settlementMethod.Name, createdEvent.SettlementMethod);
             Assert.Equal(disconnectionType.Name, createdEvent.DisconnectionType);
@@ -284,13 +282,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 address,
                 SampleData.IsOfficialAddress,
                 MeteringPointSubType.Physical,
-                GridAreaId.New(),
+                new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
                 GsrnNumber.Create(SampleData.PowerPlant),
-                SampleData.LocationDescription,
+                LocationDescription.Create(SampleData.LocationDescription),
                 SampleData.MeterNumber,
                 ReadingOccurrence.Hourly,
-                SampleData.MaximumCurrent,
-                SampleData.MaximumPower,
+                PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
                 EffectiveDate.Create(SampleData.EffectiveDate),
                 SettlementMethod.Flex,
                 NetSettlementGroup.Six,

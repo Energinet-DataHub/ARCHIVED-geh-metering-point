@@ -12,20 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using System;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class KilowattPowerLimitValidationError : ValidationError
+    public class GridAreaCodeUniqueRuleErrorConverter : ErrorConverter<GridAreaCodeUniqueRuleError>
     {
-        public KilowattPowerLimitValidationError(string gsrnNumber, string? kilowattPowerLimit)
+        protected override ErrorMessage Convert(GridAreaCodeUniqueRuleError validationError)
         {
-            GsrnNumber = gsrnNumber;
-            KilowattPowerLimit = kilowattPowerLimit;
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new("?", $"The grid area code {validationError.Code} already exists");
         }
-
-        public string GsrnNumber { get; }
-
-        public string? KilowattPowerLimit { get; }
     }
 }

@@ -12,18 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class AmperePowerLimitErrorConverter : ErrorConverter<AmperePowerLimitValidationError>
+    public class GridAreaCodeUniqueRule : IBusinessRule
     {
-        protected override ErrorMessage Convert(AmperePowerLimitValidationError validationError)
-        {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+        private readonly GridArea? _existingGridArea;
+        private readonly string _code;
 
-            return new("E86", $"Power limit A {validationError.AmperePowerLimit} for metering point {validationError.GsrnNumber} contains a non-digit character or has a length that exceeds 6");
+        public GridAreaCodeUniqueRule(GridArea? existingGridArea, string code)
+        {
+            _existingGridArea = existingGridArea;
+            _code = code;
         }
+
+        public bool IsBroken => _existingGridArea != null && _existingGridArea.Code.Value == _code;
+
+        public ValidationError ValidationError => new GridAreaCodeUniqueRuleError(_code);
     }
 }
