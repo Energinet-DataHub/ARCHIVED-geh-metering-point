@@ -183,9 +183,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.ToTable("ConsumptionMeteringPoints", "dbo");
 
-            builder.Property<bool>("_isAddressWashable")
-                .HasColumnName("IsAddressWashable");
-
             builder.Property<AssetType>("_assetType")
                 .HasColumnName("AssetType")
                 .HasConversion(
