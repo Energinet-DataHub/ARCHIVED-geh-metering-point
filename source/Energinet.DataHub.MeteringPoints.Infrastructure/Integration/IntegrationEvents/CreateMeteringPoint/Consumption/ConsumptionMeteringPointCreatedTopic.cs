@@ -12,22 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Azure.Messaging.ServiceBus;
-
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption
 {
-    /// <summary>
-    /// Interface for Topic sender
-    /// </summary>
-    public interface ITopicSender<TTopic>
-        where TTopic : Topic
-    {
-        /// <summary>
-        /// Sends a message async
-        /// </summary>
-        /// <param name="message"></param>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task SendMessageAsync(ServiceBusMessage message);
-    }
+    public record ConsumptionMeteringPointCreatedTopic(string Name) : Topic;
 }
