@@ -82,7 +82,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             container.Register<OutboxWatcher>(Lifestyle.Scoped);
             container.Register<IPostOfficeStorageClient, TempPostOfficeStorageClient>(Lifestyle.Scoped);
             container.Register<OutboxOrchestrator>(Lifestyle.Scoped);
-            container.Register<IOutboxMessageDispatcher, OutboxMessageDispatcher>(Lifestyle.Transient);
+            container.Register<IOutboxMessageDispatcher, OutboxMessageDispatcher>(Lifestyle.Scoped);
             container.RegisterDecorator<IOutboxMessageDispatcher, OutboxMessageDispatcherTelemetryDecorator>(
                 Lifestyle.Scoped);
             container.Register<OutboxMessageFactory>(Lifestyle.Scoped);
