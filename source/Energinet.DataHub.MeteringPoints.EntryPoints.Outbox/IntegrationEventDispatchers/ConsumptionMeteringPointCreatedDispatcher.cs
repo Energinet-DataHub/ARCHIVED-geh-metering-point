@@ -12,13 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 
@@ -28,16 +25,15 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDi
     {
         private readonly IIntegrationEventMessageFactory _integrationEventMessageFactory;
 
-        public ConsumptionMeteringPointCreatedDispatcher(ITopicSender<ConsumptionMeteringPointCreatedTopic> topicSender, ProtobufOutboundMapper<ConsumptionMeteringPointCreatedIntegrationEvent> mapper, IIntegrationEventMessageFactory integrationEventMessageFactory)
-            : base(topicSender, mapper, integrationEventMessageFactory)
+        public ConsumptionMeteringPointCreatedDispatcher(ITopicSender<ConsumptionMeteringPointCreatedTopic> topicSender, ProtobufOutboundMapper<ConsumptionMeteringPointCreatedIntegrationEvent> mapper, IIntegrationEventMessageFactory integrationEventMessageFactory, IIntegrationMetadataContext integrationMetadataContext)
+            : base(topicSender, mapper, integrationEventMessageFactory, integrationMetadataContext)
         {
             _integrationEventMessageFactory = integrationEventMessageFactory;
         }
 
-        protected override ServiceBusMessage EnrichMessage(ServiceBusMessage serviceBusMessage)
+        protected override void EnrichMessage(ServiceBusMessage serviceBusMessage)
         {
-            return _integrationEventMessageFactory.EnrichMessage(
-                serviceBusMessage,
+            serviceBusMessage.EnrichMetadata(
                 nameof(ConsumptionMeteringPointCreated),
                 1);
         }

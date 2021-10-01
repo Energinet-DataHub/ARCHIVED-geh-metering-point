@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
@@ -31,25 +32,34 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDi
         private readonly ITopicSender<TTopic> _topicSender;
         private readonly ProtobufOutboundMapper<TEvent> _mapper;
         private readonly IIntegrationEventMessageFactory _integrationEventMessageFactory;
+        private readonly IIntegrationMetadataContext _integrationMetadataContext;
 
-        protected IntegrationEventDispatcher(ITopicSender<TTopic> topicSender, ProtobufOutboundMapper<TEvent> mapper, IIntegrationEventMessageFactory integrationEventMessageFactory)
+        protected IntegrationEventDispatcher(
+            ITopicSender<TTopic> topicSender,
+            ProtobufOutboundMapper<TEvent> mapper,
+            IIntegrationEventMessageFactory integrationEventMessageFactory,
+            IIntegrationMetadataContext integrationMetadataContext)
         {
             _topicSender = topicSender;
             _mapper = mapper;
             _integrationEventMessageFactory = integrationEventMessageFactory;
+            _integrationMetadataContext = integrationMetadataContext;
         }
 
         public async Task<Unit> Handle(TEvent request, CancellationToken cancellationToken)
         {
             var message = _mapper.Convert(request);
             var bytes = message.ToByteArray();
-            var serviceBusMessage = _integrationEventMessageFactory.CreateMessage(bytes);
-            serviceBusMessage = EnrichMessage(serviceBusMessage);
+
+            var serviceBusMessage = _integrationEventMessageFactory.CreateMessage(bytes, _integrationMetadataContext);
+            serviceBusMessage.SetMetadata(_integrationMetadataContext.Timestamp, _integrationMetadataContext.CorrelationId ?? string.Empty, _integrationMetadataContext.EventId);
+            EnrichMessage(serviceBusMessage);
 
             await _topicSender.SendMessageAsync(serviceBusMessage).ConfigureAwait(false);
+
             return Unit.Value;
         }
 
-        protected abstract ServiceBusMessage EnrichMessage(ServiceBusMessage serviceBusMessage);
+        protected abstract void EnrichMessage(ServiceBusMessage serviceBusMessage);
     }
 }

@@ -20,38 +20,14 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
 {
     public class IntegrationEventServiceBusMessageFactory : IIntegrationEventMessageFactory
     {
-        private const string MessageTypeName = "MessageType";
-        private const string MessageVersionName = "MessageVersion";
-        private const string TimeStampName = "Timestamp";
-        private const string CorrelationIdName = "CorrelationId";
-        private const string EventIdentifierName = "EventIdentifier";
-        private readonly IIntegrationMetadataContext _integrationMetadataContext;
-
-        public IntegrationEventServiceBusMessageFactory(IIntegrationMetadataContext integrationMetadataContext)
-        {
-            _integrationMetadataContext = integrationMetadataContext;
-        }
-
-        public ServiceBusMessage CreateMessage(byte[] bytes)
+        public ServiceBusMessage CreateMessage(byte[] bytes, IIntegrationMetadataContext integrationMetadataContext)
         {
             ServiceBusMessage serviceBusMessage = new(bytes)
             {
                 ContentType = "application/octet-stream;charset=utf-8",
             };
-            serviceBusMessage.ApplicationProperties.Add(TimeStampName, _integrationMetadataContext.Timestamp.ToString());
-            serviceBusMessage.ApplicationProperties.Add(CorrelationIdName, _integrationMetadataContext.CorrelationId);
-            serviceBusMessage.ApplicationProperties.Add(EventIdentifierName, _integrationMetadataContext.EventId.ToString());
 
             return serviceBusMessage;
-        }
-
-        public ServiceBusMessage EnrichMessage(ServiceBusMessage message, string messageType, int version)
-        {
-            if (message == null) throw new ArgumentNullException(nameof(message));
-            message.ApplicationProperties.Add(MessageVersionName, version);
-            message.ApplicationProperties.Add(MessageTypeName, messageType);
-
-            return message;
         }
     }
 }
