@@ -13,18 +13,30 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
+using System.Runtime.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public class CapacityIsMandatoryErrorConverter : ErrorConverter<CapacityIsRequiredRuleError>
+    [Serializable]
+    public class InvalidCapacityExeception : BusinessRuleException
     {
-        protected override ErrorMessage Convert(CapacityIsRequiredRuleError validationError)
+        public InvalidCapacityExeception()
         {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+        }
 
-            return new("D56", $"Capacity is required for this metering point type.");
+        public InvalidCapacityExeception(string? message)
+            : base(message)
+        {
+        }
+
+        public InvalidCapacityExeception(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+
+        protected InvalidCapacityExeception(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
         }
     }
 }

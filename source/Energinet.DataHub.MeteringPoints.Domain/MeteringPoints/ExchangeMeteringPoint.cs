@@ -40,7 +40,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             EffectiveDate effectiveDate,
             string? toGrid,
             string? fromGrid,
-            ProductType productType)
+            ProductType productType,
+            Capacity? capacity)
             : base(
                 id,
                 gsrnNumber,
@@ -54,7 +55,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 meterNumber,
                 meterReadingOccurrence,
                 powerLimit,
-                effectiveDate)
+                effectiveDate,
+                capacity)
         {
             _toGrid = toGrid;
             _fromGrid = fromGrid;

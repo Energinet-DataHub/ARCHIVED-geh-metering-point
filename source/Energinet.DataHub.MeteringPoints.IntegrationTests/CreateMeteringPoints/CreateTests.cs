@@ -200,6 +200,40 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
+        public async Task Should_reject_when_capacity_is_required_but_not_specified()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.One.Name,
+                    PhysicalConnectionCapacity = null,
+                    SubTypeOfMeteringPoint = MeteringPointSubType.Calculated.Name,
+                    MeterNumber = null,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D56");
+        }
+
+        [Fact]
+        public async Task Should_reject_if_capacity_is_invalid()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.One.Name,
+                    PhysicalConnectionCapacity = "123.3333670",
+                    SubTypeOfMeteringPoint = MeteringPointSubType.Calculated.Name,
+                    MeterNumber = null,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("E86");
+        }
+
+        [Fact]
         public async Task Should_reject_when_geo_info_reference_is_invalid()
         {
             var invalidGeoInfoReference = "xxxxxxx";

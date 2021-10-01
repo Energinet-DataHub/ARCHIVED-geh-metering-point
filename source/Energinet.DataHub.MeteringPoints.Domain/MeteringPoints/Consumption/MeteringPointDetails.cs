@@ -34,5 +34,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         DisconnectionType DisconnectionType,
         ConnectionType ConnectionType,
         AssetType? AssetType,
-        ScheduledMeterReadingDate? ScheduledMeterReadingDate);
+        ScheduledMeterReadingDate? ScheduledMeterReadingDate,
+        Capacity? Capacity);
 }

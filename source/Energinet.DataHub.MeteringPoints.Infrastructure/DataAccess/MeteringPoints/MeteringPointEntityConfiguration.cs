@@ -141,6 +141,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             builder.Property<EffectiveDate>("_effectiveDate")
                 .HasColumnName("EffectiveDate")
                 .HasConversion<DateTime>(toDbValue => toDbValue.DateInUtc.ToDateTimeUtc(), fromDbValue => EffectiveDate.Create(fromDbValue));
+
+            builder.Property<Capacity>("_capacity")
+                .HasColumnName("Capacity")
+                .HasConversion<float?>(toDbValue => toDbValue == null ? null : toDbValue.Kw!, fromDbValue => fromDbValue.HasValue ? Capacity.Create(fromDbValue.Value) : null!);
         }
     }
 

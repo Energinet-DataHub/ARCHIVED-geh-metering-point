@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Categories;
@@ -62,6 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 isOfficial: true,
                 geoInfoReference: Guid.NewGuid());
             var scheduledMeterReadingDate = ScheduledMeterReadingDate.Create("0101");
+            var capacity = Capacity.Create(SampleData.Capacity);
 
             var meteringPointDetails = CreateDetails()
                 with
@@ -75,6 +77,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                     DisconnectionType = disconnectionType,
                     ConnectionType = connectionType,
                     ScheduledMeterReadingDate = scheduledMeterReadingDate,
+                    Capacity = capacity,
                 };
 
             var meteringPoint = ConsumptionMeteringPoint.Create(meteringPointDetails);
@@ -111,6 +114,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(connectionType.Name, createdEvent.ConnectionType);
             Assert.Equal(assetType.Name, createdEvent.AssetType);
             Assert.Equal(scheduledMeterReadingDate.MonthAndDay, createdEvent.ScheduledMeterReadingDate);
+            Assert.Equal(capacity.Kw, createdEvent.Capacity);
         }
 
         [Fact]
@@ -166,7 +170,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                     NetSettlementGroup = netSettlementGroup,
                 };
 
-            var checkResult = CreateRequest(meteringPointDetails);
+            var checkResult = CheckCreationRules(meteringPointDetails);
 
             AssertContainsValidationError<PowerPlantIsRequiredForNetSettlementGroupRuleError>(checkResult);
         }
@@ -183,7 +187,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                     NetSettlementGroup = netSettlementGroup,
                 };
 
-            var checkResult = CreateRequest(meteringPointDetails);
+            var checkResult = CheckCreationRules(meteringPointDetails);
 
             AssertDoesNotContainValidationError<PowerPlantIsRequiredForNetSettlementGroupRuleError>(checkResult);
         }
@@ -211,7 +215,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                     Address = address,
                 };
 
-            var checkResult = CreateRequest(meteringPointDetails);
+            var checkResult = CheckCreationRules(meteringPointDetails);
             AssertContainsValidationError<StreetNameIsRequiredRuleError>(checkResult);
         }
 
@@ -261,7 +265,22 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(ProductType.EnergyActive.Name, createdEvent!.ProductType);
         }
 
-        private static BusinessRulesValidationResult CreateRequest(MeteringPointDetails meteringPointDetails)
+        [Fact]
+        public void Capacity_is_required_for_all_net_settlement_groups_but_0()
+        {
+            var details = CreateDetails()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.Six,
+                    Capacity = null,
+                };
+
+            var checkResult = CheckCreationRules(details);
+
+            AssertContainsValidationError<CapacityIsRequiredRuleError>(checkResult);
+        }
+
+        private static BusinessRulesValidationResult CheckCreationRules(MeteringPointDetails meteringPointDetails)
         {
             return ConsumptionMeteringPoint.CanCreate(meteringPointDetails);
         }

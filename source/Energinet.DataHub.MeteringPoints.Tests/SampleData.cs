@@ -86,6 +86,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public static Guid GeoInfoReference => Guid.Parse("EB0ECFD2-97AD-48E3-8502-04C36AA7ACF8");
 
+        public static string Capacity => "1.2";
+
         private static string EffectiveDateNow()
         {
             var currentDate = SystemClock.Instance.GetCurrentInstant().InUtc();
