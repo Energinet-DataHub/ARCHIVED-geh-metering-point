@@ -32,20 +32,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests
             TeTest3,
         }
 
-        private enum ZSettlementMethod
-        {
-            SmFlex = 0,
-            SmProfiled = 1,
-            SmNonprofiled = 2,
-        }
-
         [Fact]
         public void Map_from_enum_to_EnumerationType_Success()
         {
-            var testEnum = TestEnum.TeTest1;
+            var testEnum = TestEnum.TeTest2;
             var enumerationType = testEnum.MapToEnumerationType<TestEnumerationType>();
 
-            enumerationType.Id.Should().Be((int)TestEnum.TeTest1);
+            enumerationType.Id.Should().Be((int)testEnum);
         }
 
         [Fact]
@@ -57,24 +50,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests
             Convert.ToInt32(testEnum, CultureInfo.InvariantCulture).Should().Be(enumerationType.Id);
         }
 
-        [Fact]
-        public void MapZ_from_enum_to_EnumerationType_Success()
-        {
-            var testEnum = ZSettlementMethod.SmFlex;
-            var enumerationType = testEnum.MapToEnumerationType<ZZSettlementMethod>();
-
-            enumerationType.Id.Should().Be((int)TestEnum.TeTest1);
-        }
-
-        [Fact]
-        public void MapZ_from_EnumerationType_to_enum_Success()
-        {
-            var enumerationType = new ZZSettlementMethod(1, nameof(ZZSettlementMethod.Flex));
-            var testEnum = enumerationType.MapToEnum<ZSettlementMethod>();
-
-            Convert.ToInt32(testEnum, CultureInfo.InvariantCulture).Should().Be(enumerationType.Id);
-        }
-
         internal class TestEnumerationType : EnumerationType
         {
             public static readonly TestEnumerationType Test1 = new(0, nameof(Test1));
@@ -82,18 +57,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests
             public static readonly TestEnumerationType Test3 = new(2, nameof(Test3));
 
             public TestEnumerationType(int id, string name)
-                : base(id, name)
-            {
-            }
-        }
-
-        internal class ZZSettlementMethod : EnumerationType
-        {
-            public static readonly ZZSettlementMethod Flex = new(0, nameof(Flex));
-            public static readonly ZZSettlementMethod Profiled = new(1, nameof(Profiled));
-            public static readonly ZZSettlementMethod NonProfiled = new(2, nameof(NonProfiled));
-
-            public ZZSettlementMethod(int id, string name)
                 : base(id, name)
             {
             }
