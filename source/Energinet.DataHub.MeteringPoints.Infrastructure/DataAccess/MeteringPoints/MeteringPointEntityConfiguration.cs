@@ -164,6 +164,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 config.Property(x => x.StartOfSupply)
                     .HasColumnName("StartOfSupplyDate");
             });
+            builder.Property<ConnectionType>("ConnectionType")
+                .HasColumnName("ConnectionType")
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<ConnectionType>(fromDbValue));
         }
     }
 
@@ -186,11 +191,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<AssetType>(fromDbValue));
-            builder.Property<ConnectionType>("_connectionType")
-                .HasColumnName("ConnectionType")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<ConnectionType>(fromDbValue));
 
             builder.Property<DisconnectionType>("_disconnectionType")
                 .HasColumnName("DisconnectionType")
