@@ -13,10 +13,11 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Domain.PostOffice;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 using FluentAssertions;
 using GreenEnergyHub.PostOffice.Communicator.Dequeue;
 using GreenEnergyHub.PostOffice.Communicator.Model;
@@ -29,24 +30,27 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
     [UnitTest]
     public class SubPostOfficeTests
     {
-        private readonly IMessageDispatcher _messageDispatcher;
+        private readonly DummyDispatcher _messageDispatcher;
         private readonly ISubPostOfficeClient _subPostOfficeClient;
         private readonly DummyDataAvailableNotificationSender _dataAvailableNotificationSender;
         private readonly DummyDataBundleResponseSender _dataBundleResponseSender;
         private readonly DummyDequeueNotificationSender _dequeueNotificationSender;
         private readonly RequestBundleParser _requestBundleParser;
+        private readonly DequeueNotificationParser _dequeueNotificationParser;
+
+        private readonly List<PostOfficeMessageMetadata> _ids;
 
         public SubPostOfficeTests()
         {
             _messageDispatcher = new DummyDispatcher();
-            var postOfficeMessageMetadataRepository = new DummyPostOfficeMessageMetadataRepository();
+            _ids = new List<PostOfficeMessageMetadata> { new("correlationId1") };
+            var postOfficeMessageMetadataRepository = new DummyPostOfficeMessageMetadataRepository(_ids);
             var subPostOfficeStorageClient = new DummySubPostOfficeStorageClient();
             var postOfficeStorageClient = new DummyPostOfficeStorageClient();
             _dataBundleResponseSender = new DummyDataBundleResponseSender();
             var dequeueNotificationParser = new DequeueNotificationParser();
-
             _requestBundleParser = new RequestBundleParser();
-
+            _dequeueNotificationParser = new DequeueNotificationParser();
             _dataAvailableNotificationSender = new DummyDataAvailableNotificationSender();
             _subPostOfficeClient = new SubPostOfficeClient(
                 subPostOfficeStorageClient,
@@ -63,7 +67,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
         [Fact]
         public async Task Dispatch_Should_Result_In_MessageReady_Notification()
         {
-            await _subPostOfficeClient.DispatchAsync(new PostOfficeMessageEnvelope("recipient", "content", "messagetype", "correlation")).ConfigureAwait(false);
+            await _subPostOfficeClient.DispatchAsync(new PostOfficeMessageEnvelope("recipient", "content", "messagetype", "correlationId1")).ConfigureAwait(false);
 
             // should we test that messages are stored correctly?
             _dataAvailableNotificationSender.IsSent().Should().Be(true);
@@ -72,7 +76,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
         [Fact]
         public async Task GenerateBundle_Should_Result_In_BundleReady_Notification()
         {
-            var requestBundleDto = new DataBundleRequestDto("idempotencyId", new[] { Guid.NewGuid().ToString() });
+            var requestBundleDto = new DataBundleRequestDto("idempotencyId", new[] { Guid.NewGuid() });
 
             var bytes = _requestBundleParser.Parse(requestBundleDto);
 
@@ -85,7 +89,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
         [Fact]
         public async Task BundleDequeued_Should_Result_In_Dispatched_Commands_For_Each_Message()
         {
-            await _subPostOfficeClient.BundleDequeuedAsync(Array.Empty<byte>()).ConfigureAwait(false);
+            var bytes = _dequeueNotificationParser.Parse(new DequeueNotificationDto(new List<Guid> { Guid.NewGuid() }, new GlobalLocationNumberDto("recipient")));
+
+            await _subPostOfficeClient.BundleDequeuedAsync(bytes).ConfigureAwait(false);
+
+            _messageDispatcher.IsDispatched().Should().Be(true);
         }
     }
 }

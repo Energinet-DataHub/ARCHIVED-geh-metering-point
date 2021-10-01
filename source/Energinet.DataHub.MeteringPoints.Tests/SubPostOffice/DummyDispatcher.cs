@@ -21,9 +21,17 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
 {
     public class DummyDispatcher : IMessageDispatcher
     {
+        private bool _isDispatched;
+
         public Task DispatchAsync(IOutboundMessage message, CancellationToken cancellationToken = default)
         {
+            _isDispatched = true;
             return Task.CompletedTask;
+        }
+
+        public bool IsDispatched()
+        {
+            return _isDispatched;
         }
     }
 }

@@ -72,14 +72,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
             await _postOfficeMessageMetadataRepository.SaveMessageAsync(messageMetadata).ConfigureAwait(false);
 
             //TODO: Change DomainOrigin to MeteringPoints when added to enum.
-            await _dataAvailableNotificationSender.SendAsync(new DataAvailableNotificationDto(messageMetadata.Id, new GlobalLocationNumber(message.Recipient), new MessageType(message.MessageType), DomainOrigin.Unknown, true, 1)).ConfigureAwait(false);
+            await _dataAvailableNotificationSender.SendAsync(new DataAvailableNotificationDto(messageMetadata.Id, new GlobalLocationNumberDto(message.Recipient), new MessageTypeDto(message.MessageType), DomainOrigin.MeteringPoints, true, 1)).ConfigureAwait(false);
         }
 
         public async Task CreateBundleAsync(byte[] request)
         {
             var notificationDto = _requestBundleParser.Parse(request);
 
-            var messageMetadatas = await _postOfficeMessageMetadataRepository.GetMessagesAsync(notificationDto.DataAvailableNotificationIds.Select(Guid.Parse).ToArray()).ConfigureAwait(false);
+            var messageMetadatas = await _postOfficeMessageMetadataRepository.GetMessagesAsync(notificationDto.DataAvailableNotificationIds.ToArray()).ConfigureAwait(false);
 
             StringBuilder fullMessage = new();
 
@@ -98,7 +98,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
         {
             var notificationDto = _dequeueNotificationParser.Parse(notification);
 
-            var messages = await _postOfficeMessageMetadataRepository.GetMessagesAsync(notificationDto.DataAvailableNotificationIds.Select(Guid.Parse).ToArray()).ConfigureAwait(false);
+            var messages = await _postOfficeMessageMetadataRepository.GetMessagesAsync(notificationDto.DataAvailableNotificationIds.ToArray()).ConfigureAwait(false);
 
             foreach (var message in messages)
             {

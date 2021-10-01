@@ -22,11 +22,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
 {
     public class DummyPostOfficeMessageMetadataRepository : IPostOfficeMessageMetadataRepository
     {
-        private readonly List<PostOfficeMessageMetadata> _postOfficeMessageMetadataList;
+        private readonly IList<PostOfficeMessageMetadata> _postOfficeMessageMetadataList;
 
-        public DummyPostOfficeMessageMetadataRepository()
+        public DummyPostOfficeMessageMetadataRepository(IList<PostOfficeMessageMetadata> postOfficeMessageMetadataList)
         {
-            _postOfficeMessageMetadataList = new List<PostOfficeMessageMetadata>();
+            _postOfficeMessageMetadataList = postOfficeMessageMetadataList;
         }
 
         public Task<PostOfficeMessageMetadata> GetMessageAsync(Guid messageId)
