@@ -12,9 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Google.Protobuf;
@@ -28,24 +31,35 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDi
     {
         private readonly ITopicSender<TTopic> _topicSender;
         private readonly ProtobufOutboundMapper<TEvent> _mapper;
+        private readonly IIntegrationEventMessageFactory _integrationEventMessageFactory;
+        private readonly IIntegrationMetadataContext _integrationMetadataContext;
 
-        protected IntegrationEventDispatcher(ITopicSender<TTopic> topicSender, ProtobufOutboundMapper<TEvent> mapper)
+        protected IntegrationEventDispatcher(
+            ITopicSender<TTopic> topicSender,
+            ProtobufOutboundMapper<TEvent> mapper,
+            IIntegrationEventMessageFactory integrationEventMessageFactory,
+            IIntegrationMetadataContext integrationMetadataContext)
         {
             _topicSender = topicSender;
             _mapper = mapper;
+            _integrationEventMessageFactory = integrationEventMessageFactory;
+            _integrationMetadataContext = integrationMetadataContext;
         }
 
         public async Task<Unit> Handle(TEvent request, CancellationToken cancellationToken)
         {
-            await DispatchMessageAsync(request).ConfigureAwait(false);
+            var message = _mapper.Convert(request);
+            var bytes = message.ToByteArray();
+
+            var serviceBusMessage = _integrationEventMessageFactory.CreateMessage(bytes, _integrationMetadataContext);
+            serviceBusMessage.SetMetadata(_integrationMetadataContext.Timestamp, _integrationMetadataContext.CorrelationId ?? string.Empty, _integrationMetadataContext.EventId);
+            EnrichMessage(serviceBusMessage);
+
+            await _topicSender.SendMessageAsync(serviceBusMessage).ConfigureAwait(false);
+
             return Unit.Value;
         }
 
-        private async Task DispatchMessageAsync(IOutboundMessage request)
-        {
-            var message = _mapper.Convert(request);
-            var bytes = message.ToByteArray();
-            await _topicSender.SendMessageAsync(bytes).ConfigureAwait(false);
-        }
+        protected abstract void EnrichMessage(ServiceBusMessage serviceBusMessage);
     }
 }
