@@ -24,11 +24,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
         /// <summary>
         /// Creates the message
         /// </summary>
-        public ServiceBusMessage CreateMessage(byte[] bytes);
-
-        /// <summary>
-        /// Enrich the message
-        /// </summary>
-        public ServiceBusMessage EnrichMessage(ServiceBusMessage message, string messageType, int version);
+        public ServiceBusMessage CreateMessage(byte[] bytes, IIntegrationMetadataContext integrationMetadataContext);
     }
 }

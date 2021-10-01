@@ -40,6 +40,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
         /// <summary>
         /// Set the initial meta data.
         /// </summary>
-        public void SetMetadata(Instant timestamp, string? correlationId, Guid eventId);
+        public void SetMetadata(Instant timestamp, string correlationId, Guid eventId);
     }
 }
