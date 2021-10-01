@@ -22,35 +22,35 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class Capacity : ValueObject
     {
-        private Capacity(float kwh)
+        private Capacity(float kw)
         {
-            Kwh = kwh;
+            Kw = kw;
         }
 
-        public float Kwh { get; }
+        public float Kw { get; }
 
-        public static Capacity Create(float capacityInKwh)
+        public static Capacity Create(float capacityInKw)
         {
-            var capacityAsString = capacityInKwh.ToString(CultureInfo.InvariantCulture);
+            var capacityAsString = capacityInKw.ToString(CultureInfo.InvariantCulture);
             return Create(capacityAsString);
         }
 
-        public static Capacity Create(string capacityInKwh)
+        public static Capacity Create(string capacityInKw)
         {
-            if (CheckRules(capacityInKwh).Success == false)
+            if (CheckRules(capacityInKw).Success == false)
             {
-                throw new InvalidCapacityExeception(capacityInKwh);
+                throw new InvalidCapacityExeception(capacityInKw);
             }
 
-            var convertedValue = float.Parse(capacityInKwh, CultureInfo.InvariantCulture);
+            var convertedValue = float.Parse(capacityInKw, CultureInfo.InvariantCulture);
             return new Capacity(convertedValue);
         }
 
-        public static BusinessRulesValidationResult CheckRules(string capacityInKwh)
+        public static BusinessRulesValidationResult CheckRules(string capacityInKw)
         {
             var rules = new List<IBusinessRule>()
             {
-                new CapacityFormatRule(capacityInKwh),
+                new CapacityFormatRule(capacityInKw),
             };
 
             return new BusinessRulesValidationResult(rules);

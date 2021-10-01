@@ -50,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             string capacityValue = "123.000";
             var capacity = Capacity.Create(capacityValue);
 
-            Assert.Equal(float.Parse(capacityValue, CultureInfo.InvariantCulture), capacity.Kwh);
+            Assert.Equal(float.Parse(capacityValue, CultureInfo.InvariantCulture), capacity.Kw);
         }
     }
 }
