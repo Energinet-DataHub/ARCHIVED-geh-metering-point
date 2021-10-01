@@ -32,7 +32,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         private NetSettlementGroup _netSettlementGroup;
         private DisconnectionType _disconnectionType;
         private AssetType? _assetType;
-        private bool _isAddressWashable;
         private ScheduledMeterReadingDate? _scheduledMeterReadingDate;
 
         private ConsumptionMeteringPoint(
