@@ -36,5 +36,21 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             Assert.False(result.Success);
             AssertError<InvalidMeterReadingOccurrenceRuleError>(result, true);
         }
+
+        [Fact]
+        public void Connection_type_is_required_when_net_settlement_group_is_not_0()
+        {
+            var details = CreateDetails()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.Six,
+                    ConnectionType = null,
+                };
+
+            var result = MarketMeteringPoint.CanCreate(details);
+
+            Assert.False(result.Success);
+            AssertError<ConnectionTypeIsRequiredRuleError>(result, true);
+        }
     }
 }

@@ -60,6 +60,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError<CreateMeteringPointRejected>("E86");
         }
 
+        [Fact]
+        public async Task Should_reject_if_net_settlement_group_is_not_0_and_connection_type_is_undefined()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.Six.Name,
+                    ConnectionType = null,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
+        }
+
         private static CreateMeteringPoint CreateRequest()
         {
             return new CreateMeteringPoint(

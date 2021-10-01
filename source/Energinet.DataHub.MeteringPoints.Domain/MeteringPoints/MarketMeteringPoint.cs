@@ -43,7 +43,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit powerLimit,
             EffectiveDate effectiveDate,
-            Capacity? capacity)
+            Capacity? capacity,
+            ConnectionType? connectionType)
             : base(
                 id,
                 gsrnNumber,
@@ -60,9 +61,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 effectiveDate,
                 capacity)
         {
+            ConnectionType = connectionType;
         }
 
         protected EnergySupplierDetails? EnergySupplierDetails { get; private set; }
+
+        protected ConnectionType? ConnectionType { get; private set; }
 
         public static new BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
         {
@@ -72,6 +76,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             {
                 new MeterReadingOccurrenceRule(meteringPointDetails.ReadingOccurrence),
                 new GeoInfoReferenceRequirementRule(meteringPointDetails.Address),
+                new ConnectionTypeRequirementRule(meteringPointDetails.NetSettlementGroup, meteringPointDetails.ConnectionType),
             };
 
             return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));

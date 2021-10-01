@@ -264,6 +264,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError<CreateMeteringPointRejected>("D63");
         }
 
+        [Fact]
+        public async Task Should_reject_if_connection_type_is_unknown()
+        {
+            var invalidConnectionType = "invalid_value";
+            var request = CreateRequest()
+                with
+                {
+                    ConnectionType = invalidConnectionType,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
+        }
+
         private static CreateMeteringPoint CreateRequest()
         {
             return new(
