@@ -112,7 +112,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 _assetType.Name,
                 ConnectionState.PhysicalState.Name,
                 _scheduledMeterReadingDate?.MonthAndDay,
-                capacity?.Kwh);
+                capacity?.Kw);
 
             AddDomainEvent(@event);
         }
