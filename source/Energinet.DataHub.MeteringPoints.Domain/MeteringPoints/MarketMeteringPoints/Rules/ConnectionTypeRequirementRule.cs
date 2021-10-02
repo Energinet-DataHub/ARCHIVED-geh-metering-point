@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Globalization;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
@@ -20,12 +22,30 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
     {
         public ConnectionTypeRequirementRule(NetSettlementGroup netSettlementGroup, ConnectionType? connectionType)
         {
-            IsBroken = netSettlementGroup != NetSettlementGroup.Zero && connectionType is null;
-            ValidationError = new ConnectionTypeIsRequiredRuleError(netSettlementGroup);
+            if (netSettlementGroup == null!) throw new ArgumentNullException(nameof(netSettlementGroup));
+            if (netSettlementGroup == NetSettlementGroup.Zero)
+            {
+                IsBroken = connectionType is not null;
+                ValidationError = new ConnectionTypeIsNotAllowedRuleError();
+                return;
+            }
+
+            if (netSettlementGroup != NetSettlementGroup.Zero && connectionType is null)
+            {
+                IsBroken = true;
+                ValidationError = new ConnectionTypeIsRequiredRuleError(netSettlementGroup);
+                return;
+            }
+
+            if (netSettlementGroup == NetSettlementGroup.Six && connectionType! != ConnectionType.Installation)
+            {
+                IsBroken = true;
+                ValidationError = new ConnectionTypeDoesNotMatchNetSettlementGroupRuleError(connectionType?.Name!, netSettlementGroup.Id.ToString(CultureInfo.InvariantCulture));
+            }
         }
 
         public bool IsBroken { get; }
 
-        public ValidationError ValidationError { get; }
+        public ValidationError ValidationError { get; } = new ConnectionTypeIsNotAllowedRuleError();
     }
 }

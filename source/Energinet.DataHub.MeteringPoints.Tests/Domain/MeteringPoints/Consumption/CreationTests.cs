@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             var meteringPointSubtype = MeteringPointSubType.Physical;
             var gridAreadLinkId = new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId));
             var powerPlanGsrn = GsrnNumber.Create(SampleData.PowerPlant);
-            var netSettlementGroup = NetSettlementGroup.Three;
+            var netSettlementGroup = NetSettlementGroup.Six;
             var locationDescription = LocationDescription.Create(string.Empty);
             var measurementUnitType = MeasurementUnitType.KWh;
             var meterNumber = MeterId.Create("A1234");
@@ -47,7 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             var effectiveDate = EffectiveDate.Create(SampleData.EffectiveDate);
             var settlementMethod = SettlementMethod.Flex;
             var disconnectionType = DisconnectionType.Manual;
-            var connectionType = ConnectionType.Direct;
+            var connectionType = ConnectionType.Installation;
             var assetType = AssetType.GasTurbine;
             var address = Address.Create(
                 streetName: "Test Street",
@@ -78,6 +78,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                     ConnectionType = connectionType,
                     ScheduledMeterReadingDate = scheduledMeterReadingDate,
                     Capacity = capacity,
+                    NetSettlementGroup = netSettlementGroup,
                 };
 
             var meteringPoint = ConsumptionMeteringPoint.Create(meteringPointDetails);

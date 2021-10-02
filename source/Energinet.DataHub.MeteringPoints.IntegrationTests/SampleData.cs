@@ -31,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string DisconnectionType => Domain.MeteringPoints.DisconnectionType.Manual.Name;
 
-        public static string ConnectionType => Domain.MeteringPoints.ConnectionType.Installation.Name;
+        public static string ConnectionType => string.Empty;
 
         public static string PowerPlantGsrnNumber => "571234567891234568";
 

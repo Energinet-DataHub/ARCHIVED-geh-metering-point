@@ -14,6 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Categories;
 
@@ -51,6 +52,37 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
 
             Assert.False(result.Success);
             AssertError<ConnectionTypeIsRequiredRuleError>(result, true);
+        }
+
+        [Fact]
+        public void Connection_type_is_not_allowed_for_net_settlement_group_0()
+        {
+            var details = CreateDetails()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.Zero,
+                    ConnectionType = ConnectionType.Installation,
+                };
+
+            var result = MarketMeteringPoint.CanCreate(details);
+
+            Assert.False(result.Success);
+            AssertError<ConnectionTypeIsNotAllowedRuleError>(result, true);
+        }
+
+        [Fact]
+        public void Connection_type_must_match_net_settlement_group()
+        {
+            var details = CreateDetails()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.Six,
+                    ConnectionType = ConnectionType.Direct,
+                };
+
+            var result = MarketMeteringPoint.CanCreate(details);
+
+            AssertError<ConnectionTypeDoesNotMatchNetSettlementGroupRuleError>(result, true);
         }
     }
 }

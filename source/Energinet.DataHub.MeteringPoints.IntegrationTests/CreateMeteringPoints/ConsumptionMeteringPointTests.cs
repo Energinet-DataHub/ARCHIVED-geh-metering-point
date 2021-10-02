@@ -226,6 +226,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                     PowerPlant = SampleData.PowerPlantGsrnNumber,
                     NetSettlementGroup = NetSettlementGroup.One.Name,
                     ScheduledMeterReadingDate = "0101",
+                    ConnectionType = ConnectionType.Installation.Name,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
@@ -292,7 +293,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 Guid.NewGuid().ToString(),
                 SampleData.PhysicalState,
                 NetSettlementGroup.Six.Name,
-                SampleData.ConnectionType,
+                ConnectionType.Installation.Name,
                 SampleData.AssetType,
                 "123",
                 ToGrid: "456",
