@@ -14,6 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 {

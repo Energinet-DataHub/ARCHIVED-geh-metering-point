@@ -16,6 +16,7 @@ using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Xunit;
 using Xunit.Categories;
 

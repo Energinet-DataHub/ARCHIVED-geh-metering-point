@@ -14,7 +14,7 @@
 
 using System.Threading.Tasks;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints
 {
     /// <summary>
     /// Repository for market facing metering points
