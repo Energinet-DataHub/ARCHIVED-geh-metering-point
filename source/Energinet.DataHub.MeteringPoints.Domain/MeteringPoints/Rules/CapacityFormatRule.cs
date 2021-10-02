@@ -22,18 +22,18 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
     {
         private const int MaxLength = 9;
 
-        public CapacityFormatRule(string capacityInKwh)
+        public CapacityFormatRule(string capacityInKw)
         {
-            if (capacityInKwh == null) throw new ArgumentNullException(nameof(capacityInKwh));
-            ValidationError = new InvalidCapacityFormatRuleError(capacityInKwh);
+            if (capacityInKw == null) throw new ArgumentNullException(nameof(capacityInKw));
+            ValidationError = new InvalidCapacityFormatRuleError(capacityInKw);
 
-            if (CanParse(capacityInKwh) == false)
+            if (CanParse(capacityInKw) == false)
             {
                 IsBroken = true;
                 return;
             }
 
-            var length = GetLength(capacityInKwh);
+            var length = GetLength(capacityInKw);
             if (length > MaxLength)
             {
                 IsBroken = true;
@@ -44,9 +44,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 
         public ValidationError ValidationError { get; }
 
-        private static int GetLength(string capacityInKwh)
+        private static int GetLength(string capacityInKw)
         {
-            return !capacityInKwh.Contains('.', StringComparison.OrdinalIgnoreCase) ? capacityInKwh.Length : capacityInKwh.Remove(capacityInKwh.IndexOf('.', StringComparison.OrdinalIgnoreCase), 1).Length;
+            return !capacityInKw.Contains('.', StringComparison.OrdinalIgnoreCase) ? capacityInKw.Length : capacityInKw.Remove(capacityInKw.IndexOf('.', StringComparison.OrdinalIgnoreCase), 1).Length;
         }
 
         private static bool CanParse(string value)

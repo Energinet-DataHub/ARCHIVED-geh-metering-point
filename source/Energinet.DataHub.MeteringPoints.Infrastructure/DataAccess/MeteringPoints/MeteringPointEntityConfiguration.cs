@@ -144,7 +144,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.Property<Capacity>("_capacity")
                 .HasColumnName("Capacity")
-                .HasConversion<float?>(toDbValue => toDbValue == null ? null : toDbValue.Kwh!, fromDbValue => fromDbValue.HasValue ? Capacity.Create(fromDbValue.Value) : null!);
+                .HasConversion<float?>(toDbValue => toDbValue == null ? null : toDbValue.Kw!, fromDbValue => fromDbValue.HasValue ? Capacity.Create(fromDbValue.Value) : null!);
         }
     }
 

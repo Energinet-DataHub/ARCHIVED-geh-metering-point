@@ -115,7 +115,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(connectionType.Name, createdEvent.ConnectionType);
             Assert.Equal(assetType.Name, createdEvent.AssetType);
             Assert.Equal(scheduledMeterReadingDate.MonthAndDay, createdEvent.ScheduledMeterReadingDate);
-            Assert.Equal(capacity.Kwh, createdEvent.Capacity);
+            Assert.Equal(capacity.Kw, createdEvent.Capacity);
         }
 
         [Fact]
