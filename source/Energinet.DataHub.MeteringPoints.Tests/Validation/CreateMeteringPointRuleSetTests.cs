@@ -112,7 +112,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             var businessRequest = CreateRequest() with
             {
                 GsrnNumber = SampleData.GsrnNumber,
-                SubTypeOfMeteringPoint = subTypeOfMeteringPoint,
+                MeteringMethod = subTypeOfMeteringPoint,
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);

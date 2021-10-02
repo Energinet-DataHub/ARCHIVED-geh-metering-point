@@ -84,7 +84,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
             command.PowerPlant.Should().Be("571234567891234636");
             command.SettlementMethod.Should().Be(nameof(SettlementMethod.Flex));
             command.TypeOfMeteringPoint.Should().Be(nameof(MeteringPointType.Consumption));
-            command.SubTypeOfMeteringPoint.Should().Be(nameof(MeteringPointSubType.Physical));
+            command.MeteringMethod.Should().Be(nameof(MeteringMethod.Physical));
             command.PhysicalStatusOfMeteringPoint.Should().Be(nameof(PhysicalState.New));
             command.ConnectionType.Should().Be(nameof(ConnectionType.Direct));
             command.AssetType.Should().Be(nameof(AssetType.WindTurbines));
@@ -124,7 +124,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
 
             command.SettlementMethod.Should().Be(nameof(SettlementMethod.Flex));
             command.TypeOfMeteringPoint.Should().Be(nameof(MeteringPointType.Consumption));
-            command.SubTypeOfMeteringPoint.Should().Be(nameof(MeteringPointSubType.Physical));
+            command.MeteringMethod.Should().Be(nameof(MeteringMethod.Physical));
             command.PhysicalStatusOfMeteringPoint.Should().Be(nameof(PhysicalState.New));
             command.ConnectionType.Should().Be(nameof(ConnectionType.Direct));
             command.AssetType.Should().Be(nameof(AssetType.WindTurbines));

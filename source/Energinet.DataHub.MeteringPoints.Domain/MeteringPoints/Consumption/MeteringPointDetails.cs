@@ -22,7 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         MeteringPointId Id,
         GsrnNumber GsrnNumber,
         Address Address,
-        MeteringPointSubType MeteringPointSubType,
+        MeteringMethod MeteringMethod,
         GridAreaLinkId GridAreaLinkId,
         GsrnNumber? PowerPlantGsrnNumber,
         LocationDescription? LocationDescription,

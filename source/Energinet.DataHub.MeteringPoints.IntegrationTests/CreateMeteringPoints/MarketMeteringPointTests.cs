@@ -107,7 +107,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SampleData.IsWashable,
                 SampleData.GsrnNumber,
                 SampleData.TypeOfMeteringPoint,
-                MeteringPointSubType.Calculated.Name,
+                MeteringMethod.Calculated.Name,
                 SampleData.ReadingOccurrence,
                 0,
                 0,

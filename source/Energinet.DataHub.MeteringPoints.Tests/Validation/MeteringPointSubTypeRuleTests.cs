@@ -22,30 +22,30 @@ using Xunit.Categories;
 namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 {
     [UnitTest]
-    public class MeteringPointSubTypeRuleTests : CreateMeteringPointRulesTest<MeteringPointSubTypeMustBeValidRule>
+    public class MeteringPointSubTypeRuleTests : CreateMeteringPointRulesTest<MeteringMethodMustBeValidRule>
     {
         [Theory]
-        [InlineData(nameof(MeteringPointType.Production), nameof(MeteringPointSubType.Virtual), nameof(NetSettlementGroup.One))]
-        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeteringPointSubType.Calculated), nameof(NetSettlementGroup.One))]
-        [InlineData(nameof(MeteringPointType.WholesaleServices), nameof(MeteringPointSubType.Virtual), nameof(NetSettlementGroup.One))]
-        [InlineData(nameof(MeteringPointType.OwnProduction), nameof(MeteringPointSubType.Virtual), nameof(NetSettlementGroup.One))]
-        [InlineData(nameof(MeteringPointType.NetFromGrid), nameof(MeteringPointSubType.Calculated), nameof(NetSettlementGroup.One))]
-        [InlineData(nameof(MeteringPointType.NetToGrid), nameof(MeteringPointSubType.Calculated), nameof(NetSettlementGroup.One))]
-        [InlineData(nameof(MeteringPointType.TotalConsumption), nameof(MeteringPointSubType.Calculated), nameof(NetSettlementGroup.One))]
-        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.Zero))]
-        [InlineData(nameof(MeteringPointType.Production), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.Ninetynine))]
-        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeteringPointSubType.Virtual), nameof(NetSettlementGroup.Zero))]
-        [InlineData(nameof(MeteringPointType.Production), nameof(MeteringPointSubType.Calculated), nameof(NetSettlementGroup.Ninetynine))]
-        [InlineData(nameof(MeteringPointType.OtherConsumption), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.One))]
-        [InlineData(nameof(MeteringPointType.OtherProduction), nameof(MeteringPointSubType.Virtual), nameof(NetSettlementGroup.One))]
-        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), nameof(MeteringPointSubType.Virtual), nameof(NetSettlementGroup.One))]
+        [InlineData(nameof(MeteringPointType.Production), nameof(MeteringMethod.Virtual), nameof(NetSettlementGroup.One))]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeteringMethod.Calculated), nameof(NetSettlementGroup.One))]
+        [InlineData(nameof(MeteringPointType.WholesaleServices), nameof(MeteringMethod.Virtual), nameof(NetSettlementGroup.One))]
+        [InlineData(nameof(MeteringPointType.OwnProduction), nameof(MeteringMethod.Virtual), nameof(NetSettlementGroup.One))]
+        [InlineData(nameof(MeteringPointType.NetFromGrid), nameof(MeteringMethod.Calculated), nameof(NetSettlementGroup.One))]
+        [InlineData(nameof(MeteringPointType.NetToGrid), nameof(MeteringMethod.Calculated), nameof(NetSettlementGroup.One))]
+        [InlineData(nameof(MeteringPointType.TotalConsumption), nameof(MeteringMethod.Calculated), nameof(NetSettlementGroup.One))]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeteringMethod.Physical), nameof(NetSettlementGroup.Zero))]
+        [InlineData(nameof(MeteringPointType.Production), nameof(MeteringMethod.Physical), nameof(NetSettlementGroup.Ninetynine))]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeteringMethod.Virtual), nameof(NetSettlementGroup.Zero))]
+        [InlineData(nameof(MeteringPointType.Production), nameof(MeteringMethod.Calculated), nameof(NetSettlementGroup.Ninetynine))]
+        [InlineData(nameof(MeteringPointType.OtherConsumption), nameof(MeteringMethod.Physical), nameof(NetSettlementGroup.One))]
+        [InlineData(nameof(MeteringPointType.OtherProduction), nameof(MeteringMethod.Virtual), nameof(NetSettlementGroup.One))]
+        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), nameof(MeteringMethod.Virtual), nameof(NetSettlementGroup.One))]
         public void MeteringPointSubtypeShouldValidate(string typeOfMeteringPoint, string meteringPointSubType, string netSettlementGroup)
         {
             var request = CreateRequest() with
             {
                 GsrnNumber = SampleData.GsrnNumber,
                 TypeOfMeteringPoint = typeOfMeteringPoint,
-                SubTypeOfMeteringPoint = meteringPointSubType,
+                MeteringMethod = meteringPointSubType,
                 NetSettlementGroup = netSettlementGroup,
             };
 
@@ -54,23 +54,23 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 
         [Theory]
         [InlineData(nameof(MeteringPointType.Consumption), "", nameof(NetSettlementGroup.One),   typeof(MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineMustBeSubtypeVirtualOrCalculatedValidationError))]
-        [InlineData(nameof(MeteringPointType.WholesaleServices), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError))]
-        [InlineData(nameof(MeteringPointType.OwnProduction), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError))]
-        [InlineData(nameof(MeteringPointType.NetFromGrid), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError))]
-        [InlineData(nameof(MeteringPointType.NetToGrid), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError))]
-        [InlineData(nameof(MeteringPointType.TotalConsumption), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError))]
-        [InlineData(nameof(MeteringPointType.Production), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.One), typeof(MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineMustBeSubtypeVirtualOrCalculatedValidationError))]
-        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeteringPointSubType.Physical), nameof(NetSettlementGroup.One), typeof(MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineMustBeSubtypeVirtualOrCalculatedValidationError))]
-        [InlineData(nameof(MeteringPointType.OtherConsumption), nameof(MeteringPointSubType.Calculated), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeMustBePhysicalOrVirtualValidationError))]
-        [InlineData(nameof(MeteringPointType.OtherProduction), nameof(MeteringPointSubType.Calculated), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeMustBePhysicalOrVirtualValidationError))]
-        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), nameof(MeteringPointSubType.Calculated), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeMustBePhysicalOrVirtualValidationError))]
+        [InlineData(nameof(MeteringPointType.WholesaleServices), nameof(MeteringMethod.Physical), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError))]
+        [InlineData(nameof(MeteringPointType.OwnProduction), nameof(MeteringMethod.Physical), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError))]
+        [InlineData(nameof(MeteringPointType.NetFromGrid), nameof(MeteringMethod.Physical), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError))]
+        [InlineData(nameof(MeteringPointType.NetToGrid), nameof(MeteringMethod.Physical), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError))]
+        [InlineData(nameof(MeteringPointType.TotalConsumption), nameof(MeteringMethod.Physical), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeValueMustBeValidValidationError))]
+        [InlineData(nameof(MeteringPointType.Production), nameof(MeteringMethod.Physical), nameof(NetSettlementGroup.One), typeof(MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineMustBeSubtypeVirtualOrCalculatedValidationError))]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeteringMethod.Physical), nameof(NetSettlementGroup.One), typeof(MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineMustBeSubtypeVirtualOrCalculatedValidationError))]
+        [InlineData(nameof(MeteringPointType.OtherConsumption), nameof(MeteringMethod.Calculated), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeMustBePhysicalOrVirtualValidationError))]
+        [InlineData(nameof(MeteringPointType.OtherProduction), nameof(MeteringMethod.Calculated), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeMustBePhysicalOrVirtualValidationError))]
+        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), nameof(MeteringMethod.Calculated), nameof(NetSettlementGroup.One),   typeof(MeteringPointSubTypeMustBePhysicalOrVirtualValidationError))]
         public void MeteringPointSubtypeShouldResultInError(string typeOfMeteringPoint, string meteringPointSubType, string netSettlementGroup,  Type expectedError)
         {
             var request = CreateRequest() with
             {
                 GsrnNumber = SampleData.GsrnNumber,
                 TypeOfMeteringPoint = typeOfMeteringPoint,
-                SubTypeOfMeteringPoint = meteringPointSubType,
+                MeteringMethod = meteringPointSubType,
                 NetSettlementGroup = netSettlementGroup,
             };
 

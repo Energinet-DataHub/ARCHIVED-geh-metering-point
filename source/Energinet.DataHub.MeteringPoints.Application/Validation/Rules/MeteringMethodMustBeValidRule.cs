@@ -22,11 +22,11 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class MeteringPointSubTypeMustBeValidRule : AbstractValidator<CreateMeteringPoint>
+    public class MeteringMethodMustBeValidRule : AbstractValidator<CreateMeteringPoint>
     {
-        public MeteringPointSubTypeMustBeValidRule()
+        public MeteringMethodMustBeValidRule()
         {
-            RuleFor(createMeteringPoint => createMeteringPoint.SubTypeOfMeteringPoint)
+            RuleFor(createMeteringPoint => createMeteringPoint.MeteringMethod)
                 .NotEmpty()
                 .WithState(createMeteringPoint => new MeteringPointSubTypeMandatoryValidationError(createMeteringPoint.GsrnNumber));
 
@@ -37,14 +37,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                     .WithState(createMeteringPoint =>
                         new MeteringPointSubTypeValueMustBeValidValidationError(
                             createMeteringPoint.GsrnNumber,
-                            createMeteringPoint.SubTypeOfMeteringPoint));
+                            createMeteringPoint.MeteringMethod));
             });
 
             When(GroupOfMeteringPointTypesThatMustBeSubtypePhysicalOrVirtual, () =>
             {
                 RuleFor(createMeteringPoint => createMeteringPoint)
                     .Must(SubTypeIsVirtualOrPhysical)
-                    .WithState(createMeteringPoint => new MeteringPointSubTypeMustBePhysicalOrVirtualValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.SubTypeOfMeteringPoint));
+                    .WithState(createMeteringPoint => new MeteringPointSubTypeMustBePhysicalOrVirtualValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.MeteringMethod));
             });
 
             When(MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNine, () =>
@@ -54,7 +54,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                     .WithState(createMeteringPoint =>
                         new MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineMustBeSubtypeVirtualOrCalculatedValidationError(
                             createMeteringPoint.GsrnNumber,
-                            createMeteringPoint.SubTypeOfMeteringPoint,
+                            createMeteringPoint.MeteringMethod,
                             createMeteringPoint.TypeOfMeteringPoint));
             });
 
@@ -65,7 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                     .WithState(createMeteringPoint =>
                         new MeteringPointSubTypeValueMustBeValidValidationError(
                             createMeteringPoint.GsrnNumber,
-                            createMeteringPoint.SubTypeOfMeteringPoint));
+                            createMeteringPoint.MeteringMethod));
             });
         }
 
@@ -140,40 +140,40 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
         private static bool SubTypeIsVirtualOrCalculated(CreateMeteringPoint createMeteringPoint)
         {
-            return Virtual(createMeteringPoint.SubTypeOfMeteringPoint) ||
-                   Calculated(createMeteringPoint.SubTypeOfMeteringPoint);
+            return Virtual(createMeteringPoint.MeteringMethod) ||
+                   Calculated(createMeteringPoint.MeteringMethod);
         }
 
         private static bool SubTypeIsVirtualOrPhysical(CreateMeteringPoint createMeteringPoint)
         {
-            return Virtual(createMeteringPoint.SubTypeOfMeteringPoint) ||
-                   Physical(createMeteringPoint.SubTypeOfMeteringPoint);
+            return Virtual(createMeteringPoint.MeteringMethod) ||
+                   Physical(createMeteringPoint.MeteringMethod);
         }
 
         private static bool ExpectedSubTypes(CreateMeteringPoint createMeteringPoint)
         {
             return new HashSet<string>
                     {
-                        MeteringPointSubType.Calculated.Name,
-                        MeteringPointSubType.Physical.Name,
-                        MeteringPointSubType.Virtual.Name,
+                        MeteringMethod.Calculated.Name,
+                        MeteringMethod.Physical.Name,
+                        MeteringMethod.Virtual.Name,
                     }
-                .Contains(createMeteringPoint.SubTypeOfMeteringPoint);
+                .Contains(createMeteringPoint.MeteringMethod);
         }
 
         private static bool Virtual(string subTypeOfMeteringPoint)
         {
-            return subTypeOfMeteringPoint.Equals(MeteringPointSubType.Virtual.Name, StringComparison.Ordinal);
+            return subTypeOfMeteringPoint.Equals(MeteringMethod.Virtual.Name, StringComparison.Ordinal);
         }
 
         private static bool Calculated(string subTypeOfMeteringPoint)
         {
-            return subTypeOfMeteringPoint.Equals(MeteringPointSubType.Calculated.Name, StringComparison.Ordinal);
+            return subTypeOfMeteringPoint.Equals(MeteringMethod.Calculated.Name, StringComparison.Ordinal);
         }
 
         private static bool Physical(string subTypeOfMeteringPoint)
         {
-            return subTypeOfMeteringPoint.Equals(MeteringPointSubType.Physical.Name, StringComparison.Ordinal);
+            return subTypeOfMeteringPoint.Equals(MeteringMethod.Physical.Name, StringComparison.Ordinal);
         }
     }
 }

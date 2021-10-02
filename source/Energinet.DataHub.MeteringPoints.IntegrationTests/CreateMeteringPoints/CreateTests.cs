@@ -177,7 +177,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 with
                 {
                     MeterNumber = null,
-                    SubTypeOfMeteringPoint = MeteringPointSubType.Physical.Name,
+                    MeteringMethod = MeteringMethod.Physical.Name,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
@@ -192,7 +192,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 with
                 {
                     MeterNumber = SampleData.MeterNumber,
-                    SubTypeOfMeteringPoint = MeteringPointSubType.Virtual.Name,
+                    MeteringMethod = MeteringMethod.Virtual.Name,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
@@ -209,7 +209,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                     NetSettlementGroup = NetSettlementGroup.One.Name,
                     ConnectionType = ConnectionType.Installation.Name,
                     PhysicalConnectionCapacity = null,
-                    SubTypeOfMeteringPoint = MeteringPointSubType.Calculated.Name,
+                    MeteringMethod = MeteringMethod.Calculated.Name,
                     MeterNumber = null,
                 };
 
@@ -226,7 +226,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 {
                     NetSettlementGroup = NetSettlementGroup.One.Name,
                     PhysicalConnectionCapacity = "123.3333670",
-                    SubTypeOfMeteringPoint = MeteringPointSubType.Calculated.Name,
+                    MeteringMethod = MeteringMethod.Calculated.Name,
                     MeterNumber = null,
                 };
 

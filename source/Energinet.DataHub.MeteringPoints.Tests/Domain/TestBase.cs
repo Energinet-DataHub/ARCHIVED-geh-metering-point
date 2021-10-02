@@ -42,7 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 address,
-                MeteringPointSubType.Physical,
+                MeteringMethod.Physical,
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
                 GsrnNumber.Create(SampleData.PowerPlant),
                 LocationDescription.Create(SampleData.LocationDescription),
