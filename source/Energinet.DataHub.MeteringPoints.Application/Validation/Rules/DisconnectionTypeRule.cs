@@ -21,9 +21,9 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class DisconnectionRule : AbstractValidator<CreateMeteringPoint>
+    public class DisconnectionTypeRule : AbstractValidator<CreateMeteringPoint>
     {
-        public DisconnectionRule()
+        public DisconnectionTypeRule()
         {
             When(MandatoryMeteringPointTypes, () =>
             {
