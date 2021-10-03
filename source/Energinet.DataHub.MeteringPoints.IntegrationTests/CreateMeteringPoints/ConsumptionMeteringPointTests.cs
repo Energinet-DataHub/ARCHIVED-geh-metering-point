@@ -16,6 +16,7 @@ using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
@@ -139,6 +140,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 with
                 {
                     SettlementMethod = "Invalid_Method_Name",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D15");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_settlement_method_does_not_match_net_settlement_group()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    ScheduledMeterReadingDate = null,
+                    NetSettlementGroup = NetSettlementGroup.One.Name,
+                    SettlementMethod = SettlementMethod.Profiled.Name,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
