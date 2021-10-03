@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Create;
@@ -171,7 +172,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task Should_reject_if_subtype_is_physical_and_meter_identification_is_undefined()
+        public async Task Should_reject_if_metering_method_is_physical_and_meter_identification_is_undefined()
         {
             var request = CreateRequest()
                 with
@@ -186,7 +187,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task Should_reject_if_subtype_is_not_physical_and_meter_identification_is_defined()
+        public async Task Should_reject_if_metering_method_is_not_physical_and_meter_identification_is_defined()
         {
             var request = CreateRequest()
                 with
@@ -288,6 +289,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 {
                     ConnectionType = ConnectionType.Installation.Name,
                     NetSettlementGroup = NetSettlementGroup.Zero.Name,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("invalid_value")]
+        public async Task Should_reject_when_metering_method_is_missing_or_is_invalid(string meteringMethod)
+        {
+            var request = CreateRequest()
+                with
+                {
+                    MeteringMethod = meteringMethod,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);

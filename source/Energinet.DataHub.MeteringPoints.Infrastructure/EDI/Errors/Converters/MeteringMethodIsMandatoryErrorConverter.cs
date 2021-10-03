@@ -12,20 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using System;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class MeteringPointSubTypeMustBePhysicalOrVirtualValidationError : ValidationError
+    public class MeteringMethodIsMandatoryErrorConverter : ErrorConverter<MeteringMethodIsMandatoryValidationError>
     {
-        public MeteringPointSubTypeMustBePhysicalOrVirtualValidationError(string gsrnNumber, string meteringPointSubType)
+        protected override ErrorMessage Convert(MeteringMethodIsMandatoryValidationError validationError)
         {
-            GsrnNumber = gsrnNumber;
-            MeteringPointSubType = meteringPointSubType;
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new("D02", $"Metering method is missing.");
         }
-
-        public string GsrnNumber { get; }
-
-        public string MeteringPointSubType { get; }
     }
 }

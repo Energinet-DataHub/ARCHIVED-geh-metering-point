@@ -83,7 +83,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     .HasColumnName("ConnectionState_EffectiveDate");
             });
 
-            builder.Property<MeteringMethod>("_meteringPointSubType")
+            builder.Property<MeteringMethod>("_meteringMethod")
                 .HasColumnName("MeteringPointSubType")
                 .HasConversion(
                     toDbValue => toDbValue.Name,

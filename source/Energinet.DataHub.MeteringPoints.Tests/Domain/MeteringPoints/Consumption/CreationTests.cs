@@ -36,19 +36,17 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             var meteringPointId = MeteringPointId.New();
             var meteringPointGsrn = GsrnNumber.Create(SampleData.GsrnNumber);
             var isOfficielAddress = SampleData.IsOfficialAddress;
-            var meteringPointSubtype = MeteringMethod.Physical;
+            var meteringMethod = MeteringMethod.Virtual;
             var gridAreadLinkId = new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId));
             var powerPlanGsrn = GsrnNumber.Create(SampleData.PowerPlant);
-            var netSettlementGroup = NetSettlementGroup.Six;
+            var netSettlementGroup = NetSettlementGroup.Zero;
             var locationDescription = LocationDescription.Create(string.Empty);
             var measurementUnitType = MeasurementUnitType.KWh;
-            var meterNumber = MeterId.Create("A1234");
             var readingOccurrence = ReadingOccurrence.Hourly;
             var powerLimit = PowerLimit.Create(0, 0);
             var effectiveDate = EffectiveDate.Create(SampleData.EffectiveDate);
             var settlementMethod = SettlementMethod.Flex;
             var disconnectionType = DisconnectionType.Manual;
-            var connectionType = ConnectionType.Installation;
             var assetType = AssetType.GasTurbine;
             var address = Address.Create(
                 streetName: "Test Street",
@@ -73,13 +71,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                     Address = address,
                     GridAreaLinkId = gridAreadLinkId,
                     LocationDescription = locationDescription,
-                    MeterNumber = meterNumber,
                     PowerLimit = powerLimit,
                     DisconnectionType = disconnectionType,
-                    ConnectionType = connectionType,
-                    ScheduledMeterReadingDate = scheduledMeterReadingDate,
+                    ConnectionType = null,
+                    ScheduledMeterReadingDate = null,
                     Capacity = capacity,
                     NetSettlementGroup = netSettlementGroup,
+                    MeterNumber = null,
+                    MeteringMethod = meteringMethod,
                 };
 
             var meteringPoint = ConsumptionMeteringPoint.Create(meteringPointDetails);
@@ -100,22 +99,19 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(meteringPointId.Value, createdEvent.MeteringPointId);
             Assert.Equal(meteringPointGsrn.Value, createdEvent.GsrnNumber);
             Assert.Equal(isOfficielAddress, createdEvent.IsOfficialAddress);
-            Assert.Equal(meteringPointSubtype.Name, createdEvent.MeteringPointSubType);
+            Assert.Equal(meteringMethod.Name, createdEvent.MeteringPointSubType);
             Assert.Equal(gridAreadLinkId.Value, createdEvent.GridAreaLinkId);
             Assert.Equal(meteringPointDetails.NetSettlementGroup.Name, createdEvent.NetSettlementGroup);
             Assert.Equal(powerPlanGsrn.Value, createdEvent.PowerPlantGsrnNumber);
             Assert.Equal(locationDescription.Value, createdEvent.LocationDescription);
             Assert.Equal(measurementUnitType.Name, createdEvent.UnitType);
-            Assert.Equal(meterNumber.Value, createdEvent.MeterNumber);
             Assert.Equal(readingOccurrence.Name, createdEvent.ReadingOccurrence);
             Assert.Equal(powerLimit.Ampere, createdEvent.MaximumCurrent);
             Assert.Equal(powerLimit.Kwh, createdEvent.MaximumPower);
             Assert.Equal(effectiveDate.DateInUtc, createdEvent.EffectiveDate);
             Assert.Equal(settlementMethod.Name, createdEvent.SettlementMethod);
             Assert.Equal(disconnectionType.Name, createdEvent.DisconnectionType);
-            Assert.Equal(connectionType.Name, createdEvent.ConnectionType);
             Assert.Equal(assetType.Name, createdEvent.AssetType);
-            Assert.Equal(scheduledMeterReadingDate.MonthAndDay, createdEvent.ScheduledMeterReadingDate);
             Assert.Equal(capacity.Kw, createdEvent.Capacity);
         }
 

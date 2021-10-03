@@ -17,13 +17,13 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class MeteringPointSubTypeMustBePhysicalOrVirtualErrorConverter : ErrorConverter<MeteringPointSubTypeMustBePhysicalOrVirtualValidationError>
+    public class InvalidMeteringMethodRuleErrorConverter : ErrorConverter<InvalidMeteringMethodRuleError>
     {
-        protected override ErrorMessage Convert(MeteringPointSubTypeMustBePhysicalOrVirtualValidationError validationError)
+        protected override ErrorMessage Convert(InvalidMeteringMethodRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D37", $"Sub type {validationError.MeteringPointSubType} not allowed: the sub type for metering point {validationError.GsrnNumber} must be Physical (D01) or Virtual (D02) if type is Other consumption (D17) or Other production (D18) or Exchange - Reactive energy (D20).");
+            return new("D02", $"Metering method {validationError.MeteringMethod} has wrong value (outside domain)");
         }
     }
 }

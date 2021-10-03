@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class MeteringPointSubTypeMandatoryValidationError : ValidationError
+    public class InvalidMeteringMethodRuleError : ValidationError
     {
-        public MeteringPointSubTypeMandatoryValidationError(string gsrnNumber)
+        public InvalidMeteringMethodRuleError(string meteringMethod)
         {
-            GsrnNumber = gsrnNumber;
+            MeteringMethod = meteringMethod;
         }
 
-        public string GsrnNumber { get; }
+        public string MeteringMethod { get; }
     }
 }
