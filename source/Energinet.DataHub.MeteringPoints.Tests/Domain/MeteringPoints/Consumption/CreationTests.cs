@@ -20,6 +20,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
@@ -276,6 +277,21 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             var checkResult = CheckCreationRules(details);
 
             AssertContainsValidationError<CapacityIsRequiredRuleError>(checkResult);
+        }
+
+        [Fact]
+        public void Asset_type_is_required_for_net_settlement_groups_other_than_0()
+        {
+            var details = CreateDetails()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.Six,
+                    AssetType = null,
+                };
+
+            var checkResult = CheckCreationRules(details);
+
+            AssertContainsValidationError<AssetTypeIsRequiredRuleError>(checkResult);
         }
 
         private static BusinessRulesValidationResult CheckCreationRules(MeteringPointDetails meteringPointDetails)

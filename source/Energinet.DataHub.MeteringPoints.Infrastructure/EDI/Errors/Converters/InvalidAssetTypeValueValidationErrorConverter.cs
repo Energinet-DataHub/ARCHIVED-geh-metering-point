@@ -17,13 +17,13 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class AssetTypeMandatoryErrorConverter : ErrorConverter<AssetTypeMandatoryValidationError>
+    public class InvalidAssetTypeValueValidationErrorConverter : ErrorConverter<InvalidAssetTypeValueValidationError>
     {
-        protected override ErrorMessage Convert(AssetTypeMandatoryValidationError validationError)
+        protected override ErrorMessage Convert(InvalidAssetTypeValueValidationError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D59", $"AssetType for metering point {validationError.GsrnNumber} is missing. It must be applied for Production (E18) and Consumption (E17) in net settlement groups other than 0.");
+            return new ErrorMessage("D59", $"AssetType {validationError.AssetType} has wrong value (outside domain).");
         }
     }
 }

@@ -158,6 +158,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 new ScheduledMeterReadingDateRule(meteringPointDetails.ScheduledMeterReadingDate,
                     meteringPointDetails.NetSettlementGroup),
                 new CapacityRequirementRule(meteringPointDetails.Capacity, meteringPointDetails.NetSettlementGroup),
+                new AssetTypeRequirementRule(meteringPointDetails.AssetType, meteringPointDetails.NetSettlementGroup),
             };
 
             return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
