@@ -75,24 +75,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 {
                     Address = address,
                 };
-            // var details = new MeteringPointDetails(
-            //     MeteringPointId.New(),
-            //     GsrnNumber.Create(SampleData.GsrnNumber),
-            //     address,
-            //     EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
-            //     GridAreaLinkId.New(),
-            //     GsrnNumber.Create(SampleData.PowerPlant),
-            //     LocationDescription.Create(SampleData.LocationDescription),
-            //     MeterId.Create(SampleData.MeterNumber),
-            //     ReadingOccurrence.Hourly,
-            //     PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
-            //     EffectiveDate.Create(SampleData.EffectiveDate),
-            //     SettlementMethod.Flex,
-            //     NetSettlementGroup.Six,
-            //     DisconnectionType.Remote,
-            //     ConnectionType.Installation,
-            //     AssetType.Boiler,
-            //     ScheduledMeterReadingDate.Create("0101"));
+
             var checkResult = MarketMeteringPoint.CanCreate(details);
 
             AssertError<GeoInfoReferenceIsRequiredRuleError>(checkResult, true);
@@ -128,7 +111,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 ReadingOccurrence.Hourly,
                 PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
                 EffectiveDate.Create(SampleData.EffectiveDate),
-                Capacity.Create(SampleData.Capacity));
+                Capacity.Create(SampleData.Capacity),
+                ConnectionType.Installation);
         }
     }
 }

@@ -35,7 +35,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit powerLimit,
             EffectiveDate effectiveDate,
-            Capacity? capacity)
+            Capacity? capacity,
+            ConnectionType? connectionType)
             : base(
                 id,
                 gsrnNumber,
@@ -50,7 +51,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 meterReadingOccurrence,
                 powerLimit,
                 effectiveDate,
-                capacity)
+                capacity,
+                connectionType)
         {
         }
 

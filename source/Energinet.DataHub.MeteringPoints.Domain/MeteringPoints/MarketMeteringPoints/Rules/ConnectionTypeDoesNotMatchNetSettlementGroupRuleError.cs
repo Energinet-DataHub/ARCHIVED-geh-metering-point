@@ -14,18 +14,18 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
 {
-    public class ConnectionTypeMandatoryValidationError : ValidationError
+    public class ConnectionTypeDoesNotMatchNetSettlementGroupRuleError : ValidationError
     {
-        public ConnectionTypeMandatoryValidationError(string gsrnNumber, string? connectionType)
+        public ConnectionTypeDoesNotMatchNetSettlementGroupRuleError(string connectionType, string netSettlementGroup)
         {
-            GsrnNumber = gsrnNumber;
             ConnectionType = connectionType;
+            NetSettlementGroup = netSettlementGroup;
         }
 
-        public string GsrnNumber { get; }
+        public string ConnectionType { get; set; }
 
-        public string? ConnectionType { get; }
+        public string NetSettlementGroup { get; set; }
     }
 }

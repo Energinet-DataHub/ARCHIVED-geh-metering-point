@@ -31,9 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         private SettlementMethod _settlementMethod;
         private NetSettlementGroup _netSettlementGroup;
         private DisconnectionType _disconnectionType;
-        private ConnectionType _connectionType;
         private AssetType? _assetType;
-        private bool _isAddressWashable;
         private ScheduledMeterReadingDate? _scheduledMeterReadingDate;
 
         private ConsumptionMeteringPoint(
@@ -52,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             SettlementMethod settlementMethod,
             NetSettlementGroup netSettlementGroup,
             DisconnectionType disconnectionType,
-            ConnectionType connectionType,
+            ConnectionType? connectionType,
             AssetType? assetType,
             ScheduledMeterReadingDate? scheduledMeterReadingDate,
             Capacity? capacity)
@@ -70,12 +68,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meterReadingOccurrence,
                 powerLimit,
                 effectiveDate,
-                capacity)
+                capacity,
+                connectionType)
         {
             _settlementMethod = settlementMethod;
             _netSettlementGroup = netSettlementGroup;
             _disconnectionType = disconnectionType;
-            _connectionType = connectionType;
             _assetType = assetType;
             _productType = ProductType.EnergyActive;
             ConnectionState = ConnectionState.New();
@@ -110,7 +108,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 powerLimit.Kwh,
                 effectiveDate.DateInUtc,
                 _disconnectionType.Name,
-                _connectionType.Name,
+                ConnectionType?.Name,
                 _assetType.Name,
                 ConnectionState.PhysicalState.Name,
                 _scheduledMeterReadingDate?.MonthAndDay,

@@ -13,17 +13,18 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class ConnectionTypeMandatoryErrorConverter : ErrorConverter<ConnectionTypeMandatoryValidationError>
+    public class InvalidConnectionTypeRuleErrorConverter : ErrorConverter<InvalidConnectionTypeRuleError>
     {
-        protected override ErrorMessage Convert(ConnectionTypeMandatoryValidationError validationError)
+        protected override ErrorMessage Convert(InvalidConnectionTypeRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D02", $"Connection type {validationError.ConnectionType} for metering point {validationError.GsrnNumber} with net settlement group not 0 is missing (type E17/E18) or not allowed (other types/nsg)");
+            return new("D02", $"Connection type {validationError.ConnectionType} has wrong value (outside domain)");
         }
     }
 }
