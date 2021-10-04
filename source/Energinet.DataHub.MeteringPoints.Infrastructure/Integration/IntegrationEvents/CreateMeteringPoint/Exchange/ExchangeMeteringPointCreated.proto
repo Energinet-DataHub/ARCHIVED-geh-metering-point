@@ -60,7 +60,7 @@ message ExchangeMeteringPointCreated {
   MeteringMethod metering_method = 6; // Metering method denotes where energy quantities originate
   MeterReadingPeriodicity meter_reading_periodicity = 7; // Denotes how often a energy quantity is read on a metering point
   ProductType product = 8; // Denotes the product type
-  ConnectionState connection_state = 9; // Denotes which connection state a metering point is created with. For a production metering point this is always "New"
+  ConnectionState connection_state = 9; // Denotes which connection state a metering point is created with. For an exchange metering point this is always "New"
   UnitType unit_type = 10; // Denotes the unit type. For a production metering point this is always a variation of watt/hour 
   string effective_date = 11; // The date on which the metering point is created
 }
