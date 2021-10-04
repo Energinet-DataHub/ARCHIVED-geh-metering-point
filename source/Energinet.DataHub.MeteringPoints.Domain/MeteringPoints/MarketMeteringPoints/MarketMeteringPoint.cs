@@ -74,7 +74,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
 
         protected DisconnectionType DisconnectionType { get; private set; }
 
-        public static new BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
+        public static BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
         {
             if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
             var generalRuleCheckResult = MeteringPoint.CanCreate(meteringPointDetails);
