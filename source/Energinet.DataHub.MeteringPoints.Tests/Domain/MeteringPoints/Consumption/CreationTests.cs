@@ -294,6 +294,24 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             AssertContainsValidationError<AssetTypeIsRequiredRuleError>(checkResult);
         }
 
+        [Theory]
+        [InlineData("Profiled", true)]
+        [InlineData("NonProfiled", false)]
+        [InlineData("Flex", false)]
+        public void Settlement_method_must_be_flex_or_non_profiled(string settlementMethod, bool expectError)
+        {
+            var details = CreateDetails()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.Six,
+                    SettlementMethod = EnumerationType.FromName<SettlementMethod>(settlementMethod),
+                };
+
+            var checkResult = CheckCreationRules(details);
+
+            AssertError<InvalidSettlementMethodRuleError>(checkResult, expectError);
+        }
+
         private static BusinessRulesValidationResult CheckCreationRules(MeteringPointDetails meteringPointDetails)
         {
             return ConsumptionMeteringPoint.CanCreate(meteringPointDetails);
