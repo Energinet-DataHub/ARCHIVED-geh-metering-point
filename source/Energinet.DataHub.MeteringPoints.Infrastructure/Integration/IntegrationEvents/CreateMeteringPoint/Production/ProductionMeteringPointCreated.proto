@@ -64,7 +64,7 @@ message ProductionMeteringPointCreated {
   string metering_point_id = 1; // Unique identification for metering point
   string gsrn_number = 2; // Business facing metering point identifier
   string grid_area_code = 3; // Signifies which grid area a metering point belongs to
-  MeteringMethod metering_method = 4; // Metering method denotes how energy quantity is calculated in other domain
+  MeteringMethod metering_method = 4; // Metering method denotes where energy quantities originate
   MeterReadingPeriodicity meter_reading_periodicity = 5; // Denotes how often a energy quantity is read on a metering point
   NetSettlementGroup net_settlement_group = 6; // Denotes the net settlement group
   ProductType product = 7; // Denotes the product type

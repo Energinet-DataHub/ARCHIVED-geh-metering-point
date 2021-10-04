@@ -57,7 +57,7 @@ message ExchangeMeteringPointCreated {
   string grid_area_code = 3; // Signifies which grid area a metering point belongs to
   string to_grid_area_code = 4; // Denotes which grid area energy is exchanged to
   string from_grid_area_code = 5; // Denotes which grid area energy is exchange from
-  MeteringMethod metering_method = 6; // Metering method denotes how energy quantity is calculated in other domain
+  MeteringMethod metering_method = 6; // Metering method denotes where energy quantities originate
   MeterReadingPeriodicity meter_reading_periodicity = 7; // Denotes how often a energy quantity is read on a metering point
   ProductType product = 8; // Denotes the product type
   ConnectionState connection_state = 9; // Denotes which connection state a metering point is created with. For a production metering point this is always "New"

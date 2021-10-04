@@ -41,19 +41,19 @@ message ConsumptionMeteringPointCreated {
   
   enum SettlementMethod {
     SM_FLEX = 0;
-    SM_PROFILED = 1;
+    SM_PROFILED = 1; // Legacy method. A consumption metering point can no longer have settlement method be profiled.
     SM_NONPROFILED = 2;  
   }
   
   enum MeteringMethod {
-    MM_PHYSICAL = 0;
-    MM_VIRTUAL = 1;
-    MM_CALCULATED =2;
+    MM_PHYSICAL = 0; // Has a physical meter associated with it
+    MM_VIRTUAL = 1; // Does not have a physical meter associated with it
+    MM_CALCULATED =2; // Does not have a physical meter associated with it
   }
   
   enum MeterReadingPeriodicity {
-    MRP_HOURLY = 0;
-    MRP_QUARTERLY = 1;
+    MRP_HOURLY = 0; // Read every hour
+    MRP_QUARTERLY = 1; // Read every 15 minutes
   }
   
   enum ConnectionState {
@@ -71,7 +71,7 @@ message ConsumptionMeteringPointCreated {
   string gsrn_number = 2; // Business facing metering point identifier
   string grid_area_code = 3; // Signifies which grid area a metering point belongs to
   SettlementMethod settlement_method = 4; 
-  MeteringMethod metering_method = 5; // Metering method denotes how energy quantity is calculated in other domain
+  MeteringMethod metering_method = 5; // Metering method denotes where energy quantities originate
   MeterReadingPeriodicity meter_reading_periodicity = 6; // Denotes how often a energy quantity is read on a metering point
   NetSettlementGroup net_settlement_group = 7; // Denotes the net settlement group
   ProductType product = 8;  
