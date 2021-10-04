@@ -107,6 +107,34 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError<CreateMeteringPointRejected>("D37");
         }
 
+        [Fact]
+        public async Task Should_reject_if_asset_type_is_required_and_not_specified()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    AssetType = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D59");
+        }
+
+        [Fact]
+        public async Task Should_reject_if_asset_type_value_is_invalid()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    AssetType = "invalid_value",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D59");
+        }
+
         private static CreateMeteringPoint CreateRequest()
         {
             return new CreateMeteringPoint(

@@ -26,65 +26,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
     {
         public AssetTypeRule()
         {
-            When(IsProduction, () =>
+            When(request => string.IsNullOrWhiteSpace(request.AssetType) == false, () =>
             {
                 RuleFor(request => request.AssetType)
-                    .NotEmpty()
-                    .WithState(request => new AssetTypeMandatoryValidationError(request.GsrnNumber));
+                    .Must(value => EnumerationType.GetAll<AssetType>().Select(item => item.Name).Contains(value))
+                    .WithState(request =>
+                        new InvalidAssetTypeValueValidationError(request.AssetType!));
             });
-
-            When(IsConsumptionWithNetSettlementGroupNotZero, () =>
-            {
-                RuleFor(request => request.AssetType)
-                    .NotEmpty()
-                    .WithState(request => new AssetTypeMandatoryValidationError(request.GsrnNumber));
-            });
-
-            When(IsNotAllowedType, () =>
-            {
-                RuleFor(request => request.AssetType)
-                    .Null()
-                    .WithState(request => new AssetTypeNotAllowedValidationError(request.GsrnNumber, request.AssetType));
-            });
-
-            RuleFor(request => request.AssetType)
-                .Must(IsNullOrEmptyOrValidDomainValue)
-                .WithState(request => new AssetTypeWrongValueValidationError(request.GsrnNumber, request.AssetType));
-        }
-
-        private static bool IsConsumptionWithNetSettlementGroupNotZero(CreateMeteringPoint request)
-        {
-            return request.TypeOfMeteringPoint == MeteringPointType.Consumption.Name && request.NetSettlementGroup != NetSettlementGroup.Zero.Name;
-        }
-
-        private static bool IsProduction(CreateMeteringPoint request)
-        {
-            return request.TypeOfMeteringPoint == MeteringPointType.Production.Name;
-        }
-
-        private static bool IsNullOrEmptyOrValidDomainValue(string? assetType)
-        {
-            if (string.IsNullOrEmpty(assetType)) return true;
-
-            var allAssetTypes = EnumerationType.GetAll<AssetType>().Select(x => x.Name).ToHashSet();
-
-            return allAssetTypes.Contains(assetType);
-        }
-
-        private static bool IsNotAllowedType(CreateMeteringPoint request)
-        {
-            var notAllowedMeteringPointTypes = new HashSet<string>
-            {
-                MeteringPointType.Analysis.Name,
-                MeteringPointType.ExchangeReactiveEnergy.Name,
-                MeteringPointType.InternalUse.Name,
-                MeteringPointType.Exchange.Name,
-                MeteringPointType.GridLossCorrection.Name,
-                MeteringPointType.ElectricalHeating.Name,
-                MeteringPointType.NetConsumption.Name,
-            };
-
-            return notAllowedMeteringPointTypes.Contains(request.TypeOfMeteringPoint);
         }
     }
 }
