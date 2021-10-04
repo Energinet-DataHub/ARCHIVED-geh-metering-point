@@ -28,7 +28,6 @@ env:
   CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI/Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.csproj'
   SOLUTION_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.sln'
   ORGANISATION_NAME: 'endk'
-  AZURE_APP_NAME: 'webapi'
   PROJECT_NAME: meteringpoint
   REPOSITORY_NAME: Energinet-DataHub/geh-metering-point
 
@@ -100,6 +99,11 @@ jobs:
           name: drop
           path: drop
 
+      - name: Set dynamic environment variables
+        shell: bash
+        run: |
+          echo "AZURE_APP_NAME=app-webapi-${{ env.PROJECT_NAME }}-${{ env.ORGANISATION_NAME }}-${{ matrix.environment.short }}" >> $GITHUB_ENV
+
       - name: Setup Azure CLI
         shell: bash
         run: |
@@ -111,12 +115,12 @@ jobs:
       - name: Get function publish profile
         id: get-publish-profile
         run: |
-          publish_profile=$(az webapp deployment list-publishing-profiles --name app-${{ env.AZURE_APP_NAME }}-${{ env.PROJECT_NAME }}-${{ env.ORGANISATION_NAME }}-${{ matrix.environment.short }} --resource-group ${{ matrix.environment.long }} --subscription ${{ secrets.SUBSCRIPTION_ID }} --xml)
+          publish_profile=$(az webapp deployment list-publishing-profiles --name ${{ env.AZURE_APP_NAME }} --resource-group ${{ matrix.environment.long }} --subscription ${{ secrets.SUBSCRIPTION_ID }} --xml)
           echo "::set-output name=publish-profile::${publish_profile}"
 
       - name: Deploy App Service
         uses: azure/webapps-deploy@v2
         with:
-          app-name: "app-${{ env.AZURE_APP_NAME }}"
+          app-name: ${{ env.AZURE_APP_NAME }}
           package: ${{ github.workspace }}/drop
           publish-profile: ${{ steps.get-publish-profile.outputs.publish-profile }}
