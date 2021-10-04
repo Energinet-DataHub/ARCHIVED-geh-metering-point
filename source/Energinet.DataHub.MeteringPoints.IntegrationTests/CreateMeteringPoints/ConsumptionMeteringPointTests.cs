@@ -148,22 +148,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task Should_reject_when_settlement_method_does_not_match_net_settlement_group()
-        {
-            var request = CreateRequest()
-                with
-                {
-                    ScheduledMeterReadingDate = null,
-                    NetSettlementGroup = NetSettlementGroup.One.Name,
-                    SettlementMethod = SettlementMethod.Profiled.Name,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError<CreateMeteringPointRejected>("D15");
-        }
-
-        [Fact]
         public async Task Should_reject_when_net_settlement_group_is_missing()
         {
             var request = CreateRequest()

@@ -24,7 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
             return new ErrorMessage(
                 "D15",
-                $"Settlement method {validationError.SettlementMethod} not allowed: settlement method must be non-profiled or flex settled if a consumption metering point is in net settlement group 1 or 2.");
+                $"Settlement method {validationError.SettlementMethod} not allowed: settlement method must be non-profiled or flex settled.");
         }
     }
 }
