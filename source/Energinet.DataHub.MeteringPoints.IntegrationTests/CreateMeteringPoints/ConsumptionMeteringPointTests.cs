@@ -16,6 +16,7 @@ using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
@@ -226,6 +227,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                     PowerPlant = SampleData.PowerPlantGsrnNumber,
                     NetSettlementGroup = NetSettlementGroup.One.Name,
                     ScheduledMeterReadingDate = "0101",
+                    ConnectionType = ConnectionType.Installation.Name,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
@@ -277,7 +279,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SampleData.IsWashable,
                 SampleData.GsrnNumber,
                 SampleData.TypeOfMeteringPoint,
-                MeteringPointSubType.Calculated.Name,
+                MeteringMethod.Calculated.Name,
                 SampleData.ReadingOccurrence,
                 0,
                 0,
@@ -292,7 +294,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 Guid.NewGuid().ToString(),
                 SampleData.PhysicalState,
                 NetSettlementGroup.Six.Name,
-                SampleData.ConnectionType,
+                ConnectionType.Installation.Name,
                 SampleData.AssetType,
                 "123",
                 ToGrid: "456",

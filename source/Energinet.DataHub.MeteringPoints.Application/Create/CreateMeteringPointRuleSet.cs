@@ -37,12 +37,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation
                         .WithState(value => new InvalidScheduledMeterReadingDateRuleError());
                 });
             });
+            RuleFor(request => request).SetValidator(new ConnectionTypeRule());
             RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberMustBeValidRule());
             RuleFor(request => request).SetValidator(new SettlementMethodMustBeValidRule());
             RuleFor(request => request).SetValidator(new MeteringGridAreaValidRule());
             RuleFor(request => request.EffectiveDate).SetValidator(new EffectiveDateRule());
             RuleFor(request => request).SetValidator(new MeteringPointTypeValidRule());
-            RuleFor(request => request).SetValidator(new MeteringPointSubTypeMustBeValidRule());
+            RuleFor(request => request).SetValidator(new MeteringMethodMustBeValidRule());
             RuleFor(request => request).SetValidator(new MeterNumberMustBeValidRule());
             RuleFor(request => request).SetValidator(new NetSettlementGroupRule());
             RuleFor(request => request).SetValidator(new ProductTypeRule());

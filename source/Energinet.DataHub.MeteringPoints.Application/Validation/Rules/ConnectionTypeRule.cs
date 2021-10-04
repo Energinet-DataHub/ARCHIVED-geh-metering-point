@@ -14,9 +14,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
@@ -25,107 +28,15 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
     {
         public ConnectionTypeRule()
         {
-            When(ConnectionTypeIsMandatory, () =>
+            When(request => !string.IsNullOrWhiteSpace(request.ConnectionType), () =>
             {
-                RuleFor(createMeteringPoint => createMeteringPoint.ConnectionType)
-                    .Cascade(CascadeMode.Stop)
-                    .NotEmpty()
-                    .WithState(createMeteringPoint =>
-                        new ConnectionTypeMandatoryValidationError(
-                            createMeteringPoint.GsrnNumber,
-                            createMeteringPoint.ConnectionType));
+                RuleFor(request => request.ConnectionType)
+                    .Must(value => EnumerationType
+                        .GetAll<ConnectionType>()
+                        .Select(item => item.Name)
+                        .Contains(value, StringComparer.OrdinalIgnoreCase))
+                    .WithState(request => new InvalidConnectionTypeRuleError(request.ConnectionType !));
             });
-
-            When(ConnectionTypeIsNotAllowed, () =>
-            {
-                RuleFor(createMeteringPoint => createMeteringPoint.ConnectionType)
-                    .Cascade(CascadeMode.Stop)
-                    .Empty()
-                    .WithState(createMeteringPoint =>
-                        new ConnectionTypeMandatoryValidationError(
-                            createMeteringPoint.GsrnNumber,
-                            createMeteringPoint.ConnectionType));
-            });
-
-            When(createMeteringPoint => createMeteringPoint.ConnectionType?.Length > 0, () =>
-            {
-                When(NetSettlementGroupIsThreeOrSix, () =>
-                    {
-                        RuleFor(createMeteringPoint => createMeteringPoint.ConnectionType)
-                            .Must(connectionType => ConnectionType.Installation.Name == connectionType)
-                            .WithState(createMeteringPoint =>
-                                new ConnectionTypeNetSettlementGroupValidationError(
-                                    createMeteringPoint.GsrnNumber,
-                                    createMeteringPoint.ConnectionType,
-                                    createMeteringPoint.NetSettlementGroup));
-                    })
-                    .Otherwise(AllowedConnectionTypesAction);
-            });
-        }
-
-        private static bool ConnectionTypeIsNotAllowed(CreateMeteringPoint createMeteringPoint)
-        {
-            return NetSettlementGroupIsZero(createMeteringPoint) &&
-                   ProductOrConsumptionMeteringPointTypes(createMeteringPoint);
-        }
-
-        private static bool AllowedConnectionTypes(string? connectionType)
-        {
-            if (string.IsNullOrEmpty(connectionType)) return false;
-
-            return new HashSet<string>
-                {
-                    ConnectionType.Direct.Name,
-                    ConnectionType.Installation.Name,
-                }
-                .Contains(connectionType);
-        }
-
-        private static bool ConnectionTypeIsMandatory(CreateMeteringPoint createMeteringPoint)
-        {
-            return ProductOrConsumptionMeteringPointTypes(createMeteringPoint) &&
-                   !NetSettlementGroupIsZero(createMeteringPoint);
-        }
-
-        private static bool NetSettlementGroupIsZero(CreateMeteringPoint createMeteringPoint)
-        {
-            return NetSettlementGroup.Zero.Name.Equals(createMeteringPoint.NetSettlementGroup, StringComparison.Ordinal);
-        }
-
-        private static bool NetSettlementGroupIsThreeOrSix(CreateMeteringPoint createMeteringPoint)
-        {
-            return NetSettlementGroupIsThree(createMeteringPoint)
-                   || NetSettlementGroupIsSix(createMeteringPoint);
-        }
-
-        private static bool NetSettlementGroupIsThree(CreateMeteringPoint createMeteringPoint)
-        {
-            return NetSettlementGroup.Three.Name.Equals(createMeteringPoint.NetSettlementGroup, StringComparison.Ordinal);
-        }
-
-        private static bool NetSettlementGroupIsSix(CreateMeteringPoint createMeteringPoint)
-        {
-            return NetSettlementGroup.Six.Name.Equals(createMeteringPoint.NetSettlementGroup, StringComparison.Ordinal);
-        }
-
-        private static bool ProductOrConsumptionMeteringPointTypes(CreateMeteringPoint createMeteringPoint)
-        {
-            return new HashSet<string>
-                {
-                    MeteringPointType.Production.Name,
-                    MeteringPointType.Consumption.Name,
-                }
-                .Contains(createMeteringPoint.TypeOfMeteringPoint);
-        }
-
-        private void AllowedConnectionTypesAction()
-        {
-            RuleFor(createMeteringPoint => createMeteringPoint.ConnectionType)
-                .Must(AllowedConnectionTypes)
-                .WithState(createMeteringPoint =>
-                    new ConnectionTypeWrongValueValidationError(
-                        createMeteringPoint.GsrnNumber,
-                        createMeteringPoint.ConnectionType));
         }
     }
 }

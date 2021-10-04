@@ -12,11 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Domain.Addresses;
-using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using BenchmarkDotNet.Attributes;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
@@ -25,7 +23,7 @@ using Xunit.Categories;
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMeteringPoints
 {
     [UnitTest]
-    public class CreationTests
+    public class CreationTests : TestBase
     {
         [Fact]
         public void Should_return_error__meter_reading_occurrence_is_not_quarterly_or_hourly()
@@ -39,45 +37,83 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             var result = MarketMeteringPoint.CanCreate(details);
 
             Assert.False(result.Success);
-            Assert.Contains(result.Errors, e => e is InvalidMeterReadingOccurrenceRuleError);
+            AssertError<InvalidMeterReadingOccurrenceRuleError>(result, true);
         }
 
-        private static MeteringPointDetails CreateDetails()
+        [Fact]
+        public void Connection_type_is_required_when_net_settlement_group_is_not_0()
         {
-            var address = Address.Create(
-                SampleData.StreetName,
-                SampleData.StreetCode,
-                SampleData.BuildingNumber,
-                SampleData.CityName,
-                SampleData.CitySubdivision,
-                SampleData.PostCode,
-                EnumerationType.FromName<CountryCode>(SampleData.CountryCode),
-                SampleData.Floor,
-                SampleData.Room,
-                SampleData.MunicipalityCode,
-                SampleData.IsOfficialAddress,
-                SampleData.GeoInfoReference);
+            var details = CreateDetails()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.Six,
+                    ConnectionType = null,
+                };
 
-            var details = new MeteringPointDetails(
-                MeteringPointId.New(),
-                GsrnNumber.Create(SampleData.GsrnNumber),
-                address,
-                EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
-                new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
-                GsrnNumber.Create(SampleData.PowerPlant),
-                LocationDescription.Create(SampleData.LocationDescription),
-                string.IsNullOrWhiteSpace(SampleData.MeterNumber) ? null : MeterId.Create(SampleData.MeterNumber),
-                ReadingOccurrence.Hourly,
-                PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
-                EffectiveDate.Create(SampleData.EffectiveDate),
-                SettlementMethod.Flex,
-                NetSettlementGroup.Six,
-                DisconnectionType.Remote,
-                ConnectionType.Installation,
-                AssetType.WindTurbines,
-                ScheduledMeterReadingDate.Create("0101"));
+            var result = MarketMeteringPoint.CanCreate(details);
 
-            return details;
+            Assert.False(result.Success);
+            AssertError<ConnectionTypeIsRequiredRuleError>(result, true);
+        }
+
+        [Fact]
+        public void Connection_type_is_not_allowed_for_net_settlement_group_0()
+        {
+            var details = CreateDetails()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.Zero,
+                    ConnectionType = ConnectionType.Installation,
+                };
+
+            var result = MarketMeteringPoint.CanCreate(details);
+
+            Assert.False(result.Success);
+            AssertError<ConnectionTypeIsNotAllowedRuleError>(result, true);
+        }
+
+        [Fact]
+        public void Connection_type_must_match_net_settlement_group()
+        {
+            var details = CreateDetails()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.Six,
+                    ConnectionType = ConnectionType.Direct,
+                };
+
+            var result = MarketMeteringPoint.CanCreate(details);
+
+            AssertError<ConnectionTypeDoesNotMatchNetSettlementGroupRuleError>(result, true);
+        }
+
+        [Theory]
+        [InlineData("Zero", "Physical", false)]
+        [InlineData("One", "Physical", true)]
+        [InlineData("One", "Virtual", false)]
+        [InlineData("One", "Calculated", false)]
+        [InlineData("Two", "Physical", true)]
+        [InlineData("Two", "Virtual", false)]
+        [InlineData("Two", "Calculated", false)]
+        [InlineData("Three", "Physical", true)]
+        [InlineData("Three", "Virtual", false)]
+        [InlineData("Three", "Calculated", false)]
+        [InlineData("Six", "Physical", true)]
+        [InlineData("Six", "Virtual", false)]
+        [InlineData("Six", "Calculated", false)]
+        [InlineData("NinetyNine", "Physical", false)]
+        public void Metering_method_must_be_virtual_or_calculated_when_net_settlement_group_is_not_0_or_99(string netSettlementGroup, string meteringMethod, bool expectError)
+        {
+            var details = CreateDetails()
+                with
+                {
+                    NetSettlementGroup = EnumerationType.FromName<NetSettlementGroup>(netSettlementGroup),
+                    MeteringMethod = EnumerationType.FromName<MeteringMethod>(meteringMethod),
+                };
+
+            var result = MarketMeteringPoint.CanCreate(details);
+
+            AssertError<MeteringMethodDoesNotMatchNetSettlementGroupRuleError>(result, expectError);
         }
     }
 }

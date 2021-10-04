@@ -36,6 +36,7 @@ module "azfun_outbox" {
     METERINGPOINT_QUEUE_TOPIC_NAME          = module.sbq_meteringpoint.name
     SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING = data.azurerm_key_vault_secret.INTEGRATION_EVENTS_SENDER_CONNECTION_STRING.value
     METERING_POINT_CREATED_TOPIC            = "metering-point-created"
+    CONSUMPTION_METERING_POINT_CREATED_TOPIC = "consumption-metering-point-created"
     METERING_POINT_CONNECTED_TOPIC          = "metering-point-connected"
     ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER  = "*/10 * * * * *"
     EVENT_MESSAGE_DISPATCH_TRIGGER_TIMER  = "*/10 * * * * *"

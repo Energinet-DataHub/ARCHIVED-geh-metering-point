@@ -28,6 +28,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public static readonly MeasurementUnitType MVAr = new MeasurementUnitType(7, nameof(MVAr));
         public static readonly MeasurementUnitType DanishTariffCode = new MeasurementUnitType(8, nameof(DanishTariffCode));
         public static readonly MeasurementUnitType STK = new MeasurementUnitType(9, nameof(STK));
+        public static readonly MeasurementUnitType Wh = new MeasurementUnitType(10, nameof(Wh));
+        public static readonly MeasurementUnitType GWh = new MeasurementUnitType(11, nameof(GWh));
 
         private MeasurementUnitType(int id, string name)
             : base(id, name)

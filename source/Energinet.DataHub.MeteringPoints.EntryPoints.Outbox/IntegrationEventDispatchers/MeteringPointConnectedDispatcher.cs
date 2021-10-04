@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
@@ -21,9 +24,19 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDi
 {
     public class MeteringPointConnectedDispatcher : IntegrationEventDispatcher<MeteringPointConnectedTopic, MeteringPointConnectedIntegrationEvent>
     {
-        public MeteringPointConnectedDispatcher(ITopicSender<MeteringPointConnectedTopic> topicSender, ProtobufOutboundMapper<MeteringPointConnectedIntegrationEvent> mapper)
-            : base(topicSender, mapper)
+        private readonly IIntegrationEventMessageFactory _integrationEventMessageFactory;
+
+        public MeteringPointConnectedDispatcher(ITopicSender<MeteringPointConnectedTopic> topicSender, ProtobufOutboundMapper<MeteringPointConnectedIntegrationEvent> mapper, IIntegrationEventMessageFactory integrationEventMessageFactory, IIntegrationMetadataContext integrationMetadataContext)
+            : base(topicSender, mapper, integrationEventMessageFactory, integrationMetadataContext)
         {
+            _integrationEventMessageFactory = integrationEventMessageFactory;
+        }
+
+        protected override void EnrichMessage(ServiceBusMessage serviceBusMessage)
+        {
+            serviceBusMessage.EnrichMetadata(
+                nameof(MeteringPointCreated),
+                1);
         }
     }
 }

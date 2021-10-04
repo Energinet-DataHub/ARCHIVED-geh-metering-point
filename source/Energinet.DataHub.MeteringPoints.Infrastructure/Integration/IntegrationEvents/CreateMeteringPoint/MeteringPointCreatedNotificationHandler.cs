@@ -37,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 notification.MeteringPointType.Name,
                 notification.GridAreaLinkId.Value.ToString(),
                 notification.SettlementMethod?.Name ?? string.Empty,
-                notification.MeteringPointSubType.Name,
+                notification.MeteringMethod.Name,
                 notification.PhysicalState.Name,
                 notification.ReadingOccurrence.Name,
                 notification.NetSettlementGroup?.Name ?? string.Empty,

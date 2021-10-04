@@ -105,14 +105,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         }
 
         [Theory]
-        [InlineData("Physical", typeof(MeteringPointSubTypeMandatoryValidationError), false)]
-        [InlineData("", typeof(MeteringPointSubTypeMandatoryValidationError), true)]
+        [InlineData("Physical", typeof(MeteringMethodIsMandatoryValidationError), false)]
+        [InlineData("", typeof(MeteringMethodIsMandatoryValidationError), true)]
         public void Validate_MandatorySubTypeOfMP(string subTypeOfMeteringPoint, System.Type validationError, bool expectedError)
         {
             var businessRequest = CreateRequest() with
             {
                 GsrnNumber = SampleData.GsrnNumber,
-                SubTypeOfMeteringPoint = subTypeOfMeteringPoint,
+                MeteringMethod = subTypeOfMeteringPoint,
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);

@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using MediatR;
 using Xunit;
@@ -62,13 +63,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task CreateMeteringPoint_WithNoValidationErrors_ShouldGenerateIntegrationEventInOutbox()
+        public async Task ConsumptionCreateMeteringPoint_WithNoValidationErrors_ShouldGenerateIntegrationEventInOutbox()
         {
             var request = CreateRequest();
 
             await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
 
-            AssertOutboxMessage<MeteringPointCreatedEventMessage>();
+            AssertOutboxMessage<ConsumptionMeteringPointCreatedIntegrationEvent>();
         }
 
         [Fact]
@@ -171,13 +172,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task Should_reject_if_subtype_is_physical_and_meter_identification_is_undefined()
+        public async Task Should_reject_if_metering_method_is_physical_and_meter_identification_is_undefined()
         {
             var request = CreateRequest()
                 with
                 {
                     MeterNumber = null,
-                    SubTypeOfMeteringPoint = MeteringPointSubType.Physical.Name,
+                    MeteringMethod = MeteringMethod.Physical.Name,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
@@ -186,13 +187,48 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task Should_reject_if_subtype_is_not_physical_and_meter_identification_is_defined()
+        public async Task Should_reject_if_metering_method_is_not_physical_and_meter_identification_is_defined()
         {
             var request = CreateRequest()
                 with
                 {
                     MeterNumber = SampleData.MeterNumber,
-                    SubTypeOfMeteringPoint = MeteringPointSubType.Virtual.Name,
+                    MeteringMethod = MeteringMethod.Virtual.Name,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("E86");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_capacity_is_required_but_not_specified()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.One.Name,
+                    ConnectionType = ConnectionType.Installation.Name,
+                    PhysicalConnectionCapacity = null,
+                    MeteringMethod = MeteringMethod.Calculated.Name,
+                    MeterNumber = null,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D56");
+        }
+
+        [Fact]
+        public async Task Should_reject_if_capacity_is_invalid()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.One.Name,
+                    PhysicalConnectionCapacity = "123.3333670",
+                    MeteringMethod = MeteringMethod.Calculated.Name,
+                    MeterNumber = null,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
@@ -228,6 +264,52 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError<CreateMeteringPointRejected>("D63");
+        }
+
+        [Fact]
+        public async Task Should_reject_if_connection_type_is_unknown()
+        {
+            var invalidConnectionType = "invalid_value";
+            var request = CreateRequest()
+                with
+                {
+                    ConnectionType = invalidConnectionType,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
+        }
+
+        [Fact]
+        public async Task Should_reject_if_connection_type_is_not_allowed()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    ConnectionType = ConnectionType.Installation.Name,
+                    NetSettlementGroup = NetSettlementGroup.Zero.Name,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("invalid_value")]
+        public async Task Should_reject_when_metering_method_is_missing_or_is_invalid(string meteringMethod)
+        {
+            var request = CreateRequest()
+                with
+                {
+                    MeteringMethod = meteringMethod,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
         }
 
         private static CreateMeteringPoint CreateRequest()

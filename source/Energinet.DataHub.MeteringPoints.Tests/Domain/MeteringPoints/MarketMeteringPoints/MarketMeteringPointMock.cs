@@ -15,6 +15,7 @@
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMeteringPoints
@@ -25,7 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            MeteringPointSubType meteringPointSubType,
+            MeteringMethod meteringMethod,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
@@ -34,12 +35,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             MeterId meterNumber,
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit powerLimit,
-            EffectiveDate effectiveDate)
+            EffectiveDate effectiveDate,
+            Capacity? capacity,
+            ConnectionType? connectionType,
+            DisconnectionType disconnectionType)
             : base(
                 id,
                 gsrnNumber,
                 address,
-                meteringPointSubType,
+                meteringMethod,
                 meteringPointType,
                 gridAreaLinkId,
                 powerPlantGsrnNumber,
@@ -48,7 +52,10 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 meterNumber,
                 meterReadingOccurrence,
                 powerLimit,
-                effectiveDate)
+                effectiveDate,
+                capacity,
+                connectionType,
+                disconnectionType)
         {
         }
 
