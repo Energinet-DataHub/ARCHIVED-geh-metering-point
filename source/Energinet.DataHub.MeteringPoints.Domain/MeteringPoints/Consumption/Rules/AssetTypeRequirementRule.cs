@@ -12,17 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules
 {
-    public class InvalidAssetTypeValueValidationError : ValidationError
+    public class AssetTypeRequirementRule : IBusinessRule
     {
-        public InvalidAssetTypeValueValidationError(string assetType)
+        public AssetTypeRequirementRule(AssetType? assetType, NetSettlementGroup netSettlementGroup)
         {
-            AssetType = assetType;
+            IsBroken = netSettlementGroup != NetSettlementGroup.Zero && assetType is null;
         }
 
-        public string? AssetType { get; }
+        public bool IsBroken { get; }
+
+        public ValidationError ValidationError => new AssetTypeIsRequiredRuleError();
     }
 }
