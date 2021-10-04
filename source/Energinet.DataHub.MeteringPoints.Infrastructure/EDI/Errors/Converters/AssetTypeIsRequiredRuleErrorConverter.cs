@@ -24,7 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D59", $"AssetType is missing. It must be applied for Production (E18) and Consumption (E17) in net settlement groups other than 0.");
+            return new("D59", $"AssetType is missing. It must be applied for Consumption (E17) in net settlement groups other than 0.");
         }
     }
 }
