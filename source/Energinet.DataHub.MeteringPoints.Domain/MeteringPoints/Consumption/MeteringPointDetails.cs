@@ -32,7 +32,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         SettlementMethod SettlementMethod,
         NetSettlementGroup NetSettlementGroup,
         DisconnectionType DisconnectionType,
-        ConnectionType ConnectionType,
+        ConnectionType? ConnectionType,
         AssetType? AssetType,
-        ScheduledMeterReadingDate? ScheduledMeterReadingDate);
+        ScheduledMeterReadingDate? ScheduledMeterReadingDate,
+        Capacity? Capacity);
 }

@@ -14,16 +14,17 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class ConnectionTypeNetSettlementGroupErrorConverter : ErrorConverter<ConnectionTypeNetSettlementGroupValidationError>
+    public class ConnectionTypeIsRequiredRuleErrorConverter : ErrorConverter<ConnectionTypeIsRequiredRuleError>
     {
-        protected override ErrorMessage Convert(ConnectionTypeNetSettlementGroupValidationError validationError)
+        protected override ErrorMessage Convert(ConnectionTypeIsRequiredRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D55", $"Connection type {validationError.ConnectionType} not allowed: the connection type for metering point {validationError.GsrnNumber} must be Installation connected (D02) if net settlement group is {validationError.NetSettlementGroup}.");
+            return new("D02", $"Connection type is required for net settlement groups other than 0 for type Consumption/Production).");
         }
     }
 }

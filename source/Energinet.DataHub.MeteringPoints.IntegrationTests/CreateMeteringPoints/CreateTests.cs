@@ -200,6 +200,41 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
+        public async Task Should_reject_when_capacity_is_required_but_not_specified()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.One.Name,
+                    ConnectionType = ConnectionType.Installation.Name,
+                    PhysicalConnectionCapacity = null,
+                    SubTypeOfMeteringPoint = MeteringPointSubType.Calculated.Name,
+                    MeterNumber = null,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D56");
+        }
+
+        [Fact]
+        public async Task Should_reject_if_capacity_is_invalid()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.One.Name,
+                    PhysicalConnectionCapacity = "123.3333670",
+                    SubTypeOfMeteringPoint = MeteringPointSubType.Calculated.Name,
+                    MeterNumber = null,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("E86");
+        }
+
+        [Fact]
         public async Task Should_reject_when_geo_info_reference_is_invalid()
         {
             var invalidGeoInfoReference = "xxxxxxx";
@@ -227,6 +262,36 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError<CreateMeteringPointRejected>("D63");
+        }
+
+        [Fact]
+        public async Task Should_reject_if_connection_type_is_unknown()
+        {
+            var invalidConnectionType = "invalid_value";
+            var request = CreateRequest()
+                with
+                {
+                    ConnectionType = invalidConnectionType,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
+        }
+
+        [Fact]
+        public async Task Should_reject_if_connection_type_is_not_allowed()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    ConnectionType = ConnectionType.Installation.Name,
+                    NetSettlementGroup = NetSettlementGroup.Zero.Name,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
         }
 
         private static CreateMeteringPoint CreateRequest()

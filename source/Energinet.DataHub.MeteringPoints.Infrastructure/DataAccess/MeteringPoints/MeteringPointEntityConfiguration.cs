@@ -141,6 +141,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             builder.Property<EffectiveDate>("_effectiveDate")
                 .HasColumnName("EffectiveDate")
                 .HasConversion<DateTime>(toDbValue => toDbValue.DateInUtc.ToDateTimeUtc(), fromDbValue => EffectiveDate.Create(fromDbValue));
+
+            builder.Property<Capacity>("_capacity")
+                .HasColumnName("Capacity")
+                .HasConversion<float?>(toDbValue => toDbValue == null ? null : toDbValue.Kw!, fromDbValue => fromDbValue.HasValue ? Capacity.Create(fromDbValue.Value) : null!);
         }
     }
 
@@ -160,6 +164,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 config.Property(x => x.StartOfSupply)
                     .HasColumnName("StartOfSupplyDate");
             });
+            builder.Property<ConnectionType>("ConnectionType")
+                .HasColumnName("ConnectionType")
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<ConnectionType>(fromDbValue));
         }
     }
 
@@ -174,19 +183,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.ToTable("ConsumptionMeteringPoints", "dbo");
 
-            builder.Property<bool>("_isAddressWashable")
-                .HasColumnName("IsAddressWashable");
-
             builder.Property<AssetType>("_assetType")
                 .HasColumnName("AssetType")
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<AssetType>(fromDbValue));
-            builder.Property<ConnectionType>("_connectionType")
-                .HasColumnName("ConnectionType")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<ConnectionType>(fromDbValue));
 
             builder.Property<DisconnectionType>("_disconnectionType")
                 .HasColumnName("DisconnectionType")

@@ -54,7 +54,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 DisconnectionType.Manual,
                 ConnectionType.Installation,
                 AssetType.GasTurbine,
-                ScheduledMeterReadingDate.Create(SampleData.ScheduledMeterReadingDate));
+                ScheduledMeterReadingDate.Create(SampleData.ScheduledMeterReadingDate),
+                Capacity.Create(SampleData.Capacity));
         }
 
         protected static Address CreateAddress()

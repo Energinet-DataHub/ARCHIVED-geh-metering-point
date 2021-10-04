@@ -60,6 +60,36 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError<CreateMeteringPointRejected>("E86");
         }
 
+        [Fact]
+        public async Task Should_reject_if_net_settlement_group_is_not_0_and_connection_type_is_undefined()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.Six.Name,
+                    ConnectionType = null,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_connection_type_does_not_match_net_settlement_group()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.Six.Name,
+                    ConnectionType = ConnectionType.Direct.Name,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D55");
+        }
+
         private static CreateMeteringPoint CreateRequest()
         {
             return new CreateMeteringPoint(
@@ -91,7 +121,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 Guid.NewGuid().ToString(),
                 SampleData.PhysicalState,
                 NetSettlementGroup.Six.Name,
-                SampleData.ConnectionType,
+                ConnectionType.Installation.Name,
                 SampleData.AssetType,
                 "123",
                 ToGrid: "456",

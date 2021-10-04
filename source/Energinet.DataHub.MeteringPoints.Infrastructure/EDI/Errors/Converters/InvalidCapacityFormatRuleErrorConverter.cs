@@ -14,16 +14,17 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class ConnectionTypeWrongValueErrorConverter : ErrorConverter<ConnectionTypeWrongValueValidationError>
+    public class InvalidCapacityFormatRuleErrorConverter : ErrorConverter<InvalidCapacityFormatRuleError>
     {
-        protected override ErrorMessage Convert(ConnectionTypeWrongValueValidationError validationError)
+        protected override ErrorMessage Convert(InvalidCapacityFormatRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D02", $"Connection type {validationError.ConnectionType} for metering point {validationError.GsrnNumber} has wrong value (outside domain)");
+            return new("E86", $"Capacity {validationError.Capacity} contains a non-digit character other than a decimal point or has a length that exceeds 9.");
         }
     }
 }

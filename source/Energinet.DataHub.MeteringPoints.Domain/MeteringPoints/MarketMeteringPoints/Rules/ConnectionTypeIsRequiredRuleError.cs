@@ -14,18 +14,15 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
 {
-    public class CapacityMaximumLengthValidationError : ValidationError
+    public class ConnectionTypeIsRequiredRuleError : ValidationError
     {
-        public CapacityMaximumLengthValidationError(string gsrnNumber, string? capacity)
+        public ConnectionTypeIsRequiredRuleError(NetSettlementGroup netSettlementGroup)
         {
-            GsrnNumber = gsrnNumber;
-            Capacity = capacity;
+            NetSettlementGroup = netSettlementGroup;
         }
 
-        public string GsrnNumber { get; }
-
-        public string? Capacity { get; }
+        public NetSettlementGroup NetSettlementGroup { get; }
     }
 }

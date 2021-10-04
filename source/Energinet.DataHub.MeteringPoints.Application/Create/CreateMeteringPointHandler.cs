@@ -146,7 +146,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup!),
                 EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
                 EnumerationType.FromName<ConnectionType>(request.ConnectionType!),
-                EnumerationType.FromName<ProductType>(request.ProductType));
+                EnumerationType.FromName<ProductType>(request.ProductType),
+                Capacity.Create(request.PhysicalConnectionCapacity!));
         }
 
         private static ExchangeMeteringPoint CreateExchangeMeteringPoint(CreateMeteringPoint request, MeteringPointType meteringPointType)
@@ -168,7 +169,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 EffectiveDate.Create(request.EffectiveDate), // TODO: Parse date in correct format when implemented in Input Validation
                 request.ToGrid,
                 request.FromGrid,
-                EnumerationType.FromName<ProductType>(request.ProductType));
+                EnumerationType.FromName<ProductType>(request.ProductType),
+                string.IsNullOrWhiteSpace(request.PhysicalConnectionCapacity) ? null : Capacity.Create(request.PhysicalConnectionCapacity));
         }
 
         private static ConsumptionMeteringPoint CreateConsumptionMeteringPoint(MeteringPointDetails meteringPointDetails)
@@ -193,9 +195,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 EnumerationType.FromName<SettlementMethod>(request.SettlementMethod!),
                 EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup!),
                 EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
-                EnumerationType.FromName<ConnectionType>(request.ConnectionType!),
+                !string.IsNullOrWhiteSpace(request.ConnectionType) ? EnumerationType.FromName<ConnectionType>(request.ConnectionType!) : null,
                 !string.IsNullOrEmpty(request.AssetType) ? EnumerationType.FromName<AssetType>(request.AssetType) : null !,
-                !string.IsNullOrEmpty(request.ScheduledMeterReadingDate) ? ScheduledMeterReadingDate.Create(request.ScheduledMeterReadingDate !) : null);
+                !string.IsNullOrEmpty(request.ScheduledMeterReadingDate) ? ScheduledMeterReadingDate.Create(request.ScheduledMeterReadingDate !) : null,
+                !string.IsNullOrWhiteSpace(request.PhysicalConnectionCapacity) ? Capacity.Create(request.PhysicalConnectionCapacity) : null);
         }
 
         private static Domain.Addresses.Address CreateAddress(CreateMeteringPoint request)

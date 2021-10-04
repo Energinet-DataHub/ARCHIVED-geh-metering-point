@@ -12,19 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
 {
-    public class CapacityIsMandatoryErrorConverter : ErrorConverter<CapacityIsRequiredRuleError>
+    public class ConnectionTypeDoesNotMatchNetSettlementGroupRuleError : ValidationError
     {
-        protected override ErrorMessage Convert(CapacityIsRequiredRuleError validationError)
+        public ConnectionTypeDoesNotMatchNetSettlementGroupRuleError(string connectionType, string netSettlementGroup)
         {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-
-            return new("D56", $"Capacity is required for this metering point type.");
+            ConnectionType = connectionType;
+            NetSettlementGroup = netSettlementGroup;
         }
+
+        public string ConnectionType { get; set; }
+
+        public string NetSettlementGroup { get; set; }
     }
 }

@@ -14,18 +14,15 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
-    public class ConnectionTypeMandatoryValidationError : ValidationError
+    public class InvalidCapacityFormatRuleError : ValidationError
     {
-        public ConnectionTypeMandatoryValidationError(string gsrnNumber, string? connectionType)
+        public InvalidCapacityFormatRuleError(string capacity)
         {
-            GsrnNumber = gsrnNumber;
-            ConnectionType = connectionType;
+            Capacity = capacity;
         }
 
-        public string GsrnNumber { get; }
-
-        public string? ConnectionType { get; }
+        public string Capacity { get; }
     }
 }

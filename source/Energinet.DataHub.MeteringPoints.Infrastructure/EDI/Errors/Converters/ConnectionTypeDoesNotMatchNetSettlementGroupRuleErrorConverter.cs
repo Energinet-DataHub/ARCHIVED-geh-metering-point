@@ -14,17 +14,17 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class CapacityIsMandatoryErrorConverter : ErrorConverter<CapacityIsRequiredRuleError>
+    public class ConnectionTypeDoesNotMatchNetSettlementGroupRuleErrorConverter : ErrorConverter<ConnectionTypeDoesNotMatchNetSettlementGroupRuleError>
     {
-        protected override ErrorMessage Convert(CapacityIsRequiredRuleError validationError)
+        protected override ErrorMessage Convert(ConnectionTypeDoesNotMatchNetSettlementGroupRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D56", $"Capacity is required for this metering point type.");
+            return new("D55", $"Connection type {validationError.ConnectionType} not allowed: the connection type must be Installation connected (D02) if net settlement group is {validationError.NetSettlementGroup}.");
         }
     }
 }

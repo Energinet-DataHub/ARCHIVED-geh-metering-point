@@ -20,7 +20,6 @@ using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
@@ -43,7 +42,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeterId? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit powerLimit,
-            EffectiveDate effectiveDate)
+            EffectiveDate effectiveDate,
+            Capacity? capacity,
+            ConnectionType? connectionType)
             : base(
                 id,
                 gsrnNumber,
@@ -57,11 +58,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 meterNumber,
                 meterReadingOccurrence,
                 powerLimit,
-                effectiveDate)
+                effectiveDate,
+                capacity)
         {
+            ConnectionType = connectionType;
         }
 
         protected EnergySupplierDetails? EnergySupplierDetails { get; private set; }
+
+        protected ConnectionType? ConnectionType { get; private set; }
 
         public static new BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
         {
@@ -71,6 +76,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             {
                 new MeterReadingOccurrenceRule(meteringPointDetails.ReadingOccurrence),
                 new GeoInfoReferenceRequirementRule(meteringPointDetails.Address),
+                new ConnectionTypeRequirementRule(meteringPointDetails.NetSettlementGroup, meteringPointDetails.ConnectionType),
             };
 
             return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
