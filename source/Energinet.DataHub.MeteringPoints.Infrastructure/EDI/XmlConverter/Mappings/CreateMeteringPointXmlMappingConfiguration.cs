@@ -14,6 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappings
 {

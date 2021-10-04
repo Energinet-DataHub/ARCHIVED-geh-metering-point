@@ -21,13 +21,15 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints
 {
     public abstract class MarketMeteringPoint : MeteringPoint
     {
+        #pragma warning disable CS8618 // Ignore uninitialized properties
         protected MarketMeteringPoint()
         {
         }
+        #pragma warning restore
 
         protected MarketMeteringPoint(
             MeteringPointId id,
@@ -44,7 +46,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             PowerLimit powerLimit,
             EffectiveDate effectiveDate,
             Capacity? capacity,
-            ConnectionType? connectionType)
+            ConnectionType? connectionType,
+            DisconnectionType disconnectionType)
             : base(
                 id,
                 gsrnNumber,
@@ -62,11 +65,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 capacity)
         {
             ConnectionType = connectionType;
+            DisconnectionType = disconnectionType;
         }
 
         protected EnergySupplierDetails? EnergySupplierDetails { get; private set; }
 
         protected ConnectionType? ConnectionType { get; private set; }
+
+        protected DisconnectionType DisconnectionType { get; private set; }
 
         public static new BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
         {

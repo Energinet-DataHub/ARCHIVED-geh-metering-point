@@ -20,6 +20,7 @@ using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules.Connect;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -30,7 +31,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
     {
         private SettlementMethod _settlementMethod;
         private NetSettlementGroup _netSettlementGroup;
-        private DisconnectionType _disconnectionType;
         private AssetType? _assetType;
         private ScheduledMeterReadingDate? _scheduledMeterReadingDate;
 
@@ -69,11 +69,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 powerLimit,
                 effectiveDate,
                 capacity,
-                connectionType)
+                connectionType,
+                disconnectionType)
         {
             _settlementMethod = settlementMethod;
             _netSettlementGroup = netSettlementGroup;
-            _disconnectionType = disconnectionType;
             _assetType = assetType;
             _productType = ProductType.EnergyActive;
             ConnectionState = ConnectionState.New();
@@ -107,7 +107,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 powerLimit.Ampere,
                 powerLimit.Kwh,
                 effectiveDate.DateInUtc,
-                _disconnectionType.Name,
+                DisconnectionType.Name,
                 ConnectionType?.Name,
                 _assetType.Name,
                 ConnectionState.PhysicalState.Name,

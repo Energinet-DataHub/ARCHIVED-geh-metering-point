@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappings;
 using FluentAssertions;
