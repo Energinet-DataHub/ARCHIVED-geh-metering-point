@@ -36,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 GsrnNumber = obj.GsrnNumber,
                 GridAreaCode = obj.GridAreaCode,
                 SettlementMethod = EnumerationType.FromName<SettlementMethod>(obj.SettlementMethod).MapToEnum<ConsumptionMeteringPointCreated.Types.SettlementMethod>(),
-                MeteringMethod = EnumerationType.FromName<MeteringPointSubType>(obj.MeteringMethod).MapToEnum<ConsumptionMeteringPointCreated.Types.MeteringMethod>(),
+                MeteringMethod = EnumerationType.FromName<MeteringMethod>(obj.MeteringMethod).MapToEnum<ConsumptionMeteringPointCreated.Types.MeteringMethod>(),
                 MeterReadingPeriodicity = EnumerationType.FromName<ReadingOccurrence>(obj.MeterReadingPeriodicity).MapToEnum<ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity>(),
                 NetSettlementGroup = EnumerationType.FromName<NetSettlementGroup>(obj.NetSettlementGroup).MapToEnum<ConsumptionMeteringPointCreated.Types.NetSettlementGroup>(),
                 Product = EnumerationType.FromName<ProductType>(obj.ProductType).MapToEnum<ConsumptionMeteringPointCreated.Types.ProductType>(),

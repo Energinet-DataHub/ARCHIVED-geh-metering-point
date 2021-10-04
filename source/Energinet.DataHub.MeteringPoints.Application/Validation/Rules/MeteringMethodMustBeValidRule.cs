@@ -14,29 +14,27 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class ConnectionTypeRule : AbstractValidator<CreateMeteringPoint>
+    public class MeteringMethodMustBeValidRule : AbstractValidator<CreateMeteringPoint>
     {
-        public ConnectionTypeRule()
+        public MeteringMethodMustBeValidRule()
         {
-            When(request => !string.IsNullOrWhiteSpace(request.ConnectionType), () =>
-            {
-                RuleFor(request => request.ConnectionType)
-                    .Must(value => EnumerationType
-                        .GetAll<ConnectionType>()
-                        .Select(item => item.Name)
-                        .Contains(value, StringComparer.OrdinalIgnoreCase))
-                    .WithState(request => new InvalidConnectionTypeRuleError(request.ConnectionType !));
-            });
+            RuleFor(createMeteringPoint => createMeteringPoint.MeteringMethod)
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty()
+                .WithState(createMeteringPoint => new MeteringMethodIsMandatoryValidationError())
+                .Must(value => EnumerationType.GetAll<MeteringMethod>().Select(item => item.Name)
+                    .Contains(value, StringComparer.OrdinalIgnoreCase))
+                .WithState(request => new InvalidMeteringMethodRuleError(request.MeteringMethod));
         }
     }
 }

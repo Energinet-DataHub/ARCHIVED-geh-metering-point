@@ -40,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcess
                 GeoInfoReference: obj.InstallationLocationAddress.GeoInfoReference,
                 GsrnNumber: obj.GsrnNumber,
                 TypeOfMeteringPoint: obj.TypeOfMeteringPoint,
-                SubTypeOfMeteringPoint: obj.SubTypeOfMeteringPoint,
+                MeteringMethod: obj.SubTypeOfMeteringPoint,
                 MeterReadingOccurrence: obj.MeterReadingOccurrence,
                 MaximumCurrent: obj.MaximumCurrent,
                 MaximumPower: obj.MaximumPower,

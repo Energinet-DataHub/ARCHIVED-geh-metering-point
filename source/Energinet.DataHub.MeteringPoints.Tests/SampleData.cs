@@ -36,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public static string PhysicalStateName => PhysicalState.Connected.Name;
 
-        public static string SubTypeName => MeteringPointSubType.Physical.Name;
+        public static string SubTypeName => MeteringMethod.Physical.Name;
 
         public static string TypeName => MeteringPointType.Consumption.Name;
 

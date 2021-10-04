@@ -14,18 +14,16 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints
 {
-    public class MeteringPointSubTypeMustBePhysicalOrVirtualValidationError : ValidationError
+    public class ConnectionType : EnumerationType
     {
-        public MeteringPointSubTypeMustBePhysicalOrVirtualValidationError(string gsrnNumber, string meteringPointSubType)
+        public static readonly ConnectionType Direct = new ConnectionType(0, nameof(Direct));
+        public static readonly ConnectionType Installation = new ConnectionType(1, nameof(Installation));
+
+        private ConnectionType(int id, string name)
+            : base(id, name)
         {
-            GsrnNumber = gsrnNumber;
-            MeteringPointSubType = meteringPointSubType;
         }
-
-        public string GsrnNumber { get; }
-
-        public string MeteringPointSubType { get; }
     }
 }

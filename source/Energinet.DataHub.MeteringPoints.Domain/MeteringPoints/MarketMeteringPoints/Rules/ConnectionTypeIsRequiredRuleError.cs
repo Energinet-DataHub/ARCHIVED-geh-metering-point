@@ -12,20 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
 {
-    /// <summary>
-    /// Repository for market facing metering points
-    /// </summary>
-    public interface IMarketMeteringPointRepository
+    public class ConnectionTypeIsRequiredRuleError : ValidationError
     {
-        /// <summary>
-        /// Fetch metering point by GSRN number
-        /// </summary>
-        /// <param name="gsrnNumber"></param>
-        /// <returns><see cref="MarketMeteringPoint"/></returns>
-        Task<MarketMeteringPoint> GetByGSRNAsync(GsrnNumber gsrnNumber);
+        public ConnectionTypeIsRequiredRuleError(NetSettlementGroup netSettlementGroup)
+        {
+            NetSettlementGroup = netSettlementGroup;
+        }
+
+        public NetSettlementGroup NetSettlementGroup { get; }
     }
 }

@@ -12,20 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using System;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class ConnectionTypeWrongValueValidationError : ValidationError
+    public class InvalidMeteringMethodRuleErrorConverter : ErrorConverter<InvalidMeteringMethodRuleError>
     {
-        public ConnectionTypeWrongValueValidationError(string gsrnNumber, string? connectionType)
+        protected override ErrorMessage Convert(InvalidMeteringMethodRuleError validationError)
         {
-            GsrnNumber = gsrnNumber;
-            ConnectionType = connectionType;
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new("D02", $"Metering method {validationError.MeteringMethod} has wrong value (outside domain)");
         }
-
-        public string GsrnNumber { get; }
-
-        public string? ConnectionType { get; }
     }
 }

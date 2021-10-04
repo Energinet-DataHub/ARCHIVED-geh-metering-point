@@ -32,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
                 {
                     GsrnNumber = obj.GsrnNumber,
                     TypeOfMeteringPoint = obj.TypeOfMeteringPoint,
-                    SubTypeOfMeteringPoint = obj.SubTypeOfMeteringPoint,
+                    SubTypeOfMeteringPoint = obj.MeteringMethod,
                     MeterReadingOccurrence = obj.MeterReadingOccurrence,
                     MaximumCurrent = obj.MaximumCurrent,
                     MaximumPower = obj.MaximumPower,

@@ -16,13 +16,13 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public class MeteringPointSubType : EnumerationType
+    public class MeteringMethod : EnumerationType
     {
-        public static readonly MeteringPointSubType Physical = new MeteringPointSubType(0, nameof(Physical));
-        public static readonly MeteringPointSubType Virtual = new MeteringPointSubType(1, nameof(Virtual));
-        public static readonly MeteringPointSubType Calculated = new MeteringPointSubType(2, nameof(Calculated));
+        public static readonly MeteringMethod Physical = new MeteringMethod(0, nameof(Physical));
+        public static readonly MeteringMethod Virtual = new MeteringMethod(1, nameof(Virtual));
+        public static readonly MeteringMethod Calculated = new MeteringMethod(2, nameof(Calculated));
 
-        private MeteringPointSubType(int id, string name)
+        private MeteringMethod(int id, string name)
             : base(id, name)
         {
         }

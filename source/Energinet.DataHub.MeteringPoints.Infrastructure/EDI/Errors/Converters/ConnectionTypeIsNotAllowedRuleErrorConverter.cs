@@ -12,18 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class ConnectionTypeWrongValueErrorConverter : ErrorConverter<ConnectionTypeWrongValueValidationError>
+    public class ConnectionTypeIsNotAllowedRuleErrorConverter : ErrorConverter<ConnectionTypeIsNotAllowedRuleError>
     {
-        protected override ErrorMessage Convert(ConnectionTypeWrongValueValidationError validationError)
+        protected override ErrorMessage Convert(ConnectionTypeIsNotAllowedRuleError validationError)
         {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-
-            return new("D02", $"Connection type {validationError.ConnectionType} for metering point {validationError.GsrnNumber} has wrong value (outside domain)");
+            return new ErrorMessage("D02", "Connection type is not allowed for net settlement group 0.");
         }
     }
 }
