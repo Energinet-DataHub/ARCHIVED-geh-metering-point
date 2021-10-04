@@ -15,6 +15,8 @@
 
 syntax = "proto3";
 
+import "google/protobuf/timestamp.proto";
+
 option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEventContracts";
 
 /**
@@ -75,7 +77,7 @@ message ConsumptionMeteringPointCreated {
   MeterReadingPeriodicity meter_reading_periodicity = 6; // Denotes how often a energy quantity is read on a metering point
   NetSettlementGroup net_settlement_group = 7; // Denotes the net settlement group
   ProductType product = 8;  
-  string effective_date = 9; // The date on which the metering point is created
-  ConnectionState connection_state = 10; // Denotes which connection state a metering point is created with. For a production metering point this is always "New"
+  google.protobuf.Timestamp effective_date = 9; // The date on which the metering point is created
+  ConnectionState connection_state = 10; // Denotes which connection state a metering point is created with. For a consumption metering point this is always "New"
   UnitType unit_type = 11; // Denotes the unit type. For a production metering point this is always a variation of watt/hour 
 }
