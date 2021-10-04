@@ -23,7 +23,7 @@ on:
 env:
   CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI/Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.csproj'
   SOLUTION_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.sln'
-  DOTNET_VERSION: '5.0'
+  DOTNET_VERSION: '3.1.0'
 
 jobs:
   pre_job:
