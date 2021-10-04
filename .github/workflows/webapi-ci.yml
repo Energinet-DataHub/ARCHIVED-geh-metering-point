@@ -23,7 +23,6 @@ on:
 env:
   CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI/Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.csproj'
   SOLUTION_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.sln'
-  DOTNET_VERSION: '3.1.0'
 
 jobs:
   pre_job:
@@ -50,11 +49,16 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@master
-              
-      - name: Setup .NET ${{ env.DOTNET_VERSION }} environment
+
+      - name: Setup .NET 3.1 environment
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+          dotnet-version: '3.1.x'
+
+      - name: Setup .NET 5.0.202 environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.202'
 
       - name: Build and test project
         uses: ./.github/actions/dotnet-build-and-test
