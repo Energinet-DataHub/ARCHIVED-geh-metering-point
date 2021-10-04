@@ -16,12 +16,11 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules
 {
-    public class SettlementMethodRequirementRule : IBusinessRule
+    public class SettlementMethodMustBeFlexOrNonProfiledRule : IBusinessRule
     {
-        public SettlementMethodRequirementRule(SettlementMethod settlementMethod, NetSettlementGroup netSettlementGroup)
+        public SettlementMethodMustBeFlexOrNonProfiledRule(SettlementMethod settlementMethod)
         {
-            IsBroken = (netSettlementGroup == NetSettlementGroup.One || netSettlementGroup == NetSettlementGroup.Two) &&
-                       !(settlementMethod == SettlementMethod.Flex || settlementMethod == SettlementMethod.NonProfiled);
+            IsBroken = settlementMethod == SettlementMethod.Profiled;
             ValidationError = new InvalidSettlementMethodRuleError(settlementMethod);
         }
 

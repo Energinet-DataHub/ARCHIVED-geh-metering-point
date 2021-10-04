@@ -159,7 +159,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                     meteringPointDetails.NetSettlementGroup),
                 new CapacityRequirementRule(meteringPointDetails.Capacity, meteringPointDetails.NetSettlementGroup),
                 new AssetTypeRequirementRule(meteringPointDetails.AssetType, meteringPointDetails.NetSettlementGroup),
-                new SettlementMethodRequirementRule(meteringPointDetails.SettlementMethod, meteringPointDetails.NetSettlementGroup),
+                new SettlementMethodMustBeFlexOrNonProfiledRule(meteringPointDetails.SettlementMethod),
             };
 
             return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));

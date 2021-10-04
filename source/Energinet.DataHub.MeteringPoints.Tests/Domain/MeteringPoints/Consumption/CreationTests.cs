@@ -295,18 +295,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         }
 
         [Theory]
-        [InlineData("One", "Profiled", true)]
-        [InlineData("One", "NonProfiled", false)]
-        [InlineData("One", "Flex", false)]
-        [InlineData("Two", "Profiled", true)]
-        [InlineData("Two", "NonProfiled", false)]
-        [InlineData("Two", "Flex", false)]
-        public void Settlement_method_must_be_flex_or_non_profiled_when_net_settlement_group_is_1_or_2(string netSettlementGroup, string settlementMethod, bool expectError)
+        [InlineData("Profiled", true)]
+        [InlineData("NonProfiled", false)]
+        [InlineData("Flex", false)]
+        public void Settlement_method_must_be_flex_or_non_profiled(string settlementMethod, bool expectError)
         {
             var details = CreateDetails()
                 with
                 {
-                    NetSettlementGroup = EnumerationType.FromName<NetSettlementGroup>(netSettlementGroup),
+                    NetSettlementGroup = NetSettlementGroup.Six,
                     SettlementMethod = EnumerationType.FromName<SettlementMethod>(settlementMethod),
                 };
 
