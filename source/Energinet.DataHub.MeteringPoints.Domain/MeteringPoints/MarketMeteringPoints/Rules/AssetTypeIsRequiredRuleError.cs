@@ -14,15 +14,9 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
 {
-    public class AssetTypeMandatoryValidationError : ValidationError
+    public class AssetTypeIsRequiredRuleError : ValidationError
     {
-        public AssetTypeMandatoryValidationError(string gsrnNumber)
-        {
-            GsrnNumber = gsrnNumber;
-        }
-
-        public string GsrnNumber { get; }
     }
 }
