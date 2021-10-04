@@ -36,7 +36,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
         ConnectionType? ConnectionType,
         AssetType? AssetType,
         ScheduledMeterReadingDate? ScheduledMeterReadingDate,
-        Capacity? Capacity) : MeteringPoints.MeteringPointDetails(
+        Capacity? Capacity)
+        : MeteringPoints.MeteringPointDetails(
         Id,
         GsrnNumber,
         Address,

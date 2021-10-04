@@ -38,7 +38,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             EffectiveDate effectiveDate,
             Capacity? capacity,
             ConnectionType? connectionType,
-            DisconnectionType disconnectionType)
+            DisconnectionType disconnectionType,
+            NetSettlementGroup netSettlementGroup)
             : base(
                 id,
                 gsrnNumber,
@@ -55,7 +56,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 effectiveDate,
                 capacity,
                 connectionType,
-                disconnectionType)
+                disconnectionType,
+                netSettlementGroup)
         {
         }
 
