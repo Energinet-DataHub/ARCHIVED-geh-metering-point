@@ -24,7 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D02", $"Connection type is required for net settlement groups other than 0 for type E17/E18).");
+            return new("D02", $"Connection type is required for net settlement groups other than 0 for type Consumption/Production).");
         }
     }
 }
