@@ -85,6 +85,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             container.RegisterDecorator<IOutboxMessageDispatcher, OutboxMessageDispatcherTelemetryDecorator>(Lifestyle.Scoped);
             container.Register<OutboxMessageFactory>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
+            container.Register<ISubPostOfficeStorageClient, SubPostOfficeStorageClient>();
 
             var connectionString = Environment.GetEnvironmentVariable("SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING");
             container.Register<ServiceBusClient>(
