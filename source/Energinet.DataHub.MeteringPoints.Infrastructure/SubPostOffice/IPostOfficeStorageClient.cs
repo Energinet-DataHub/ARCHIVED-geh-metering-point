@@ -25,6 +25,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
         /// Write file.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task WriteAsync(string content);
+        Task WriteAsync(string blobName, string content);
     }
 }

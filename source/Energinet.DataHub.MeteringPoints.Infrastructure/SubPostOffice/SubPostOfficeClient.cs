@@ -88,7 +88,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
                 fullMessage.Append(message);
             }
 
-            await _postOfficeStorageClient.WriteAsync(fullMessage.ToString()).ConfigureAwait(false);
+            await _postOfficeStorageClient.WriteAsync(Guid.NewGuid().ToString(), fullMessage.ToString()).ConfigureAwait(false);
 
             await _dataBundleResponseSender.SendAsync(new RequestDataBundleResponseDto(new Uri("http://uriToBundleBlob"), notificationDto.DataAvailableNotificationIds), "sessionId").ConfigureAwait(false);
         }

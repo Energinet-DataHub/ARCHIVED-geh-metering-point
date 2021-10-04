@@ -20,9 +20,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
     public class SubPostOfficeStorageClient : ISubPostOfficeStorageClient
     {
-        private readonly PostOfficeStorageSettings _settings;
+        private const string ContainerName = "sub-post-office";
+        private readonly SubPostOfficeStorageSettings _settings;
 
-        public SubPostOfficeStorageClient(PostOfficeStorageSettings settings)
+        public SubPostOfficeStorageClient(SubPostOfficeStorageSettings settings)
         {
             _settings = settings;
         }
@@ -31,16 +32,16 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
         {
             if (messageBlob == null) throw new ArgumentNullException(nameof(messageBlob));
 
-            var blobContainerClient = new BlobContainerClient(_settings.ConnectionString, _settings.ContainerName);
+            var blobContainerClient = new BlobContainerClient(_settings.ConnectionString, ContainerName);
 
-            var blobClient = blobContainerClient.GetBlobClient(messageBlob.BlobName); // TODO
+            var blobClient = blobContainerClient.GetBlobClient(messageBlob.BlobName);
 
             return blobClient.UploadAsync(new BinaryData(messageBlob.Content));
         }
 
         public async Task<PostOfficeMessageBlob> ReadAsync(string blobName)
         {
-            var blobClient = new BlobClient(_settings.ConnectionString, "sub-post-office", blobName);
+            var blobClient = new BlobClient(_settings.ConnectionString, ContainerName, blobName);
 
             var message = await blobClient.DownloadContentAsync().ConfigureAwait(false);
 
@@ -48,5 +49,5 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
         }
     }
 
-    public record PostOfficeStorageSettings(string ConnectionString, string ContainerName);
+    public record SubPostOfficeStorageSettings(string ConnectionString);
 }

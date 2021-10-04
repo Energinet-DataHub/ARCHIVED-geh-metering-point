@@ -20,9 +20,17 @@ using Energinet.DataHub.MeteringPoints.EntryPoints.SubPostOffice.Functions;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.PostOffice;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
+using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
+using GreenEnergyHub.PostOffice.Communicator.DataAvailable;
+using GreenEnergyHub.PostOffice.Communicator.Dequeue;
+using GreenEnergyHub.PostOffice.Communicator.Factories;
+using GreenEnergyHub.PostOffice.Communicator.Peek;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -70,18 +78,35 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.SubPostOffice
             base.ConfigureContainer(container);
 
             // Register application components.
-            container.Register<QueueSubscriber>(Lifestyle.Scoped);
-
-            var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")
-                                   ?? throw new InvalidOperationException(
-                                       "Metering point db connection string not found.");
-            container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
-
+            container.Register<BundleDequeuedQueueSubscriber>(Lifestyle.Scoped);
+            container.Register<RequestBundleQueueSubscriber>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
             container.Register<IUnitOfWork, UnitOfWork>();
             container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
             container.Register<ISystemDateTimeProvider, SystemDateTimeProvider>(Lifestyle.Singleton);
             container.Register<IIncomingMessageRegistry, IncomingMessageRegistry>(Lifestyle.Transient);
+
+            ConfigureSubPostOfficeDependencies(container);
+
+            ConfigurePostOfficeDependencies(container);
+        }
+
+        private static void ConfigureSubPostOfficeDependencies(Container container)
+        {
+            container.Register<ISubPostOfficeClient, SubPostOfficeClient>(Lifestyle.Singleton);
+            container.Register<IMessageDispatcher, InternalDispatcher>(Lifestyle.Singleton);
+            container.Register(() => new SubPostOfficeStorageSettings("localPostOfficeConnString"), Lifestyle.Singleton);
+            container.Register<ISubPostOfficeStorageClient, SubPostOfficeStorageClient>(Lifestyle.Singleton);
+            container.Register<IPostOfficeMessageMetadataRepository, PostOfficeMessageMetadataRepository>(Lifestyle.Singleton);
+        }
+
+        private static void ConfigurePostOfficeDependencies(Container container)
+        {
+            container.Register<IServiceBusClientFactory, ServiceBusClientFactory>(Lifestyle.Singleton);
+            container.Register<IDataAvailableNotificationSender, DataAvailableNotificationSender>(Lifestyle.Singleton);
+            container.Register<IDequeueNotificationParser, DequeueNotificationParser>(Lifestyle.Singleton);
+            container.Register<IRequestBundleParser, RequestBundleParser>(Lifestyle.Singleton);
+            container.Register<IPostOfficeStorageClient, PostOfficeStorageClient>(Lifestyle.Singleton);
         }
     }
 }

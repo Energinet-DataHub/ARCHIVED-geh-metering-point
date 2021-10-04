@@ -70,10 +70,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             base.ConfigureContainer(container);
 
             // Register application components.
-            container.Register(
-                () => new PostOfficeStorageSettings(
-                    Environment.GetEnvironmentVariable("TEMP_POST_OFFICE_CONNECTION_STRING")!,
-                    Environment.GetEnvironmentVariable("TEMP_POST_OFFICE_SHARE")!));
             container.Register<ISubPostOfficeClient, SubPostOfficeClient>(Lifestyle.Scoped);
             container.Register<ISystemDateTimeProvider, SystemDateTimeProvider>(Lifestyle.Scoped);
             container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Scoped);

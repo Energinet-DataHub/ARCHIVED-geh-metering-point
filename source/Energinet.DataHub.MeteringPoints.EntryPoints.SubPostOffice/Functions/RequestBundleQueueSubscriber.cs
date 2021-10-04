@@ -15,42 +15,36 @@
 using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
-using MediatR;
+using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.SubPostOffice.Functions
 {
-    public class QueueSubscriber
+    public class RequestBundleQueueSubscriber
     {
         private readonly ILogger _logger;
         private readonly ICorrelationContext _correlationContext;
-        private readonly MessageExtractor _messageExtractor;
-        private readonly IMediator _mediator;
+        private readonly ISubPostOfficeClient _subPostOfficeClient;
 
-        public QueueSubscriber(
+        public RequestBundleQueueSubscriber(
             ILogger logger,
             ICorrelationContext correlationContext,
-            MessageExtractor messageExtractor,
-            IMediator mediator)
+            ISubPostOfficeClient subPostOfficeClient)
         {
             _logger = logger;
             _correlationContext = correlationContext;
-            _messageExtractor = messageExtractor;
-            _mediator = mediator;
+            _subPostOfficeClient = subPostOfficeClient;
         }
 
-        [Function("QueueSubscriber")]
+        [Function("RequestBundleQueueSubscriber")]
         public async Task RunAsync(
-            [ServiceBusTrigger("%METERINGPOINT_QUEUE_TOPIC_NAME%", Connection = "METERINGPOINT_QUEUE_CONNECTION_STRING")] byte[] data,
+            [ServiceBusTrigger("%POSTOFFICE_QUEUE_TOPIC_NAME%", Connection = "POSTOFFICE_QUEUE_CONNECTION_STRING")] byte[] data,
             FunctionContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
-            var message = await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
-
-            var result = await _mediator.Send(message).ConfigureAwait(false);
+            await _subPostOfficeClient.CreateBundleAsync(data).ConfigureAwait(false);
 
             _logger.LogInformation("Dequeued with correlation id: {correlationId}", _correlationContext.Id);
         }

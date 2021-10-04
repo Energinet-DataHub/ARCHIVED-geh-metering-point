@@ -19,7 +19,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice.Mocks
 {
     public class PostOfficeStorageClientMock : IPostOfficeStorageClient
     {
-        public Task WriteAsync(string content)
+        public Task WriteAsync(string blobName, string content)
         {
             return Task.CompletedTask;
         }
