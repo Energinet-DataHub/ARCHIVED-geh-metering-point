@@ -14,7 +14,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Domain.PostOffice;
+using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.PostOffice
 {
@@ -37,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.PostOffice
             throw new NotImplementedException();
         }
 
-        public Task SaveMessageAsync(PostOfficeMessageMetadata postOfficeMessageMetadata)
+        public Task SaveMessageMetadataAsync(PostOfficeMessageMetadata postOfficeMessageMetadata)
         {
             throw new NotImplementedException();
         }

@@ -12,26 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+using Energinet.DataHub.MeteringPoints.Application.PostOffice;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 
-namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
+namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice.Mocks
 {
-    public class DummyDispatcher : IMessageDispatcher
+    public class DispatcherMock : IMessageDispatcher
     {
-        private bool _isDispatched;
+        private readonly List<MessageReceived> _dispatchedCommands = new();
 
         public Task DispatchAsync(IOutboundMessage message, CancellationToken cancellationToken = default)
         {
-            _isDispatched = true;
+            _dispatchedCommands.Add((MessageReceived)message);
             return Task.CompletedTask;
         }
 
-        public bool IsDispatched()
+        public bool IsDispatched(string correlation)
         {
-            return _isDispatched;
+            return _dispatchedCommands.Any(x => x.Correlation == correlation);
         }
     }
 }

@@ -12,25 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.PostOffice.Communicator.Dequeue;
-using GreenEnergyHub.PostOffice.Communicator.Model;
-
-namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
-    public class DummyDequeueNotificationSender : IDequeueNotificationSender
+    public static class PostOfficeMessageBlobFactory
     {
-        private bool _isSent;
-
-        public bool IsSent()
+        public static PostOfficeMessageBlob Create(string blobName, string content)
         {
-            return _isSent;
-        }
-
-        public Task SendAsync(DequeueNotificationDto dequeueNotificationDto, DomainOrigin domainOrigin)
-        {
-            _isSent = true;
-            return Task.CompletedTask;
+            return new PostOfficeMessageBlob(blobName, content);
         }
     }
 }

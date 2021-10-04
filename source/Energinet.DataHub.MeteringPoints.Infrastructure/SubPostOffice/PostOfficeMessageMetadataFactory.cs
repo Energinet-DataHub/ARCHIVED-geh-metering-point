@@ -12,16 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
+using System;
 
-namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
-    public class DummyPostOfficeStorageClient : IPostOfficeStorageClient
+    public static class PostOfficeMessageMetadataFactory
     {
-        public Task WriteAsync(byte[] bytes)
+        public static PostOfficeMessageMetadata Create(string correlation)
         {
-            return Task.CompletedTask;
+            var blobName = CreateBlobName();
+
+            return new PostOfficeMessageMetadata(blobName, correlation);
+        }
+
+        private static string CreateBlobName()
+        {
+            return $"{Guid.NewGuid():N}.xml";
         }
     }
 }

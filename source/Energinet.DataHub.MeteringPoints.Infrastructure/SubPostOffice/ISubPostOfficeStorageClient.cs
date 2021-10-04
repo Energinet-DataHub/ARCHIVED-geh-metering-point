@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
@@ -26,12 +26,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
         /// Write file.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task WriteAsync(PostOfficeMessageEnvelope message);
+        Task WriteAsync(PostOfficeMessageBlob messageBlob);
 
         /// <summary>
         /// Read file.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task<string> ReadAsync(string id);
+        Task<PostOfficeMessageBlob> ReadAsync(string blobName);
     }
 }

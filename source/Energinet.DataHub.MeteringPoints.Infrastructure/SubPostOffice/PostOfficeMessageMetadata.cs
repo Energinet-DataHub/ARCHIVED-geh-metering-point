@@ -12,25 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.PostOffice.Communicator.DataAvailable;
-using GreenEnergyHub.PostOffice.Communicator.Model;
+using System;
 
-namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
-    public class DummyDataAvailableNotificationSender : IDataAvailableNotificationSender
+    public class PostOfficeMessageMetadata
     {
-        private bool _isSent;
-
-        public Task SendAsync(DataAvailableNotificationDto dataAvailableNotificationDto)
+        public PostOfficeMessageMetadata(string blobName, string correlation)
         {
-            _isSent = true;
-            return Task.CompletedTask;
+            Id = Guid.NewGuid();
+            Correlation = correlation;
+            BlobName = blobName;
         }
 
-        public bool IsSent()
+        public PostOfficeMessageMetadata(Guid id, string blobName, string correlation)
+            : this(blobName, correlation)
         {
-            return _isSent;
+            Id = id;
         }
+
+        public Guid Id { get; }
+
+        public string BlobName { get; }
+
+        public string Correlation { get; }
     }
 }

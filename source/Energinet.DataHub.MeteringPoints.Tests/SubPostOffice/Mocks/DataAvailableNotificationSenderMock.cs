@@ -13,18 +13,24 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.PostOffice.Communicator.DataAvailable;
+using GreenEnergyHub.PostOffice.Communicator.Model;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
+namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice.Mocks
 {
-    /// <summary>
-    /// Basic file management for PostOffice communication.
-    /// </summary>
-    public interface IPostOfficeStorageClient
+    public class DataAvailableNotificationSenderMock : IDataAvailableNotificationSender
     {
-        /// <summary>
-        /// Write file.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task WriteAsync(string content);
+        private bool _isSent;
+
+        public Task SendAsync(DataAvailableNotificationDto dataAvailableNotificationDto)
+        {
+            _isSent = true;
+            return Task.CompletedTask;
+        }
+
+        public bool IsSent()
+        {
+            return _isSent;
+        }
     }
 }

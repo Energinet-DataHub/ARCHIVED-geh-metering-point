@@ -12,25 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.PostOffice.Communicator.Model;
-using GreenEnergyHub.PostOffice.Communicator.Peek;
+using System.Collections.Generic;
 
-namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
-    public class DummyDataBundleResponseSender : IDataBundleResponseSender
-    {
-        private bool _isSent;
-
-        public Task SendAsync(RequestDataBundleResponseDto requestDataBundleResponseDto, string sessionId)
-        {
-            _isSent = true;
-            return Task.CompletedTask;
-        }
-
-        public bool IsSent()
-        {
-            return _isSent;
-        }
-    }
+#pragma warning disable CA1819
+    public record PostOfficeMessageBlob(string BlobName, string Content);
+#pragma warning restore CA1819
 }

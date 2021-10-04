@@ -15,7 +15,6 @@
 using System;
 using System.Threading.Tasks;
 using Azure.Storage.Blobs;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
@@ -28,26 +27,26 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
             _settings = settings;
         }
 
-        public Task WriteAsync(PostOfficeMessageEnvelope message)
+        public Task WriteAsync(PostOfficeMessageBlob messageBlob)
         {
-            if (message == null) throw new ArgumentNullException(nameof(message));
+            if (messageBlob == null) throw new ArgumentNullException(nameof(messageBlob));
 
-            var blobContainerClient = new BlobContainerClient(_settings.ConnectionString, "postofficemessages"); // TODO
+            var blobContainerClient = new BlobContainerClient(_settings.ConnectionString, _settings.ContainerName);
 
-            var blobClient = blobContainerClient.GetBlobClient("blobName"); // TODO
+            var blobClient = blobContainerClient.GetBlobClient(messageBlob.BlobName); // TODO
 
-            return blobClient.UploadAsync(new BinaryData(message.Content));
+            return blobClient.UploadAsync(new BinaryData(messageBlob.Content));
         }
 
-        public async Task<string> ReadAsync(string id)
+        public async Task<PostOfficeMessageBlob> ReadAsync(string blobName)
         {
-            var blobClient = new BlobClient(_settings.ConnectionString, "postofficemessages", id); // TODO
+            var blobClient = new BlobClient(_settings.ConnectionString, "sub-post-office", blobName);
 
             var message = await blobClient.DownloadContentAsync().ConfigureAwait(false);
 
-            return message.Value.Content.ToString();
+            return PostOfficeMessageBlobFactory.Create(blobName, message.Value.Content.ToString());
         }
     }
 
-    public record PostOfficeStorageSettings(string ConnectionString, string ShareName);
+    public record PostOfficeStorageSettings(string ConnectionString, string ContainerName);
 }

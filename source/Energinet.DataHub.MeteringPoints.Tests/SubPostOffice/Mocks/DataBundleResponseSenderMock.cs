@@ -13,30 +13,24 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
-using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
-using Xunit.Sdk;
+using GreenEnergyHub.PostOffice.Communicator.Model;
+using GreenEnergyHub.PostOffice.Communicator.Peek;
 
-namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
+namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice.Mocks
 {
-    public class DummySubPostOfficeStorageClient : ISubPostOfficeStorageClient
+    public class DataBundleResponseSenderMock : IDataBundleResponseSender
     {
-        private PostOfficeMessageEnvelope? _message;
+        private bool _isSent;
 
-        public Task WriteAsync(PostOfficeMessageEnvelope message)
+        public Task SendAsync(RequestDataBundleResponseDto requestDataBundleResponseDto, string sessionId)
         {
-            _message = message;
+            _isSent = true;
             return Task.CompletedTask;
         }
 
-        public Task<string> ReadAsync(string id)
+        public bool IsSent()
         {
-            if (_message is null)
-            {
-                throw new NullException(_message);
-            }
-
-            return new Task<string>(() => _message.Content);
+            return _isSent;
         }
     }
 }

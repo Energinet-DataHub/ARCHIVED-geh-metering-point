@@ -18,7 +18,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Application.PostOffice;
-using Energinet.DataHub.MeteringPoints.Domain.PostOffice;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 using GreenEnergyHub.PostOffice.Communicator.DataAvailable;
@@ -66,12 +65,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
                 throw new ArgumentNullException(nameof(message));
             }
 
-            await _subPostOfficeStorageClient.WriteAsync(message).ConfigureAwait(false); // todo .. wrap message in messageblob with information about blobname etc.
+            var messageMetadata = PostOfficeMessageMetadataFactory.Create(message.Correlation);
+            var messageBlob = PostOfficeMessageBlobFactory.Create(messageMetadata.BlobName, message.Content);
 
-            var messageMetadata = new PostOfficeMessageMetadata(message.Correlation);
-            await _postOfficeMessageMetadataRepository.SaveMessageAsync(messageMetadata).ConfigureAwait(false);
+            await _subPostOfficeStorageClient.WriteAsync(messageBlob).ConfigureAwait(false);
+            await _postOfficeMessageMetadataRepository.SaveMessageMetadataAsync(messageMetadata).ConfigureAwait(false);
 
-            //TODO: Change DomainOrigin to MeteringPoints when added to enum.
             await _dataAvailableNotificationSender.SendAsync(new DataAvailableNotificationDto(messageMetadata.Id, new GlobalLocationNumberDto(message.Recipient), new MessageTypeDto(message.MessageType), DomainOrigin.MeteringPoints, true, 1)).ConfigureAwait(false);
         }
 
@@ -85,11 +84,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 
             foreach (var messageMetadata in messageMetadatas)
             {
-                var message = await _subPostOfficeStorageClient.ReadAsync(messageMetadata.Id.ToString()).ConfigureAwait(false);
+                var message = await _subPostOfficeStorageClient.ReadAsync(messageMetadata.BlobName).ConfigureAwait(false);
                 fullMessage.Append(message);
             }
 
-            await _postOfficeStorageClient.WriteAsync(Encoding.Default.GetBytes(fullMessage.ToString())).ConfigureAwait(false);
+            await _postOfficeStorageClient.WriteAsync(fullMessage.ToString()).ConfigureAwait(false);
 
             await _dataBundleResponseSender.SendAsync(new RequestDataBundleResponseDto(new Uri("http://uriToBundleBlob"), notificationDto.DataAvailableNotificationIds), "sessionId").ConfigureAwait(false);
         }

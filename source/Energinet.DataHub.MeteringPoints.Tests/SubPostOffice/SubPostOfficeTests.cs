@@ -14,10 +14,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Domain.PostOffice;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
+using Energinet.DataHub.MeteringPoints.Tests.SubPostOffice.Mocks;
 using FluentAssertions;
 using GreenEnergyHub.PostOffice.Communicator.Dequeue;
 using GreenEnergyHub.PostOffice.Communicator.Model;
@@ -30,70 +31,94 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
     [UnitTest]
     public class SubPostOfficeTests
     {
-        private readonly DummyDispatcher _messageDispatcher;
+        private readonly DispatcherMock _messageDispatcher;
         private readonly ISubPostOfficeClient _subPostOfficeClient;
-        private readonly DummyDataAvailableNotificationSender _dataAvailableNotificationSender;
-        private readonly DummyDataBundleResponseSender _dataBundleResponseSender;
-        private readonly DummyDequeueNotificationSender _dequeueNotificationSender;
+        private readonly DataAvailableNotificationSenderMock _dataAvailableNotificationSender;
+        private readonly DataBundleResponseSenderMock _dataBundleResponseSender;
         private readonly RequestBundleParser _requestBundleParser;
         private readonly DequeueNotificationParser _dequeueNotificationParser;
 
-        private readonly List<PostOfficeMessageMetadata> _ids;
+        private readonly PostOfficeMessageMetadataRepositoryMock _postOfficeMessageMetadataRepository;
+        private readonly SubPostOfficeStorageClientMock _subPostOfficeStorageClient;
 
         public SubPostOfficeTests()
         {
-            _messageDispatcher = new DummyDispatcher();
-            _ids = new List<PostOfficeMessageMetadata> { new("correlationId1") };
-            var postOfficeMessageMetadataRepository = new DummyPostOfficeMessageMetadataRepository(_ids);
-            var subPostOfficeStorageClient = new DummySubPostOfficeStorageClient();
-            var postOfficeStorageClient = new DummyPostOfficeStorageClient();
-            _dataBundleResponseSender = new DummyDataBundleResponseSender();
+            _messageDispatcher = new DispatcherMock();
+            _postOfficeMessageMetadataRepository = new PostOfficeMessageMetadataRepositoryMock();
+            _subPostOfficeStorageClient = new SubPostOfficeStorageClientMock();
+            PostOfficeStorageClientMock postOfficeStorageClient = new();
+            _dataBundleResponseSender = new DataBundleResponseSenderMock();
             var dequeueNotificationParser = new DequeueNotificationParser();
             _requestBundleParser = new RequestBundleParser();
             _dequeueNotificationParser = new DequeueNotificationParser();
-            _dataAvailableNotificationSender = new DummyDataAvailableNotificationSender();
+            _dataAvailableNotificationSender = new DataAvailableNotificationSenderMock();
             _subPostOfficeClient = new SubPostOfficeClient(
-                subPostOfficeStorageClient,
+                _subPostOfficeStorageClient,
                 postOfficeStorageClient,
-                postOfficeMessageMetadataRepository,
+                _postOfficeMessageMetadataRepository,
                 _messageDispatcher,
                 _dataAvailableNotificationSender,
                 _dataBundleResponseSender,
                 dequeueNotificationParser,
                 _requestBundleParser);
-            _dequeueNotificationSender = new DummyDequeueNotificationSender();
         }
 
         [Fact]
         public async Task Dispatch_Should_Result_In_MessageReady_Notification()
         {
-            await _subPostOfficeClient.DispatchAsync(new PostOfficeMessageEnvelope("recipient", "content", "messagetype", "correlationId1")).ConfigureAwait(false);
-
-            // should we test that messages are stored correctly?
-            _dataAvailableNotificationSender.IsSent().Should().Be(true);
+            var message = await DispatchMessage().ConfigureAwait(false);
+            _subPostOfficeStorageClient.Exists(message.PostOfficeMessageMetadata.BlobName).Should().BeTrue();
+            _dataAvailableNotificationSender.IsSent().Should().BeTrue();
         }
 
         [Fact]
         public async Task GenerateBundle_Should_Result_In_BundleReady_Notification()
         {
-            var requestBundleDto = new DataBundleRequestDto("idempotencyId", new[] { Guid.NewGuid() });
+            var message = await DispatchMessage().ConfigureAwait(false);
+            await RequestBundle(message.PostOfficeMessageMetadata).ConfigureAwait(false);
 
-            var bytes = _requestBundleParser.Parse(requestBundleDto);
-
-            await _subPostOfficeClient.CreateBundleAsync(bytes).ConfigureAwait(false);
-
-            // test that bundle is stored correctly
-            _dataBundleResponseSender.IsSent().Should().Be(true);
+            _dataBundleResponseSender.IsSent().Should().BeTrue();
         }
 
         [Fact]
         public async Task BundleDequeued_Should_Result_In_Dispatched_Commands_For_Each_Message()
         {
-            var bytes = _dequeueNotificationParser.Parse(new DequeueNotificationDto(new List<Guid> { Guid.NewGuid() }, new GlobalLocationNumberDto("recipient")));
+            var messages = new List<(PostOfficeMessageMetadata PostOfficeMessageMetadata, string Correlation)>();
+
+            for (var i = 0; i < 100; i++)
+            {
+                var message = await DispatchMessage().ConfigureAwait(false);
+                messages.Add(message);
+                await RequestBundle(message!.PostOfficeMessageMetadata).ConfigureAwait(false);
+            }
+
+            var bytes = _dequeueNotificationParser.Parse(new DequeueNotificationDto(messages.Select(x => x.PostOfficeMessageMetadata.Id).ToArray(), new GlobalLocationNumberDto("recipient")));
 
             await _subPostOfficeClient.BundleDequeuedAsync(bytes).ConfigureAwait(false);
 
-            _messageDispatcher.IsDispatched().Should().Be(true);
+            foreach (var message in messages)
+            {
+                _messageDispatcher.IsDispatched(message.Correlation).Should().BeTrue();
+            }
+        }
+
+        private async Task RequestBundle(PostOfficeMessageMetadata? message)
+        {
+            var requestBundleDto = new DataBundleRequestDto("idempotencyId", new[] { message!.Id });
+
+            var bytes = _requestBundleParser.Parse(requestBundleDto);
+
+            await _subPostOfficeClient.CreateBundleAsync(bytes).ConfigureAwait(false);
+        }
+
+        private async Task<(PostOfficeMessageMetadata PostOfficeMessageMetadata, string Correlation)> DispatchMessage()
+        {
+            var correlationId = Guid.NewGuid().ToString();
+
+            await _subPostOfficeClient.DispatchAsync(new PostOfficeMessageEnvelope("recipient", "content", "messagetype", correlationId)).ConfigureAwait(false);
+
+            var message = _postOfficeMessageMetadataRepository.GetMessageByCorrelation(correlationId);
+            return (message, correlationId);
         }
     }
 }

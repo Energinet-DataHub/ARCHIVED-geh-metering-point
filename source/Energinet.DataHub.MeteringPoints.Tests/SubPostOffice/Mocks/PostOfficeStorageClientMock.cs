@@ -12,23 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using NodaTime;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.PostOffice
+namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice.Mocks
 {
-    public class PostOfficeMessageMetadata
+    public class PostOfficeStorageClientMock : IPostOfficeStorageClient
     {
-        public PostOfficeMessageMetadata(string correlation)
+        public Task WriteAsync(string content)
         {
-            Id = Guid.NewGuid();
-            Correlation = correlation;
+            return Task.CompletedTask;
         }
-
-        public Guid Id { get; }
-
-        public Instant CreatedDate { get; }
-
-        public string Correlation { get; }
     }
 }

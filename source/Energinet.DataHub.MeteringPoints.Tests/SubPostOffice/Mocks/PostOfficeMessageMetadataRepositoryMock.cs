@@ -16,18 +16,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Domain.PostOffice;
+using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
 
-namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
+namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice.Mocks
 {
-    public class DummyPostOfficeMessageMetadataRepository : IPostOfficeMessageMetadataRepository
+    public class PostOfficeMessageMetadataRepositoryMock : IPostOfficeMessageMetadataRepository
     {
-        private readonly IList<PostOfficeMessageMetadata> _postOfficeMessageMetadataList;
-
-        public DummyPostOfficeMessageMetadataRepository(IList<PostOfficeMessageMetadata> postOfficeMessageMetadataList)
-        {
-            _postOfficeMessageMetadataList = postOfficeMessageMetadataList;
-        }
+        private readonly List<PostOfficeMessageMetadata> _postOfficeMessageMetadataList = new();
 
         public Task<PostOfficeMessageMetadata> GetMessageAsync(Guid messageId)
         {
@@ -39,10 +34,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
             return Task.FromResult(_postOfficeMessageMetadataList.ToArray());
         }
 
-        public Task SaveMessageAsync(PostOfficeMessageMetadata postOfficeMessageMetadata)
+        public Task SaveMessageMetadataAsync(PostOfficeMessageMetadata postOfficeMessageMetadata)
         {
             _postOfficeMessageMetadataList.Add(postOfficeMessageMetadata);
             return Task.CompletedTask;
+        }
+
+        public PostOfficeMessageMetadata GetMessageByCorrelation(string correlation)
+        {
+            return _postOfficeMessageMetadataList.Single(x => x.Correlation == correlation);
         }
     }
 }

@@ -15,7 +15,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.PostOffice
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
     /// <summary>
     /// Repository for market facing metering points
@@ -35,6 +35,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.PostOffice
         /// <summary>
         /// Save Post Office Message Metadata
         /// </summary>
-        Task SaveMessageAsync(PostOfficeMessageMetadata postOfficeMessageMetadata);
+        Task SaveMessageMetadataAsync(PostOfficeMessageMetadata postOfficeMessageMetadata);
     }
 }
