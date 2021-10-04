@@ -29,7 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             var details = CreateDetails()
                 with
                 {
-                    MeterNumber = null, MeteringPointSubType = MeteringPointSubType.Physical,
+                    MeterNumber = null, MeteringMethod = MeteringMethod.Physical,
                 };
 
             var result = MeteringPoint.CanCreate(details);
@@ -44,7 +44,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 with
                 {
                     MeterNumber = MeterId.Create("A1234"),
-                    MeteringPointSubType = MeteringPointSubType.Virtual,
+                    MeteringMethod = MeteringMethod.Virtual,
                 };
 
             var result = MeteringPoint.CanCreate(details);

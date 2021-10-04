@@ -14,17 +14,18 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
 {
-    public class MeteringPointSubType : EnumerationType
+    public class MeteringMethodDoesNotMatchNetSettlementGroupRuleError : ValidationError
     {
-        public static readonly MeteringPointSubType Physical = new MeteringPointSubType(0, nameof(Physical));
-        public static readonly MeteringPointSubType Virtual = new MeteringPointSubType(1, nameof(Virtual));
-        public static readonly MeteringPointSubType Calculated = new MeteringPointSubType(2, nameof(Calculated));
-
-        private MeteringPointSubType(int id, string name)
-            : base(id, name)
+        public MeteringMethodDoesNotMatchNetSettlementGroupRuleError(NetSettlementGroup netSettlementGroup, MeteringMethod meteringMethod)
         {
+            NetSettlementGroup = netSettlementGroup;
+            MeteringMethod = meteringMethod;
         }
+
+        public NetSettlementGroup NetSettlementGroup { get; }
+
+        public MeteringMethod MeteringMethod { get; }
     }
 }

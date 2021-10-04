@@ -28,7 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            MeteringPointSubType meteringPointSubType,
+            MeteringMethod meteringMethod,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
@@ -46,7 +46,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 id,
                 gsrnNumber,
                 address,
-                meteringPointSubType,
+                meteringMethod,
                 meteringPointType,
                 gridAreaLinkId,
                 powerPlantGsrnNumber,
@@ -62,7 +62,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _fromGrid = fromGrid;
             _productType = productType;
 
-            AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaLinkId, meteringPointSubType, ConnectionState.PhysicalState, meterReadingOccurrence, ProductType.Tariff, unitType, toGrid, fromGrid));
+            AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaLinkId, meteringMethod, ConnectionState.PhysicalState, meterReadingOccurrence, ProductType.Tariff, unitType, toGrid, fromGrid));
         }
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor

@@ -28,7 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 .AddProperty(x => x.MaximumPower, "MarketEvaluationPoint", "contractedConnectionCapacity")
                 .AddProperty(x => x.MaximumCurrent, "MarketEvaluationPoint", "ratedCurrent")
                 .AddProperty(x => x.TypeOfMeteringPoint, TranslateMeteringPointType, "MarketEvaluationPoint", "type")
-                .AddProperty(x => x.SubTypeOfMeteringPoint, TranslateMeteringPointSubType, "MarketEvaluationPoint", "meteringMethod")
+                .AddProperty(x => x.MeteringMethod, TranslateMeteringPointSubType, "MarketEvaluationPoint", "meteringMethod")
                 .AddProperty(x => x.MeterReadingOccurrence, TranslateMeterReadingOccurrence, "MarketEvaluationPoint", "readCycle")
                 .AddProperty(x => x.MeteringGridArea, "MarketEvaluationPoint", "meteringGridArea_Domain.mRID")
                 .AddProperty(x => x.PowerPlant, "MarketEvaluationPoint", "Linked_MarketEvaluationPoint", "mRID")
@@ -131,9 +131,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
         {
             return element.SourceValue.ToUpperInvariant() switch
             {
-                "D01" => nameof(MeteringPointSubType.Physical),
-                "D02" => nameof(MeteringPointSubType.Virtual),
-                "D03" => nameof(MeteringPointSubType.Calculated),
+                "D01" => nameof(MeteringMethod.Physical),
+                "D02" => nameof(MeteringMethod.Virtual),
+                "D03" => nameof(MeteringMethod.Calculated),
                 _ => element.SourceValue,
             };
         }

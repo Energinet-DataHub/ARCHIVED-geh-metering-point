@@ -35,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            MeteringPointSubType meteringPointSubType,
+            MeteringMethod meteringMethod,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
@@ -52,7 +52,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
                 id,
                 gsrnNumber,
                 address,
-                meteringPointSubType,
+                meteringMethod,
                 meteringPointType,
                 gridAreaLinkId,
                 powerPlantGsrnNumber,
@@ -83,6 +83,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
                 new MeterReadingOccurrenceRule(meteringPointDetails.ReadingOccurrence),
                 new GeoInfoReferenceRequirementRule(meteringPointDetails.Address),
                 new ConnectionTypeRequirementRule(meteringPointDetails.NetSettlementGroup, meteringPointDetails.ConnectionType),
+                new MeteringMethodRule(meteringPointDetails.NetSettlementGroup, meteringPointDetails.MeteringMethod),
             };
 
             return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));

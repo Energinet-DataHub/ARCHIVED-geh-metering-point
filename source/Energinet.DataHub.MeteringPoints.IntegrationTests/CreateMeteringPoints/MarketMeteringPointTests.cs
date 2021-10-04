@@ -91,6 +91,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError<CreateMeteringPointRejected>("D55");
         }
 
+        [Fact]
+        public async Task Should_reject_if_metering_method_does_not_match_net_settlement_group()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    MeterNumber = "1",
+                    NetSettlementGroup = NetSettlementGroup.Six.Name,
+                    MeteringMethod = MeteringMethod.Physical.Name,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D37");
+        }
+
         private static CreateMeteringPoint CreateRequest()
         {
             return new CreateMeteringPoint(
@@ -107,7 +123,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SampleData.IsWashable,
                 SampleData.GsrnNumber,
                 SampleData.TypeOfMeteringPoint,
-                MeteringPointSubType.Calculated.Name,
+                MeteringMethod.Calculated.Name,
                 SampleData.ReadingOccurrence,
                 0,
                 0,

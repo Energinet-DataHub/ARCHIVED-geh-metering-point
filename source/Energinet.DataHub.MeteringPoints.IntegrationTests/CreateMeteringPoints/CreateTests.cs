@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Create;
@@ -171,13 +172,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task Should_reject_if_subtype_is_physical_and_meter_identification_is_undefined()
+        public async Task Should_reject_if_metering_method_is_physical_and_meter_identification_is_undefined()
         {
             var request = CreateRequest()
                 with
                 {
                     MeterNumber = null,
-                    SubTypeOfMeteringPoint = MeteringPointSubType.Physical.Name,
+                    MeteringMethod = MeteringMethod.Physical.Name,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
@@ -186,13 +187,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task Should_reject_if_subtype_is_not_physical_and_meter_identification_is_defined()
+        public async Task Should_reject_if_metering_method_is_not_physical_and_meter_identification_is_defined()
         {
             var request = CreateRequest()
                 with
                 {
                     MeterNumber = SampleData.MeterNumber,
-                    SubTypeOfMeteringPoint = MeteringPointSubType.Virtual.Name,
+                    MeteringMethod = MeteringMethod.Virtual.Name,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
@@ -209,7 +210,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                     NetSettlementGroup = NetSettlementGroup.One.Name,
                     ConnectionType = ConnectionType.Installation.Name,
                     PhysicalConnectionCapacity = null,
-                    SubTypeOfMeteringPoint = MeteringPointSubType.Calculated.Name,
+                    MeteringMethod = MeteringMethod.Calculated.Name,
                     MeterNumber = null,
                 };
 
@@ -226,7 +227,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 {
                     NetSettlementGroup = NetSettlementGroup.One.Name,
                     PhysicalConnectionCapacity = "123.3333670",
-                    SubTypeOfMeteringPoint = MeteringPointSubType.Calculated.Name,
+                    MeteringMethod = MeteringMethod.Calculated.Name,
                     MeterNumber = null,
                 };
 
@@ -288,6 +289,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 {
                     ConnectionType = ConnectionType.Installation.Name,
                     NetSettlementGroup = NetSettlementGroup.Zero.Name,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("invalid_value")]
+        public async Task Should_reject_when_metering_method_is_missing_or_is_invalid(string meteringMethod)
+        {
+            var request = CreateRequest()
+                with
+                {
+                    MeteringMethod = meteringMethod,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);

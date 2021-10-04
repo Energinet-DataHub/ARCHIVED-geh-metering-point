@@ -134,7 +134,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 GsrnNumber.Create(request.GsrnNumber),
                 CreateAddress(request),
                 request.IsOfficialAddress.GetValueOrDefault(), // TODO: change to boolean in domain?
-                EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
+                EnumerationType.FromName<MeteringMethod>(request.MeteringMethod),
                 meteringPointType,
                 new GridAreaLinkId(Guid.NewGuid()), // TODO: Use links correct, when updating creation of production metering pints
                 !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null,
@@ -158,7 +158,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 GsrnNumber.Create(request.GsrnNumber),
                 CreateAddress(request),
                 //PhysicalState.New,
-                EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
+                EnumerationType.FromName<MeteringMethod>(request.MeteringMethod),
                 meteringPointType,
                 new GridAreaLinkId(Guid.NewGuid()), // TODO: Use links correct, when updating creation of exchange metering pints
                 !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null,
@@ -185,7 +185,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 MeteringPointId.New(),
                 GsrnNumber.Create(request.GsrnNumber),
                 CreateAddress(request),
-                EnumerationType.FromName<MeteringPointSubType>(request.SubTypeOfMeteringPoint),
+                EnumerationType.FromName<MeteringMethod>(request.MeteringMethod),
                 gridAreaLinkId,
                 !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null !,
                 LocationDescription.Create(request.LocationDescription!),
