@@ -15,6 +15,8 @@
 
 syntax = "proto3";
 
+import "google/protobuf/timestamp.proto";
+
 option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEventContracts";
 
 /**
@@ -62,5 +64,5 @@ message ExchangeMeteringPointCreated {
   ProductType product = 8; // Denotes the product type
   ConnectionState connection_state = 9; // Denotes which connection state a metering point is created with. For an exchange metering point this is always "New"
   UnitType unit_type = 10; // Denotes the unit type. For a production metering point this is always a variation of watt/hour 
-  string effective_date = 11; // The date on which the metering point is created
+  google.protobuf.Timestamp effective_date = 11; // The date on which the metering point is created
 }
