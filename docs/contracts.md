@@ -112,8 +112,8 @@ Represents the closing of a metering point.
 <a name=".MeteringPointDisconnected"></a>
 
 ### MeteringPointDisconnected (Preliminary)
-Represents the disconnection of a metering point.
 
+Represents the disconnection of a metering point.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
@@ -141,7 +141,6 @@ Represents the changing of the Net Settlement Group.
 Represents the coupling of a parent to a eligible metering point.
 If a parent is changed, ie. one is removed and another is coupled, both the coupling and the decoupling messages are sent.
 
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | metering_point_id | [string](#string) |  | Unique metering point identifier of the child metering point. |
@@ -157,7 +156,6 @@ If a parent is changed, ie. one is removed and another is coupled, both the coup
 Represents the decoupling of a parent to a eligible metering point.
 If a parent is changed, ie. one is removed and another is coupled, both the coupling and the decoupling messages are sent.
 
-
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | metering_point_id | [string](#string) |  | Unique metering point identifier of the child metering point which has the existing parent decoupled. |
@@ -169,7 +167,6 @@ If a parent is changed, ie. one is removed and another is coupled, both the coup
 ### SettlementDetailsChanged (Preliminary)
 
 Represents the changing of settlement details. Either the settlement method or the reading periodicity will be changed, or both will be changed.
-
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
