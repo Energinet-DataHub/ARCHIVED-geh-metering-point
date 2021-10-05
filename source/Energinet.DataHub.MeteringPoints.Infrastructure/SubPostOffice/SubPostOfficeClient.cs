@@ -67,7 +67,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 
             await _postOfficeStorageHandler.AddStreamToStorageAsync(stream, notificationDto).ConfigureAwait(false);
 
-            await _dataBundleResponseSender.SendAsync(new RequestDataBundleResponseDto(new Uri("http://uriToBundleBlob"), notificationDto.DataAvailableNotificationIds), "sessionId").ConfigureAwait(false);
+            await _dataBundleResponseSender.SendAsync(new RequestDataBundleResponseDto(new Uri("http://uriToBundleBlob"), notificationDto.DataAvailableNotificationIds), "sessionId", DomainOrigin.MeteringPoints).ConfigureAwait(false);
         }
 
         public async Task BundleDequeuedAsync(byte[] notification)

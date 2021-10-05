@@ -59,5 +59,8 @@ limitations under the License.
     <Reference Include="GreenEnergyHub.PostOffice.Communicator, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\PoorMansPackages\GreenEnergyHub.PostOffice.Communicator.dll</HintPath>
     </Reference>
+    <Reference Include="GreenEnergyHub.PostOffice.Communicator.SimpleInjector, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\PoorMansPackages\GreenEnergyHub.PostOffice.Communicator.SimpleInjector.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

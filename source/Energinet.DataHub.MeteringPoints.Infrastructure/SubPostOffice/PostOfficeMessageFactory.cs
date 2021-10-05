@@ -16,9 +16,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
     public static class PostOfficeMessageFactory
     {
-        public static PostOfficeMessage Create(string correlation, string messageContent)
+        public static PostOfficeMessage Create(string correlation, string messageContent, string type)
         {
-            return new PostOfficeMessage(messageContent, correlation);
+            return new PostOfficeMessage(messageContent, correlation, type);
         }
     }
 }

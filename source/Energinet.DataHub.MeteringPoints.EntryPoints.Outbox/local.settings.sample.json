@@ -9,8 +9,10 @@
     "METERING_POINT_CONNECTED_TOPIC": "<Topic name for MeteringPointConnected events>",
     "METERINGPOINT_DB_CONNECTION_STRING": "<Main SQL database connection string>",
     "EVENT_MESSAGE_DISPATCH_TRIGGER_TIMER": "*/10 * * * * *",
-    "ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER": "*/10 * * * * *",
-    "TEMP_POST_OFFICE_CONNECTION_STRING": "",
-    "TEMP_POST_OFFICE_SHARE": ""
+    "ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER": "*/10 * * * * *"
+  },
+  "ConnectionStrings": {
+    "POSTOFFICE_QUEUE_CONNECTION_STRING": "<PostOffice Service Bus connection string>",
+    "POSTOFFICE_STORAGE_CONNECTION_STRING": "<PostOffice Service Bus connection string>"
   }
 }

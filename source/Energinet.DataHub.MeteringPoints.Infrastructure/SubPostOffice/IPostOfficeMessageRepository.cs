@@ -35,6 +35,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
         /// <summary>
         /// Save Post Office Message Metadata
         /// </summary>
-        Task SaveMessageMetadataAsync(PostOfficeMessage postOfficeMessage);
+        void AddMessageMetadata(PostOfficeMessage postOfficeMessage);
     }
 }

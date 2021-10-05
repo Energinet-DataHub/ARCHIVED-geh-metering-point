@@ -36,6 +36,7 @@ using GreenEnergyHub.PostOffice.Communicator.Dequeue;
 using GreenEnergyHub.PostOffice.Communicator.Factories;
 using GreenEnergyHub.PostOffice.Communicator.Model;
 using GreenEnergyHub.PostOffice.Communicator.Peek;
+using GreenEnergyHub.PostOffice.Communicator.SimpleInjector;
 using GreenEnergyHub.PostOffice.Communicator.Storage;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
@@ -100,21 +101,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.SubPostOffice
             var topic = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME");
             container.Register(() => new ServiceBusClient(connectionString).CreateSender(topic), Lifestyle.Singleton);
 
-            // container.AddPostOfficeCommunication("serviceBusConnectionString", "storageConnectionString");
             container.AddSubPostOfficeClient();
-            ConfigurePostOfficeDependencies(container); // TODO: temporary until AddPostOfficeCommunication extension method works as expected.
-        }
 
-        private static void ConfigurePostOfficeDependencies(Container container)
-        {
-            container.RegisterSingleton<IServiceBusClientFactory>(() => new ServiceBusClientFactory("connectionString"));
-            container.Register<IDataAvailableNotificationSender, DataAvailableNotificationSender>(Lifestyle.Singleton);
-            container.Register<IRequestBundleParser, RequestBundleParser>(Lifestyle.Singleton);
-            container.Register<IResponseBundleParser, ResponseBundleParser>(Lifestyle.Singleton);
-            container.Register<IDataBundleResponseSender>(() => new DataBundleResponseSender(container.GetRequiredService<IResponseBundleParser>(), container.GetRequiredService<IServiceBusClientFactory>(), DomainOrigin.MeteringPoints), Lifestyle.Singleton);
-            container.Register<IStorageHandler, StorageHandler>(Lifestyle.Singleton);
-            container.Register<IStorageServiceClientFactory>(() => new StorageServiceClientFactory("connectionString"), Lifestyle.Singleton);
-            container.Register<IDequeueNotificationParser, DequeueNotificationParser>(Lifestyle.Singleton);
+            container.AddPostOfficeCommunication("POSTOFFICE_QUEUE_CONNECTION_STRING", "POSTOFFICE_STORAGE_CONNECTION_STRING");
         }
     }
 }
