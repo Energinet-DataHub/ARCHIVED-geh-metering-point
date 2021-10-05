@@ -312,6 +312,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError<CreateMeteringPointRejected>("D02");
         }
 
+        [Theory]
+        [InlineData(null)]
+        [InlineData("invalid_value")]
+        public async Task Should_reject_when_measurement_unit_is_missing_or_is_invalid(string measurementUnitType)
+        {
+            var request = CreateRequest()
+                with
+                {
+                    MeasureUnitType = measurementUnitType,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D02");
+        }
+
         private static CreateMeteringPoint CreateRequest()
         {
             return new(
