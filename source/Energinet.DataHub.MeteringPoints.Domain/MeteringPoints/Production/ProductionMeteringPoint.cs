@@ -18,23 +18,20 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
 {
     #pragma warning disable
-    public class ConsumptionMeteringPoint : MarketMeteringPoint
+    public class ProductionMeteringPoint : MarketMeteringPoint
     {
-        private SettlementMethod _settlementMethod;
         private NetSettlementGroup _netSettlementGroup;
         private AssetType? _assetType;
-        private ScheduledMeterReadingDate? _scheduledMeterReadingDate;
 
-        private ConsumptionMeteringPoint(
+        private ProductionMeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
@@ -47,12 +44,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit powerLimit,
             EffectiveDate effectiveDate,
-            SettlementMethod settlementMethod,
             NetSettlementGroup netSettlementGroup,
             DisconnectionType disconnectionType,
             ConnectionType? connectionType,
             AssetType? assetType,
-            ScheduledMeterReadingDate? scheduledMeterReadingDate,
             Capacity? capacity)
             : base(
                 id,
@@ -72,14 +67,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 connectionType,
                 disconnectionType)
         {
-            _settlementMethod = settlementMethod;
             _netSettlementGroup = netSettlementGroup;
             _assetType = assetType;
             _productType = ProductType.EnergyActive;
             ConnectionState = ConnectionState.New();
-            _scheduledMeterReadingDate = scheduledMeterReadingDate;
 
-            var @event = new ConsumptionMeteringPointCreated(
+            var @event = new ProductionMeteringPointCreated(
                 id.Value,
                 GsrnNumber.Value,
                 gridAreaLinkId.Value,
@@ -87,7 +80,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 _productType.Name,
                 meterReadingOccurrence.Name,
                 _unitType.Name,
-                _settlementMethod.Name,
                 netSettlementGroup.Name,
                 address.City,
                 address.Floor,
@@ -111,14 +103,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 ConnectionType?.Name,
                 _assetType.Name,
                 ConnectionState.PhysicalState.Name,
-                _scheduledMeterReadingDate?.MonthAndDay,
                 capacity?.Kw);
 
             AddDomainEvent(@event);
         }
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
-        private ConsumptionMeteringPoint() { }
+        private ProductionMeteringPoint() { }
 #pragma warning restore 8618
 
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
@@ -144,34 +135,25 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
 
-        public static BusinessRulesValidationResult CanCreate(ConsumptionMeteringPointDetails meteringPointDetails)
+        public static BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
         {
             if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
             var generalRuleCheckResult= MarketMeteringPoint.CanCreate(meteringPointDetails);
             var rules = new List<IBusinessRule>()
             {
-                new PowerPlantIsRequiredForNetSettlementGroupRule(meteringPointDetails.GsrnNumber,
-                    meteringPointDetails.NetSettlementGroup, meteringPointDetails.PowerPlantGsrnNumber),
-                new StreetNameIsRequiredRule(meteringPointDetails.GsrnNumber, meteringPointDetails.Address),
-                new PostCodeIsRequiredRule(meteringPointDetails.Address),
-                new CityIsRequiredRule(meteringPointDetails.Address),
-                new ScheduledMeterReadingDateRule(meteringPointDetails.ScheduledMeterReadingDate,
-                    meteringPointDetails.NetSettlementGroup),
-                new CapacityRequirementRule(meteringPointDetails.Capacity, meteringPointDetails.NetSettlementGroup),
-                new AssetTypeRequirementRule(meteringPointDetails.AssetType, meteringPointDetails.NetSettlementGroup),
-                new SettlementMethodMustBeFlexOrNonProfiledRule(meteringPointDetails.SettlementMethod),
+                // TODO: Implement production specific rules
             };
 
             return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
         }
 
-        public static ConsumptionMeteringPoint Create(MeteringPointDetails meteringPointDetails)
+        public static ProductionMeteringPoint Create(MeteringPointDetails meteringPointDetails)
         {
             if (!CanCreate(meteringPointDetails).Success)
             {
-                throw new ConsumptionMeteringPointException($"Cannot create consumption metering point due to violation of one or more business rules.");
+                throw new ProductionMeteringPointException($"Cannot create production metering point due to violation of one or more business rules.");
             }
-            return new ConsumptionMeteringPoint(
+            return new ProductionMeteringPoint(
                 meteringPointDetails.Id,
                 meteringPointDetails.GsrnNumber,
                 meteringPointDetails.Address,
@@ -184,12 +166,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointDetails.ReadingOccurrence,
                 meteringPointDetails.PowerLimit,
                 meteringPointDetails.EffectiveDate,
-                meteringPointDetails.SettlementMethod,
                 meteringPointDetails.NetSettlementGroup,
                 meteringPointDetails.DisconnectionType,
                 meteringPointDetails.ConnectionType,
                 meteringPointDetails.AssetType,
-                meteringPointDetails.ScheduledMeterReadingDate,
                 meteringPointDetails.Capacity);
         }
     }
