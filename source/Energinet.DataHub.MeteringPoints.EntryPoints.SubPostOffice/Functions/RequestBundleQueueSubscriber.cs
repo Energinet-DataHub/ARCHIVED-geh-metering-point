@@ -39,7 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.SubPostOffice.Functions
 
         [Function("RequestBundleQueueSubscriber")]
         public async Task RunAsync(
-            [ServiceBusTrigger("%POSTOFFICE_QUEUE_TOPIC_NAME%", Connection = "POSTOFFICE_QUEUE_CONNECTION_STRING")] byte[] data,
+            [ServiceBusTrigger("sbq-meteringpoints", Connection = "POSTOFFICE_QUEUE_CONNECTION_STRING", IsSessionsEnabled = true)] byte[] data,
             FunctionContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));

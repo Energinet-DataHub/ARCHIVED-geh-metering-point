@@ -85,7 +85,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.SubPostOffice
             base.ConfigureContainer(container);
 
             // Register application components.
-            container.Register<BundleDequeuedQueueSubscriber>(Lifestyle.Scoped);
+            // container.Register<BundleDequeuedQueueSubscriber>(Lifestyle.Scoped);
             container.Register<RequestBundleQueueSubscriber>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
             container.Register<IUnitOfWork, UnitOfWork>();
