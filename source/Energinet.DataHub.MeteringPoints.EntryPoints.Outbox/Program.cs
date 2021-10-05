@@ -20,6 +20,7 @@ using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
+using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
@@ -30,6 +31,12 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
+using GreenEnergyHub.PostOffice.Communicator.DataAvailable;
+using GreenEnergyHub.PostOffice.Communicator.Dequeue;
+using GreenEnergyHub.PostOffice.Communicator.Factories;
+using GreenEnergyHub.PostOffice.Communicator.Model;
+using GreenEnergyHub.PostOffice.Communicator.Peek;
+using GreenEnergyHub.PostOffice.Communicator.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleInjector;
@@ -70,7 +77,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             base.ConfigureContainer(container);
 
             // Register application components.
-            container.Register<ISubPostOfficeClient, SubPostOfficeClient>(Lifestyle.Scoped);
             container.Register<ISystemDateTimeProvider, SystemDateTimeProvider>(Lifestyle.Scoped);
             container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Scoped);
             container.Register<IOutboxManager, OutboxManager>(Lifestyle.Scoped);
@@ -81,12 +87,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             container.RegisterDecorator<IOutboxMessageDispatcher, OutboxMessageDispatcherTelemetryDecorator>(Lifestyle.Scoped);
             container.Register<OutboxMessageFactory>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
-            container.Register<ISubPostOfficeStorageClient, SubPostOfficeStorageClient>();
 
             var connectionString = Environment.GetEnvironmentVariable("SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING");
-            container.Register<ServiceBusClient>(
-                () => new ServiceBusClient(connectionString),
-                Lifestyle.Singleton);
+            container.Register(() => new ServiceBusClient(connectionString), Lifestyle.Singleton);
 
             container.Register(
                 () => new MeteringPointCreatedTopic(Environment.GetEnvironmentVariable("METERING_POINT_CREATED_TOPIC") ?? throw new InvalidOperationException(
@@ -101,6 +104,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
 
             container.SendProtobuf<IntegrationEventEnvelope>();
 
+            container.AddSubPostOfficeDataAvailableClient();
+            ConfigurePostOfficeDependencies(container); // TODO: temporary until AddPostOfficeCommunication extension method works as expected.
+
             // Setup pipeline behaviors
             container.BuildMediator(
                 new[]
@@ -108,6 +114,18 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                     typeof(OutboxWatcher).Assembly,
                 },
                 Array.Empty<Type>());
+        }
+
+        private static void ConfigurePostOfficeDependencies(Container container)
+        {
+            container.RegisterSingleton<IServiceBusClientFactory>(() => new ServiceBusClientFactory("connectionString"));
+            container.Register<IDataAvailableNotificationSender, DataAvailableNotificationSender>(Lifestyle.Singleton);
+            container.Register<IRequestBundleParser, RequestBundleParser>(Lifestyle.Singleton);
+            container.Register<IResponseBundleParser, ResponseBundleParser>(Lifestyle.Singleton);
+            container.Register<IDataBundleResponseSender>(() => new DataBundleResponseSender(container.GetRequiredService<IResponseBundleParser>(), container.GetRequiredService<IServiceBusClientFactory>(), DomainOrigin.MeteringPoints), Lifestyle.Singleton);
+            container.Register<IStorageHandler, StorageHandler>(Lifestyle.Singleton);
+            container.Register<IStorageServiceClientFactory>(() => new StorageServiceClientFactory("connectionString"), Lifestyle.Singleton);
+            container.Register<IDequeueNotificationParser, DequeueNotificationParser>(Lifestyle.Singleton);
         }
     }
 }

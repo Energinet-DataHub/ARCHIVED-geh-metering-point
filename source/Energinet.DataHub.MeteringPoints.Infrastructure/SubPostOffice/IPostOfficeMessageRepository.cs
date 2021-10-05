@@ -25,16 +25,16 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
         /// <summary>
         /// Fetch Post Office Message Metadata by id
         /// </summary>
-        Task<PostOfficeMessageMetadata> GetMessageAsync(Guid messageId);
+        Task<PostOfficeMessage> GetMessageAsync(Guid messageId);
 
         /// <summary>
         /// Fetch Post Office Message Metadata by id
         /// </summary>
-        Task<PostOfficeMessageMetadata[]> GetMessagesAsync(Guid[] messageIds);
+        Task<PostOfficeMessage[]> GetMessagesAsync(Guid[] messageIds);
 
         /// <summary>
         /// Save Post Office Message Metadata
         /// </summary>
-        Task SaveMessageMetadataAsync(PostOfficeMessageMetadata postOfficeMessageMetadata);
+        Task SaveMessageMetadataAsync(PostOfficeMessage postOfficeMessage);
     }
 }

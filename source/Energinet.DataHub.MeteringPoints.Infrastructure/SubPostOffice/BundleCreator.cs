@@ -12,22 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
-    public static class PostOfficeMessageMetadataFactory
+    public class BundleCreator : IBundleCreator
     {
-        public static PostOfficeMessageMetadata Create(string correlation)
+        public Task<string> CreateBundleAsync(IEnumerable<PostOfficeMessage> messages)
         {
-            var blobName = CreateBlobName();
-
-            return new PostOfficeMessageMetadata(blobName, correlation);
-        }
-
-        private static string CreateBlobName()
-        {
-            return $"{Guid.NewGuid():N}.xml";
+            return Task.FromResult(string.Empty);
         }
     }
 }

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
@@ -22,12 +21,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
     /// </summary>
     public interface ISubPostOfficeClient
     {
-        /// <summary>
-        /// Dispatch message to Local Post Office
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task DispatchAsync(PostOfficeMessageEnvelope message);
-
         /// <summary>
         /// Request bundle from Local Post Office
         /// </summary>

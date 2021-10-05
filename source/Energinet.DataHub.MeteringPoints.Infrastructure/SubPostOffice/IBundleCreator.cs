@@ -12,24 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using GreenEnergyHub.PostOffice.Communicator.Model;
-using GreenEnergyHub.PostOffice.Communicator.Storage;
 
-namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice.Mocks
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
-    public class PostOfficeStorageClientMock : IStorageHandler
+    /// <summary>
+    /// Bundle creator
+    /// </summary>
+    public interface IBundleCreator
     {
-        public Task<Uri> AddStreamToStorageAsync(Stream stream, DataBundleRequestDto requestDto)
-        {
-            return Task.FromResult(new Uri("https://someUri"));
-        }
-
-        public Task<Stream> GetStreamFromStorageAsync(Uri contentPath)
-        {
-            return Task.FromResult((Stream)new MemoryStream());
-        }
+        /// <summary>
+        /// Create a bundle.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        Task<string> CreateBundleAsync(IEnumerable<PostOfficeMessage> messages);
     }
 }

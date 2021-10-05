@@ -33,41 +33,40 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
     {
         private readonly DispatcherMock _messageDispatcher;
         private readonly ISubPostOfficeClient _subPostOfficeClient;
+        private readonly ISubPostOfficeDataAvailableClient _subPostOfficeDataAvailableClient;
         private readonly DataAvailableNotificationSenderMock _dataAvailableNotificationSender;
         private readonly DataBundleResponseSenderMock _dataBundleResponseSender;
         private readonly RequestBundleParser _requestBundleParser;
         private readonly DequeueNotificationParser _dequeueNotificationParser;
 
         private readonly PostOfficeMessageMetadataRepositoryMock _postOfficeMessageMetadataRepository;
-        private readonly SubPostOfficeStorageClientMock _subPostOfficeStorageClient;
 
         public SubPostOfficeTests()
         {
             _messageDispatcher = new DispatcherMock();
             _postOfficeMessageMetadataRepository = new PostOfficeMessageMetadataRepositoryMock();
-            _subPostOfficeStorageClient = new SubPostOfficeStorageClientMock();
-            PostOfficeStorageClientMock postOfficeStorageClient = new();
             _dataBundleResponseSender = new DataBundleResponseSenderMock();
             var dequeueNotificationParser = new DequeueNotificationParser();
             _requestBundleParser = new RequestBundleParser();
             _dequeueNotificationParser = new DequeueNotificationParser();
             _dataAvailableNotificationSender = new DataAvailableNotificationSenderMock();
             _subPostOfficeClient = new SubPostOfficeClient(
-                _subPostOfficeStorageClient,
-                postOfficeStorageClient,
+                new PostOfficeStorageClientMock(),
                 _postOfficeMessageMetadataRepository,
                 _messageDispatcher,
-                _dataAvailableNotificationSender,
                 _dataBundleResponseSender,
                 dequeueNotificationParser,
-                _requestBundleParser);
+                _requestBundleParser,
+                new BundleCreator());
+
+            _subPostOfficeDataAvailableClient = new SubPostOfficeDataAvailableClient(_postOfficeMessageMetadataRepository, _dataAvailableNotificationSender);
         }
 
         [Fact]
         public async Task Dispatch_Should_Result_In_MessageReady_Notification()
         {
             var message = await DispatchMessage().ConfigureAwait(false);
-            _subPostOfficeStorageClient.Exists(message.PostOfficeMessageMetadata.BlobName).Should().BeTrue();
+            _postOfficeMessageMetadataRepository.GetMessageAsync(message.PostOfficeMessageMetadata.Id).Should().NotBeNull();
             _dataAvailableNotificationSender.IsSent().Should().BeTrue();
         }
 
@@ -83,14 +82,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
         [Fact]
         public async Task BundleDequeued_Should_Result_In_Dispatched_Commands_For_Each_Message()
         {
-            var messages = new List<(PostOfficeMessageMetadata PostOfficeMessageMetadata, string Correlation)>();
+            var messages = new List<(PostOfficeMessage PostOfficeMessageMetadata, string Correlation)>();
 
             for (var i = 0; i < 100; i++)
             {
                 var message = await DispatchMessage().ConfigureAwait(false);
                 messages.Add(message);
-                await RequestBundle(message!.PostOfficeMessageMetadata).ConfigureAwait(false);
             }
+
+            await RequestBundle(messages).ConfigureAwait(false); // TODO : do only once
 
             var bytes = _dequeueNotificationParser.Parse(new DequeueNotificationDto(messages.Select(x => x.PostOfficeMessageMetadata.Id).ToArray(), new GlobalLocationNumberDto("recipient")));
 
@@ -102,7 +102,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
             }
         }
 
-        private async Task RequestBundle(PostOfficeMessageMetadata? message)
+        private async Task RequestBundle(List<(PostOfficeMessage PostOfficeMessageMetadata, string Correlation)> messages)
+        {
+            foreach (var message in messages)
+            {
+                await RequestBundle(message.PostOfficeMessageMetadata).ConfigureAwait(false);
+            }
+        }
+
+        private async Task RequestBundle(PostOfficeMessage message)
         {
             var requestBundleDto = new DataBundleRequestDto("idempotencyId", new[] { message!.Id });
 
@@ -111,11 +119,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
             await _subPostOfficeClient.CreateBundleAsync(bytes).ConfigureAwait(false);
         }
 
-        private async Task<(PostOfficeMessageMetadata PostOfficeMessageMetadata, string Correlation)> DispatchMessage()
+        private async Task<(PostOfficeMessage PostOfficeMessageMetadata, string Correlation)> DispatchMessage()
         {
             var correlationId = Guid.NewGuid().ToString();
 
-            await _subPostOfficeClient.DispatchAsync(new PostOfficeMessageEnvelope("recipient", "content", "messagetype", correlationId)).ConfigureAwait(false);
+            await _subPostOfficeDataAvailableClient.DataAvailableAsync(new PostOfficeMessageEnvelope("recipient", "content", "messagetype", correlationId)).ConfigureAwait(false);
 
             var message = _postOfficeMessageMetadataRepository.GetMessageByCorrelation(correlationId);
             return (message, correlationId);

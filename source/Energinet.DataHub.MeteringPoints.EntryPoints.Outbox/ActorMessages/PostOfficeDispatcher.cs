@@ -23,18 +23,18 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
 {
     public class PostOfficeDispatcher : IRequestHandler<PostOfficeMessageEnvelope>
     {
-        private readonly ISubPostOfficeClient _subPostOfficeClient;
+        private readonly ISubPostOfficeDataAvailableClient _subPostOfficeDataAvailableClient;
 
-        public PostOfficeDispatcher(ISubPostOfficeClient subPostOfficeClient)
+        public PostOfficeDispatcher(ISubPostOfficeDataAvailableClient subPostOfficeDataAvailableClient)
         {
-            _subPostOfficeClient = subPostOfficeClient;
+            _subPostOfficeDataAvailableClient = subPostOfficeDataAvailableClient;
         }
 
         public async Task<Unit> Handle(PostOfficeMessageEnvelope request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            await _subPostOfficeClient.DispatchAsync(request).ConfigureAwait(false);
+            await _subPostOfficeDataAvailableClient.DataAvailableAsync(request).ConfigureAwait(false);
 
             return Unit.Value;
         }

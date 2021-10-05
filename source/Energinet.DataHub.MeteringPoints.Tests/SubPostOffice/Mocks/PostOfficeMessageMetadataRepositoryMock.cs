@@ -22,25 +22,25 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice.Mocks
 {
     public class PostOfficeMessageMetadataRepositoryMock : IPostOfficeMessageMetadataRepository
     {
-        private readonly List<PostOfficeMessageMetadata> _postOfficeMessageMetadataList = new();
+        private readonly List<PostOfficeMessage> _postOfficeMessageMetadataList = new();
 
-        public Task<PostOfficeMessageMetadata> GetMessageAsync(Guid messageId)
+        public Task<PostOfficeMessage> GetMessageAsync(Guid messageId)
         {
             return Task.FromResult(_postOfficeMessageMetadataList.First());
         }
 
-        public Task<PostOfficeMessageMetadata[]> GetMessagesAsync(Guid[] messageIds)
+        public Task<PostOfficeMessage[]> GetMessagesAsync(Guid[] messageIds)
         {
             return Task.FromResult(_postOfficeMessageMetadataList.ToArray());
         }
 
-        public Task SaveMessageMetadataAsync(PostOfficeMessageMetadata postOfficeMessageMetadata)
+        public Task SaveMessageMetadataAsync(PostOfficeMessage postOfficeMessage)
         {
-            _postOfficeMessageMetadataList.Add(postOfficeMessageMetadata);
+            _postOfficeMessageMetadataList.Add(postOfficeMessage);
             return Task.CompletedTask;
         }
 
-        public PostOfficeMessageMetadata GetMessageByCorrelation(string correlation)
+        public PostOfficeMessage GetMessageByCorrelation(string correlation)
         {
             return _postOfficeMessageMetadataList.Single(x => x.Correlation == correlation);
         }

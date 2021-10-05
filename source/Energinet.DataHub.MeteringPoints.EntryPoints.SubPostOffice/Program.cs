@@ -14,23 +14,29 @@
 
 using System;
 using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.MeteringPoints.Application.Common.Users;
+using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
 using Energinet.DataHub.MeteringPoints.EntryPoints.SubPostOffice.Functions;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
+using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.PostOffice;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
-using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
+using Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.PostOffice.Communicator.DataAvailable;
 using GreenEnergyHub.PostOffice.Communicator.Dequeue;
 using GreenEnergyHub.PostOffice.Communicator.Factories;
+using GreenEnergyHub.PostOffice.Communicator.Model;
 using GreenEnergyHub.PostOffice.Communicator.Peek;
+using GreenEnergyHub.PostOffice.Communicator.Storage;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -85,28 +91,30 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.SubPostOffice
             container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
             container.Register<ISystemDateTimeProvider, SystemDateTimeProvider>(Lifestyle.Singleton);
             container.Register<IIncomingMessageRegistry, IncomingMessageRegistry>(Lifestyle.Transient);
+            container.SendProtobuf<MeteringPointEnvelope>();
+            container.Register<IMessageDispatcher, InternalDispatcher>(Lifestyle.Scoped);
+            container.Register<Channel, InternalServiceBus>(Lifestyle.Scoped);
+            container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
 
-            ConfigureSubPostOfficeDependencies(container);
+            var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING");
+            var topic = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME");
+            container.Register(() => new ServiceBusClient(connectionString).CreateSender(topic), Lifestyle.Singleton);
 
-            ConfigurePostOfficeDependencies(container);
-        }
-
-        private static void ConfigureSubPostOfficeDependencies(Container container)
-        {
-            container.Register<ISubPostOfficeClient, SubPostOfficeClient>(Lifestyle.Singleton);
-            container.Register<IMessageDispatcher, InternalDispatcher>(Lifestyle.Singleton);
-            container.Register(() => new SubPostOfficeStorageSettings("localPostOfficeConnString"), Lifestyle.Singleton);
-            container.Register<ISubPostOfficeStorageClient, SubPostOfficeStorageClient>(Lifestyle.Singleton);
-            container.Register<IPostOfficeMessageMetadataRepository, PostOfficeMessageMetadataRepository>(Lifestyle.Singleton);
+            // container.AddPostOfficeCommunication("serviceBusConnectionString", "storageConnectionString");
+            container.AddSubPostOfficeClient();
+            ConfigurePostOfficeDependencies(container); // TODO: temporary until AddPostOfficeCommunication extension method works as expected.
         }
 
         private static void ConfigurePostOfficeDependencies(Container container)
         {
-            container.Register<IServiceBusClientFactory, ServiceBusClientFactory>(Lifestyle.Singleton);
+            container.RegisterSingleton<IServiceBusClientFactory>(() => new ServiceBusClientFactory("connectionString"));
             container.Register<IDataAvailableNotificationSender, DataAvailableNotificationSender>(Lifestyle.Singleton);
-            container.Register<IDequeueNotificationParser, DequeueNotificationParser>(Lifestyle.Singleton);
             container.Register<IRequestBundleParser, RequestBundleParser>(Lifestyle.Singleton);
-            container.Register<IPostOfficeStorageClient, PostOfficeStorageClient>(Lifestyle.Singleton);
+            container.Register<IResponseBundleParser, ResponseBundleParser>(Lifestyle.Singleton);
+            container.Register<IDataBundleResponseSender>(() => new DataBundleResponseSender(container.GetRequiredService<IResponseBundleParser>(), container.GetRequiredService<IServiceBusClientFactory>(), DomainOrigin.MeteringPoints), Lifestyle.Singleton);
+            container.Register<IStorageHandler, StorageHandler>(Lifestyle.Singleton);
+            container.Register<IStorageServiceClientFactory>(() => new StorageServiceClientFactory("connectionString"), Lifestyle.Singleton);
+            container.Register<IDequeueNotificationParser, DequeueNotificationParser>(Lifestyle.Singleton);
         }
     }
 }

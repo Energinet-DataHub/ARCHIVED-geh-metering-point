@@ -27,17 +27,17 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.PostOffice
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Task<PostOfficeMessageMetadata> GetMessageAsync(Guid messageId)
+        public Task<PostOfficeMessage> GetMessageAsync(Guid messageId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<PostOfficeMessageMetadata[]> GetMessagesAsync(Guid[] messageIds)
+        public Task<PostOfficeMessage[]> GetMessagesAsync(Guid[] messageIds)
         {
             throw new NotImplementedException();
         }
 
-        public Task SaveMessageMetadataAsync(PostOfficeMessageMetadata postOfficeMessageMetadata)
+        public Task SaveMessageMetadataAsync(PostOfficeMessage postOfficeMessage)
         {
             throw new NotImplementedException();
         }

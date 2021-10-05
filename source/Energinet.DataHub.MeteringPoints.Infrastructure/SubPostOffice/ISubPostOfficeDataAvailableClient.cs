@@ -12,29 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
-    public class PostOfficeMessageMetadata
+    /// <summary>
+    /// Local Post Office
+    /// </summary>
+    public interface ISubPostOfficeDataAvailableClient
     {
-        public PostOfficeMessageMetadata(string blobName, string correlation)
-        {
-            Id = Guid.NewGuid();
-            Correlation = correlation;
-            BlobName = blobName;
-        }
-
-        public PostOfficeMessageMetadata(Guid id, string blobName, string correlation)
-            : this(blobName, correlation)
-        {
-            Id = id;
-        }
-
-        public Guid Id { get; }
-
-        public string BlobName { get; }
-
-        public string Correlation { get; }
+        /// <summary>
+        /// Dispatch message to Local Post Office
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        Task DataAvailableAsync(PostOfficeMessageEnvelope message);
     }
 }

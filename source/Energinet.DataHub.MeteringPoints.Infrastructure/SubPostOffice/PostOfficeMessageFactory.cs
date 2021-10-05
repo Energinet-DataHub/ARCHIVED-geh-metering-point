@@ -12,26 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Threading.Tasks;
-
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
-    /// <summary>
-    /// Basic file management for PostOffice communication.
-    /// </summary>
-    public interface ISubPostOfficeStorageClient
+    public static class PostOfficeMessageFactory
     {
-        /// <summary>
-        /// Write file.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task WriteAsync(PostOfficeMessageBlob messageBlob);
-
-        /// <summary>
-        /// Read file.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task<PostOfficeMessageBlob> ReadAsync(string blobName);
+        public static PostOfficeMessage Create(string correlation, string messageContent)
+        {
+            return new PostOfficeMessage(messageContent, correlation);
+        }
     }
 }

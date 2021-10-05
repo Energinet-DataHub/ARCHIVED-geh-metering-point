@@ -19,9 +19,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.PostOffice
 {
-    public class PostOfficeMessageMetadataEntityConfiguration : IEntityTypeConfiguration<PostOfficeMessageMetadata>
+    public class PostOfficeMessageMetadataEntityConfiguration : IEntityTypeConfiguration<PostOfficeMessage>
     {
-        public void Configure(EntityTypeBuilder<PostOfficeMessageMetadata> builder)
+        public void Configure(EntityTypeBuilder<PostOfficeMessage> builder)
         {
             if (builder == null)
             {

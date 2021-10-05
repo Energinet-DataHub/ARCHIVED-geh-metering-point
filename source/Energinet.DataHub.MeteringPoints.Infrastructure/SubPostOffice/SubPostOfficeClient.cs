@@ -13,82 +13,59 @@
 // limitations under the License.
 
 using System;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Application.PostOffice;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
-using GreenEnergyHub.PostOffice.Communicator.DataAvailable;
 using GreenEnergyHub.PostOffice.Communicator.Dequeue;
 using GreenEnergyHub.PostOffice.Communicator.Model;
 using GreenEnergyHub.PostOffice.Communicator.Peek;
+using GreenEnergyHub.PostOffice.Communicator.Storage;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
     public class SubPostOfficeClient : ISubPostOfficeClient
     {
         private readonly IMessageDispatcher _messageDispatcher;
-        private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
         private readonly IDataBundleResponseSender _dataBundleResponseSender;
         private readonly IDequeueNotificationParser _dequeueNotificationParser;
         private readonly IRequestBundleParser _requestBundleParser;
-        private readonly ISubPostOfficeStorageClient _subPostOfficeStorageClient;
-        private readonly IPostOfficeStorageClient _postOfficeStorageClient;
+        private readonly IBundleCreator _bundleCreator;
+        private readonly IStorageHandler _postOfficeStorageHandler;
         private readonly IPostOfficeMessageMetadataRepository _postOfficeMessageMetadataRepository;
 
         public SubPostOfficeClient(
-            ISubPostOfficeStorageClient subPostOfficeStorageClient,
-            IPostOfficeStorageClient postOfficeStorageClient,
+            IStorageHandler postOfficeStorageHandler,
             IPostOfficeMessageMetadataRepository postOfficeMessageMetadataRepository,
             IMessageDispatcher messageDispatcher,
-            IDataAvailableNotificationSender dataAvailableNotificationSender,
             IDataBundleResponseSender dataBundleResponseSender,
             IDequeueNotificationParser dequeueNotificationParser,
-            IRequestBundleParser requestBundleParser)
+            IRequestBundleParser requestBundleParser,
+            IBundleCreator bundleCreator)
         {
-            _subPostOfficeStorageClient = subPostOfficeStorageClient;
-            _postOfficeStorageClient = postOfficeStorageClient;
+            _postOfficeStorageHandler = postOfficeStorageHandler;
             _postOfficeMessageMetadataRepository = postOfficeMessageMetadataRepository;
             _messageDispatcher = messageDispatcher;
-            _dataAvailableNotificationSender = dataAvailableNotificationSender;
             _dataBundleResponseSender = dataBundleResponseSender;
             _dequeueNotificationParser = dequeueNotificationParser;
             _requestBundleParser = requestBundleParser;
-        }
-
-        public async Task DispatchAsync(PostOfficeMessageEnvelope message)
-        {
-            if (message is null)
-            {
-                throw new ArgumentNullException(nameof(message));
-            }
-
-            var messageMetadata = PostOfficeMessageMetadataFactory.Create(message.Correlation);
-            var messageBlob = PostOfficeMessageBlobFactory.Create(messageMetadata.BlobName, message.Content);
-
-            await _subPostOfficeStorageClient.WriteAsync(messageBlob).ConfigureAwait(false);
-            await _postOfficeMessageMetadataRepository.SaveMessageMetadataAsync(messageMetadata).ConfigureAwait(false);
-
-            await _dataAvailableNotificationSender.SendAsync(new DataAvailableNotificationDto(messageMetadata.Id, new GlobalLocationNumberDto(message.Recipient), new MessageTypeDto(message.MessageType), DomainOrigin.MeteringPoints, true, 1)).ConfigureAwait(false);
+            _bundleCreator = bundleCreator;
         }
 
         public async Task CreateBundleAsync(byte[] request)
         {
             var notificationDto = _requestBundleParser.Parse(request);
 
-            var messageMetadatas = await _postOfficeMessageMetadataRepository.GetMessagesAsync(notificationDto.DataAvailableNotificationIds.ToArray()).ConfigureAwait(false);
+            var messages = await _postOfficeMessageMetadataRepository.GetMessagesAsync(notificationDto.DataAvailableNotificationIds.ToArray()).ConfigureAwait(false);
 
-            StringBuilder fullMessage = new();
+            var bundle = await _bundleCreator.CreateBundleAsync(messages).ConfigureAwait(false);
 
-            foreach (var messageMetadata in messageMetadatas)
-            {
-                var message = await _subPostOfficeStorageClient.ReadAsync(messageMetadata.BlobName).ConfigureAwait(false);
-                fullMessage.Append(message);
-            }
+            await using var stream = new MemoryStream(Encoding.UTF8.GetBytes(bundle));
 
-            await _postOfficeStorageClient.WriteAsync(Guid.NewGuid().ToString(), fullMessage.ToString()).ConfigureAwait(false);
+            await _postOfficeStorageHandler.AddStreamToStorageAsync(stream, notificationDto).ConfigureAwait(false);
 
             await _dataBundleResponseSender.SendAsync(new RequestDataBundleResponseDto(new Uri("http://uriToBundleBlob"), notificationDto.DataAvailableNotificationIds), "sessionId").ConfigureAwait(false);
         }

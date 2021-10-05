@@ -83,6 +83,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests
         public void SubPostOfficeHostConfigurationTest()
         {
             Environment.SetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING", SomeString);
+            Environment.SetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusConnectionString);
+            Environment.SetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME", SomeString);
             Environment.SetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", SomeString);
             var program = new EntryPoints.SubPostOffice.Program();
 
