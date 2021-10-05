@@ -19,7 +19,9 @@ resource "azurerm_app_service" "webapi" {
 
   site_config {
     dotnet_framework_version = "v4.0"
-    scm_type                 = "LocalGit"
+    cors {
+      allowed_origins = ["*"]
+    }
   }
 
   app_settings = {
