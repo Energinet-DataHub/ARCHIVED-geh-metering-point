@@ -18,15 +18,16 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
     public class PostOfficeMessage
     {
-        public PostOfficeMessage(string messageContent, string correlation)
+        public PostOfficeMessage(string messageContent, string correlation, string type)
         {
             Id = Guid.NewGuid();
             Correlation = correlation;
+            Type = type;
             MessageContent = messageContent;
         }
 
-        public PostOfficeMessage(Guid id, string messageContent, string correlation)
-            : this(messageContent, correlation)
+        public PostOfficeMessage(Guid id, string messageContent, string correlation, string type)
+            : this(messageContent, correlation, type)
         {
             Id = id;
         }
@@ -36,5 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
         public string MessageContent { get; }
 
         public string Correlation { get; }
+
+        public string Type { get; }
     }
 }
