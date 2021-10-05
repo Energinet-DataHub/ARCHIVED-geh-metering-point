@@ -15,6 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Microsoft.EntityFrameworkCore;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints

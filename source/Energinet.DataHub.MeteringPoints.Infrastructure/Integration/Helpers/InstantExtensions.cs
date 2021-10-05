@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using System.Diagnostics.CodeAnalysis;
+using Google.Protobuf.WellKnownTypes;
+using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
 {
-    public class InvalidAssetTypeValueValidationError : ValidationError
+    public static class InstantExtensions
     {
-        public InvalidAssetTypeValueValidationError(string assetType)
+        public static Timestamp ToTimestamp([NotNull] this Instant instant)
         {
-            AssetType = assetType;
+            return Timestamp.FromDateTimeOffset(instant.ToDateTimeOffset());
         }
-
-        public string? AssetType { get; }
     }
 }

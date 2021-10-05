@@ -12,20 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    /// <summary>
-    /// Repository for market facing metering points
-    /// </summary>
-    public interface IMarketMeteringPointRepository
+    public class MeteringMethod : EnumerationType
     {
-        /// <summary>
-        /// Fetch metering point by GSRN number
-        /// </summary>
-        /// <param name="gsrnNumber"></param>
-        /// <returns><see cref="MarketMeteringPoint"/></returns>
-        Task<MarketMeteringPoint> GetByGSRNAsync(GsrnNumber gsrnNumber);
+        public static readonly MeteringMethod Physical = new MeteringMethod(0, nameof(Physical));
+        public static readonly MeteringMethod Virtual = new MeteringMethod(1, nameof(Virtual));
+        public static readonly MeteringMethod Calculated = new MeteringMethod(2, nameof(Calculated));
+
+        private MeteringMethod(int id, string name)
+            : base(id, name)
+        {
+        }
     }
 }

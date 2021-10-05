@@ -12,18 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules
 {
-    public class MeteringPointSubTypeMandatoryErrorConverter : ErrorConverter<MeteringPointSubTypeMandatoryValidationError>
+    public class AssetTypeRequirementRule : IBusinessRule
     {
-        protected override ErrorMessage Convert(MeteringPointSubTypeMandatoryValidationError validationError)
+        public AssetTypeRequirementRule(AssetType? assetType, NetSettlementGroup netSettlementGroup)
         {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-
-            return new("D02", $"Sub type is missing for metering point {validationError.GsrnNumber}");
+            IsBroken = netSettlementGroup != NetSettlementGroup.Zero && assetType is null;
         }
+
+        public bool IsBroken { get; }
+
+        public ValidationError ValidationError => new AssetTypeIsRequiredRuleError();
     }
 }

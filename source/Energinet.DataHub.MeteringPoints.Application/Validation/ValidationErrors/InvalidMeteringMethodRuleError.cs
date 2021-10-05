@@ -16,13 +16,13 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class InvalidAssetTypeValueValidationError : ValidationError
+    public class InvalidMeteringMethodRuleError : ValidationError
     {
-        public InvalidAssetTypeValueValidationError(string assetType)
+        public InvalidMeteringMethodRuleError(string meteringMethod)
         {
-            AssetType = assetType;
+            MeteringMethod = meteringMethod;
         }
 
-        public string? AssetType { get; }
+        public string MeteringMethod { get; }
     }
 }

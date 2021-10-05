@@ -21,19 +21,21 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints
 {
     public abstract class MarketMeteringPoint : MeteringPoint
     {
+        #pragma warning disable CS8618 // Ignore uninitialized properties
         protected MarketMeteringPoint()
         {
         }
+        #pragma warning restore
 
         protected MarketMeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            MeteringPointSubType meteringPointSubType,
+            MeteringMethod meteringMethod,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
@@ -44,12 +46,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             PowerLimit powerLimit,
             EffectiveDate effectiveDate,
             Capacity? capacity,
-            ConnectionType? connectionType)
+            ConnectionType? connectionType,
+            DisconnectionType disconnectionType)
             : base(
                 id,
                 gsrnNumber,
                 address,
-                meteringPointSubType,
+                meteringMethod,
                 meteringPointType,
                 gridAreaLinkId,
                 powerPlantGsrnNumber,
@@ -62,11 +65,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 capacity)
         {
             ConnectionType = connectionType;
+            DisconnectionType = disconnectionType;
         }
 
         protected EnergySupplierDetails? EnergySupplierDetails { get; private set; }
 
         protected ConnectionType? ConnectionType { get; private set; }
+
+        protected DisconnectionType DisconnectionType { get; private set; }
 
         public static new BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
         {
@@ -77,6 +83,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 new MeterReadingOccurrenceRule(meteringPointDetails.ReadingOccurrence),
                 new GeoInfoReferenceRequirementRule(meteringPointDetails.Address),
                 new ConnectionTypeRequirementRule(meteringPointDetails.NetSettlementGroup, meteringPointDetails.ConnectionType),
+                new MeteringMethodRule(meteringPointDetails.NetSettlementGroup, meteringPointDetails.MeteringMethod),
             };
 
             return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));

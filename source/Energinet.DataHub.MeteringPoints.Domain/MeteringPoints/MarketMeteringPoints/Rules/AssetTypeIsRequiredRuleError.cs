@@ -14,18 +14,9 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
 {
-    public class MeteringPointSubTypeValueMustBeValidValidationError : ValidationError
+    public class AssetTypeIsRequiredRuleError : ValidationError
     {
-        public MeteringPointSubTypeValueMustBeValidValidationError(string gsrnNumber, string meteringPointSubType)
-        {
-            GsrnNumber = gsrnNumber;
-            MeteringPointSubType = meteringPointSubType;
-        }
-
-        public string GsrnNumber { get; }
-
-        public string MeteringPointSubType { get; }
     }
 }

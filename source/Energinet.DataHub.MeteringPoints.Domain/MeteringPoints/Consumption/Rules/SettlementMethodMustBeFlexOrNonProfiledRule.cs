@@ -12,18 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules
 {
-    public class MeteringPointSubTypeMandatoryValidationError : ValidationError
+    public class SettlementMethodMustBeFlexOrNonProfiledRule : IBusinessRule
     {
-        public MeteringPointSubTypeMandatoryValidationError(string gsrnNumber)
+        public SettlementMethodMustBeFlexOrNonProfiledRule(SettlementMethod settlementMethod)
         {
-            GsrnNumber = gsrnNumber;
+            IsBroken = settlementMethod == SettlementMethod.Profiled;
+            ValidationError = new InvalidSettlementMethodRuleError(settlementMethod);
         }
 
-        public string GsrnNumber { get; }
+        public bool IsBroken { get; }
+
+        public ValidationError ValidationError { get; }
     }
 }

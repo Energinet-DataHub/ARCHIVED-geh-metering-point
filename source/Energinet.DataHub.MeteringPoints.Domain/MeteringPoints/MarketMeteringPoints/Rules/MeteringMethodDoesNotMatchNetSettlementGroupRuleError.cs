@@ -14,16 +14,18 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
 {
-    public class DisconnectionType : EnumerationType
+    public class MeteringMethodDoesNotMatchNetSettlementGroupRuleError : ValidationError
     {
-        public static readonly DisconnectionType Remote = new DisconnectionType(0, nameof(Remote));
-        public static readonly DisconnectionType Manual = new DisconnectionType(1, nameof(Manual));
-
-        private DisconnectionType(int id, string name)
-            : base(id, name)
+        public MeteringMethodDoesNotMatchNetSettlementGroupRuleError(NetSettlementGroup netSettlementGroup, MeteringMethod meteringMethod)
         {
+            NetSettlementGroup = netSettlementGroup;
+            MeteringMethod = meteringMethod;
         }
+
+        public NetSettlementGroup NetSettlementGroup { get; }
+
+        public MeteringMethod MeteringMethod { get; }
     }
 }

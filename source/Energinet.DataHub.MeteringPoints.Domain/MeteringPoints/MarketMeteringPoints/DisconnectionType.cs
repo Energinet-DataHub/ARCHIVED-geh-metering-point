@@ -14,15 +14,16 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints
 {
-    public class InvalidAssetTypeValueValidationError : ValidationError
+    public class DisconnectionType : EnumerationType
     {
-        public InvalidAssetTypeValueValidationError(string assetType)
-        {
-            AssetType = assetType;
-        }
+        public static readonly DisconnectionType Remote = new DisconnectionType(0, nameof(Remote));
+        public static readonly DisconnectionType Manual = new DisconnectionType(1, nameof(Manual));
 
-        public string? AssetType { get; }
+        private DisconnectionType(int id, string name)
+            : base(id, name)
+        {
+        }
     }
 }

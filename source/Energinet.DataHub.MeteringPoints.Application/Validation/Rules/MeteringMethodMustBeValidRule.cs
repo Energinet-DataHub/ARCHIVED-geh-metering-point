@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
@@ -22,17 +24,17 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class AssetTypeRule : AbstractValidator<CreateMeteringPoint>
+    public class MeteringMethodMustBeValidRule : AbstractValidator<CreateMeteringPoint>
     {
-        public AssetTypeRule()
+        public MeteringMethodMustBeValidRule()
         {
-            When(request => string.IsNullOrWhiteSpace(request.AssetType) == false, () =>
-            {
-                RuleFor(request => request.AssetType)
-                    .Must(value => EnumerationType.GetAll<AssetType>().Select(item => item.Name).Contains(value))
-                    .WithState(request =>
-                        new InvalidAssetTypeValueValidationError(request.AssetType!));
-            });
+            RuleFor(createMeteringPoint => createMeteringPoint.MeteringMethod)
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty()
+                .WithState(createMeteringPoint => new MeteringMethodIsMandatoryValidationError())
+                .Must(value => EnumerationType.GetAll<MeteringMethod>().Select(item => item.Name)
+                    .Contains(value, StringComparer.OrdinalIgnoreCase))
+                .WithState(request => new InvalidMeteringMethodRuleError(request.MeteringMethod));
         }
     }
 }

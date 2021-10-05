@@ -12,19 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using System;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class MeteringPointSubType : EnumerationType
+    public class InvalidAssetTypeValueValidationErrorConverter : ErrorConverter<InvalidAssetTypeValueValidationError>
     {
-        public static readonly MeteringPointSubType Physical = new MeteringPointSubType(0, nameof(Physical));
-        public static readonly MeteringPointSubType Virtual = new MeteringPointSubType(1, nameof(Virtual));
-        public static readonly MeteringPointSubType Calculated = new MeteringPointSubType(2, nameof(Calculated));
-
-        private MeteringPointSubType(int id, string name)
-            : base(id, name)
+        protected override ErrorMessage Convert(InvalidAssetTypeValueValidationError validationError)
         {
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new ErrorMessage("D59", $"AssetType {validationError.AssetType} has wrong value (outside domain).");
         }
     }
 }

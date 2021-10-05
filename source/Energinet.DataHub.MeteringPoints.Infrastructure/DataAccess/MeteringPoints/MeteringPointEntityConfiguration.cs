@@ -18,6 +18,7 @@ using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -82,11 +83,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     .HasColumnName("ConnectionState_EffectiveDate");
             });
 
-            builder.Property<MeteringPointSubType>("_meteringPointSubType")
+            builder.Property<MeteringMethod>("_meteringMethod")
                 .HasColumnName("MeteringPointSubType")
                 .HasConversion(
                     toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<MeteringPointSubType>(fromDbValue));
+                    fromDbValue => EnumerationType.FromName<MeteringMethod>(fromDbValue));
 
             builder.Property<MeteringPointType>("_meteringPointType")
                 .HasColumnName("TypeOfMeteringPoint")
@@ -169,6 +170,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<ConnectionType>(fromDbValue));
+
+            builder.Property<DisconnectionType>("DisconnectionType")
+                .HasColumnName("DisconnectionType")
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<DisconnectionType>(fromDbValue));
         }
     }
 
@@ -188,12 +195,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<AssetType>(fromDbValue));
-
-            builder.Property<DisconnectionType>("_disconnectionType")
-                .HasColumnName("DisconnectionType")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<DisconnectionType>(fromDbValue));
 
             builder.Property<SettlementMethod>("_settlementMethod")
                 .HasColumnName("SettlementMethod")

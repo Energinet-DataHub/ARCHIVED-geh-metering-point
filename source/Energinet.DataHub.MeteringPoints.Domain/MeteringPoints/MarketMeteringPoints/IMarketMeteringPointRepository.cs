@@ -12,17 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using System.Threading.Tasks;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints
 {
-    public class AssetTypeMandatoryValidationError : ValidationError
+    /// <summary>
+    /// Repository for market facing metering points
+    /// </summary>
+    public interface IMarketMeteringPointRepository
     {
-        public AssetTypeMandatoryValidationError(string gsrnNumber)
-        {
-            GsrnNumber = gsrnNumber;
-        }
-
-        public string GsrnNumber { get; }
+        /// <summary>
+        /// Fetch metering point by GSRN number
+        /// </summary>
+        /// <param name="gsrnNumber"></param>
+        /// <returns><see cref="MarketMeteringPoint"/></returns>
+        Task<MarketMeteringPoint> GetByGSRNAsync(GsrnNumber gsrnNumber);
     }
 }

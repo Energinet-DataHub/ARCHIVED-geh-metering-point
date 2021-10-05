@@ -31,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             bool? IsOfficialAddress = null,
             string GsrnNumber = "",
             string TypeOfMeteringPoint = "",
-            string SubTypeOfMeteringPoint = "",
+            string MeteringMethod = "",
             string MeterReadingOccurrence = "",
             int MaximumCurrent = 0,
             int MaximumPower = 0,

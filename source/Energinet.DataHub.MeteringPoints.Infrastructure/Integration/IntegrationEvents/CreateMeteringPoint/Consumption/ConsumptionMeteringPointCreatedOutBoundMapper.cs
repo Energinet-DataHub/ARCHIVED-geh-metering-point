@@ -19,6 +19,8 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Google.Protobuf;
+using NodaTime;
+using NodaTime.Text;
 using ConsumptionMeteringPointCreated = Energinet.DataHub.MeteringPoints.IntegrationEventContracts.ConsumptionMeteringPointCreated;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption
@@ -34,11 +36,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 GsrnNumber = obj.GsrnNumber,
                 GridAreaCode = obj.GridAreaCode,
                 SettlementMethod = EnumerationType.FromName<SettlementMethod>(obj.SettlementMethod).MapToEnum<ConsumptionMeteringPointCreated.Types.SettlementMethod>(),
-                MeteringMethod = EnumerationType.FromName<MeteringPointSubType>(obj.MeteringMethod).MapToEnum<ConsumptionMeteringPointCreated.Types.MeteringMethod>(),
+                MeteringMethod = EnumerationType.FromName<MeteringMethod>(obj.MeteringMethod).MapToEnum<ConsumptionMeteringPointCreated.Types.MeteringMethod>(),
                 MeterReadingPeriodicity = EnumerationType.FromName<ReadingOccurrence>(obj.MeterReadingPeriodicity).MapToEnum<ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity>(),
                 NetSettlementGroup = EnumerationType.FromName<NetSettlementGroup>(obj.NetSettlementGroup).MapToEnum<ConsumptionMeteringPointCreated.Types.NetSettlementGroup>(),
                 Product = EnumerationType.FromName<ProductType>(obj.ProductType).MapToEnum<ConsumptionMeteringPointCreated.Types.ProductType>(),
-                EffectiveDate = obj.EffectiveDate,
+                EffectiveDate = obj.EffectiveDate.ToTimestamp(),
                 UnitType = EnumerationType.FromName<MeasurementUnitType>(obj.UnitType).MapToEnum<ConsumptionMeteringPointCreated.Types.UnitType>(),
                 ConnectionState = EnumerationType.FromName<PhysicalState>(obj.ConnectionState).MapToEnum<ConsumptionMeteringPointCreated.Types.ConnectionState>(),
             };

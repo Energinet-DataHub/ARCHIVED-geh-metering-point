@@ -19,14 +19,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
     public class MeterIdRequirementRule : IBusinessRule
     {
-        public MeterIdRequirementRule(MeterId? meterId, MeteringPointSubType meteringPointSubType)
+        public MeterIdRequirementRule(MeterId? meterId, MeteringMethod meteringMethod)
         {
-            if (meteringPointSubType == MeteringPointSubType.Physical && meterId == null)
+            if (meteringMethod == MeteringMethod.Physical && meterId == null)
             {
                 IsBroken = true;
                 ValidationError = new MeterIdIsRequiredRuleError();
             }
-            else if (meteringPointSubType != MeteringPointSubType.Physical && meterId! != null!)
+            else if (meteringMethod != MeteringMethod.Physical && meterId! != null!)
             {
                 IsBroken = true;
                 ValidationError = new MeterIdIsNotAllowedRuleError();

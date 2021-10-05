@@ -20,6 +20,7 @@ using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules.Connect;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -30,7 +31,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
     {
         private SettlementMethod _settlementMethod;
         private NetSettlementGroup _netSettlementGroup;
-        private DisconnectionType _disconnectionType;
         private AssetType? _assetType;
         private ScheduledMeterReadingDate? _scheduledMeterReadingDate;
 
@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            MeteringPointSubType meteringPointSubType,
+            MeteringMethod meteringMethod,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
@@ -58,7 +58,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 id,
                 gsrnNumber,
                 address,
-                meteringPointSubType,
+                meteringMethod,
                 meteringPointType,
                 gridAreaLinkId,
                 powerPlantGsrnNumber,
@@ -69,11 +69,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 powerLimit,
                 effectiveDate,
                 capacity,
-                connectionType)
+                connectionType,
+                disconnectionType)
         {
             _settlementMethod = settlementMethod;
             _netSettlementGroup = netSettlementGroup;
-            _disconnectionType = disconnectionType;
             _assetType = assetType;
             _productType = ProductType.EnergyActive;
             ConnectionState = ConnectionState.New();
@@ -83,7 +83,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 id.Value,
                 GsrnNumber.Value,
                 gridAreaLinkId.Value,
-                meteringPointSubType.Name,
+                meteringMethod.Name,
                 _productType.Name,
                 meterReadingOccurrence.Name,
                 _unitType.Name,
@@ -107,7 +107,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 powerLimit.Ampere,
                 powerLimit.Kwh,
                 effectiveDate.DateInUtc,
-                _disconnectionType.Name,
+                DisconnectionType.Name,
                 ConnectionType?.Name,
                 _assetType.Name,
                 ConnectionState.PhysicalState.Name,
@@ -158,6 +158,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 new ScheduledMeterReadingDateRule(meteringPointDetails.ScheduledMeterReadingDate,
                     meteringPointDetails.NetSettlementGroup),
                 new CapacityRequirementRule(meteringPointDetails.Capacity, meteringPointDetails.NetSettlementGroup),
+                new AssetTypeRequirementRule(meteringPointDetails.AssetType, meteringPointDetails.NetSettlementGroup),
+                new SettlementMethodMustBeFlexOrNonProfiledRule(meteringPointDetails.SettlementMethod),
             };
 
             return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
@@ -173,7 +175,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointDetails.Id,
                 meteringPointDetails.GsrnNumber,
                 meteringPointDetails.Address,
-                meteringPointDetails.MeteringPointSubType,
+                meteringPointDetails.MeteringMethod,
                 MeteringPointType.Consumption,
                 meteringPointDetails.GridAreaLinkId,
                 meteringPointDetails.PowerPlantGsrnNumber,

@@ -14,15 +14,15 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules
 {
-    public class InvalidAssetTypeValueValidationError : ValidationError
+    public class InvalidSettlementMethodRuleError : ValidationError
     {
-        public InvalidAssetTypeValueValidationError(string assetType)
+        public InvalidSettlementMethodRuleError(SettlementMethod settlementMethod)
         {
-            AssetType = assetType;
+            SettlementMethod = settlementMethod;
         }
 
-        public string? AssetType { get; }
+        public SettlementMethod SettlementMethod { get; }
     }
 }

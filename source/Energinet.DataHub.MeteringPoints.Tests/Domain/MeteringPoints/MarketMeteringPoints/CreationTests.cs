@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using BenchmarkDotNet.Attributes;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
@@ -83,6 +85,35 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             var result = MarketMeteringPoint.CanCreate(details);
 
             AssertError<ConnectionTypeDoesNotMatchNetSettlementGroupRuleError>(result, true);
+        }
+
+        [Theory]
+        [InlineData("Zero", "Physical", false)]
+        [InlineData("One", "Physical", true)]
+        [InlineData("One", "Virtual", false)]
+        [InlineData("One", "Calculated", false)]
+        [InlineData("Two", "Physical", true)]
+        [InlineData("Two", "Virtual", false)]
+        [InlineData("Two", "Calculated", false)]
+        [InlineData("Three", "Physical", true)]
+        [InlineData("Three", "Virtual", false)]
+        [InlineData("Three", "Calculated", false)]
+        [InlineData("Six", "Physical", true)]
+        [InlineData("Six", "Virtual", false)]
+        [InlineData("Six", "Calculated", false)]
+        [InlineData("NinetyNine", "Physical", false)]
+        public void Metering_method_must_be_virtual_or_calculated_when_net_settlement_group_is_not_0_or_99(string netSettlementGroup, string meteringMethod, bool expectError)
+        {
+            var details = CreateDetails()
+                with
+                {
+                    NetSettlementGroup = EnumerationType.FromName<NetSettlementGroup>(netSettlementGroup),
+                    MeteringMethod = EnumerationType.FromName<MeteringMethod>(meteringMethod),
+                };
+
+            var result = MarketMeteringPoint.CanCreate(details);
+
+            AssertError<MeteringMethodDoesNotMatchNetSettlementGroupRuleError>(result, expectError);
         }
     }
 }

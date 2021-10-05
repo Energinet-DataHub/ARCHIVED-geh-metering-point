@@ -16,6 +16,7 @@ using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
@@ -90,6 +91,50 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError<CreateMeteringPointRejected>("D55");
         }
 
+        [Fact]
+        public async Task Should_reject_if_metering_method_does_not_match_net_settlement_group()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    MeterNumber = "1",
+                    NetSettlementGroup = NetSettlementGroup.Six.Name,
+                    MeteringMethod = MeteringMethod.Physical.Name,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D37");
+        }
+
+        [Fact]
+        public async Task Should_reject_if_asset_type_is_required_and_not_specified()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    AssetType = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D59");
+        }
+
+        [Fact]
+        public async Task Should_reject_if_asset_type_value_is_invalid()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    AssetType = "invalid_value",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError<CreateMeteringPointRejected>("D59");
+        }
+
         private static CreateMeteringPoint CreateRequest()
         {
             return new CreateMeteringPoint(
@@ -106,7 +151,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SampleData.IsWashable,
                 SampleData.GsrnNumber,
                 SampleData.TypeOfMeteringPoint,
-                MeteringPointSubType.Calculated.Name,
+                MeteringMethod.Calculated.Name,
                 SampleData.ReadingOccurrence,
                 0,
                 0,
