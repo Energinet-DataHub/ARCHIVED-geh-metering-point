@@ -43,6 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
             var messageMetadata = PostOfficeMessageFactory.Create(message.Correlation, message.Content, message.MessageType);
             _postOfficeMessageMetadataRepository.AddMessageMetadata(messageMetadata);
 
+            // TODO - add notification to Outbox instead of sending immediately
             await _dataAvailableNotificationSender.SendAsync(new DataAvailableNotificationDto(messageMetadata.Id, new GlobalLocationNumberDto(message.Recipient), new MessageTypeDto(message.MessageType), DomainOrigin.MeteringPoints, true, 1)).ConfigureAwait(false);
         }
     }
