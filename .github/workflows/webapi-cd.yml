@@ -17,7 +17,6 @@ on:
   push:
     branches:
       - main
-      - xtban/gridarea-webapi
     paths:
       - source/**
       - .github/workflows/webapi-cd.yml
@@ -74,21 +73,21 @@ jobs:
             short: u,
             name: Development
           },
-          # {
-          #   long: rg-DataHub-MeteringPoint-T,
-          #   short: t,
-          #   name: Test
-          # },
-          # {
-          #   long: rg-DataHub-MeteringPoint-B,
-          #   short: b,
-          #   name: Preprod
-          # },
-          # {
-          #   long: rg-DataHub-MeteringPoint-P,
-          #   short: p,
-          #   name: Production
-          # }
+          {
+            long: rg-DataHub-MeteringPoint-T,
+            short: t,
+            name: Test
+          },
+          {
+            long: rg-DataHub-MeteringPoint-B,
+            short: b,
+            name: Preprod
+          },
+          {
+            long: rg-DataHub-MeteringPoint-P,
+            short: p,
+            name: Production
+          }
         ]
     environment:
       name: ${{ matrix.environment.long }}

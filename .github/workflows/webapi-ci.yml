@@ -17,7 +17,6 @@ on:
   pull_request:
     branches:
       - main
-      - xtban/gridarea-webapi
   workflow_dispatch: {}
 
 env:
