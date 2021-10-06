@@ -26,6 +26,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
         /// Create a bundle.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task<string> CreateBundleAsync(IEnumerable<PostOfficeMessage> messages);
+        Task<string> CreateBundleAsync(IList<PostOfficeMessage> messages);
     }
 }
