@@ -13,19 +13,17 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice.Bundling
 {
-    /// <summary>
-    /// Bundle creator
-    /// </summary>
-    public interface IBundleCreator
+    public class BundleRequest<TDocument> : IRequest<string>, IBundleRequest
     {
-        /// <summary>
-        /// Create a bundle.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task<string> CreateBundleAsync(IList<PostOfficeMessage> messages);
+        public BundleRequest(IList<PostOfficeMessage> documents)
+        {
+            Documents = documents;
+        }
+
+        public IList<PostOfficeMessage> Documents { get; }
     }
 }
