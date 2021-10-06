@@ -86,6 +86,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.SubPostOffice
             // container.Register<BundleDequeuedQueueSubscriber>(Lifestyle.Scoped);
             container.Register<RequestBundleQueueSubscriber>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
+            container.Register<CorrelationIdMiddleware>(Lifestyle.Scoped);
+            container.Register<EntryPointTelemetryScopeMiddleware>(Lifestyle.Scoped);
             container.Register<IUnitOfWork, UnitOfWork>();
             container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
             container.Register<ISystemDateTimeProvider, SystemDateTimeProvider>(Lifestyle.Singleton);
