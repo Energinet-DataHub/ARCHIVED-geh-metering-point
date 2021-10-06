@@ -17,6 +17,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
@@ -36,6 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
         private readonly IJsonSerializer _jsonSerializer;
         private readonly ICorrelationContext _correlationContext;
         private readonly ISystemDateTimeProvider _dateTimeProvider;
+        private readonly IUserContext _userContext;
 
         public CreateMeteringPointResultHandler(
             ErrorMessageFactory errorMessageFactory,
@@ -43,7 +45,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
             IOutboxMessageFactory outboxMessageFactory,
             IJsonSerializer jsonSerializer,
             ICorrelationContext correlationContext,
-            ISystemDateTimeProvider dateTimeProvider)
+            ISystemDateTimeProvider dateTimeProvider,
+            IUserContext userContext)
         {
             _errorMessageFactory = errorMessageFactory;
             _outbox = outbox;
@@ -51,6 +54,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
             _jsonSerializer = jsonSerializer;
             _correlationContext = correlationContext;
             _dateTimeProvider = dateTimeProvider;
+            _userContext = userContext;
         }
 
         public Task HandleAsync(Application.Create.CreateMeteringPoint request, BusinessProcessResult result)
@@ -79,7 +83,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
                     CodingScheme: "9",
                     Role: "EZ"),
                 Receiver: new MarketRoleParticipant(
-                    Id: "8200000007432", // TODO: Hardcoded
+                    Id: _userContext.CurrentUser?.GlnNumber ?? "8200000000006", // TODO: Hardcoded
                     CodingScheme: "9",
                     Role: "DDQ"),
                 CreatedDateTime: _dateTimeProvider.Now(),
@@ -95,7 +99,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
             var document = AcknowledgementXmlSerializer.Serialize(message, xmlNamespace);
 
             var envelope = CreatePostOfficeEnvelope(
-                recipient: "8200000007432", // TODO: Hardcoded
+                recipient: _userContext.CurrentUser?.GlnNumber ?? "8200000000006", // TODO: Hardcoded
                 cimContent: document,
                 messageType: typeof(ConfirmMessage).FullName!);
 
