@@ -114,7 +114,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             return new BusinessProcessResult(request.TransactionId, validationRules);
         }
 
-        private static BusinessProcessResult CheckBusinessRules(CreateMeteringPoint request, MeteringPointDetails meteringPointDetails)
+        private static BusinessProcessResult CheckBusinessRules(CreateMeteringPoint request, Domain.MeteringPoints.Consumption.MeteringPointDetails meteringPointDetails)
         {
             var meteringPointType = EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint);
             if (meteringPointType != MeteringPointType.Consumption)
@@ -174,14 +174,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 string.IsNullOrWhiteSpace(request.PhysicalConnectionCapacity) ? null : Capacity.Create(request.PhysicalConnectionCapacity));
         }
 
-        private static ConsumptionMeteringPoint CreateConsumptionMeteringPoint(MeteringPointDetails meteringPointDetails)
+        private static ConsumptionMeteringPoint CreateConsumptionMeteringPoint(Domain.MeteringPoints.Consumption.MeteringPointDetails meteringPointDetails)
         {
             return ConsumptionMeteringPoint.Create(meteringPointDetails);
         }
 
-        private static MeteringPointDetails CreateDetails(CreateMeteringPoint request, GridAreaLinkId gridAreaLinkId)
+        private static Domain.MeteringPoints.Consumption.MeteringPointDetails CreateDetails(CreateMeteringPoint request, GridAreaLinkId gridAreaLinkId)
         {
-            return new MeteringPointDetails(
+            return new Domain.MeteringPoints.Consumption.MeteringPointDetails(
                 MeteringPointId.New(),
                 GsrnNumber.Create(request.GsrnNumber),
                 CreateAddress(request),
