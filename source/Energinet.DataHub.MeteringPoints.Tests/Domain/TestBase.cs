@@ -22,6 +22,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoint
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Sdk;
+using MeteringPointDetails = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.MeteringPointDetails;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain
 {

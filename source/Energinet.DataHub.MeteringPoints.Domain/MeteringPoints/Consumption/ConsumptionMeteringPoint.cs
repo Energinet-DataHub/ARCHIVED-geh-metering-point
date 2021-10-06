@@ -30,7 +30,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
     public class ConsumptionMeteringPoint : MarketMeteringPoint
     {
         private SettlementMethod _settlementMethod;
-        private NetSettlementGroup _netSettlementGroup;
         private AssetType? _assetType;
         private ScheduledMeterReadingDate? _scheduledMeterReadingDate;
 
@@ -70,10 +69,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 effectiveDate,
                 capacity,
                 connectionType,
-                disconnectionType)
+                disconnectionType,
+                netSettlementGroup)
         {
             _settlementMethod = settlementMethod;
-            _netSettlementGroup = netSettlementGroup;
             _assetType = assetType;
             _productType = ProductType.EnergyActive;
             ConnectionState = ConnectionState.New();
