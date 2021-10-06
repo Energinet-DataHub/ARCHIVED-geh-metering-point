@@ -18,7 +18,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoint
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public abstract record MeteringPointDetails(
+    public record MeteringPointDetails(
         MeteringPointId Id,
         GsrnNumber GsrnNumber,
         Address Address,

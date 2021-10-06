@@ -20,7 +20,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 {
     public record ConsumptionMeteringPointDetails(
         SettlementMethod SettlementMethod,
-        ScheduledMeterReadingDate ScheduledMeterReadingDate,
+        ScheduledMeterReadingDate? ScheduledMeterReadingDate,
         AssetType? AssetType,
         Capacity? Capacity,
         MeteringPointId Id,

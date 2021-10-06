@@ -27,9 +27,11 @@ using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using MediatR;
 using ConsumptionMeteringPoint = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.ConsumptionMeteringPoint;
+using ProductionMeteringPoint = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production.ProductionMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Create
 {
@@ -86,13 +88,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             switch (meteringPointType.Name)
             {
                 case nameof(MeteringPointType.Consumption):
-                    meteringPoint = CreateConsumptionMeteringPoint(meteringPointDetails);
+                    meteringPoint = CreateConsumptionMeteringPoint((ConsumptionMeteringPointDetails)CreateDetails(request, gridArea?.DefaultLink.Id!));
                     break;
                 case nameof(MeteringPointType.Exchange):
                     meteringPoint = CreateExchangeMeteringPoint(request, meteringPointType);
                     break;
                 case nameof(MeteringPointType.Production):
-                    meteringPoint = CreateProductionMeteringPoint(request, meteringPointType);
+                    meteringPoint = CreateProductionMeteringPoint((ProductionMeteringPointDetails)CreateDetails(request, gridArea?.DefaultLink.Id!));
                     break;
                 default:
                     throw new NotImplementedException(
@@ -116,39 +118,32 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
 
         private static BusinessProcessResult CheckBusinessRules(CreateMeteringPoint request, MeteringPointDetails meteringPointDetails)
         {
+            BusinessRulesValidationResult validationResult;
             var meteringPointType = EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint);
-            if (meteringPointType != MeteringPointType.Consumption)
-            {
-                return BusinessProcessResult.Ok(request.TransactionId);
-            }
 
-            var validationResult = ConsumptionMeteringPoint.CanCreate(meteringPointDetails);
+            switch (meteringPointType.Name)
+            {
+                case nameof(MeteringPointType.Consumption):
+                    validationResult = ConsumptionMeteringPoint.CanCreate(meteringPointDetails);
+                    break;
+                case nameof(MeteringPointType.Production):
+                    validationResult = ProductionMeteringPoint.CanCreate(meteringPointDetails);
+                    break;
+                default:
+                    return BusinessProcessResult.Ok(request.TransactionId);
+            }
 
             return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
         }
 
-        private static ProductionMeteringPoint CreateProductionMeteringPoint(CreateMeteringPoint request, MeteringPointType meteringPointType)
+        private static ProductionMeteringPoint CreateProductionMeteringPoint(ProductionMeteringPointDetails meteringPointDetails)
         {
-           return new(
-                MeteringPointId.New(),
-                GsrnNumber.Create(request.GsrnNumber),
-                CreateAddress(request),
-                request.IsOfficialAddress.GetValueOrDefault(), // TODO: change to boolean in domain?
-                EnumerationType.FromName<MeteringMethod>(request.MeteringMethod),
-                meteringPointType,
-                new GridAreaLinkId(Guid.NewGuid()), // TODO: Use links correct, when updating creation of production metering pints
-                !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null,
-                LocationDescription.Create(request.LocationDescription!),
-                EnumerationType.FromName<MeasurementUnitType>(request.UnitType),
-                string.IsNullOrWhiteSpace(request.MeterNumber) ? null : MeterId.Create(request.MeterNumber),
-                EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
-                PowerLimit.Create(request.MaximumPower, request.MaximumCurrent),
-                EffectiveDate.Create(request.EffectiveDate),
-                EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup!),
-                EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
-                EnumerationType.FromName<ConnectionType>(request.ConnectionType!),
-                EnumerationType.FromName<ProductType>(request.ProductType),
-                Capacity.Create(request.PhysicalConnectionCapacity!));
+            return ProductionMeteringPoint.Create(meteringPointDetails);
+        }
+
+        private static ConsumptionMeteringPoint CreateConsumptionMeteringPoint(ConsumptionMeteringPointDetails meteringPointDetails)
+        {
+            return ConsumptionMeteringPoint.Create(meteringPointDetails);
         }
 
         private static ExchangeMeteringPoint CreateExchangeMeteringPoint(CreateMeteringPoint request, MeteringPointType meteringPointType)
@@ -174,32 +169,67 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 string.IsNullOrWhiteSpace(request.PhysicalConnectionCapacity) ? null : Capacity.Create(request.PhysicalConnectionCapacity));
         }
 
-        private static ConsumptionMeteringPoint CreateConsumptionMeteringPoint(MeteringPointDetails meteringPointDetails)
-        {
-            return ConsumptionMeteringPoint.Create(meteringPointDetails);
-        }
-
         private static MeteringPointDetails CreateDetails(CreateMeteringPoint request, GridAreaLinkId gridAreaLinkId)
         {
-            return new MeteringPointDetails(
-                MeteringPointId.New(),
-                GsrnNumber.Create(request.GsrnNumber),
-                CreateAddress(request),
-                EnumerationType.FromName<MeteringMethod>(request.MeteringMethod),
-                gridAreaLinkId,
-                !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null !,
-                LocationDescription.Create(request.LocationDescription!),
-                string.IsNullOrWhiteSpace(request.MeterNumber) ? null : MeterId.Create(request.MeterNumber),
-                EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
-                PowerLimit.Create(request.MaximumPower, request.MaximumCurrent),
-                EffectiveDate.Create(request.EffectiveDate),
-                EnumerationType.FromName<SettlementMethod>(request.SettlementMethod!),
-                EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup!),
-                EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
-                !string.IsNullOrWhiteSpace(request.ConnectionType) ? EnumerationType.FromName<ConnectionType>(request.ConnectionType!) : null,
-                !string.IsNullOrEmpty(request.AssetType) ? EnumerationType.FromName<AssetType>(request.AssetType) : null !,
-                !string.IsNullOrEmpty(request.ScheduledMeterReadingDate) ? ScheduledMeterReadingDate.Create(request.ScheduledMeterReadingDate !) : null,
-                !string.IsNullOrWhiteSpace(request.PhysicalConnectionCapacity) ? Capacity.Create(request.PhysicalConnectionCapacity) : null);
+            var meteringPointType = EnumerationType.FromName<MeteringPointType>(request.TypeOfMeteringPoint);
+            switch (meteringPointType.Name)
+            {
+                case nameof(MeteringPointType.Consumption):
+                    return new ConsumptionMeteringPointDetails(
+                        EnumerationType.FromName<SettlementMethod>(request.SettlementMethod!),
+                        !string.IsNullOrEmpty(request.ScheduledMeterReadingDate) ? ScheduledMeterReadingDate.Create(request.ScheduledMeterReadingDate !) : null,
+                        !string.IsNullOrEmpty(request.AssetType) ? EnumerationType.FromName<AssetType>(request.AssetType) : null !,
+                        !string.IsNullOrWhiteSpace(request.PhysicalConnectionCapacity) ? Capacity.Create(request.PhysicalConnectionCapacity) : null,
+                        MeteringPointId.New(),
+                        GsrnNumber.Create(request.GsrnNumber),
+                        CreateAddress(request),
+                        EnumerationType.FromName<MeteringMethod>(request.MeteringMethod),
+                        gridAreaLinkId,
+                        !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null !,
+                        LocationDescription.Create(request.LocationDescription!),
+                        string.IsNullOrWhiteSpace(request.MeterNumber) ? null : MeterId.Create(request.MeterNumber),
+                        EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
+                        PowerLimit.Create(request.MaximumPower, request.MaximumCurrent),
+                        EffectiveDate.Create(request.EffectiveDate),
+                        EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup!),
+                        EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
+                        !string.IsNullOrWhiteSpace(request.ConnectionType) ? EnumerationType.FromName<ConnectionType>(request.ConnectionType!) : null);
+                case nameof(MeteringPointType.Production):
+                    return new ProductionMeteringPointDetails(
+                        MeteringPointId.New(),
+                        GsrnNumber.Create(request.GsrnNumber),
+                        CreateAddress(request),
+                        EnumerationType.FromName<MeteringMethod>(request.MeteringMethod),
+                        gridAreaLinkId,
+                        !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null !,
+                        false,
+                        LocationDescription.Create(request.LocationDescription!),
+                        string.IsNullOrWhiteSpace(request.MeterNumber) ? null : MeterId.Create(request.MeterNumber),
+                        EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
+                        PowerLimit.Create(request.MaximumPower, request.MaximumCurrent),
+                        EffectiveDate.Create(request.EffectiveDate),
+                        EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup!),
+                        EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
+                        !string.IsNullOrWhiteSpace(request.ConnectionType) ? EnumerationType.FromName<ConnectionType>(request.ConnectionType!) : null,
+                        !string.IsNullOrEmpty(request.AssetType) ? EnumerationType.FromName<AssetType>(request.AssetType) : null !,
+                        !string.IsNullOrWhiteSpace(request.PhysicalConnectionCapacity) ? Capacity.Create(request.PhysicalConnectionCapacity) : null !);
+                default:
+                    return new MeteringPointDetails(
+                        MeteringPointId.New(),
+                        GsrnNumber.Create(request.GsrnNumber),
+                        CreateAddress(request),
+                        EnumerationType.FromName<MeteringMethod>(request.MeteringMethod),
+                        gridAreaLinkId,
+                        !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null !,
+                        LocationDescription.Create(request.LocationDescription!),
+                        string.IsNullOrWhiteSpace(request.MeterNumber) ? null : MeterId.Create(request.MeterNumber),
+                        EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
+                        PowerLimit.Create(request.MaximumPower, request.MaximumCurrent),
+                        EffectiveDate.Create(request.EffectiveDate),
+                        EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup!),
+                        EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
+                        !string.IsNullOrWhiteSpace(request.ConnectionType) ? EnumerationType.FromName<ConnectionType>(request.ConnectionType!) : null);
+            }
         }
 
         private static Domain.Addresses.Address CreateAddress(CreateMeteringPoint request)

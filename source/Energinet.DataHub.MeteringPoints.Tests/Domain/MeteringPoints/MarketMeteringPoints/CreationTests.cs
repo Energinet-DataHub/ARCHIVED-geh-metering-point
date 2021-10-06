@@ -28,7 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
         [Fact]
         public void Should_return_error__meter_reading_occurrence_is_not_quarterly_or_hourly()
         {
-            var details = CreateDetails()
+            var details = CreateConsumptionDetails()
                 with
                 {
                     ReadingOccurrence = ReadingOccurrence.Yearly,
@@ -43,7 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
         [Fact]
         public void Connection_type_is_required_when_net_settlement_group_is_not_0()
         {
-            var details = CreateDetails()
+            var details = CreateConsumptionDetails()
                 with
                 {
                     NetSettlementGroup = NetSettlementGroup.Six,
@@ -59,7 +59,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
         [Fact]
         public void Connection_type_is_not_allowed_for_net_settlement_group_0()
         {
-            var details = CreateDetails()
+            var details = CreateConsumptionDetails()
                 with
                 {
                     NetSettlementGroup = NetSettlementGroup.Zero,
@@ -75,7 +75,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
         [Fact]
         public void Connection_type_must_match_net_settlement_group()
         {
-            var details = CreateDetails()
+            var details = CreateConsumptionDetails()
                 with
                 {
                     NetSettlementGroup = NetSettlementGroup.Six,
@@ -104,7 +104,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
         [InlineData("NinetyNine", "Physical", false)]
         public void Metering_method_must_be_virtual_or_calculated_when_net_settlement_group_is_not_0_or_99(string netSettlementGroup, string meteringMethod, bool expectError)
         {
-            var details = CreateDetails()
+            var details = CreateConsumptionDetails()
                 with
                 {
                     NetSettlementGroup = EnumerationType.FromName<NetSettlementGroup>(netSettlementGroup),

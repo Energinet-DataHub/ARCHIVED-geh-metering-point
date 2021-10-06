@@ -71,7 +71,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 SampleData.IsOfficialAddress,
                 null);
 
-            var details = CreateDetails()
+            var details = CreateConsumptionDetails()
                 with
                 {
                     Address = address,

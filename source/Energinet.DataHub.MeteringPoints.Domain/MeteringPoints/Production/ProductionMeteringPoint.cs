@@ -30,6 +30,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
     {
         private NetSettlementGroup _netSettlementGroup;
         private AssetType? _assetType;
+        private bool _isAddressWashable;
+        private bool _productionObligation;
 
         private ProductionMeteringPoint(
             MeteringPointId id,
@@ -45,6 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
             PowerLimit? powerLimit,
             EffectiveDate effectiveDate,
             NetSettlementGroup netSettlementGroup,
+            bool productionObligation,
             DisconnectionType disconnectionType,
             ConnectionType? connectionType,
             AssetType assetType,
@@ -94,7 +97,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 address.CitySubDivision,
                 address.IsOfficial,
                 address.GeoInfoReference,
-                powerPlantGsrnNumber.Value,
+                powerPlantGsrnNumber?.Value,
                 locationDescription.Value,
                 meterNumber?.Value,
                 powerLimit.Ampere,
@@ -162,7 +165,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 meteringPointDetails.GsrnNumber,
                 meteringPointDetails.Address,
                 meteringPointDetails.MeteringMethod,
-                MeteringPointType.Consumption,
+                MeteringPointType.Production,
                 meteringPointDetails.GridAreaLinkId,
                 meteringPointDetails.PowerPlantGsrnNumber,
                 meteringPointDetails.LocationDescription,
@@ -171,6 +174,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 meteringPointDetails.PowerLimit,
                 meteringPointDetails.EffectiveDate,
                 meteringPointDetails.NetSettlementGroup,
+                false,
                 meteringPointDetails.DisconnectionType,
                 meteringPointDetails.ConnectionType,
                 meteringPointDetails.AssetType,

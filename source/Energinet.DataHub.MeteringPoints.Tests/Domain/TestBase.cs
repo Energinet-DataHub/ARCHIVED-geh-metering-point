@@ -34,11 +34,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             Assert.Equal(errorExpected, hasError);
         }
 
-        protected static MeteringPointDetails CreateDetails()
+        protected static ConsumptionMeteringPointDetails CreateConsumptionDetails()
         {
             var address = CreateAddress();
 
-            return new MeteringPointDetails(
+            return new ConsumptionMeteringPointDetails(
+                SettlementMethod.Flex,
+                ScheduledMeterReadingDate.Create(SampleData.ScheduledMeterReadingDate),
+                AssetType.GasTurbine,
+                Capacity.Create(SampleData.Capacity),
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 address,
@@ -46,18 +50,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
                 GsrnNumber.Create(SampleData.PowerPlant),
                 LocationDescription.Create(SampleData.LocationDescription),
-                null,
-                //string.IsNullOrWhiteSpace(SampleData.MeterNumber) ? null : MeterId.Create(SampleData.MeterNumber),
+                string.IsNullOrWhiteSpace(SampleData.MeterNumber) ? null : MeterId.Create(SampleData.MeterNumber),
                 ReadingOccurrence.Hourly,
                 PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
                 EffectiveDate.Create(SampleData.EffectiveDate),
-                SettlementMethod.Flex,
                 NetSettlementGroup.Six,
                 DisconnectionType.Manual,
-                ConnectionType.Installation,
-                AssetType.GasTurbine,
-                ScheduledMeterReadingDate.Create(SampleData.ScheduledMeterReadingDate),
-                Capacity.Create(SampleData.Capacity));
+                ConnectionType.Installation);
         }
 
         protected static Address CreateAddress()
