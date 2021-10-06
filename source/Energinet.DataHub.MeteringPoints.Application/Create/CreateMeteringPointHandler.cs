@@ -124,10 +124,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             switch (meteringPointType.Name)
             {
                 case nameof(MeteringPointType.Consumption):
-                    validationResult = ConsumptionMeteringPoint.CanCreate(meteringPointDetails);
+                    validationResult = ConsumptionMeteringPoint.CanCreate((ConsumptionMeteringPointDetails)meteringPointDetails);
                     break;
                 case nameof(MeteringPointType.Production):
-                    validationResult = ProductionMeteringPoint.CanCreate(meteringPointDetails);
+                    validationResult = ProductionMeteringPoint.CanCreate((ProductionMeteringPointDetails)meteringPointDetails);
                     break;
                 default:
                     return BusinessProcessResult.Ok(request.TransactionId);

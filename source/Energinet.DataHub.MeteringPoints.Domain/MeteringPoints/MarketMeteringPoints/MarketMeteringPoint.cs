@@ -79,7 +79,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
 
         protected NetSettlementGroup NetSettlementGroup { get; private set; }
 
+#pragma warning disable 108,114
         public static BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
+#pragma warning restore 108,114
         {
             if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
             var generalRuleCheckResult = MeteringPoint.CanCreate(meteringPointDetails);

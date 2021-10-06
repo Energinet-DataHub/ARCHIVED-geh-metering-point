@@ -68,7 +68,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 effectiveDate,
                 capacity,
                 connectionType,
-                disconnectionType)
+                disconnectionType,
+                netSettlementGroup)
         {
             _netSettlementGroup = netSettlementGroup;
             _assetType = assetType;
