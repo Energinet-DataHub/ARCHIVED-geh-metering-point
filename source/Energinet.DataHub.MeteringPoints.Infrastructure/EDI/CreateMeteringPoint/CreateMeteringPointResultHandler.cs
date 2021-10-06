@@ -15,9 +15,13 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
@@ -31,19 +35,22 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
         private readonly IOutboxMessageFactory _outboxMessageFactory;
         private readonly IJsonSerializer _jsonSerializer;
         private readonly ICorrelationContext _correlationContext;
+        private readonly ISystemDateTimeProvider _dateTimeProvider;
 
         public CreateMeteringPointResultHandler(
             ErrorMessageFactory errorMessageFactory,
             IOutbox outbox,
             IOutboxMessageFactory outboxMessageFactory,
             IJsonSerializer jsonSerializer,
-            ICorrelationContext correlationContext)
+            ICorrelationContext correlationContext,
+            ISystemDateTimeProvider dateTimeProvider)
         {
             _errorMessageFactory = errorMessageFactory;
             _outbox = outbox;
             _outboxMessageFactory = outboxMessageFactory;
             _jsonSerializer = jsonSerializer;
             _correlationContext = correlationContext;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         public Task HandleAsync(Application.Create.CreateMeteringPoint request, BusinessProcessResult result)
@@ -52,8 +59,58 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
             if (result == null) throw new ArgumentNullException(nameof(result));
 
             return result.Success
-                ? CreateAcceptResponseAsync(request, result)
+                ? CreateAcceptMessageAsync(request, result)
                 : CreateRejectResponseAsync(request, result);
+        }
+
+        protected Task CreateAcceptMessageAsync(Application.Create.CreateMeteringPoint request, BusinessProcessResult result)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (result == null) throw new ArgumentNullException(nameof(result));
+
+            var message = new ConfirmMessage(
+                DocumentName: "ConfirmRequestChangeOfSupplier_MarketDocument",
+                Id: Guid.NewGuid().ToString(),
+                Type: "414",
+                ProcessType: "E65",
+                BusinessSectorType: "E21",
+                Sender: new MarketRoleParticipant(
+                    Id: "DataHub GLN", // TODO: Use correct GLN
+                    CodingScheme: "9",
+                    Role: "EZ"),
+                Receiver: new MarketRoleParticipant(
+                    Id: "8200000007432", // TODO: Hardcoded
+                    CodingScheme: "9",
+                    Role: "DDQ"),
+                CreatedDateTime: _dateTimeProvider.Now(),
+                ReasonCode: "39",
+                MarketActivityRecord: new MarketActivityRecord(
+                    Id: Guid.NewGuid().ToString(),
+                    BusinessProcessReference: _correlationContext.Id,
+                    MarketEvaluationPoint: request.GsrnNumber,
+                    StartDateAndOrTime: request.EffectiveDate,
+                    OriginalTransaction: request.TransactionId));
+
+            XNamespace xmlNamespace = "urn:ebix:org:ChangeAccountingPointCharacteristics:0:1";
+            var document = AcknowledgementXmlSerializer.Serialize(message, xmlNamespace);
+
+            var envelope = CreatePostOfficeEnvelope(
+                recipient: "8200000007432", // TODO: Hardcoded
+                cimContent: document,
+                messageType: typeof(ConfirmMessage).FullName!);
+
+            AddToOutbox(envelope);
+
+            return Task.CompletedTask;
+        }
+
+        private PostOfficeMessageEnvelope CreatePostOfficeEnvelope(string recipient, string cimContent, string messageType)
+        {
+            return new(
+                Recipient: recipient,
+                Content: cimContent,
+                MessageType: messageType,
+                Correlation: _correlationContext.AsTraceContext()); // TODO: add correlation when Telemetry is added
         }
 
         private Task CreateAcceptResponseAsync(Application.Create.CreateMeteringPoint request, BusinessProcessResult result)
