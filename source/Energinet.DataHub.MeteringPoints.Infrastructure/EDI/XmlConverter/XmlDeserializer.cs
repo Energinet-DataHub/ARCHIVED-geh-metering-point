@@ -30,7 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             _xmlMapper = xmlMapper;
         }
 
-        public async Task<IEnumerable<IBusinessRequest>> DeserializeAsync(Stream body)
+        public async Task<IEnumerable<IInternalMarketDocument>> DeserializeAsync(Stream body)
         {
             XElement rootElement = await XElement.LoadAsync(body, LoadOptions.None, CancellationToken.None).ConfigureAwait(false);
             return _xmlMapper.Map(rootElement);

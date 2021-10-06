@@ -12,23 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
+namespace Energinet.DataHub.MeteringPoints.Application.Common
 {
     /// <summary>
-    /// XML converter
+    /// Internal representation of an actor document
     /// </summary>
-    public interface IXmlConverter
+    public interface IInternalMarketDocument : IRequest<BusinessProcessResult>
     {
+        // /// <summary>
+        // /// Actor provided transaction id
+        // /// </summary>
+        // string TransactionId { get; }
+
         /// <summary>
-        /// Deserializes an EDI message in XML format to a generic collection
+        /// Document type
         /// </summary>
-        /// <param name="body"></param>
-        /// <returns>A generic collection</returns>
-        public Task<IEnumerable<IInternalMarketDocument>> DeserializeAsync(Stream body);
+        string Type { get; }
+
+        /// <summary>
+        /// Process type
+        /// </summary>
+        string ProcessType { get; }
     }
 }
