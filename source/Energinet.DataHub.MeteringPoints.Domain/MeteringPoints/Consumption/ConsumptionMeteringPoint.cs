@@ -100,7 +100,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 address.CitySubDivision,
                 address.IsOfficial,
                 address.GeoInfoReference,
-                powerPlantGsrnNumber.Value,
+                powerPlantGsrnNumber?.Value,
                 locationDescription.Value,
                 meterNumber?.Value,
                 powerLimit.Ampere,
