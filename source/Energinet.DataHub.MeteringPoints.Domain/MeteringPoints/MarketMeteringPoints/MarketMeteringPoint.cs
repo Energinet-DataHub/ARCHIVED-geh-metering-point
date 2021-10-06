@@ -48,7 +48,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             EffectiveDate effectiveDate,
             Capacity? capacity,
             ConnectionType? connectionType,
-            DisconnectionType disconnectionType)
+            DisconnectionType disconnectionType,
+            NetSettlementGroup netSettlementGroup)
             : base(
                 id,
                 gsrnNumber,
@@ -67,6 +68,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
         {
             ConnectionType = connectionType;
             DisconnectionType = disconnectionType;
+            NetSettlementGroup = netSettlementGroup;
         }
 
         protected EnergySupplierDetails? EnergySupplierDetails { get; private set; }
@@ -75,7 +77,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
 
         protected DisconnectionType DisconnectionType { get; private set; }
 
-        public static new BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
+        protected NetSettlementGroup NetSettlementGroup { get; private set; }
+
+        public static BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
         {
             if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
             var generalRuleCheckResult = MeteringPoint.CanCreate(meteringPointDetails);

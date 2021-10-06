@@ -114,7 +114,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 EffectiveDate.Create(SampleData.EffectiveDate),
                 Capacity.Create(SampleData.Capacity),
                 ConnectionType.Installation,
-                DisconnectionType.Remote);
+                DisconnectionType.Remote,
+                NetSettlementGroup.Six);
         }
     }
 }
