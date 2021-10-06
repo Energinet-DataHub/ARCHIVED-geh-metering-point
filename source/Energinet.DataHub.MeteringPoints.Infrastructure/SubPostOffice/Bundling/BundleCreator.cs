@@ -54,7 +54,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice.Bundling
             var bundleInstance = Activator.CreateInstance(genericBundleRequestType, messages) as IBundleRequest;
             if (bundleInstance is null)
             {
-                throw new InvalidOperationException($"Couldn't create bundle for type: {type.Name}");
+                throw new InvalidOperationException($"Couldn't create bundle request for type: {type.Name}");
             }
 
             return bundleInstance;

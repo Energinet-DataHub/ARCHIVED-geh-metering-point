@@ -35,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
     public class BundleCreatorTests
     {
         [Fact]
-        public async Task Foo()
+        public async Task Bundles_should_be_created_for_multiple_documents()
         {
             using var container = new Container();
             container.BuildMinimalMediator(typeof(BundleHandler<>).Assembly, Array.Empty<Type>());
@@ -44,26 +44,28 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
             container.Register<IBundleCreator, BundleCreator>();
             container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageSerializer>();
             var sut = container.GetInstance<IBundleCreator>();
-            var postOfficeMessages = CreatePostOfficeMessages();
+            var confirmMessages = CreateConfirmMessages().ToList();
+            var postOfficeMessages = CreatePostOfficeMessages(confirmMessages);
 
             var bundle = await sut.CreateBundleAsync(postOfficeMessages).ConfigureAwait(false);
 
             bundle.Should().NotBeNull();
+            bundle.Should().ContainAll(confirmMessages.Select(message => message.MarketActivityRecord.Id.ToString()));
         }
 
-        private static List<PostOfficeMessage> CreatePostOfficeMessages()
+        private static List<PostOfficeMessage> CreatePostOfficeMessages(IEnumerable<ConfirmMessage> createConfirmMessages)
         {
-            var officeMessages = new Fixture().Create<List<ConfirmMessage>>()
+            var officeMessages = createConfirmMessages
                 .Select(message => new JsonSerializer().Serialize(message))
                 .Select(message => new PostOfficeMessage(message, "correlation", typeof(ConfirmMessage).FullName!))
                 .ToList();
             return officeMessages;
-            // var postOfficeMessages = new List<PostOfficeMessage>()
-            // {
-            //     new PostOfficeMessage("{\"TransactionId\":\"1630566602017\",\"Status\":\"Accepted\",\"GsrnNumber\":\"574591757409421563\"}", "correlation1", typeof(ConfirmMessage).FullName!),
-            //     new PostOfficeMessage("{\"TransactionId\":\"1630566602012\",\"Status\":\"Accepted\",\"GsrnNumber\":\"574591757409421563\"}", "correlation2", typeof(ConfirmMessage).FullName!),
-            // };
-            // return postOfficeMessages;
+        }
+
+        private static IEnumerable<ConfirmMessage> CreateConfirmMessages()
+        {
+            return new Fixture().Create<List<ConfirmMessage>>()
+                .Select(message => message with { DocumentName = "Foo" });
         }
     }
 }

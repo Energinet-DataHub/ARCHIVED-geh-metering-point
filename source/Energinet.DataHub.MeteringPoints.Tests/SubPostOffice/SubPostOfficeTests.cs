@@ -59,7 +59,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
                 _dataBundleResponseSender,
                 dequeueNotificationParser,
                 _requestBundleParser,
-                null!);
+                new BundleCreatorMock());
 
             _subPostOfficeDataAvailableClient = new SubPostOfficeDataAvailableClient(_postOfficeMessageMetadataRepository, _dataAvailableNotificationSender);
         }

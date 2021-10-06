@@ -31,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice.Bundling
 
             var document = CreateDocumentWithHeader(message, xmlNamespace);
             document
-                ?.Element(message.DocumentName)
+                ?.Element(xmlNamespace + message.DocumentName)
                 ?.Add(CreateMarketActivityRecord(message, xmlNamespace));
 
             return Serialize(document!);
@@ -47,7 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice.Bundling
             foreach (var message in messages)
             {
                 document
-                    ?.Element(message.DocumentName)
+                    ?.Element(xmlNamespace + message.DocumentName)
                     ?.Add(CreateMarketActivityRecord(message, xmlNamespace));
             }
 

@@ -19,9 +19,11 @@ using Energinet.DataHub.MeteringPoints.Application.Authorization;
 using Energinet.DataHub.MeteringPoints.Application.Authorization.AuthorizationHandlers;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.PostOffice;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
 using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice.Bundling;
+using MediatR;
 using SimpleInjector;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions
@@ -93,7 +95,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions
 
             container.Register<ISubPostOfficeClient, SubPostOfficeClient>(Lifestyle.Scoped);
             container.Register<IPostOfficeMessageMetadataRepository, PostOfficeMessageMetadataRepository>(Lifestyle.Scoped);
-            container.Register<IBundleCreator, BundleCreator>(Lifestyle.Singleton);
+
+            container.Register<IBundleCreator, BundleCreator>(Lifestyle.Scoped);
+            container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageSerializer>(Lifestyle.Singleton);
         }
 
         public static void AddSubPostOfficeDataAvailableClient(this Container container)
