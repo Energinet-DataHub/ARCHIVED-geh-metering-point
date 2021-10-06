@@ -36,5 +36,19 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
         DisconnectionType DisconnectionType,
         ConnectionType? ConnectionType,
         AssetType AssetType,
-        Capacity Capacity);
+        Capacity Capacity) : MeteringPointDetails(
+        Id,
+        GsrnNumber,
+        Address,
+        MeteringMethod,
+        GridAreaLinkId,
+        PowerPlantGsrnNumber,
+        LocationDescription,
+        MeterNumber,
+        ReadingOccurrence,
+        PowerLimit,
+        EffectiveDate,
+        NetSettlementGroup,
+        DisconnectionType,
+        ConnectionType);
 }

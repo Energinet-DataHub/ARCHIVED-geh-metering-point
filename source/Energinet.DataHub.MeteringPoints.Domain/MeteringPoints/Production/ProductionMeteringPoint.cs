@@ -42,13 +42,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
             LocationDescription? locationDescription,
             MeterId? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
-            PowerLimit powerLimit,
+            PowerLimit? powerLimit,
             EffectiveDate effectiveDate,
             NetSettlementGroup netSettlementGroup,
             DisconnectionType disconnectionType,
             ConnectionType? connectionType,
-            AssetType? assetType,
-            Capacity? capacity)
+            AssetType assetType,
+            Capacity capacity)
             : base(
                 id,
                 gsrnNumber,
@@ -70,6 +70,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
             _netSettlementGroup = netSettlementGroup;
             _assetType = assetType;
             _productType = ProductType.EnergyActive;
+            ProductionObligation = false;
             ConnectionState = ConnectionState.New();
 
             var @event = new ProductionMeteringPointCreated(
@@ -103,10 +104,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 ConnectionType?.Name,
                 _assetType.Name,
                 ConnectionState.PhysicalState.Name,
-                capacity?.Kw);
+                ProductionObligation,
+                capacity.Kw);
 
             AddDomainEvent(@event);
         }
+
+        protected bool ProductionObligation { get; }
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
         private ProductionMeteringPoint() { }
@@ -135,7 +139,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
 
-        public static BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
+        public static BusinessRulesValidationResult CanCreate(ProductionMeteringPointDetails meteringPointDetails)
         {
             if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
             var generalRuleCheckResult= MarketMeteringPoint.CanCreate(meteringPointDetails);
@@ -147,7 +151,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
             return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
         }
 
-        public static ProductionMeteringPoint Create(MeteringPointDetails meteringPointDetails)
+        public static ProductionMeteringPoint Create(ProductionMeteringPointDetails meteringPointDetails)
         {
             if (!CanCreate(meteringPointDetails).Success)
             {
