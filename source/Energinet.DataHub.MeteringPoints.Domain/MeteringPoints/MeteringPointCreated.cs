@@ -14,6 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
@@ -25,7 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GsrnNumber gsrnNumber,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
-            MeteringPointSubType meteringPointSubType,
+            MeteringMethod meteringMethod,
             PhysicalState physicalState,
             ReadingOccurrence readingOccurrence,
             ProductType productType,
@@ -35,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GsrnNumber = gsrnNumber;
             MeteringPointType = meteringPointType;
             GridAreaLinkId = gridAreaLinkId;
-            MeteringPointSubType = meteringPointSubType;
+            MeteringMethod = meteringMethod;
             PhysicalState = physicalState;
             ReadingOccurrence = readingOccurrence;
             ProductType = productType;
@@ -47,14 +48,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GsrnNumber gsrnNumber,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
-            MeteringPointSubType meteringPointSubType,
+            MeteringMethod meteringMethod,
             PhysicalState connectionStatePhysicalState,
             ReadingOccurrence meterReadingOccurrence,
             ProductType productType,
             MeasurementUnitType measurementUnitType,
             string? toGrid,
             string? fromGrid)
-            : this(meteringPointId, gsrnNumber, meteringPointType, gridAreaLinkId, meteringPointSubType, connectionStatePhysicalState, meterReadingOccurrence, productType, measurementUnitType)
+            : this(meteringPointId, gsrnNumber, meteringPointType, gridAreaLinkId, meteringMethod, connectionStatePhysicalState, meterReadingOccurrence, productType, measurementUnitType)
         {
             ToGrid = toGrid;
             FromGrid = fromGrid;
@@ -65,13 +66,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GsrnNumber gsrnNumber,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
-            MeteringPointSubType meteringPointSubType,
+            MeteringMethod meteringMethod,
             PhysicalState connectionStatePhysicalState,
             ReadingOccurrence meterReadingOccurrence,
             ProductType productType,
             MeasurementUnitType measurementUnitType,
             NetSettlementGroup netSettlementGroup)
-            : this(meteringPointId, gsrnNumber, meteringPointType, gridAreaLinkId, meteringPointSubType, connectionStatePhysicalState, meterReadingOccurrence, productType, measurementUnitType)
+            : this(meteringPointId, gsrnNumber, meteringPointType, gridAreaLinkId, meteringMethod, connectionStatePhysicalState, meterReadingOccurrence, productType, measurementUnitType)
         {
             NetSettlementGroup = netSettlementGroup;
         }
@@ -81,14 +82,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GsrnNumber gsrnNumber,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
-            MeteringPointSubType meteringPointSubType,
+            MeteringMethod meteringMethod,
             PhysicalState connectionStatePhysicalState,
             ReadingOccurrence meterReadingOccurrence,
             ProductType productType,
             MeasurementUnitType measurementUnitType,
             SettlementMethod settlementMethod,
             NetSettlementGroup netSettlementGroup)
-            : this(meteringPointId, gsrnNumber, meteringPointType, gridAreaLinkId, meteringPointSubType, connectionStatePhysicalState, meterReadingOccurrence, productType, measurementUnitType)
+            : this(meteringPointId, gsrnNumber, meteringPointType, gridAreaLinkId, meteringMethod, connectionStatePhysicalState, meterReadingOccurrence, productType, measurementUnitType)
         {
             SettlementMethod = settlementMethod;
             NetSettlementGroup = netSettlementGroup;
@@ -104,7 +105,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public MeasurementUnitType MeasurementUnitType { get; }
 
-        public MeteringPointSubType MeteringPointSubType { get; }
+        public MeteringMethod MeteringMethod { get; }
 
         public GsrnNumber GsrnNumber { get; }
 

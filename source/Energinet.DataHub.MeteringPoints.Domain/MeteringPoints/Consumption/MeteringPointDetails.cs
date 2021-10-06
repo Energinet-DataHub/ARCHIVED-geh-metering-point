@@ -14,25 +14,46 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 {
     public record MeteringPointDetails(
-        MeteringPointId Id,
-        GsrnNumber GsrnNumber,
-        Address Address,
-        MeteringPointSubType MeteringPointSubType,
-        GridAreaLinkId GridAreaLinkId,
-        GsrnNumber? PowerPlantGsrnNumber,
-        LocationDescription? LocationDescription,
-        MeterId? MeterNumber,
-        ReadingOccurrence ReadingOccurrence,
-        PowerLimit PowerLimit,
-        EffectiveDate EffectiveDate,
-        SettlementMethod SettlementMethod,
-        NetSettlementGroup NetSettlementGroup,
-        DisconnectionType DisconnectionType,
-        ConnectionType ConnectionType,
-        AssetType? AssetType,
-        ScheduledMeterReadingDate? ScheduledMeterReadingDate);
+            MeteringPointId Id,
+            GsrnNumber GsrnNumber,
+            Address Address,
+            MeteringMethod MeteringMethod,
+            GridAreaLinkId GridAreaLinkId,
+            GsrnNumber? PowerPlantGsrnNumber,
+            LocationDescription? LocationDescription,
+            MeterId? MeterNumber,
+            ReadingOccurrence ReadingOccurrence,
+            PowerLimit PowerLimit,
+            EffectiveDate EffectiveDate,
+            SettlementMethod SettlementMethod,
+            NetSettlementGroup NetSettlementGroup,
+            DisconnectionType DisconnectionType,
+            ConnectionType? ConnectionType,
+            AssetType? AssetType,
+            ScheduledMeterReadingDate? ScheduledMeterReadingDate,
+            Capacity? Capacity)
+        : MarketMeteringPoints.MeteringPointDetails(
+            Id,
+            GsrnNumber,
+            Address,
+            MeteringMethod,
+            GridAreaLinkId,
+            PowerPlantGsrnNumber,
+            LocationDescription,
+            MeterNumber,
+            ReadingOccurrence,
+            PowerLimit,
+            EffectiveDate,
+            SettlementMethod,
+            NetSettlementGroup,
+            DisconnectionType,
+            ConnectionType,
+            AssetType,
+            ScheduledMeterReadingDate,
+            Capacity);
 }

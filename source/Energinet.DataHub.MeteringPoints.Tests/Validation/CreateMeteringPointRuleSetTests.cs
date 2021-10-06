@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentAssertions;
@@ -105,14 +106,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         }
 
         [Theory]
-        [InlineData("Physical", typeof(MeteringPointSubTypeMandatoryValidationError), false)]
-        [InlineData("", typeof(MeteringPointSubTypeMandatoryValidationError), true)]
+        [InlineData("Physical", typeof(MeteringMethodIsMandatoryValidationError), false)]
+        [InlineData("", typeof(MeteringMethodIsMandatoryValidationError), true)]
         public void Validate_MandatorySubTypeOfMP(string subTypeOfMeteringPoint, System.Type validationError, bool expectedError)
         {
             var businessRequest = CreateRequest() with
             {
                 GsrnNumber = SampleData.GsrnNumber,
-                SubTypeOfMeteringPoint = subTypeOfMeteringPoint,
+                MeteringMethod = subTypeOfMeteringPoint,
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);

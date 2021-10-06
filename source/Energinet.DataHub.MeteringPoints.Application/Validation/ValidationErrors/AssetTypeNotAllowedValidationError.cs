@@ -16,15 +16,12 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class AssetTypeWrongValueValidationError : ValidationError
+    public class InvalidAssetTypeValueValidationError : ValidationError
     {
-        public AssetTypeWrongValueValidationError(string gsrnNumber, string? assetType)
+        public InvalidAssetTypeValueValidationError(string assetType)
         {
-            GsrnNumber = gsrnNumber;
             AssetType = assetType;
         }
-
-        public string GsrnNumber { get; }
 
         public string? AssetType { get; }
     }

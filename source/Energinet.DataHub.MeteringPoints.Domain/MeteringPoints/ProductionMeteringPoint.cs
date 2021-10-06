@@ -14,6 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
@@ -34,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GsrnNumber gsrnNumber,
             Address address,
             bool isAddressWashable,
-            MeteringPointSubType meteringPointSubType,
+            MeteringMethod meteringMethod,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
@@ -47,12 +48,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             NetSettlementGroup netSettlementGroup,
             DisconnectionType disconnectionType,
             ConnectionType connectionType,
-            ProductType productType)
+            ProductType productType,
+            Capacity capacity)
             : base(
                 id,
                 gsrnNumber,
                 address,
-                meteringPointSubType,
+                meteringMethod,
                 meteringPointType,
                 gridAreaLinkId,
                 powerPlantGsrnNumber,
@@ -61,7 +63,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 meterNumber,
                 meterReadingOccurrence,
                 powerLimit,
-                effectiveDate)
+                effectiveDate,
+                capacity)
         {
             _netSettlementGroup = netSettlementGroup;
             _disconnectionType = disconnectionType;
@@ -70,7 +73,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _productType = productType;
             _isAddressWashable = isAddressWashable;
 
-            AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaLinkId, meteringPointSubType, ConnectionState.PhysicalState, meterReadingOccurrence, ProductType.Tariff, unitType, netSettlementGroup));
+            AddDomainEvent(new MeteringPointCreated(id, GsrnNumber, meteringPointType, gridAreaLinkId, meteringMethod, ConnectionState.PhysicalState, meterReadingOccurrence, ProductType.Tariff, unitType, netSettlementGroup));
         }
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor

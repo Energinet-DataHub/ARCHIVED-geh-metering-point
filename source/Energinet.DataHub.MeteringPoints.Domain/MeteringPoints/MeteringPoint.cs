@@ -31,13 +31,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 #pragma warning restore
         private Address _address;
         private GridAreaLinkId _gridAreaLinkId;
-        private MeteringPointSubType _meteringPointSubType;
+        private MeteringMethod _meteringMethod;
         private ReadingOccurrence _meterReadingOccurrence;
         private PowerLimit _powerLimit;
         private GsrnNumber? _powerPlantGsrnNumber;
         private LocationDescription? _locationDescription;
         private EffectiveDate _effectiveDate;
         private MeterId? _meterNumber;
+        private Capacity? _capacity;
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
         protected MeteringPoint() { }
@@ -48,7 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            MeteringPointSubType meteringPointSubType,
+            MeteringMethod meteringMethod,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
@@ -57,12 +58,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeterId? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit powerLimit,
-            EffectiveDate effectiveDate)
+            EffectiveDate effectiveDate,
+            Capacity? capacity)
         {
             Id = id;
             GsrnNumber = gsrnNumber;
             _address = address;
-            _meteringPointSubType = meteringPointSubType;
+            _meteringMethod = meteringMethod;
             _meteringPointType = meteringPointType;
             _gridAreaLinkId = gridAreaLinkId;
             _powerPlantGsrnNumber = powerPlantGsrnNumber;
@@ -72,6 +74,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _meterReadingOccurrence = meterReadingOccurrence;
             _powerLimit = powerLimit;
             _effectiveDate = effectiveDate;
+            _capacity = capacity;
         }
 
         public MeteringPointId Id { get; }
@@ -85,7 +88,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
             var rules = new List<IBusinessRule>()
             {
-                new MeterIdRequirementRule(meteringPointDetails.MeterNumber, meteringPointDetails.MeteringPointSubType),
+                new MeterIdRequirementRule(meteringPointDetails.MeterNumber, meteringPointDetails.MeteringMethod),
             };
 
             return new BusinessRulesValidationResult(rules);

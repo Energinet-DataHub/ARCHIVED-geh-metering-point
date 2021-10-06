@@ -25,6 +25,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
@@ -78,20 +79,36 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             container.Register<OutboxWatcher>(Lifestyle.Scoped);
             container.Register<OutboxOrchestrator>(Lifestyle.Scoped);
             container.Register<IOutboxMessageDispatcher, OutboxMessageDispatcher>(Lifestyle.Scoped);
-            container.RegisterDecorator<IOutboxMessageDispatcher, OutboxMessageDispatcherTelemetryDecorator>(Lifestyle.Scoped);
+            container.RegisterDecorator<IOutboxMessageDispatcher, OutboxMessageDispatcherTelemetryDecorator>(
+                Lifestyle.Scoped);
             container.Register<OutboxMessageFactory>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
+            container.Register<IIntegrationMetadataContext, IntegrationMetadataContext>(Lifestyle.Scoped);
+            container.Register<IIntegrationEventMessageFactory, IntegrationEventServiceBusMessageFactory>(Lifestyle.Scoped);
 
-            var connectionString = Environment.GetEnvironmentVariable("SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING");
-            container.Register(() => new ServiceBusClient(connectionString), Lifestyle.Singleton);
+            var connectionString =
+                Environment.GetEnvironmentVariable("SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING");
+            container.Register<ServiceBusClient>(
+                () => new ServiceBusClient(connectionString),
+                Lifestyle.Singleton);
 
             container.Register(
-                () => new MeteringPointCreatedTopic(Environment.GetEnvironmentVariable("METERING_POINT_CREATED_TOPIC") ?? throw new InvalidOperationException(
-                    "No MeteringPointCreated Topic found")),
+                () => new MeteringPointCreatedTopic(
+                    Environment.GetEnvironmentVariable("METERING_POINT_CREATED_TOPIC") ??
+                    throw new InvalidOperationException(
+                        "No MeteringPointCreated Topic found")),
                 Lifestyle.Singleton);
             container.Register(
-                () => new MeteringPointConnectedTopic(Environment.GetEnvironmentVariable("METERING_POINT_CONNECTED_TOPIC") ?? throw new InvalidOperationException(
-                    "No MeteringPointConnected Topic found")),
+                () => new ConsumptionMeteringPointCreatedTopic(
+                    Environment.GetEnvironmentVariable("CONSUMPTION_METERING_POINT_CREATED_TOPIC") ??
+                    throw new InvalidOperationException(
+                        "No Consumption Metering Point Created Topic found")),
+                Lifestyle.Singleton);
+            container.Register(
+                () => new MeteringPointConnectedTopic(
+                    Environment.GetEnvironmentVariable("METERING_POINT_CONNECTED_TOPIC") ??
+                    throw new InvalidOperationException(
+                        "No MeteringPointConnected Topic found")),
                 Lifestyle.Singleton);
 
             container.Register(typeof(ITopicSender<>), typeof(TopicSender<>), Lifestyle.Singleton);

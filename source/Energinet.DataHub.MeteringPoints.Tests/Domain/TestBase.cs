@@ -18,9 +18,11 @@ using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Sdk;
+using MeteringPointDetails = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.MeteringPointDetails;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain
 {
@@ -41,11 +43,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 address,
-                MeteringPointSubType.Physical,
+                MeteringMethod.Virtual,
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
                 GsrnNumber.Create(SampleData.PowerPlant),
                 LocationDescription.Create(SampleData.LocationDescription),
-                string.IsNullOrWhiteSpace(SampleData.MeterNumber) ? null : MeterId.Create(SampleData.MeterNumber),
+                null,
+                //string.IsNullOrWhiteSpace(SampleData.MeterNumber) ? null : MeterId.Create(SampleData.MeterNumber),
                 ReadingOccurrence.Hourly,
                 PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
                 EffectiveDate.Create(SampleData.EffectiveDate),
@@ -54,7 +57,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 DisconnectionType.Manual,
                 ConnectionType.Installation,
                 AssetType.GasTurbine,
-                ScheduledMeterReadingDate.Create(SampleData.ScheduledMeterReadingDate));
+                ScheduledMeterReadingDate.Create(SampleData.ScheduledMeterReadingDate),
+                Capacity.Create(SampleData.Capacity));
         }
 
         protected static Address CreateAddress()

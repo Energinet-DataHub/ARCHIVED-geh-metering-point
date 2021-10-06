@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration
 {
@@ -27,6 +28,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration
         /// </summary>
         /// <param name="message"></param>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task SendMessageAsync(byte[] message);
+        Task SendMessageAsync(ServiceBusMessage message);
     }
 }

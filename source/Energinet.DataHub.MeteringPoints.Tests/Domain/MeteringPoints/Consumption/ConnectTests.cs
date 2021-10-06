@@ -18,6 +18,7 @@ using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules.Connect;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 using Xunit;
@@ -26,7 +27,7 @@ using Xunit.Categories;
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumption
 {
     [UnitTest]
-    public class ConnectTests
+    public class ConnectTests : TestBase
     {
         private readonly SystemDateTimeProviderStub _systemDateTimeProvider;
 
@@ -95,40 +96,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
 
         private static ConsumptionMeteringPoint CreateConsumptionMeteringPoint()
         {
-            var address = Address.Create(
-                SampleData.StreetName,
-                SampleData.StreetCode,
-                SampleData.BuildingNumber,
-                SampleData.CityName,
-                SampleData.CitySubdivision,
-                SampleData.PostCode,
-                EnumerationType.FromName<CountryCode>(SampleData.CountryCode),
-                SampleData.Floor,
-                SampleData.Room,
-                SampleData.MunicipalityCode,
-                SampleData.IsOfficialAddress,
-                SampleData.GeoInfoReference);
-
-            var meteringPointDetails = new MeteringPointDetails(
-                MeteringPointId.New(),
-                GsrnNumber.Create(SampleData.GsrnNumber),
-                address,
-                EnumerationType.FromName<MeteringPointSubType>(SampleData.SubTypeName),
-                new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
-                GsrnNumber.Create(SampleData.PowerPlant),
-                LocationDescription.Create(SampleData.LocationDescription),
-                string.IsNullOrWhiteSpace(SampleData.MeterNumber) ? null : MeterId.Create(SampleData.MeterNumber),
-                ReadingOccurrence.Hourly,
-                PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
-                EffectiveDate.Create(SampleData.EffectiveDate),
-                EnumerationType.FromName<SettlementMethod>(SampleData.SettlementMethod!),
-                EnumerationType.FromName<NetSettlementGroup>(SampleData.NetSettlementGroup!),
-                DisconnectionType.Manual,
-                ConnectionType.Installation,
-                AssetType.Boiler,
-                ScheduledMeterReadingDate.Create(SampleData.ScheduledMeterReadingDate));
-
-            return ConsumptionMeteringPoint.Create(meteringPointDetails);
+            var details = CreateDetails();
+            return ConsumptionMeteringPoint.Create(details);
         }
 
         private ConnectionDetails ConnectNow()

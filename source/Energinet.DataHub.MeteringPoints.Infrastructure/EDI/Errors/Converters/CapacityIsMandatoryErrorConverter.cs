@@ -14,16 +14,17 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class CapacityIsMandatoryErrorConverter : ErrorConverter<CapacityIsMandatoryValidationError>
+    public class CapacityIsMandatoryErrorConverter : ErrorConverter<CapacityIsRequiredRuleError>
     {
-        protected override ErrorMessage Convert(CapacityIsMandatoryValidationError validationError)
+        protected override ErrorMessage Convert(CapacityIsRequiredRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D56", $"Capacity '{validationError.Capacity}' for metering point {validationError.GsrnNumber} with net settlement group not 0 is missing (type E18) or not allowed (other types).");
+            return new("D56", $"Capacity is required for this metering point type.");
         }
     }
 }

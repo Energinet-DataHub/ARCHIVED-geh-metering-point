@@ -16,13 +16,14 @@ using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Xunit;
 using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 {
     [UnitTest]
-    public class DisconnectionRuleTests : CreateMeteringPointRulesTest<DisconnectionRule>
+    public class DisconnectionRuleTests : CreateMeteringPointRulesTest<DisconnectionTypeRule>
     {
         [Theory]
         [InlineData(nameof(DisconnectionType.Manual), nameof(MeteringPointType.Production))]
