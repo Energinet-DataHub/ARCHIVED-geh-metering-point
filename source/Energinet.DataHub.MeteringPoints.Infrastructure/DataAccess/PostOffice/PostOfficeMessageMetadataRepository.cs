@@ -13,8 +13,10 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
+using Microsoft.EntityFrameworkCore;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.PostOffice
 {
@@ -29,17 +31,17 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.PostOffice
 
         public Task<PostOfficeMessage> GetMessageAsync(Guid messageId)
         {
-            throw new NotImplementedException();
+            return _context.PostOfficeMessages.SingleAsync(p => p.Id == messageId);
         }
 
         public Task<PostOfficeMessage[]> GetMessagesAsync(Guid[] messageIds)
         {
-            throw new NotImplementedException();
+            return _context.PostOfficeMessages.Where(p => messageIds.Contains(p.Id)).ToArrayAsync();
         }
 
-        public Task SaveMessageMetadataAsync(PostOfficeMessage postOfficeMessage)
+        public void AddMessageMetadata(PostOfficeMessage postOfficeMessage)
         {
-            throw new NotImplementedException();
+            _context.PostOfficeMessages.Add(postOfficeMessage);
         }
     }
 }

@@ -19,7 +19,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.PostOffice
 {
-    public class PostOfficeMessageMetadataEntityConfiguration : IEntityTypeConfiguration<PostOfficeMessage>
+    public class PostOfficeMessageEntityConfiguration : IEntityTypeConfiguration<PostOfficeMessage>
     {
         public void Configure(EntityTypeBuilder<PostOfficeMessage> builder)
         {
@@ -28,13 +28,19 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.PostOffice
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            builder.ToTable("MeteringPoints", "dbo");
+            builder.ToTable("PostOfficeMessages", "dbo");
 
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id);
-            // .HasConversion(
-            //     toDbValue => toDbValue.Value,
-            //     fromDbValue => new MeteringPointId(fromDbValue));
+
+            builder.Property(x => x.Correlation)
+                .HasColumnName("Correlation");
+
+            builder.Property(x => x.Type)
+                .HasColumnName("Type");
+
+            builder.Property(x => x.Content)
+                .HasColumnName("Content");
         }
     }
 }

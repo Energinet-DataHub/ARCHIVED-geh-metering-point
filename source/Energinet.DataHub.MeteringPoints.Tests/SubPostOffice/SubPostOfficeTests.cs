@@ -17,12 +17,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
 using Energinet.DataHub.MeteringPoints.Tests.SubPostOffice.Mocks;
 using FluentAssertions;
 using GreenEnergyHub.PostOffice.Communicator.Dequeue;
 using GreenEnergyHub.PostOffice.Communicator.Model;
 using GreenEnergyHub.PostOffice.Communicator.Peek;
+using MediatR;
 using Xunit;
 using Xunit.Categories;
 
@@ -57,7 +59,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
                 _dataBundleResponseSender,
                 dequeueNotificationParser,
                 _requestBundleParser,
-                new BundleCreator());
+                new BundleCreator(new JsonSerializer()));
 
             _subPostOfficeDataAvailableClient = new SubPostOfficeDataAvailableClient(_postOfficeMessageMetadataRepository, _dataAvailableNotificationSender);
         }

@@ -28,10 +28,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
         private readonly IJsonSerializer _jsonSerializer;
 
         public BundleCreator(
-            IMediator mediator,
             IJsonSerializer jsonSerializer)
         {
-            _mediator = mediator;
+            _mediator = new Mediator(new ServiceFactory(type => { return new string('x', 2); }));
             _jsonSerializer = jsonSerializer;
         }
 
@@ -70,7 +69,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
             List<object> dtos = new();
             foreach (var message in messages)
             {
-                dtos.Add(_jsonSerializer.Deserialize(message.MessageContent, type));
+                dtos.Add(_jsonSerializer.Deserialize(message.Content, type));
             }
 
             return dtos;

@@ -7,7 +7,9 @@
     "METERINGPOINT_DB_CONNECTION_STRING": "<Main SQL server database connection string>",
     "METERINGPOINT_QUEUE_TOPIC_NAME": "<Name of Service Bus queue for receiving business requests and internal commands>",
     "METERINGPOINT_QUEUE_CONNECTION_STRING": "<Service Bus connection string where business requests and internal commands are received>",
-    "INTEGRATION_EVENT_QUEUE": "<Name of Service Bus queue for receiving integration/notification events>",
-    "INTEGRATION_EVENT_QUEUE_CONNECTION": "<Service Bus connection string where integration/notification events are received>"
+  },
+  "ConnectionStrings": {
+    "POSTOFFICE_QUEUE_CONNECTION_STRING": "<PostOffice Service Bus connection string>",
+    "POSTOFFICE_STORAGE_CONNECTION_STRING": "<PostOffice Storage connection string>"
   }
 }

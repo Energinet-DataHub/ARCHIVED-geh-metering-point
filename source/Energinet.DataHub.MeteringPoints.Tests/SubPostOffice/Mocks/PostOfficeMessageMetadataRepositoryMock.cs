@@ -34,10 +34,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice.Mocks
             return Task.FromResult(_postOfficeMessageMetadataList.ToArray());
         }
 
-        public Task SaveMessageMetadataAsync(PostOfficeMessage postOfficeMessage)
+        public void AddMessageMetadata(PostOfficeMessage postOfficeMessage)
         {
             _postOfficeMessageMetadataList.Add(postOfficeMessage);
-            return Task.CompletedTask;
         }
 
         public PostOfficeMessage GetMessageByCorrelation(string correlation)

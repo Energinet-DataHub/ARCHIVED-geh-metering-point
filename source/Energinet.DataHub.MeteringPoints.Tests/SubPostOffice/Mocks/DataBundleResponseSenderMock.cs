@@ -22,7 +22,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice.Mocks
     {
         private bool _isSent;
 
-        public Task SendAsync(RequestDataBundleResponseDto requestDataBundleResponseDto, string sessionId)
+#pragma warning disable CA1801
+        public Task SendAsync(RequestDataBundleResponseDto requestDataBundleResponseDto, string sessionId, DomainOrigin domainOrigin)
+#pragma warning restore CA1801
         {
             _isSent = true;
             return Task.CompletedTask;

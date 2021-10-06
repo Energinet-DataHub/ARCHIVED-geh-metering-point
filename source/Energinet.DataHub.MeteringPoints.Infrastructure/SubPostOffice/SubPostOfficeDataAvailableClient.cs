@@ -41,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
             }
 
             var messageMetadata = PostOfficeMessageFactory.Create(message.Correlation, message.Content, message.MessageType);
-            await _postOfficeMessageMetadataRepository.SaveMessageMetadataAsync(messageMetadata).ConfigureAwait(false);
+            _postOfficeMessageMetadataRepository.AddMessageMetadata(messageMetadata);
 
             await _dataAvailableNotificationSender.SendAsync(new DataAvailableNotificationDto(messageMetadata.Id, new GlobalLocationNumberDto(message.Recipient), new MessageTypeDto(message.MessageType), DomainOrigin.MeteringPoints, true, 1)).ConfigureAwait(false);
         }
