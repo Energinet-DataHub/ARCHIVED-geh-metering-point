@@ -62,7 +62,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public static string SettlementMethod => MeteringPoints.Domain.MeteringPoints.Consumption.SettlementMethod.Flex.Name;
 
-        public static string NetSettlementGroup => Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.NetSettlementGroup.Six.Name;
+        public static string NetSettlementGroup => MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.NetSettlementGroup.Six.Name;
 
         public static string DisconnectionType => string.Empty;
 
