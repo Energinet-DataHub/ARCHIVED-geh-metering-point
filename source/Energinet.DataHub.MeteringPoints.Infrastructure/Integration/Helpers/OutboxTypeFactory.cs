@@ -18,6 +18,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Production;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
 {
@@ -27,6 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
         {
             { typeof(MeteringPointCreatedEventMessage).FullName!, typeof(MeteringPointCreatedEventMessage) },
             { typeof(ConsumptionMeteringPointCreatedIntegrationEvent).FullName!, typeof(ConsumptionMeteringPointCreatedIntegrationEvent) },
+            { typeof(ProductionMeteringPointCreatedIntegrationEvent).FullName!, typeof(ProductionMeteringPointCreatedIntegrationEvent) },
             { typeof(MeteringPointConnectedIntegrationEvent).FullName!, typeof(MeteringPointConnectedIntegrationEvent) },
             { typeof(PostOfficeEnvelope).FullName!, typeof(PostOfficeEnvelope) },
         };
