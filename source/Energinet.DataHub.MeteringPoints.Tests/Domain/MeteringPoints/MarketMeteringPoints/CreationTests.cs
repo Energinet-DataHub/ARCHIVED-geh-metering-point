@@ -12,10 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using BenchmarkDotNet.Attributes;
+using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Categories;
@@ -87,6 +90,65 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             AssertError<ConnectionTypeDoesNotMatchNetSettlementGroupRuleError>(result, true);
         }
 
+        [Fact]
+        public void Should_return_error_when_street_name_is_missing()
+        {
+            var address = Address.Create(
+                string.Empty,
+                SampleData.StreetCode,
+                string.Empty,
+                SampleData.CityName,
+                string.Empty,
+                string.Empty,
+                null,
+                string.Empty,
+                string.Empty,
+                default,
+                isOfficial: true,
+                geoInfoReference: Guid.NewGuid());
+
+            var meteringPointDetails = CreateProductionDetails()
+                with
+                {
+                    Address = address,
+                    MeteringMethod = MeteringMethod.Virtual,
+                    MeterNumber = null,
+                };
+
+            var checkResult = CheckCreationRules(meteringPointDetails);
+            AssertContainsValidationError<StreetNameIsRequiredRuleError>(checkResult);
+        }
+
+        [Fact]
+        public void Should_return_error_when_post_code_is_missing()
+        {
+            var address = Address.Create(
+                SampleData.StreetName,
+                SampleData.StreetCode,
+                string.Empty,
+                SampleData.CityName,
+                string.Empty,
+                string.Empty,
+                null,
+                string.Empty,
+                string.Empty,
+                default,
+                isOfficial: true,
+                geoInfoReference: Guid.NewGuid());
+
+            var meteringPointDetails = CreateProductionDetails()
+                with
+                {
+                    Address = address,
+                    MeteringMethod = MeteringMethod.Virtual,
+                    MeterNumber = null,
+                };
+
+            var checkResult = ProductionMeteringPoint.CanCreate(meteringPointDetails);
+
+            Assert.Contains(checkResult.Errors, error => error is PostCodeIsRequiredRuleError);
+        }
+
         [Theory]
         [InlineData("Zero", "Physical", false)]
         [InlineData("One", "Physical", true)]
@@ -114,6 +176,21 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             var result = MarketMeteringPoint.CanCreate(details);
 
             AssertError<MeteringMethodDoesNotMatchNetSettlementGroupRuleError>(result, expectError);
+        }
+
+        private static BusinessRulesValidationResult CheckCreationRules(ProductionMeteringPointDetails meteringPointDetails)
+        {
+            return ProductionMeteringPoint.CanCreate(meteringPointDetails);
+        }
+
+        private static void AssertContainsValidationError<TValidationError>(BusinessRulesValidationResult result)
+        {
+            Assert.Contains(result.Errors, error => error is TValidationError);
+        }
+
+        private static void AssertDoesNotContainValidationError<TValidationError>(BusinessRulesValidationResult result)
+        {
+            Assert.DoesNotContain(result.Errors, error => error is TValidationError);
         }
     }
 }

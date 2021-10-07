@@ -20,6 +20,7 @@ using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -151,9 +152,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             {
                 new PowerPlantIsRequiredForNetSettlementGroupRule(meteringPointDetails.GsrnNumber,
                     meteringPointDetails.NetSettlementGroup, meteringPointDetails.PowerPlantGsrnNumber),
-                new StreetNameIsRequiredRule(meteringPointDetails.GsrnNumber, meteringPointDetails.Address),
-                new PostCodeIsRequiredRule(meteringPointDetails.Address),
-                new CityIsRequiredRule(meteringPointDetails.Address),
                 new ScheduledMeterReadingDateRule(meteringPointDetails.ScheduledMeterReadingDate,
                     meteringPointDetails.NetSettlementGroup),
                 new CapacityRequirementRule(meteringPointDetails.Capacity, meteringPointDetails.NetSettlementGroup),
