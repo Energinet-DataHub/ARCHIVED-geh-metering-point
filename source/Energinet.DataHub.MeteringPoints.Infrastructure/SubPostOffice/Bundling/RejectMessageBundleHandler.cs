@@ -12,20 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Contracts
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice.Bundling
 {
-    /// <summary>
-    /// Reject actor message
-    /// </summary>
-    public interface IRejectMessage
+    public class RejectMessageBundleHandler : BundleHandler<RejectMessage>
     {
-        /// <summary>
-        /// Errors2
-        /// </summary>
-        IReadOnlyCollection<Reason> Errors { get; }
+        public RejectMessageBundleHandler(IJsonSerializer jsonSerializer, IDocumentSerializer<RejectMessage> documentSerializer)
+            : base(jsonSerializer, documentSerializer)
+        {
+        }
     }
 }
