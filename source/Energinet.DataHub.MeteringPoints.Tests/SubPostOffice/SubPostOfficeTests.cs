@@ -96,7 +96,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
                 messages.Add(message);
             }
 
-            await RequestBundle(messages).ConfigureAwait(false); // TODO : do only once
+            await RequestBundle(messages).ConfigureAwait(false);
 
             var bytes = _dequeueNotificationParser.Parse(new DequeueNotificationDto(messages.Select(x => x.PostOfficeMessageMetadata.Id).ToArray(), new GlobalLocationNumberDto("recipient")));
 
