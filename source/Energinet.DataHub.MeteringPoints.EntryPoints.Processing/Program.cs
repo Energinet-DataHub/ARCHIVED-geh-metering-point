@@ -143,6 +143,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             // TODO: remove this when infrastructure and application has been split into more assemblies.
             container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageSerializer>(Lifestyle.Singleton);
+            container.Register<IDocumentSerializer<RejectMessage>, RejectMessageSerializer>(Lifestyle.Singleton);
 
             container.AddValidationErrorConversion(
                 validateRegistrations: false,

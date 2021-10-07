@@ -43,9 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice.Bundling
 
         private static Type GetMessageType(IList<PostOfficeMessage> messages)
         {
-            var messageType = messages.First().Type;
-            var type = Type.GetType(messageType) ?? throw new InvalidOperationException("Unknown type");
-            return type;
+            return messages.First().Type.Type;
         }
 
         private static IBundleRequest CreateBundleRequest(IList<PostOfficeMessage> messages, Type type)

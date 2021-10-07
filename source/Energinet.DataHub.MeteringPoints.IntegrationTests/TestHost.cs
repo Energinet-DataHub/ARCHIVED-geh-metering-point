@@ -41,7 +41,6 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Contracts;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GridAreas;
@@ -59,7 +58,6 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Xunit;
@@ -80,6 +78,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         private readonly Container _container;
         private readonly IServiceProvider _serviceProvider;
         private bool _disposed;
+        private JsonSerializer _jsonSerializer = new();
 
         protected TestHost(DatabaseFixture databaseFixture)
         {
@@ -132,6 +131,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             // TODO: remove this when infrastructure and application has been split into more assemblies.
             _container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageSerializer>(Lifestyle.Singleton);
+            _container.Register<IDocumentSerializer<RejectMessage>, RejectMessageSerializer>(Lifestyle.Singleton);
 
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
@@ -215,30 +215,29 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             message.Should().BeOfType<TMessage>();
         }
 
-        protected void AssertValidationError<TRejectMessage>(string expectedErrorCode)
-            where TRejectMessage : IRejectMessage
+        protected void AssertValidationError(string expectedErrorCode, DocumentType type)
         {
             var message = GetOutboxMessages
                     <PostOfficeMessageEnvelope>()
-                .First(msg => msg.MessageType.Equals(typeof(TRejectMessage).Name, StringComparison.Ordinal));
+                .Single(msg => msg.MessageType.Equals(type));
 
-            var rejectMessage = JsonConvert.DeserializeObject<TRejectMessage>(message.Content);
+            var rejectMessage = _jsonSerializer.Deserialize<RejectMessage>(message.Content);
 
-            var errorCount = rejectMessage.Errors.Count;
+            var errorCount = rejectMessage.MarketActivityRecord.Reasons.Count;
             if (errorCount > 1)
             {
                 var errorMessage = new StringBuilder();
                 errorMessage.AppendLine($"Reject message contains more ({errorCount}) than 1 error:");
-                foreach (var error in rejectMessage.Errors)
+                foreach (var error in rejectMessage.MarketActivityRecord.Reasons)
                 {
-                    errorMessage.AppendLine($"Code: {error.Code}. Description: {error.Description}.");
+                    errorMessage.AppendLine($"Code: {error.Code}. Description: {error.Text}.");
                 }
 
                 throw new XunitException(errorMessage.ToString());
             }
 
-            var validationError = rejectMessage.Errors
-                .First(error => error.Code == expectedErrorCode);
+            var validationError = rejectMessage.MarketActivityRecord.Reasons
+                .Single(error => error.Code == expectedErrorCode);
 
             Assert.NotNull(validationError);
         }

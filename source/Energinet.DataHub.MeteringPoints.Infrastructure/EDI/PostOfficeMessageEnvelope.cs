@@ -16,5 +16,5 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
 {
-    public record PostOfficeMessageEnvelope(string Recipient, string Content, string MessageType, string Correlation) : IRequest;
+    public record PostOfficeMessageEnvelope(string Recipient, string Content, DocumentType MessageType, string Correlation) : IRequest;
 }

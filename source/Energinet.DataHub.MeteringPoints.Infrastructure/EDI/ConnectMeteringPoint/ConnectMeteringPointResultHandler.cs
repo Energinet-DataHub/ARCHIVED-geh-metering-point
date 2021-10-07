@@ -96,7 +96,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
             var envelope = new PostOfficeMessageEnvelope(
                 string.Empty,
                 serializedMessage,
-                typeof(ConnectMeteringPointAccepted).FullName!,
+                DocumentType.ConnectMeteringPointAccepted,
                 _correlationContext.AsTraceContext());
 
             return envelope;
@@ -194,7 +194,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
             var postOfficeEnvelope = new PostOfficeMessageEnvelope(
                 string.Empty,
                 _jsonSerializer.Serialize(serializedMessage),
-                typeof(AccountingPointCharacteristicsMessage).FullName!,
+                DocumentType.AccountingPointCharacteristicsMessage,
                 _correlationContext.Id);
 
             return postOfficeEnvelope;
@@ -213,7 +213,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
                 Reason: "TODO",
                 Errors: errors);
 
-            var envelope = new PostOfficeMessageEnvelope(string.Empty, _jsonSerializer.Serialize(ediMessage), typeof(ConnectMeteringPointRejected).FullName!, _correlationContext.AsTraceContext());
+            var envelope = new PostOfficeMessageEnvelope(string.Empty, _jsonSerializer.Serialize(ediMessage), DocumentType.ConnectMeteringPointRejected, _correlationContext.AsTraceContext());
             AddToOutbox(envelope);
 
             return Task.CompletedTask;

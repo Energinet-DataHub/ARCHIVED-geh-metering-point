@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
@@ -25,7 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public PostOfficeMessage Create(string correlation, string messageContent, string type, string recipient)
+        public PostOfficeMessage Create(string correlation, string messageContent, DocumentType type, string recipient)
         {
             return new PostOfficeMessage(messageContent, correlation, type, recipient, _dateTimeProvider.Now());
         }

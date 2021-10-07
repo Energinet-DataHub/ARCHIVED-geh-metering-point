@@ -12,19 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Contracts;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice.Bundling
 {
-    public record CreateMeteringPointRejected(
-        string TransactionId,
-        string Status, // TODO: Is status implicit in Rejected from type?
-        string GsrnNumber,
-        string Reason,
-        IReadOnlyList<ErrorMessage> Errors)
-        : IRejectMessage;
-
-    // TODO: Reference to original document?
+    public class RejectMessageBundleHandler : BundleHandler<RejectMessage>
+    {
+        public RejectMessageBundleHandler(IJsonSerializer jsonSerializer, IDocumentSerializer<RejectMessage> documentSerializer)
+            : base(jsonSerializer, documentSerializer)
+        {
+        }
+    }
 }
