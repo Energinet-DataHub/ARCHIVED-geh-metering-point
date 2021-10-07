@@ -15,7 +15,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -63,17 +62,16 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
             if (result == null) throw new ArgumentNullException(nameof(result));
 
             return result.Success
-                ? CreateAcceptMessageAsync(request, result)
+                ? CreateAcceptMessageAsync(request)
                 : CreateRejectResponseAsync(request, result);
         }
 
-        protected Task CreateAcceptMessageAsync(Application.Create.CreateMeteringPoint request, BusinessProcessResult result)
+        private Task CreateAcceptMessageAsync(Application.Create.CreateMeteringPoint request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (result == null) throw new ArgumentNullException(nameof(result));
 
             var message = new ConfirmMessage(
-                DocumentName: "ConfirmRequestChangeOfSupplier_MarketDocument",
+                DocumentName: "ConfirmRequestChangeAccountingPointCharacteristics_MarketDocument",
                 Id: Guid.NewGuid().ToString(),
                 Type: "414",
                 ProcessType: "E65",
@@ -90,40 +88,16 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
                 ReasonCode: "39",
                 MarketActivityRecord: new MarketActivityRecord(
                     Id: Guid.NewGuid().ToString(),
-                    BusinessProcessReference: _correlationContext.Id,
+                    BusinessProcessReference: _correlationContext.Id, // TODO: is correlation id the same as BusinessProcessReference?
                     MarketEvaluationPoint: request.GsrnNumber,
                     StartDateAndOrTime: request.EffectiveDate,
                     OriginalTransaction: request.TransactionId));
 
-            XNamespace xmlNamespace = "urn:ebix:org:ChangeAccountingPointCharacteristics:0:1";
-            var document = AcknowledgementXmlSerializer.Serialize(message, xmlNamespace);
-
             var envelope = CreatePostOfficeEnvelope(
                 recipient: _userContext.CurrentUser?.GlnNumber ?? "8200000000006", // TODO: Hardcoded
-                cimContent: document,
-                messageType: typeof(ConfirmMessage).FullName!);
+                cimContent: _jsonSerializer.Serialize(message),
+                messageType: DocumentType.CreateMeteringPointAccepted);
 
-            AddToOutbox(envelope);
-
-            return Task.CompletedTask;
-        }
-
-        private PostOfficeMessageEnvelope CreatePostOfficeEnvelope(string recipient, string cimContent, string messageType)
-        {
-            return new(
-                Recipient: recipient,
-                Content: cimContent,
-                MessageType: messageType,
-                Correlation: _correlationContext.AsTraceContext()); // TODO: add correlation when Telemetry is added
-        }
-
-        private Task CreateAcceptResponseAsync(Application.Create.CreateMeteringPoint request, BusinessProcessResult result)
-        {
-            var ediMessage = new CreateMeteringPointAccepted(
-                TransactionId: result.TransactionId,
-                GsrnNumber: request.GsrnNumber,
-                Status: "Accepted");
-            var envelope = new PostOfficeMessageEnvelope(string.Empty, _jsonSerializer.Serialize(ediMessage), nameof(CreateMeteringPointAccepted), _correlationContext.AsTraceContext());
             AddToOutbox(envelope);
 
             return Task.CompletedTask;
@@ -135,17 +109,49 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
                 .Select(error => _errorMessageFactory.GetErrorMessage(error))
                 .ToArray();
 
-            var ediMessage = new CreateMeteringPointRejected(
-                TransactionId: result.TransactionId,
-                GsrnNumber: request.GsrnNumber,
-                Status: "Rejected", // TODO: Is this necessary? Also, Reason?
-                Reason: "TODO",
-                Errors: errors);
-            var envelope = new PostOfficeMessageEnvelope(string.Empty, _jsonSerializer.Serialize(ediMessage), nameof(CreateMeteringPointRejected), _correlationContext.AsTraceContext());
+            var message = new RejectMessage(
+                DocumentName: "RejectRequestChangeAccountingPointCharacteristics_MarketDocument",
+                Id: Guid.NewGuid().ToString(),
+                Type: "414",
+                ProcessType: "E65",
+                BusinessSectorType: "E21",
+                Sender: new MarketRoleParticipant(
+                    Id: "DataHub GLN", // TODO: Use correct GLN
+                    CodingScheme: "9",
+                    Role: "EZ"),
+                Receiver: new MarketRoleParticipant(
+                    Id: _userContext.CurrentUser?.GlnNumber ?? "8200000000006", // TODO: Hardcoded
+                    CodingScheme: "9",
+                    Role: "DDQ"),
+                CreatedDateTime: _dateTimeProvider.Now(),
+                Reason: new Reason(
+                    Code: "41",
+                    Text: string.Empty),
+                MarketActivityRecord: new MarketActivityRecordWithReasons(
+                    Id: Guid.NewGuid().ToString(),
+                    BusinessProcessReference: _correlationContext.Id, // TODO: is correlation id the same as BusinessProcessReference?
+                    MarketEvaluationPoint: request.GsrnNumber,
+                    StartDateAndOrTime: request.EffectiveDate,
+                    OriginalTransaction: request.TransactionId,
+                    Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
+
+            var envelope = CreatePostOfficeEnvelope(
+                recipient: _userContext.CurrentUser?.GlnNumber ?? "8200000000006", // TODO: Hardcoded
+                cimContent: _jsonSerializer.Serialize(message),
+                messageType: DocumentType.CreateMeteringPointRejected);
 
             AddToOutbox(envelope);
 
             return Task.CompletedTask;
+        }
+
+        private PostOfficeMessageEnvelope CreatePostOfficeEnvelope(string recipient, string cimContent, DocumentType messageType)
+        {
+            return new(
+                Recipient: recipient,
+                Content: cimContent,
+                MessageType: messageType,
+                Correlation: _correlationContext.AsTraceContext()); // TODO: add correlation when Telemetry is added
         }
 
         private void AddToOutbox<TEdiMessage>(TEdiMessage ediMessage)

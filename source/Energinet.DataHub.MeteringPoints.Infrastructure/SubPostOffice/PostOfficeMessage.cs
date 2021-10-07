@@ -13,12 +13,13 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
     public class PostOfficeMessage
     {
-        public PostOfficeMessage(string content, string correlation, string type)
+        public PostOfficeMessage(string content, string correlation, DocumentType type)
         {
             Id = Guid.NewGuid();
             Correlation = correlation;
@@ -26,7 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
             Content = content;
         }
 
-        public PostOfficeMessage(Guid id, string messageContent, string correlation, string type)
+        public PostOfficeMessage(Guid id, string messageContent, string correlation, DocumentType type)
             : this(messageContent, correlation, type)
         {
             Id = id;
@@ -38,6 +39,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 
         public string Correlation { get; }
 
-        public string Type { get; }
+        public DocumentType Type { get; }
     }
 }

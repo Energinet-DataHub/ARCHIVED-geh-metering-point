@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
@@ -57,7 +58,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
         {
             var officeMessages = createConfirmMessages
                 .Select(message => new JsonSerializer().Serialize(message))
-                .Select(message => new PostOfficeMessage(message, "correlation", typeof(ConfirmMessage).FullName!))
+                .Select(message => new PostOfficeMessage(message, "correlation", DocumentType.CreateMeteringPointAccepted))
                 .ToList();
             return officeMessages;
         }

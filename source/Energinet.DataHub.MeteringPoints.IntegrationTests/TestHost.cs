@@ -212,30 +212,29 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             message.Should().BeOfType<TMessage>();
         }
 
-        protected void AssertValidationError<TRejectMessage>(string expectedErrorCode)
-            where TRejectMessage : IRejectMessage
+        protected void AssertValidationError(string expectedErrorCode, DocumentType type)
         {
             var message = GetOutboxMessages
                     <PostOfficeMessageEnvelope>()
-                .First(msg => msg.MessageType.Equals(typeof(TRejectMessage).Name, StringComparison.Ordinal));
+                .Single(msg => msg.MessageType.Equals(type));
 
-            var rejectMessage = JsonConvert.DeserializeObject<TRejectMessage>(message.Content);
+            var rejectMessage = JsonConvert.DeserializeObject<RejectMessage>(message.Content);
 
-            var errorCount = rejectMessage.Errors.Count;
+            var errorCount = rejectMessage.MarketActivityRecord.Reasons.Count;
             if (errorCount > 1)
             {
                 var errorMessage = new StringBuilder();
                 errorMessage.AppendLine($"Reject message contains more ({errorCount}) than 1 error:");
-                foreach (var error in rejectMessage.Errors)
+                foreach (var error in rejectMessage.MarketActivityRecord.Reasons)
                 {
-                    errorMessage.AppendLine($"Code: {error.Code}. Description: {error.Description}.");
+                    errorMessage.AppendLine($"Code: {error.Code}. Description: {error.Text}.");
                 }
 
                 throw new XunitException(errorMessage.ToString());
             }
 
-            var validationError = rejectMessage.Errors
-                .First(error => error.Code == expectedErrorCode);
+            var validationError = rejectMessage.MarketActivityRecord.Reasons
+                .Single(error => error.Code == expectedErrorCode);
 
             Assert.NotNull(validationError);
         }

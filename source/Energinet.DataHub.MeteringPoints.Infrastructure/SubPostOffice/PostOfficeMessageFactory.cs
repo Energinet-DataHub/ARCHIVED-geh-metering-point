@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
+
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
     public static class PostOfficeMessageFactory
     {
-        public static PostOfficeMessage Create(string correlation, string messageContent, string type)
+        public static PostOfficeMessage Create(string correlation, string messageContent, DocumentType type)
         {
             return new PostOfficeMessage(messageContent, correlation, type);
         }

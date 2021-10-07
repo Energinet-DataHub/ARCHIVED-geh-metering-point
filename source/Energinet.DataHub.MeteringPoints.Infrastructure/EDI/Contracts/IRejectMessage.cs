@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Contracts
@@ -23,8 +24,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Contracts
     public interface IRejectMessage
     {
         /// <summary>
-        /// List of validation errors
+        /// Errors2
         /// </summary>
-        IReadOnlyList<ErrorMessage> Errors { get; }
+        IReadOnlyCollection<Reason> Errors { get; }
     }
 }

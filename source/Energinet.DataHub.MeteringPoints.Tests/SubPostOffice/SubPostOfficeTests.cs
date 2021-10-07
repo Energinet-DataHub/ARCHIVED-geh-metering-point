@@ -125,7 +125,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
         {
             var correlationId = Guid.NewGuid().ToString();
 
-            await _subPostOfficeDataAvailableClient.DataAvailableAsync(new PostOfficeMessageEnvelope("recipient", "content", "messagetype", correlationId)).ConfigureAwait(false);
+            await _subPostOfficeDataAvailableClient.DataAvailableAsync(new PostOfficeMessageEnvelope("recipient", "content", DocumentType.AccountingPointCharacteristicsMessage, correlationId)).ConfigureAwait(false);
 
             var message = _postOfficeMessageMetadataRepository.GetMessageByCorrelation(correlationId);
             return (message, correlationId);
