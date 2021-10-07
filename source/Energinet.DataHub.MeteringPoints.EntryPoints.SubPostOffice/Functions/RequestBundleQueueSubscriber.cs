@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
@@ -26,25 +25,24 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.SubPostOffice.Functions
         private readonly ILogger _logger;
         private readonly ICorrelationContext _correlationContext;
         private readonly ISubPostOfficeClient _subPostOfficeClient;
+        private readonly ISessionContext _sessionContext;
 
         public RequestBundleQueueSubscriber(
             ILogger logger,
             ICorrelationContext correlationContext,
-            ISubPostOfficeClient subPostOfficeClient)
+            ISubPostOfficeClient subPostOfficeClient,
+            ISessionContext sessionContext)
         {
             _logger = logger;
             _correlationContext = correlationContext;
             _subPostOfficeClient = subPostOfficeClient;
+            _sessionContext = sessionContext;
         }
 
         [Function("RequestBundleQueueSubscriber")]
-        public async Task RunAsync(
-            [ServiceBusTrigger("sbq-meteringpoints", Connection = "POSTOFFICE_QUEUE_CONNECTION_STRING", IsSessionsEnabled = true)] byte[] data,
-            FunctionContext context)
+        public async Task RunAsync([ServiceBusTrigger("sbq-meteringpoints", Connection = "POSTOFFICE_QUEUE_CONNECTION_STRING", IsSessionsEnabled = true)] byte[] data)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
-
-            await _subPostOfficeClient.CreateBundleAsync(data).ConfigureAwait(false);
+            await _subPostOfficeClient.CreateBundleAsync(data, _sessionContext.Id).ConfigureAwait(false);
 
             _logger.LogInformation("Dequeued with correlation id: {correlationId}", _correlationContext.Id);
         }
