@@ -23,6 +23,7 @@ limitations under the License.
   <ItemGroup>
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.3.0" />
     <PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
+    <PackageReference Include="ENDK.DataHub.MessageHub.Client" Version="1.0.1" />
     <PackageReference Include="Google.Protobuf" Version="3.18.0" />
     <PackageReference Include="Grpc.Tools" Version="2.37.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
@@ -65,12 +66,6 @@ limitations under the License.
 
     <ItemGroup>
       <Compile Remove="DataAccess\GridAreas\GridAreaLinkEntityConfiguration.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="GreenEnergyHub.PostOffice.Communicator, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\PoorMansPackages\GreenEnergyHub.PostOffice.Communicator.dll</HintPath>
-      </Reference>
     </ItemGroup>
 
 </Project>

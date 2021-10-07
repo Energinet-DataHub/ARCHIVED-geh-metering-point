@@ -15,8 +15,8 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using GreenEnergyHub.PostOffice.Communicator.Model;
-using GreenEnergyHub.PostOffice.Communicator.Storage;
+using Energinet.DataHub.MessageHub.Client.Model;
+using Energinet.DataHub.MessageHub.Client.Storage;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice.Mocks
 {

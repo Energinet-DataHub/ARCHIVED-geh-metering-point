@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
         /// Request bundle from Local Post Office
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task CreateBundleAsync(byte[] request);
+        Task CreateBundleAsync(byte[] request, string sessionId);
 
         /// <summary>
         /// Notify that bundle has been dequeued

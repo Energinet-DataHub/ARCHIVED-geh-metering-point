@@ -12,7 +12,6 @@
 // // See the License for the specific language governing permissions and
 // // limitations under the License.
 //
-// using System;
 // using System.Threading.Tasks;
 // using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 // using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
@@ -38,12 +37,8 @@
 //         }
 //
 //         [Function("BundleDequeuedQueueSubscriber")]
-//         public async Task RunAsync(
-//             [ServiceBusTrigger("%POSTOFFICE_QUEUE_TOPIC_NAME%", Connection = "POSTOFFICE_QUEUE_CONNECTION_STRING")] byte[] data,
-//             FunctionContext context)
+//         public async Task RunAsync([ServiceBusTrigger("sbq-meteringpoints-dequeue", Connection = "POSTOFFICE_QUEUE_CONNECTION_STRING", IsSessionsEnabled = true)] byte[] data)
 //         {
-//             if (context == null) throw new ArgumentNullException(nameof(context));
-//
 //             await _subPostOfficeClient.BundleDequeuedAsync(data).ConfigureAwait(false);
 //
 //             _logger.LogInformation("Dequeued with correlation id: {correlationId}", _correlationContext.Id);

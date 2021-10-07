@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.PostOffice.Communicator.Model;
-using GreenEnergyHub.PostOffice.Communicator.Peek;
+using Energinet.DataHub.MessageHub.Client.Model;
+using Energinet.DataHub.MessageHub.Client.Peek;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice.Mocks
 {
@@ -22,9 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice.Mocks
     {
         private bool _isSent;
 
-#pragma warning disable CA1801
         public Task SendAsync(RequestDataBundleResponseDto requestDataBundleResponseDto, string sessionId, DomainOrigin domainOrigin)
-#pragma warning restore CA1801
         {
             _isSent = true;
             return Task.CompletedTask;

@@ -16,16 +16,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure;
+using Energinet.DataHub.MessageHub.Client.Dequeue;
+using Energinet.DataHub.MessageHub.Client.Model;
+using Energinet.DataHub.MessageHub.Client.Peek;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
 using Energinet.DataHub.MeteringPoints.Tests.SubPostOffice.Mocks;
 using FluentAssertions;
-using GreenEnergyHub.PostOffice.Communicator.Dequeue;
-using GreenEnergyHub.PostOffice.Communicator.Model;
-using GreenEnergyHub.PostOffice.Communicator.Peek;
-using MediatR;
 using Xunit;
 using Xunit.Categories;
 
@@ -122,7 +119,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
 
             var bytes = _requestBundleParser.Parse(requestBundleDto);
 
-            await _subPostOfficeClient.CreateBundleAsync(bytes).ConfigureAwait(false);
+            await _subPostOfficeClient.CreateBundleAsync(bytes, "sessionId").ConfigureAwait(false);
         }
 
         private async Task<(PostOfficeMessage PostOfficeMessageMetadata, string Correlation)> DispatchMessage()

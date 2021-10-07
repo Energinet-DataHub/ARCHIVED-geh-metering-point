@@ -24,6 +24,8 @@ limitations under the License.
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ENDK.DataHub.MessageHub.Client" Version="1.0.1" />
+    <PackageReference Include="ENDK.DataHub.MessageHub.Client.SimpleInjector" Version="1.0.2" />
     <PackageReference Include="EntityFrameworkCore.SqlServer.NodaTime" Version="5.0.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.18.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Timer" Version="4.1.0" />
@@ -53,14 +55,5 @@ limitations under the License.
 
   <ItemGroup>
     <Compile Remove="EventMessageDispatcher.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="GreenEnergyHub.PostOffice.Communicator, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\PoorMansPackages\GreenEnergyHub.PostOffice.Communicator.dll</HintPath>
-    </Reference>
-    <Reference Include="GreenEnergyHub.PostOffice.Communicator.SimpleInjector, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\PoorMansPackages\GreenEnergyHub.PostOffice.Communicator.SimpleInjector.dll</HintPath>
-    </Reference>
   </ItemGroup>
 </Project>

@@ -16,14 +16,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Energinet.DataHub.MessageHub.Client.Dequeue;
+using Energinet.DataHub.MessageHub.Client.Model;
+using Energinet.DataHub.MessageHub.Client.Peek;
+using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Application.PostOffice;
 using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice.Bundling;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
-using GreenEnergyHub.PostOffice.Communicator.Dequeue;
-using GreenEnergyHub.PostOffice.Communicator.Model;
-using GreenEnergyHub.PostOffice.Communicator.Peek;
-using GreenEnergyHub.PostOffice.Communicator.Storage;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
@@ -55,7 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
             _bundleCreator = bundleCreator;
         }
 
-        public async Task CreateBundleAsync(byte[] request)
+        public async Task CreateBundleAsync(byte[] request, string sessionId)
         {
             var notificationDto = _requestBundleParser.Parse(request);
 
@@ -67,7 +67,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 
             var uri = await _postOfficeStorageHandler.AddStreamToStorageAsync(stream, notificationDto).ConfigureAwait(false);
 
-            await _dataBundleResponseSender.SendAsync(new RequestDataBundleResponseDto(uri, notificationDto.DataAvailableNotificationIds), "sessionId", DomainOrigin.MeteringPoints).ConfigureAwait(false);
+            await _dataBundleResponseSender.SendAsync(new RequestDataBundleResponseDto(uri, notificationDto.DataAvailableNotificationIds), sessionId, DomainOrigin.MeteringPoints).ConfigureAwait(false);
         }
 
         public async Task BundleDequeuedAsync(byte[] notification)

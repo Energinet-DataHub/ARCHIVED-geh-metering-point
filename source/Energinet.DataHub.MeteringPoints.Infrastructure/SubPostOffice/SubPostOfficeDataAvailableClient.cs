@@ -14,9 +14,9 @@
 
 using System;
 using System.Threading.Tasks;
+using Energinet.DataHub.MessageHub.Client.DataAvailable;
+using Energinet.DataHub.MessageHub.Client.Model;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
-using GreenEnergyHub.PostOffice.Communicator.DataAvailable;
-using GreenEnergyHub.PostOffice.Communicator.Model;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {

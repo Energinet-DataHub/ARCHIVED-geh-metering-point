@@ -15,6 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.MessageHub.Client.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -34,7 +35,6 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
-using GreenEnergyHub.PostOffice.Communicator.SimpleInjector;
 using MediatR;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
@@ -60,6 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.SubPostOffice
             base.ConfigureFunctionsWorkerDefaults(options);
 
             options.UseMiddleware<CorrelationIdMiddleware>();
+            options.UseMiddleware<SessionIdMiddleware>();
             options.UseMiddleware<EntryPointTelemetryScopeMiddleware>();
         }
 
@@ -83,10 +84,12 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.SubPostOffice
             base.ConfigureContainer(container);
 
             // Register application components.
-            // container.Register<BundleDequeuedQueueSubscriber>(Lifestyle.Scoped);
             container.Register<RequestBundleQueueSubscriber>(Lifestyle.Scoped);
+            // container.Register<BundleDequeuedQueueSubscriber>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
             container.Register<CorrelationIdMiddleware>(Lifestyle.Scoped);
+            container.Register<ISessionContext, SessionContext>(Lifestyle.Scoped);
+            container.Register<SessionIdMiddleware>(Lifestyle.Scoped);
             container.Register<EntryPointTelemetryScopeMiddleware>(Lifestyle.Scoped);
             container.Register<IUnitOfWork, UnitOfWork>();
             container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
@@ -101,6 +104,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.SubPostOffice
 
             // TODO: register with assembly scan once assemblies have been split.
             container.Register<IRequestHandler<BundleRequest<ConfirmMessage>, string>, ConfirmMessageBundleHandler>(Lifestyle.Scoped);
+            container.Register<IRequestHandler<BundleRequest<RejectMessage>, string>, RejectMessageBundleHandler>(Lifestyle.Scoped);
 
             var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING");
             var topic = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME");

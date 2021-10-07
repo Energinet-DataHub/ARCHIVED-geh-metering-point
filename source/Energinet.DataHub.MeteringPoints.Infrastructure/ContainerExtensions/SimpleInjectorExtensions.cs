@@ -98,6 +98,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions
 
             container.Register<IBundleCreator, BundleCreator>(Lifestyle.Scoped);
             container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageSerializer>(Lifestyle.Singleton);
+            container.Register<IDocumentSerializer<RejectMessage>, RejectMessageSerializer>(Lifestyle.Singleton);
         }
 
         public static void AddSubPostOfficeDataAvailableClient(this Container container)
