@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Text.Json.Serialization;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
@@ -28,7 +27,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
         public static readonly DocumentType ConnectMeteringPointRejected = new(4, nameof(ConnectMeteringPointRejected), typeof(RejectMessage));
         public static readonly DocumentType AccountingPointCharacteristicsMessage = new(5, nameof(AccountingPointCharacteristicsMessage), typeof(AccountingPointCharacteristicsMessage));
 
-        [JsonConstructorAttribute]
         public DocumentType(int id, string name)
             : base(id, name)
         {
@@ -42,7 +40,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
             Type = type;
         }
 
-        [JsonIgnore]
         public Type Type { get; }
     }
 }
