@@ -106,6 +106,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions
 
             container.Register<IPostOfficeMessageMetadataRepository, PostOfficeMessageMetadataRepository>(Lifestyle.Scoped);
             container.Register<ISubPostOfficeDataAvailableClient, SubPostOfficeDataAvailableClient>(Lifestyle.Scoped);
+            container.Register<PostOfficeMessageFactory>();
         }
 
         private static ErrorConverterRegistration GetErrorConverterRegistration(this SimpleInjector.Container container, Type type)

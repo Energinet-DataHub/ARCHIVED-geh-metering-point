@@ -12,15 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
-    public static class PostOfficeMessageFactory
+    public class PostOfficeMessageFactory
     {
-        public static PostOfficeMessage Create(string correlation, string messageContent, DocumentType type)
+        private readonly ISystemDateTimeProvider _dateTimeProvider;
+
+        public PostOfficeMessageFactory(ISystemDateTimeProvider dateTimeProvider)
         {
-            return new PostOfficeMessage(messageContent, correlation, type);
+            _dateTimeProvider = dateTimeProvider;
+        }
+
+        public PostOfficeMessage Create(string correlation, string messageContent, DocumentType type, string recipient)
+        {
+            return new PostOfficeMessage(messageContent, correlation, type, recipient, _dateTimeProvider.Now());
         }
     }
 }

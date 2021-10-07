@@ -14,21 +14,24 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
+using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
     public class PostOfficeMessage
     {
-        public PostOfficeMessage(string content, string correlation, DocumentType type)
+        public PostOfficeMessage(string content, string correlation, DocumentType type, string recipient, Instant date)
         {
             Id = Guid.NewGuid();
             Correlation = correlation;
             Type = type;
+            Recipient = recipient;
+            Date = date;
             Content = content;
         }
 
-        public PostOfficeMessage(Guid id, string messageContent, string correlation, DocumentType type)
-            : this(messageContent, correlation, type)
+        public PostOfficeMessage(Guid id, string messageContent, string correlation, DocumentType type, string recipient, Instant date)
+            : this(messageContent, correlation, type, recipient, date)
         {
             Id = id;
         }
@@ -40,5 +43,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
         public string Correlation { get; }
 
         public DocumentType Type { get; }
+
+        public string Recipient { get; }
+
+        public Instant Date { get; }
     }
 }

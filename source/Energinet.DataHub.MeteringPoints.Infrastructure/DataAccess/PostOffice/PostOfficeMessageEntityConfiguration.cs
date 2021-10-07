@@ -47,6 +47,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.PostOffice
 
             builder.Property(x => x.Content)
                 .HasColumnName("Content");
+
+            builder.Property(x => x.Date)
+                .HasColumnName("Date");
+
+            builder.Property(x => x.Recipient)
+                .HasColumnName("Recipient");
         }
     }
 }
