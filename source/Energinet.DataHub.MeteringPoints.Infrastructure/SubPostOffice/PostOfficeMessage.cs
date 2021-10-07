@@ -13,21 +13,24 @@
 // limitations under the License.
 
 using System;
+using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
     public class PostOfficeMessage
     {
-        public PostOfficeMessage(string content, string correlation, string type)
+        public PostOfficeMessage(string content, string correlation, string type, string recipient, Instant date)
         {
             Id = Guid.NewGuid();
             Correlation = correlation;
             Type = type;
+            Recipient = recipient;
+            Date = date;
             Content = content;
         }
 
-        public PostOfficeMessage(Guid id, string messageContent, string correlation, string type)
-            : this(messageContent, correlation, type)
+        public PostOfficeMessage(Guid id, string messageContent, string correlation, string type, string recipient, Instant date)
+            : this(messageContent, correlation, type, recipient, date)
         {
             Id = id;
         }
@@ -39,5 +42,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
         public string Correlation { get; }
 
         public string Type { get; }
+
+        public string Recipient { get; }
+
+        public Instant Date { get; }
     }
 }

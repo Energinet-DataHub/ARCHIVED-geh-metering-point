@@ -23,14 +23,17 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
     public class SubPostOfficeDataAvailableClient : ISubPostOfficeDataAvailableClient
     {
         private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
+        private readonly PostOfficeMessageFactory _postOfficeMessageFactory;
         private readonly IPostOfficeMessageMetadataRepository _postOfficeMessageMetadataRepository;
 
         public SubPostOfficeDataAvailableClient(
             IPostOfficeMessageMetadataRepository postOfficeMessageMetadataRepository,
-            IDataAvailableNotificationSender dataAvailableNotificationSender)
+            IDataAvailableNotificationSender dataAvailableNotificationSender,
+            PostOfficeMessageFactory postOfficeMessageFactory)
         {
             _postOfficeMessageMetadataRepository = postOfficeMessageMetadataRepository;
             _dataAvailableNotificationSender = dataAvailableNotificationSender;
+            _postOfficeMessageFactory = postOfficeMessageFactory;
         }
 
         public async Task DataAvailableAsync(PostOfficeMessageEnvelope message)
@@ -40,7 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
                 throw new ArgumentNullException(nameof(message));
             }
 
-            var messageMetadata = PostOfficeMessageFactory.Create(message.Correlation, message.Content, message.MessageType);
+            var messageMetadata = _postOfficeMessageFactory.Create(message.Correlation, message.Content, message.MessageType, message.Recipient);
             _postOfficeMessageMetadataRepository.AddMessageMetadata(messageMetadata);
 
             // TODO - add notification to Outbox instead of sending immediately

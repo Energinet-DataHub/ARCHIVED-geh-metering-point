@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
@@ -61,7 +62,10 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
                 _requestBundleParser,
                 new BundleCreatorMock());
 
-            _subPostOfficeDataAvailableClient = new SubPostOfficeDataAvailableClient(_postOfficeMessageMetadataRepository, _dataAvailableNotificationSender);
+            _subPostOfficeDataAvailableClient = new SubPostOfficeDataAvailableClient(
+                _postOfficeMessageMetadataRepository,
+                _dataAvailableNotificationSender,
+                new PostOfficeMessageFactory(new SystemDateTimeProviderStub()));
         }
 
         [Fact]

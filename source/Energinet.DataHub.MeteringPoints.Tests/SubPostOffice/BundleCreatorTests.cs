@@ -25,6 +25,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
 using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice.Bundling;
 using FluentAssertions;
 using MediatR;
+using NodaTime;
 using SimpleInjector;
 using Xunit;
 using Xunit.Categories;
@@ -57,7 +58,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice
         {
             var officeMessages = createConfirmMessages
                 .Select(message => new JsonSerializer().Serialize(message))
-                .Select(message => new PostOfficeMessage(message, "correlation", typeof(ConfirmMessage).FullName!))
+                .Select(message => new PostOfficeMessage(message, "correlation", typeof(ConfirmMessage).FullName!, "recipient", SystemClock.Instance.GetCurrentInstant()))
                 .ToList();
             return officeMessages;
         }
