@@ -37,7 +37,7 @@ module "azfun_outbox" {
     SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING = data.azurerm_key_vault_secret.INTEGRATION_EVENTS_SENDER_CONNECTION_STRING.value
     METERING_POINT_CREATED_TOPIC            = "metering-point-created"
     CONSUMPTION_METERING_POINT_CREATED_TOPIC = "consumption-metering-point-created"
-	PRODUCTION_METERING_POINT_CREATED_TOPIC = "production-metering-point-created"
+    PRODUCTION_METERING_POINT_CREATED_TOPIC = "production-metering-point-created"
     METERING_POINT_CONNECTED_TOPIC          = "metering-point-connected"
     ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER  = "*/10 * * * * *"
     EVENT_MESSAGE_DISPATCH_TRIGGER_TIMER  = "*/10 * * * * *"
