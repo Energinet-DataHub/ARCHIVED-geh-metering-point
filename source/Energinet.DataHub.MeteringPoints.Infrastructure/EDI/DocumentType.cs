@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Text.Json.Serialization;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
@@ -27,23 +28,21 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
         public static readonly DocumentType ConnectMeteringPointRejected = new(4, nameof(ConnectMeteringPointRejected), typeof(RejectMessage));
         public static readonly DocumentType AccountingPointCharacteristicsMessage = new(5, nameof(AccountingPointCharacteristicsMessage), typeof(AccountingPointCharacteristicsMessage));
 
+        [JsonConstructorAttribute]
+        public DocumentType(int id, string name)
+            : base(id, name)
+        {
+            var documentType = FromName<DocumentType>(name);
+            Type = documentType.Type;
+        }
+
         private DocumentType(int id, string name, Type type)
             : base(id, name)
         {
             Type = type;
         }
 
+        [JsonIgnore]
         public Type Type { get; }
-    }
-
-    #pragma warning disable
-    public enum DocumentType2
-    {
-        None = 0,
-        CreateMeteringPointAccepted = 1,
-        CreateMeteringPointRejected = 2,
-        AccountingPointCharacteristicsMessage = 3,
-        ConnectMeteringPointAccepted = 4,
-        ConnectMeteringPointRejected = 5,
     }
 }

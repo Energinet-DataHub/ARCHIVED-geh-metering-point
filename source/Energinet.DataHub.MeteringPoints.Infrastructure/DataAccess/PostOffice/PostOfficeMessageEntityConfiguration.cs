@@ -13,6 +13,9 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Domain.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -37,7 +40,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.PostOffice
                 .HasColumnName("Correlation");
 
             builder.Property(x => x.Type)
-                .HasColumnName("Type");
+                .HasColumnName("Type")
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<DocumentType>(fromDbValue));
 
             builder.Property(x => x.Content)
                 .HasColumnName("Content");

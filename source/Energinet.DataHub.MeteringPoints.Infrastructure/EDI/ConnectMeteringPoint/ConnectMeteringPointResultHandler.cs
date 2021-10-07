@@ -96,7 +96,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
             var envelope = new PostOfficeMessageEnvelope(
                 string.Empty,
                 serializedMessage,
-                DocumentType.ConnectMeteringPointRejected,
+                DocumentType.ConnectMeteringPointAccepted,
                 _correlationContext.AsTraceContext());
 
             return envelope;

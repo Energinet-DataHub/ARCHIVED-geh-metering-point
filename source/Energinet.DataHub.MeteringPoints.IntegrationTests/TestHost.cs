@@ -59,7 +59,6 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Xunit;
@@ -221,7 +220,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                     <PostOfficeMessageEnvelope>()
                 .Single(msg => msg.MessageType.Equals(type));
 
-            var rejectMessage = JsonConvert.DeserializeObject<RejectMessage>(message.Content);
+            var rejectMessage = new JsonSerializer().Deserialize<RejectMessage>(message.Content);
 
             var errorCount = rejectMessage.MarketActivityRecord.Reasons.Count;
             if (errorCount > 1)
