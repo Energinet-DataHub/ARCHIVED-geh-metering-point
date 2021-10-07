@@ -96,7 +96,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
 
         private static ConsumptionMeteringPoint CreateConsumptionMeteringPoint()
         {
-            var details = CreateConsumptionDetails();
+            var details = CreateConsumptionDetails()
+                with
+                {
+                    MeteringMethod = MeteringMethod.Virtual,
+                    MeterNumber = null,
+                };
             return ConsumptionMeteringPoint.Create(details);
         }
 

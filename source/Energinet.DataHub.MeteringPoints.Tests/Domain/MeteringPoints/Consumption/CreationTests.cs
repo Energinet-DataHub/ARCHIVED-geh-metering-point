@@ -149,7 +149,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         [Fact]
         public void Product_type_should_as_default_be_active_energy()
         {
-            var details = CreateConsumptionDetails();
+            var details = CreateConsumptionDetails()
+            with
+            {
+                MeteringMethod = MeteringMethod.Virtual,
+                MeterNumber = null,
+            };
 
             var meteringPoint = ConsumptionMeteringPoint.Create(details);
 
@@ -165,6 +170,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 {
                     PowerPlantGsrnNumber = null,
                     NetSettlementGroup = NetSettlementGroup.Six,
+                    MeteringMethod = MeteringMethod.Virtual,
+                    MeterNumber = null,
                 };
 
             var checkResult = CheckCreationRules(meteringPointDetails);
@@ -253,6 +260,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 with
                 {
                     Address = address,
+                    NetSettlementGroup = NetSettlementGroup.Six,
+                    MeteringMethod = MeteringMethod.Virtual,
+                    MeterNumber = null,
                 };
 
             var meteringPoint = ConsumptionMeteringPoint.Create(meteringPointDetails);
@@ -310,7 +320,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             AssertError<InvalidSettlementMethodRuleError>(checkResult, expectError);
         }
 
-        private static BusinessRulesValidationResult CheckCreationRules(MeteringPointDetails meteringPointDetails)
+        private static BusinessRulesValidationResult CheckCreationRules(ConsumptionMeteringPointDetails meteringPointDetails)
         {
             return ConsumptionMeteringPoint.CanCreate(meteringPointDetails);
         }
