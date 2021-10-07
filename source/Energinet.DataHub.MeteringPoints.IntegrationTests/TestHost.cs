@@ -20,6 +20,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
+using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create;
@@ -50,6 +51,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice.Bundling;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
+using Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentAssertions;
@@ -124,6 +126,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IDomainEventPublisher, DomainEventPublisher>();
             _container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Singleton);
             _container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
+            _container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
 
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
 
