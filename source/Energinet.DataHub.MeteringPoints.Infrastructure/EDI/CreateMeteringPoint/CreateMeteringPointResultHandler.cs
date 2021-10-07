@@ -38,6 +38,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
         private readonly ISystemDateTimeProvider _dateTimeProvider;
         private readonly IUserContext _userContext;
 
+        private readonly string _glnNumber = "8200000008842";
+
         public CreateMeteringPointResultHandler(
             ErrorMessageFactory errorMessageFactory,
             IOutbox outbox,
@@ -81,7 +83,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
                     CodingScheme: "9",
                     Role: "EZ"),
                 Receiver: new MarketRoleParticipant(
-                    Id: _userContext.CurrentUser?.GlnNumber ?? "8200000000006", // TODO: Hardcoded
+                    Id: _userContext.CurrentUser?.GlnNumber ?? _glnNumber, // TODO: Hardcoded
                     CodingScheme: "9",
                     Role: "DDQ"),
                 CreatedDateTime: _dateTimeProvider.Now(),
@@ -94,7 +96,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
                     OriginalTransaction: request.TransactionId));
 
             var envelope = CreatePostOfficeEnvelope(
-                recipient: _userContext.CurrentUser?.GlnNumber ?? "8200000000006", // TODO: Hardcoded
+                recipient: _userContext.CurrentUser?.GlnNumber ?? _glnNumber, // TODO: Hardcoded
                 cimContent: _jsonSerializer.Serialize(message),
                 messageType: DocumentType.CreateMeteringPointAccepted);
 
@@ -120,7 +122,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
                     CodingScheme: "9",
                     Role: "EZ"),
                 Receiver: new MarketRoleParticipant(
-                    Id: _userContext.CurrentUser?.GlnNumber ?? "8200000000006", // TODO: Hardcoded
+                    Id: _userContext.CurrentUser?.GlnNumber ?? _glnNumber, // TODO: Hardcoded
                     CodingScheme: "9",
                     Role: "DDQ"),
                 CreatedDateTime: _dateTimeProvider.Now(),
@@ -136,7 +138,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
                     Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
 
             var envelope = CreatePostOfficeEnvelope(
-                recipient: _userContext.CurrentUser?.GlnNumber ?? "8200000000006", // TODO: Hardcoded
+                recipient: _userContext.CurrentUser?.GlnNumber ?? _glnNumber, // TODO: Hardcoded
                 cimContent: _jsonSerializer.Serialize(message),
                 messageType: DocumentType.CreateMeteringPointRejected);
 

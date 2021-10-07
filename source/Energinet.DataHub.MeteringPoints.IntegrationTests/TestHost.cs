@@ -71,7 +71,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
     [Collection("IntegrationTest")]
     [IntegrationTest]
-    #pragma warning disable CA1724 // TODO: TestHost is reserved. Maybe refactor to base EntryPoint?
+#pragma warning disable CA1724 // TODO: TestHost is reserved. Maybe refactor to base EntryPoint?
     public class TestHost : IDisposable
     {
         private readonly Scope _scope;
@@ -100,7 +100,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             serviceCollection.AddDbContext<MeteringPointContext>(
                 x =>
-                x.UseSqlServer(connectionString, y => y.UseNodaTime()),
+                    x.UseSqlServer(connectionString, y => y.UseNodaTime()),
                 ServiceLifetime.Scoped);
             serviceCollection.AddSimpleInjector(_container);
             _serviceProvider = serviceCollection.BuildServiceProvider().UseSimpleInjector(_container);
@@ -125,7 +125,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IDomainEventPublisher, DomainEventPublisher>();
             _container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Singleton);
             _container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
-            _container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
+            _container.Register<IUserContext>(() => new UserContext { CurrentUser = new UserIdentity(Guid.NewGuid().ToString(), "8200000009320"), }, Lifestyle.Scoped);
 
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
 
@@ -140,19 +140,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 typeof(ErrorMessageFactory).Assembly); // Infrastructure
 
             _container.BuildMediator(
-                new[]
-                {
-                    typeof(CreateMeteringPoint).Assembly,
-                    typeof(MeteringPointCreatedNotificationHandler).Assembly,
-                },
+                new[] { typeof(CreateMeteringPoint).Assembly, typeof(MeteringPointCreatedNotificationHandler).Assembly, },
                 new[]
                 {
                     typeof(UnitOfWorkBehavior<,>),
                     // typeof(AuthorizationBehavior<,>),
-                    typeof(InputValidationBehavior<,>),
-                    typeof(DomainEventsDispatcherBehaviour<,>),
-                    typeof(InternalCommandHandlingBehaviour<,>),
-                    typeof(BusinessProcessResultBehavior<,>),
+                    typeof(InputValidationBehavior<,>), typeof(DomainEventsDispatcherBehaviour<,>), typeof(InternalCommandHandlingBehaviour<,>), typeof(BusinessProcessResultBehavior<,>),
                 });
 
             _container.Verify();
