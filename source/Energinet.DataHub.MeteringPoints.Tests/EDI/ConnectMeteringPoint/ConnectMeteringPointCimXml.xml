@@ -41,9 +41,7 @@ limitations under the License.
             <cim:meteringGridArea_Domain.mRID codingScheme="NIE">870</cim:meteringGridArea_Domain.mRID>
             <cim:inMeteringGridArea_Domain.mRID codingScheme="NLI">869</cim:inMeteringGridArea_Domain.mRID>
             <cim:outMeteringGridArea_Domain.mRID codingScheme="NGB">871</cim:outMeteringGridArea_Domain.mRID>
-            <cim:Linked_MarketEvaluationPoint>
-                <cim:mRID codingScheme="NEE">571313180400013032</cim:mRID>
-            </cim:Linked_MarketEvaluationPoint>
+            <cim:Linked_MarketEvaluationPoint.mRID codingScheme="NEE">571313180400013032</cim:Linked_MarketEvaluationPoint.mRID>
             <cim:physicalConnectionCapacity unit="MAW">1000</cim:physicalConnectionCapacity>
             <cim:mPConnectionType>D01</cim:mPConnectionType>
             <cim:disconnectionMethod>D01</cim:disconnectionMethod>
