@@ -78,6 +78,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         private readonly Container _container;
         private readonly IServiceProvider _serviceProvider;
         private bool _disposed;
+        private JsonSerializer _jsonSerializer = new();
 
         protected TestHost(DatabaseFixture databaseFixture)
         {
@@ -220,7 +221,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                     <PostOfficeMessageEnvelope>()
                 .Single(msg => msg.MessageType.Equals(type));
 
-            var rejectMessage = new JsonSerializer().Deserialize<RejectMessage>(message.Content);
+            var rejectMessage = _jsonSerializer.Deserialize<RejectMessage>(message.Content);
 
             var errorCount = rejectMessage.MarketActivityRecord.Reasons.Count;
             if (errorCount > 1)
