@@ -60,7 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.SubPostOffice
             base.ConfigureFunctionsWorkerDefaults(options);
 
             options.UseMiddleware<CorrelationIdMiddleware>();
-            options.UseMiddleware<SessionIdMiddleware>();
+            options.UseMiddleware<ServiceBusSessionIdMiddleware>();
             options.UseMiddleware<EntryPointTelemetryScopeMiddleware>();
         }
 
@@ -85,11 +85,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.SubPostOffice
 
             // Register application components.
             container.Register<RequestBundleQueueSubscriber>(Lifestyle.Scoped);
-            // container.Register<BundleDequeuedQueueSubscriber>(Lifestyle.Scoped);
+            container.Register<BundleDequeuedQueueSubscriber>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
             container.Register<CorrelationIdMiddleware>(Lifestyle.Scoped);
             container.Register<ISessionContext, SessionContext>(Lifestyle.Scoped);
-            container.Register<SessionIdMiddleware>(Lifestyle.Scoped);
+            container.Register<ServiceBusSessionIdMiddleware>(Lifestyle.Scoped);
             container.Register<EntryPointTelemetryScopeMiddleware>(Lifestyle.Scoped);
             container.Register<IUnitOfWork, UnitOfWork>();
             container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);

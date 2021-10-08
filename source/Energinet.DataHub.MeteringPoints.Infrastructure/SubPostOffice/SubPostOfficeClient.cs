@@ -67,6 +67,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 
             var uri = await _postOfficeStorageHandler.AddStreamToStorageAsync(stream, notificationDto).ConfigureAwait(false);
 
+            // TODO - add notification to Outbox instead of sending immediately
             await _dataBundleResponseSender.SendAsync(new RequestDataBundleResponseDto(uri, notificationDto.DataAvailableNotificationIds), sessionId, DomainOrigin.MeteringPoints).ConfigureAwait(false);
         }
 
@@ -78,6 +79,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 
             foreach (var message in messages)
             {
+                // TODO : this must be handled by raising an Integration Event through Outbox
                 IOutboundMessage messageReceived = new MessageReceived(Correlation: message.Correlation);
                 await _messageDispatcher.DispatchAsync(messageReceived).ConfigureAwait(false);
             }

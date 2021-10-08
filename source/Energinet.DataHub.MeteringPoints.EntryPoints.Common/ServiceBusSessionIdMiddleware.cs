@@ -23,11 +23,11 @@ using Newtonsoft.Json;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common
 {
-    public class SessionIdMiddleware : IFunctionsWorkerMiddleware
+    public class ServiceBusSessionIdMiddleware : IFunctionsWorkerMiddleware
     {
         private readonly ISessionContext _sessionContext;
 
-        public SessionIdMiddleware(ISessionContext sessionContext)
+        public ServiceBusSessionIdMiddleware(ISessionContext sessionContext)
         {
             _sessionContext = sessionContext;
         }
@@ -36,19 +36,18 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
-            if (context.BindingContext.BindingData["MessageSession"] is not string session)
+            if (context.BindingContext.BindingData.TryGetValue("MessageSession", out var value) && value is string session)
             {
-                throw new InvalidOperationException("Session data does not exist in FunctionContext");
+                var sessionData = JsonConvert.DeserializeObject<Dictionary<string, object>>(session);
+
+                if (sessionData["SessionId"] is not string sessionId)
+                {
+                    throw new InvalidOperationException("Session id does not exist in session data");
+                }
+
+                _sessionContext.SetId(sessionId);
             }
 
-            var sessionData = JsonConvert.DeserializeObject<Dictionary<string, object>>(session);
-
-            if (sessionData["SessionId"] is not string sessionId)
-            {
-                throw new InvalidOperationException("Session id does not exist in session data");
-            }
-
-            _sessionContext.SetId(sessionId);
             await next(context).ConfigureAwait(false);
         }
     }
