@@ -71,9 +71,15 @@ message ConnectMeteringPoint {
     string transactionId = 3;
 }
 
+message CreateDefaultChargeLinks {
+    string gsrnNumber = 1;
+    string correlationId = 2;
+}
+
 message MeteringPointEnvelope {
   oneof MeteringPointMessages {
     CreateMeteringPoint createMeteringPoint = 1;
     ConnectMeteringPoint connectMeteringPoint = 2;
+    CreateDefaultChargeLinks createDefaultChargeLinks = 3;
   }
 }

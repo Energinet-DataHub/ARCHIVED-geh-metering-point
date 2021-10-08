@@ -22,6 +22,7 @@ using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
+using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create;
 using Energinet.DataHub.MeteringPoints.Application.Validation;

@@ -12,20 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.MeteringPoints.Application.Integrations;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
+namespace Energinet.DataHub.MeteringPoints.Application.ChargeLinks.Create
 {
-    /// <summary>
-    /// Creates the integration message to be dispatched
-    /// </summary>
-    public interface IIntegrationEventMessageFactory
+    public class CreateDefaultChargeLinksSucceededHandler : INotificationHandler<CreateDefaultChargeLinksSucceeded>
     {
-        /// <summary>
-        /// Creates the message
-        /// </summary>
-        public ServiceBusMessage CreateMessage(byte[] bytes, IIntegrationMetadataContext integrationMetadataContext);
+        public Task Handle(CreateDefaultChargeLinksSucceeded notification, CancellationToken cancellationToken)
+        {
+            //TODO: Handle process state
+            //TODO: Call Charges DLL with a CreateDefaultChargesLinksMessages request to send out Charge Link Messages
+            throw new System.NotImplementedException();
+        }
     }
 }

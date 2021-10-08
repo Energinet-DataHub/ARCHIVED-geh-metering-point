@@ -12,7 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect
+using System;
+using NodaTime;
+
+namespace Energinet.DataHub.MeteringPoints.Application.Integrations
 {
-    public record MeteringPointConnectedTopic(string Name) : Topic;
+    public class IntegrationMetadataContext : IIntegrationMetadataContext
+    {
+        public Instant Timestamp { get; private set; }
+
+        public string? CorrelationId { get; private set; }
+
+        public Guid EventId { get; private set; }
+
+        public void SetMetadata(Instant timestamp, string correlationId, Guid eventId)
+        {
+            Timestamp = timestamp;
+            CorrelationId = correlationId;
+            EventId = eventId;
+        }
+    }
 }

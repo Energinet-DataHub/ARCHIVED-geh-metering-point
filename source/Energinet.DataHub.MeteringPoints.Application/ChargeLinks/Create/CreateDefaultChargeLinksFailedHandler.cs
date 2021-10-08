@@ -12,7 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
+
+namespace Energinet.DataHub.MeteringPoints.Application.ChargeLinks.Create
 {
-    public record MeteringPointConnectedTopic(string Name) : Topic;
+    public class CreateDefaultChargeLinksFailedHandler : INotificationHandler<CreateDefaultChargeLinksFailed>
+    {
+        public Task Handle(CreateDefaultChargeLinksFailed notification, CancellationToken cancellationToken)
+        {
+            // TODO: Handle Failed CreateDefaultChargeLinks Requests
+            throw new System.NotImplementedException();
+        }
+    }
 }

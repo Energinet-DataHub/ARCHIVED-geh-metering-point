@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect
+namespace Energinet.DataHub.MeteringPoints.Application.ChargeLinks.Messages
 {
-    public record MeteringPointConnectedTopic(string Name) : Topic;
+    public record CreateDefaultChargeLinksMessagesFailed(string GsrnNumber);
 }

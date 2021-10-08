@@ -12,24 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using NodaTime;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.ChargeLinks.Create;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
+namespace Energinet.DataHub.MeteringPoints.Application.ChargeLinks
 {
-    public class IntegrationMetadataContext : IIntegrationMetadataContext
+    public class DefaultChargeLinkRequestClientMock : IDefaultChargeLinkRequestClientMock
     {
-        public Instant Timestamp { get; private set; }
-
-        public string? CorrelationId { get; private set; }
-
-        public Guid EventId { get; private set; }
-
-        public void SetMetadata(Instant timestamp, string correlationId, Guid eventId)
+        public async Task CreateDefaultChargeLinksRequestAsync(
+            CreateDefaultChargeLinksDto createDefaultChargeLinksDto,
+            string correlationId)
         {
-            Timestamp = timestamp;
-            CorrelationId = correlationId;
-            EventId = eventId;
+            await Task.FromResult(true).ConfigureAwait(false);
         }
     }
 }

@@ -15,6 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.MeteringPoints.Application.Integrations;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
@@ -23,6 +24,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;

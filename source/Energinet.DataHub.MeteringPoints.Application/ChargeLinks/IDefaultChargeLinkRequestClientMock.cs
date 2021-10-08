@@ -12,7 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.ChargeLinks.Create;
+
+namespace Energinet.DataHub.MeteringPoints.Application.ChargeLinks
 {
-    public record MeteringPointConnectedTopic(string Name) : Topic;
+    /// <summary>
+    /// Client Mock
+    /// </summary>
+    public interface IDefaultChargeLinkRequestClientMock
+    {
+        /// <summary>
+        /// Client Mock Method
+        /// </summary>
+        public Task CreateDefaultChargeLinksRequestAsync(
+            CreateDefaultChargeLinksDto createDefaultChargeLinksDto,
+            string correlationId);
+    }
 }

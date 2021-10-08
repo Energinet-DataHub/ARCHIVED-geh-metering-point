@@ -12,7 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect
+using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
+using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+using MediatR;
+
+namespace Energinet.DataHub.MeteringPoints.Application.ChargeLinks.Create
 {
-    public record MeteringPointConnectedTopic(string Name) : Topic;
+    public class CreateDefaultChargeLinksDto : InternalCommand, IRequest, IInboundMessage, IOutboundMessage
+    {
+        public CreateDefaultChargeLinksDto(string meteringPointId)
+        {
+            MeteringPointId = meteringPointId;
+        }
+
+        public string MeteringPointId { get; }
+    }
 }

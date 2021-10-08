@@ -13,15 +13,13 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.Create;
-using Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Validation;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation
+namespace Energinet.DataHub.MeteringPoints.Application.Create
 {
     public class CreateMeteringPointRuleSet : AbstractValidator<CreateMeteringPoint>
     {
