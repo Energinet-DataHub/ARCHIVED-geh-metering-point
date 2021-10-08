@@ -22,7 +22,7 @@ on:
       - build/modules/**
       - .github/actions/meteringpoint-apply-db-migrations/**
       - .github/workflows/infrastructure-cd.yml
-      - source\Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp\Scripts
+      - source/Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp/Scripts
   workflow_dispatch: {}
 env:
   TERRAFORM_BACKEND_FILE_PATH: './build/infrastructure/main/backend.tf'
@@ -78,7 +78,7 @@ jobs:
         shell: bash
         run: |
           echo ${{ steps.terraform-output.outputs.sql-server-connectionstring }}
-          dotnet run --project source/Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp/ --configuration Release -- ${{ steps.terraform-output.outputs.sql-server-connectionstring }} includeSeedData includeTestData
+          dotnet run --project source/Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp/ --configuration Release -- ${{ steps.terraform-output.outputs.sql-server-connectionstring }} includeSeedData
   
   infra_deploy_test:
     name: Deploy infrastructure to Test
