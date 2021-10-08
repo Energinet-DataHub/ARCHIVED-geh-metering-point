@@ -63,6 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 
             var bundle = await _bundleCreator.CreateBundleAsync(messages).ConfigureAwait(false);
 
+            // TODO: Set BundleId on every message (e.g. notification.IdempotencyId)
             await using var stream = new MemoryStream(Encoding.UTF8.GetBytes(bundle));
 
             var uri = await _postOfficeStorageHandler.AddStreamToStorageAsync(stream, notificationDto).ConfigureAwait(false);
@@ -79,6 +80,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 
             foreach (var message in messages)
             {
+                // TODO : update message with date and time for dequeue execution
                 // TODO : this must be handled by raising an Integration Event through Outbox
                 IOutboundMessage messageReceived = new MessageReceived(Correlation: message.Correlation);
                 await _messageDispatcher.DispatchAsync(messageReceived).ConfigureAwait(false);
