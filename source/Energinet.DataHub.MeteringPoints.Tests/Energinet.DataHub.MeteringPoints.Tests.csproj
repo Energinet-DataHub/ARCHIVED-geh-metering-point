@@ -49,7 +49,7 @@ limitations under the License.
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher\Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher.csproj" />
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.EntryPoints.Outbox\Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.csproj" />
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.EntryPoints.Processing\Energinet.DataHub.MeteringPoints.EntryPoints.Processing.csproj" />
-    <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.EntryPoints.SubPostOffice\Energinet.DataHub.MeteringPoints.EntryPoints.SubPostOffice.csproj" />
+    <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub\Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub.csproj" />
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Infrastructure\Energinet.DataHub.MeteringPoints.Infrastructure.csproj" />
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Benchmarks\Energinet.DataHub.MeteringPoints.Benchmarks.csproj" />
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Domain\Energinet.DataHub.MeteringPoints.Domain.csproj" />

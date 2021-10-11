@@ -12,7 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect
+using System.Collections.Generic;
+using MediatR;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub.Bundling
 {
-    public record MeteringPointConnectedTopic(string Name) : Topic;
+    public class BundleRequest<TDocument> : IRequest<string>, IBundleRequest
+    {
+        public BundleRequest(IList<MessageHubMessage> documents)
+        {
+            Documents = documents;
+        }
+
+        public IList<MessageHubMessage> Documents { get; }
+    }
 }

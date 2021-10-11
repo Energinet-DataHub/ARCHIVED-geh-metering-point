@@ -25,6 +25,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
@@ -115,8 +116,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
 
             container.SendProtobuf<IntegrationEventEnvelope>();
 
-            container.AddPostOfficeCommunication("POSTOFFICE_QUEUE_CONNECTION_STRING", "POSTOFFICE_STORAGE_CONNECTION_STRING");
-            container.AddSubPostOfficeDataAvailableClient();
+            container.AddPostOfficeCommunication("MESSAGEHUB_QUEUE_CONNECTION_STRING", "MESSAGEHUB_STORAGE_CONNECTION_STRING");
+            container.AddLocalMessageHubDataAvailableClient();
 
             // Setup pipeline behaviors
             container.BuildMediator(

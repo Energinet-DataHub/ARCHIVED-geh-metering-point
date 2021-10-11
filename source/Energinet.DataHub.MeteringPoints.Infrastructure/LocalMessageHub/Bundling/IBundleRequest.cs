@@ -12,7 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub.Bundling
 {
-    public record MeteringPointConnectedTopic(string Name) : Topic;
+    /// <summary>
+    /// A request to create a bundle.
+    /// </summary>
+#pragma warning disable CA1040 // Marker interface
+    public interface IBundleRequest
+    {
+    }
 }

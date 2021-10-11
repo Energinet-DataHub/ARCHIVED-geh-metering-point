@@ -46,9 +46,9 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GridAreas;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
+using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub.Bundling;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
-using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice.Bundling;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
@@ -211,7 +211,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         protected void AssertValidationError(string expectedErrorCode, DocumentType type)
         {
             var message = GetOutboxMessages
-                    <PostOfficeMessageEnvelope>()
+                    <MessageHubEnvelope>()
                 .Single(msg => msg.MessageType.Equals(type));
 
             var rejectMessage = _jsonSerializer.Deserialize<RejectMessage>(message.Content);
@@ -254,7 +254,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             cleanupStatement.AppendLine($"DELETE FROM QueuedInternalCommands");
             cleanupStatement.AppendLine($"DELETE FROM GridAreaLinks");
             cleanupStatement.AppendLine($"DELETE FROM GridAreas");
-            cleanupStatement.AppendLine($"DELETE FROM PostOfficeMessages");
+            cleanupStatement.AppendLine($"DELETE FROM MessageHubMessages");
 
             _container.GetInstance<MeteringPointContext>()
                 .Database.ExecuteSqlRaw(cleanupStatement.ToString());

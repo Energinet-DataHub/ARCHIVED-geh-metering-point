@@ -12,7 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect
+using System.Threading.Tasks;
+using Energinet.DataHub.MessageHub.Client.DataAvailable;
+using Energinet.DataHub.MessageHub.Client.Model;
+
+namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
 {
-    public record MeteringPointConnectedTopic(string Name) : Topic;
+    public class DataAvailableNotificationSenderMock : IDataAvailableNotificationSender
+    {
+        private bool _isSent;
+
+        public Task SendAsync(DataAvailableNotificationDto dataAvailableNotificationDto)
+        {
+            _isSent = true;
+            return Task.CompletedTask;
+        }
+
+        public bool IsSent()
+        {
+            return _isSent;
+        }
+    }
 }
