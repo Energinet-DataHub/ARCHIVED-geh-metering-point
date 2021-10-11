@@ -33,10 +33,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChargeLinks.Create
             // TODO: Call Charges DLL to request default charge links
             // TODO: Error Handling if something fails within Volt client package
             // TODO: On some point add this to some process manager
-            var (gsrnNumber, correlationId) = request;
             await _defaultChargeLinkRequestClientMock.CreateDefaultChargeLinksRequestAsync(
-                new CreateDefaultChargeLinksDto(gsrnNumber),
-                correlationId).ConfigureAwait(false);
+                new CreateDefaultChargeLinksDto(request.GsrnNumber),
+                request.CorrelationId).ConfigureAwait(false);
             return default;
         }
     }

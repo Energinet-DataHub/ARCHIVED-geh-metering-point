@@ -18,7 +18,7 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChargeLinks.Create
 {
-    public class CreateDefaultChargeLinksDto : InternalCommand, IRequest, IInboundMessage, IOutboundMessage
+    public class CreateDefaultChargeLinksDto
     {
         public CreateDefaultChargeLinksDto(string meteringPointId)
         {

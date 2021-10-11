@@ -20,7 +20,7 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChargeLinks.Create
 {
-    public class CreateDefaultChargeLinksNotificationHandler : INotificationHandler<CreateDefaultChargeLinks>
+    public class CreateDefaultChargeLinksNotificationHandler : INotificationHandler<CreateDefaultChargeLinksNotification>
     {
         private readonly ICommandScheduler _commandScheduler;
 
@@ -29,10 +29,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChargeLinks.Create
             _commandScheduler = commandScheduler;
         }
 
-        public Task Handle(CreateDefaultChargeLinks notification, CancellationToken cancellationToken)
+        public Task Handle(CreateDefaultChargeLinksNotification notification, CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
-            var command = new CreateDefaultChargeLinksDto(notification.GsrnNumber);
+            var command = new CreateDefaultChargeLinks(notification.GsrnNumber, notification.CorrelationId);
 
             return _commandScheduler.EnqueueAsync(command);
         }
