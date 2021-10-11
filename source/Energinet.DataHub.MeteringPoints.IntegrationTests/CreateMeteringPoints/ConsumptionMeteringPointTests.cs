@@ -302,7 +302,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 ToGrid: "456",
                 ParentRelatedMeteringPoint: null,
                 SampleData.ProductType,
-                "0",
+                "100000",
                 SampleData.GeoInfoReference,
                 SampleData.MeasurementUnitType,
                 "0101");
