@@ -365,7 +365,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 ToGrid: "456",
                 ParentRelatedMeteringPoint: null,
                 SampleData.ProductType,
-                null,
+                "1000",
                 SampleData.GeoInfoReference,
                 SampleData.MeasurementUnitType,
                 SampleData.ScheduledMeterReadingDate);
