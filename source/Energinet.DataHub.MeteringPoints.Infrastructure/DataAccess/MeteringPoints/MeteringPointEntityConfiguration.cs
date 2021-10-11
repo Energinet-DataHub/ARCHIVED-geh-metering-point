@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Globalization;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -23,8 +22,6 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints
 {
@@ -146,7 +143,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.Property<Capacity>("_capacity")
                 .HasColumnName("Capacity")
-                .HasConversion<float?>(toDbValue => toDbValue == null ? null : toDbValue.Kw!, fromDbValue => fromDbValue.HasValue ? Capacity.Create(fromDbValue.Value) : null!);
+                .HasConversion<double?>(toDbValue => toDbValue == null ? null : toDbValue.Kw!, fromDbValue => fromDbValue.HasValue ? Capacity.Create(fromDbValue.Value) : null!);
         }
     }
 
