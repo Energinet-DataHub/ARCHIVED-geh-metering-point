@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
+using Energinet.DataHub.MeteringPoints.Application.Validation.Extensions;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -26,12 +28,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
     {
         public NetSettlementGroupRule()
         {
-            RuleFor(request => request.NetSettlementGroup)
-                .Cascade(CascadeMode.Stop)
-                .NotEmpty()
-                .WithState(createMeteringPoint => new NetSettlementGroupMandatoryValidationError(createMeteringPoint.TypeOfMeteringPoint))
-                .Must(netSettlementGroup => AllowedNetSettlementGroupValues().Contains(netSettlementGroup!))
-                .WithState(createMeteringPoint => new NetSettlementGroupInvalidValueValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.TypeOfMeteringPoint));
+            When(request => !string.IsNullOrWhiteSpace(request.NetSettlementGroup), () =>
+            {
+                RuleFor(request => request.NetSettlementGroup)
+                    .Must(value => EnumerationType.GetAll<NetSettlementGroup>().Select(item => item.Name).Contains(value))
+                    .WithState(createMeteringPoint => new NetSettlementGroupInvalidValueValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.TypeOfMeteringPoint));
+            });
         }
 
         private static HashSet<string> AllowedNetSettlementGroupValues()

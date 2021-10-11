@@ -49,7 +49,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcess
                 PowerPlant = obj.PowerPlant,
                 LocationDescription = obj.LocationDescription,
                 SettlementMethod = obj.SettlementMethod,
-                UnitType = obj.UnitType,
                 DisconnectionType = obj.DisconnectionType,
                 EffectiveDate = obj.OccurenceDate,
                 MeterNumber = obj.MeterNumber,

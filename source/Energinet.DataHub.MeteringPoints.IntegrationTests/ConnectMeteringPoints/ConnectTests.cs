@@ -166,7 +166,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
                 SampleData.PowerPlantGsrnNumber,
                 string.Empty,
                 SampleData.SettlementMethod,
-                SampleData.MeasurementUnitType,
                 SampleData.DisconnectionType,
                 SampleData.EffectiveDate,
                 SampleData.MeterNumber,

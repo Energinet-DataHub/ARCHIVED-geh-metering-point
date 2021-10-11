@@ -104,37 +104,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         }
 
         [Theory]
-        [InlineData("Physical", typeof(MeteringMethodIsMandatoryValidationError), false)]
-        [InlineData("", typeof(MeteringMethodIsMandatoryValidationError), true)]
-        public void Validate_MandatorySubTypeOfMP(string subTypeOfMeteringPoint, System.Type validationError, bool expectedError)
-        {
-            var businessRequest = CreateRequest() with
-            {
-                GsrnNumber = SampleData.GsrnNumber,
-                MeteringMethod = subTypeOfMeteringPoint,
-            };
-
-            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
-        }
-
-        [Theory]
-        [InlineData(nameof(MeteringPointType.Consumption), nameof(NetSettlementGroup.Ninetynine), typeof(NetSettlementGroupMandatoryValidationError), false)]
-        [InlineData(nameof(MeteringPointType.Production), nameof(NetSettlementGroup.Ninetynine), typeof(NetSettlementGroupMandatoryValidationError), false)]
-        [InlineData(nameof(MeteringPointType.Production), "InvalidNetSettlementGroupValue", typeof(NetSettlementGroupInvalidValueValidationError), true)]
-        [InlineData(nameof(MeteringPointType.Consumption), "", typeof(NetSettlementGroupMandatoryValidationError), true)]
-        [InlineData(nameof(MeteringPointType.Production), "", typeof(NetSettlementGroupMandatoryValidationError), true)]
-        public void Validate_NetSettlementGroup(string meteringPointType, string netSettlementGroup, System.Type validationError, bool expectedError)
-        {
-            var businessRequest = CreateRequest() with
-            {
-                NetSettlementGroup = netSettlementGroup,
-                TypeOfMeteringPoint = meteringPointType,
-            };
-
-            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
-        }
-
-        [Theory]
         [InlineData(nameof(MeteringPointType.Consumption), nameof(ProductType.EnergyActive), typeof(ProductTypeMandatoryValidationError), false)]
         [InlineData(nameof(MeteringPointType.Consumption), "", typeof(ProductTypeMandatoryValidationError), true)]
         [InlineData(nameof(MeteringPointType.Consumption), "InvalidProductType", typeof(ProductTypeInvalidValueValidationError), true)]

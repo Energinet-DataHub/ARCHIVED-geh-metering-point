@@ -55,7 +55,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
                         GeoInfoReference = obj.GeoInfoReference,
                     },
                     SettlementMethod = obj.SettlementMethod,
-                    UnitType = obj.UnitType,
                     DisconnectionType = obj.DisconnectionType,
                     OccurenceDate = obj.EffectiveDate,
                     MeterNumber = obj.MeterNumber,

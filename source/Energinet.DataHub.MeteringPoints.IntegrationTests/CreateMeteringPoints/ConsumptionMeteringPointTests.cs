@@ -14,6 +14,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -37,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task Should_reject_when_powerplant_is_not_specified_and_netsettlementgroup_is_not_0_or_99()
         {
-            var request = CreateRequest()
+            var request = CreateCommand()
                 with
                 {
                     PowerPlant = string.Empty,
@@ -52,7 +53,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task Should_reject_when_street_name_is_missing()
         {
-            var request = CreateRequest()
+            var request = CreateCommand()
                 with
                 {
                     StreetName = string.Empty,
@@ -66,7 +67,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task Should_reject_when_post_code_is_missing()
         {
-            var request = CreateRequest()
+            var request = CreateCommand()
                 with
                 {
                     PostCode = string.Empty,
@@ -80,7 +81,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task Should_reject_when_city_is_missing()
         {
-            var request = CreateRequest()
+            var request = CreateCommand()
                 with
                 {
                     CityName = string.Empty,
@@ -94,7 +95,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task Should_reject_when_reading_occurence_is_missing()
         {
-            var request = CreateRequest()
+            var request = CreateCommand()
                 with
                 {
                     MeterReadingOccurrence = string.Empty,
@@ -106,23 +107,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task Should_reject_when_reading_occurence_is_not_a_valid_value()
-        {
-            var request = CreateRequest()
-                with
-                {
-                    MeterReadingOccurrence = "Not_valid_Reading_occurence_value",
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError<CreateMeteringPointRejected>("D02");
-        }
-
-        [Fact]
         public async Task Should_reject_when_settlement_method_is_missing()
         {
-            var request = CreateRequest()
+            var request = CreateCommand()
                 with
                 {
                     SettlementMethod = string.Empty,
@@ -134,23 +121,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task Should_reject_when_settlement_method_is_invalid()
-        {
-            var request = CreateRequest()
-                with
-                {
-                    SettlementMethod = "Invalid_Method_Name",
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError<CreateMeteringPointRejected>("D15");
-        }
-
-        [Fact]
         public async Task Should_reject_when_net_settlement_group_is_missing()
         {
-            var request = CreateRequest()
+            var request = CreateCommand()
                 with
                 {
                     NetSettlementGroup = string.Empty,
@@ -162,38 +135,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task Should_reject_when_net_settlement_group_is_invalid()
-        {
-            var request = CreateRequest()
-                with
-                {
-                    NetSettlementGroup = "Invalid_netsettlement_group_value",
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError<CreateMeteringPointRejected>("D02");
-        }
-
-        [Fact]
-        public async Task Should_reject_when_country_code_is_not_dk()
-        {
-            var invalidCountryCode = "SE";
-            var request = CreateRequest()
-                with
-                {
-                    CountryCode = invalidCountryCode,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError<CreateMeteringPointRejected>("E86");
-        }
-
-        [Fact]
         public async Task Should_reject_when_scheduled_meter_reading_date_is_missing()
         {
-            var request = CreateRequest()
+            var request = CreateCommand()
                 with
                 {
                     ScheduledMeterReadingDate = string.Empty,
@@ -207,7 +151,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task Should_reject_when_day_of_scheduled_meter_reading_date_is_not_01_and_net_settlement_group_is_6()
         {
-            var request = CreateRequest()
+            var request = CreateCommand()
                 with
                 {
                     ScheduledMeterReadingDate = "0502",
@@ -222,7 +166,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task Should_reject_if_scheduled_meter_reading_date_is_specified_and_net_settlement_group_is_not_6()
         {
-            var request = CreateRequest()
+            var request = CreateCommand()
                 with
                 {
                     PowerPlant = SampleData.PowerPlantGsrnNumber,
@@ -239,7 +183,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task Should_reject_when_scheduled_meter_reading_date_is_invalid()
         {
-            var request = CreateRequest()
+            var request = CreateCommand()
                 with
                 {
                     ScheduledMeterReadingDate = "0631",
@@ -250,62 +194,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError<CreateMeteringPointRejected>("E86");
         }
 
-        [Fact]
-        public async Task Should_reject_when_measurement_unit_is_missing()
+        private static CreateConsumptionMeteringPoint CreateCommand()
         {
-            var request = CreateRequest()
-                with
-                {
-                    MeasureUnitType = string.Empty,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError<CreateMeteringPointRejected>("D02");
-        }
-
-        private static MasterDataDocument CreateRequest()
-        {
-            return new MasterDataDocument(
-                BusinessProcessType.CreateMeteringPoint.Name,
-                SampleData.StreetName,
-                SampleData.BuildingNumber,
-                SampleData.PostCode,
-                SampleData.CityName,
-                SampleData.CitySubDivisionName,
-                SampleData.MunicipalityCode,
-                SampleData.CountryCode,
-                SampleData.StreetCode,
-                SampleData.FloorIdentification,
-                SampleData.RoomIdentification,
-                SampleData.IsWashable,
-                SampleData.GsrnNumber,
-                SampleData.TypeOfMeteringPoint,
-                MeteringMethod.Calculated.Name,
-                SampleData.ReadingOccurrence,
-                0,
-                0,
-                SampleData.MeteringGridArea,
-                SampleData.PowerPlantGsrnNumber,
-                string.Empty,
-                SampleData.SettlementMethod,
-                SampleData.MeasurementUnitType,
-                SampleData.DisconnectionType,
-                SampleData.EffectiveDate,
-                string.Empty,
-                Guid.NewGuid().ToString(),
-                SampleData.PhysicalState,
-                NetSettlementGroup.Six.Name,
-                ConnectionType.Installation.Name,
-                SampleData.AssetType,
-                "123",
-                ToGrid: "456",
-                ParentRelatedMeteringPoint: null,
-                SampleData.ProductType,
-                "0",
-                SampleData.GeoInfoReference,
-                SampleData.MeasurementUnitType,
-                "0101");
+            return Scenarios.CreateConsumptionMeteringPointCommand();
         }
     }
 }

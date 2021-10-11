@@ -32,9 +32,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         public SettlementMethodMustBeValidRule()
         {
             RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
-                .Cascade(CascadeMode.Stop)
-                .NotEmpty()
-                .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError())
                 .Must(settlementMethod => _allowedDomainValuesForConsumptionAndNetLossCorrection.Contains(settlementMethod!))
                 .WithState(createMeteringPoint => new SettlementMethodMissingRequiredDomainValuesValidationError(createMeteringPoint.SettlementMethod!));
         }

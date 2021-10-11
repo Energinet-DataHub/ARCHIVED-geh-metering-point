@@ -30,6 +30,35 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
         }
 
         [Fact]
+        public async Task Should_reject_when_country_code_is_not_dk()
+        {
+            var invalidCountryCode = "SE";
+            var request = CreateDocument()
+                with
+                {
+                    CountryCode = invalidCountryCode,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_net_settlement_group_is_invalid()
+        {
+            var request = CreateDocument()
+                with
+                {
+                    NetSettlementGroup = "Invalid_netsettlement_group_value",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
+        }
+
+        [Fact]
         public async Task Should_reject_when_maximum_power_is_invalid()
         {
             var invalidPowerLimit = 12345567;
@@ -136,6 +165,92 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
             AssertValidationError("D02");
         }
 
+        [Fact]
+        public async Task Should_reject_when_measurement_unit_is_missing()
+        {
+            var request = CreateDocument()
+                with
+                {
+                    MeasureUnitType = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("invalid_value")]
+        public async Task Should_reject_when_measurement_unit_is_missing_or_is_invalid(string measurementUnitType)
+        {
+            var request = CreateDocument()
+                with
+                {
+                    MeasureUnitType = measurementUnitType,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_reading_occurence_is_not_a_valid_value()
+        {
+            var request = CreateDocument()
+                with
+                {
+                    MeterReadingOccurrence = "Not_valid_Reading_occurence_value",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_settlement_method_is_invalid()
+        {
+            var request = CreateDocument()
+                with
+                {
+                    SettlementMethod = "Invalid_Method_Name",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D15");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_metering_method_is_invalid()
+        {
+            var request = CreateDocument()
+                with
+                {
+                    MeteringMethod = "Invalid_value",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
+        }
+
+        [Fact]
+        public async Task Should_reject_if_asset_type_value_is_invalid()
+        {
+            var request = CreateDocument()
+                with
+                {
+                    AssetType = "invalid_value",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D59");
+        }
+
         private static MasterDataDocument CreateDocument()
         {
             return new(
@@ -161,7 +276,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
                 SampleData.PowerPlantGsrnNumber,
                 string.Empty,
                 SampleData.SettlementMethod,
-                SampleData.MeasurementUnitType,
                 SampleData.DisconnectionType,
                 SampleData.EffectiveDate,
                 SampleData.MeterNumber,

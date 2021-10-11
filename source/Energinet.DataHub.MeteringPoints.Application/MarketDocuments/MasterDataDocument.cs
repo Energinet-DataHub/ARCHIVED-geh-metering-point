@@ -40,7 +40,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
             string? PowerPlant = null,
             string? LocationDescription = null,
             string? SettlementMethod = null,
-            string UnitType = "",
             string DisconnectionType = "",
             string EffectiveDate = "",
             string? MeterNumber = "",

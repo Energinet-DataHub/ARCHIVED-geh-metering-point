@@ -26,13 +26,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
     {
         public MeteringMethodMustBeValidRule()
         {
-            RuleFor(createMeteringPoint => createMeteringPoint.MeteringMethod)
-                .Cascade(CascadeMode.Stop)
-                .NotEmpty()
-                .WithState(createMeteringPoint => new MeteringMethodIsMandatoryValidationError())
-                .Must(value => EnumerationType.GetAll<MeteringMethod>().Select(item => item.Name)
-                    .Contains(value, StringComparer.OrdinalIgnoreCase))
-                .WithState(request => new InvalidMeteringMethodRuleError(request.MeteringMethod));
+            When(request => !string.IsNullOrWhiteSpace(request.MeteringMethod), () =>
+            {
+                RuleFor(createMeteringPoint => createMeteringPoint.MeteringMethod)
+                    .Must(value => EnumerationType.GetAll<MeteringMethod>().Select(item => item.Name)
+                        .Contains(value, StringComparer.OrdinalIgnoreCase))
+                    .WithState(request => new InvalidMeteringMethodRuleError(request.MeteringMethod));
+            });
         }
     }
 }
