@@ -12,7 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub.Bundling
 {
-    public record MeteringPointConnectedTopic(string Name) : Topic;
+    public class RejectMessageBundleHandler : BundleHandler<RejectMessage>
+    {
+        public RejectMessageBundleHandler(IJsonSerializer jsonSerializer, IDocumentSerializer<RejectMessage> documentSerializer)
+            : base(jsonSerializer, documentSerializer)
+        {
+        }
+    }
 }

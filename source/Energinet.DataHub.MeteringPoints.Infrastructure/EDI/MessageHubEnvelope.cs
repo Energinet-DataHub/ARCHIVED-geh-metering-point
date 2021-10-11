@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect
+using MediatR;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
 {
-    public record MeteringPointConnectedTopic(string Name) : Topic;
+    public record MessageHubEnvelope(string Recipient, string Content, DocumentType MessageType, string Correlation) : IRequest;
 }

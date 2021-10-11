@@ -12,7 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub
 {
-    public record MeteringPointConnectedTopic(string Name) : Topic;
+    /// <summary>
+    /// Local Post Office
+    /// </summary>
+    public interface ILocalMessageHubDataAvailableClient
+    {
+        /// <summary>
+        /// Dispatch message to Local Post Office
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        Task DataAvailableAsync(MessageHubEnvelope messageHub);
+    }
 }
