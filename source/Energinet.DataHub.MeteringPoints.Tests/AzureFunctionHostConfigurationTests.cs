@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub;
 using Xunit;
 
 namespace Energinet.DataHub.MeteringPoints.Tests
@@ -67,13 +68,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests
         {
             Environment.SetEnvironmentVariable("SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING", ServiceBusConnectionString);
             Environment.SetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING", SomeString);
-            Environment.SetEnvironmentVariable("TEMP_POST_OFFICE_CONNECTION_STRING", SomeString);
-            Environment.SetEnvironmentVariable("TEMP_POST_OFFICE_SHARE", SomeString);
             Environment.SetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", SomeString);
             Environment.SetEnvironmentVariable("METERING_POINT_CREATED_TOPIC", SomeString);
+            Environment.SetEnvironmentVariable("CONSUMPTION_METERING_POINT_CREATED_TOPIC", SomeString);
             Environment.SetEnvironmentVariable("METERING_POINT_CONNECTED_TOPIC", SomeString);
-            Environment.SetEnvironmentVariable("POSTOFFICE_QUEUE_CONNECTION_STRING", SomeString);
-            Environment.SetEnvironmentVariable("POSTOFFICE_STORAGE_CONNECTION_STRING", SomeString);
+            Environment.SetEnvironmentVariable("MESSAGEHUB_QUEUE_CONNECTION_STRING", SomeString);
+            Environment.SetEnvironmentVariable("MESSAGEHUB_STORAGE_CONNECTION_STRING", SomeString);
             var program = new EntryPoints.Outbox.Program();
 
             program.ConfigureApplication();
@@ -82,16 +82,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests
         }
 
         [Fact]
-        public void SubPostOfficeHostConfigurationTest()
+        public void LocalMessageHubHostConfigurationTest()
         {
             Environment.SetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING", SomeString);
             Environment.SetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusConnectionString);
             Environment.SetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME", SomeString);
-            Environment.SetEnvironmentVariable("POSTOFFICE_QUEUE_CONNECTION_STRING", SomeString);
-            Environment.SetEnvironmentVariable("POSTOFFICE_STORAGE_CONNECTION_STRING", SomeString);
+            Environment.SetEnvironmentVariable("MESSAGEHUB_QUEUE_CONNECTION_STRING", SomeString);
+            Environment.SetEnvironmentVariable("MESSAGEHUB_STORAGE_CONNECTION_STRING", SomeString);
             Environment.SetEnvironmentVariable("CONSUMPTION_METERING_POINT_CREATED_TOPIC", SomeString);
             Environment.SetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", SomeString);
-            var program = new EntryPoints.SubPostOffice.Program();
+            var program = new Program();
 
             program.ConfigureApplication();
 

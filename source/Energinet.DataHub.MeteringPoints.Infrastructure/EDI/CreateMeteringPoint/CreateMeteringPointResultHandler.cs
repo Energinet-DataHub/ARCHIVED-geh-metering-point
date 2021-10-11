@@ -95,7 +95,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
                     StartDateAndOrTime: request.EffectiveDate,
                     OriginalTransaction: request.TransactionId));
 
-            var envelope = CreatePostOfficeEnvelope(
+            var envelope = CreateMessageHubEnvelope(
                 recipient: _userContext.CurrentUser?.GlnNumber ?? _glnNumber, // TODO: Hardcoded
                 cimContent: _jsonSerializer.Serialize(message),
                 messageType: DocumentType.CreateMeteringPointAccepted);
@@ -137,7 +137,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
                     OriginalTransaction: request.TransactionId,
                     Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
 
-            var envelope = CreatePostOfficeEnvelope(
+            var envelope = CreateMessageHubEnvelope(
                 recipient: _userContext.CurrentUser?.GlnNumber ?? _glnNumber, // TODO: Hardcoded
                 cimContent: _jsonSerializer.Serialize(message),
                 messageType: DocumentType.CreateMeteringPointRejected);
@@ -147,7 +147,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
             return Task.CompletedTask;
         }
 
-        private PostOfficeMessageEnvelope CreatePostOfficeEnvelope(string recipient, string cimContent, DocumentType messageType)
+        private MessageHubEnvelope CreateMessageHubEnvelope(string recipient, string cimContent, DocumentType messageType)
         {
             return new(
                 Recipient: recipient,

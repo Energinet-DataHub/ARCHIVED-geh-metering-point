@@ -56,7 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
 
-            AssertOutboxMessage<PostOfficeMessageEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointAccepted);
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointAccepted);
         }
 
         [Fact]
@@ -80,7 +80,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
 
-            AssertOutboxMessage<PostOfficeMessageEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointRejected);
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointRejected);
         }
 
         [Fact]
@@ -100,7 +100,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
             await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
 
-            AssertOutboxMessage<PostOfficeMessageEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointRejected);
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointRejected);
         }
 
         [Fact(Skip = "Not implemented yet")]

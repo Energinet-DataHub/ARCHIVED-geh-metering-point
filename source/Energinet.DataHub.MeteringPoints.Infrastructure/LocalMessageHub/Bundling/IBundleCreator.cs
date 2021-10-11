@@ -12,7 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub.Bundling
 {
-    public record MeteringPointConnectedTopic(string Name) : Topic;
+    /// <summary>
+    /// Bundle creator
+    /// </summary>
+    public interface IBundleCreator
+    {
+        /// <summary>
+        /// Create a bundle.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        Task<string> CreateBundleAsync(IList<MessageHubMessage> messages);
+    }
 }
