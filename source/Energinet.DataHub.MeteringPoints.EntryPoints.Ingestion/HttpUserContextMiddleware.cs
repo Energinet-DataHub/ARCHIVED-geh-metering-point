@@ -14,6 +14,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Microsoft.Azure.Functions.Worker;
@@ -35,8 +36,22 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
+            string glnNumber;
+            var httpRequestData = context.GetHttpRequestData();
+            if (httpRequestData != null && httpRequestData.Headers.TryGetValues("gln", out var glnValues) &&
+                glnValues?.SingleOrDefault() != null)
+            {
+                glnNumber = glnValues.Single();
+            }
+            else
+            {
+                glnNumber = "8200000000006"; // TODO: default gln for testing purposes, remove when a proper user context exist.
+            }
+
             // TODO: Update with a proper identity once we know how/what/when.
-            _userContext.CurrentUser = new UserIdentity(Id: "Replace me with an identity of the current user");
+            _userContext.CurrentUser = new UserIdentity(
+                Id: "Replace me with an identity of the current user",
+                GlnNumber: glnNumber);
 
             await next(context).ConfigureAwait(false);
         }

@@ -12,19 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Contracts
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
 {
-    /// <summary>
-    /// Reject actor message
-    /// </summary>
-    public interface IRejectMessage
-    {
-        /// <summary>
-        /// List of validation errors
-        /// </summary>
-        IReadOnlyList<ErrorMessage> Errors { get; }
-    }
+    public record MessageHubEnvelope(string Recipient, string Content, DocumentType MessageType, string Correlation) : IRequest;
 }

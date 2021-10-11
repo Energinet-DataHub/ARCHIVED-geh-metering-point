@@ -18,9 +18,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
+using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create;
@@ -39,16 +39,18 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Contracts;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GridAreas;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
+using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub.Bundling;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
+using Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentAssertions;
@@ -56,7 +58,6 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Xunit;
@@ -70,13 +71,14 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
     [Collection("IntegrationTest")]
     [IntegrationTest]
-    #pragma warning disable CA1724 // TODO: TestHost is reserved. Maybe refactor to base EntryPoint?
+#pragma warning disable CA1724 // TODO: TestHost is reserved. Maybe refactor to base EntryPoint?
     public class TestHost : IDisposable
     {
         private readonly Scope _scope;
         private readonly Container _container;
         private readonly IServiceProvider _serviceProvider;
         private bool _disposed;
+        private JsonSerializer _jsonSerializer = new();
 
         protected TestHost(DatabaseFixture databaseFixture)
         {
@@ -98,7 +100,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             serviceCollection.AddDbContext<MeteringPointContext>(
                 x =>
-                x.UseSqlServer(connectionString, y => y.UseNodaTime()),
+                    x.UseSqlServer(connectionString, y => y.UseNodaTime()),
                 ServiceLifetime.Scoped);
             serviceCollection.AddSimpleInjector(_container);
             _serviceProvider = serviceCollection.BuildServiceProvider().UseSimpleInjector(_container);
@@ -123,8 +125,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IDomainEventPublisher, DomainEventPublisher>();
             _container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Singleton);
             _container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
+            _container.Register<IUserContext>(() => new UserContext { CurrentUser = new UserIdentity(Guid.NewGuid().ToString(), "8200000001409"), }, Lifestyle.Scoped);
 
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
+
+            // TODO: remove this when infrastructure and application has been split into more assemblies.
+            _container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageSerializer>(Lifestyle.Singleton);
+            _container.Register<IDocumentSerializer<RejectMessage>, RejectMessageSerializer>(Lifestyle.Singleton);
 
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
@@ -133,19 +140,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 typeof(ErrorMessageFactory).Assembly); // Infrastructure
 
             _container.BuildMediator(
-                new[]
-                {
-                    typeof(CreateMeteringPoint).Assembly,
-                    typeof(MeteringPointCreatedNotificationHandler).Assembly,
-                },
+                new[] { typeof(CreateMeteringPoint).Assembly, typeof(MeteringPointCreatedNotificationHandler).Assembly, },
                 new[]
                 {
                     typeof(UnitOfWorkBehavior<,>),
                     // typeof(AuthorizationBehavior<,>),
-                    typeof(InputValidationBehavior<,>),
-                    typeof(DomainEventsDispatcherBehaviour<,>),
-                    typeof(InternalCommandHandlingBehaviour<,>),
-                    typeof(BusinessProcessResultBehavior<,>),
+                    typeof(InputValidationBehavior<,>), typeof(DomainEventsDispatcherBehaviour<,>), typeof(InternalCommandHandlingBehaviour<,>), typeof(BusinessProcessResultBehavior<,>),
                 });
 
             _container.Verify();
@@ -208,30 +208,29 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             message.Should().BeOfType<TMessage>();
         }
 
-        protected void AssertValidationError<TRejectMessage>(string expectedErrorCode)
-            where TRejectMessage : IRejectMessage
+        protected void AssertValidationError(string expectedErrorCode, DocumentType type)
         {
             var message = GetOutboxMessages
-                    <PostOfficeEnvelope>()
-                .First(msg => msg.MessageType.Equals(typeof(TRejectMessage).Name, StringComparison.Ordinal));
+                    <MessageHubEnvelope>()
+                .Single(msg => msg.MessageType.Equals(type));
 
-            var rejectMessage = JsonConvert.DeserializeObject<TRejectMessage>(message.Content);
+            var rejectMessage = _jsonSerializer.Deserialize<RejectMessage>(message.Content);
 
-            var errorCount = rejectMessage.Errors.Count;
+            var errorCount = rejectMessage.MarketActivityRecord.Reasons.Count;
             if (errorCount > 1)
             {
                 var errorMessage = new StringBuilder();
                 errorMessage.AppendLine($"Reject message contains more ({errorCount}) than 1 error:");
-                foreach (var error in rejectMessage.Errors)
+                foreach (var error in rejectMessage.MarketActivityRecord.Reasons)
                 {
-                    errorMessage.AppendLine($"Code: {error.Code}. Description: {error.Description}.");
+                    errorMessage.AppendLine($"Code: {error.Code}. Description: {error.Text}.");
                 }
 
                 throw new XunitException(errorMessage.ToString());
             }
 
-            var validationError = rejectMessage.Errors
-                .First(error => error.Code == expectedErrorCode);
+            var validationError = rejectMessage.MarketActivityRecord.Reasons
+                .Single(error => error.Code == expectedErrorCode);
 
             Assert.NotNull(validationError);
         }
@@ -255,6 +254,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             cleanupStatement.AppendLine($"DELETE FROM QueuedInternalCommands");
             cleanupStatement.AppendLine($"DELETE FROM GridAreaLinks");
             cleanupStatement.AppendLine($"DELETE FROM GridAreas");
+            cleanupStatement.AppendLine($"DELETE FROM MessageHubMessages");
 
             _container.GetInstance<MeteringPointContext>()
                 .Database.ExecuteSqlRaw(cleanupStatement.ToString());

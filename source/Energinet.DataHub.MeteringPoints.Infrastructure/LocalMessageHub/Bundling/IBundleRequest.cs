@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub.Bundling
 {
-    public record CreateMeteringPointAccepted(
-        string TransactionId,
-        string Status, // TODO: Is status implicit in Accepted from type?
-        string GsrnNumber);
-
-    // TODO: Reference to original document?
+    /// <summary>
+    /// A request to create a bundle.
+    /// </summary>
+#pragma warning disable CA1040 // Marker interface
+    public interface IBundleRequest
+    {
+    }
 }

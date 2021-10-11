@@ -30,7 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
             { typeof(ConsumptionMeteringPointCreatedIntegrationEvent).FullName!, typeof(ConsumptionMeteringPointCreatedIntegrationEvent) },
             { typeof(ProductionMeteringPointCreatedIntegrationEvent).FullName!, typeof(ProductionMeteringPointCreatedIntegrationEvent) },
             { typeof(MeteringPointConnectedIntegrationEvent).FullName!, typeof(MeteringPointConnectedIntegrationEvent) },
-            { typeof(PostOfficeEnvelope).FullName!, typeof(PostOfficeEnvelope) },
+            { typeof(MessageHubEnvelope).FullName!, typeof(MessageHubEnvelope) },
         };
 
         public static Type GetType(string type)

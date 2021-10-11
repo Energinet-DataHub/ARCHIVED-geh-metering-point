@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher", "Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher\Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher.csproj", "{00AD3FF1-2571-4D5C-9BFC-1BC927AE7911}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub", "Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub\Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub.csproj", "{C4CCE071-5E60-4558-B6C0-937A0F97A15D}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI", "Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI\Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.csproj", "{1E8BC6B4-C2D2-4343-8C9A-474452FB0BC2}"
 EndProject
 Global
@@ -97,6 +99,10 @@ Global
 		{00AD3FF1-2571-4D5C-9BFC-1BC927AE7911}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00AD3FF1-2571-4D5C-9BFC-1BC927AE7911}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00AD3FF1-2571-4D5C-9BFC-1BC927AE7911}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4CCE071-5E60-4558-B6C0-937A0F97A15D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4CCE071-5E60-4558-B6C0-937A0F97A15D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4CCE071-5E60-4558-B6C0-937A0F97A15D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4CCE071-5E60-4558-B6C0-937A0F97A15D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1E8BC6B4-C2D2-4343-8C9A-474452FB0BC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1E8BC6B4-C2D2-4343-8C9A-474452FB0BC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E8BC6B4-C2D2-4343-8C9A-474452FB0BC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -112,5 +118,6 @@ Global
 		{59EA4350-50A9-4091-A7DB-281E9498A286} = {251113C8-9673-45D2-AFA6-2D53AF6E8756}
 		{00AD3FF1-2571-4D5C-9BFC-1BC927AE7911} = {698CCD74-174C-493E-BDC4-69A0E3EA3F82}
 		{1E8BC6B4-C2D2-4343-8C9A-474452FB0BC2} = {698CCD74-174C-493E-BDC4-69A0E3EA3F82}
+		{C4CCE071-5E60-4558-B6C0-937A0F97A15D} = {698CCD74-174C-493E-BDC4-69A0E3EA3F82}
 	EndGlobalSection
 EndGlobal
