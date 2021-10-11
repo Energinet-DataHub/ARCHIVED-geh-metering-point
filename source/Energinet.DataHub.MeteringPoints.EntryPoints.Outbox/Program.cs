@@ -28,6 +28,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Production;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
@@ -104,6 +105,12 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                     Environment.GetEnvironmentVariable("CONSUMPTION_METERING_POINT_CREATED_TOPIC") ??
                     throw new InvalidOperationException(
                         "No Consumption Metering Point Created Topic found")),
+                Lifestyle.Singleton);
+            container.Register(
+                () => new ProductionMeteringPointCreatedTopic(
+                    Environment.GetEnvironmentVariable("PRODUCTION_METERING_POINT_CREATED_TOPIC") ??
+                    throw new InvalidOperationException(
+                        "No Production Metering Point Created Topic found")),
                 Lifestyle.Singleton);
             container.Register(
                 () => new MeteringPointConnectedTopic(

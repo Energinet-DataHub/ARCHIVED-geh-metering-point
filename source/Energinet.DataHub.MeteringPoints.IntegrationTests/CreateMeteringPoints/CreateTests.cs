@@ -38,9 +38,24 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task CreateMeteringPoint_WithNoValidationErrors_ShouldBeRetrievableFromRepository()
+        public async Task CreateConsumptionMeteringPoint_WithNoValidationErrors_ShouldBeRetrievableFromRepository()
         {
             var request = CreateRequest();
+
+            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
+
+            var gsrnNumber = GsrnNumber.Create(request.GsrnNumber);
+            var found = await _meteringPointRepository.GetByGsrnNumberAsync(gsrnNumber).ConfigureAwait(false);
+            Assert.NotNull(found);
+        }
+
+        [Fact]
+        public async Task CreateProductionMeteringPoint_WithNoValidationErrors_ShouldBeRetrievableFromRepository()
+        {
+            var request = CreateRequest() with
+                {
+                    TypeOfMeteringPoint = nameof(MeteringPointType.Production),
+                };
 
             await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
 

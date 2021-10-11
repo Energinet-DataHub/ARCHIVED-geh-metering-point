@@ -21,7 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
 {
     public class ProductionMeteringPointCreated : DomainEventBase
     {
-        public ProductionMeteringPointCreated(Guid meteringPointId, string gsrnNumber, Guid gridAreaId, string meteringPointSubType, string productType, string readingOccurrence, string unitType, string netSettlementGroup, string city, string floor, string room, string buildingNumber, string countryCode, int? municipalityCode, string postCode, string streetCode, string streetName, string citySubDivision, bool isOfficialAddress, Guid? geoInfoReference, string powerPlantGsrnNumber, string locationDescription, string meterNumber, int maximumCurrent, int maximumPower, Instant effectiveDate, string disconnectionType, string connectionType, string assetType, string physicalState, bool productionObligation, float? capacity)
+        public ProductionMeteringPointCreated(Guid meteringPointId, string gsrnNumber, Guid gridAreaId, string meteringPointSubType, string productType, string readingOccurrence, string unitType, string netSettlementGroup, string city, string floor, string room, string buildingNumber, string countryCode, int? municipalityCode, string postCode, string streetCode, string streetName, string citySubDivision, bool isOfficialAddress, Guid? geoInfoReference, string powerPlantGsrnNumber, string locationDescription, string meterNumber, int maximumCurrent, int maximumPower, Instant effectiveDate, string disconnectionType, string connectionType, string assetType, string physicalState, bool productionObligation, double capacity)
         {
             MeteringPointId = meteringPointId;
             GsrnNumber = gsrnNumber;
@@ -120,6 +120,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
 
         public Guid? GeoInfoReference { get; }
 
-        public float? Capacity { get; }
+        public double? Capacity { get; }
     }
 }
