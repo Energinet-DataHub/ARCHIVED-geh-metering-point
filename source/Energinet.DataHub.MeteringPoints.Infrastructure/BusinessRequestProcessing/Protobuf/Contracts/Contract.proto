@@ -25,7 +25,7 @@ message Address {
   google.protobuf.StringValue postCode = 2;
   google.protobuf.StringValue cityName = 3;
   google.protobuf.StringValue countryCode = 4;
-  google.protobuf.BoolValue officialAddressIndicator = 5;
+  google.protobuf.BoolValue actualAddressIndicator = 5;
   google.protobuf.StringValue buildingNumber = 6;
   string streetCode = 7;
   google.protobuf.StringValue floorIdentification = 8;
@@ -66,9 +66,9 @@ message CreateMeteringPoint {
 }
 
 message ConnectMeteringPoint {
-    string gsrnNumber = 1;
-    string effectiveDate = 2;
-    string transactionId = 3;
+  string gsrnNumber = 1;
+  string effectiveDate = 2;
+  string transactionId = 3;
 }
 
 message MeteringPointEnvelope {

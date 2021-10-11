@@ -44,6 +44,7 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Model\202110011345 Add ConnectionType.sql" />
     <EmbeddedResource Include="Scripts\Model\202110021100 Move DisconnectionType.sql" />
     <EmbeddedResource Include="Scripts\Model\202110071100 Update MessageHubMessages table.sql" />
+    <EmbeddedResource Include="Scripts\Model\202110111554 Rename IsOfficialAddress to IsActualAddress.sql" />
     <EmbeddedResource Include="Scripts\Seed\202109232130 Create Grid Area seed data.sql" />
     <EmbeddedResource Include="Scripts\Test\202109232129 Clean database.sql" />
     <EmbeddedResource Include="Scripts\Test\202109232130 Create Grid Area test data.sql" />
