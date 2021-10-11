@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappings
 {
-    public class CreateMeteringPointXmlMappingConfiguration : XmlMappingConfigurationBase
+    public class MasterDataDocumentXmlMappingConfiguration : XmlMappingConfigurationBase
     {
-        public CreateMeteringPointXmlMappingConfiguration()
+        public MasterDataDocumentXmlMappingConfiguration()
         {
-            CreateMapping<Application.Create.CreateMeteringPoint>("MktActivityRecord", mapper => mapper
+            CreateMapping<MasterDataDocument>("MktActivityRecord", mapper => mapper
                 .AddProperty(x => x.GsrnNumber, "MarketEvaluationPoint", "mRID")
                 .AddProperty(x => x.AssetType, TranslateAssetType, "MarketEvaluationPoint", "asset_MktPSRType.psrType")
                 .AddProperty(x => x.MaximumPower, "MarketEvaluationPoint", "contractedConnectionCapacity")

@@ -29,4 +29,8 @@ limitations under the License.
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Domain\Energinet.DataHub.MeteringPoints.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="MasterDataDocument.cs" />
+  </ItemGroup>
+
 </Project>

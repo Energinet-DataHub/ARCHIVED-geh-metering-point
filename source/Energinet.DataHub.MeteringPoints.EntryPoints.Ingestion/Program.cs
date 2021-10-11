@@ -99,7 +99,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             switch (processType)
             {
                 case "E02":
-                    return new CreateMeteringPointXmlMappingConfiguration();
+                    return new MasterDataDocumentXmlMappingConfiguration();
                 case "D15":
                     return new ConnectMeteringPointXmlMappingConfiguration();
                 default:

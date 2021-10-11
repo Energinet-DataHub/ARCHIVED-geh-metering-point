@@ -12,16 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application;
-using Energinet.DataHub.MeteringPoints.Application.Create;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 {
-    public abstract class CreateMeteringPointRulesTest<TRuleSet> : RuleSetTest<CreateMeteringPoint, TRuleSet>
-        where TRuleSet : AbstractValidator<CreateMeteringPoint>, new()
+    public abstract class CreateMeteringPointRulesTest<TRuleSet> : RuleSetTest<MasterDataDocument, TRuleSet>
+        where TRuleSet : AbstractValidator<MasterDataDocument>, new()
     {
-        protected CreateMeteringPoint CreateRequest()
+        protected MasterDataDocument CreateRequest()
         {
             return new();
         }

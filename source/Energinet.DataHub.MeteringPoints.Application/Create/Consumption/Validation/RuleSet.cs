@@ -12,21 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
-using Energinet.DataHub.MeteringPoints.Application.Validation.Extensions;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Validation
 {
-    public class CapacityRule : AbstractValidator<MasterDataDocument>
+    public class RuleSet : AbstractValidator<CreateConsumptionMeteringPoint>
     {
-        public CapacityRule()
+        public RuleSet()
         {
-            When(request => string.IsNullOrWhiteSpace(request.PhysicalConnectionCapacity) == false, () =>
+            When(request => !string.IsNullOrEmpty(request.ScheduledMeterReadingDate), () =>
             {
-                RuleFor(request => request.PhysicalConnectionCapacity)
-                    .CheckRules(value => Capacity.CheckRules(value!));
+                RuleFor(request => request.ScheduledMeterReadingDate)
+                    .Must(value => ScheduledMeterReadingDate.CheckRules(value !).Success)
+                    .WithState(value => new InvalidScheduledMeterReadingDateRuleError());
             });
         }
     }

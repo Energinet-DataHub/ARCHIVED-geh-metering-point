@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using MediatR;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Common
+namespace Energinet.DataHub.MeteringPoints.Domain
 {
-    /// <summary>
-    /// Internal representation of an actor document
-    /// </summary>
-    public interface IInternalMarketDocument : IRequest<BusinessProcessResult>
+    public class BusinessProcessType : EnumerationType
     {
-        /// <summary>
-        /// Process type
-        /// </summary>
-        string ProcessType { get; }
+        public static readonly BusinessProcessType CreateMeteringPoint = new BusinessProcessType(0, nameof(CreateMeteringPoint));
+
+        public BusinessProcessType(int id, string name)
+            : base(id, name)
+        {
+        }
     }
 }

@@ -14,12 +14,13 @@
 
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Create;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Authorization.AuthorizationHandlers
 {
-    public class ExampleAuthorizationHandler : IAuthorizationHandler<CreateMeteringPoint, BusinessProcessResult>
+    public class ExampleAuthorizationHandler : IAuthorizationHandler<MasterDataDocument, BusinessProcessResult>
     {
-        public AuthorizationResult Authorize(CreateMeteringPoint command)
+        public AuthorizationResult Authorize(MasterDataDocument command)
         {
             // if (!IsValidFormat(command.OccurenceDate))
             // {

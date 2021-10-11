@@ -18,6 +18,7 @@ using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Domain;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 {
@@ -49,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
         {
             var mrid = ExtractElementValue(rootElement, ns + "mRID");
             var type = ExtractElementValue(rootElement, ns + "type");
-            var processType = ExtractElementValue(rootElement, ns + "process.processType");
+            var processType = TranslateProcessType(ExtractElementValue(rootElement, ns + "process.processType"));
 
             var headerData = new XmlHeaderData(mrid, type, processType);
 
@@ -59,6 +60,15 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
         private static string ExtractElementValue(XContainer element, XName name)
         {
             return element.Element(name)?.Value ?? string.Empty;
+        }
+
+        private static string TranslateProcessType(string value)
+        {
+            return value.ToUpperInvariant() switch
+            {
+                "E02" => nameof(BusinessProcessType.CreateMeteringPoint),
+                _ => value,
+            };
         }
 
         private static XElement? GetXmlElement(XContainer? container, Queue<string> hierarchyQueue, XNamespace ns)

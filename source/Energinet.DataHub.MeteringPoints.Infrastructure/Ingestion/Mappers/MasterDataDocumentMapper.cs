@@ -16,20 +16,20 @@ using System;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Google.Protobuf;
-using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Create.CreateMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
 {
-    public class CreateMeteringPointMapper : ProtobufOutboundMapper<CreateMeteringPoint>
+    public class MasterDataDocumentMapper : ProtobufOutboundMapper<Application.MarketDocuments.MasterDataDocument>
     {
-        protected override IMessage Convert(CreateMeteringPoint obj)
+        protected override IMessage Convert(Application.MarketDocuments.MasterDataDocument obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 
             return new MeteringPointEnvelope()
             {
-                CreateMeteringPoint = new Contracts.CreateMeteringPoint
+                MasterDataDocument = new MasterDataDocument
                 {
+                    ProcessType = obj.ProcessType,
                     GsrnNumber = obj.GsrnNumber,
                     TypeOfMeteringPoint = obj.TypeOfMeteringPoint,
                     SubTypeOfMeteringPoint = obj.MeteringMethod,

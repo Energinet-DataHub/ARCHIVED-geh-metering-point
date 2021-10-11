@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using MediatR;
+using System;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Common
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
 {
-    /// <summary>
-    /// Internal representation of an actor document
-    /// </summary>
-    public interface IInternalMarketDocument : IRequest<BusinessProcessResult>
+    public class TestBusinessRequest : IBusinessRequest
     {
-        /// <summary>
-        /// Process type
-        /// </summary>
-        string ProcessType { get; }
+        public TestBusinessRequest(string transactionId)
+        {
+            TransactionId = transactionId;
+        }
+
+        public string TransactionId { get; }
     }
 }

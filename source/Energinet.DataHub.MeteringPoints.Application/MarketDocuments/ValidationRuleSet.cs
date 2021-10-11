@@ -13,30 +13,18 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.Create;
-using Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Validation;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation
+namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
 {
-    public class CreateMeteringPointRuleSet : AbstractValidator<CreateMeteringPoint>
+    public class ValidationRuleSet : AbstractValidator<MasterDataDocument>
     {
-        public CreateMeteringPointRuleSet()
+        public ValidationRuleSet()
         {
-            // Rules for Consumption metering points
-            When(request => request.TypeOfMeteringPoint.Equals(MeteringPointType.Consumption.Name, StringComparison.OrdinalIgnoreCase), () =>
-            {
-                When(request => !string.IsNullOrEmpty(request.ScheduledMeterReadingDate), () =>
-                {
-                    RuleFor(request => request.ScheduledMeterReadingDate)
-                        .Must(value => ScheduledMeterReadingDate.CheckRules(value !).Success)
-                        .WithState(value => new InvalidScheduledMeterReadingDateRuleError());
-                });
-            });
             RuleFor(request => request).SetValidator(new ConnectionTypeRule());
             RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberMustBeValidRule());
             RuleFor(request => request).SetValidator(new SettlementMethodMustBeValidRule());

@@ -23,6 +23,26 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Contracts
     public interface IRejectMessage
     {
         /// <summary>
+        /// Transaction id
+        /// </summary>
+        string TransactionId { get; }
+
+        /// <summary>
+        /// Status
+        /// </summary>
+        string Status { get; } // TODO: Is status implicit in Rejected from type?
+
+        /// <summary>
+        /// Gsrn
+        /// </summary>
+        string GsrnNumber { get; }
+
+        /// <summary>
+        /// Reason
+        /// </summary>
+        string Reason { get; }
+
+        /// <summary>
         /// List of validation errors
         /// </summary>
         IReadOnlyList<ErrorMessage> Errors { get; }

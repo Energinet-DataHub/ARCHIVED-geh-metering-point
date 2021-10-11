@@ -14,9 +14,9 @@
 
 using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Create;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
+using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
@@ -264,9 +264,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError<CreateMeteringPointRejected>("D02");
         }
 
-        private static CreateMeteringPoint CreateRequest()
+        private static MasterDataDocument CreateRequest()
         {
-            return new CreateMeteringPoint(
+            return new MasterDataDocument(
+                BusinessProcessType.CreateMeteringPoint.Name,
                 SampleData.StreetName,
                 SampleData.BuildingNumber,
                 SampleData.PostCode,

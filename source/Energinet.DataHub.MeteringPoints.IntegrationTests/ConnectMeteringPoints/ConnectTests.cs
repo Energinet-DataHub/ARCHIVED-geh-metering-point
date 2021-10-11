@@ -17,6 +17,8 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Extensions;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
+using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
@@ -139,9 +141,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
         {
         }
 
-        private static CreateMeteringPoint CreateMeteringPointRequest()
+        private static MasterDataDocument CreateMeteringPointRequest()
         {
             return new(
+                BusinessProcessType.CreateMeteringPoint.Name,
                 SampleData.StreetName,
                 SampleData.BuildingNumber,
                 SampleData.PostCode,

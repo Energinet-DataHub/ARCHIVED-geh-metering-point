@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,17 +30,24 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcess
     {
         private readonly IValidator<TRequest> _validator;
         private readonly IBusinessProcessResultHandler<TRequest> _businessProcessResultHandler;
+        private readonly IBusinessProcessValidationContext _validationContext;
 
-        public InputValidationBehavior(IValidator<TRequest> validator, IBusinessProcessResultHandler<TRequest> businessProcessResultHandler)
+        public InputValidationBehavior(IValidator<TRequest> validator, IBusinessProcessResultHandler<TRequest> businessProcessResultHandler, IBusinessProcessValidationContext validationContext)
         {
-            _validator = validator;
+            _validator = validator ?? throw new ArgumentNullException(nameof(validator));
             _businessProcessResultHandler = businessProcessResultHandler ?? throw new ArgumentNullException(nameof(businessProcessResultHandler));
+            _validationContext = validationContext ?? throw new ArgumentNullException(nameof(validationContext));
         }
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (next == null) throw new ArgumentNullException(nameof(next));
+
+            if (_validationContext.HasErrors)
+            {
+                return await FailureDueToValidationErrorsAsync(request, _validationContext.GetErrors().ToList()).ConfigureAwait(false);
+            }
 
             var validationResult = await _validator.ValidateAsync(request, cancellationToken).ConfigureAwait(false);
             if (!validationResult.IsValid)
@@ -49,13 +57,17 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcess
                     .Select(error => (ValidationError)error.CustomState)
                     .ToList()
                     .AsReadOnly();
-
-                var result = new BusinessProcessResult(request.TransactionId, validationErrors);
-                await _businessProcessResultHandler.HandleAsync(request, result).ConfigureAwait(false);
-                return (TResponse)result;
+                return await FailureDueToValidationErrorsAsync(request, validationErrors.ToList()).ConfigureAwait(false);
             }
 
             return await next().ConfigureAwait(false);
+        }
+
+        private async Task<TResponse> FailureDueToValidationErrorsAsync(TRequest request, List<ValidationError> validationErrors)
+        {
+            var result = new BusinessProcessResult(request.TransactionId, validationErrors);
+            await _businessProcessResultHandler.HandleAsync(request, result).ConfigureAwait(false);
+            return (TResponse)result;
         }
     }
 }

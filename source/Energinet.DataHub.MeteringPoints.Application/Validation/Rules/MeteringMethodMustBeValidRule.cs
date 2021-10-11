@@ -13,10 +13,8 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Application.Create;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -24,7 +22,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class MeteringMethodMustBeValidRule : AbstractValidator<CreateMeteringPoint>
+    public class MeteringMethodMustBeValidRule : AbstractValidator<MasterDataDocument>
     {
         public MeteringMethodMustBeValidRule()
         {

@@ -12,17 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Create;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
+using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
-using MediatR;
 using Xunit;
 using Xunit.Categories;
 
@@ -127,51 +126,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task Should_reject_when_maximum_power_is_invalid()
-        {
-            var invalidPowerLimit = 12345567;
-            var request = CreateRequest()
-                with
-                {
-                    MaximumPower = invalidPowerLimit,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError<CreateMeteringPointRejected>("E86");
-        }
-
-        [Fact]
-        public async Task Should_reject_when_maximum_current_is_invalid()
-        {
-            var invalidCurrent = 12345567;
-            var request = CreateRequest()
-                with
-                {
-                    MaximumCurrent = invalidCurrent,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError<CreateMeteringPointRejected>("E86");
-        }
-
-        [Fact]
-        public async Task Should_reject_when_location_description_is_invalid()
-        {
-            var invalidLocationDescription = "1234567890123456789012345678901234567890123456789012345678901234567890";
-            var request = CreateRequest()
-                with
-                {
-                    LocationDescription = invalidLocationDescription,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError<CreateMeteringPointRejected>("E86");
-        }
-
-        [Fact]
         public async Task Should_reject_if_metering_method_is_physical_and_meter_identification_is_undefined()
         {
             var request = CreateRequest()
@@ -217,68 +171,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError<CreateMeteringPointRejected>("D56");
-        }
-
-        [Fact]
-        public async Task Should_reject_if_capacity_is_invalid()
-        {
-            var request = CreateRequest()
-                with
-                {
-                    NetSettlementGroup = NetSettlementGroup.One.Name,
-                    PhysicalConnectionCapacity = "123.3333670",
-                    MeteringMethod = MeteringMethod.Calculated.Name,
-                    MeterNumber = null,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError<CreateMeteringPointRejected>("E86");
-        }
-
-        [Fact]
-        public async Task Should_reject_when_geo_info_reference_is_invalid()
-        {
-            var invalidGeoInfoReference = "xxxxxxx";
-            var request = CreateRequest()
-                with
-                {
-                    GeoInfoReference = invalidGeoInfoReference,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError<CreateMeteringPointRejected>("E86");
-        }
-
-        [Fact]
-        public async Task Should_reject_when_geo_info_reference_is_specified_and_official_address_is_empty()
-        {
-            var request = CreateRequest()
-                with
-                {
-                    GeoInfoReference = SampleData.GeoInfoReference,
-                    IsOfficialAddress = null,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError<CreateMeteringPointRejected>("D63");
-        }
-
-        [Fact]
-        public async Task Should_reject_if_connection_type_is_unknown()
-        {
-            var invalidConnectionType = "invalid_value";
-            var request = CreateRequest()
-                with
-                {
-                    ConnectionType = invalidConnectionType,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError<CreateMeteringPointRejected>("D02");
         }
 
         [Fact]
@@ -328,9 +220,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError<CreateMeteringPointRejected>("D02");
         }
 
-        private static CreateMeteringPoint CreateRequest()
+        private static MasterDataDocument CreateRequest()
         {
             return new(
+                BusinessProcessType.CreateMeteringPoint.Name,
                 SampleData.StreetName,
                 SampleData.BuildingNumber,
                 SampleData.PostCode,

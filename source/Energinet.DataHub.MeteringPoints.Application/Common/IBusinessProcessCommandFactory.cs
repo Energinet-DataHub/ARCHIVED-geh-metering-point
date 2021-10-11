@@ -12,18 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using MediatR;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Common
 {
     /// <summary>
-    /// Internal representation of an actor document
+    /// Factory for creating business process commands from actor documents
     /// </summary>
-    public interface IInternalMarketDocument : IRequest<BusinessProcessResult>
+    public interface IBusinessProcessCommandFactory
     {
         /// <summary>
-        /// Process type
+        /// Create business request from document
         /// </summary>
-        string ProcessType { get; }
+        /// <param name="document"></param>
+        /// <returns><see cref="IBusinessRequest"/></returns>
+        IBusinessRequest? CreateFrom(MasterDataDocument document);
     }
 }

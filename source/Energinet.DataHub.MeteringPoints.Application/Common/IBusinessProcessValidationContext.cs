@@ -12,18 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using MediatR;
+using System.Collections.Generic;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Common
 {
     /// <summary>
-    /// Internal representation of an actor document
+    /// Service that contains validation error raised during a business process
     /// </summary>
-    public interface IInternalMarketDocument : IRequest<BusinessProcessResult>
+    public interface IBusinessProcessValidationContext
     {
         /// <summary>
-        /// Process type
+        /// Indicates if any error has been registered
         /// </summary>
-        string ProcessType { get; }
+        bool HasErrors { get; }
+
+        /// <summary>
+        /// Add validation errors to context
+        /// </summary>
+        /// <param name="validationErrors"></param>
+        void Add(IEnumerable<ValidationError> validationErrors);
+
+        /// <summary>
+        /// Registered errors
+        /// </summary>
+        /// <returns><see cref="ValidationError"/></returns>
+        IEnumerable<ValidationError> GetErrors();
     }
 }

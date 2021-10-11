@@ -12,18 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using MediatR;
+using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Common
+namespace Energinet.DataHub.MeteringPoints.Application.Validation
 {
-    /// <summary>
-    /// Internal representation of an actor document
-    /// </summary>
-    public interface IInternalMarketDocument : IRequest<BusinessProcessResult>
+    public class NullValidationSet<TRequestType> : AbstractValidator<TRequestType>
     {
-        /// <summary>
-        /// Process type
-        /// </summary>
-        string ProcessType { get; }
     }
 }

@@ -19,6 +19,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
@@ -68,12 +69,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
         [Fact]
         public async Task ValidateValuesFromEachElementTest()
         {
-            var xmlMapper = new XmlMapper((processType, type) => new CreateMeteringPointXmlMappingConfiguration());
+            var xmlMapper = new XmlMapper((processType, type) => new MasterDataDocumentXmlMappingConfiguration());
 
             var xmlConverter = new XmlDeserializer(xmlMapper);
 
             var commandsRaw = await xmlConverter.DeserializeAsync(_xmlStream).ConfigureAwait(false);
-            var commands = commandsRaw.Cast<MeteringPoints.Application.Create.CreateMeteringPoint>();
+            var commands = commandsRaw.Cast<MasterDataDocument>();
 
             var command = commands.First();
 
@@ -114,11 +115,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
         [Fact]
         public async Task ValidateTranslationOfCimXmlValuesToDomainSpecificValuesTest()
         {
-            var xmlMapper = new XmlMapper((processType, type) => new CreateMeteringPointXmlMappingConfiguration());
+            var xmlMapper = new XmlMapper((processType, type) => new MasterDataDocumentXmlMappingConfiguration());
 
             var xmlConverter = new XmlDeserializer(xmlMapper);
             var commandsRaw = await xmlConverter.DeserializeAsync(_xmlStream).ConfigureAwait(false);
-            var commands = commandsRaw.Cast<MeteringPoints.Application.Create.CreateMeteringPoint>();
+            var commands = commandsRaw.Cast<MasterDataDocument>();
 
             var command = commands.First();
 

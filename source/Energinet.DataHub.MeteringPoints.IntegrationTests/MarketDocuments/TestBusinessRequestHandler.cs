@@ -12,18 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using MediatR;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Common
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
 {
-    /// <summary>
-    /// Internal representation of an actor document
-    /// </summary>
-    public interface IInternalMarketDocument : IRequest<BusinessProcessResult>
+    public class TestBusinessRequestHandler : IBusinessRequestHandler<TestBusinessRequest>
     {
-        /// <summary>
-        /// Process type
-        /// </summary>
-        string ProcessType { get; }
+        public Task<BusinessProcessResult> Handle(TestBusinessRequest request, CancellationToken cancellationToken)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
+        }
     }
 }

@@ -14,9 +14,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Application;
-using Energinet.DataHub.MeteringPoints.Application.Create;
-using Energinet.DataHub.MeteringPoints.Application.Validation;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
@@ -241,14 +239,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
         }
 
-        private static CreateMeteringPoint CreateRequest()
+        private static MasterDataDocument CreateRequest()
         {
             return new();
         }
 
-        private static List<ValidationError> GetValidationErrors(CreateMeteringPoint request)
+        private static List<ValidationError> GetValidationErrors(MasterDataDocument request)
         {
-            var ruleSet = new CreateMeteringPointRuleSet();
+            var ruleSet = new ValidationRuleSet();
             var validationResult = ruleSet.Validate(request);
 
             return validationResult.Errors
@@ -256,7 +254,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
                 .ToList();
         }
 
-        private static void ValidateCreateMeteringPoint(CreateMeteringPoint businessRequest, System.Type validationError, bool expectedError)
+        private static void ValidateCreateMeteringPoint(MasterDataDocument businessRequest, System.Type validationError, bool expectedError)
         {
             var errors = GetValidationErrors(businessRequest);
             var errorType = errors.Find(error => error.GetType() == validationError);

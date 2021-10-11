@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 {
@@ -72,7 +73,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 
         private static IEnumerable<Type> GetBusinessRequests()
         {
-            return typeof(Application.Create.MasterDataDocument).Assembly.GetTypes()
+            return typeof(MasterDataDocument).Assembly.GetTypes()
                 .Where(p => typeof(IInternalMarketDocument).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
                 .ToList();
         }
