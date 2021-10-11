@@ -66,15 +66,8 @@ message MasterDataDocument {
   string processType = 28;
 }
 
-message ConnectMeteringPoint {
-    string gsrnNumber = 1;
-    string effectiveDate = 2;
-    string transactionId = 3;
-}
-
 message MeteringPointEnvelope {
   oneof MeteringPointMessages {
     MasterDataDocument masterDataDocument = 1;
-    ConnectMeteringPoint connectMeteringPoint = 2;
   }
 }
