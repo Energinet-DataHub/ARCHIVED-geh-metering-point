@@ -12,19 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Contracts;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
 {
-    public record CreateMeteringPointRejected(
-        string TransactionId,
-        string Status, // TODO: Is status implicit in Rejected from type?
-        string GsrnNumber,
-        string Reason,
-        IReadOnlyList<ErrorMessage> Errors)
-        : IRejectMessage;
-
-    // TODO: Reference to original document?
+    public record PostOfficeMessageEnvelope(string Recipient, string Content, DocumentType MessageType, string Correlation) : IRequest;
 }

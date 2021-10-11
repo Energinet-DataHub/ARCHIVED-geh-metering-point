@@ -18,7 +18,12 @@ using System.Reflection;
 using Energinet.DataHub.MeteringPoints.Application.Authorization;
 using Energinet.DataHub.MeteringPoints.Application.Authorization.AuthorizationHandlers;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.PostOffice;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
+using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
+using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice.Bundling;
+using MediatR;
 using SimpleInjector;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions
@@ -82,6 +87,27 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions
                 throw new InvalidOperationException(
                     $"There should not be any duplicate error converter registrations, but we found these duplicates:{Environment.NewLine}{string.Join(Environment.NewLine, duplicateRegistrations)}");
             }
+        }
+
+        public static void AddSubPostOfficeClient(this Container container)
+        {
+            if (container == null) throw new ArgumentNullException(nameof(container));
+
+            container.Register<ISubPostOfficeClient, SubPostOfficeClient>(Lifestyle.Scoped);
+            container.Register<IPostOfficeMessageMetadataRepository, PostOfficeMessageMetadataRepository>(Lifestyle.Scoped);
+
+            container.Register<IBundleCreator, BundleCreator>(Lifestyle.Scoped);
+            container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageSerializer>(Lifestyle.Singleton);
+            container.Register<IDocumentSerializer<RejectMessage>, RejectMessageSerializer>(Lifestyle.Singleton);
+        }
+
+        public static void AddSubPostOfficeDataAvailableClient(this Container container)
+        {
+            if (container == null) throw new ArgumentNullException(nameof(container));
+
+            container.Register<IPostOfficeMessageMetadataRepository, PostOfficeMessageMetadataRepository>(Lifestyle.Scoped);
+            container.Register<ISubPostOfficeDataAvailableClient, SubPostOfficeDataAvailableClient>(Lifestyle.Scoped);
+            container.Register<PostOfficeMessageFactory>();
         }
 
         private static ErrorConverterRegistration GetErrorConverterRegistration(this SimpleInjector.Container container, Type type)

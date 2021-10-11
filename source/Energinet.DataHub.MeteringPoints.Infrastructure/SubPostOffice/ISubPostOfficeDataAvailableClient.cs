@@ -12,19 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Contracts
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
     /// <summary>
-    /// Reject actor message
+    /// Local Post Office
     /// </summary>
-    public interface IRejectMessage
+    public interface ISubPostOfficeDataAvailableClient
     {
         /// <summary>
-        /// List of validation errors
+        /// Dispatch message to Local Post Office
         /// </summary>
-        IReadOnlyList<ErrorMessage> Errors { get; }
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        Task DataAvailableAsync(PostOfficeMessageEnvelope message);
     }
 }

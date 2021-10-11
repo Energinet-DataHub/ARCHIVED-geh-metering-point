@@ -12,12 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint
-{
-    public record CreateMeteringPointAccepted(
-        string TransactionId,
-        string Status, // TODO: Is status implicit in Accepted from type?
-        string GsrnNumber);
+using System.Threading.Tasks;
+using Energinet.DataHub.MessageHub.Client.DataAvailable;
+using Energinet.DataHub.MessageHub.Client.Model;
 
-    // TODO: Reference to original document?
+namespace Energinet.DataHub.MeteringPoints.Tests.SubPostOffice.Mocks
+{
+    public class DataAvailableNotificationSenderMock : IDataAvailableNotificationSender
+    {
+        private bool _isSent;
+
+        public Task SendAsync(DataAvailableNotificationDto dataAvailableNotificationDto)
+        {
+            _isSent = true;
+            return Task.CompletedTask;
+        }
+
+        public bool IsSent()
+        {
+            return _isSent;
+        }
+    }
 }

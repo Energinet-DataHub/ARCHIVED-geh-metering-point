@@ -12,21 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice
 {
-    /// <summary>
-    /// Basic file management for PostOffice communication.
-    /// </summary>
-    public interface IPostOfficeStorageClient
+    public class PostOfficeMessageFactory
     {
-        /// <summary>
-        /// Write file.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task WriteAsync(PostOfficeEnvelope message);
+        private readonly ISystemDateTimeProvider _dateTimeProvider;
+
+        public PostOfficeMessageFactory(ISystemDateTimeProvider dateTimeProvider)
+        {
+            _dateTimeProvider = dateTimeProvider;
+        }
+
+        public PostOfficeMessage Create(string correlation, string messageContent, DocumentType type, string recipient)
+        {
+            return new PostOfficeMessage(messageContent, correlation, type, recipient, _dateTimeProvider.Now());
+        }
     }
 }

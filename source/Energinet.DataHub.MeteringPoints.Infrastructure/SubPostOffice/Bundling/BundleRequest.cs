@@ -12,9 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice.Bundling
 {
-    public record PostOfficeEnvelope(string Id, string Recipient, string Content, string MessageType, string Correlation) : IRequest;
+    public class BundleRequest<TDocument> : IRequest<string>, IBundleRequest
+    {
+        public BundleRequest(IList<PostOfficeMessage> documents)
+        {
+            Documents = documents;
+        }
+
+        public IList<PostOfficeMessage> Documents { get; }
+    }
 }

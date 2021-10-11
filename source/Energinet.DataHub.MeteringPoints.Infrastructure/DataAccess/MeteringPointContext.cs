@@ -18,9 +18,11 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.PostOffice;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using Energinet.DataHub.MeteringPoints.Infrastructure.SubPostOffice;
 using Microsoft.EntityFrameworkCore;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
@@ -51,6 +53,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
 
         public DbSet<QueuedInternalCommand> QueuedInternalCommands { get; private set; }
 
+        public DbSet<PostOfficeMessage> PostOfficeMessages { get; private set; }
+
         public DbSet<GridArea> GridAreas { get; private set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -66,6 +70,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
             modelBuilder.ApplyConfiguration(new IncomingMessageEntityConfiguration());
             modelBuilder.ApplyConfiguration(new QueuedInternalCommandEntityConfiguration());
             modelBuilder.ApplyConfiguration(new GridAreaEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new PostOfficeMessageEntityConfiguration());
         }
     }
 }
