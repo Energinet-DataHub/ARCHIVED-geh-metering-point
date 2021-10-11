@@ -18,7 +18,6 @@ using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
 {
     public record CreateConsumptionMeteringPoint(
-            string BusinessProcessCode = "",
             string? StreetName = null,
             string? BuildingNumber = null,
             string? PostCode = null,
@@ -31,7 +30,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
             string? RoomIdentification = null,
             bool? IsOfficialAddress = null,
             string GsrnNumber = "",
-            string TypeOfMeteringPoint = "",
             string MeteringMethod = "",
             string MeterReadingOccurrence = "",
             int MaximumCurrent = 0,
@@ -40,22 +38,15 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
             string? PowerPlant = null,
             string? LocationDescription = null,
             string? SettlementMethod = null,
-            string UnitType = "",
             string DisconnectionType = "",
             string EffectiveDate = "",
             string? MeterNumber = "",
             string TransactionId = "",
-            string PhysicalStatusOfMeteringPoint = "",
             string? NetSettlementGroup = null,
             string? ConnectionType = null,
             string? AssetType = null,
-            string? FromGrid = "",
-            string? ToGrid = "",
-            string? ParentRelatedMeteringPoint = null,
-            string ProductType = "",
             string? PhysicalConnectionCapacity = null,
             string? GeoInfoReference = null,
-            string MeasureUnitType = "",
             string? ScheduledMeterReadingDate = "")
         : IBusinessRequest,
             IOutboundMessage,
