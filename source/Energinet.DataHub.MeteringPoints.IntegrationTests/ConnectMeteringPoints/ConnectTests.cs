@@ -23,7 +23,6 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharact
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
-using MediatR;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;

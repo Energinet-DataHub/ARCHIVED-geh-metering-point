@@ -22,14 +22,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class Capacity : ValueObject
     {
-        private Capacity(float kw)
+        private Capacity(double kw)
         {
             Kw = kw;
         }
 
-        public float Kw { get; }
+        public double Kw { get; }
 
-        public static Capacity Create(float capacityInKw)
+        public static Capacity Create(double capacityInKw)
         {
             var capacityAsString = capacityInKw.ToString(CultureInfo.InvariantCulture);
             return Create(capacityAsString);
@@ -42,7 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 throw new InvalidCapacityExeception(capacityInKw);
             }
 
-            var convertedValue = float.Parse(capacityInKw, CultureInfo.InvariantCulture);
+            var convertedValue = double.Parse(capacityInKw, CultureInfo.InvariantCulture);
             return new Capacity(convertedValue);
         }
 

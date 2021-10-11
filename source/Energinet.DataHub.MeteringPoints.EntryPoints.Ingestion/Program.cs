@@ -51,7 +51,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 
         protected override void ConfigureFunctionsWorkerDefaults(IFunctionsWorkerApplicationBuilder options)
         {
-            if (options == null) throw new ArgumentNullException(nameof(options));
             base.ConfigureFunctionsWorkerDefaults(options);
 
             options.UseMiddleware<CorrelationIdMiddleware>();
