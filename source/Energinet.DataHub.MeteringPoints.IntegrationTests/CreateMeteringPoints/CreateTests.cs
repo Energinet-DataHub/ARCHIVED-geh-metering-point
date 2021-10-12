@@ -380,7 +380,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 SampleData.StreetCode,
                 SampleData.FloorIdentification,
                 SampleData.RoomIdentification,
-                SampleData.IsWashable,
+                SampleData.IsActualAddress,
                 SampleData.GsrnNumber,
                 SampleData.TypeOfMeteringPoint,
                 SampleData.SubTypeOfMeteringPoint,

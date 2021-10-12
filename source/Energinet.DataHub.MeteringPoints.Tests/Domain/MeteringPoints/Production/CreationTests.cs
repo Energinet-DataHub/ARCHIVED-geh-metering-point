@@ -33,7 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Productio
         {
             var meteringPointId = MeteringPointId.New();
             var meteringPointGsrn = GsrnNumber.Create(SampleData.GsrnNumber);
-            var isOfficielAddress = SampleData.IsOfficialAddress;
+            var isOfficielAddress = SampleData.IsActualAddress;
             var meteringMethod = MeteringMethod.Virtual;
             var gridAreadLinkId = new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId));
             var powerPlanGsrn = GsrnNumber.Create(SampleData.PowerPlant);
@@ -56,7 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Productio
                 floor: string.Empty,
                 room: string.Empty,
                 municipalityCode: null,
-                isOfficial: true,
+                isActual: true,
                 geoInfoReference: Guid.NewGuid());
             var capacity = Capacity.Create(SampleData.Capacity);
 
@@ -89,7 +89,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Productio
             Assert.Equal(address.StreetCode, createdEvent.StreetCode);
             Assert.Equal(address.StreetName, createdEvent.StreetName);
             Assert.Equal(address.CitySubDivision, createdEvent.CitySubDivision);
-            Assert.Equal(address.IsOfficial, createdEvent.IsOfficialAddress);
+            Assert.Equal(address.IsActual, createdEvent.IsOfficialAddress);
             Assert.Equal(address.GeoInfoReference, createdEvent.GeoInfoReference);
             Assert.Equal(meteringPointId.Value, createdEvent.MeteringPointId);
             Assert.Equal(meteringPointGsrn.Value, createdEvent.GsrnNumber);

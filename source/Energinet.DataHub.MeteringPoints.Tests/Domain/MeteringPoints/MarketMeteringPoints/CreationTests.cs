@@ -104,7 +104,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 string.Empty,
                 string.Empty,
                 default,
-                isOfficial: true,
+                isActual: true,
                 geoInfoReference: Guid.NewGuid());
 
             var meteringPointDetails = CreateProductionDetails()
@@ -133,7 +133,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 string.Empty,
                 string.Empty,
                 default,
-                isOfficial: true,
+                isActual: true,
                 geoInfoReference: Guid.NewGuid());
 
             var meteringPointDetails = CreateProductionDetails()
