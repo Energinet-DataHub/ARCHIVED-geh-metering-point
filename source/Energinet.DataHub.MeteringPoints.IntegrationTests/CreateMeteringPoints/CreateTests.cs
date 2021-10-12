@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Production;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
 using Xunit.Categories;
@@ -65,9 +66,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task CreateMeteringPoint_WithNoValidationErrors_ShouldGenerateConfirmMessageInOutbox()
+        public async Task CreateConsumptionMeteringPoint_WithNoValidationErrors_ShouldGenerateConfirmMessageInOutbox()
         {
             var request = CreateRequest();
+
+            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
+
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointAccepted);
+        }
+
+        [Fact]
+        public async Task CreateProductionMeteringPoint_WithNoValidationErrors_ShouldGenerateConfirmMessageInOutbox()
+        {
+            var request = CreateRequest() with
+            {
+                TypeOfMeteringPoint = nameof(MeteringPointType.Production),
+            };
 
             await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
 
@@ -82,6 +96,19 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
 
             AssertOutboxMessage<ConsumptionMeteringPointCreatedIntegrationEvent>();
+        }
+
+        [Fact]
+        public async Task ProductionCreateMeteringPoint_WithNoValidationErrors_ShouldGenerateIntegrationEventInOutbox()
+        {
+            var request = CreateRequest() with
+            {
+                TypeOfMeteringPoint = nameof(MeteringPointType.Production),
+            };
+
+            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
+
+            AssertOutboxMessage<ProductionMeteringPointCreatedIntegrationEvent>();
         }
 
         [Fact]
