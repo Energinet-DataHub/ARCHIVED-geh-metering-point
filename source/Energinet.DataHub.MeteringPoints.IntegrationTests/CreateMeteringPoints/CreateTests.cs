@@ -291,13 +291,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task Should_reject_when_geo_info_reference_is_specified_and_official_address_is_empty()
+        public async Task Should_reject_when_geo_info_reference_is_specified_and_actual_address_is_empty()
         {
             var request = CreateRequest()
                 with
                 {
                     GeoInfoReference = SampleData.GeoInfoReference,
-                    IsOfficialAddress = null,
+                    IsActualAddress = null,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);

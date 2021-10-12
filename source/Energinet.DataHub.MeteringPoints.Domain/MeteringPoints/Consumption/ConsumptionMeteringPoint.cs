@@ -99,7 +99,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 address.StreetCode,
                 address.StreetName,
                 address.CitySubDivision,
-                address.IsOfficial,
+                address.IsActual,
                 address.GeoInfoReference,
                 powerPlantGsrnNumber?.Value,
                 locationDescription?.Value,

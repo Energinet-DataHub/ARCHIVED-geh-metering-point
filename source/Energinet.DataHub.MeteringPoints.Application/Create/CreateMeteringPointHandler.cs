@@ -244,7 +244,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 floor: request.FloorIdentification,
                 room: request.RoomIdentification,
                 municipalityCode: string.IsNullOrWhiteSpace(request.MunicipalityCode) ? default : int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()),
-                isOfficial: request.IsOfficialAddress.GetValueOrDefault(),
+                isActual: request.IsActualAddress.GetValueOrDefault(),
                 geoInfoReference: string.IsNullOrWhiteSpace(request.GeoInfoReference) ? default : Guid.Parse(request.GeoInfoReference));
         }
 

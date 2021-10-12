@@ -52,7 +52,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation
             RuleFor(request => request).SetValidator(new CapacityRule());
             RuleFor(request => request).SetValidator(new LocationDescriptionMustBeValidRule());
             RuleFor(request => request).SetValidator(new PowerPlantMustBeValidRule());
-            RuleFor(request => request).SetValidator(new OfficialAddressRule());
+            RuleFor(request => request).SetValidator(new ActualAddressRule());
             RuleFor(request => request).SetValidator(new AssetTypeRule());
             RuleFor(request => request).SetValidator(new PowerLimitRule());
             RuleFor(request => request).SetValidator(new PhysicalStateRule());

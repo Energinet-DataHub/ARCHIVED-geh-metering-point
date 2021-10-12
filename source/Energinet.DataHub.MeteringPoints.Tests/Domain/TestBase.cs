@@ -97,7 +97,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 string.Empty,
                 string.Empty,
                 default,
-                isOfficial: true,
+                isActual: true,
                 geoInfoReference: Guid.NewGuid());
         }
     }
