@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
@@ -29,6 +30,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoint
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using ConsumptionMeteringPoint = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.ConsumptionMeteringPoint;
 using ProductionMeteringPoint = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production.ProductionMeteringPoint;
 
@@ -36,6 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
 {
     public class CreateMeteringPointHandler : IBusinessRequestHandler<CreateMeteringPoint>
     {
+        private static ILogger? _logger;
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly IGridAreaRepository _gridAreaRepository;
         private readonly IMediator _mediator;
@@ -43,11 +46,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
         public CreateMeteringPointHandler(
             IMeteringPointRepository meteringPointRepository,
             IGridAreaRepository gridAreaRepository,
-            IMediator mediator)
+            IMediator mediator,
+            ILogger logger)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _gridAreaRepository = gridAreaRepository;
             _mediator = mediator;
+            _logger = logger;
         }
 
         public async Task<BusinessProcessResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
@@ -129,6 +134,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                     validationResult = ProductionMeteringPoint.CanCreate((ProductionMeteringPointDetails)meteringPointDetails);
                     break;
                 default:
+                    // TODO: One for every new MP type
+                    _logger.LogInformation("This specific type has no specific business validations implemented yet");
                     return BusinessProcessResult.Ok(request.TransactionId);
             }
 
