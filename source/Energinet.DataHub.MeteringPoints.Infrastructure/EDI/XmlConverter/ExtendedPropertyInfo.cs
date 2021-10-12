@@ -20,7 +20,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 {
     public class ExtendedPropertyInfo
     {
-        public ExtendedPropertyInfo(IList<string> xmlHierarchy, PropertyInfo propertyInfo, Func<XmlElementInfo, object> translatorFunc)
+        public ExtendedPropertyInfo(IList<string> xmlHierarchy, PropertyInfo propertyInfo, Func<XmlElementInfo, object?> translatorFunc)
             : this(xmlHierarchy, propertyInfo)
         {
             XmlHierarchy = xmlHierarchy;
@@ -38,6 +38,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 
         public PropertyInfo PropertyInfo { get; }
 
-        public Func<XmlElementInfo, object>? TranslatorFunc { get; }
+        public Func<XmlElementInfo, object?>? TranslatorFunc { get; }
     }
 }
