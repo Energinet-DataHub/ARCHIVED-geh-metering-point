@@ -85,7 +85,7 @@ limitations under the License.
                 <cim:poBox>5000</cim:poBox>
                 <cim:language>String</cim:language>
             </cim:usagePointLocation.mainAddress>
-            <cim:usagePointLocation.officialAddressIndicator></cim:usagePointLocation.officialAddressIndicator>
+            <cim:usagePointLocation.actualAddressIndicator></cim:usagePointLocation.actualAddressIndicator>
             <cim:usagePointLocation.geoInfoReference>a</cim:usagePointLocation.geoInfoReference>
             <cim:parent_MarketEvaluationPoint.description>E17</cim:parent_MarketEvaluationPoint.description>
         </cim:MarketEvaluationPoint>
