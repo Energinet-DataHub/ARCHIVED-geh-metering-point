@@ -32,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 .AddProperty(x => x.MeteringMethod, TranslateMeteringPointSubType, "MarketEvaluationPoint", "meteringMethod")
                 .AddProperty(x => x.MeterReadingOccurrence, TranslateMeterReadingOccurrence, "MarketEvaluationPoint", "readCycle")
                 .AddProperty(x => x.MeteringGridArea, "MarketEvaluationPoint", "meteringGridArea_Domain.mRID")
-                .AddProperty(x => x.PowerPlant, "MarketEvaluationPoint", "Linked_MarketEvaluationPoint", "mRID")
+                .AddProperty(x => x.PowerPlant, "MarketEvaluationPoint", "linked_MarketEvaluationPoint.mRID")
                 .AddProperty(x => x.LocationDescription, "MarketEvaluationPoint", "description")
                 .AddProperty(x => x.SettlementMethod, TranslateSettlementMethod, "MarketEvaluationPoint", "settlementMethod")
                 .AddProperty(x => x.DisconnectionType, TranslateDisconnectionType, "MarketEvaluationPoint", "disconnectionMethod")

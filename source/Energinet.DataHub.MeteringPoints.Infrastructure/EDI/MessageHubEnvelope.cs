@@ -12,12 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint
-{
-    public record CreateMeteringPointAccepted(
-        string TransactionId,
-        string Status, // TODO: Is status implicit in Accepted from type?
-        string GsrnNumber);
+using MediatR;
 
-    // TODO: Reference to original document?
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
+{
+    public record MessageHubEnvelope(string Recipient, string Content, DocumentType MessageType, string Correlation) : IRequest;
 }

@@ -23,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
         public IBusinessRequest? CreateFrom(MasterDataDocument document)
         {
             if (document == null) throw new ArgumentNullException(nameof(document));
-            return new TestBusinessRequest(document.TransactionId);
+            return new TestBusinessRequest(document.TransactionId, "TestDate", "TestGsrn");
         }
     }
 }

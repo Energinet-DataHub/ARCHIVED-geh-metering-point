@@ -51,7 +51,7 @@ message MasterDataDocument {
   string unitType = 13;
   string disconnectionType = 14;
   string occurenceDate = 15;
-  string meterNumber = 16;
+  google.protobuf.StringValue meterNumber = 16;
   string transactionId = 17;
   string physicalStatusOfMeteringPoint = 18;
   google.protobuf.StringValue netSettlementGroup = 19;

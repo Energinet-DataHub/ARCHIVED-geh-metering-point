@@ -13,38 +13,25 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Contracts
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub.Bundling
 {
     /// <summary>
-    /// Reject actor message
+    /// Serialize documents.
     /// </summary>
-    public interface IRejectMessage
+    /// <typeparam name="TDocument">Document type to serialize</typeparam>
+    public interface IDocumentSerializer<TDocument>
     {
         /// <summary>
-        /// Transaction id
+        /// Serialize single document.
         /// </summary>
-        string TransactionId { get; }
+        /// <param name="message"></param>
+        public string Serialize(TDocument message);
 
         /// <summary>
-        /// Status
+        /// Serialize multiple documents into one.
         /// </summary>
-        string Status { get; } // TODO: Is status implicit in Rejected from type?
-
-        /// <summary>
-        /// Gsrn
-        /// </summary>
-        string GsrnNumber { get; }
-
-        /// <summary>
-        /// Reason
-        /// </summary>
-        string Reason { get; }
-
-        /// <summary>
-        /// List of validation errors
-        /// </summary>
-        IReadOnlyList<ErrorMessage> Errors { get; }
+        /// <param name="messages"></param>
+        public string Serialize(IList<TDocument> messages);
     }
 }

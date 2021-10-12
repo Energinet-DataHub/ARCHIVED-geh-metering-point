@@ -19,11 +19,17 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
 {
     public class TestBusinessRequest : IBusinessRequest
     {
-        public TestBusinessRequest(string transactionId)
+        public TestBusinessRequest(string transactionId, string effectiveDate, string gsrnNumber)
         {
             TransactionId = transactionId;
+            EffectiveDate = effectiveDate;
+            GsrnNumber = gsrnNumber;
         }
 
         public string TransactionId { get; }
+
+        public string EffectiveDate { get; }
+
+        public string GsrnNumber { get; }
     }
 }

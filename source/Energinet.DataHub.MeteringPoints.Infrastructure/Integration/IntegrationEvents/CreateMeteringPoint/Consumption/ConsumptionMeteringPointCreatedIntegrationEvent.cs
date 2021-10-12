@@ -17,6 +17,7 @@ using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using MediatR;
+using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption
 {
@@ -29,7 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
             string MeterReadingPeriodicity,
             string NetSettlementGroup,
             string ProductType,
-            string EffectiveDate,
+            Instant EffectiveDate,
             string UnitType,
             string ConnectionState)
         : IIntegrationEvent, IRequest, IOutboundMessage;

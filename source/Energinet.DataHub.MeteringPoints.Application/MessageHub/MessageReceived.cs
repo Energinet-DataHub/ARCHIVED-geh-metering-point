@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using MediatR;
+using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
+namespace Energinet.DataHub.MeteringPoints.Application.MessageHub
 {
-    public record PostOfficeEnvelope(string Id, string Recipient, string Content, string MessageType, string Correlation) : IRequest;
+    public record MessageReceived(string Correlation)
+        : IOutboundMessage,
+            IInboundMessage;
 }

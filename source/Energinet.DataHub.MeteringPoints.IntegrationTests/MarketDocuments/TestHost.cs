@@ -19,6 +19,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -29,10 +30,11 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Contracts;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
+using Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentAssertions;
@@ -80,6 +82,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
             serviceCollection.AddSimpleInjector(_container);
             _serviceProvider = serviceCollection.BuildServiceProvider().UseSimpleInjector(_container);
 
+            _container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
             _container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
             _container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
             _container.Register<IOutboxManager, OutboxManager>(Lifestyle.Scoped);
@@ -155,69 +158,31 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
                 .Select(message => jsonSerializer.Deserialize<TMessage>(message.Data));
         }
 
-        protected void AssertOutboxMessage<TMessage>(Func<TMessage, bool> funcAssert)
-        {
-            if (funcAssert == null) throw new ArgumentNullException(nameof(funcAssert));
-
-            var message = GetOutboxMessages<TMessage>().SingleOrDefault(funcAssert.Invoke);
-
-            message.Should().NotBeNull();
-            message.Should().BeOfType<TMessage>();
-        }
-
-        protected void AssertOutboxMessage<TMessage>()
-        {
-            var message = GetOutboxMessages<TMessage>().SingleOrDefault();
-
-            message.Should().NotBeNull();
-            message.Should().BeOfType<TMessage>();
-        }
-
-        protected void AssertValidationError<TRejectMessage>(string expectedErrorCode)
-            where TRejectMessage : IRejectMessage
+        protected void AssertValidationError(string expectedErrorCode)
         {
             var message = GetOutboxMessages
-                    <PostOfficeEnvelope>()
-                .First(msg => msg.MessageType.Equals(typeof(TRejectMessage).Name, StringComparison.Ordinal));
+                    <MessageHubEnvelope>()
+                .Single(msg => msg.MessageType.Name.EndsWith("rejected", StringComparison.OrdinalIgnoreCase));
 
-            var rejectMessage = JsonConvert.DeserializeObject<TRejectMessage>(message.Content);
+            var rejectMessage = GetService<IJsonSerializer>().Deserialize<RejectMessage>(message.Content);
 
-            var errorCount = rejectMessage.Errors.Count;
+            var errorCount = rejectMessage.MarketActivityRecord.Reasons.Count;
             if (errorCount > 1)
             {
                 var errorMessage = new StringBuilder();
                 errorMessage.AppendLine($"Reject message contains more ({errorCount}) than 1 error:");
-                foreach (var error in rejectMessage.Errors)
+                foreach (var error in rejectMessage.MarketActivityRecord.Reasons)
                 {
-                    errorMessage.AppendLine($"Code: {error.Code}. Description: {error.Description}.");
+                    errorMessage.AppendLine($"Code: {error.Code}. Description: {error.Text}.");
                 }
 
                 throw new XunitException(errorMessage.ToString());
             }
 
-            var validationError = rejectMessage.Errors
-                .First(error => error.Code == expectedErrorCode);
+            var validationError = rejectMessage.MarketActivityRecord.Reasons
+                .Single(error => error.Code == expectedErrorCode);
 
             Assert.NotNull(validationError);
-        }
-
-        protected void AssertValidationError(string expectedErrorCode)
-        {
-            var errorMessages = new List<ErrorMessage>();
-            var envelopes = GetOutboxMessages<PostOfficeEnvelope>();
-            foreach (var envelope in envelopes)
-            {
-                var message = JObject.Parse(envelope.Content);
-                if (message.ContainsKey("Errors"))
-                {
-                    errorMessages =
-                        JsonConvert.DeserializeObject<List<Infrastructure.EDI.Errors.ErrorMessage>>(message
-                            .GetValue("Errors", StringComparison.OrdinalIgnoreCase).ToString());
-                    break;
-                }
-            }
-
-            Assert.Contains(errorMessages, error => error.Code == expectedErrorCode);
         }
 
         protected async Task SendCommandAsync(object command, CancellationToken cancellationToken = default)

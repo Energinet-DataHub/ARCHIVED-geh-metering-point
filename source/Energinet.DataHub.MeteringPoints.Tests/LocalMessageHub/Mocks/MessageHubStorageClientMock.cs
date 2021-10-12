@@ -12,21 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.IO;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using Energinet.DataHub.MessageHub.Client.Model;
+using Energinet.DataHub.MessageHub.Client.Storage;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.PostOffice
+namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
 {
-    /// <summary>
-    /// Basic file management for PostOffice communication.
-    /// </summary>
-    public interface IPostOfficeStorageClient
+    public class MessageHubStorageClientMock : IStorageHandler
     {
-        /// <summary>
-        /// Write file.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task WriteAsync(PostOfficeEnvelope message);
+        public Task<Uri> AddStreamToStorageAsync(Stream stream, DataBundleRequestDto requestDto)
+        {
+            return Task.FromResult(new Uri("https://someUri"));
+        }
+
+        public Task<Stream> GetStreamFromStorageAsync(Uri contentPath)
+        {
+            return Task.FromResult((Stream)new MemoryStream());
+        }
     }
 }
