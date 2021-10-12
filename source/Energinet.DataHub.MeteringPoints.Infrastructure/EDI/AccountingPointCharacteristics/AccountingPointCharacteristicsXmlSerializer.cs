@@ -102,7 +102,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCha
                                 new XElement(xmlNamespace + "postalCode", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.TownDetail.Code),
                                 new XElement(xmlNamespace + "poBox", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.TownDetail.Code),
                                 new XElement(xmlNamespace + "code", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.TownDetail.Code)),
-                            new XElement(xmlNamespace + "usagePointLocation.officialAddressIndicator", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationOfficialAddressIndicator),
+                            new XElement(xmlNamespace + "usagePointLocation.actualAddressIndicator", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationActualAddressIndicator),
                             new XElement(xmlNamespace + "usagePointLocation.geoInfoReference", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationGeoInfoReference),
                             MridElement(xmlNamespace, "parent_MarketEvaluationPoint.mRID", message.MarketActivityRecord.MarketEvaluationPoint.ParentMarketEvaluationPointId.Mrid),
                             new XElement(xmlNamespace + "parent_MarketEvaluationPoint.description", message.MarketActivityRecord.MarketEvaluationPoint.ParentMarketEvaluationPointId.Description),

@@ -37,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcess
                 StreetCode = obj.InstallationLocationAddress.StreetCode,
                 FloorIdentification = obj.InstallationLocationAddress.FloorIdentification,
                 RoomIdentification = obj.InstallationLocationAddress.RoomIdentification,
-                IsOfficialAddress = obj.InstallationLocationAddress.OfficialAddressIndicator,
+                IsActualAddress = obj.InstallationLocationAddress.ActualAddressIndicator,
                 GeoInfoReference = obj.InstallationLocationAddress.GeoInfoReference,
                 GsrnNumber = obj.GsrnNumber,
                 TypeOfMeteringPoint = obj.TypeOfMeteringPoint,

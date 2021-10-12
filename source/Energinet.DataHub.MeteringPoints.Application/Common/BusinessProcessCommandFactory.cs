@@ -70,7 +70,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
                     StreetName = document.StreetName,
                     TransactionId = document.TransactionId,
                     GeoInfoReference = document.GeoInfoReference,
-                    IsOfficialAddress = document.IsOfficialAddress,
+                    IsActualAddress = document.IsActualAddress,
                     MeteringGridArea = document.MeteringGridArea,
                     MeterReadingOccurrence = document.MeterReadingOccurrence,
                     NetSettlementGroup = document.NetSettlementGroup,

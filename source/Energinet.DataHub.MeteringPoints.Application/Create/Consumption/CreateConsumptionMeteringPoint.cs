@@ -28,7 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
             string StreetCode = "",
             string? FloorIdentification = null,
             string? RoomIdentification = null,
-            bool? IsOfficialAddress = null,
+            bool? IsActualAddress = null,
             string GsrnNumber = "",
             string MeteringMethod = "",
             string MeterReadingOccurrence = "",

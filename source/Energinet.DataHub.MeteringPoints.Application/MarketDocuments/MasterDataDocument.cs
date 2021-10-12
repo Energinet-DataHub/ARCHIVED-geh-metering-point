@@ -29,7 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
             string StreetCode = "",
             string? FloorIdentification = null,
             string? RoomIdentification = null,
-            bool? IsOfficialAddress = null,
+            bool? IsActualAddress = null,
             string GsrnNumber = "",
             string TypeOfMeteringPoint = "",
             string MeteringMethod = "",

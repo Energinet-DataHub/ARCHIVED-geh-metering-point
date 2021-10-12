@@ -89,7 +89,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
 
             command.FromGrid.Should().Be("869");
             command.ToGrid.Should().Be("871");
-            Assert.True(command.IsOfficialAddress);
+            Assert.True(command.IsActualAddress);
             Assert.Null(command.ParentRelatedMeteringPoint);
         }
 

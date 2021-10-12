@@ -179,7 +179,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
                             PostalCode: "PostalCode",
                             PoBox: "PoBox",
                             Language: "Language"),
-                        UsagePointLocationOfficialAddressIndicator: false,
+                        UsagePointLocationActualAddressIndicator: false,
                         UsagePointLocationGeoInfoReference: "UsagePointLocationGeoInfoReference",
                         ParentMarketEvaluationPointId: new ParentMarketEvaluationPoint(
                             Id: "Id",

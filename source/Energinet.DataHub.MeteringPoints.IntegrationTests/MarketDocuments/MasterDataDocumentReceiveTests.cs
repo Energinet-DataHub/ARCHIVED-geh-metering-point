@@ -142,7 +142,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
                 with
                 {
                     GeoInfoReference = SampleData.GeoInfoReference,
-                    IsOfficialAddress = null,
+                    IsActualAddress = null,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);

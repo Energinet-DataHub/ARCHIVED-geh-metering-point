@@ -22,18 +22,18 @@ using Xunit.Categories;
 namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 {
     [UnitTest]
-    public class OfficialAddressRuleTests : CreateMeteringPointRulesTest<OfficialAddressRule>
+    public class ActualAddressRuleTests : CreateMeteringPointRulesTest<ActualAddressRule>
     {
         [Theory]
         [InlineData("7511e205-cd43-44e3-9a17-7664f66a5d07", true, nameof(MeteringPointType.Production))]
         [InlineData("7511e205-cd43-44e3-9a17-7664f66a5d07", true, nameof(MeteringPointType.ElectricalHeating))]
         [InlineData("", false, nameof(MeteringPointType.ElectricalHeating))]
-        public void OfficialAddressShouldValidate(string reference, bool isOfficialAddress, string meteringPointType)
+        public void ActualAddressShouldValidate(string reference, bool isActualAddress, string meteringPointType)
         {
             var request = CreateRequest() with
             {
                 GeoInfoReference = reference,
-                IsOfficialAddress = isOfficialAddress,
+                IsActualAddress = isActualAddress,
                 TypeOfMeteringPoint = meteringPointType,
             };
 

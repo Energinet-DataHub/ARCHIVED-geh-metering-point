@@ -57,13 +57,13 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 .AddProperty(x => x.ParentRelatedMeteringPoint, "MarketEvaluationPoint", "parent_MarketEvaluationPoint.mRID")
                 .AddProperty(x => x.ProductType, TranslateProductType, "MarketEvaluationPoint", "Series", "product")
                 .AddProperty(x => x.PhysicalConnectionCapacity, "MarketEvaluationPoint", "physicalConnectionCapacity")
-                .AddProperty(x => x.IsOfficialAddress, OfficialAddressIndicator, "MarketEvaluationPoint", "usagePointLocation.officialAddressIndicator")
+                .AddProperty(x => x.IsActualAddress, ActualAddressIndicator, "MarketEvaluationPoint", "usagePointLocation.actualAddressIndicator")
                 .AddProperty(x => x.GeoInfoReference, "MarketEvaluationPoint", "usagePointLocation.geoInfoReference")
                 .AddProperty(x => x.MeasureUnitType, TranslateMeasureUnitType, "MarketEvaluationPoint", "Series", "quantity_Measure_Unit.name")
                 .AddProperty(x => x.ScheduledMeterReadingDate, "MarketEvaluationPoint", "nextReadingDate"));
         }
 
-        private static bool? OfficialAddressIndicator(XmlElementInfo element)
+        private static bool? ActualAddressIndicator(XmlElementInfo element)
         {
             if (bool.TryParse(element?.SourceValue, out var result))
             {
