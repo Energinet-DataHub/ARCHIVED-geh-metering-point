@@ -99,52 +99,52 @@ namespace Energinet.DataHub.MeteringPoints.Application.Queries
             ProductType = productType;
         }
 
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; }
 
-        public string GsrnNumber { get; set; }
+        public string GsrnNumber { get; private set; }
 
-        public string StreetName { get; set; }
+        public string StreetName { get; private set; }
 
-        public string PostCode { get; set; }
+        public string PostCode { get; private set; }
 
-        public string CityName { get; set; }
+        public string CityName { get; private set; }
 
-        public string CountryCode { get; set; }
+        public string CountryCode { get; private set; }
 
-        public string PhysicalState { get; set; }
+        public string PhysicalState { get; private set; }
 
-        public string MeteringPointSubType { get; set; }
+        public string MeteringPointSubType { get; private set; }
 
-        public string MeteringPointType { get; set; }
+        public string MeteringPointType { get; private set; }
 
-        public string GridAreaId { get; set; }
+        public string GridAreaId { get; private set; }
 
-        public string? PowerPlantGsrnNumber { get; set; }
+        public string? PowerPlantGsrnNumber { get; private set; }
 
-        public string? LocationDescription { get; set; }
+        public string? LocationDescription { get; private set; }
 
-        public string UnitType { get; set; }
+        public string UnitType { get; private set; }
 
-        public string MeterNumber { get; set; }
+        public string MeterNumber { get; private set; }
 
-        public string MeterReadingOccurrence { get; set; }
+        public string MeterReadingOccurrence { get; private set; }
 
-        public int MaximumCurrent { get; set; }
+        public int MaximumCurrent { get; private set; }
 
-        public int MaximumPower { get; set; }
+        public int MaximumPower { get; private set; }
 
-        public string SettlementMethod { get; set; }
+        public string SettlementMethod { get; private set; }
 
-        public string NetSettlementGroup { get; set; }
+        public string NetSettlementGroup { get; private set; }
 
-        public string DisconnectionType { get; set; }
+        public string DisconnectionType { get; private set; }
 
-        public string ConnectionType { get; set; }
+        public string ConnectionType { get; private set; }
 
-        public string? AssetType { get; set; }
+        public string? AssetType { get; private set; }
 
-        public string? ParentRelatedMeteringPoint { get; set; }
+        public string? ParentRelatedMeteringPoint { get; private set; }
 
-        public string ProductType { get; set; }
+        public string ProductType { get; private set; }
     }
 }
