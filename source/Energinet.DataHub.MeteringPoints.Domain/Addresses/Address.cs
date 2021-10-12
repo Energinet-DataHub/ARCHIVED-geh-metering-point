@@ -22,7 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
 {
     public class Address : ValueObject
     {
-        private Address(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode, bool isOfficial, Guid? geoInfoReference)
+        private Address(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode, bool isActual, Guid? geoInfoReference)
         {
             StreetName = streetName;
             StreetCode = streetCode;
@@ -34,7 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
             Floor = floor;
             Room = room;
             MunicipalityCode = municipalityCode;
-            IsOfficial = isOfficial;
+            IsActual = isActual;
             GeoInfoReference = geoInfoReference;
         }
 
@@ -58,7 +58,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
 
         public int? MunicipalityCode { get; }
 
-        public bool IsOfficial { get; }
+        public bool IsActual { get; }
 
         public Guid? GeoInfoReference { get; }
 
@@ -73,7 +73,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
             string? floor,
             string? room,
             int? municipalityCode,
-            bool isOfficial,
+            bool isActual,
             Guid? geoInfoReference)
         {
             if (CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode).Success == false)
@@ -92,7 +92,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
                 floor: floor,
                 room: room,
                 municipalityCode: municipalityCode,
-                isOfficial: isOfficial,
+                isActual: isActual,
                 geoInfoReference: geoInfoReference);
         }
 

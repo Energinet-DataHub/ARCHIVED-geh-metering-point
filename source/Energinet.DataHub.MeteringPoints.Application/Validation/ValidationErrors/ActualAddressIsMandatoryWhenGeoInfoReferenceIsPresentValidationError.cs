@@ -16,9 +16,9 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class OfficialAddressIsMandatoryWhenGeoInfoReferenceIsPresentValidationError : ValidationError
+    public class ActualAddressIsMandatoryWhenGeoInfoReferenceIsPresentValidationError : ValidationError
     {
-        public OfficialAddressIsMandatoryWhenGeoInfoReferenceIsPresentValidationError(string gsrnNumber, string? reference)
+        public ActualAddressIsMandatoryWhenGeoInfoReferenceIsPresentValidationError(string gsrnNumber, string? reference)
         {
             GsrnNumber = gsrnNumber;
             Reference = reference;

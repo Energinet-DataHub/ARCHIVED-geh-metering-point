@@ -45,7 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
                         PostCode = obj.PostCode,
                         CityName = obj.CityName,
                         CountryCode = obj.CountryCode,
-                        OfficialAddressIndicator = obj.IsOfficialAddress,
+                        ActualAddressIndicator = obj.IsActualAddress,
                         StreetCode = obj.StreetCode,
                         FloorIdentification = obj.FloorIdentification,
                         RoomIdentification = obj.RoomIdentification,

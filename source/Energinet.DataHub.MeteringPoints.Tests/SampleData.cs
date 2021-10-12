@@ -32,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public static string CountryCode => "DK";
 
-        public static bool IsOfficialAddress => true;
+        public static bool IsActualAddress => true;
 
         public static string PhysicalStateName => PhysicalState.Connected.Name;
 
