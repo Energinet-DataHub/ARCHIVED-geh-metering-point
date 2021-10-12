@@ -153,6 +153,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IDocumentSerializer<RejectMessage>, RejectMessageSerializer>(Lifestyle.Singleton);
 
             container.Register<IActorMessageFactory, ActorMessageFactory>(Lifestyle.Scoped);
+            container.Register<IMessageHubDispatcher, MessageHubDispatcher>(Lifestyle.Scoped);
 
             container.AddValidationErrorConversion(
                 validateRegistrations: false,

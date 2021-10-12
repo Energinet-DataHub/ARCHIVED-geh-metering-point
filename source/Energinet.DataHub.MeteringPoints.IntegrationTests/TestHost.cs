@@ -144,6 +144,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IDocumentSerializer<RejectMessage>, RejectMessageSerializer>(Lifestyle.Singleton);
 
             _container.Register<IActorMessageFactory, ActorMessageFactory>(Lifestyle.Scoped);
+            _container.Register<IMessageHubDispatcher, MessageHubDispatcher>(Lifestyle.Scoped);
 
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
