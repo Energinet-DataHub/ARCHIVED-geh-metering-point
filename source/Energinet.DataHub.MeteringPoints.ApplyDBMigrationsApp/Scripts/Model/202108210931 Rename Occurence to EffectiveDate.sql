@@ -1,1 +1,1 @@
-EXEC sp_rename 'dbo.MeteringPoints.IsOfficialAddress', 'IsActualAddress', 'COLUMN';
+EXEC sp_rename 'dbo.MeteringPoints.OccurenceDate', 'EffectiveDate', 'COLUMN';

@@ -1,4 +1,1 @@
-ALTER TABLE [dbo].[MessageHubMessages]
-ADD
-    [Date] [DATETIME2](7) NOT NULL,
-    [Recipient] NVARCHAR(128) NOT NULL
+EXEC sp_rename 'dbo.MeteringPoints.IsOfficialAddress', 'IsActualAddress', 'COLUMN';
