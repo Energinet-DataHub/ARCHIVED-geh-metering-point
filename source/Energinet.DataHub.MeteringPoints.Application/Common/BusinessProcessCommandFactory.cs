@@ -13,10 +13,12 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Common
@@ -27,7 +29,21 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
         {
             if (document == null) throw new ArgumentNullException(nameof(document));
             var processType = EnumerationType.FromName<BusinessProcessType>(document.ProcessType);
-            if (processType == BusinessProcessType.CreateMeteringPoint)
+
+            if (processType == BusinessProcessType.CreateMeteringPoint) return CreateNewMeteringPointCommand(document);
+            if (processType == BusinessProcessType.ConnectMeteringPoint) return CreateConnectMeteringPointCommand(document);
+            return null;
+        }
+
+        private static IBusinessRequest? CreateConnectMeteringPointCommand(MasterDataDocument document)
+        {
+            return new ConnectMeteringPoint(document.GsrnNumber, document.EffectiveDate, document.TransactionId);
+        }
+
+        private static IBusinessRequest? CreateNewMeteringPointCommand(MasterDataDocument document)
+        {
+            var meteringPointType = EnumerationType.FromName<MeteringPointType>(document.TypeOfMeteringPoint);
+            if (meteringPointType == MeteringPointType.Consumption)
             {
                 return new CreateConsumptionMeteringPoint
                 {

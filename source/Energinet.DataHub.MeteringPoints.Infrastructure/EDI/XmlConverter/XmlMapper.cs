@@ -67,6 +67,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             return value.ToUpperInvariant() switch
             {
                 "E02" => nameof(BusinessProcessType.CreateMeteringPoint),
+                "D15" => nameof(BusinessProcessType.ConnectMeteringPoint),
                 _ => value,
             };
         }

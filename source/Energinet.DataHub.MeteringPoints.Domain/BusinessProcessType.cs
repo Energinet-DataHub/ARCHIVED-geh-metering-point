@@ -19,6 +19,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain
     public class BusinessProcessType : EnumerationType
     {
         public static readonly BusinessProcessType CreateMeteringPoint = new BusinessProcessType(0, nameof(CreateMeteringPoint));
+        public static readonly BusinessProcessType ConnectMeteringPoint = new BusinessProcessType(1, nameof(ConnectMeteringPoint));
 
         public BusinessProcessType(int id, string name)
             : base(id, name)
