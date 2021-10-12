@@ -94,6 +94,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
             _container.Register<IBusinessProcessValidationContext, BusinessProcessValidationContext>(Lifestyle.Scoped);
             _container.Register<IBusinessProcessCommandFactory, TestBusinessProcessCommandFactory>(Lifestyle.Singleton);
             _container.Register(typeof(IBusinessProcessResultHandler<TestBusinessRequest>), typeof(TestBusinessRequestResultHandler), Lifestyle.Scoped);
+            _container.Register<IActorMessageFactory, ActorMessageFactory>(Lifestyle.Scoped);
+            _container.Register<IMessageHubDispatcher, MessageHubDispatcher>(Lifestyle.Scoped);
 
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
