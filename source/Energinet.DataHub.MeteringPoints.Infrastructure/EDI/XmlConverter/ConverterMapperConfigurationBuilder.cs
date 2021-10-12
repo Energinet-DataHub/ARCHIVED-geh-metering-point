@@ -79,12 +79,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             return parameters.Where(p => !headerProperties.Contains(p.Name)).ToArray();
         }
 
-        private static Func<XmlElementInfo, object> CastFunc<TProperty>(Func<XmlElementInfo, TProperty> translatorFunc)
+        private static Func<XmlElementInfo, object?> CastFunc<TProperty>(Func<XmlElementInfo, TProperty> translatorFunc)
         {
-            return p => translatorFunc(p) ?? throw new InvalidOperationException($"Type '{typeof(TProperty)}' could not be casted to object");
+            return p => translatorFunc(p);
         }
 
-        private ConverterMapperConfigurationBuilder<T> AddPropertyInternal<TProperty>(Expression<Func<T, TProperty>> selector, Func<XmlElementInfo, object> translatorFunc, params string[] xmlHierarchy)
+        private ConverterMapperConfigurationBuilder<T> AddPropertyInternal<TProperty>(Expression<Func<T, TProperty>> selector, Func<XmlElementInfo, object?> translatorFunc, params string[] xmlHierarchy)
         {
             var propertyInfo = PropertyInfoHelper.GetPropertyInfo(selector);
             _properties[propertyInfo.Name] = new ExtendedPropertyInfo(xmlHierarchy, propertyInfo, translatorFunc);

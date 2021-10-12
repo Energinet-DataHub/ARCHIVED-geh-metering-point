@@ -103,7 +103,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
                     var xmlHierarchyQueue = new Queue<string>(property.Value.XmlHierarchy);
                     var correspondingXmlElement = GetXmlElement(element, xmlHierarchyQueue, ns);
 
-                    return Convert(correspondingXmlElement, property.Value.PropertyInfo.PropertyType, property.Value.TranslatorFunc);
+                    var valueTranslatorFunc = property.Value.TranslatorFunc;
+
+                    return Convert(correspondingXmlElement, property.Value.PropertyInfo.PropertyType, valueTranslatorFunc);
                 }).ToArray();
 
                 var constructorArguments = CreateConstructorArguments(GetHeaderValuesToInclude(configuration, xmlHeaderData), args);
@@ -137,7 +139,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             return includedHeaderValues.ToArray();
         }
 
-        private static object? Convert(XElement? source, Type dest, Func<XmlElementInfo, object>? valueTranslatorFunc)
+        private static object? Convert(XElement? source, Type dest, Func<XmlElementInfo, object?>? valueTranslatorFunc)
         {
             if (source is null) return default;
 
