@@ -31,31 +31,31 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
 {
     public class CreateMeteringPointResultHandler : IBusinessProcessResultHandler<CreateConsumptionMeteringPoint>
     {
+        private readonly IActorMessageFactory _actorMessageFactory;
         private readonly ErrorMessageFactory _errorMessageFactory;
         private readonly IOutbox _outbox;
         private readonly IOutboxMessageFactory _outboxMessageFactory;
         private readonly IJsonSerializer _jsonSerializer;
         private readonly ICorrelationContext _correlationContext;
-        private readonly ISystemDateTimeProvider _dateTimeProvider;
         private readonly IUserContext _userContext;
 
         private readonly string _glnNumber = "8200000008842";
 
         public CreateMeteringPointResultHandler(
+            IActorMessageFactory actorMessageFactory,
             ErrorMessageFactory errorMessageFactory,
             IOutbox outbox,
             IOutboxMessageFactory outboxMessageFactory,
             IJsonSerializer jsonSerializer,
             ICorrelationContext correlationContext,
-            ISystemDateTimeProvider dateTimeProvider,
             IUserContext userContext)
         {
+            _actorMessageFactory = actorMessageFactory;
             _errorMessageFactory = errorMessageFactory;
             _outbox = outbox;
             _outboxMessageFactory = outboxMessageFactory;
             _jsonSerializer = jsonSerializer;
             _correlationContext = correlationContext;
-            _dateTimeProvider = dateTimeProvider;
             _userContext = userContext;
         }
 
@@ -73,29 +73,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var message = new ConfirmMessage(
-                DocumentName: "ConfirmRequestChangeAccountingPointCharacteristics_MarketDocument",
-                Id: Guid.NewGuid().ToString(),
-                Type: "414",
-                ProcessType: "E65",
-                BusinessSectorType: "E21",
-                Sender: new MarketRoleParticipant(
-                    Id: "DataHub GLN", // TODO: Use correct GLN
-                    CodingScheme: "9",
-                    Role: "EZ"),
-                Receiver: new MarketRoleParticipant(
-                    Id: _userContext.CurrentUser?.GlnNumber ?? _glnNumber, // TODO: Hardcoded
-                    CodingScheme: "9",
-                    Role: "DDQ"),
-                CreatedDateTime: _dateTimeProvider.Now(),
-                ReasonCode: "39",
-                MarketActivityRecord: new MarketActivityRecord(
-                    Id: Guid.NewGuid().ToString(),
-                    BusinessProcessReference: _correlationContext.Id, // TODO: is correlation id the same as BusinessProcessReference?
-                    MarketEvaluationPoint: request.GsrnNumber,
-                    StartDateAndOrTime: request.EffectiveDate,
-                    OriginalTransaction: request.TransactionId));
-
+            var message = _actorMessageFactory.CreateNewMeteringPointConfirmation(request.GsrnNumber, request.EffectiveDate, request.TransactionId);
             var envelope = CreateMessageHubEnvelope(
                 recipient: _userContext.CurrentUser?.GlnNumber ?? _glnNumber, // TODO: Hardcoded
                 cimContent: _jsonSerializer.Serialize(message),
@@ -110,34 +88,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
         {
             var errors = result.ValidationErrors
                 .Select(error => _errorMessageFactory.GetErrorMessage(error))
-                .ToArray();
+                .AsEnumerable();
 
-            var message = new RejectMessage(
-                DocumentName: "RejectRequestChangeAccountingPointCharacteristics_MarketDocument",
-                Id: Guid.NewGuid().ToString(),
-                Type: "414",
-                ProcessType: "E65",
-                BusinessSectorType: "E21",
-                Sender: new MarketRoleParticipant(
-                    Id: "DataHub GLN", // TODO: Use correct GLN
-                    CodingScheme: "9",
-                    Role: "EZ"),
-                Receiver: new MarketRoleParticipant(
-                    Id: _userContext.CurrentUser?.GlnNumber ?? _glnNumber, // TODO: Hardcoded
-                    CodingScheme: "9",
-                    Role: "DDQ"),
-                CreatedDateTime: _dateTimeProvider.Now(),
-                Reason: new Reason(
-                    Code: "41",
-                    Text: string.Empty),
-                MarketActivityRecord: new MarketActivityRecordWithReasons(
-                    Id: Guid.NewGuid().ToString(),
-                    BusinessProcessReference: _correlationContext.Id, // TODO: is correlation id the same as BusinessProcessReference?
-                    MarketEvaluationPoint: request.GsrnNumber,
-                    StartDateAndOrTime: request.EffectiveDate,
-                    OriginalTransaction: request.TransactionId,
-                    Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
-
+            var message = _actorMessageFactory.CreateNewMeteringPointReject(request.GsrnNumber, request.EffectiveDate, request.TransactionId, errors);
             var envelope = CreateMessageHubEnvelope(
                 recipient: _userContext.CurrentUser?.GlnNumber ?? _glnNumber, // TODO: Hardcoded
                 cimContent: _jsonSerializer.Serialize(message),

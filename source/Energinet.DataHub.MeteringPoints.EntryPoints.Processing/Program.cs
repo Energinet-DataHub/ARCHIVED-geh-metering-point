@@ -38,6 +38,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
@@ -150,6 +151,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             // TODO: remove this when infrastructure and application has been split into more assemblies.
             container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageSerializer>(Lifestyle.Singleton);
             container.Register<IDocumentSerializer<RejectMessage>, RejectMessageSerializer>(Lifestyle.Singleton);
+
+            container.Register<IActorMessageFactory, ActorMessageFactory>(Lifestyle.Scoped);
 
             container.AddValidationErrorConversion(
                 validateRegistrations: false,
