@@ -21,6 +21,7 @@ using Energinet.DataHub.MessageHub.Client.Model;
 using Energinet.DataHub.MessageHub.Client.Peek;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
+using Energinet.DataHub.MeteringPoints.Messaging;
 using Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks;
 using FluentAssertions;
 using Xunit;
