@@ -47,5 +47,19 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub
         public string Recipient { get; }
 
         public Instant Date { get; }
+
+        public Instant? DequeuedDate { get; private set; }
+
+        public string? BundleId { get; private set; }
+
+        public void Dequeue(Instant date)
+        {
+            DequeuedDate = date;
+        }
+
+        public void AddToBundle(string bundleId)
+        {
+            BundleId = bundleId;
+        }
     }
 }
