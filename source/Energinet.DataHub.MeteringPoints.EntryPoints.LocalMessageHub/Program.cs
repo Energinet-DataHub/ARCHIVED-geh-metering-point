@@ -111,13 +111,30 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub
             container.Register<IRequestHandler<BundleRequest<ConfirmMessage>, string>, ConfirmMessageBundleHandler>(Lifestyle.Scoped);
             container.Register<IRequestHandler<BundleRequest<RejectMessage>, string>, RejectMessageBundleHandler>(Lifestyle.Scoped);
 
+            container.Register<ILocalMessageHubClient, LocalMessageHubClient>(Lifestyle.Scoped);
+            container.Register<IMessageHubMessageRepository, MessageHubMessageRepository>(Lifestyle.Scoped);
+            container.Register<INotificationHandler, MeteringPointNotificationHandler>(Lifestyle.Scoped);
+            container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Scoped);
+            container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
+            container.Register<IBundleCreator, BundleCreator>(Lifestyle.Scoped);
+            container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageSerializer>(Lifestyle.Singleton);
+            container.Register<IDocumentSerializer<RejectMessage>, RejectMessageSerializer>(Lifestyle.Singleton);
+
             var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING");
             var topic = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME");
             container.Register(() => new ServiceBusClient(connectionString).CreateSender(topic), Lifestyle.Singleton);
 
-            container.AddLocalMessageHubClient();
+            // "MESSAGEHUB_QUEUE_CONNECTION_STRING", "MESSAGEHUB_STORAGE_CONNECTION_STRING"
 
-            container.AddPostOfficeCommunication("MESSAGEHUB_QUEUE_CONNECTION_STRING", "MESSAGEHUB_STORAGE_CONNECTION_STRING");
+            // TODO
+            container.AddPostOfficeCommunication(
+                new DomainConfig(
+                    "queue",
+                    "reply-queue",
+                    "data-available-queue",
+                    "acknowledge-queue",
+                    "service-bus-cnnnection-string",
+                    "storage-connection-string"));
         }
     }
 }

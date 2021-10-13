@@ -117,8 +117,18 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
 
             container.SendProtobuf<IntegrationEventEnvelope>();
 
-            container.AddPostOfficeCommunication("MESSAGEHUB_QUEUE_CONNECTION_STRING", "MESSAGEHUB_STORAGE_CONNECTION_STRING");
-            container.AddLocalMessageHubDataAvailableClient();
+            container.Register<IMessageHubMessageRepository, MessageHubMessageRepository>(Lifestyle.Scoped);
+            container.Register<ILocalMessageHubDataAvailableClient, LocalMessageHubDataAvailableClient>(Lifestyle.Scoped);
+            container.Register<MessageHubMessageFactory>(Lifestyle.Scoped);
+
+            container.AddPostOfficeCommunication(
+                new DomainConfig(
+                    "queue",
+                    "reply-queue",
+                    "data-available-queue",
+                    "acknowledge-queue",
+                    "service-bus-cnnnection-string",
+                    "storage-connection-string"));
 
             // Setup pipeline behaviors
             container.BuildMediator(
