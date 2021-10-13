@@ -25,8 +25,8 @@ limitations under the License.
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ENDK.DataHub.MessageHub.Client" Version="1.0.1" />
-    <PackageReference Include="ENDK.DataHub.MessageHub.Client.SimpleInjector" Version="1.0.2" />
+    <PackageReference Include="Energinet.DataHub.MessageHub.Client" Version="1.1.0" />
+    <PackageReference Include="Energinet.DataHub.MessageHub.Client.SimpleInjector" Version="1.1.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.18.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
@@ -75,5 +75,6 @@ limitations under the License.
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Application\Energinet.DataHub.MeteringPoints.Application.csproj" />
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.EntryPoints.Common\Energinet.DataHub.MeteringPoints.EntryPoints.Common.csproj" />
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Infrastructure\Energinet.DataHub.MeteringPoints.Infrastructure.csproj" />
+    <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Messaging\Energinet.DataHub.MeteringPoints.Messaging.csproj" />
   </ItemGroup>
 </Project>
