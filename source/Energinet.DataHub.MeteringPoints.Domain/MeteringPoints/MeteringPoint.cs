@@ -94,6 +94,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             return new BusinessRulesValidationResult(rules);
         }
 
+        public abstract void Change(MasterDataDetails masterDataDetails);
+
+        public abstract BusinessRulesValidationResult CanChange(MasterDataDetails details);
+
         public abstract BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails);
 
         public abstract void Connect(ConnectionDetails connectionDetails);

@@ -26,6 +26,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
         public static readonly DocumentType ConnectMeteringPointAccepted = new(3, nameof(ConnectMeteringPointAccepted), typeof(ConfirmMessage));
         public static readonly DocumentType ConnectMeteringPointRejected = new(4, nameof(ConnectMeteringPointRejected), typeof(RejectMessage));
         public static readonly DocumentType AccountingPointCharacteristicsMessage = new(5, nameof(AccountingPointCharacteristicsMessage), typeof(AccountingPointCharacteristicsMessage));
+        public static readonly DocumentType ChangeMasterDataAccepted = new(6, nameof(ChangeMasterDataAccepted), typeof(ConfirmMessage));
+        public static readonly DocumentType ChangeMasterDataRejected = new(7, nameof(ChangeMasterDataRejected), typeof(RejectMessage));
 
         public DocumentType(int id, string name)
             : base(id, name)

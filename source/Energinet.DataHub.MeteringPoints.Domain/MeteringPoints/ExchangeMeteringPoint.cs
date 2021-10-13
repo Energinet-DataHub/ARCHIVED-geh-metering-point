@@ -14,6 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
@@ -68,6 +69,16 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
         private ExchangeMeteringPoint() { }
 #pragma warning restore 8618
+
+        public override void Change(MasterDataDetails masterDataDetails)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override BusinessRulesValidationResult CanChange(MasterDataDetails details)
+        {
+            throw new System.NotImplementedException();
+        }
 
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
         {

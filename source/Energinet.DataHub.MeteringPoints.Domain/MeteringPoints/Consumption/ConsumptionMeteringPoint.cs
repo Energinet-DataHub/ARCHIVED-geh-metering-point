@@ -120,6 +120,20 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         private ConsumptionMeteringPoint() { }
 #pragma warning restore 8618
 
+        public override void Change(MasterDataDetails masterDataDetails)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override BusinessRulesValidationResult CanChange(MasterDataDetails details)
+        {
+            var rules = new List<IBusinessRule>()
+            {
+                new StreetNameIsRequiredRule(GsrnNumber, details.StreetName),
+            };
+            return new BusinessRulesValidationResult(rules);
+        }
+
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
         {
             var rules = new Collection<IBusinessRule>

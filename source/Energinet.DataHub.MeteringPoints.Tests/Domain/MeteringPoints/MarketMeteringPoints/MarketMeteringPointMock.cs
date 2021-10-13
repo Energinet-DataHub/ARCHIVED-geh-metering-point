@@ -15,6 +15,7 @@
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -59,6 +60,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 disconnectionType,
                 netSettlementGroup)
         {
+        }
+
+        public override void Change(MasterDataDetails masterDataDetails)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override BusinessRulesValidationResult CanChange(MasterDataDetails details)
+        {
+            throw new System.NotImplementedException();
         }
 
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)

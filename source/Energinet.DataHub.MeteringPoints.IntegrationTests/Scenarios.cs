@@ -17,7 +17,7 @@ using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
     public static class Scenarios
     {

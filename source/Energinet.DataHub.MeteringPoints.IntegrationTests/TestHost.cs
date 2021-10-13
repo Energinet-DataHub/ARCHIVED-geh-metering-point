@@ -18,6 +18,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
@@ -27,6 +28,7 @@ using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
+using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
@@ -42,6 +44,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
@@ -58,6 +61,7 @@ using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentAssertions;
 using FluentValidation;
+using FluentValidation.Validators;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -119,6 +123,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Singleton);
             _container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
             _container.Register<ISystemDateTimeProvider, SystemDateTimeProviderStub>(Lifestyle.Singleton);
+            _container.Register(typeof(IBusinessProcessResultHandler<ChangeMasterDataRequest>), typeof(ChangeMasterDataResultHandler), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<CreateConsumptionMeteringPoint>), typeof(CreateMeteringPointResultHandler), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<ConnectMeteringPoint>), typeof(ConnectMeteringPointResultHandler), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<CreateGridArea>), typeof(CreateGridAreaNullResultHandler), Lifestyle.Singleton);
@@ -126,6 +131,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IValidator<ConnectMeteringPoint>, ConnectMeteringPointRuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<CreateGridArea>, CreateGridAreaRuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<CreateConsumptionMeteringPoint>, Application.Create.Consumption.Validation.RuleSet>(Lifestyle.Scoped);
+            _container.Register<IValidator<ChangeMasterDataRequest>, NullValidationSet<ChangeMasterDataRequest>>(Lifestyle.Scoped);
             _container.Register<IDomainEventsAccessor, DomainEventsAccessor>();
             _container.Register<IDomainEventsDispatcher, DomainEventsDispatcher>();
             _container.Register<IDomainEventPublisher, DomainEventPublisher>();
@@ -254,19 +260,29 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         protected void AssertValidationError(string expectedErrorCode)
         {
-            var envelopes = GetOutboxMessages<MessageHubEnvelope>();
-            foreach (var envelope in envelopes)
+            var message = GetOutboxMessages
+                    <MessageHubEnvelope>()
+                .Single(msg => msg.MessageType.Name.EndsWith("rejected", StringComparison.OrdinalIgnoreCase));
+
+            var rejectMessage = GetService<IJsonSerializer>().Deserialize<RejectMessage>(message.Content);
+
+            var errorCount = rejectMessage.MarketActivityRecord.Reasons.Count;
+            if (errorCount > 1)
             {
-                var message = JObject.Parse(envelope.Content);
-                if (message.ContainsKey("Errors"))
+                var errorMessage = new StringBuilder();
+                errorMessage.AppendLine($"Reject message contains more ({errorCount}) than 1 error:");
+                foreach (var error in rejectMessage.MarketActivityRecord.Reasons)
                 {
-                    var errorMessages =
-                        JsonConvert.DeserializeObject<List<Infrastructure.EDI.Errors.ErrorMessage>>(message
-                            .GetValue("Errors", StringComparison.OrdinalIgnoreCase).ToString());
-                    Assert.Contains(errorMessages, error => error.Code == expectedErrorCode);
-                    break;
+                    errorMessage.AppendLine($"Code: {error.Code}. Description: {error.Text}.");
                 }
+
+                throw new XunitException(errorMessage.ToString());
             }
+
+            var validationError = rejectMessage.MarketActivityRecord.Reasons
+                .Single(error => error.Code == expectedErrorCode);
+
+            Assert.NotNull(validationError);
         }
 
         protected async Task SendCommandAsync(object command, CancellationToken cancellationToken = default)
