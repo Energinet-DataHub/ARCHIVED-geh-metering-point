@@ -32,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
     [UnitTest]
     public class LocalMessageHubTests
     {
-        private readonly DispatcherMock _messageDispatcher;
+        private readonly MeteringPointIntegrationEventHandlerMock _integrationEventHandler;
         private readonly ILocalMessageHubClient _localMessageHubClient;
         private readonly ILocalMessageHubDataAvailableClient _localMessageHubDataAvailableClient;
         private readonly DataAvailableNotificationSenderMock _dataAvailableNotificationSender;
@@ -44,7 +44,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
 
         public LocalMessageHubTests()
         {
-            _messageDispatcher = new DispatcherMock();
+            _integrationEventHandler = new MeteringPointIntegrationEventHandlerMock();
             _messageHubMessageRepository = new MessageHubMessageRepositoryMock();
             _dataBundleResponseSender = new DataBundleResponseSenderMock();
             var dequeueNotificationParser = new DequeueNotificationParser();
@@ -52,13 +52,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
             _dequeueNotificationParser = new DequeueNotificationParser();
             _dataAvailableNotificationSender = new DataAvailableNotificationSenderMock();
             _localMessageHubClient = new LocalMessageHubClient(
-                new MessageHubStorageClientMock(),
+                new StorageHandlerMock(),
                 _messageHubMessageRepository,
-                _messageDispatcher,
+                _integrationEventHandler,
                 _dataBundleResponseSender,
                 dequeueNotificationParser,
                 _requestBundleParser,
-                new BundleCreatorMock());
+                new BundleCreatorMock(),
+                new SystemDateTimeProviderStub());
 
             _localMessageHubDataAvailableClient = new LocalMessageHubDataAvailableClient(
                 _messageHubMessageRepository,
@@ -102,7 +103,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
 
             foreach (var message in messages)
             {
-                _messageDispatcher.IsDispatched(message.Correlation).Should().BeTrue();
+                _integrationEventHandler.IsDispatched(message.Correlation).Should().BeTrue();
             }
         }
 

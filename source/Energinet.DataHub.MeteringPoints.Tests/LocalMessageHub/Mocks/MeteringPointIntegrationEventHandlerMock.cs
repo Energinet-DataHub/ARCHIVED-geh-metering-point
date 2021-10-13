@@ -14,27 +14,22 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
-using Energinet.DataHub.MeteringPoints.Application.MessageHub;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
+using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
 {
-    public class DispatcherMock : IMessageDispatcher
+    public class MeteringPointIntegrationEventHandlerMock : INotificationHandler
     {
-        private readonly List<MessageReceived> _dispatchedCommands = new();
-
-        public Task DispatchAsync(IOutboundMessage message, CancellationToken cancellationToken = default)
-        {
-            _dispatchedCommands.Add((MessageReceived)message);
-            return Task.CompletedTask;
-        }
+        private readonly List<MessageHubMessage> _messages = new();
 
         public bool IsDispatched(string correlation)
         {
-            return _dispatchedCommands.Any(x => x.Correlation == correlation);
+            return _messages.Any(x => x.Correlation == correlation);
+        }
+
+        public void Handle(MessageHubMessage messageHubMessage)
+        {
+            _messages.Add(messageHubMessage);
         }
     }
 }

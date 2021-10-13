@@ -20,7 +20,7 @@ using Energinet.DataHub.MessageHub.Client.Storage;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
 {
-    public class MessageHubStorageClientMock : IStorageHandler
+    public class StorageHandlerMock : IStorageHandler
     {
         public Task<Uri> AddStreamToStorageAsync(Stream stream, DataBundleRequestDto requestDto)
         {
