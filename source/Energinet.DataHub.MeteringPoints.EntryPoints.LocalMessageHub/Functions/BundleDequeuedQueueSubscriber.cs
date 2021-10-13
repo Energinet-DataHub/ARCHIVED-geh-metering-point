@@ -26,21 +26,25 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub.Functions
         private readonly ILogger _logger;
         private readonly ICorrelationContext _correlationContext;
         private readonly ILocalMessageHubClient _localMessageHubClient;
+        private readonly IUnitOfWork _unitOfWork;
 
         public BundleDequeuedQueueSubscriber(
             ILogger logger,
             ICorrelationContext correlationContext,
-            ILocalMessageHubClient localMessageHubClient)
+            ILocalMessageHubClient localMessageHubClient,
+            IUnitOfWork unitOfWork)
         {
             _logger = logger;
             _correlationContext = correlationContext;
             _localMessageHubClient = localMessageHubClient;
+            _unitOfWork = unitOfWork;
         }
 
         [Function("BundleDequeuedQueueSubscriber")]
         public async Task RunAsync([ServiceBusTrigger("sbq-meteringpoints-dequeue", Connection = "MESSAGEHUB_QUEUE_CONNECTION_STRING")] byte[] data)
         {
             await _localMessageHubClient.BundleDequeuedAsync(data).ConfigureAwait(false);
+            await _unitOfWork.CommitAsync().ConfigureAwait(false);
 
             _logger.LogInformation("Dequeued with correlation id: {correlationId}", _correlationContext.Id);
         }
