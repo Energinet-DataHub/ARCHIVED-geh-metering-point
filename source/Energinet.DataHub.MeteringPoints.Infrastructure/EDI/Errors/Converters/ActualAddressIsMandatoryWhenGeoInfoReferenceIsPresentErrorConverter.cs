@@ -17,9 +17,9 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class OfficialAddressIsMandatoryWhenGeoInfoReferenceIsPresentErrorConverter : ErrorConverter<OfficialAddressIsMandatoryWhenGeoInfoReferenceIsPresentValidationError>
+    public class ActualAddressIsMandatoryWhenGeoInfoReferenceIsPresentErrorConverter : ErrorConverter<ActualAddressIsMandatoryWhenGeoInfoReferenceIsPresentValidationError>
     {
-        protected override ErrorMessage Convert(OfficialAddressIsMandatoryWhenGeoInfoReferenceIsPresentValidationError validationError)
+        protected override ErrorMessage Convert(ActualAddressIsMandatoryWhenGeoInfoReferenceIsPresentValidationError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 

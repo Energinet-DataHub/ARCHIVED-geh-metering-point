@@ -20,18 +20,18 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class OfficialAddressRule : AbstractValidator<CreateMeteringPoint>
+    public class ActualAddressRule : AbstractValidator<CreateMeteringPoint>
     {
-        public OfficialAddressRule()
+        public ActualAddressRule()
         {
             When(request => !string.IsNullOrWhiteSpace(request.GeoInfoReference), () =>
             {
                 RuleFor(request => request.GeoInfoReference)
                     .Must(value => IsGuid(value!))
                     .WithState(request => new InvalidGeoInfoReferenceRuleError(request.GeoInfoReference !));
-                RuleFor(request => request.IsOfficialAddress)
+                RuleFor(request => request.IsActualAddress)
                     .NotNull()
-                    .WithState(request => new OfficialAddressIsMandatoryWhenGeoInfoReferenceIsPresentValidationError(request.GsrnNumber, request.GeoInfoReference));
+                    .WithState(request => new ActualAddressIsMandatoryWhenGeoInfoReferenceIsPresentValidationError(request.GsrnNumber, request.GeoInfoReference));
             });
         }
 
@@ -45,9 +45,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             return !string.IsNullOrWhiteSpace(request.GeoInfoReference);
         }
 
-        private static bool IsOfficialAddress(CreateMeteringPoint request)
+        private static bool IsActualAddress(CreateMeteringPoint request)
         {
-            return request.IsOfficialAddress.GetValueOrDefault();
+            return request.IsActualAddress.GetValueOrDefault();
         }
 
         private static bool IsValidReference(string? reference)
