@@ -14,7 +14,8 @@
 
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
-using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Messaging;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 

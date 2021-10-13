@@ -12,18 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
-using Energinet.DataHub.MeteringPoints.Messaging.Bundling;
-
-namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
+namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling
 {
-    public class BundleCreatorMock : IBundleCreator
+    /// <summary>
+    /// A request to create a bundle.
+    /// </summary>
+#pragma warning disable CA1040 // Marker interface
+    public interface IBundleRequest
     {
-        public Task<string> CreateBundleAsync(IList<MessageHubMessage> messages)
-        {
-            return Task.FromResult("empty bundle");
-        }
     }
 }

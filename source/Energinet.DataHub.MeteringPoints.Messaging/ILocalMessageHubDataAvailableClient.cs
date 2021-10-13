@@ -12,18 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
-using Energinet.DataHub.MeteringPoints.Messaging.Bundling;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 
-namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
+namespace Energinet.DataHub.MeteringPoints.Messaging
 {
-    public class BundleCreatorMock : IBundleCreator
+    /// <summary>
+    /// Local Post Office
+    /// </summary>
+    public interface ILocalMessageHubDataAvailableClient
     {
-        public Task<string> CreateBundleAsync(IList<MessageHubMessage> messages)
-        {
-            return Task.FromResult("empty bundle");
-        }
+        /// <summary>
+        /// Dispatch message to Local Post Office
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        Task DataAvailableAsync(MessageHubEnvelope messageHub);
     }
 }

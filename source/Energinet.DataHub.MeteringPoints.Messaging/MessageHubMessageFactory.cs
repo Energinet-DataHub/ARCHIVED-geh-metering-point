@@ -12,18 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
-using Energinet.DataHub.MeteringPoints.Messaging.Bundling;
 
-namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
+namespace Energinet.DataHub.MeteringPoints.Messaging
 {
-    public class BundleCreatorMock : IBundleCreator
+    public class MessageHubMessageFactory
     {
-        public Task<string> CreateBundleAsync(IList<MessageHubMessage> messages)
+        private readonly ISystemDateTimeProvider _dateTimeProvider;
+
+        public MessageHubMessageFactory(ISystemDateTimeProvider dateTimeProvider)
         {
-            return Task.FromResult("empty bundle");
+            _dateTimeProvider = dateTimeProvider;
+        }
+
+        public MessageHubMessage Create(string correlation, string messageContent, DocumentType type, string recipient)
+        {
+            return new MessageHubMessage(messageContent, correlation, type, recipient, _dateTimeProvider.Now());
         }
     }
 }

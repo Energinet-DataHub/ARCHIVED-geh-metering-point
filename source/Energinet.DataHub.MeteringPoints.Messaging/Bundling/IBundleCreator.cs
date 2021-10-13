@@ -15,15 +15,18 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
-using Energinet.DataHub.MeteringPoints.Messaging.Bundling;
 
-namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
+namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling
 {
-    public class BundleCreatorMock : IBundleCreator
+    /// <summary>
+    /// Bundle creator
+    /// </summary>
+    public interface IBundleCreator
     {
-        public Task<string> CreateBundleAsync(IList<MessageHubMessage> messages)
-        {
-            return Task.FromResult("empty bundle");
-        }
+        /// <summary>
+        /// Create a bundle.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        Task<string> CreateBundleAsync(IList<MessageHubMessage> messages);
     }
 }

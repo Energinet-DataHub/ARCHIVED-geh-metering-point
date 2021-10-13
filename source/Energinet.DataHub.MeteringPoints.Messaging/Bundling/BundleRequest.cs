@@ -13,17 +13,18 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
-using Energinet.DataHub.MeteringPoints.Messaging.Bundling;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
+namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling
 {
-    public class BundleCreatorMock : IBundleCreator
+    public class BundleRequest<TDocument> : IRequest<string>, IBundleRequest
     {
-        public Task<string> CreateBundleAsync(IList<MessageHubMessage> messages)
+        public BundleRequest(IList<MessageHubMessage> documents)
         {
-            return Task.FromResult("empty bundle");
+            Documents = documents;
         }
+
+        public IList<MessageHubMessage> Documents { get; }
     }
 }
