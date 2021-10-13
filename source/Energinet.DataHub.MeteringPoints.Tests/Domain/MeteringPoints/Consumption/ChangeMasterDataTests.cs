@@ -24,12 +24,28 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         [Fact]
         public void Should_return_error_when_street_name_is_blank()
         {
-            var meteringPoint = ConsumptionMeteringPoint.Create(CreateDetails());
+            var meteringPoint = CreateMeteringPoint();
             var details = new MasterDataDetails(string.Empty);
 
             var result = meteringPoint.CanChange(details);
 
             AssertError<StreetNameIsRequiredRuleError>(result, true);
+        }
+
+        [Fact]
+        public void Should_return_success_when_street_name_is_null()
+        {
+            var meteringPoint = CreateMeteringPoint();
+            var details = new MasterDataDetails(null);
+
+            var result = meteringPoint.CanChange(details);
+
+            Assert.True(result.Success);
+        }
+
+        private static ConsumptionMeteringPoint CreateMeteringPoint()
+        {
+            return ConsumptionMeteringPoint.Create(CreateDetails());
         }
     }
 }
