@@ -130,7 +130,7 @@ jobs:
         shell: bash
         run: |
           echo ${{ steps.terraform-output.outputs.sql-server-connectionstring }}
-          dotnet run --project source/Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp/ --configuration Release -- ${{ steps.terraform-output.outputs.sql-server-connectionstring }} includeSeedData includeTestData
+          dotnet run --project source/Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp/ --configuration Release -- ${{ steps.terraform-output.outputs.sql-server-connectionstring }} includeSeedData
 
   infra_deploy_preprod:
     name: Deploy infrastructure to Preproduction
