@@ -91,7 +91,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
         {
             switch (documentType)
             {
-                case "A99":
+                case "E58":
                     return new MasterDataDocumentXmlMappingConfiguration();
                 default:
                     throw new NotImplementedException();
