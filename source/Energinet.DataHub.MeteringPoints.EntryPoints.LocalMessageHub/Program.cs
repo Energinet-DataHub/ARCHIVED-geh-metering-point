@@ -15,7 +15,6 @@
 using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.MessageHub.Client;
 using Energinet.DataHub.MessageHub.Client.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Contracts;
@@ -122,19 +121,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub
 
             var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING");
             var topic = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME");
+
             container.Register(() => new ServiceBusClient(connectionString).CreateSender(topic), Lifestyle.Singleton);
 
-            // "MESSAGEHUB_QUEUE_CONNECTION_STRING", "MESSAGEHUB_STORAGE_CONNECTION_STRING"
-
-            // TODO
-            container.AddPostOfficeCommunication(
-                new DomainConfig(
-                    "queue",
-                    "reply-queue",
-                    "data-available-queue",
-                    "acknowledge-queue",
-                    "service-bus-cnnnection-string",
-                    "storage-connection-string"));
+            container.AddPostOfficeCommunication("MESSAGEHUB_QUEUE_CONNECTION_STRING", "MESSAGEHUB_STORAGE_CONNECTION_STRING");
         }
     }
 }

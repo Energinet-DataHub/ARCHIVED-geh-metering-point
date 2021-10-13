@@ -75,7 +75,7 @@ namespace Energinet.DataHub.MeteringPoints.Messaging
             var uri = await _storageHandler.AddStreamToStorageAsync(stream, bundleRequestDto).ConfigureAwait(false);
 
             // TODO - add notification to Outbox instead of sending immediately
-            await _dataBundleResponseSender.SendAsync(new DataBundleResponseDto(uri, bundleRequestDto.DataAvailableNotificationIds), bundleRequestDto, sessionId).ConfigureAwait(false);
+            await _dataBundleResponseSender.SendAsync(new RequestDataBundleResponseDto(uri, bundleRequestDto.DataAvailableNotificationIds), sessionId, DomainOrigin.MeteringPoints).ConfigureAwait(false);
         }
 
         public async Task BundleDequeuedAsync(byte[] notification)
