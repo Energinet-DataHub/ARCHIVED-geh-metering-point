@@ -14,8 +14,9 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
+using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub
+namespace Energinet.DataHub.MeteringPoints.Messaging
 {
     public class MessageHubMessageFactory
     {

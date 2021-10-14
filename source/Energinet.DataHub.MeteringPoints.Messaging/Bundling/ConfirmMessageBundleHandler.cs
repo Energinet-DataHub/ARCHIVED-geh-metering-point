@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bundling;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub.Bundling
+namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling
 {
     public class ConfirmMessageBundleHandler : BundleHandler<ConfirmMessage>
     {

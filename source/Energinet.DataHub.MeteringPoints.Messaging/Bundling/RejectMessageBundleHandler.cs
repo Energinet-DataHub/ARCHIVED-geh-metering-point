@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
-using Energinet.DataHub.MeteringPoints.Messaging.Bundling;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bundling;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
+namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling
 {
-    public class BundleCreatorMock : IBundleCreator
+    public class RejectMessageBundleHandler : BundleHandler<RejectMessage>
     {
-        public Task<string> CreateBundleAsync(IList<MessageHubMessage> messages)
+        public RejectMessageBundleHandler(IJsonSerializer jsonSerializer, IDocumentSerializer<RejectMessage> documentSerializer)
+            : base(jsonSerializer, documentSerializer)
         {
-            return Task.FromResult("empty bundle");
         }
     }
 }

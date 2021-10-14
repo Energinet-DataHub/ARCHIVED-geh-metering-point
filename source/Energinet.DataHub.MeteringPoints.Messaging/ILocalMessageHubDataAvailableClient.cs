@@ -13,24 +13,19 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub
+namespace Energinet.DataHub.MeteringPoints.Messaging
 {
     /// <summary>
     /// Local Post Office
     /// </summary>
-    public interface ILocalMessageHubClient
+    public interface ILocalMessageHubDataAvailableClient
     {
         /// <summary>
-        /// Request bundle from Local Post Office
+        /// Dispatch message to Local Post Office
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task CreateBundleAsync(byte[] request, string sessionId);
-
-        /// <summary>
-        /// Notify that bundle has been dequeued
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task BundleDequeuedAsync(byte[] notification);
+        Task DataAvailableAsync(MessageHubEnvelope messageHub);
     }
 }
