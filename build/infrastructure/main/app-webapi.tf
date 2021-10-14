@@ -32,7 +32,7 @@ resource "azurerm_app_service" "webapi" {
   connection_string {
     name  = "METERINGPOINT_DB_CONNECTION_STRING"
     type  = "SQLServer"
-    value = "Server=some-server.mydomain.com;Integrated Security=SSPI"
+    value = local.METERING_POINT_CONNECTION_STRING
   }
 
   connection_string {
