@@ -32,8 +32,8 @@ module "azfun_localmessagehub" {
     METERINGPOINT_DB_CONNECTION_STRING    = local.METERING_POINT_CONNECTION_STRING
   }
   connection_string                         = {
-    POSTOFFICE_STORAGE_CONNECTION_STRING  = module.stor_postoffice.primary_connection_string
-    POST_OFFICE_QUEUE_CONNECTION_STRING   = data.azurerm_key_vault_secret.POST_OFFICE_QUEUE_CONNECTION_STRING.value
+    MESSAGEHUB_STORAGE_CONNECTION_STRING  = module.stor_postoffice.primary_connection_string
+    MESSAGEHUB_QUEUE_CONNECTION_STRING    = data.azurerm_key_vault_secret.shared_resources_integrationevents_sendlisten_connection_string.value
   }
   dependencies                              = [
     module.appi.dependent_on,
