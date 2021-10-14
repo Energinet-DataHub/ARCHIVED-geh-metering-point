@@ -82,7 +82,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             options.UseMiddleware<CorrelationIdMiddleware>();
             options.UseMiddleware<EntryPointTelemetryScopeMiddleware>();
             options.UseMiddleware<ServiceBusUserContextMiddleware>();
-            options.UseMiddleware<ServiceBusMessageIdempotencyMiddleware>();
+            // TODO: Fix the duplicate check for ingestion messages and re-enable this https://app.zenhub.com/workspaces/batman-60a6105157304f00119be86e/issues/energinet-datahub/geh-metering-point/378
+            // options.UseMiddleware<ServiceBusMessageIdempotencyMiddleware>();
         }
 
         protected override void ConfigureServiceCollection(IServiceCollection services)
