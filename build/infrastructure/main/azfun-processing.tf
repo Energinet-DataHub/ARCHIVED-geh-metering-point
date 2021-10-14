@@ -29,17 +29,12 @@ module "azfun_processing" {
     WEBSITES_ENABLE_APP_SERVICE_STORAGE   = true
     FUNCTIONS_WORKER_RUNTIME              = "dotnet-isolated"
     # Endregion: Default Values
-    # VALIDATION_REPORTS_QUEUE_TOPIC        = data.azurerm_key_vault_secret.VALIDATION_REPORTS_QUEUE_TOPIC.value
-    # VALIDATION_REPORTS_URL                = data.azurerm_key_vault_secret.VALIDATION_REPORTS_QUEUE_URL.value
-    # VALIDATION_REPORTS_CONNECTION_STRING  = data.azurerm_key_vault_secret.VALIDATION_REPORTS_CONNECTION_STRING.value
     METERINGPOINT_QUEUE_URL                 = "${module.sbn_meteringpoint.name}.servicebus.windows.net:9093"
     METERINGPOINT_QUEUE_CONNECTION_STRING   = module.sbnar_meteringpoint_listener.primary_connection_string
     METERINGPOINT_DB_CONNECTION_STRING      = local.METERING_POINT_CONNECTION_STRING
     METERINGPOINT_QUEUE_TOPIC_NAME          = module.sbq_meteringpoint.name
     INTEGRATION_EVENT_QUEUE                 = data.azurerm_key_vault_secret.SHARED_RESOURCES_EVENT_FORWARDED_QUEUE.value
     INTEGRATION_EVENT_QUEUE_CONNECTION      = data.azurerm_key_vault_secret.INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING.value
-    # POST_OFFICE_QUEUE_CONNECTION_STRING   = data.azurerm_key_vault_secret.POST_OFFICE_QUEUE_CONNECTION_STRING.value
-    # POST_OFFICE_QUEUE_TOPIC_NAME          = data.azurerm_key_vault_secret.POST_OFFICE_QUEUE_MARKETDATA_TOPIC_NAME.value
   }
   dependencies                              = [
     module.appi.dependent_on,
