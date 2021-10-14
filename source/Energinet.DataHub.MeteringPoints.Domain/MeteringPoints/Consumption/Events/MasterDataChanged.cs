@@ -19,11 +19,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Eve
 {
     public class MasterDataChanged : DomainEventBase
     {
-        public MasterDataChanged(string streetName)
+        public MasterDataChanged(string streetName, string postCode)
         {
             StreetName = streetName;
+            PostCode = postCode;
         }
 
         public string StreetName { get; }
+
+        public string PostCode { get; }
     }
 }

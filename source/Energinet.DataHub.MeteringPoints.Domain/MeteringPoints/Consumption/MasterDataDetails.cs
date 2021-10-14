@@ -14,5 +14,7 @@
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 {
-    public record MasterDataDetails(string? StreetName);
+    public record MasterDataDetails(
+        string? StreetName = null,
+        string? PostCode = null);
 }

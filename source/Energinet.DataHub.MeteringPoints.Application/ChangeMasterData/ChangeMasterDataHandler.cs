@@ -48,7 +48,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
                 return validationResult;
             }
 
-            var masterDataDetails = new MasterDataDetails(request.StreetName);
+            var masterDataDetails = new MasterDataDetails(request.StreetName, request.PostCode);
             var rulesCheckResult = CheckBusinessRules(request, masterDataDetails, meteringPoint!);
             if (!rulesCheckResult.Success)
             {

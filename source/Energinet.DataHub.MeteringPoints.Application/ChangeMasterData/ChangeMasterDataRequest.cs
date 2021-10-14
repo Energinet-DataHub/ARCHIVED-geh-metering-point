@@ -20,5 +20,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
         string TransactionId = "",
         string GsrnNumber = "",
         string EffectiveDate = "",
-        string? StreetName = null) : IBusinessRequest;
+        string? StreetName = null,
+        string? PostCode = null) : IBusinessRequest;
 }

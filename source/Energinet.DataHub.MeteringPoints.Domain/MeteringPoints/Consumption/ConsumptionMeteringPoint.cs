@@ -128,25 +128,25 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 throw new MasterDataChangeException();
             }
 
-            if (masterDataDetails.StreetName.Equals(Address.StreetName, StringComparison.OrdinalIgnoreCase) == false)
-            {
-                var newAddress = Address.Create(
-                    masterDataDetails.StreetName,
-                    Address.StreetCode,
-                    Address.BuildingNumber,
-                    Address.City,
-                    Address.CitySubDivision,
-                    Address.PostCode,
-                    Address.CountryCode,
-                    Address.Floor,
-                    Address.Room,
-                    Address.MunicipalityCode,
-                    Address.IsActual,
-                    Address.GeoInfoReference);
+            var streetName = masterDataDetails.StreetName ?? Address.StreetName;
+            var postCode = masterDataDetails.PostCode ?? Address.PostCode;
+            var newAddress = Address.Create(
+                streetName,
+                Address.StreetCode,
+                Address.BuildingNumber,
+                Address.City,
+                Address.CitySubDivision,
+                postCode,
+                Address.CountryCode,
+                Address.Floor,
+                Address.Room,
+                Address.MunicipalityCode,
+                Address.IsActual,
+                Address.GeoInfoReference);
 
-                Address = newAddress;
-                AddDomainEvent(new MasterDataChanged(Address.StreetName));
-            }
+            if (newAddress.Equals(Address) != false) return;
+            Address = newAddress;
+            AddDomainEvent(new MasterDataChanged(Address.StreetName, Address.PostCode));
         }
 
         public override BusinessRulesValidationResult CanChange(MasterDataDetails details)
@@ -154,6 +154,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             var rules = new List<IBusinessRule>()
             {
                 new StreetNameIsRequiredRule(GsrnNumber, details.StreetName),
+                new PostCodeIsRequiredRule(details.PostCode),
             };
             return new BusinessRulesValidationResult(rules);
         }

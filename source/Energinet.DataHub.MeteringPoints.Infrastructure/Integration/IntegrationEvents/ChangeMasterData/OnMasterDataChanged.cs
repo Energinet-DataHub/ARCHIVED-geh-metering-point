@@ -30,7 +30,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         public override Task Handle(MasterDataChanged notification, CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
-            var integration = new MasterDataChangedIntegrationEvent(notification.StreetName);
+            var integration = new MasterDataChangedIntegrationEvent(
+                notification.StreetName,
+                notification.PostCode);
             CreateAndAddOutboxMessage(integration);
             return Task.CompletedTask;
         }

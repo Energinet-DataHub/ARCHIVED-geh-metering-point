@@ -16,11 +16,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
 {
     public class MasterDataChangedIntegrationEvent : IIntegrationEvent
     {
-        public MasterDataChangedIntegrationEvent(string streetName)
+        public MasterDataChangedIntegrationEvent(string streetName, string postCode)
         {
             StreetName = streetName;
+            PostCode = postCode;
         }
 
         public string StreetName { get; }
+
+        public string PostCode { get; }
     }
 }

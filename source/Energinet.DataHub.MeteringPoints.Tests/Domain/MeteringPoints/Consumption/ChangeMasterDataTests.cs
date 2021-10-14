@@ -47,15 +47,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         }
 
         [Fact]
-        public void Should_throw_if_any_business_rule_are_violated()
-        {
-            var meteringPoint = CreateMeteringPoint();
-            var details = new MasterDataDetails(string.Empty);
-
-            Assert.Throws<MasterDataChangeException>(() => meteringPoint.Change(details));
-        }
-
-        [Fact]
         public void Should_change_street_name()
         {
             var meteringPoint = CreateMeteringPoint();
@@ -66,6 +57,54 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             var changeEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MasterDataChanged) as MasterDataChanged;
             Assert.NotNull(changeEvent);
             Assert.Equal(details.StreetName, changeEvent?.StreetName);
+        }
+
+        [Fact]
+        public void Should_throw_if_any_business_rule_are_violated()
+        {
+            var meteringPoint = CreateMeteringPoint();
+            var details = new MasterDataDetails(string.Empty);
+
+            Assert.Throws<MasterDataChangeException>(() => meteringPoint.Change(details));
+        }
+
+        [Fact]
+        public void Should_return_error_when_post_code_is_blank()
+        {
+            var meteringPoint = CreateMeteringPoint();
+            var details = new MasterDataDetails()
+                with
+                {
+                    PostCode = string.Empty,
+                };
+
+            var result = meteringPoint.CanChange(details);
+
+            AssertError<PostCodeIsRequiredRuleError>(result, true);
+        }
+
+        [Fact]
+        public void Should_return_success_when_post_code_is_null()
+        {
+            var meteringPoint = CreateMeteringPoint();
+            var details = new MasterDataDetails(PostCode: null);
+
+            var result = meteringPoint.CanChange(details);
+
+            Assert.True(result.Success);
+        }
+
+        [Fact]
+        public void Should_change_post_code()
+        {
+            var meteringPoint = CreateMeteringPoint();
+            var details = new MasterDataDetails(PostCode: "7000");
+
+            meteringPoint.Change(details);
+
+            var changeEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MasterDataChanged) as MasterDataChanged;
+            Assert.NotNull(changeEvent);
+            Assert.Equal(details.PostCode, changeEvent?.PostCode);
         }
 
         private static ConsumptionMeteringPoint CreateMeteringPoint()

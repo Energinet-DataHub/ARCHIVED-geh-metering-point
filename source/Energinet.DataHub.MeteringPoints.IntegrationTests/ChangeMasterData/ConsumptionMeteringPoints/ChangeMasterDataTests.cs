@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Common;
@@ -27,24 +28,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
         public ChangeMasterDataTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
         {
-        }
-
-        [Fact]
-        public async Task Should_reject_when_street_name_is_empty()
-        {
-            await CreateMeteringPointAsync().ConfigureAwait(false);
-
-            var request = new ChangeMasterDataRequest()
-                with
-                {
-                    TransactionId = SampleData.Transaction,
-                    GsrnNumber = SampleData.GsrnNumber,
-                    StreetName = string.Empty,
-                };
-
-            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("E86");
         }
 
         [Fact]
@@ -66,6 +49,24 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
         }
 
         [Fact]
+        public async Task Should_reject_when_street_name_is_empty()
+        {
+            await CreateMeteringPointAsync().ConfigureAwait(false);
+
+            var request = new ChangeMasterDataRequest()
+                with
+                {
+                    TransactionId = SampleData.Transaction,
+                    GsrnNumber = SampleData.GsrnNumber,
+                    StreetName = string.Empty,
+                };
+
+            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
+        [Fact]
         public async Task Should_change_street_name()
         {
             await CreateMeteringPointAsync().ConfigureAwait(false);
@@ -83,6 +84,44 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
             var integrationEvent = FindIntegrationEvent<MasterDataChangedIntegrationEvent>();
             Assert.NotNull(integrationEvent);
             Assert.Equal(request.StreetName, integrationEvent?.StreetName);
+        }
+
+        [Fact]
+        public async Task Should_reject_if_post_code_is_empty()
+        {
+            await CreateMeteringPointAsync().ConfigureAwait(false);
+
+            var request = new ChangeMasterDataRequest()
+                with
+                {
+                    TransactionId = SampleData.Transaction,
+                    GsrnNumber = SampleData.GsrnNumber,
+                    PostCode = string.Empty,
+                };
+
+            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
+        [Fact]
+        public async Task Should_change_post_code()
+        {
+            await CreateMeteringPointAsync().ConfigureAwait(false);
+            var request = new ChangeMasterDataRequest()
+                with
+                {
+                    TransactionId = SampleData.Transaction,
+                    GsrnNumber = SampleData.GsrnNumber,
+                    PostCode = "7000",
+                };
+
+            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+
+            AssertConfirmMessage(DocumentType.ChangeMasterDataAccepted);
+            var integrationEvent = FindIntegrationEvent<MasterDataChangedIntegrationEvent>();
+            Assert.NotNull(integrationEvent);
+            Assert.Equal(request.PostCode, integrationEvent?.PostCode);
         }
 
         private Task<BusinessProcessResult> CreateMeteringPointAsync()
