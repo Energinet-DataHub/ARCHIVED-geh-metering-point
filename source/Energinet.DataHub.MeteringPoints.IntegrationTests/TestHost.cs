@@ -135,7 +135,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IUserContext>(() => new UserContext { CurrentUser = new UserIdentity(Guid.NewGuid().ToString(), "8200000001409"), }, Lifestyle.Scoped);
 
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
-            _container.Register<DbHelper>(() => new DbHelper(new SqlDbConnectionFactory(connectionString)), Lifestyle.Scoped);
+            _container.Register<DbGridAreaHelper>(() => new DbGridAreaHelper(new SqlDbConnectionFactory(connectionString)), Lifestyle.Scoped);
 
             // TODO: remove this when infrastructure and application has been split into more assemblies.
             _container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageSerializer>(Lifestyle.Singleton);

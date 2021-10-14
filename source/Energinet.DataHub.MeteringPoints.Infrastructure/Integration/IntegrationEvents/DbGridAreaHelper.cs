@@ -19,11 +19,11 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
 {
-    public class DbHelper
+    public class DbGridAreaHelper
     {
         private readonly IDbConnectionFactory _connectionFactory;
 
-        public DbHelper(IDbConnectionFactory connectionFactory)
+        public DbGridAreaHelper(IDbConnectionFactory connectionFactory)
         {
             _connectionFactory = connectionFactory;
         }

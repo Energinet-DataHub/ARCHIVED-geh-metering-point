@@ -25,18 +25,18 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
 {
     public class OnConsumptionMeteringPointCreated : IntegrationEventPublisher<ConsumptionMeteringPointCreated>
     {
-        private readonly DbHelper _dbHelper;
+        private readonly DbGridAreaHelper _dbGridAreaHelper;
 
-        public OnConsumptionMeteringPointCreated(IOutbox outbox, IOutboxMessageFactory outboxMessageFactory, DbHelper dbHelper)
+        public OnConsumptionMeteringPointCreated(IOutbox outbox, IOutboxMessageFactory outboxMessageFactory, DbGridAreaHelper dbGridAreaHelper)
             : base(outbox, outboxMessageFactory)
         {
-            _dbHelper = dbHelper;
+            _dbGridAreaHelper = dbGridAreaHelper;
         }
 
         public override async Task Handle(ConsumptionMeteringPointCreated notification, CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
-            var gridAreaCode = await _dbHelper.GetGridAreaCodeAsync(notification.GridAreaLinkId).ConfigureAwait(false);
+            var gridAreaCode = await _dbGridAreaHelper.GetGridAreaCodeAsync(notification.GridAreaLinkId).ConfigureAwait(false);
             var message = new ConsumptionMeteringPointCreatedIntegrationEvent(
                 notification.MeteringPointId.ToString(),
                 notification.GsrnNumber,
