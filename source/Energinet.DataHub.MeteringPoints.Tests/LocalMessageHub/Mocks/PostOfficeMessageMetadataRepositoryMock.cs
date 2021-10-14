@@ -26,7 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
 
         public Task<MessageHubMessage> GetMessageAsync(Guid messageId)
         {
-            return Task.FromResult(_messageHubMessages.First());
+            return Task.FromResult(_messageHubMessages.First(x => x.Id == messageId));
         }
 
         public Task<MessageHubMessage[]> GetMessagesAsync(Guid[] messageIds)

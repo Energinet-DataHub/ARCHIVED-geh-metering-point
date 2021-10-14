@@ -15,6 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
 using Microsoft.Extensions.Logging;
@@ -24,14 +25,19 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
     public class ServiceBusMessageIdempotencyMiddleware : IFunctionsWorkerMiddleware
     {
         private const string MessageIdKey = "MessageId";
-        private const string MessageTypeKey = "Label";
+        private const string CustomPropertyKey = "UserProperties";
         private readonly ILogger _logger;
         private readonly IIncomingMessageRegistry _incomingMessageRegistry;
+        private readonly IJsonSerializer _jsonSerializer;
 
-        public ServiceBusMessageIdempotencyMiddleware(ILogger logger, IIncomingMessageRegistry incomingMessageRegistry)
+        public ServiceBusMessageIdempotencyMiddleware(
+            ILogger logger,
+            IIncomingMessageRegistry incomingMessageRegistry,
+            IJsonSerializer jsonSerializer)
         {
             _logger = logger;
             _incomingMessageRegistry = incomingMessageRegistry ?? throw new ArgumentNullException(nameof(incomingMessageRegistry));
+            _jsonSerializer = jsonSerializer;
         }
 
         public async Task Invoke(FunctionContext context, FunctionExecutionDelegate next)
@@ -39,7 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             if (context == null) throw new ArgumentNullException(nameof(context));
             if (next == null) throw new ArgumentNullException(nameof(next));
 
-            var messageType = GetValueFromMessage(context, MessageTypeKey);
+            var messageType = GetMessageType(context);
             var messageId = GetValueFromMessage(context, MessageIdKey);
             if (messageId != null && messageType != null)
             {
@@ -58,6 +64,19 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
         {
             context.BindingContext.BindingData.TryGetValue(key, out var value);
             return value?.ToString();
+        }
+
+        private string? GetMessageType(FunctionContext context)
+        {
+            var userProperties = GetValueFromMessage(context, CustomPropertyKey);
+
+            if (userProperties is null)
+            {
+                throw new InvalidOperationException($"Service bus metadata must be specified as User Properties attributes");
+            }
+
+            var eventMetadata = _jsonSerializer.Deserialize<EventMetadata>(userProperties);
+            return eventMetadata.MessageType ?? throw new InvalidOperationException("Service bus metadata property MessageType is missing");
         }
 
         private async Task RegisterIdempotentMessageAsync(string messageId, string messageType)

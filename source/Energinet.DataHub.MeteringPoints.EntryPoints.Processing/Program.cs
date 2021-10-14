@@ -34,6 +34,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bundling;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
@@ -44,13 +45,13 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GridAreas;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notifications;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
-using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub.Bundling;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity;
+using Energinet.DataHub.MeteringPoints.Messaging.Bundling;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentValidation;
 using Microsoft.Azure.Functions.Worker;
@@ -81,7 +82,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             options.UseMiddleware<CorrelationIdMiddleware>();
             options.UseMiddleware<EntryPointTelemetryScopeMiddleware>();
             options.UseMiddleware<ServiceBusUserContextMiddleware>();
-            options.UseMiddleware<ServiceBusMessageIdempotencyMiddleware>();
+            // TODO: Fix the duplicate check for ingestion messages and re-enable this https://app.zenhub.com/workspaces/batman-60a6105157304f00119be86e/issues/energinet-datahub/geh-metering-point/378
+            // options.UseMiddleware<ServiceBusMessageIdempotencyMiddleware>();
         }
 
         protected override void ConfigureServiceCollection(IServiceCollection services)

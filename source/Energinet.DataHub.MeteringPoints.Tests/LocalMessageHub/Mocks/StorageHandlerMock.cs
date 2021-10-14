@@ -12,29 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+using System;
+using System.IO;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
-using Energinet.DataHub.MeteringPoints.Application.MessageHub;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
+using Energinet.DataHub.MessageHub.Client.Model;
+using Energinet.DataHub.MessageHub.Client.Storage;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
 {
-    public class DispatcherMock : IMessageDispatcher
+    public class StorageHandlerMock : IStorageHandler
     {
-        private readonly List<MessageReceived> _dispatchedCommands = new();
-
-        public Task DispatchAsync(IOutboundMessage message, CancellationToken cancellationToken = default)
+        public Task<Uri> AddStreamToStorageAsync(Stream stream, DataBundleRequestDto requestDto)
         {
-            _dispatchedCommands.Add((MessageReceived)message);
-            return Task.CompletedTask;
+            return Task.FromResult(new Uri("https://someUri"));
         }
 
-        public bool IsDispatched(string correlation)
+        public Task<Stream> GetStreamFromStorageAsync(Uri contentPath)
         {
-            return _dispatchedCommands.Any(x => x.Correlation == correlation);
+            return Task.FromResult((Stream)new MemoryStream());
         }
     }
 }
