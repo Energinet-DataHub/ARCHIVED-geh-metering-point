@@ -12,24 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.Addresses;
+using System;
+using System.Runtime.Serialization;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
 {
-    public class StreetNameIsRequiredRule : IBusinessRule
+    [Serializable]
+    public class ProductionMeteringPointException : BusinessOperationException
     {
-        private readonly GsrnNumber _meteringpointGsrn;
-        private readonly Address _address;
-
-        public StreetNameIsRequiredRule(GsrnNumber meteringpointGSRN, Address address)
+        public ProductionMeteringPointException(string? message, Exception? innerException)
+            : base(message, innerException)
         {
-            _meteringpointGsrn = meteringpointGSRN;
-            _address = address;
         }
 
-        public bool IsBroken => string.IsNullOrWhiteSpace(_address.StreetName);
+        public ProductionMeteringPointException()
+        {
+        }
 
-        public ValidationError ValidationError => new StreetNameIsRequiredRuleError(_meteringpointGsrn);
+        public ProductionMeteringPointException(string? message)
+            : base(message)
+        {
+        }
+
+        protected ProductionMeteringPointException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
     }
 }

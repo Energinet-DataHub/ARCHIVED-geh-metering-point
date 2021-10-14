@@ -12,32 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
 {
-    public abstract record MeteringPointDetails(
+    public record ProductionMeteringPointDetails(
         MeteringPointId Id,
         GsrnNumber GsrnNumber,
         Address Address,
         MeteringMethod MeteringMethod,
         GridAreaLinkId GridAreaLinkId,
         GsrnNumber? PowerPlantGsrnNumber,
+        bool ProductionObligation,
         LocationDescription? LocationDescription,
         MeterId? MeterNumber,
         ReadingOccurrence ReadingOccurrence,
         PowerLimit PowerLimit,
         EffectiveDate EffectiveDate,
-        SettlementMethod SettlementMethod,
         NetSettlementGroup NetSettlementGroup,
         DisconnectionType DisconnectionType,
         ConnectionType? ConnectionType,
-        AssetType? AssetType,
-        ScheduledMeterReadingDate? ScheduledMeterReadingDate,
-        Capacity? Capacity)
-        : MeteringPoints.MeteringPointDetails(
+        AssetType AssetType,
+        Capacity Capacity) : MeteringPointDetails(
         Id,
         GsrnNumber,
         Address,
@@ -49,8 +48,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
         ReadingOccurrence,
         PowerLimit,
         EffectiveDate,
-        SettlementMethod,
-        AssetType,
-        ScheduledMeterReadingDate,
-        Capacity);
+        NetSettlementGroup,
+        DisconnectionType,
+        ConnectionType);
 }

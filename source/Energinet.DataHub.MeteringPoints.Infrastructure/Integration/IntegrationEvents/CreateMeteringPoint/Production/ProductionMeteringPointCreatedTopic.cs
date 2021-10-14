@@ -12,21 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using NodaTime;
-
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules.Connect
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Production
 {
-    public class MustHaveEnergySupplierRuleError : ValidationError
-    {
-        public MustHaveEnergySupplierRuleError(GsrnNumber meteringPointGSRN, Instant effectiveDate)
-        {
-            MeteringPointGsrn = meteringPointGSRN;
-            EffectiveDate = effectiveDate;
-        }
-
-        public GsrnNumber MeteringPointGsrn { get; }
-
-        public Instant EffectiveDate { get;  }
-    }
+    public record ProductionMeteringPointCreatedTopic(string Name) : Topic;
 }

@@ -26,7 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         [Fact]
         public void Should_return_error_when_subtype_is_physical_and_meter_id_is_undefined()
         {
-            var details = CreateDetails()
+            var details = CreateConsumptionDetails()
                 with
                 {
                     MeterNumber = null, MeteringMethod = MeteringMethod.Physical,
@@ -40,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         [Fact]
         public void Should_return_error_when_subtype_is_not_and_meter_id_is_defined()
         {
-            var details = CreateDetails()
+            var details = CreateConsumptionDetails()
                 with
                 {
                     MeterNumber = MeterId.Create("A1234"),
