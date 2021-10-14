@@ -12,16 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
-
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub.Bundling
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub
 {
-    public class RejectMessageBundleHandler : BundleHandler<RejectMessage>
+    /// <summary>
+    /// Handling of outgoing notifications
+    /// </summary>
+    public interface INotificationHandler
     {
-        public RejectMessageBundleHandler(IJsonSerializer jsonSerializer, IDocumentSerializer<RejectMessage> documentSerializer)
-            : base(jsonSerializer, documentSerializer)
-        {
-        }
+        /// <summary>
+        /// Handle a single outgoing notification
+        /// </summary>
+        /// <param name="messageHubMessage"></param>
+        public void Handle(MessageHubMessage messageHubMessage);
     }
 }

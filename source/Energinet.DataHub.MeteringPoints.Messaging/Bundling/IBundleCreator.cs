@@ -12,24 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Energinet.DataHub.MessageHub.Client.Model;
-using Energinet.DataHub.MessageHub.Client.Storage;
+using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 
-namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
+namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling
 {
-    public class MessageHubStorageClientMock : IStorageHandler
+    /// <summary>
+    /// Bundle creator
+    /// </summary>
+    public interface IBundleCreator
     {
-        public Task<Uri> AddStreamToStorageAsync(Stream stream, DataBundleRequestDto requestDto)
-        {
-            return Task.FromResult(new Uri("https://someUri"));
-        }
-
-        public Task<Stream> GetStreamFromStorageAsync(Uri contentPath)
-        {
-            return Task.FromResult((Stream)new MemoryStream());
-        }
+        /// <summary>
+        /// Create a bundle.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        Task<string> CreateBundleAsync(IList<MessageHubMessage> messages);
     }
 }

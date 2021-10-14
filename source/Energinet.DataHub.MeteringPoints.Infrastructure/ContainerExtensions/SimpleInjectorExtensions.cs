@@ -18,12 +18,7 @@ using System.Reflection;
 using Energinet.DataHub.MeteringPoints.Application.Authorization;
 using Energinet.DataHub.MeteringPoints.Application.Authorization.AuthorizationHandlers;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
-using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
-using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub.Bundling;
-using MediatR;
 using SimpleInjector;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions
@@ -35,10 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions
             if (container == null) throw new ArgumentNullException(nameof(container));
 
             container.Register(typeof(IAuthorizationHandler<,>), typeof(InputAuthorizationHandler<,>));
-            container.Collection.Register(typeof(IAuthorizationHandler<,>), new[]
-            {
-                typeof(ExampleAuthorizationHandler),
-            });
+            container.Collection.Register(typeof(IAuthorizationHandler<,>), new[] { typeof(ExampleAuthorizationHandler), });
         }
 
         public static void AddValidationErrorConversion(this Container container, bool validateRegistrations, params Assembly[] assemblies)
@@ -87,27 +79,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions
                 throw new InvalidOperationException(
                     $"There should not be any duplicate error converter registrations, but we found these duplicates:{Environment.NewLine}{string.Join(Environment.NewLine, duplicateRegistrations)}");
             }
-        }
-
-        public static void AddLocalMessageHubClient(this Container container)
-        {
-            if (container == null) throw new ArgumentNullException(nameof(container));
-
-            container.Register<ILocalMessageHubClient, LocalMessageHubClient>(Lifestyle.Scoped);
-            container.Register<IMessageHubMessageRepository, MessageHubMessageRepository>(Lifestyle.Scoped);
-
-            container.Register<IBundleCreator, BundleCreator>(Lifestyle.Scoped);
-            container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageSerializer>(Lifestyle.Singleton);
-            container.Register<IDocumentSerializer<RejectMessage>, RejectMessageSerializer>(Lifestyle.Singleton);
-        }
-
-        public static void AddLocalMessageHubDataAvailableClient(this Container container)
-        {
-            if (container == null) throw new ArgumentNullException(nameof(container));
-
-            container.Register<IMessageHubMessageRepository, MessageHubMessageRepository>(Lifestyle.Scoped);
-            container.Register<ILocalMessageHubDataAvailableClient, LocalMessageHubDataAvailableClient>(Lifestyle.Scoped);
-            container.Register<MessageHubMessageFactory>();
         }
 
         private static ErrorConverterRegistration GetErrorConverterRegistration(this SimpleInjector.Container container, Type type)
