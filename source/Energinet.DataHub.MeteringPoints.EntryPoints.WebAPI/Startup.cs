@@ -143,9 +143,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI v1"));
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI v1"));
 
             app.UseHttpsRedirection();
 
