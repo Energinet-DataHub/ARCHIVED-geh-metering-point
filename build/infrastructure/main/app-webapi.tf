@@ -18,7 +18,8 @@ resource "azurerm_app_service" "webapi" {
   app_service_plan_id = azurerm_app_service_plan.meteringpoint.id
 
   site_config {
-    dotnet_framework_version = "v4.0"
+    linux_fx_version = "DOTNETCORE|5.0"
+    dotnet_framework_version = "v5.0"
     cors {
       allowed_origins = ["*"]
     }
@@ -32,7 +33,7 @@ resource "azurerm_app_service" "webapi" {
   connection_string {
     name  = "METERINGPOINT_DB_CONNECTION_STRING"
     type  = "SQLServer"
-    value = "Server=some-server.mydomain.com;Integrated Security=SSPI"
+    value = local.METERING_POINT_CONNECTION_STRING
   }
 
   connection_string {
