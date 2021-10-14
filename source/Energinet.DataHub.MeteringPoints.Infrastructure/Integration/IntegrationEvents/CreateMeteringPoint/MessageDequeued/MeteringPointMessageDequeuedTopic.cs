@@ -14,5 +14,5 @@
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.MessageDequeued
 {
-    public record MeteringPointDequeuedTopic(string Name) : Topic;
+    public record MeteringPointMessageDequeuedTopic(string Name) : Topic;
 }
