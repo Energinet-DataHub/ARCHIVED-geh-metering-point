@@ -45,7 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCha
         DateTime SupplyStartDateAndOrTimeDateTime,
         string Description,
         MainAddress UsagePointLocationMainAddress,
-        bool UsagePointLocationOfficialAddressIndicator,
+        bool UsagePointLocationActualAddressIndicator,
         string UsagePointLocationGeoInfoReference,
         ParentMarketEvaluationPoint ParentMarketEvaluationPointId,
         ChildMarketEvaluationPoint ChildMarketEvaluationPoint);

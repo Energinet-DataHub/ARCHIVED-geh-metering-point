@@ -13,15 +13,11 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
-using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
-using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappings;
@@ -31,8 +27,6 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using SimpleInjector;
 
@@ -51,7 +45,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 
         protected override void ConfigureFunctionsWorkerDefaults(IFunctionsWorkerApplicationBuilder options)
         {
-            if (options == null) throw new ArgumentNullException(nameof(options));
             base.ConfigureFunctionsWorkerDefaults(options);
 
             options.UseMiddleware<CorrelationIdMiddleware>();

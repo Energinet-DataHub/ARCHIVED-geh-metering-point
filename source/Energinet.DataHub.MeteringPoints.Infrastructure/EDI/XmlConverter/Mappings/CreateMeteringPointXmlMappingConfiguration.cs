@@ -31,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 .AddProperty(x => x.MeteringMethod, TranslateMeteringPointSubType, "MarketEvaluationPoint", "meteringMethod")
                 .AddProperty(x => x.MeterReadingOccurrence, TranslateMeterReadingOccurrence, "MarketEvaluationPoint", "readCycle")
                 .AddProperty(x => x.MeteringGridArea, "MarketEvaluationPoint", "meteringGridArea_Domain.mRID")
-                .AddProperty(x => x.PowerPlant, "MarketEvaluationPoint", "Linked_MarketEvaluationPoint.mRID")
+                .AddProperty(x => x.PowerPlant, "MarketEvaluationPoint", "linked_MarketEvaluationPoint.mRID")
                 .AddProperty(x => x.LocationDescription, "MarketEvaluationPoint", "description")
                 .AddProperty(x => x.SettlementMethod, TranslateSettlementMethod, "MarketEvaluationPoint", "settlementMethod")
                 .AddProperty(x => x.UnitType, "MarketEvaluationPoint", "Series", "quantity_Measure_Unit.name")
@@ -57,13 +57,13 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 .AddProperty(x => x.ParentRelatedMeteringPoint, "MarketEvaluationPoint", "parent_MarketEvaluationPoint.mRID")
                 .AddProperty(x => x.ProductType, TranslateProductType, "MarketEvaluationPoint", "Series", "product")
                 .AddProperty(x => x.PhysicalConnectionCapacity, "MarketEvaluationPoint", "physicalConnectionCapacity")
-                .AddProperty(x => x.IsOfficialAddress, OfficialAddressIndicator, "MarketEvaluationPoint", "usagePointLocation.officialAddressIndicator")
+                .AddProperty(x => x.IsActualAddress, ActualAddressIndicator, "MarketEvaluationPoint", "usagePointLocation.actualAddressIndicator")
                 .AddProperty(x => x.GeoInfoReference, "MarketEvaluationPoint", "usagePointLocation.geoInfoReference")
                 .AddProperty(x => x.MeasureUnitType, TranslateMeasureUnitType, "MarketEvaluationPoint", "Series", "quantity_Measure_Unit.name")
                 .AddProperty(x => x.ScheduledMeterReadingDate, "MarketEvaluationPoint", "nextReadingDate"));
         }
 
-        private static bool? OfficialAddressIndicator(XmlElementInfo element)
+        private static bool? ActualAddressIndicator(XmlElementInfo element)
         {
             if (bool.TryParse(element?.SourceValue, out var result))
             {

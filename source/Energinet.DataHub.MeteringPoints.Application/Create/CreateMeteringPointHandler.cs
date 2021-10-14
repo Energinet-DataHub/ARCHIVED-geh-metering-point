@@ -20,7 +20,6 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
-using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
@@ -133,7 +132,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 MeteringPointId.New(),
                 GsrnNumber.Create(request.GsrnNumber),
                 CreateAddress(request),
-                request.IsOfficialAddress.GetValueOrDefault(), // TODO: change to boolean in domain?
+                request.IsActualAddress.GetValueOrDefault(), // TODO: change to boolean in domain?
                 EnumerationType.FromName<MeteringMethod>(request.MeteringMethod),
                 meteringPointType,
                 new GridAreaLinkId(Guid.NewGuid()), // TODO: Use links correct, when updating creation of production metering pints
@@ -215,7 +214,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 floor: request.FloorIdentification,
                 room: request.RoomIdentification,
                 municipalityCode: string.IsNullOrWhiteSpace(request.MunicipalityCode) ? default : int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()),
-                isOfficial: request.IsOfficialAddress.GetValueOrDefault(),
+                isActual: request.IsActualAddress.GetValueOrDefault(),
                 geoInfoReference: string.IsNullOrWhiteSpace(request.GeoInfoReference) ? default : Guid.Parse(request.GeoInfoReference));
         }
 

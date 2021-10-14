@@ -31,6 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Serialization
         {
             _options = new JsonSerializerOptions();
             _options.Converters.Add(NodaConverters.InstantConverter);
+            _options.Converters.Add(new CustomJsonConverterForType());
         }
 
         public async ValueTask<object> DeserializeAsync(Stream utf8Json, Type returnType)

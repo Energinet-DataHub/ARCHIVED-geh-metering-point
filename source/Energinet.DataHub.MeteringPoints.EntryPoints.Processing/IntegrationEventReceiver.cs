@@ -13,8 +13,10 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.Eventing.Reader;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notifications;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using MediatR;
 using Microsoft.Azure.Functions.Worker;
@@ -28,17 +30,20 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
         private readonly ProtobufInboundMapperFactory _protobufInboundMapperFactory;
         private readonly IProtobufMessageFactory _protobufMessageFactory;
         private readonly INotificationReceiver _notificationReceiver;
+        private readonly IJsonSerializer _jsonSerializer;
 
         public IntegrationEventReceiver(
             ILogger logger,
             ProtobufInboundMapperFactory protobufInboundMapperFactory,
             IProtobufMessageFactory protobufMessageFactory,
-            INotificationReceiver notificationReceiver)
+            INotificationReceiver notificationReceiver,
+            IJsonSerializer jsonSerializer)
         {
             _logger = logger;
             _protobufInboundMapperFactory = protobufInboundMapperFactory ?? throw new ArgumentNullException(nameof(protobufInboundMapperFactory));
             _protobufMessageFactory = protobufMessageFactory ?? throw new ArgumentNullException(nameof(protobufMessageFactory));
             _notificationReceiver = notificationReceiver ?? throw new ArgumentNullException(nameof(notificationReceiver));
+            _jsonSerializer = jsonSerializer;
         }
 
         [Function("IntegrationEventReceiver")]
@@ -56,16 +61,17 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             return _notificationReceiver.PublishAndCommitAsync(notification);
         }
 
-        private static string GetEventTypeName(FunctionContext context)
+        private string GetEventTypeName(FunctionContext context)
         {
-            context.BindingContext.BindingData.TryGetValue("Label", out var label);
+            context.BindingContext.BindingData.TryGetValue("UserProperties", out var metadata);
 
-            if (label is null)
+            if (metadata is null)
             {
-                throw new InvalidOperationException($"Service bus message must specify the event type using the 'Label/Subject' attribute.");
+                throw new InvalidOperationException($"Service bus metadata must be specified as User Properties attributes");
             }
 
-            return label.ToString()!;
+            var eventMetadata = _jsonSerializer.Deserialize<EventMetadata>(metadata.ToString() ?? throw new InvalidOperationException());
+            return eventMetadata.MessageType ?? throw new InvalidOperationException("Service bus metadata property MessageType is missing");
         }
     }
 }

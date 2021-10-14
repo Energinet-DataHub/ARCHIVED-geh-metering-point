@@ -17,5 +17,5 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common.Users
     /// <summary>
     /// User identity
     /// </summary>
-    public record UserIdentity(string Id);
+    public record UserIdentity(string Id, string GlnNumber);
 }

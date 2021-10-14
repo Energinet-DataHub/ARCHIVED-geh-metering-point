@@ -13,11 +13,9 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
-using Microsoft.ApplicationInsights;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
 using TraceContext = Energinet.DataHub.MeteringPoints.Infrastructure.Correlation.TraceContext;

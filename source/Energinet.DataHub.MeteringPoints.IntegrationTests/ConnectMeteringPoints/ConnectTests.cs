@@ -23,7 +23,6 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharact
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
-using MediatR;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -52,7 +51,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             await MarkAsEnergySupplierAssigned(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
             await SendCommandAsync(connectMeteringPointRequest).ConfigureAwait(false);
 
-            AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == typeof(ConnectMeteringPointAccepted).FullName);
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConnectMeteringPointAccepted);
         }
 
         [Fact]
@@ -65,7 +64,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             await MarkAsEnergySupplierAssigned(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
             await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
-            AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == typeof(AccountingPointCharacteristicsMessage).FullName);
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.AccountingPointCharacteristicsMessage);
         }
 
         [Fact]
@@ -77,7 +76,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             await SendCommandAsync(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
             await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
-            AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == typeof(ConnectMeteringPointRejected).FullName);
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConnectMeteringPointRejected);
         }
 
         [Fact]
@@ -106,7 +105,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             await SendCommandAsync(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
             await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
-            AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == typeof(ConnectMeteringPointRejected).FullName!);
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConnectMeteringPointRejected);
         }
 
         [Fact]
@@ -116,7 +115,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
 
             await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
-            AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == typeof(ConnectMeteringPointRejected).FullName!);
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConnectMeteringPointRejected);
         }
 
         [Fact]
@@ -131,7 +130,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
             await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
-            AssertOutboxMessage<PostOfficeEnvelope>(envelope => envelope.MessageType == typeof(ConnectMeteringPointRejected).FullName!);
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConnectMeteringPointRejected);
         }
 
         [Fact(Skip = "Not implemented yet")]
