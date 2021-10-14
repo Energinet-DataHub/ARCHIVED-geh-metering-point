@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Globalization;
+using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
@@ -32,7 +34,28 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
 
             if (processType == BusinessProcessType.CreateMeteringPoint) return CreateNewMeteringPointCommand(document);
             if (processType == BusinessProcessType.ConnectMeteringPoint) return CreateConnectMeteringPointCommand(document);
+            if (processType == BusinessProcessType.ChangeMasterData) return CreateChangeMasterDataCommand(document);
             return null;
+        }
+
+        private static IBusinessRequest? CreateChangeMasterDataCommand(MasterDataDocument document)
+        {
+            return new ChangeMasterDataRequest(
+                TransactionId: document.TransactionId,
+                GsrnNumber: document.GsrnNumber,
+                EffectiveDate: document.EffectiveDate,
+                StreetName: document.StreetName,
+                StreetCode: document.StreetCode,
+                PostCode: document.PostCode,
+                City: document.CityName,
+                BuildingNumber: document.BuildingNumber,
+                CitySubDivision: document.CitySubDivisionName,
+                CountryCode: document.CountryCode,
+                Floor: document.FloorIdentification,
+                Room: document.RoomIdentification,
+                MunicipalityCode: int.Parse(document.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()),
+                IsActual: document.IsActualAddress,
+                GeoInfoReference: Guid.Parse(document.GeoInfoReference!));
         }
 
         private static IBusinessRequest? CreateConnectMeteringPointCommand(MasterDataDocument document)
@@ -61,7 +84,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
                     MaximumPower = document.MaximumPower,
                     MeteringMethod = document.MeteringMethod,
                     MeterNumber = document.MeterNumber,
-                    MunicipalityCode = document.MunicipalityCode,
+                    MunicipalityCode = document.MunicipalityCode.ToString()!,
                     PostCode = document.PostCode,
                     PowerPlant = document.PowerPlant,
                     RoomIdentification = document.RoomIdentification,
