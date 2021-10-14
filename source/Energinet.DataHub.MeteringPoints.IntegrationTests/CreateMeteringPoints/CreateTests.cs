@@ -56,6 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             var request = CreateRequest() with
                 {
                     TypeOfMeteringPoint = nameof(MeteringPointType.Production),
+                    SettlementMethod = null,
                 };
 
             await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
