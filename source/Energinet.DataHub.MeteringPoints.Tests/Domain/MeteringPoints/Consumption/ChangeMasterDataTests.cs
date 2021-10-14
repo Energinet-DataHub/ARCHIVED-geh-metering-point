@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Linq;
+using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumption
@@ -44,19 +45,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             var result = meteringPoint.CanChange(details);
 
             Assert.True(result.Success);
-        }
-
-        [Fact]
-        public void Should_change_street_name()
-        {
-            var meteringPoint = CreateMeteringPoint();
-            var details = new MasterDataDetails("New Street Name");
-
-            meteringPoint.Change(details);
-
-            var changeEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MasterDataChanged) as MasterDataChanged;
-            Assert.NotNull(changeEvent);
-            Assert.Equal(details.StreetName, changeEvent?.StreetName);
         }
 
         [Fact]
@@ -95,19 +83,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         }
 
         [Fact]
-        public void Should_change_post_code()
-        {
-            var meteringPoint = CreateMeteringPoint();
-            var details = new MasterDataDetails(PostCode: "7000");
-
-            meteringPoint.Change(details);
-
-            var changeEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MasterDataChanged) as MasterDataChanged;
-            Assert.NotNull(changeEvent);
-            Assert.Equal(details.PostCode, changeEvent?.PostCode);
-        }
-
-        [Fact]
         public void Should_return_error_when_city_is_blank()
         {
             var meteringPoint = CreateMeteringPoint();
@@ -134,16 +109,39 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         }
 
         [Fact]
-        public void Should_change_city()
+        public void Should_change_address()
         {
             var meteringPoint = CreateMeteringPoint();
-            var details = new MasterDataDetails(City: "New City Name");
+            var details = new MasterDataDetails(
+                StreetName: "New Street Name",
+                PostCode: "6000",
+                City: "New City Name",
+                StreetCode: "0500",
+                BuildingNumber: "4",
+                CitySubDivision: "New",
+                CountryCode: CountryCode.DK,
+                Floor: "9",
+                Room: "9",
+                MunicipalityCode: 999,
+                IsActual: true,
+                GeoInfoReference: Guid.NewGuid());
 
             meteringPoint.Change(details);
 
             var changeEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MasterDataChanged) as MasterDataChanged;
             Assert.NotNull(changeEvent);
             Assert.Equal(details.City, changeEvent?.City);
+            Assert.Equal(details.Floor, changeEvent?.Floor);
+            Assert.Equal(details.Room, changeEvent?.Room);
+            Assert.Equal(details.BuildingNumber, changeEvent?.BuildingNumber);
+            Assert.Equal(details.CountryCode?.Name, changeEvent?.CountryCode);
+            Assert.Equal(details.PostCode, changeEvent?.PostCode);
+            Assert.Equal(details.StreetCode, changeEvent?.StreetCode);
+            Assert.Equal(details.StreetName, changeEvent?.StreetName);
+            Assert.Equal(details.CitySubDivision, changeEvent?.CitySubDivision);
+            Assert.Equal(details.IsActual, changeEvent?.IsActual);
+            Assert.Equal(details.MunicipalityCode, changeEvent?.MunicipalityCode);
+            Assert.Equal(details.GeoInfoReference, changeEvent?.GeoInfoReference);
         }
 
         private static ConsumptionMeteringPoint CreateMeteringPoint()

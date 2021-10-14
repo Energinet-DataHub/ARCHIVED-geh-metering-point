@@ -31,8 +31,18 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
             var integration = new MasterDataChangedIntegrationEvent(
-                notification.StreetName,
-                notification.PostCode);
+                streetName: notification.StreetName,
+                postCode: notification.PostCode,
+                city: notification.City,
+                streetCode: notification.StreetCode,
+                buildingNumber: notification.BuildingNumber,
+                citySubDivision: notification.CitySubDivision,
+                countryCode: notification.CountryCode,
+                floor: notification.Floor,
+                room: notification.Room,
+                municipalityCode: notification.MunicipalityCode,
+                isActual: notification.IsActual,
+                geoInfoReference: notification.GeoInfoReference);
             CreateAndAddOutboxMessage(integration);
             return Task.CompletedTask;
         }

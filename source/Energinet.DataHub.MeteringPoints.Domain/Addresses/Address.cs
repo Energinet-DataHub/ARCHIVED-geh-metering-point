@@ -76,9 +76,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
             bool isActual,
             Guid? geoInfoReference)
         {
-            if (CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode).Success == false)
+            var result = CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode);
+            if (result.Success == false)
             {
-                throw new InvalidAddressException();
+                throw new InvalidAddressException(result.Errors);
             }
 
             return new(

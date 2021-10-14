@@ -12,10 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
@@ -28,6 +30,48 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
         public ChangeMasterDataTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
         {
+        }
+
+        [Fact]
+        public async Task Should_change_address()
+        {
+            await CreateMeteringPointAsync().ConfigureAwait(false);
+            var request = new ChangeMasterDataRequest()
+                with
+                {
+                    TransactionId = SampleData.Transaction,
+                    GsrnNumber = SampleData.GsrnNumber,
+                    StreetName = "New Street Name",
+                    PostCode = "6000",
+                    City = "New City Name",
+                    StreetCode = "0500",
+                    BuildingNumber = "4",
+                    CitySubDivision = "New",
+                    CountryCode = CountryCode.DK.Name,
+                    Floor = "9",
+                    Room = "9",
+                    MunicipalityCode = 999,
+                    IsActual = true,
+                    GeoInfoReference = Guid.NewGuid(),
+                };
+
+            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+
+            AssertConfirmMessage(DocumentType.ChangeMasterDataAccepted);
+            var integrationEvent = FindIntegrationEvent<MasterDataChangedIntegrationEvent>();
+            Assert.NotNull(integrationEvent);
+            Assert.Equal(request.StreetName, integrationEvent?.StreetName);
+            Assert.Equal(request.PostCode, integrationEvent?.PostCode);
+            Assert.Equal(request.City, integrationEvent?.City);
+            Assert.Equal(request.Floor, integrationEvent?.Floor);
+            Assert.Equal(request.Room, integrationEvent?.Room);
+            Assert.Equal(request.BuildingNumber, integrationEvent?.BuildingNumber);
+            Assert.Equal(request.CountryCode, integrationEvent?.CountryCode);
+            Assert.Equal(request.StreetCode, integrationEvent?.StreetCode);
+            Assert.Equal(request.CitySubDivision, integrationEvent?.CitySubDivision);
+            Assert.Equal(request.IsActual, integrationEvent?.IsActual);
+            Assert.Equal(request.MunicipalityCode, integrationEvent?.MunicipalityCode);
+            Assert.Equal(request.GeoInfoReference, integrationEvent?.GeoInfoReference);
         }
 
         [Fact]
@@ -67,26 +111,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
         }
 
         [Fact]
-        public async Task Should_change_street_name()
-        {
-            await CreateMeteringPointAsync().ConfigureAwait(false);
-            var request = new ChangeMasterDataRequest()
-                with
-                {
-                    TransactionId = SampleData.Transaction,
-                    GsrnNumber = SampleData.GsrnNumber,
-                    StreetName = "New Street Name",
-                };
-
-            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
-
-            AssertConfirmMessage(DocumentType.ChangeMasterDataAccepted);
-            var integrationEvent = FindIntegrationEvent<MasterDataChangedIntegrationEvent>();
-            Assert.NotNull(integrationEvent);
-            Assert.Equal(request.StreetName, integrationEvent?.StreetName);
-        }
-
-        [Fact]
         public async Task Should_reject_if_post_code_is_empty()
         {
             await CreateMeteringPointAsync().ConfigureAwait(false);
@@ -102,26 +126,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
             await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
 
             AssertValidationError("E86");
-        }
-
-        [Fact]
-        public async Task Should_change_post_code()
-        {
-            await CreateMeteringPointAsync().ConfigureAwait(false);
-            var request = new ChangeMasterDataRequest()
-                with
-                {
-                    TransactionId = SampleData.Transaction,
-                    GsrnNumber = SampleData.GsrnNumber,
-                    PostCode = "7000",
-                };
-
-            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
-
-            AssertConfirmMessage(DocumentType.ChangeMasterDataAccepted);
-            var integrationEvent = FindIntegrationEvent<MasterDataChangedIntegrationEvent>();
-            Assert.NotNull(integrationEvent);
-            Assert.Equal(request.PostCode, integrationEvent?.PostCode);
         }
 
         [Fact]

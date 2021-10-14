@@ -12,10 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.Addresses;
+
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 {
     public record MasterDataDetails(
         string? StreetName = null,
         string? PostCode = null,
-        string? City = null);
+        string? City = null,
+        string? StreetCode = null,
+        string? BuildingNumber = null,
+        string? CitySubDivision = null,
+        CountryCode? CountryCode = null,
+        string? Floor = null,
+        string? Room = null,
+        int? MunicipalityCode = null,
+        bool? IsActual = null,
+        Guid? GeoInfoReference = null);
 }

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
@@ -22,5 +23,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
         string EffectiveDate = "",
         string? StreetName = null,
         string? PostCode = null,
-        string? City = null) : IBusinessRequest;
+        string? City = null,
+        string? StreetCode = null,
+        string? BuildingNumber = null,
+        string? CitySubDivision = null,
+        string? CountryCode = null,
+        string? Floor = null,
+        string? Room = null,
+        int? MunicipalityCode = null,
+        bool? IsActual = null,
+        Guid? GeoInfoReference = null) : IBusinessRequest;
 }

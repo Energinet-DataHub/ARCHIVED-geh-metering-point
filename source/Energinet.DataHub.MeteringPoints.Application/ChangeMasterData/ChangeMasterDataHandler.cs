@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -48,7 +49,19 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
                 return validationResult;
             }
 
-            var masterDataDetails = new MasterDataDetails(request.StreetName, request.PostCode, request.City);
+            var masterDataDetails = new MasterDataDetails(
+                request.StreetName,
+                request.PostCode,
+                request.City,
+                request.StreetCode,
+                request.BuildingNumber,
+                request.CitySubDivision,
+                request.CountryCode == null ? null : EnumerationType.FromName<CountryCode>(request.CountryCode),
+                request.Floor,
+                request.Room,
+                request.MunicipalityCode,
+                request.IsActual,
+                request.GeoInfoReference);
             var rulesCheckResult = CheckBusinessRules(request, masterDataDetails, meteringPoint!);
             if (!rulesCheckResult.Success)
             {

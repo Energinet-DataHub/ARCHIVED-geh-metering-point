@@ -13,7 +13,9 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
@@ -24,9 +26,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
         }
 
-        public InvalidAddressException(string? message)
+        public InvalidAddressException(string message)
             : base(message)
         {
+        }
+
+        public InvalidAddressException(IReadOnlyCollection<ValidationError> validationErrors)
+            : base()
+        {
+            ValidationErrors = validationErrors;
         }
 
         public InvalidAddressException(string message, Exception innerException)
@@ -38,5 +46,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             : base(info, context)
         {
         }
+
+        public IReadOnlyCollection<ValidationError> ValidationErrors { get; } = new List<ValidationError>();
     }
 }

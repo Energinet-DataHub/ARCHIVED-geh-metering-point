@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -19,11 +20,20 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Eve
 {
     public class MasterDataChanged : DomainEventBase
     {
-        public MasterDataChanged(string streetName, string postCode, string city)
+        public MasterDataChanged(string streetName, string postCode, string city, string streetCode, string buildingNumber, string citySubDivision, string countryCode, string floor, string room, int municipalityCode, bool isActual, Guid geoInfoReference)
         {
             StreetName = streetName;
             PostCode = postCode;
             City = city;
+            StreetCode = streetCode;
+            BuildingNumber = buildingNumber;
+            CitySubDivision = citySubDivision;
+            CountryCode = countryCode;
+            Floor = floor;
+            Room = room;
+            MunicipalityCode = municipalityCode;
+            IsActual = isActual;
+            GeoInfoReference = geoInfoReference;
         }
 
         public string StreetName { get; }
@@ -31,5 +41,23 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Eve
         public string PostCode { get; }
 
         public string City { get; }
+
+        public string StreetCode { get; }
+
+        public string BuildingNumber { get; }
+
+        public string CitySubDivision { get; }
+
+        public string CountryCode { get; }
+
+        public string Floor { get; }
+
+        public string Room { get; }
+
+        public int MunicipalityCode { get; }
+
+        public bool IsActual { get; }
+
+        public Guid GeoInfoReference { get; }
     }
 }
