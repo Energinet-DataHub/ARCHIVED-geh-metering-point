@@ -33,7 +33,7 @@ module "azfun_localmessagehub" {
   }
   connection_string                         = {
     MESSAGEHUB_STORAGE_CONNECTION_STRING  = module.stor_postoffice.primary_connection_string
-    MESSAGEHUB_QUEUE_CONNECTION_STRING    = data.azurerm_key_vault_secret.shared_resources_integrationevents_sendlisten_connection_string.value
+    MESSAGEHUB_QUEUE_CONNECTION_STRING    = data.azurerm_key_vault_secret.shared_resources_integrationevents_transceiver_connection_string.value
   }
   dependencies                              = [
     module.appi.dependent_on,
