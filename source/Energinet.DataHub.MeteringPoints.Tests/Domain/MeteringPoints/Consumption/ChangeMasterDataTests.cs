@@ -107,6 +107,45 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(details.PostCode, changeEvent?.PostCode);
         }
 
+        [Fact]
+        public void Should_return_error_when_city_is_blank()
+        {
+            var meteringPoint = CreateMeteringPoint();
+            var details = new MasterDataDetails()
+                with
+                {
+                    City = string.Empty,
+                };
+
+            var result = meteringPoint.CanChange(details);
+
+            AssertError<CityIsRequiredRuleError>(result, true);
+        }
+
+        [Fact]
+        public void Should_return_success_when_city_is_null()
+        {
+            var meteringPoint = CreateMeteringPoint();
+            var details = new MasterDataDetails(City: null);
+
+            var result = meteringPoint.CanChange(details);
+
+            Assert.True(result.Success);
+        }
+
+        [Fact]
+        public void Should_change_city()
+        {
+            var meteringPoint = CreateMeteringPoint();
+            var details = new MasterDataDetails(City: "New City Name");
+
+            meteringPoint.Change(details);
+
+            var changeEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MasterDataChanged) as MasterDataChanged;
+            Assert.NotNull(changeEvent);
+            Assert.Equal(details.City, changeEvent?.City);
+        }
+
         private static ConsumptionMeteringPoint CreateMeteringPoint()
         {
             return ConsumptionMeteringPoint.Create(CreateDetails());

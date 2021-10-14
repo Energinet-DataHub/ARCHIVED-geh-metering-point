@@ -134,7 +134,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 streetName,
                 Address.StreetCode,
                 Address.BuildingNumber,
-                Address.City,
+                masterDataDetails.City ?? Address.City,
                 Address.CitySubDivision,
                 postCode,
                 Address.CountryCode,
@@ -146,7 +146,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 
             if (newAddress.Equals(Address) != false) return;
             Address = newAddress;
-            AddDomainEvent(new MasterDataChanged(Address.StreetName, Address.PostCode));
+            AddDomainEvent(new MasterDataChanged(Address.StreetName, Address.PostCode, Address.City));
         }
 
         public override BusinessRulesValidationResult CanChange(MasterDataDetails details)
@@ -155,6 +155,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             {
                 new StreetNameIsRequiredRule(GsrnNumber, details.StreetName),
                 new PostCodeIsRequiredRule(details.PostCode),
+                new CityIsRequiredRule(details.City),
             };
             return new BusinessRulesValidationResult(rules);
         }

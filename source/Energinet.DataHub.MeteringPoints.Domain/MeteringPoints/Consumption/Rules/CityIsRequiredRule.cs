@@ -26,6 +26,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rul
             IsBroken = string.IsNullOrWhiteSpace(address.City);
         }
 
+        public CityIsRequiredRule(string city)
+        {
+            IsBroken = city?.Length == 0;
+        }
+
         public bool IsBroken { get; }
 
         public ValidationError ValidationError => new CityIsRequiredRuleError();

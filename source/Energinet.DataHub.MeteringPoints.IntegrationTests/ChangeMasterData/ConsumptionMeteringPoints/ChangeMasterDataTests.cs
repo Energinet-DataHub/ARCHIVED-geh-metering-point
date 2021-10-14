@@ -124,6 +124,24 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
             Assert.Equal(request.PostCode, integrationEvent?.PostCode);
         }
 
+        [Fact]
+        public async Task Should_reject_if_city_is_empty()
+        {
+            await CreateMeteringPointAsync().ConfigureAwait(false);
+
+            var request = new ChangeMasterDataRequest()
+                with
+                {
+                    TransactionId = SampleData.Transaction,
+                    GsrnNumber = SampleData.GsrnNumber,
+                    City = string.Empty,
+                };
+
+            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
         private Task<BusinessProcessResult> CreateMeteringPointAsync()
         {
             return InvokeBusinessProcessAsync(Scenarios.CreateConsumptionMeteringPointCommand());
