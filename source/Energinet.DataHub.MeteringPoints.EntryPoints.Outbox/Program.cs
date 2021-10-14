@@ -15,7 +15,6 @@
 using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.MessageHub.Client;
 using Energinet.DataHub.MessageHub.Client.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
@@ -30,6 +29,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEve
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.MessageDequeued;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Production;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
@@ -106,6 +106,12 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                     Environment.GetEnvironmentVariable("CONSUMPTION_METERING_POINT_CREATED_TOPIC") ??
                     throw new InvalidOperationException(
                         "No Consumption Metering Point Created Topic found")),
+                Lifestyle.Singleton);
+            container.Register(
+                () => new ProductionMeteringPointCreatedTopic(
+                    Environment.GetEnvironmentVariable("PRODUCTION_METERING_POINT_CREATED_TOPIC") ??
+                    throw new InvalidOperationException(
+                        "No Production Metering Point Created Topic found")),
                 Lifestyle.Singleton);
             container.Register(
                 () => new MeteringPointConnectedTopic(

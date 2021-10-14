@@ -17,9 +17,9 @@ using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Queries
 {
-    public record ConsumptionMeteringPoint
+    public record ProductionMeteringPoint
     {
-        public ConsumptionMeteringPoint()
+        public ProductionMeteringPoint()
         {
             Id = default!;
             GsrnNumber = default!;
@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Queries
             MeterReadingOccurrence = default!;
             MaximumCurrent = default!;
             MaximumPower = default!;
-            SettlementMethod = default!;
+            ProductionObligation = default!;
             NetSettlementGroup = default!;
             DisconnectionType = default!;
             ConnectionType = default!;
@@ -47,7 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Queries
             ProductType = default!;
         }
 
-        public ConsumptionMeteringPoint(
+        public ProductionMeteringPoint(
             Guid id,
             string gsrnNumber,
             string streetName,
@@ -65,7 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Queries
             string meterReadingOccurrence,
             int maximumCurrent,
             int maximumPower,
-            string settlementMethod,
+            bool productionObligation,
             string netSettlementGroup,
             string disconnectionType,
             string connectionType,
@@ -90,7 +90,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Queries
             MeterReadingOccurrence = meterReadingOccurrence;
             MaximumCurrent = maximumCurrent;
             MaximumPower = maximumPower;
-            SettlementMethod = settlementMethod;
+            ProductionObligation = productionObligation;
             NetSettlementGroup = netSettlementGroup;
             DisconnectionType = disconnectionType;
             ConnectionType = connectionType;
@@ -133,7 +133,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Queries
 
         public int MaximumPower { get; private set; }
 
-        public string SettlementMethod { get; private set; }
+        public bool ProductionObligation { get; private set; }
 
         public string NetSettlementGroup { get; private set; }
 

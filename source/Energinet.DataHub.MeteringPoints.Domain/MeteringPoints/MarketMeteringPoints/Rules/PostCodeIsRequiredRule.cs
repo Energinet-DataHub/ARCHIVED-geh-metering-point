@@ -13,17 +13,21 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Create
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
 {
-    public class CityIsRequiredRuleErrorConverter : ErrorConverter<CityIsRequiredRuleError>
+    public class PostCodeIsRequiredRule : IBusinessRule
     {
-        protected override ErrorMessage Convert(CityIsRequiredRuleError validationError)
+        public PostCodeIsRequiredRule(Address address)
         {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-            return new ErrorMessage("E86", "City is required for market metering points.");
+            if (address == null) throw new ArgumentNullException(nameof(address));
+            IsBroken = string.IsNullOrWhiteSpace(address.PostCode);
         }
+
+        public bool IsBroken { get; }
+
+        public ValidationError ValidationError => new PostCodeIsRequiredRuleError();
     }
 }

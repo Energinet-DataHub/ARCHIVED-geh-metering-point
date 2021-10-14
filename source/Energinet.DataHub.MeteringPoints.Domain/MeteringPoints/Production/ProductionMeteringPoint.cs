@@ -18,23 +18,22 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
 {
     #pragma warning disable
-    public class ConsumptionMeteringPoint : MarketMeteringPoint
+    public class ProductionMeteringPoint : MarketMeteringPoint
     {
-        private SettlementMethod _settlementMethod;
+        private NetSettlementGroup _netSettlementGroup;
         private AssetType? _assetType;
-        private ScheduledMeterReadingDate? _scheduledMeterReadingDate;
+        private bool _isAddressWashable;
+        private bool _productionObligation;
 
-        private ConsumptionMeteringPoint(
+        private ProductionMeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
@@ -47,13 +46,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit? powerLimit,
             EffectiveDate effectiveDate,
-            SettlementMethod settlementMethod,
             NetSettlementGroup netSettlementGroup,
+            bool productionObligation,
             DisconnectionType disconnectionType,
             ConnectionType? connectionType,
-            AssetType? assetType,
-            ScheduledMeterReadingDate? scheduledMeterReadingDate,
-            Capacity? capacity)
+            AssetType assetType,
+            Capacity capacity)
             : base(
                 id,
                 gsrnNumber,
@@ -73,13 +71,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 disconnectionType,
                 netSettlementGroup)
         {
-            _settlementMethod = settlementMethod;
+            _netSettlementGroup = netSettlementGroup;
             _assetType = assetType;
             _productType = ProductType.EnergyActive;
+            ProductionObligation = false;
             ConnectionState = ConnectionState.New();
-            _scheduledMeterReadingDate = scheduledMeterReadingDate;
 
-            var @event = new ConsumptionMeteringPointCreated(
+            var @event = new ProductionMeteringPointCreated(
                 id.Value,
                 GsrnNumber.Value,
                 gridAreaLinkId.Value,
@@ -87,7 +85,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 _productType.Name,
                 meterReadingOccurrence.Name,
                 _unitType.Name,
-                _settlementMethod.Name,
                 netSettlementGroup.Name,
                 address.City,
                 address.Floor,
@@ -102,23 +99,25 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 address.IsActual,
                 address.GeoInfoReference,
                 powerPlantGsrnNumber?.Value,
-                locationDescription?.Value,
+                locationDescription.Value,
                 meterNumber?.Value,
                 powerLimit.Ampere,
                 powerLimit.Kwh,
                 effectiveDate.DateInUtc,
                 DisconnectionType.Name,
                 ConnectionType?.Name,
-                _assetType?.Name,
+                _assetType.Name,
                 ConnectionState.PhysicalState.Name,
-                _scheduledMeterReadingDate?.MonthAndDay,
-                capacity?.Kw);
+                ProductionObligation,
+                capacity.Kw);
 
             AddDomainEvent(@event);
         }
 
+        protected bool ProductionObligation { get; }
+
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
-        private ConsumptionMeteringPoint() { }
+        private ProductionMeteringPoint() { }
 #pragma warning restore 8618
 
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
@@ -144,36 +143,30 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
 
-        public static BusinessRulesValidationResult CanCreate(ConsumptionMeteringPointDetails meteringPointDetails)
+        public static BusinessRulesValidationResult CanCreate(ProductionMeteringPointDetails meteringPointDetails)
         {
             if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
             var generalRuleCheckResult= MarketMeteringPoint.CanCreate(meteringPointDetails);
             var rules = new List<IBusinessRule>()
             {
-                new PowerPlantIsRequiredForNetSettlementGroupRule(meteringPointDetails.GsrnNumber,
-                    meteringPointDetails.NetSettlementGroup, meteringPointDetails.PowerPlantGsrnNumber),
-                new ScheduledMeterReadingDateRule(meteringPointDetails.ScheduledMeterReadingDate,
-                    meteringPointDetails.NetSettlementGroup),
-                new CapacityRequirementRule(meteringPointDetails.Capacity, meteringPointDetails.NetSettlementGroup),
-                new AssetTypeRequirementRule(meteringPointDetails.AssetType, meteringPointDetails.NetSettlementGroup),
-                new SettlementMethodMustBeFlexOrNonProfiledRule(meteringPointDetails.SettlementMethod),
+                // TODO: Implement production specific rules
             };
 
             return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
         }
 
-        public static ConsumptionMeteringPoint Create(ConsumptionMeteringPointDetails meteringPointDetails)
+        public static ProductionMeteringPoint Create(ProductionMeteringPointDetails meteringPointDetails)
         {
             if (!CanCreate(meteringPointDetails).Success)
             {
-                throw new ConsumptionMeteringPointException($"Cannot create consumption metering point due to violation of one or more business rules.");
+                throw new ProductionMeteringPointException($"Cannot create production metering point due to violation of one or more business rules.");
             }
-            return new ConsumptionMeteringPoint(
+            return new ProductionMeteringPoint(
                 meteringPointDetails.Id,
                 meteringPointDetails.GsrnNumber,
                 meteringPointDetails.Address,
                 meteringPointDetails.MeteringMethod,
-                MeteringPointType.Consumption,
+                MeteringPointType.Production,
                 meteringPointDetails.GridAreaLinkId,
                 meteringPointDetails.PowerPlantGsrnNumber,
                 meteringPointDetails.LocationDescription,
@@ -181,12 +174,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointDetails.ReadingOccurrence,
                 meteringPointDetails.PowerLimit,
                 meteringPointDetails.EffectiveDate,
-                meteringPointDetails.SettlementMethod,
                 meteringPointDetails.NetSettlementGroup,
+                false,
                 meteringPointDetails.DisconnectionType,
                 meteringPointDetails.ConnectionType,
                 meteringPointDetails.AssetType,
-                meteringPointDetails.ScheduledMeterReadingDate,
                 meteringPointDetails.Capacity);
         }
     }

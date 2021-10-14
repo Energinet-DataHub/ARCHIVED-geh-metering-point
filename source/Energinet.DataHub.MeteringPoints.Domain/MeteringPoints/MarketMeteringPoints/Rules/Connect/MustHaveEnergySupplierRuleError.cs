@@ -12,22 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules.Connect
 {
-    public class PostCodeIsRequiredRule : IBusinessRule
+    public class MustHaveEnergySupplierRuleError : ValidationError
     {
-        public PostCodeIsRequiredRule(Address address)
+        public MustHaveEnergySupplierRuleError(GsrnNumber meteringPointGSRN, Instant effectiveDate)
         {
-            if (address == null) throw new ArgumentNullException(nameof(address));
-            IsBroken = string.IsNullOrWhiteSpace(address.PostCode);
+            MeteringPointGsrn = meteringPointGSRN;
+            EffectiveDate = effectiveDate;
         }
 
-        public bool IsBroken { get; }
+        public GsrnNumber MeteringPointGsrn { get; }
 
-        public ValidationError ValidationError => new PostCodeIsRequiredRuleError();
+        public Instant EffectiveDate { get;  }
     }
 }
