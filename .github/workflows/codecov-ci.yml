@@ -51,7 +51,7 @@ jobs:
     strategy:
       matrix:
         project: [
-          source/Energinet.DataHub.MeteringPoints.Tests/Energinet.DataHub.MeteringPoints.Tests.csproj
+          source/Energinet.DataHub.MeteringPoints.sln
         ]
         
     steps:
@@ -68,8 +68,13 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
           
+      - name: Build Solution
+        run: dotnet build ${{ matrix.project }} --configuration Release
+
       - name: Collect coverage
-        run: dotnet test ${{ matrix.project }} --filter "Category=UnitTest" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+        run: |
+          dotnet test ${{ matrix.project }} --no-build --filter "Category=UnitTest" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+          dotnet test ${{ matrix.project }} --no-build --filter "Category=IntegrationTest" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
         
       - name: Upload coverage
         uses: codecov/codecov-action@v1
