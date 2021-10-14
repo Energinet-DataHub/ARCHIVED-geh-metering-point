@@ -21,7 +21,7 @@ option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEventCont
  * This message is sent out when a metering point is connected.
  */
 message MeteringPointConnected {
-  string meteringpoint_id = 1;
-  string gsrn_number = 2; // Unique metering point identification
-  string effective_date = 3; // Date which the change of supplier goes into effect.
+  string meteringpoint_id = 1; // Unique identification for metering point
+  string gsrn_number = 2; // Business facing metering point identifier
+  string effective_date = 3; // Date which the metering point is connected
 }

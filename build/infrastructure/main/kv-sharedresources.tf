@@ -36,7 +36,7 @@ data "azurerm_key_vault_secret" "SHARED_RESOURCES_EVENT_FORWARDED_QUEUE" {
   key_vault_id = data.azurerm_key_vault.kv_sharedresources.id
 }
 
-data "azurerm_key_vault_secret" "shared_resources_integrationevents_sendlisten_connection_string" {
-  name         = "SHARED-RESOURCES--SB-INTEGRATIONEVENTS-SENDLISTEN-CONNECTION-STRING"
+data "azurerm_key_vault_secret" "shared_resources_integrationevents_transceiver_connection_string" {
+  name         = "SHARED-RESOURCES--SB-INTEGRATIONEVENTS-TRANSCEIVER-CONNECTION-STRING"
   key_vault_id = data.azurerm_key_vault.kv_sharedresources.id
 }
