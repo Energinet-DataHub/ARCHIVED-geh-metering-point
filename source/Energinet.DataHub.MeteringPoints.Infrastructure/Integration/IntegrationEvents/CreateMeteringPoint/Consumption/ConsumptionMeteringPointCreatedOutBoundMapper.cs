@@ -20,8 +20,6 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Google.Protobuf;
-using NodaTime;
-using NodaTime.Text;
 using ConsumptionMeteringPointCreated = Energinet.DataHub.MeteringPoints.IntegrationEventContracts.ConsumptionMeteringPointCreated;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption

@@ -17,8 +17,9 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Client.Model;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
+using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub
+namespace Energinet.DataHub.MeteringPoints.Messaging
 {
     public class LocalMessageHubDataAvailableClient : ILocalMessageHubDataAvailableClient
     {

@@ -17,10 +17,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bundling;
+using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub.Bundling
+namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling
 {
     public abstract class BundleHandler<TDocument> : IRequestHandler<BundleRequest<TDocument>, string>
     {

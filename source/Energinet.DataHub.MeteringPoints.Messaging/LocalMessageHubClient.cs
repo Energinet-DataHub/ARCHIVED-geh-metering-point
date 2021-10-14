@@ -20,70 +20,74 @@ using Energinet.DataHub.MessageHub.Client.Dequeue;
 using Energinet.DataHub.MessageHub.Client.Model;
 using Energinet.DataHub.MessageHub.Client.Peek;
 using Energinet.DataHub.MessageHub.Client.Storage;
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
-using Energinet.DataHub.MeteringPoints.Application.MessageHub;
-using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub.Bundling;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
+using Energinet.DataHub.MeteringPoints.Messaging.Bundling;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub
+namespace Energinet.DataHub.MeteringPoints.Messaging
 {
     public class LocalMessageHubClient : ILocalMessageHubClient
     {
-        private readonly IMessageDispatcher _messageDispatcher;
+        private readonly INotificationHandler _notificationHandler;
         private readonly IDataBundleResponseSender _dataBundleResponseSender;
         private readonly IDequeueNotificationParser _dequeueNotificationParser;
         private readonly IRequestBundleParser _requestBundleParser;
         private readonly IBundleCreator _bundleCreator;
+        private readonly ISystemDateTimeProvider _systemDateTimeProvider;
         private readonly IStorageHandler _storageHandler;
         private readonly IMessageHubMessageRepository _messageHubMessageRepository;
 
         public LocalMessageHubClient(
             IStorageHandler storageHandler,
             IMessageHubMessageRepository messageHubMessageRepository,
-            IMessageDispatcher messageDispatcher,
+            INotificationHandler notificationHandler,
             IDataBundleResponseSender dataBundleResponseSender,
             IDequeueNotificationParser dequeueNotificationParser,
             IRequestBundleParser requestBundleParser,
-            IBundleCreator bundleCreator)
+            IBundleCreator bundleCreator,
+            ISystemDateTimeProvider systemDateTimeProvider)
         {
             _storageHandler = storageHandler;
             _messageHubMessageRepository = messageHubMessageRepository;
-            _messageDispatcher = messageDispatcher;
+            _notificationHandler = notificationHandler;
             _dataBundleResponseSender = dataBundleResponseSender;
             _dequeueNotificationParser = dequeueNotificationParser;
             _requestBundleParser = requestBundleParser;
             _bundleCreator = bundleCreator;
+            _systemDateTimeProvider = systemDateTimeProvider;
         }
 
         public async Task CreateBundleAsync(byte[] request, string sessionId)
         {
-            var notificationDto = _requestBundleParser.Parse(request);
+            var bundleRequestDto = _requestBundleParser.Parse(request);
 
-            var messages = await _messageHubMessageRepository.GetMessagesAsync(notificationDto.DataAvailableNotificationIds.ToArray()).ConfigureAwait(false);
+            var messages = await _messageHubMessageRepository.GetMessagesAsync(bundleRequestDto.DataAvailableNotificationIds.ToArray()).ConfigureAwait(false);
 
             var bundle = await _bundleCreator.CreateBundleAsync(messages).ConfigureAwait(false);
 
-            // TODO: Set BundleId on every message (e.g. notification.IdempotencyId)
+            foreach (var message in messages)
+            {
+                message.AddToBundle(bundleRequestDto.IdempotencyId);
+            }
+
             await using var stream = new MemoryStream(Encoding.UTF8.GetBytes(bundle));
 
-            var uri = await _storageHandler.AddStreamToStorageAsync(stream, notificationDto).ConfigureAwait(false);
+            var uri = await _storageHandler.AddStreamToStorageAsync(stream, bundleRequestDto).ConfigureAwait(false);
 
             // TODO - add notification to Outbox instead of sending immediately
-            await _dataBundleResponseSender.SendAsync(new RequestDataBundleResponseDto(uri, notificationDto.DataAvailableNotificationIds), sessionId, DomainOrigin.MeteringPoints).ConfigureAwait(false);
+            await _dataBundleResponseSender.SendAsync(new RequestDataBundleResponseDto(uri, bundleRequestDto.DataAvailableNotificationIds), sessionId, DomainOrigin.MeteringPoints).ConfigureAwait(false);
         }
 
         public async Task BundleDequeuedAsync(byte[] notification)
         {
-            var notificationDto = _dequeueNotificationParser.Parse(notification);
+            var dequeueNotificationDto = _dequeueNotificationParser.Parse(notification);
 
-            var messages = await _messageHubMessageRepository.GetMessagesAsync(notificationDto.DataAvailableNotificationIds.ToArray()).ConfigureAwait(false);
+            var messages = await _messageHubMessageRepository.GetMessagesAsync(dequeueNotificationDto.DataAvailableNotificationIds.ToArray()).ConfigureAwait(false);
 
             foreach (var message in messages)
             {
-                // TODO : update message with date and time for dequeue execution
-                // TODO : this must be handled by raising an Integration Event through Outbox
-                IOutboundMessage messageReceived = new MessageReceived(Correlation: message.Correlation);
-                await _messageDispatcher.DispatchAsync(messageReceived).ConfigureAwait(false);
+                message.Dequeue(_systemDateTimeProvider.Now());
+                _notificationHandler.Handle(message);
             }
         }
     }

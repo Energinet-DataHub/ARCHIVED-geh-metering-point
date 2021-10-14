@@ -12,26 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub.Bundling
+namespace Energinet.DataHub.MeteringPoints.Messaging
 {
     /// <summary>
-    /// Serialize documents.
+    /// Local Post Office
     /// </summary>
-    /// <typeparam name="TDocument">Document type to serialize</typeparam>
-    public interface IDocumentSerializer<TDocument>
+    public interface ILocalMessageHubClient
     {
         /// <summary>
-        /// Serialize single document.
+        /// Request bundle from Local Post Office
         /// </summary>
-        /// <param name="message"></param>
-        public string Serialize(TDocument message);
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        Task CreateBundleAsync(byte[] request, string sessionId);
 
         /// <summary>
-        /// Serialize multiple documents into one.
+        /// Notify that bundle has been dequeued
         /// </summary>
-        /// <param name="messages"></param>
-        public string Serialize(IList<TDocument> messages);
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        Task BundleDequeuedAsync(byte[] notification);
     }
 }

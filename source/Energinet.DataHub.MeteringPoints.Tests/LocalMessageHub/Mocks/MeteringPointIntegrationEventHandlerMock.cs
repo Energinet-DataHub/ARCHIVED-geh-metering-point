@@ -13,19 +13,23 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
+using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub.Bundling
+namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
 {
-    /// <summary>
-    /// Bundle creator
-    /// </summary>
-    public interface IBundleCreator
+    public class MeteringPointIntegrationEventHandlerMock : INotificationHandler
     {
-        /// <summary>
-        /// Create a bundle.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        Task<string> CreateBundleAsync(IList<MessageHubMessage> messages);
+        private readonly List<MessageHubMessage> _messages = new();
+
+        public bool IsDispatched(string correlation)
+        {
+            return _messages.Any(x => x.Correlation == correlation);
+        }
+
+        public void Handle(MessageHubMessage messageHubMessage)
+        {
+            _messages.Add(messageHubMessage);
+        }
     }
 }

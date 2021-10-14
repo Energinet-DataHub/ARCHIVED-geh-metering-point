@@ -16,7 +16,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
-using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
+using Energinet.DataHub.MeteringPoints.Messaging;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages

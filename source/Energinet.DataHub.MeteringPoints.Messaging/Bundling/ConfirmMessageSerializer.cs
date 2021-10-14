@@ -16,10 +16,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bundling;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub.Bundling
+namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling
 {
     public class ConfirmMessageSerializer : IDocumentSerializer<ConfirmMessage>
     {
