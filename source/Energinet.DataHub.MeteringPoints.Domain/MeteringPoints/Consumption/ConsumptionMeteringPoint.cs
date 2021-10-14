@@ -18,6 +18,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
@@ -122,7 +123,30 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 
         public override void Change(MasterDataDetails masterDataDetails)
         {
-            throw new NotImplementedException();
+            if (CanChange(masterDataDetails).Success == false)
+            {
+                throw new MasterDataChangeException();
+            }
+
+            if (masterDataDetails.StreetName.Equals(Address.StreetName, StringComparison.OrdinalIgnoreCase) == false)
+            {
+                var newAddress = Address.Create(
+                    masterDataDetails.StreetName,
+                    Address.StreetCode,
+                    Address.BuildingNumber,
+                    Address.City,
+                    Address.CitySubDivision,
+                    Address.PostCode,
+                    Address.CountryCode,
+                    Address.Floor,
+                    Address.Room,
+                    Address.MunicipalityCode,
+                    Address.IsActual,
+                    Address.GeoInfoReference);
+
+                Address = newAddress;
+                AddDomainEvent(new MasterDataChanged(Address.StreetName));
+            }
         }
 
         public override BusinessRulesValidationResult CanChange(MasterDataDetails details)

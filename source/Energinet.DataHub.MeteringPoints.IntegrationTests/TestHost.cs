@@ -30,6 +30,7 @@ using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Contracts;
+using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -283,6 +284,33 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 .Single(error => error.Code == expectedErrorCode);
 
             Assert.NotNull(validationError);
+        }
+
+        protected TIntegrationEvent? FindIntegrationEvent<TIntegrationEvent>()
+        {
+            return GetOutboxMessages<TIntegrationEvent>().SingleOrDefault();
+        }
+
+        protected void AssertConfirmMessage(DocumentType documentType)
+        {
+            var message = GetOutboxMessages
+                    <MessageHubEnvelope>()
+                .Single(msg => msg.MessageType.Equals(documentType));
+
+            var confirmMessage = GetService<IJsonSerializer>().Deserialize<ConfirmMessage>(message.Content);
+
+            Assert.NotNull(confirmMessage);
+        }
+
+        protected void AseertNoIntegrationEventIsRaised<TIntegrationEvent>()
+        {
+            Assert.Null(GetOutboxMessages<TIntegrationEvent>().SingleOrDefault());
+        }
+
+        protected async Task<BusinessProcessResult> InvokeBusinessProcessAsync(IBusinessRequest request)
+        {
+            var result = await GetService<IMediator>().Send(request).ConfigureAwait(false);
+            return result;
         }
 
         protected async Task SendCommandAsync(object command, CancellationToken cancellationToken = default)

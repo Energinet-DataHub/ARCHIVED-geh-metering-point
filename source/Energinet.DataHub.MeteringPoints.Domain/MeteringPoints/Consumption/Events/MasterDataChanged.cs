@@ -12,19 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Events
 {
-    public class BusinessProcessType : EnumerationType
+    public class MasterDataChanged : DomainEventBase
     {
-        public static readonly BusinessProcessType CreateMeteringPoint = new BusinessProcessType(0, nameof(CreateMeteringPoint));
-        public static readonly BusinessProcessType ConnectMeteringPoint = new BusinessProcessType(1, nameof(ConnectMeteringPoint));
-        public static readonly BusinessProcessType ChangeMasterData = new BusinessProcessType(2, nameof(ChangeMasterData));
-
-        public BusinessProcessType(int id, string name)
-            : base(id, name)
+        public MasterDataChanged(string streetName)
         {
+            StreetName = streetName;
         }
+
+        public string StreetName { get; }
     }
 }

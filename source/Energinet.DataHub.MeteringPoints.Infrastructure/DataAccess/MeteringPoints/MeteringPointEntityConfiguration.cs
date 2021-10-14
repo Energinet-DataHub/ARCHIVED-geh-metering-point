@@ -47,7 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     toDbValue => toDbValue.Value,
                     fromDbValue => GsrnNumber.Create(fromDbValue));
 
-            builder.OwnsOne<Address>("_address", y =>
+            builder.OwnsOne<Address>("Address", y =>
             {
                 y.Property(x => x.StreetName).HasColumnName("StreetName");
                 y.Property(x => x.StreetCode).HasColumnName("StreetCode");

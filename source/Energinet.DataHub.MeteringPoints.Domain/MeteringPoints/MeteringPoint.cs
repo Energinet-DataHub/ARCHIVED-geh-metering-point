@@ -29,7 +29,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         protected ProductType _productType;
         protected MeasurementUnitType _unitType;
 #pragma warning restore
-        private Address _address;
         private GridAreaLinkId _gridAreaLinkId;
         private MeteringMethod _meteringMethod;
         private ReadingOccurrence _meterReadingOccurrence;
@@ -63,7 +62,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             Id = id;
             GsrnNumber = gsrnNumber;
-            _address = address;
+            Address = address;
             _meteringMethod = meteringMethod;
             _meteringPointType = meteringPointType;
             _gridAreaLinkId = gridAreaLinkId;
@@ -82,6 +81,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public GsrnNumber GsrnNumber { get; }
 
         protected ConnectionState ConnectionState { get; set; } = ConnectionState.New();
+
+        protected Address Address { get; set; }
 
         public static BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
         {

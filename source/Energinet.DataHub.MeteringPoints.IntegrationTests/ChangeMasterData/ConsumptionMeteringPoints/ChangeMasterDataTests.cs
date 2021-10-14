@@ -15,8 +15,9 @@
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
-using MediatR;
 using Xunit;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.ConsumptionMeteringPoints
@@ -41,20 +42,52 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
                     StreetName = string.Empty,
                 };
 
-            await InvokeBusinessProcess(request).ConfigureAwait(false);
+            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
 
             AssertValidationError("E86");
         }
 
-        private Task<BusinessProcessResult> CreateMeteringPointAsync()
+        [Fact]
+        public async Task When_no_changes_are_made_no_integration_event_is_raised()
         {
-            return InvokeBusinessProcess(Scenarios.CreateConsumptionMeteringPointCommand());
+            await CreateMeteringPointAsync().ConfigureAwait(false);
+            var request = new ChangeMasterDataRequest()
+                with
+                {
+                    TransactionId = SampleData.Transaction,
+                    GsrnNumber = SampleData.GsrnNumber,
+                    StreetName = SampleData.StreetName,
+                };
+
+            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+
+            AssertConfirmMessage(DocumentType.ChangeMasterDataAccepted);
+            AseertNoIntegrationEventIsRaised<MasterDataChangedIntegrationEvent>();
         }
 
-        private async Task<BusinessProcessResult> InvokeBusinessProcess(IBusinessRequest request)
+        [Fact]
+        public async Task Should_change_street_name()
         {
-            var result = await GetService<IMediator>().Send(request).ConfigureAwait(false);
-            return result;
+            await CreateMeteringPointAsync().ConfigureAwait(false);
+            var request = new ChangeMasterDataRequest()
+                with
+                {
+                    TransactionId = SampleData.Transaction,
+                    GsrnNumber = SampleData.GsrnNumber,
+                    StreetName = "New Street Name",
+                };
+
+            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+
+            AssertConfirmMessage(DocumentType.ChangeMasterDataAccepted);
+            var integrationEvent = FindIntegrationEvent<MasterDataChangedIntegrationEvent>();
+            Assert.NotNull(integrationEvent);
+            Assert.Equal(request.StreetName, integrationEvent?.StreetName);
+        }
+
+        private Task<BusinessProcessResult> CreateMeteringPointAsync()
+        {
+            return InvokeBusinessProcessAsync(Scenarios.CreateConsumptionMeteringPointCommand());
         }
     }
 }

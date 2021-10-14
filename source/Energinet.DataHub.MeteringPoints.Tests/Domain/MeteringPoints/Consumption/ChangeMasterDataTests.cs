@@ -12,9 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumption
@@ -41,6 +44,28 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             var result = meteringPoint.CanChange(details);
 
             Assert.True(result.Success);
+        }
+
+        [Fact]
+        public void Should_throw_if_any_business_rule_are_violated()
+        {
+            var meteringPoint = CreateMeteringPoint();
+            var details = new MasterDataDetails(string.Empty);
+
+            Assert.Throws<MasterDataChangeException>(() => meteringPoint.Change(details));
+        }
+
+        [Fact]
+        public void Should_change_street_name()
+        {
+            var meteringPoint = CreateMeteringPoint();
+            var details = new MasterDataDetails("New Street Name");
+
+            meteringPoint.Change(details);
+
+            var changeEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MasterDataChanged) as MasterDataChanged;
+            Assert.NotNull(changeEvent);
+            Assert.Equal(details.StreetName, changeEvent?.StreetName);
         }
 
         private static ConsumptionMeteringPoint CreateMeteringPoint()

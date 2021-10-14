@@ -12,18 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Runtime.Serialization;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public class BusinessProcessType : EnumerationType
+    [Serializable]
+    public class MasterDataChangeException : BusinessOperationException
     {
-        public static readonly BusinessProcessType CreateMeteringPoint = new BusinessProcessType(0, nameof(CreateMeteringPoint));
-        public static readonly BusinessProcessType ConnectMeteringPoint = new BusinessProcessType(1, nameof(ConnectMeteringPoint));
-        public static readonly BusinessProcessType ChangeMasterData = new BusinessProcessType(2, nameof(ChangeMasterData));
+        public MasterDataChangeException(string? message, Exception? innerException)
+            : base(message, innerException)
+        {
+        }
 
-        public BusinessProcessType(int id, string name)
-            : base(id, name)
+        public MasterDataChangeException()
+        {
+        }
+
+        public MasterDataChangeException(string? message)
+            : base(message)
+        {
+        }
+
+        protected MasterDataChangeException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
         }
     }
