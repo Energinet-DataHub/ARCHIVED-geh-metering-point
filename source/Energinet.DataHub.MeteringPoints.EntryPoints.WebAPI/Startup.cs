@@ -108,6 +108,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             _container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
 
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
+            _container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
 
             // TODO: Probably not needed
             _container.AddValidationErrorConversion(
