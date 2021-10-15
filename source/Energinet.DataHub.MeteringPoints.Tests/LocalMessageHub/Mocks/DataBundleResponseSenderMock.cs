@@ -27,7 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
             return _isSent;
         }
 
-        public Task SendAsync(RequestDataBundleResponseDto requestDataBundleResponseDto, string sessionId, DomainOrigin domainOrigin)
+        public Task SendAsync(DataBundleResponseDto dataBundleResponseDto, DataBundleRequestDto requestDto, string sessionId)
         {
             _isSent = true;
             return Task.CompletedTask;
