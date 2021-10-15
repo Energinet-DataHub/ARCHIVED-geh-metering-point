@@ -18,6 +18,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
@@ -119,6 +120,16 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
         private ProductionMeteringPoint() { }
 #pragma warning restore 8618
+
+        public override void Change(MasterDataDetails masterDataDetails)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override BusinessRulesValidationResult CanChange(MasterDataDetails details)
+        {
+            throw new NotImplementedException();
+        }
 
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
         {
