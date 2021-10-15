@@ -38,46 +38,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             _meteringPointRepository = GetService<IMeteringPointRepository>();
         }
 
-        // [Fact]
-        // public async Task CreateProductionMeteringPoint_WithNoValidationErrors_ShouldBeRetrievableFromRepository()
-        // {
-        //     var request = CreateRequest() with
-        //         {
-        //             TypeOfMeteringPoint = nameof(MeteringPointType.Production),
-        //         };
-        //
-        //     await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
-        //
-        //     var gsrnNumber = GsrnNumber.Create(request.GsrnNumber);
-        //     var found = await _meteringPointRepository.GetByGsrnNumberAsync(gsrnNumber).ConfigureAwait(false);
-        //     Assert.NotNull(found);
-        // }
-
-        // [Fact]
-        // public async Task CreateProductionMeteringPoint_WithNoValidationErrors_ShouldGenerateConfirmMessageInOutbox()
-        // {
-        //     var request = CreateCommand() with
-        //     {
-        //         TypeOfMeteringPoint = nameof(MeteringPointType.Production),
-        //     };
-        //
-        //     await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
-        //
-        //     AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointAccepted);
-        // }
-
-        // [Fact]
-        // public async Task ProductionCreateMeteringPoint_WithNoValidationErrors_ShouldGenerateIntegrationEventInOutbox()
-        // {
-        //     var request = CreateCommand() with
-        //     {
-        //         TypeOfMeteringPoint = nameof(MeteringPointType.Production),
-        //     };
-        //
-        //     await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
-        //
-        //     AssertOutboxMessage<ProductionMeteringPointCreatedIntegrationEvent>();
-        // }
         [Fact]
         public async Task Should_reject_when_grid_area_doesnt_exist()
         {

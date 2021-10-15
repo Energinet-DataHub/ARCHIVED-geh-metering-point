@@ -17,12 +17,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
+using Energinet.DataHub.MeteringPoints.Application.Create.Production;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint
 {
-    public class CreateMeteringPointResultHandler : IBusinessProcessResultHandler<CreateConsumptionMeteringPoint>
+    public class CreateMeteringPointResultHandler :
+        IBusinessProcessResultHandler<CreateConsumptionMeteringPoint>,
+        IBusinessProcessResultHandler<CreateProductionMeteringPoint>
     {
         private readonly IActorMessageFactory _actorMessageFactory;
         private readonly IMessageHubDispatcher _messageHubDispatcher;
@@ -44,25 +47,33 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
             if (result == null) throw new ArgumentNullException(nameof(result));
 
             return result.Success
-                ? CreateAcceptMessageAsync(request)
-                : CreateRejectResponseAsync(request, result);
+                ? CreateAcceptMessageAsync(request.GsrnNumber, request.EffectiveDate, request.TransactionId)
+                : CreateRejectResponseAsync(request.GsrnNumber, request.EffectiveDate, request.TransactionId, result);
         }
 
-        private Task CreateAcceptMessageAsync(CreateConsumptionMeteringPoint request)
+        public Task HandleAsync(CreateProductionMeteringPoint request, BusinessProcessResult result)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
+            if (result == null) throw new ArgumentNullException(nameof(result));
 
-            var message = _actorMessageFactory.CreateNewMeteringPointConfirmation(request.GsrnNumber, request.EffectiveDate, request.TransactionId);
+            return result.Success
+                ? CreateAcceptMessageAsync(request.GsrnNumber, request.EffectiveDate, request.TransactionId)
+                : CreateRejectResponseAsync(request.GsrnNumber, request.EffectiveDate, request.TransactionId, result);
+        }
+
+        private Task CreateAcceptMessageAsync(string gsrnNumber, string effectiveDate, string transactionId)
+        {
+            var message = _actorMessageFactory.CreateNewMeteringPointConfirmation(gsrnNumber, effectiveDate, transactionId);
             return _messageHubDispatcher.DispatchAsync(message, DocumentType.CreateMeteringPointAccepted);
         }
 
-        private Task CreateRejectResponseAsync(CreateConsumptionMeteringPoint request, BusinessProcessResult result)
+        private Task CreateRejectResponseAsync(string gsrnNumber, string effectiveDate, string transactionId, BusinessProcessResult result)
         {
             var errors = result.ValidationErrors
                 .Select(error => _errorMessageFactory.GetErrorMessage(error))
                 .AsEnumerable();
 
-            var message = _actorMessageFactory.CreateNewMeteringPointReject(request.GsrnNumber, request.EffectiveDate, request.TransactionId, errors);
+            var message = _actorMessageFactory.CreateNewMeteringPointReject(gsrnNumber, effectiveDate, transactionId, errors);
             return _messageHubDispatcher.DispatchAsync(message, DocumentType.CreateMeteringPointRejected);
         }
     }

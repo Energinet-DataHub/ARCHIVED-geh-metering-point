@@ -14,6 +14,7 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
+using Energinet.DataHub.MeteringPoints.Application.Create.Production;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 
@@ -54,6 +55,39 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 "0",
                 SampleData.GeoInfoReference,
                 "0101");
+        }
+
+        internal static CreateProductionMeteringPoint CreateProductionMeteringPointCommand()
+        {
+            return new CreateProductionMeteringPoint(
+                SampleData.StreetName,
+                SampleData.BuildingNumber,
+                SampleData.PostCode,
+                SampleData.CityName,
+                SampleData.CitySubDivisionName,
+                SampleData.MunicipalityCode,
+                SampleData.CountryCode,
+                SampleData.StreetCode,
+                SampleData.FloorIdentification,
+                SampleData.RoomIdentification,
+                SampleData.IsActualAddress,
+                SampleData.GsrnNumber,
+                MeteringMethod.Calculated.Name,
+                SampleData.ReadingOccurrence,
+                0,
+                0,
+                SampleData.MeteringGridArea,
+                SampleData.PowerPlantGsrnNumber,
+                string.Empty,
+                SampleData.DisconnectionType,
+                SampleData.EffectiveDate,
+                string.Empty,
+                Guid.NewGuid().ToString(),
+                NetSettlementGroup.Six.Name,
+                ConnectionType.Installation.Name,
+                SampleData.AssetType,
+                "0",
+                SampleData.GeoInfoReference);
         }
     }
 }
