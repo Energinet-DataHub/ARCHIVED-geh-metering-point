@@ -24,26 +24,27 @@ module "azfun_outbox" {
   always_on                                 = true
   app_settings                              = {
     # Region: Default Values
-    WEBSITE_ENABLE_SYNC_UPDATE_SITE       = true
-    WEBSITE_RUN_FROM_PACKAGE              = 1
-    WEBSITES_ENABLE_APP_SERVICE_STORAGE   = true
-    FUNCTIONS_WORKER_RUNTIME              = "dotnet-isolated"
+    WEBSITE_ENABLE_SYNC_UPDATE_SITE                               = true
+    WEBSITE_RUN_FROM_PACKAGE                                      = 1
+    WEBSITES_ENABLE_APP_SERVICE_STORAGE                           = true
+    FUNCTIONS_WORKER_RUNTIME                                      = "dotnet-isolated"
     # Endregion: Default Values
     # VALIDATION_REPORTS_QUEUE_TOPIC        = data.azurerm_key_vault_secret.VALIDATION_REPORTS_QUEUE_TOPIC.value
     # VALIDATION_REPORTS_URL                = data.azurerm_key_vault_secret.VALIDATION_REPORTS_QUEUE_URL.value
     # VALIDATION_REPORTS_CONNECTION_STRING  = data.azurerm_key_vault_secret.VALIDATION_REPORTS_CONNECTION_STRING.value
-    METERINGPOINT_DB_CONNECTION_STRING      = local.METERING_POINT_CONNECTION_STRING
-    METERINGPOINT_QUEUE_TOPIC_NAME          = module.sbq_meteringpoint.name
+    METERINGPOINT_DB_CONNECTION_STRING                            = local.METERING_POINT_CONNECTION_STRING
+    METERINGPOINT_QUEUE_TOPIC_NAME                                = module.sbq_meteringpoint.name
     SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING = data.azurerm_key_vault_secret.INTEGRATION_EVENTS_SENDER_CONNECTION_STRING.value
-    METERING_POINT_CREATED_TOPIC            = "metering-point-created"
-    CONSUMPTION_METERING_POINT_CREATED_TOPIC = "consumption-metering-point-created"
-    METERING_POINT_CONNECTED_TOPIC          = "metering-point-connected"
-    ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER  = "*/10 * * * * *"
-    EVENT_MESSAGE_DISPATCH_TRIGGER_TIMER  = "*/10 * * * * *"
-    # POST_OFFICE_QUEUE_CONNECTION_STRING   = data.azurerm_key_vault_secret.POST_OFFICE_QUEUE_CONNECTION_STRING.value
-    # POST_OFFICE_QUEUE_TOPIC_NAME          = data.azurerm_key_vault_secret.POST_OFFICE_QUEUE_MARKETDATA_TOPIC_NAME.value
-    TEMP_POST_OFFICE_CONNECTION_STRING = module.stor_postoffice.primary_connection_string
-    TEMP_POST_OFFICE_SHARE = azurerm_storage_share.postoffice.name
+    METERING_POINT_CREATED_TOPIC                                  = "metering-point-created"
+    CONSUMPTION_METERING_POINT_CREATED_TOPIC                      = "consumption-metering-point-created"
+    PRODUCTION_METERING_POINT_CREATED_TOPIC                       = "production-metering-point-created"
+    METERING_POINT_CONNECTED_TOPIC                                = "metering-point-connected"
+    ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER                          = "*/10 * * * * *"
+    EVENT_MESSAGE_DISPATCH_TRIGGER_TIMER                          = "*/10 * * * * *"
+  }
+  connection_string                         = {
+    MESSAGEHUB_STORAGE_CONNECTION_STRING  = module.stor_postoffice.primary_connection_string
+    MESSAGEHUB_QUEUE_CONNECTION_STRING    = data.azurerm_key_vault_secret.shared_resources_integrationevents_transceiver_connection_string.value
   }
   dependencies                              = [
     module.appi.dependent_on,

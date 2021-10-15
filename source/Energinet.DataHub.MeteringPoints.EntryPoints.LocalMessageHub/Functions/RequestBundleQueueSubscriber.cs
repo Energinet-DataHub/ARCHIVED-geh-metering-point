@@ -14,7 +14,8 @@
 
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
-using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Messaging;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
@@ -26,23 +27,27 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub.Functions
         private readonly ICorrelationContext _correlationContext;
         private readonly ILocalMessageHubClient _localMessageHubClient;
         private readonly ISessionContext _sessionContext;
+        private readonly IUnitOfWork _unitOfWork;
 
         public RequestBundleQueueSubscriber(
             ILogger logger,
             ICorrelationContext correlationContext,
             ILocalMessageHubClient localMessageHubClient,
-            ISessionContext sessionContext)
+            ISessionContext sessionContext,
+            IUnitOfWork unitOfWork)
         {
             _logger = logger;
             _correlationContext = correlationContext;
             _localMessageHubClient = localMessageHubClient;
             _sessionContext = sessionContext;
+            _unitOfWork = unitOfWork;
         }
 
         [Function("RequestBundleQueueSubscriber")]
         public async Task RunAsync([ServiceBusTrigger("sbq-meteringpoints", Connection = "MESSAGEHUB_QUEUE_CONNECTION_STRING", IsSessionsEnabled = true)] byte[] data)
         {
             await _localMessageHubClient.CreateBundleAsync(data, _sessionContext.Id).ConfigureAwait(false);
+            await _unitOfWork.CommitAsync().ConfigureAwait(false);
 
             _logger.LogInformation("Dequeued with correlation id: {correlationId}", _correlationContext.Id);
         }

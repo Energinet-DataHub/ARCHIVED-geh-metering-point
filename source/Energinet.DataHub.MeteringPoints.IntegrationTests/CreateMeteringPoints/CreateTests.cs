@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Production;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
 using Xunit.Categories;
@@ -35,38 +36,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             : base(databaseFixture)
         {
             _meteringPointRepository = GetService<IMeteringPointRepository>();
-        }
-
-        [Fact]
-        public async Task CreateMeteringPoint_WithNoValidationErrors_ShouldBeRetrievableFromRepository()
-        {
-            var request = CreateCommand();
-
-            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
-
-            var gsrnNumber = GsrnNumber.Create(request.GsrnNumber);
-            var found = await _meteringPointRepository.GetByGsrnNumberAsync(gsrnNumber).ConfigureAwait(false);
-            Assert.NotNull(found);
-        }
-
-        [Fact]
-        public async Task CreateMeteringPoint_WithNoValidationErrors_ShouldGenerateConfirmMessageInOutbox()
-        {
-            var request = CreateCommand();
-
-            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
-
-            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointAccepted);
-        }
-
-        [Fact]
-        public async Task ConsumptionCreateMeteringPoint_WithNoValidationErrors_ShouldGenerateIntegrationEventInOutbox()
-        {
-            var request = CreateCommand();
-
-            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
-
-            AssertOutboxMessage<ConsumptionMeteringPointCreatedIntegrationEvent>();
         }
 
         [Fact]

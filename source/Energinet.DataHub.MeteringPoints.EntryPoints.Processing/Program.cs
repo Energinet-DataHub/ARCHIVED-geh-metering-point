@@ -38,6 +38,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bundling;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
@@ -47,10 +48,10 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GridAreas;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notifications;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
-using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub.Bundling;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
@@ -87,7 +88,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             options.UseMiddleware<CorrelationIdMiddleware>();
             options.UseMiddleware<EntryPointTelemetryScopeMiddleware>();
             options.UseMiddleware<ServiceBusUserContextMiddleware>();
-            //options.UseMiddleware<ServiceBusMessageIdempotencyMiddleware>();
+            // TODO: Fix the duplicate check for ingestion messages and re-enable this https://app.zenhub.com/workspaces/batman-60a6105157304f00119be86e/issues/energinet-datahub/geh-metering-point/378
+            // options.UseMiddleware<ServiceBusMessageIdempotencyMiddleware>();
         }
 
         protected override void ConfigureServiceCollection(IServiceCollection services)
@@ -116,7 +118,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                                    ?? throw new InvalidOperationException(
                                        "Metering point db connection string not found.");
             container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
-
+            container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
             container.Register<IntegrationEventReceiver>(Lifestyle.Scoped);
             container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
             container.Register<IMarketMeteringPointRepository, MarketMeteringPointRepository>(Lifestyle.Scoped);

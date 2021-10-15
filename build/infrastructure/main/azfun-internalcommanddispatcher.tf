@@ -31,7 +31,7 @@ module "azfun_internalcommanddispatcher" {
     # Endregion: Default Values
     DB_CONNECTION_STRING                  = local.METERING_POINT_CONNECTION_STRING
     PROCESSING_QUEUE_NAME                 = module.sbq_meteringpoint.name
-    PROCESSING_QUEUE_CONNECTION_STRING    = module.sbnar_meteringpoint_listener.primary_connection_string
+    PROCESSING_QUEUE_CONNECTION_STRING    = module.sbnar_meteringpoint_sender.primary_connection_string
     DISPATCH_TRIGGER_TIMER                = "*/10 * * * * *"
   }
   dependencies                              = [

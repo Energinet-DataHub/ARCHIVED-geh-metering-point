@@ -15,7 +15,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
-using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub.Bundling;
+using Energinet.DataHub.MeteringPoints.Messaging.Bundling;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
 {

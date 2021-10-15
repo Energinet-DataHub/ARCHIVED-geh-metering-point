@@ -48,11 +48,6 @@ jobs:
     if: ${{ needs.pre_job.outputs.should_skip != 'true' || github.ref == 'refs/heads/main' }}
     name: Collect code coverage .NET
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        project: [
-          source/Energinet.DataHub.MeteringPoints.Tests/Energinet.DataHub.MeteringPoints.Tests.csproj
-        ]
         
     steps:
       - name: Checkout repository
@@ -69,7 +64,12 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
           
       - name: Collect coverage
-        run: dotnet test ${{ matrix.project }} --filter "Category=UnitTest" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+        run: |
+          dotnet test ${{ env.UNIT_TEST }} --filter "Category=UnitTest" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+          dotnet test ${{ env.INTEGRATION_TEST }} --filter "Category=IntegrationTest" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+        env:
+          UNIT_TEST: 'source/Energinet.DataHub.MeteringPoints.Tests/Energinet.DataHub.MeteringPoints.Tests.csproj'
+          INTEGRATION_TEST: 'source/Energinet.DataHub.MeteringPoints.IntegrationTests/Energinet.DataHub.MeteringPoints.IntegrationTests.csproj'
         
       - name: Upload coverage
         uses: codecov/codecov-action@v1

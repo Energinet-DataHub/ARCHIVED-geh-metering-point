@@ -15,6 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.MessageHub.Client;
 using Energinet.DataHub.MessageHub.Client.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Contracts;
@@ -23,17 +24,21 @@ using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub.Functions;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
-using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bundling;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion;
-using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub.Bundling;
+using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity;
+using Energinet.DataHub.MeteringPoints.Messaging;
+using Energinet.DataHub.MeteringPoints.Messaging.Bundling;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using MediatR;
 using Microsoft.Azure.Functions.Worker;
@@ -106,13 +111,24 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub
             container.Register<IRequestHandler<BundleRequest<ConfirmMessage>, string>, ConfirmMessageBundleHandler>(Lifestyle.Scoped);
             container.Register<IRequestHandler<BundleRequest<RejectMessage>, string>, RejectMessageBundleHandler>(Lifestyle.Scoped);
 
+            var messageHubStorageConnectionString = Environment.GetEnvironmentVariable("ConnectionStrings:MESSAGEHUB_STORAGE_CONNECTION_STRING") ?? throw new InvalidOperationException("MessageHub storage connection string not found.");
+            var messageHubServiceBusConnectionString = Environment.GetEnvironmentVariable("ConnectionStrings:MESSAGEHUB_QUEUE_CONNECTION_STRING") ?? throw new InvalidOperationException("MessageHub queue connection string not found.");
+
+            container.AddPostOfficeCommunication(messageHubServiceBusConnectionString, new MessageHubConfig("sbq-dataavailable", "sbq-meteringpoints-reply"), messageHubStorageConnectionString, new StorageConfig("postoffice-blobstorage"));
+
+            container.Register<ILocalMessageHubClient, LocalMessageHubClient>(Lifestyle.Scoped);
+            container.Register<IMessageHubMessageRepository, MessageHubMessageRepository>(Lifestyle.Scoped);
+            container.Register<INotificationHandler, MeteringPointNotificationHandler>(Lifestyle.Scoped);
+            container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Scoped);
+            container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
+            container.Register<IBundleCreator, BundleCreator>(Lifestyle.Scoped);
+            container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageSerializer>(Lifestyle.Singleton);
+            container.Register<IDocumentSerializer<RejectMessage>, RejectMessageSerializer>(Lifestyle.Singleton);
+
             var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING");
             var topic = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME");
+
             container.Register(() => new ServiceBusClient(connectionString).CreateSender(topic), Lifestyle.Singleton);
-
-            container.AddLocalMessageHubClient();
-
-            container.AddPostOfficeCommunication("MESSAGEHUB_QUEUE_CONNECTION_STRING", "MESSAGEHUB_STORAGE_CONNECTION_STRING");
         }
     }
 }

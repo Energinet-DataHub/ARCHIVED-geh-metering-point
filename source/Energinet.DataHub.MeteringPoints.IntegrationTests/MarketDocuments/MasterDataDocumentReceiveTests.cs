@@ -19,9 +19,11 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
+using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
 {
+    [IntegrationTest]
     public class MasterDataDocumentReceiveTests : TestHost
     {
         public MasterDataDocumentReceiveTests(DatabaseFixture databaseFixture)
@@ -265,7 +267,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
                 SampleData.StreetCode,
                 SampleData.FloorIdentification,
                 SampleData.RoomIdentification,
-                SampleData.IsWashable,
+                SampleData.IsActualAddress,
                 SampleData.GsrnNumber,
                 SampleData.TypeOfMeteringPoint,
                 SampleData.SubTypeOfMeteringPoint,

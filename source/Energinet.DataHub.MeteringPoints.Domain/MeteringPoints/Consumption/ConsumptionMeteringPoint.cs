@@ -20,8 +20,9 @@ using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -216,7 +217,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
 
-        public static BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
+        public static BusinessRulesValidationResult CanCreate(ConsumptionMeteringPointDetails meteringPointDetails)
         {
             if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
             var generalRuleCheckResult= MarketMeteringPoint.CanCreate(meteringPointDetails);
@@ -224,9 +225,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             {
                 new PowerPlantIsRequiredForNetSettlementGroupRule(meteringPointDetails.GsrnNumber,
                     meteringPointDetails.NetSettlementGroup, meteringPointDetails.PowerPlantGsrnNumber),
-                new StreetNameIsRequiredRule(meteringPointDetails.GsrnNumber, meteringPointDetails.Address),
-                new PostCodeIsRequiredRule(meteringPointDetails.Address),
-                new CityIsRequiredRule(meteringPointDetails.Address),
                 new ScheduledMeterReadingDateRule(meteringPointDetails.ScheduledMeterReadingDate,
                     meteringPointDetails.NetSettlementGroup),
                 new CapacityRequirementRule(meteringPointDetails.Capacity, meteringPointDetails.NetSettlementGroup),
@@ -237,7 +235,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
         }
 
-        public static ConsumptionMeteringPoint Create(MeteringPointDetails meteringPointDetails)
+        public static ConsumptionMeteringPoint Create(ConsumptionMeteringPointDetails meteringPointDetails)
         {
             if (!CanCreate(meteringPointDetails).Success)
             {

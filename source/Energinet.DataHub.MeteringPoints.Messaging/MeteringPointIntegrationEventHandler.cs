@@ -1,0 +1,43 @@
+﻿// Copyright 2020 Energinet DataHub A/S
+//
+// Licensed under the Apache License, Version 2.0 (the "License2");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+using System;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.MessageDequeued;
+using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+
+namespace Energinet.DataHub.MeteringPoints.Messaging
+{
+    public class MeteringPointNotificationHandler : INotificationHandler
+    {
+        private readonly IOutboxMessageFactory _outboxMessageFactory;
+        private readonly IOutbox _outbox;
+
+        public MeteringPointNotificationHandler(IOutboxMessageFactory outboxMessageFactory, IOutbox outbox)
+        {
+            _outboxMessageFactory = outboxMessageFactory;
+            _outbox = outbox;
+        }
+
+        public void Handle(MessageHubMessage messageHubMessage)
+        {
+            if (messageHubMessage is null) throw new ArgumentNullException(nameof(messageHubMessage));
+
+            var integrationEvent = new MeteringPointMessageDequeuedIntegrationEvent(messageHubMessage.Correlation);
+
+            var outboxMessage = _outboxMessageFactory.CreateFrom(integrationEvent, OutboxMessageCategory.IntegrationEvent);
+            _outbox.Add(outboxMessage);
+        }
+    }
+}

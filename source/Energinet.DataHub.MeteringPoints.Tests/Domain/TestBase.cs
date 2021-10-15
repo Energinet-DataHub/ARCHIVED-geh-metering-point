@@ -19,10 +19,10 @@ using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Sdk;
-using MeteringPointDetails = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.MeteringPointDetails;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain
 {
@@ -35,29 +35,51 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             Assert.Equal(errorExpected, hasError);
         }
 
-        protected static MeteringPointDetails CreateDetails()
+        protected static ConsumptionMeteringPointDetails CreateConsumptionDetails()
         {
             var address = CreateAddress();
 
-            return new MeteringPointDetails(
+            return new ConsumptionMeteringPointDetails(
+                SettlementMethod.Flex,
+                ScheduledMeterReadingDate.Create(SampleData.ScheduledMeterReadingDate),
+                AssetType.GasTurbine,
+                Capacity.Create(SampleData.Capacity),
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 address,
-                MeteringMethod.Virtual,
+                MeteringMethod.Physical,
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
                 GsrnNumber.Create(SampleData.PowerPlant),
                 LocationDescription.Create(SampleData.LocationDescription),
-                null,
-                //string.IsNullOrWhiteSpace(SampleData.MeterNumber) ? null : MeterId.Create(SampleData.MeterNumber),
+                string.IsNullOrWhiteSpace(SampleData.MeterNumber) ? null : MeterId.Create(SampleData.MeterNumber),
                 ReadingOccurrence.Hourly,
                 PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
                 EffectiveDate.Create(SampleData.EffectiveDate),
-                SettlementMethod.Flex,
+                NetSettlementGroup.Six,
+                DisconnectionType.Manual,
+                ConnectionType.Installation);
+        }
+
+        protected static ProductionMeteringPointDetails CreateProductionDetails()
+        {
+            var address = CreateAddress();
+
+            return new ProductionMeteringPointDetails(
+                MeteringPointId.New(),
+                GsrnNumber.Create(SampleData.GsrnNumber),
+                address,
+                MeteringMethod.Physical,
+                new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
+                GsrnNumber.Create(SampleData.PowerPlant),
+                LocationDescription.Create(SampleData.LocationDescription),
+                string.IsNullOrWhiteSpace(SampleData.MeterNumber) ? null : MeterId.Create(SampleData.MeterNumber),
+                ReadingOccurrence.Hourly,
+                PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
+                EffectiveDate.Create(SampleData.EffectiveDate),
                 NetSettlementGroup.Six,
                 DisconnectionType.Manual,
                 ConnectionType.Installation,
                 AssetType.GasTurbine,
-                ScheduledMeterReadingDate.Create(SampleData.ScheduledMeterReadingDate),
                 Capacity.Create(SampleData.Capacity));
         }
 
@@ -70,7 +92,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 SampleData.CityName,
                 string.Empty,
                 SampleData.PostCode,
-                null,
+                CountryCode.DK,
                 string.Empty,
                 string.Empty,
                 default,
