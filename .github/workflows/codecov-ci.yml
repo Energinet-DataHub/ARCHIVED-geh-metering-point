@@ -65,9 +65,8 @@ jobs:
           
       - name: Collect coverage
         run: |
-          dotnet build source/Energinet.DataHub.MeteringPoints.sln --configuration Release
-          dotnet test ${{ env.UNIT_TEST }} --no-build --filter "Category=UnitTest" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
-          dotnet test ${{ env.INTEGRATION_TEST }} --no-build --filter "Category=IntegrationTest" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+          dotnet test ${{ env.UNIT_TEST }} --filter "Category=UnitTest" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+          dotnet test ${{ env.INTEGRATION_TEST }} --filter "Category=IntegrationTest" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
         env:
           UNIT_TEST: 'source/Energinet.DataHub.MeteringPoints.Tests/Energinet.DataHub.MeteringPoints.Tests.csproj'
           INTEGRATION_TEST: 'source/Energinet.DataHub.MeteringPoints.IntegrationTests/Energinet.DataHub.MeteringPoints.IntegrationTests.csproj'
