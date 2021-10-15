@@ -12,7 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.MessageDequeued
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using NodaTime;
+
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules.Connect
 {
-    public record MeteringPointDequeuedTopic(string Name) : Topic;
+    public class MustHaveEnergySupplierRuleError : ValidationError
+    {
+        public MustHaveEnergySupplierRuleError(GsrnNumber meteringPointGSRN, Instant effectiveDate)
+        {
+            MeteringPointGsrn = meteringPointGSRN;
+            EffectiveDate = effectiveDate;
+        }
+
+        public GsrnNumber MeteringPointGsrn { get; }
+
+        public Instant EffectiveDate { get;  }
+    }
 }
