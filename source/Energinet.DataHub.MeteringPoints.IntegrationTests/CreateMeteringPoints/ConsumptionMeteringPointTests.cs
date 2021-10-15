@@ -38,6 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             var request = CreateCommand();
             await SendCommandAsync(request).ConfigureAwait(false);
 
+            await AssertMeteringPointExistsAsync(request.GsrnNumber).ConfigureAwait(false);
             AssertConfirmMessage(DocumentType.CreateMeteringPointAccepted);
             var integrationEvent = FindIntegrationEvent<ConsumptionMeteringPointCreatedIntegrationEvent>();
             Assert.NotNull(integrationEvent);

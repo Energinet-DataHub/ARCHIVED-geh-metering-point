@@ -314,6 +314,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             await scope.GetInstance<IMediator>().Send(command, cancellationToken).ConfigureAwait(false);
         }
 
+        protected async Task AssertMeteringPointExistsAsync(string gsrnNumber)
+        {
+            if (gsrnNumber == null) throw new ArgumentNullException(nameof(gsrnNumber));
+            Assert.NotNull(await GetService<IMeteringPointRepository>().GetByGsrnNumberAsync(GsrnNumber.Create(gsrnNumber)).ConfigureAwait(false));
+        }
+
         private void CleanupDatabase()
         {
             var cleanupStatement = new StringBuilder();
