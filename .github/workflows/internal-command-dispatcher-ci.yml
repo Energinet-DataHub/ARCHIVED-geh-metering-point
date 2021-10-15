@@ -11,20 +11,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-name: Code coverage
+name: Internal command dispatcher CI
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
   workflow_dispatch: {}
-  
+
 env:
+  CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher/Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher.csproj'
+  SOLUTION_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.sln'
   DOTNET_VERSION: '5.0'
-  
+
 jobs:
   pre_job:
     runs-on: ubuntu-latest
@@ -37,18 +36,16 @@ jobs:
         with:
           github_token: ${{ github.token }}
           paths: '[
-            "codecov.yml",
-            ".github/workflows/codecov-ci.yml",
-            "source/Energinet.DataHub.MeteringPoints*/**",
-            "source/Energinet.DataHub.MeteringPoints.sln"
+            "source/**",
+            ".github/workflows/internal-command-dispatcher-ci.yml",
+            ".github/actions/dotnet-build-and-test/**"
           ]'
-          
-  collect_coverage_dotnet:
+
+  validate_build_internal_command_dispatcher:
     needs: pre_job
-    if: ${{ needs.pre_job.outputs.should_skip != 'true' || github.ref == 'refs/heads/main' }}
-    name: Collect code coverage .NET
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+    name: Validate build internal command dispatcher
     runs-on: ubuntu-latest
-        
     steps:
       - name: Checkout repository
         uses: actions/checkout@master
@@ -56,25 +53,22 @@ jobs:
       - name: Setup .NET 3.1 environment
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '3.1.x'  
-        
+          dotnet-version: '3.1.x'
+              
       - name: Setup .NET ${{ env.DOTNET_VERSION }} environment
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-          
-      - name: Collect coverage
-        run: |
-          dotnet test ${{ env.UNIT_TEST }} --filter "Category=UnitTest" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
-          dotnet test ${{ env.INTEGRATION_TEST }} --filter "Category=IntegrationTest" --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
-        env:
-          UNIT_TEST: 'source/Energinet.DataHub.MeteringPoints.Tests/Energinet.DataHub.MeteringPoints.Tests.csproj'
-          INTEGRATION_TEST: 'source/Energinet.DataHub.MeteringPoints.IntegrationTests/Energinet.DataHub.MeteringPoints.IntegrationTests.csproj'
-        
-      - name: Upload coverage
-        uses: codecov/codecov-action@v1
+
+      - name: Build and test project
+        uses: ./.github/actions/dotnet-build-and-test
         with:
-          flags: unit
-          fail_ci_if_error: true
-          verbose: true
-          
+          CSPROJ_FILE_PATH: ${{ env.CSPROJ_FILE_PATH }}
+          SOLUTION_FILE_PATH: ${{ env.SOLUTION_FILE_PATH }}
+          OUTPUT_PATH: '${{ github.workspace }}/output'
+
+      - name: Publish artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: drop
+          path: '${{ github.workspace }}/output'
