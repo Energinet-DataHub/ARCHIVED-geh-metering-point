@@ -116,7 +116,7 @@ jobs:
       - name: Set Environment Secrets
         shell: bash
         run: |  
-          echo "ENVIRONMENT_SHORT=u" >> $GITHUB_ENV
+          echo "ENVIRONMENT_SHORT=t" >> $GITHUB_ENV
       - name: Setup Azure CLI
         shell: bash
         run: |
@@ -152,7 +152,7 @@ jobs:
       - name: Set Environment Secrets
         shell: bash
         run: |  
-          echo "ENVIRONMENT_SHORT=u" >> $GITHUB_ENV
+          echo "ENVIRONMENT_SHORT=b" >> $GITHUB_ENV
       - name: Setup Azure CLI
         shell: bash
         run: |
@@ -188,7 +188,7 @@ jobs:
       - name: Set Environment Secrets
         shell: bash
         run: |  
-          echo "ENVIRONMENT_SHORT=u" >> $GITHUB_ENV
+          echo "ENVIRONMENT_SHORT=p" >> $GITHUB_ENV
       - name: Setup Azure CLI
         shell: bash
         run: |
