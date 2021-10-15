@@ -12,17 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Production
 {
-    public class StreetNameIsRequiredRuleError : ValidationError
-    {
-        public StreetNameIsRequiredRuleError(GsrnNumber meteringPointGSRN)
-        {
-            MeteringPointGSRN = meteringPointGSRN;
-        }
-
-        public GsrnNumber MeteringPointGSRN { get; }
-    }
+    public record ProductionMeteringPointCreatedTopic(string Name) : Topic;
 }

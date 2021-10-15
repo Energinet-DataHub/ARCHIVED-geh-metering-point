@@ -13,21 +13,31 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Domain.Addresses;
+using System.Runtime.Serialization;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
 {
-    public class PostCodeIsRequiredRule : IBusinessRule
+    [Serializable]
+    public class ProductionMeteringPointException : BusinessOperationException
     {
-        public PostCodeIsRequiredRule(Address address)
+        public ProductionMeteringPointException(string? message, Exception? innerException)
+            : base(message, innerException)
         {
-            if (address == null) throw new ArgumentNullException(nameof(address));
-            IsBroken = string.IsNullOrWhiteSpace(address.PostCode);
         }
 
-        public bool IsBroken { get; }
+        public ProductionMeteringPointException()
+        {
+        }
 
-        public ValidationError ValidationError => new PostCodeIsRequiredRuleError();
+        public ProductionMeteringPointException(string? message)
+            : base(message)
+        {
+        }
+
+        protected ProductionMeteringPointException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
     }
 }
