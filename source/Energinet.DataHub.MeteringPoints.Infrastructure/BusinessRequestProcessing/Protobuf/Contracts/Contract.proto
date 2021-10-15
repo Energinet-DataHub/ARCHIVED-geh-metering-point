@@ -35,7 +35,7 @@ message Address {
   google.protobuf.StringValue geoInfoReference = 12;
 }
 
-message CreateMeteringPoint {
+message MasterDataDocument {
   string gsrnNumber = 1;
   string typeOfMeteringPoint = 2;
   string subTypeOfMeteringPoint = 3;
@@ -63,17 +63,11 @@ message CreateMeteringPoint {
   string measureUnitType = 25;
   google.protobuf.StringValue physicalConnectionCapacity = 26;
   google.protobuf.StringValue scheduledMeterReadingDate = 27;
-}
-
-message ConnectMeteringPoint {
-  string gsrnNumber = 1;
-  string effectiveDate = 2;
-  string transactionId = 3;
+  string processType = 28;
 }
 
 message MeteringPointEnvelope {
   oneof MeteringPointMessages {
-    CreateMeteringPoint createMeteringPoint = 1;
-    ConnectMeteringPoint connectMeteringPoint = 2;
+    MasterDataDocument masterDataDocument = 1;
   }
 }

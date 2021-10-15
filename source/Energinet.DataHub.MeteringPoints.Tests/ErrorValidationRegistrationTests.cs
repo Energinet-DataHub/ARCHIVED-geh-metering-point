@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Create;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
@@ -59,7 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
             using var container = new Container();
             container.AddValidationErrorConversion(
                 validateRegistrations: true,
-                typeof(CreateMeteringPoint).Assembly, // Application
+                typeof(MasterDataDocument).Assembly, // Application
                 typeof(GsrnNumberMustBeValidValidationError).Assembly, // Domain
                 typeof(ErrorMessageFactory).Assembly); // Infrastructure
         }

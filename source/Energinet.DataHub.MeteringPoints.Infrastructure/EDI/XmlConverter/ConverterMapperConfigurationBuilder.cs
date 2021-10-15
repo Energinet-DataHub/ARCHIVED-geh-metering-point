@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 {
@@ -32,7 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 
             var constructor = typeof(T).GetConstructors().FirstOrDefault() ?? throw new InvalidOperationException("Target type must be a record with a single constructor");
 
-            foreach (var parameterInfo in constructor.GetParameters())
+            foreach (var parameterInfo in GetParameters(constructor))
             {
                 _properties.Add(parameterInfo.Name ?? throw new NoNullAllowedException(), null);
             }
@@ -63,6 +64,19 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
         public ConverterMapperConfiguration Build()
         {
             return new(typeof(T), _xmlElementName, _properties);
+        }
+
+        private static ParameterInfo[] GetParameters(ConstructorInfo constructor)
+        {
+            var constructorParameters = constructor.GetParameters();
+            var filteredParameters = ExcludeParametersFromXmlHeader(constructorParameters);
+            return filteredParameters;
+        }
+
+        private static ParameterInfo[] ExcludeParametersFromXmlHeader(ParameterInfo[] parameters)
+        {
+            var headerProperties = typeof(XmlHeaderData).GetProperties().Select(p => p.Name);
+            return parameters.Where(p => !headerProperties.Contains(p.Name)).ToArray();
         }
 
         private static Func<XmlElementInfo, object?> CastFunc<TProperty>(Func<XmlElementInfo, TProperty> translatorFunc)

@@ -71,7 +71,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 MeteringMethod.Physical,
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
                 GsrnNumber.Create(SampleData.PowerPlant),
-                false,
                 LocationDescription.Create(SampleData.LocationDescription),
                 string.IsNullOrWhiteSpace(SampleData.MeterNumber) ? null : MeterId.Create(SampleData.MeterNumber),
                 ReadingOccurrence.Hourly,

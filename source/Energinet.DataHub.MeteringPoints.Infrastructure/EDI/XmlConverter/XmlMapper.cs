@@ -18,6 +18,7 @@ using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Domain;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 {
@@ -30,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             _mappingConfigurationFactory = mappingConfigurationFactory;
         }
 
-        public IEnumerable<IBusinessRequest> Map(XElement rootElement)
+        public IEnumerable<IInternalMarketDocument> Map(XElement rootElement)
         {
             if (rootElement == null) throw new ArgumentNullException(nameof(rootElement));
 
@@ -40,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 
             var currentMappingConfiguration = _mappingConfigurationFactory(headerData.ProcessType, headerData.Type);
 
-            var elements = InternalMap(currentMappingConfiguration, rootElement, ns);
+            var elements = InternalMap(currentMappingConfiguration, rootElement, ns, headerData);
 
             return elements;
         }
@@ -49,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
         {
             var mrid = ExtractElementValue(rootElement, ns + "mRID");
             var type = ExtractElementValue(rootElement, ns + "type");
-            var processType = ExtractElementValue(rootElement, ns + "process.processType");
+            var processType = TranslateProcessType(ExtractElementValue(rootElement, ns + "process.processType"));
 
             var headerData = new XmlHeaderData(mrid, type, processType);
 
@@ -59,6 +60,16 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
         private static string ExtractElementValue(XContainer element, XName name)
         {
             return element.Element(name)?.Value ?? string.Empty;
+        }
+
+        private static string TranslateProcessType(string value)
+        {
+            return value.ToUpperInvariant() switch
+            {
+                "E02" => nameof(BusinessProcessType.CreateMeteringPoint),
+                "D15" => nameof(BusinessProcessType.ConnectMeteringPoint),
+                _ => value,
+            };
         }
 
         private static XElement? GetXmlElement(XContainer? container, Queue<string> hierarchyQueue, XNamespace ns)
@@ -73,16 +84,13 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             return hierarchyQueue.Any() ? GetXmlElement(element, hierarchyQueue, ns) : element;
         }
 
-        private static IEnumerable<IBusinessRequest> InternalMap(XmlMappingConfigurationBase xmlMappingConfigurationBase, XElement rootElement, XNamespace ns)
+        private static IEnumerable<IInternalMarketDocument> InternalMap(
+            XmlMappingConfigurationBase xmlMappingConfigurationBase, XElement rootElement, XNamespace ns, XmlHeaderData xmlHeaderData)
         {
             var configuration = xmlMappingConfigurationBase.Configuration;
-
             var properties = configuration.Properties;
-
-            var messages = new List<IBusinessRequest>();
-
+            var messages = new List<IInternalMarketDocument>();
             var elements = rootElement.Elements(ns + configuration.XmlElementName);
-
             foreach (var element in elements)
             {
                 var args = properties.Select(property =>
@@ -100,7 +108,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
                     return Convert(correspondingXmlElement, property.Value.PropertyInfo.PropertyType, valueTranslatorFunc);
                 }).ToArray();
 
-                if (configuration.CreateInstance(args) is not IBusinessRequest instance)
+                var constructorArguments = CreateConstructorArguments(GetHeaderValuesToInclude(configuration, xmlHeaderData), args);
+                if (configuration.CreateInstance(constructorArguments) is not IInternalMarketDocument instance)
                 {
                     throw new InvalidOperationException("Could not create instance");
                 }
@@ -109,6 +118,25 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             }
 
             return messages;
+        }
+
+        private static object?[] CreateConstructorArguments(object?[] headerValues, object?[] mappedValues)
+        {
+            var constructorArguments = new List<object?>();
+            constructorArguments.AddRange(headerValues);
+            constructorArguments.AddRange(mappedValues);
+            return constructorArguments.ToArray();
+        }
+
+        private static object?[] GetHeaderValuesToInclude(ConverterMapperConfiguration configuration, XmlHeaderData xmlHeaderData)
+        {
+            var constructorParametersNames = configuration.Type.GetConstructors().SingleOrDefault()?.GetParameters().Select(p => p.Name).ToList();
+            var includedHeaderValues = xmlHeaderData
+                .GetType().GetProperties()
+                .Where(p => constructorParametersNames!.Contains(p.Name))
+                .Select(p => p.GetValue(xmlHeaderData)).ToList<object?>();
+
+            return includedHeaderValues.ToArray();
         }
 
         private static object? Convert(XElement? source, Type dest, Func<XmlElementInfo, object?>? valueTranslatorFunc)

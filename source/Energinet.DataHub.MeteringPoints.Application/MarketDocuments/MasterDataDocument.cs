@@ -15,9 +15,10 @@
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Create
+namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
 {
-    public record CreateMeteringPoint(
+    public record MasterDataDocument(
+            string ProcessType = "",
             string? StreetName = null,
             string? BuildingNumber = null,
             string? PostCode = null,
@@ -39,7 +40,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             string? PowerPlant = null,
             string? LocationDescription = null,
             string? SettlementMethod = null,
-            string UnitType = "",
             string DisconnectionType = "",
             string EffectiveDate = "",
             string? MeterNumber = "",
@@ -56,7 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             string? GeoInfoReference = null,
             string MeasureUnitType = "",
             string? ScheduledMeterReadingDate = "")
-        : IBusinessRequest,
+        : IInternalMarketDocument,
             IOutboundMessage,
             IInboundMessage;
 }

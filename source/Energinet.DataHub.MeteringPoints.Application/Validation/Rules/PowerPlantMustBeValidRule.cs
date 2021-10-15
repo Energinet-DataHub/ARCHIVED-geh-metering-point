@@ -12,17 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
-using System.Data;
-using Energinet.DataHub.MeteringPoints.Application.Create;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class PowerPlantMustBeValidRule : AbstractValidator<CreateMeteringPoint>
+    public class PowerPlantMustBeValidRule : AbstractValidator<MasterDataDocument>
     {
         public PowerPlantMustBeValidRule()
         {
@@ -37,17 +35,17 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 PowerPlantValueMustBeValid);
         }
 
-        private static bool MandatoryGroupOfMeteringPointTypes(CreateMeteringPoint createMeteringPoint)
+        private static bool MandatoryGroupOfMeteringPointTypes(MasterDataDocument masterDataDocument)
         {
             return new HashSet<string>
                     {
                         MeteringPointType.Production.Name,
                         MeteringPointType.VEProduction.Name,
                     }
-                .Contains(createMeteringPoint.TypeOfMeteringPoint);
+                .Contains(masterDataDocument.TypeOfMeteringPoint);
         }
 
-        private static bool NotAllowedGroupOfMeteringPointTypes(CreateMeteringPoint createMeteringPoint)
+        private static bool NotAllowedGroupOfMeteringPointTypes(MasterDataDocument masterDataDocument)
         {
             return new HashSet<string>
                     {
@@ -57,7 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                         MeteringPointType.InternalUse.Name,
                         MeteringPointType.NetConsumption.Name,
                     }
-                .Contains(createMeteringPoint.TypeOfMeteringPoint);
+                .Contains(masterDataDocument.TypeOfMeteringPoint);
         }
 
         private void PowerPlantMustBeEmpty()

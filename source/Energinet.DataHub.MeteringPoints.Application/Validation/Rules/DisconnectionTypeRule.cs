@@ -15,6 +15,7 @@
 using System.Collections.Generic;
 using System.Data;
 using Energinet.DataHub.MeteringPoints.Application.Create;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
@@ -22,7 +23,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class DisconnectionTypeRule : AbstractValidator<CreateMeteringPoint>
+    public class DisconnectionTypeRule : AbstractValidator<MasterDataDocument>
     {
         public DisconnectionTypeRule()
         {
@@ -46,13 +47,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             }.Contains(disconnectionType);
         }
 
-        private static bool MandatoryMeteringPointTypes(CreateMeteringPoint createMeteringPoint)
+        private static bool MandatoryMeteringPointTypes(MasterDataDocument masterDataDocument)
         {
             return new HashSet<string>
             {
                 MeteringPointType.Production.Name,
                 MeteringPointType.Consumption.Name,
-            }.Contains(createMeteringPoint.TypeOfMeteringPoint);
+            }.Contains(masterDataDocument.TypeOfMeteringPoint);
         }
 
         private void DisconnectionTypeMustBeEmpty()
