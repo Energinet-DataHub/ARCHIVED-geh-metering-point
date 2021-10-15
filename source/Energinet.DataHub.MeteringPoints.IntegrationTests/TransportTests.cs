@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
@@ -23,7 +22,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Xunit;
-using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Create.CreateMeteringPoint;
+using MasterDataDocument = Energinet.DataHub.MeteringPoints.Application.MarketDocuments.MasterDataDocument;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
@@ -47,7 +46,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             await using (AsyncScopedLifestyle.BeginScope(sendingContainer))
             {
                 var messageDispatcher = sendingContainer.GetRequiredService<Dispatcher>();
-                var outboundMessage = new CreateMeteringPoint
+                var outboundMessage = new MasterDataDocument
                 {
                     GsrnNumber = expectedGsrnNumber,
                 };
@@ -71,7 +70,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             await using var scope = AsyncScopedLifestyle.BeginScope(receivingContainer);
             var messageExtractor = receivingContainer.GetRequiredService<MessageExtractor>();
             var message = await messageExtractor.ExtractAsync(bytes).ConfigureAwait(false);
-            message.Should().BeOfType<CreateMeteringPoint>();
+            message.Should().BeOfType<MasterDataDocument>();
         }
     }
 }

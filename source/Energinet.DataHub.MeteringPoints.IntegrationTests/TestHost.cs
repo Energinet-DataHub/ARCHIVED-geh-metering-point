@@ -18,12 +18,16 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
+using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
+using Energinet.DataHub.MeteringPoints.Application.Create.Production;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -52,6 +56,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity;
+using Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
@@ -61,14 +66,16 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Xunit;
 using Xunit.Categories;
 using Xunit.Sdk;
 using ConnectMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Connect.ConnectMeteringPoint;
-using CreateMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Create.CreateMeteringPoint;
 using JsonSerializer = Energinet.DataHub.MeteringPoints.Infrastructure.Serialization.JsonSerializer;
+using MasterDataDocument = Energinet.DataHub.MeteringPoints.Application.MarketDocuments.MasterDataDocument;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
@@ -121,12 +128,15 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Singleton);
             _container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
             _container.Register<ISystemDateTimeProvider, SystemDateTimeProviderStub>(Lifestyle.Singleton);
-            _container.Register(typeof(IBusinessProcessResultHandler<CreateMeteringPoint>), typeof(CreateMeteringPointResultHandler), Lifestyle.Scoped);
+            _container.Register(typeof(IBusinessProcessResultHandler<CreateConsumptionMeteringPoint>), typeof(CreateMeteringPointResultHandler), Lifestyle.Scoped);
+            _container.Register(typeof(IBusinessProcessResultHandler<CreateProductionMeteringPoint>), typeof(CreateMeteringPointResultHandler), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<ConnectMeteringPoint>), typeof(ConnectMeteringPointResultHandler), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<CreateGridArea>), typeof(CreateGridAreaNullResultHandler), Lifestyle.Singleton);
-            _container.Register<IValidator<CreateMeteringPoint>, CreateMeteringPointRuleSet>(Lifestyle.Scoped);
+            _container.Register<IValidator<MasterDataDocument>, ValidationRuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<ConnectMeteringPoint>, ConnectMeteringPointRuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<CreateGridArea>, CreateGridAreaRuleSet>(Lifestyle.Scoped);
+            _container.Register<IValidator<CreateConsumptionMeteringPoint>, Application.Create.Consumption.Validation.RuleSet>(Lifestyle.Scoped);
+            _container.Register<IValidator<CreateProductionMeteringPoint>, NullValidationSet<CreateProductionMeteringPoint>>(Lifestyle.Scoped);
             _container.Register<IDomainEventsAccessor, DomainEventsAccessor>();
             _container.Register<IDomainEventsDispatcher, DomainEventsDispatcher>();
             _container.Register<IDomainEventPublisher, DomainEventPublisher>();
@@ -137,18 +147,29 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
             _container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
 
+            _container.Register<IBusinessProcessValidationContext, BusinessProcessValidationContext>(Lifestyle.Scoped);
+            _container.Register<IBusinessProcessCommandFactory, BusinessProcessCommandFactory>(Lifestyle.Singleton);
+            _container.Register(typeof(IBusinessProcessResultHandler<TestBusinessRequest>), typeof(TestBusinessRequestResultHandler), Lifestyle.Scoped);
+
             // TODO: remove this when infrastructure and application has been split into more assemblies.
             _container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageSerializer>(Lifestyle.Singleton);
             _container.Register<IDocumentSerializer<RejectMessage>, RejectMessageSerializer>(Lifestyle.Singleton);
 
+            _container.Register<IActorMessageFactory, ActorMessageFactory>(Lifestyle.Scoped);
+            _container.Register<IMessageHubDispatcher, MessageHubDispatcher>(Lifestyle.Scoped);
+
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
-                typeof(CreateMeteringPoint).Assembly, // Application
+                typeof(MasterDataDocument).Assembly, // Application
                 typeof(MeteringPoint).Assembly, // Domain
                 typeof(ErrorMessageFactory).Assembly); // Infrastructure
 
             _container.BuildMediator(
-                new[] { typeof(CreateMeteringPoint).Assembly, typeof(MeteringPointCreatedNotificationHandler).Assembly, },
+                new[]
+                {
+                    typeof(MasterDataDocument).Assembly,
+                    typeof(MeteringPointCreatedNotificationHandler).Assembly,
+                },
                 new[]
                 {
                     typeof(UnitOfWorkBehavior<,>),
@@ -243,10 +264,60 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             Assert.NotNull(validationError);
         }
 
+        protected void AssertValidationError(string expectedErrorCode)
+        {
+            var envelopes = GetOutboxMessages<MessageHubEnvelope>();
+            foreach (var envelope in envelopes)
+            {
+                var message = JObject.Parse(envelope.Content);
+                if (message.ContainsKey("Errors"))
+                {
+                    var errorMessages =
+                        JsonConvert.DeserializeObject<List<Infrastructure.EDI.Errors.ErrorMessage>>(message
+                            .GetValue("Errors", StringComparison.OrdinalIgnoreCase).ToString());
+                    Assert.Contains(errorMessages, error => error.Code == expectedErrorCode);
+                    break;
+                }
+            }
+        }
+
+        protected TIntegrationEvent? FindIntegrationEvent<TIntegrationEvent>()
+        {
+            return GetOutboxMessages<TIntegrationEvent>().SingleOrDefault();
+        }
+
+        protected void AssertConfirmMessage(DocumentType documentType)
+        {
+            var message = GetOutboxMessages
+                    <MessageHubEnvelope>()
+                .Single(msg => msg.MessageType.Equals(documentType));
+
+            var confirmMessage = GetService<IJsonSerializer>().Deserialize<ConfirmMessage>(message.Content);
+
+            Assert.NotNull(confirmMessage);
+        }
+
+        protected void AseertNoIntegrationEventIsRaised<TIntegrationEvent>()
+        {
+            Assert.Null(GetOutboxMessages<TIntegrationEvent>().SingleOrDefault());
+        }
+
+        protected async Task<BusinessProcessResult> InvokeBusinessProcessAsync(IBusinessRequest request)
+        {
+            var result = await GetService<IMediator>().Send(request).ConfigureAwait(false);
+            return result;
+        }
+
         protected async Task SendCommandAsync(object command, CancellationToken cancellationToken = default)
         {
             await using var scope = AsyncScopedLifestyle.BeginScope(_container);
             await scope.GetInstance<IMediator>().Send(command, cancellationToken).ConfigureAwait(false);
+        }
+
+        protected async Task AssertMeteringPointExistsAsync(string gsrnNumber)
+        {
+            if (gsrnNumber == null) throw new ArgumentNullException(nameof(gsrnNumber));
+            Assert.NotNull(await GetService<IMeteringPointRepository>().GetByGsrnNumberAsync(GsrnNumber.Create(gsrnNumber)).ConfigureAwait(false));
         }
 
         private void CleanupDatabase()

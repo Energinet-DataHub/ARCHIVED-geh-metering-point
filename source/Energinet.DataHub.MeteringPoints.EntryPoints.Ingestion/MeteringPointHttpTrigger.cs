@@ -56,7 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            IEnumerable<IBusinessRequest> commands;
+            IEnumerable<IInternalMarketDocument> commands;
             try
             {
                commands = await DeserializeInputAsync(request.Body).ConfigureAwait(false);
@@ -84,12 +84,12 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             return response;
         }
 
-        private async Task<IEnumerable<IBusinessRequest>> DeserializeInputAsync(Stream stream)
+        private async Task<IEnumerable<IInternalMarketDocument>> DeserializeInputAsync(Stream stream)
         {
             return await _xmlConverter.DeserializeAsync(stream).ConfigureAwait(false);
         }
 
-        private async Task DispatchCommandsAsync(IEnumerable<IBusinessRequest> commands)
+        private async Task DispatchCommandsAsync(IEnumerable<IInternalMarketDocument> commands)
         {
             foreach (var command in commands)
             {

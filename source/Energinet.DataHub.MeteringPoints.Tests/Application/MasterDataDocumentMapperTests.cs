@@ -13,8 +13,7 @@
 // limitations under the License.
 
 using AutoFixture;
-using Energinet.DataHub.MeteringPoints.Application;
-using Energinet.DataHub.MeteringPoints.Application.Connect;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Protobuf.Mappers;
 using FluentAssertions;
 using Xunit;
@@ -22,19 +21,19 @@ using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Application
 {
-    public class ConnectMeteringPointMapperTests
+    public class MasterDataDocumentMapperTests
     {
         [Fact]
         [UnitTest]
-        public void ConnectMeteringPoint_Command_Should_Map_To_Contract_And_Back()
+        public void CreateMeteringPointCommandShouldMapToContractAndBack()
         {
             var fixture = new Fixture();
-            var outboundMapper = new Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers.ConnectMeteringPointMapper();
-            var inboundMapper = new ConnectMeteringPointMapper();
-            var command = fixture.Create<ConnectMeteringPoint>();
+            var outboundMapper = new Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers.MasterDataDocumentMapper();
+            var inboundMapper = new MasterDataDocumentMapper();
+            var command = fixture.Create<MasterDataDocument>();
 
             var contract = (Contracts.MeteringPointEnvelope)outboundMapper.Convert(command);
-            var doubleMappedCommand = inboundMapper.Convert(contract.ConnectMeteringPoint) as ConnectMeteringPoint;
+            var doubleMappedCommand = inboundMapper.Convert(contract.MasterDataDocument) as MasterDataDocument;
 
             doubleMappedCommand.Should().BeEquivalentTo(command);
         }

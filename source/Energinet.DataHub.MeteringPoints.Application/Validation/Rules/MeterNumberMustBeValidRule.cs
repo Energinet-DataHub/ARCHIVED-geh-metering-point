@@ -12,20 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using Energinet.DataHub.MeteringPoints.Application.Create;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
-using FluentValidation.Results;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class MeterNumberMustBeValidRule : AbstractValidator<CreateMeteringPoint>
+    public class MeterNumberMustBeValidRule : AbstractValidator<MasterDataDocument>
     {
         private BusinessRulesValidationResult? _result;
 

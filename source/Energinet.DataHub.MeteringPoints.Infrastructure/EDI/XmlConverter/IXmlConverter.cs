@@ -29,6 +29,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
         /// </summary>
         /// <param name="body"></param>
         /// <returns>A generic collection</returns>
-        public Task<IEnumerable<IBusinessRequest>> DeserializeAsync(Stream body);
+        public Task<IEnumerable<IInternalMarketDocument>> DeserializeAsync(Stream body);
     }
 }

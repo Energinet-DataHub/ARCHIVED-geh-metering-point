@@ -74,7 +74,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 
             // TODO: Expand factory for handling other XML types
             container.Register<Func<string, string, XmlMappingConfigurationBase>>(
-                () => (processType, type) => XmlMappingConfiguration(processType), Lifestyle.Singleton);
+                () => (processType, type) => XmlMappingConfiguration(type), Lifestyle.Singleton);
             container.Register<XmlMapper>(Lifestyle.Singleton);
             container.Register<IXmlConverter, XmlDeserializer>(Lifestyle.Singleton);
 
@@ -87,14 +87,12 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             container.SendProtobuf<MeteringPointEnvelope>();
         }
 
-        private static XmlMappingConfigurationBase XmlMappingConfiguration(string processType)
+        private static XmlMappingConfigurationBase XmlMappingConfiguration(string documentType)
         {
-            switch (processType)
+            switch (documentType)
             {
-                case "E02":
-                    return new CreateMeteringPointXmlMappingConfiguration();
-                case "D15":
-                    return new ConnectMeteringPointXmlMappingConfiguration();
+                case "E58":
+                    return new MasterDataDocumentXmlMappingConfiguration();
                 default:
                     throw new NotImplementedException();
             }

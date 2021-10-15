@@ -14,7 +14,7 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Create;
+using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
@@ -39,96 +39,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task CreateConsumptionMeteringPoint_WithNoValidationErrors_ShouldBeRetrievableFromRepository()
-        {
-            var request = CreateRequest();
-
-            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
-
-            var gsrnNumber = GsrnNumber.Create(request.GsrnNumber);
-            var found = await _meteringPointRepository.GetByGsrnNumberAsync(gsrnNumber).ConfigureAwait(false);
-            Assert.NotNull(found);
-        }
-
-        [Fact]
-        public async Task CreateProductionMeteringPoint_WithNoValidationErrors_ShouldBeRetrievableFromRepository()
-        {
-            var request = CreateRequest() with
-                {
-                    TypeOfMeteringPoint = nameof(MeteringPointType.Production),
-                };
-
-            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
-
-            var gsrnNumber = GsrnNumber.Create(request.GsrnNumber);
-            var found = await _meteringPointRepository.GetByGsrnNumberAsync(gsrnNumber).ConfigureAwait(false);
-            Assert.NotNull(found);
-        }
-
-        [Fact]
-        public async Task CreateConsumptionMeteringPoint_WithNoValidationErrors_ShouldGenerateConfirmMessageInOutbox()
-        {
-            var request = CreateRequest();
-
-            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
-
-            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointAccepted);
-        }
-
-        [Fact]
-        public async Task CreateProductionMeteringPoint_WithNoValidationErrors_ShouldGenerateConfirmMessageInOutbox()
-        {
-            var request = CreateRequest() with
-            {
-                TypeOfMeteringPoint = nameof(MeteringPointType.Production),
-            };
-
-            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
-
-            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointAccepted);
-        }
-
-        [Fact]
-        public async Task ConsumptionCreateMeteringPoint_WithNoValidationErrors_ShouldGenerateIntegrationEventInOutbox()
-        {
-            var request = CreateRequest();
-
-            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
-
-            AssertOutboxMessage<ConsumptionMeteringPointCreatedIntegrationEvent>();
-        }
-
-        [Fact]
-        public async Task ProductionCreateMeteringPoint_WithNoValidationErrors_ShouldGenerateIntegrationEventInOutbox()
-        {
-            var request = CreateRequest() with
-            {
-                TypeOfMeteringPoint = nameof(MeteringPointType.Production),
-            };
-
-            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
-
-            AssertOutboxMessage<ProductionMeteringPointCreatedIntegrationEvent>();
-        }
-
-        [Fact]
-        public async Task CreateMeteringPoint_WithValidationErrors_ShouldGenerateRejectMessageInOutbox()
-        {
-            var request = CreateRequest() with
-            {
-                GsrnNumber = "This is not a valid GSRN number",
-                SettlementMethod = "WrongSettlementMethod",
-            };
-
-            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
-
-            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointRejected);
-        }
-
-        [Fact]
         public async Task Should_reject_when_grid_area_doesnt_exist()
         {
-            var request = CreateRequest() with { MeteringGridArea = "foo" };
+            var request = CreateCommand() with { MeteringGridArea = "foo" };
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
@@ -138,7 +51,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task CreateMeteringPoint_WithAlreadyExistingGsrnNumber_ShouldGenerateRejectMessageInOutbox()
         {
-            var request = CreateRequest();
+            var request = CreateCommand();
             await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
             await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
 
@@ -166,56 +79,14 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task Should_reject_when_maximum_power_is_invalid()
-        {
-            var invalidPowerLimit = 12345567;
-            var request = CreateRequest()
-                with
-                {
-                    MaximumPower = invalidPowerLimit,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("E86", DocumentType.CreateMeteringPointRejected);
-        }
-
-        [Fact]
-        public async Task Should_reject_when_maximum_current_is_invalid()
-        {
-            var invalidCurrent = 12345567;
-            var request = CreateRequest()
-                with
-                {
-                    MaximumCurrent = invalidCurrent,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("E86", DocumentType.CreateMeteringPointRejected);
-        }
-
-        [Fact]
-        public async Task Should_reject_when_location_description_is_invalid()
-        {
-            var invalidLocationDescription = "1234567890123456789012345678901234567890123456789012345678901234567890";
-            var request = CreateRequest()
-                with
-                {
-                    LocationDescription = invalidLocationDescription,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("E86", DocumentType.CreateMeteringPointRejected);
-        }
-
-        [Fact]
         public async Task Should_reject_if_metering_method_is_physical_and_meter_identification_is_undefined()
         {
-            var request = CreateRequest()
+            var request = CreateCommand()
                 with
                 {
+                    ConnectionType = string.Empty,
+                    ScheduledMeterReadingDate = string.Empty,
+                    NetSettlementGroup = NetSettlementGroup.Zero.Name,
                     MeterNumber = null,
                     MeteringMethod = MeteringMethod.Physical.Name,
                 };
@@ -228,7 +99,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task Should_reject_if_metering_method_is_not_physical_and_meter_identification_is_defined()
         {
-            var request = CreateRequest()
+            var request = CreateCommand()
                 with
                 {
                     MeterNumber = SampleData.MeterNumber,
@@ -243,10 +114,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task Should_reject_when_capacity_is_required_but_not_specified()
         {
-            var request = CreateRequest()
+            var request = CreateCommand()
                 with
                 {
-                    NetSettlementGroup = NetSettlementGroup.One.Name,
                     ConnectionType = ConnectionType.Installation.Name,
                     PhysicalConnectionCapacity = null,
                     MeteringMethod = MeteringMethod.Calculated.Name,
@@ -259,75 +129,14 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task Should_reject_if_capacity_is_invalid()
-        {
-            var request = CreateRequest()
-                with
-                {
-                    NetSettlementGroup = NetSettlementGroup.One.Name,
-                    PhysicalConnectionCapacity = "123.3333670",
-                    MeteringMethod = MeteringMethod.Calculated.Name,
-                    MeterNumber = null,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("E86", DocumentType.CreateMeteringPointRejected);
-        }
-
-        [Fact]
-        public async Task Should_reject_when_geo_info_reference_is_invalid()
-        {
-            var invalidGeoInfoReference = "xxxxxxx";
-            var request = CreateRequest()
-                with
-                {
-                    GeoInfoReference = invalidGeoInfoReference,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("E86", DocumentType.CreateMeteringPointRejected);
-        }
-
-        [Fact]
-        public async Task Should_reject_when_geo_info_reference_is_specified_and_actual_address_is_empty()
-        {
-            var request = CreateRequest()
-                with
-                {
-                    GeoInfoReference = SampleData.GeoInfoReference,
-                    IsActualAddress = null,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("D63", DocumentType.CreateMeteringPointRejected);
-        }
-
-        [Fact]
-        public async Task Should_reject_if_connection_type_is_unknown()
-        {
-            var invalidConnectionType = "invalid_value";
-            var request = CreateRequest()
-                with
-                {
-                    ConnectionType = invalidConnectionType,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("D02", DocumentType.CreateMeteringPointRejected);
-        }
-
-        [Fact]
         public async Task Should_reject_if_connection_type_is_not_allowed()
         {
-            var request = CreateRequest()
+            var request = CreateCommand()
                 with
                 {
                     ConnectionType = ConnectionType.Installation.Name,
                     NetSettlementGroup = NetSettlementGroup.Zero.Name,
+                    ScheduledMeterReadingDate = string.Empty,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
@@ -335,15 +144,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("D02", DocumentType.CreateMeteringPointRejected);
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("invalid_value")]
-        public async Task Should_reject_when_metering_method_is_missing_or_is_invalid(string meteringMethod)
+        [Fact]
+        public async Task Should_reject_when_metering_method_is_missing()
         {
-            var request = CreateRequest()
+            var request = CreateCommand()
                 with
                 {
-                    MeteringMethod = meteringMethod,
+                    MeteringMethod = string.Empty,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
@@ -351,63 +158,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("D02", DocumentType.CreateMeteringPointRejected);
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("invalid_value")]
-        public async Task Should_reject_when_measurement_unit_is_missing_or_is_invalid(string measurementUnitType)
+        private static CreateConsumptionMeteringPoint CreateCommand()
         {
-            var request = CreateRequest()
-                with
-                {
-                    MeasureUnitType = measurementUnitType,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("D02", DocumentType.CreateMeteringPointRejected);
-        }
-
-        private static CreateMeteringPoint CreateRequest()
-        {
-            return new(
-                SampleData.StreetName,
-                SampleData.BuildingNumber,
-                SampleData.PostCode,
-                SampleData.CityName,
-                SampleData.CitySubDivisionName,
-                SampleData.MunicipalityCode,
-                SampleData.CountryCode,
-                SampleData.StreetCode,
-                SampleData.FloorIdentification,
-                SampleData.RoomIdentification,
-                SampleData.IsActualAddress,
-                SampleData.GsrnNumber,
-                SampleData.TypeOfMeteringPoint,
-                SampleData.SubTypeOfMeteringPoint,
-                SampleData.ReadingOccurrence,
-                0,
-                0,
-                SampleData.MeteringGridArea,
-                SampleData.PowerPlantGsrnNumber,
-                string.Empty,
-                SampleData.SettlementMethod,
-                SampleData.MeasurementUnitType,
-                SampleData.DisconnectionType,
-                SampleData.EffectiveDate,
-                SampleData.MeterNumber,
-                SampleData.Transaction,
-                SampleData.PhysicalState,
-                SampleData.NetSettlementGroup,
-                SampleData.ConnectionType,
-                SampleData.AssetType,
-                "123",
-                ToGrid: "456",
-                ParentRelatedMeteringPoint: null,
-                SampleData.ProductType,
-                "1000",
-                SampleData.GeoInfoReference,
-                SampleData.MeasurementUnitType,
-                SampleData.ScheduledMeterReadingDate);
+            return Scenarios.CreateConsumptionMeteringPointCommand();
         }
     }
 }

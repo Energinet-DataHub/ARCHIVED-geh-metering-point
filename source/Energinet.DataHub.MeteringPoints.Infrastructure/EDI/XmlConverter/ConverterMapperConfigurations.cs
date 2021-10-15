@@ -15,7 +15,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 {
@@ -34,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
                 if (configForType == null) throw new InvalidOperationException($"Missing XmlMappingConfiguration for type: {type.Name}");
 
                 var propertiesInConfig = configForType.Configuration.Properties;
-                var propertiesInType = type.GetProperties();
+                var propertiesInType = GetProperties(type);
 
                 foreach (var propertyInfo in propertiesInType)
                 {
@@ -48,6 +50,18 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             }
         }
 
+        private static PropertyInfo[] GetProperties(Type type)
+        {
+            var properties = ExcludePropertiesFromXmlHeader(type.GetProperties());
+            return properties;
+        }
+
+        private static PropertyInfo[] ExcludePropertiesFromXmlHeader(PropertyInfo[] properties)
+        {
+            var excludedProperties = typeof(XmlHeaderData).GetProperties().Select(p => p.Name);
+            return properties.Where(p => !excludedProperties.Contains(p.Name)).ToArray();
+        }
+
         private static List<XmlMappingConfigurationBase> GetAllConfigurations()
         {
             return typeof(XmlMappingConfigurationBase).Assembly.GetTypes()
@@ -59,8 +73,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 
         private static IEnumerable<Type> GetBusinessRequests()
         {
-            return typeof(Application.Create.CreateMeteringPoint).Assembly.GetTypes()
-                .Where(p => typeof(IBusinessRequest).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
+            return typeof(MasterDataDocument).Assembly.GetTypes()
+                .Where(p => typeof(IInternalMarketDocument).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
                 .ToList();
         }
     }
