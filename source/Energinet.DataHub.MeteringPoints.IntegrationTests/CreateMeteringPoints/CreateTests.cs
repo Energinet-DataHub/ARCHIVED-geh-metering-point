@@ -38,93 +38,46 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             _meteringPointRepository = GetService<IMeteringPointRepository>();
         }
 
-        [Fact]
-        public async Task CreateConsumptionMeteringPoint_WithNoValidationErrors_ShouldBeRetrievableFromRepository()
-        {
-            var request = CreateCommand();
+        // [Fact]
+        // public async Task CreateProductionMeteringPoint_WithNoValidationErrors_ShouldBeRetrievableFromRepository()
+        // {
+        //     var request = CreateRequest() with
+        //         {
+        //             TypeOfMeteringPoint = nameof(MeteringPointType.Production),
+        //         };
+        //
+        //     await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
+        //
+        //     var gsrnNumber = GsrnNumber.Create(request.GsrnNumber);
+        //     var found = await _meteringPointRepository.GetByGsrnNumberAsync(gsrnNumber).ConfigureAwait(false);
+        //     Assert.NotNull(found);
+        // }
 
-            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
+        // [Fact]
+        // public async Task CreateProductionMeteringPoint_WithNoValidationErrors_ShouldGenerateConfirmMessageInOutbox()
+        // {
+        //     var request = CreateCommand() with
+        //     {
+        //         TypeOfMeteringPoint = nameof(MeteringPointType.Production),
+        //     };
+        //
+        //     await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
+        //
+        //     AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointAccepted);
+        // }
 
-            var gsrnNumber = GsrnNumber.Create(request.GsrnNumber);
-            var found = await _meteringPointRepository.GetByGsrnNumberAsync(gsrnNumber).ConfigureAwait(false);
-            Assert.NotNull(found);
-        }
-
-        [Fact]
-        public async Task CreateProductionMeteringPoint_WithNoValidationErrors_ShouldBeRetrievableFromRepository()
-        {
-            var request = CreateRequest() with
-                {
-                    TypeOfMeteringPoint = nameof(MeteringPointType.Production),
-                };
-
-            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
-
-            var gsrnNumber = GsrnNumber.Create(request.GsrnNumber);
-            var found = await _meteringPointRepository.GetByGsrnNumberAsync(gsrnNumber).ConfigureAwait(false);
-            Assert.NotNull(found);
-        }
-
-        [Fact]
-        public async Task CreateConsumptionMeteringPoint_WithNoValidationErrors_ShouldGenerateConfirmMessageInOutbox()
-        {
-            var request = CreateCommand();
-
-            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
-
-            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointAccepted);
-        }
-
-        [Fact]
-        public async Task CreateProductionMeteringPoint_WithNoValidationErrors_ShouldGenerateConfirmMessageInOutbox()
-        {
-            var request = CreateCommand() with
-            {
-                TypeOfMeteringPoint = nameof(MeteringPointType.Production),
-            };
-
-            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
-
-            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointAccepted);
-        }
-
-        [Fact]
-        public async Task ConsumptionCreateMeteringPoint_WithNoValidationErrors_ShouldGenerateIntegrationEventInOutbox()
-        {
-            var request = CreateCommand();
-
-            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
-
-            AssertOutboxMessage<ConsumptionMeteringPointCreatedIntegrationEvent>();
-        }
-
-        [Fact]
-        public async Task ProductionCreateMeteringPoint_WithNoValidationErrors_ShouldGenerateIntegrationEventInOutbox()
-        {
-            var request = CreateCommand() with
-            {
-                TypeOfMeteringPoint = nameof(MeteringPointType.Production),
-            };
-
-            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
-
-            AssertOutboxMessage<ProductionMeteringPointCreatedIntegrationEvent>();
-        }
-
-        [Fact]
-        public async Task CreateMeteringPoint_WithValidationErrors_ShouldGenerateRejectMessageInOutbox()
-        {
-            var request = CreateCommand() with
-            {
-                GsrnNumber = "This is not a valid GSRN number",
-                SettlementMethod = "WrongSettlementMethod",
-            };
-
-            await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
-
-            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointRejected);
-        }
-
+        // [Fact]
+        // public async Task ProductionCreateMeteringPoint_WithNoValidationErrors_ShouldGenerateIntegrationEventInOutbox()
+        // {
+        //     var request = CreateCommand() with
+        //     {
+        //         TypeOfMeteringPoint = nameof(MeteringPointType.Production),
+        //     };
+        //
+        //     await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
+        //
+        //     AssertOutboxMessage<ProductionMeteringPointCreatedIntegrationEvent>();
+        // }
         [Fact]
         public async Task Should_reject_when_grid_area_doesnt_exist()
         {
