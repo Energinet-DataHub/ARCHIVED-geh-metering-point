@@ -6,6 +6,8 @@
     "APPINSIGHTS_INSTRUMENTATIONKEY": "<Azure application insights instrumentation key>",
     "SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING": "<Shared Azure Service Bus connection string>",
     "METERING_POINT_CREATED_TOPIC": "<Topic name for MeteringPointCreated events>",
+    "CONSUMPTION_METERING_POINT_CREATED_TOPIC": "<Topic name for ConsumptionMeteringPointCreated events>",
+    "PRODUCTION_METERING_POINT_CREATED_TOPIC": "<Topic name for ProductionMeteringPointCreated events>",
     "METERING_POINT_CONNECTED_TOPIC": "<Topic name for MeteringPointConnected events>",
     "METERING_POINT_MESSAGE_DEQUEUED_TOPIC": "<Topic name for MeteringPointMessageDequeued events>",
     "METERINGPOINT_DB_CONNECTION_STRING": "<Main SQL database connection string>",
