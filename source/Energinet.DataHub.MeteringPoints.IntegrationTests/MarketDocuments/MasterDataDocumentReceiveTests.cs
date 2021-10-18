@@ -212,20 +212,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
         }
 
         [Fact]
-        public async Task Should_reject_when_settlement_method_is_invalid()
-        {
-            var request = CreateDocument()
-                with
-                {
-                    SettlementMethod = "Invalid_Method_Name",
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("D15");
-        }
-
-        [Fact]
         public async Task Should_reject_when_metering_method_is_invalid()
         {
             var request = CreateDocument()
