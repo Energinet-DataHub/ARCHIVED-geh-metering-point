@@ -40,3 +40,8 @@ data "azurerm_key_vault_secret" "shared_resources_integrationevents_transceiver_
   name         = "SHARED-RESOURCES--SB-INTEGRATIONEVENTS-TRANSCEIVER-CONNECTION-STRING"
   key_vault_id = data.azurerm_key_vault.kv_sharedresources.id
 }
+
+data "azurerm_key_vault_secret" "shared_resources_marketoperator_response_connection_string" {
+  name         = "SHARED-RESOURCES-MARKETOPERATOR-RESPONSE-CONNECTION-STRING"
+  key_vault_id = data.azurerm_key_vault.kv_sharedresources.id
+}
