@@ -14,12 +14,11 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public abstract record MeteringPointDetails(
+    public record MeteringPointDetails(
         MeteringPointId Id,
         GsrnNumber GsrnNumber,
         Address Address,
@@ -29,10 +28,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         LocationDescription? LocationDescription,
         MeterId? MeterNumber,
         ReadingOccurrence ReadingOccurrence,
-        PowerLimit PowerLimit,
+        PowerLimit? PowerLimit,
         EffectiveDate EffectiveDate,
-        SettlementMethod SettlementMethod,
-        AssetType? AssetType,
-        ScheduledMeterReadingDate? ScheduledMeterReadingDate,
-        Capacity? Capacity);
+        NetSettlementGroup NetSettlementGroup,
+        DisconnectionType DisconnectionType,
+        ConnectionType? ConnectionType)
+    {
+        public MeteringPointDetails(MeteringPointId id, GsrnNumber gsrnNumber, Address address, MeteringMethod meteringMethod, GridAreaLinkId powerPlantGsrnNumber, LocationDescription locationDescription, MeterId meterNumber, ReadingOccurrence readingOccurrence, PowerLimit powerLimit, EffectiveDate effectiveDate, NetSettlementGroup netSettlementGroup, DisconnectionType disconnectionType, ConnectionType connectionType)
+            : this(id, gsrnNumber, address, meteringMethod, powerPlantGsrnNumber, gsrnNumber, locationDescription, meterNumber, readingOccurrence, powerLimit, effectiveDate, netSettlementGroup, disconnectionType, connectionType)
+        {
+        }
+    }
 }

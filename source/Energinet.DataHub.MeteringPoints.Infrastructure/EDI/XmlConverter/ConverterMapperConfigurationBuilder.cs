@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 {
@@ -32,7 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
 
             var constructor = typeof(T).GetConstructors().FirstOrDefault() ?? throw new InvalidOperationException("Target type must be a record with a single constructor");
 
-            foreach (var parameterInfo in constructor.GetParameters())
+            foreach (var parameterInfo in GetParameters(constructor))
             {
                 _properties.Add(parameterInfo.Name ?? throw new NoNullAllowedException(), null);
             }
@@ -65,12 +66,25 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             return new(typeof(T), _xmlElementName, _properties);
         }
 
-        private static Func<XmlElementInfo, object> CastFunc<TProperty>(Func<XmlElementInfo, TProperty> translatorFunc)
+        private static ParameterInfo[] GetParameters(ConstructorInfo constructor)
         {
-            return p => translatorFunc(p) ?? throw new InvalidOperationException($"Type '{typeof(TProperty)}' could not be casted to object");
+            var constructorParameters = constructor.GetParameters();
+            var filteredParameters = ExcludeParametersFromXmlHeader(constructorParameters);
+            return filteredParameters;
         }
 
-        private ConverterMapperConfigurationBuilder<T> AddPropertyInternal<TProperty>(Expression<Func<T, TProperty>> selector, Func<XmlElementInfo, object> translatorFunc, params string[] xmlHierarchy)
+        private static ParameterInfo[] ExcludeParametersFromXmlHeader(ParameterInfo[] parameters)
+        {
+            var headerProperties = typeof(XmlHeaderData).GetProperties().Select(p => p.Name);
+            return parameters.Where(p => !headerProperties.Contains(p.Name)).ToArray();
+        }
+
+        private static Func<XmlElementInfo, object?> CastFunc<TProperty>(Func<XmlElementInfo, TProperty> translatorFunc)
+        {
+            return p => translatorFunc(p);
+        }
+
+        private ConverterMapperConfigurationBuilder<T> AddPropertyInternal<TProperty>(Expression<Func<T, TProperty>> selector, Func<XmlElementInfo, object?> translatorFunc, params string[] xmlHierarchy)
         {
             var propertyInfo = PropertyInfoHelper.GetPropertyInfo(selector);
             _properties[propertyInfo.Name] = new ExtendedPropertyInfo(xmlHierarchy, propertyInfo, translatorFunc);

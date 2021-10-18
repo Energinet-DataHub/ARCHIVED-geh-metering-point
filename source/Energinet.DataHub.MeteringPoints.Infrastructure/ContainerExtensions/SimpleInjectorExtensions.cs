@@ -30,10 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions
             if (container == null) throw new ArgumentNullException(nameof(container));
 
             container.Register(typeof(IAuthorizationHandler<,>), typeof(InputAuthorizationHandler<,>));
-            container.Collection.Register(typeof(IAuthorizationHandler<,>), new[]
-            {
-                typeof(ExampleAuthorizationHandler),
-            });
+            container.Collection.Register(typeof(IAuthorizationHandler<,>), new[] { typeof(ExampleAuthorizationHandler), });
         }
 
         public static void AddValidationErrorConversion(this Container container, bool validateRegistrations, params Assembly[] assemblies)

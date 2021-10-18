@@ -68,10 +68,10 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 SampleData.Floor,
                 SampleData.Room,
                 SampleData.MunicipalityCode,
-                SampleData.IsOfficialAddress,
+                SampleData.IsActualAddress,
                 null);
 
-            var details = CreateDetails()
+            var details = CreateConsumptionDetails()
                 with
                 {
                     Address = address,
@@ -95,7 +95,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 SampleData.Floor,
                 SampleData.Room,
                 SampleData.MunicipalityCode,
-                SampleData.IsOfficialAddress,
+                SampleData.IsActualAddress,
                 SampleData.GeoInfoReference);
 
             return new MarketMeteringPointMock(

@@ -33,6 +33,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GridAreas;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
@@ -107,6 +108,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI
             _container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
 
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
+            _container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
 
             // TODO: Probably not needed
             _container.AddValidationErrorConversion(
@@ -141,9 +143,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI v1"));
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI v1"));
 
             app.UseHttpsRedirection();
 

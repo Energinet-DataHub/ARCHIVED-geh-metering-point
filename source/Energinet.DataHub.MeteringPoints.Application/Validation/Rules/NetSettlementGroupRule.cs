@@ -15,25 +15,25 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Application.Create;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
+using Energinet.DataHub.MeteringPoints.Application.Validation.Extensions;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class NetSettlementGroupRule : AbstractValidator<CreateMeteringPoint>
+    public class NetSettlementGroupRule : AbstractValidator<MasterDataDocument>
     {
         public NetSettlementGroupRule()
         {
-            RuleFor(request => request.NetSettlementGroup)
-                .Cascade(CascadeMode.Stop)
-                .NotEmpty()
-                .WithState(createMeteringPoint => new NetSettlementGroupMandatoryValidationError(createMeteringPoint.TypeOfMeteringPoint))
-                .Must(netSettlementGroup => AllowedNetSettlementGroupValues().Contains(netSettlementGroup!))
-                .WithState(createMeteringPoint => new NetSettlementGroupInvalidValueValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.TypeOfMeteringPoint));
+            When(request => !string.IsNullOrWhiteSpace(request.NetSettlementGroup), () =>
+            {
+                RuleFor(request => request.NetSettlementGroup)
+                    .Must(value => EnumerationType.GetAll<NetSettlementGroup>().Select(item => item.Name).Contains(value))
+                    .WithState(createMeteringPoint => new NetSettlementGroupInvalidValueValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.TypeOfMeteringPoint));
+            });
         }
 
         private static HashSet<string> AllowedNetSettlementGroupValues()

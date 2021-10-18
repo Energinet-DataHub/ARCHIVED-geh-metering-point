@@ -15,7 +15,6 @@
 using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

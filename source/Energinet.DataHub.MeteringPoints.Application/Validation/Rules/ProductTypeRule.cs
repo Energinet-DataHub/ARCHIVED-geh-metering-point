@@ -14,7 +14,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Application.Create;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -22,7 +22,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class ProductTypeRule : AbstractValidator<CreateMeteringPoint>
+    public class ProductTypeRule : AbstractValidator<MasterDataDocument>
     {
         public ProductTypeRule()
         {
@@ -49,7 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             });
         }
 
-        private static bool IsMeteringPointTypeWithDefaultProductType(CreateMeteringPoint createMeteringPoint)
+        private static bool IsMeteringPointTypeWithDefaultProductType(MasterDataDocument masterDataDocument)
         {
             var includedMeteringPointTypes = new HashSet<string>
             {
@@ -59,7 +59,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 MeteringPointType.InternalUse.Name,
             };
 
-            return !includedMeteringPointTypes.Contains(createMeteringPoint.TypeOfMeteringPoint);
+            return !includedMeteringPointTypes.Contains(masterDataDocument.TypeOfMeteringPoint);
         }
 
         private static HashSet<string> AllowedProductTypeValues()

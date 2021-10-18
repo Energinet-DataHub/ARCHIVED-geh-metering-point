@@ -25,7 +25,7 @@ message Address {
   google.protobuf.StringValue postCode = 2;
   google.protobuf.StringValue cityName = 3;
   google.protobuf.StringValue countryCode = 4;
-  google.protobuf.BoolValue officialAddressIndicator = 5;
+  google.protobuf.BoolValue actualAddressIndicator = 5;
   google.protobuf.StringValue buildingNumber = 6;
   string streetCode = 7;
   google.protobuf.StringValue floorIdentification = 8;
@@ -35,7 +35,7 @@ message Address {
   google.protobuf.StringValue geoInfoReference = 12;
 }
 
-message CreateMeteringPoint {
+message MasterDataDocument {
   string gsrnNumber = 1;
   string typeOfMeteringPoint = 2;
   string subTypeOfMeteringPoint = 3;
@@ -51,7 +51,7 @@ message CreateMeteringPoint {
   string unitType = 13;
   string disconnectionType = 14;
   string occurenceDate = 15;
-  string meterNumber = 16;
+  google.protobuf.StringValue meterNumber = 16;
   string transactionId = 17;
   string physicalStatusOfMeteringPoint = 18;
   google.protobuf.StringValue netSettlementGroup = 19;
@@ -63,12 +63,7 @@ message CreateMeteringPoint {
   string measureUnitType = 25;
   google.protobuf.StringValue physicalConnectionCapacity = 26;
   google.protobuf.StringValue scheduledMeterReadingDate = 27;
-}
-
-message ConnectMeteringPoint {
-    string gsrnNumber = 1;
-    string effectiveDate = 2;
-    string transactionId = 3;
+  string processType = 28;
 }
 
 message CreateDefaultChargeLinks {
@@ -78,8 +73,8 @@ message CreateDefaultChargeLinks {
 
 message MeteringPointEnvelope {
   oneof MeteringPointMessages {
-    CreateMeteringPoint createMeteringPoint = 1;
-    ConnectMeteringPoint connectMeteringPoint = 2;
-    CreateDefaultChargeLinks createDefaultChargeLinks = 3;
+    MasterDataDocument masterDataDocument = 1;
+    CreateDefaultChargeLinks createDefaultChargeLinks = 2;
+    
   }
 }

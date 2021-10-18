@@ -16,28 +16,27 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
-using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
-using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption
 {
     public class OnConsumptionMeteringPointCreated : IntegrationEventPublisher<ConsumptionMeteringPointCreated>
     {
-        private readonly IDbConnectionFactory _connectionFactory;
+        private readonly DbGridAreaHelper _dbGridAreaHelper;
 
-        public OnConsumptionMeteringPointCreated(IOutbox outbox, IOutboxMessageFactory outboxMessageFactory, IDbConnectionFactory connectionFactory)
+        public OnConsumptionMeteringPointCreated(IOutbox outbox, IOutboxMessageFactory outboxMessageFactory, DbGridAreaHelper dbGridAreaHelper)
             : base(outbox, outboxMessageFactory)
         {
-            _connectionFactory = connectionFactory;
+            _dbGridAreaHelper = dbGridAreaHelper;
         }
 
         public override async Task Handle(ConsumptionMeteringPointCreated notification, CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
-            var gridAreaCode = await GetGridAreaCodeAsync(notification.GridAreaLinkId).ConfigureAwait(false);
+            var gridAreaCode = await _dbGridAreaHelper.GetGridAreaCodeAsync(notification.GridAreaLinkId).ConfigureAwait(false);
             var message = new ConsumptionMeteringPointCreatedIntegrationEvent(
                 notification.MeteringPointId.ToString(),
                 notification.GsrnNumber,
@@ -52,19 +51,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 notification.PhysicalState);
 
             CreateAndAddOutboxMessage(message);
-        }
-
-        private async Task<string> GetGridAreaCodeAsync(Guid gridAreaLinkId)
-        {
-            var sql = @"SELECT GridAreas.Code FROM GridAreas
-                        INNER JOIN GridAreaLinks ON GridAreas.Id = GridAreaLinks.GridAreaId
-                        WHERE GridAreaLinks.Id =@GridAreaLinkId";
-            var result = await _connectionFactory
-                .GetOpenConnection()
-                .ExecuteScalarAsync<string?>(sql, new { gridAreaLinkId })
-                .ConfigureAwait(false);
-
-            return result ?? throw new InvalidOperationException("Grid Area Code not found");
         }
     }
 }
