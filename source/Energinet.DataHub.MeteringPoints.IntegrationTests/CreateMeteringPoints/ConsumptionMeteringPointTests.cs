@@ -122,7 +122,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task Should_reject_when_settlement_method_is_missing()
+        public async Task Should_reject_when_settlement_method_is_invalid()
         {
             var request = CreateCommand()
                 with
@@ -136,7 +136,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task Should_reject_when_settlement_method_is_invalid()
+        public async Task Should_reject_when_settlement_method_is_missing()
         {
             var request = CreateCommand()
                 with
