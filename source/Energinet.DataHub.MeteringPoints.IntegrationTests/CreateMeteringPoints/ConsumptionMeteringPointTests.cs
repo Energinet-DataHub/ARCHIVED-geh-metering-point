@@ -122,20 +122,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task Should_reject_when_settlement_method_is_invalid()
-        {
-            var request = CreateCommand()
-                with
-                {
-                    SettlementMethod = "invalid",
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("D15", DocumentType.CreateMeteringPointRejected);
-        }
-
-        [Fact]
         public async Task Should_reject_when_settlement_method_is_missing()
         {
             var request = CreateCommand()
