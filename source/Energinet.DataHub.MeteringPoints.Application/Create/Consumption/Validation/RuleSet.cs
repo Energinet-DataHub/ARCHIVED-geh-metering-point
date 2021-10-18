@@ -29,21 +29,21 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Valida
                 RuleFor(request => request.ScheduledMeterReadingDate)
                     .Must(value => ScheduledMeterReadingDate.CheckRules(value !).Success)
                     .WithState(value => new InvalidScheduledMeterReadingDateRuleError());
-                RuleFor(request => request.NetSettlementGroup)
-                    .Cascade(CascadeMode.Stop)
-                    .NotEmpty()
-                    .WithState(createMeteringPoint =>
-                        new NetSettlementGroupMandatoryValidationError("Consumption"));
-                RuleFor(request => request.MeterReadingOccurrence)
-                    .NotEmpty()
-                    .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError("Consumption"));
-                RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
-                    .NotEmpty()
-                    .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError());
                 RuleFor(createMeteringPoint => createMeteringPoint.MeteringMethod)
                     .NotEmpty()
                     .WithState(createMeteringPoint => new MeteringMethodIsMandatoryValidationError());
             });
+            RuleFor(request => request.NetSettlementGroup)
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty()
+                .WithState(createMeteringPoint =>
+                    new NetSettlementGroupMandatoryValidationError("Consumption"));
+            RuleFor(request => request.MeterReadingOccurrence)
+                .NotEmpty()
+                .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError("Consumption"));
+            RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
+                .NotEmpty()
+                .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError());
         }
     }
 }
