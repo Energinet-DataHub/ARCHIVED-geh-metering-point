@@ -12,16 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Validation
 {
     public class RuleSet : AbstractValidator<CreateConsumptionMeteringPoint>
     {
+        private readonly List<string> _allowedDomainValuesForConsumptionAndNetLossCorrection =
+            EnumerationType.GetAll<SettlementMethod>()
+                .Select(item => item.Name)
+                .ToList();
+
         public RuleSet()
         {
             When(request => !string.IsNullOrEmpty(request.ScheduledMeterReadingDate), () =>
@@ -42,8 +50,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Valida
                 .NotEmpty()
                 .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError("Consumption"));
             RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError());
+                .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError())
+                .Must(settlementMethod => _allowedDomainValuesForConsumptionAndNetLossCorrection.Contains(settlementMethod!))
+                .WithState(createMeteringPoint => new SettlementMethodMissingRequiredDomainValuesValidationError(createMeteringPoint.SettlementMethod!));
         }
     }
 }
