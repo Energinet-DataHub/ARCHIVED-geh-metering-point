@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
         Address Address,
         MeteringMethod MeteringMethod,
         GridAreaLinkId GridAreaLinkId,
-        GsrnNumber? PowerPlantGsrnNumber,
+        GsrnNumber PowerPlantGsrnNumber,
         LocationDescription? LocationDescription,
         MeterId? MeterNumber,
         ReadingOccurrence ReadingOccurrence,

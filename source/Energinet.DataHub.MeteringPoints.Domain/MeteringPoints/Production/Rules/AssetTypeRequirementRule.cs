@@ -13,21 +13,20 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production.Rules
 {
-    public class CapacityRequirementRule : IBusinessRule
+    public class AssetTypeRequirementRule : IBusinessRule
     {
-        public CapacityRequirementRule(Capacity? capacity, NetSettlementGroup netSettlementGroup)
+        public AssetTypeRequirementRule(AssetType? assetType)
         {
-            IsBroken = netSettlementGroup != NetSettlementGroup.Zero && capacity == null;
-            ValidationError = new CapacityIsRequiredRuleError();
+            IsBroken = assetType is null;
         }
 
         public bool IsBroken { get; }
 
-        public ValidationError ValidationError { get; }
+        public ValidationError ValidationError => new AssetTypeIsRequiredRuleError();
     }
 }

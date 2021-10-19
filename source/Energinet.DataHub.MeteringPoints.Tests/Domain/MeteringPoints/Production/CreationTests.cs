@@ -14,10 +14,13 @@
 
 using System;
 using System.Linq;
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
@@ -124,6 +127,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Productio
 
             var createdEvent = meteringPoint.DomainEvents.First(e => e is ProductionMeteringPointCreated) as ProductionMeteringPointCreated;
             Assert.Equal(ProductType.EnergyActive.Name, createdEvent!.ProductType);
+        }
+
+        [Fact]
+        public void Asset_type_is_required()
+        {
+            var details = CreateProductionDetails()
+                with
+                {
+                   AssetType = null!,
+                };
+
+            var checkResult = CheckCreationRules(details);
+
+            AssertContainsValidationError<AssetTypeIsRequiredRuleError>(checkResult);
         }
 
         [Fact]

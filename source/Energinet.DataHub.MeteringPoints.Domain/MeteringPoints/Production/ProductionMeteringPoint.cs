@@ -19,7 +19,9 @@ using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules.Connect;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -149,7 +151,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
             var generalRuleCheckResult= MarketMeteringPoint.CanCreate(meteringPointDetails);
             var rules = new List<IBusinessRule>()
             {
-                // TODO: Implement production specific rules
+                new CapacityRequirementRule(meteringPointDetails.Capacity, meteringPointDetails.NetSettlementGroup),
+                new AssetTypeRequirementRule(meteringPointDetails.AssetType),
             };
 
             return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
