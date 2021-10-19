@@ -42,10 +42,8 @@ module "azfun_outbox" {
     METERING_POINT_MESSAGE_DEQUEUED_TOPIC                         = "metering-point-message-dequeued"
     ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER                          = "*/10 * * * * *"
     EVENT_MESSAGE_DISPATCH_TRIGGER_TIMER                          = "*/10 * * * * *"
-  }
-  connection_string                         = {
-    MESSAGEHUB_STORAGE_CONNECTION_STRING  = module.stor_postoffice.primary_connection_string
-    MESSAGEHUB_QUEUE_CONNECTION_STRING    = data.azurerm_key_vault_secret.shared_resources_integrationevents_transceiver_connection_string.value
+    MESSAGEHUB_STORAGE_CONNECTION_STRING                          = data.azurerm_key_vault_secret.shared_resources_marketoperator_response_connection_string.value
+    MESSAGEHUB_QUEUE_CONNECTION_STRING                            = data.azurerm_key_vault_secret.shared_resources_integrationevents_transceiver_connection_string.value
   }
   dependencies                              = [
     module.appi.dependent_on,

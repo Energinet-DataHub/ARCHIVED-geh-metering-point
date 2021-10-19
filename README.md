@@ -33,12 +33,12 @@ These are the processes maintained by this domain.
 
 In current program increment we are working on the following>
 
-* We are able to create consumption metering points
-* We can messages as described in the CoS sequence diagram (TBD)
-* We are able to create exchange metering points
-* We are able to create production metering points
-* We are able to create Dxx metering points (Danish MP types)
-* We publish a MeteringPointCreated event upon MP creation containing MP Type and GSRN
+* A market actor can create all metering point types
+* A market actor can update metering point master data on all metering point types
+* We can send messages to market actors through MessageHub
+* We can send metering point master data updates to future and current energy supplier
+* A market actor can cancel their request for create MP
+* We publish all metering point created events
 
 ## Getting Started
 

@@ -30,17 +30,15 @@ module "azfun_localmessagehub" {
     FUNCTIONS_WORKER_RUNTIME              = "dotnet-isolated"
     # Endregion: Default Values
     METERINGPOINT_DB_CONNECTION_STRING    = local.METERING_POINT_CONNECTION_STRING
-  }
-  connection_string                         = {
-    MESSAGEHUB_STORAGE_CONNECTION_STRING  = module.stor_postoffice.primary_connection_string
+    MESSAGEHUB_STORAGE_CONNECTION_STRING  = data.azurerm_key_vault_secret.shared_resources_marketoperator_response_connection_string.value
     MESSAGEHUB_QUEUE_CONNECTION_STRING    = data.azurerm_key_vault_secret.shared_resources_integrationevents_transceiver_connection_string.value
+    METERINGPOINT_QUEUE_CONNECTION_STRING = module.sbnar_meteringpoint_sender.primary_connection_string
   }
   dependencies                              = [
     module.appi.dependent_on,
     module.azfun_localmessagehub_plan.dependent_on,
     module.azfun_localmessagehub_stor.dependent_on,
     module.sbq_meteringpoint.dependent_on,
-    module.stor_postoffice.dependent_on,
   ]
 }
 
