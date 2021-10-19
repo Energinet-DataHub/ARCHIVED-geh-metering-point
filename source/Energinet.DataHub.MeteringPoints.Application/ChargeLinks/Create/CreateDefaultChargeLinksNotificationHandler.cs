@@ -31,6 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChargeLinks.Create
 
         public Task Handle(CreateDefaultChargeLinksNotification notification, CancellationToken cancellationToken)
         {
+            //TODO: Potential do a DB call and fetch MP GSRN Number based on CorrelationId
             if (notification == null) throw new ArgumentNullException(nameof(notification));
             var command = new CreateDefaultChargeLinks(notification.GsrnNumber, notification.CorrelationId);
 

@@ -12,19 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages;
+using Energinet.DataHub.Charges.Libraries.Models;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChargeLinks.Create
 {
     public class CreateDefaultChargeLinksSucceededHandler : INotificationHandler<CreateDefaultChargeLinksSucceeded>
     {
-        public Task Handle(CreateDefaultChargeLinksSucceeded notification, CancellationToken cancellationToken)
+        private readonly DefaultChargeLinkMessagesRequestClient _defaultChargeLinkMessagesRequestClient;
+
+        public CreateDefaultChargeLinksSucceededHandler(
+            DefaultChargeLinkMessagesRequestClient defaultChargeLinkMessagesRequestClient)
         {
-            //TODO: Handle process state
-            //TODO: Call Charges DLL with a CreateDefaultChargesLinksMessages request to send out Charge Link Messages
-            throw new System.NotImplementedException();
+            _defaultChargeLinkMessagesRequestClient = defaultChargeLinkMessagesRequestClient;
+        }
+
+        public async Task Handle(CreateDefaultChargeLinksSucceeded notification, CancellationToken cancellationToken)
+        {
+            // TODO: Handle process state
+            if (notification == null) throw new ArgumentNullException(nameof(notification));
+
+            // TODO: Get correct CorrelationId
+            if (notification.DidCreateChargeLinks)
+            {
+                await _defaultChargeLinkMessagesRequestClient.CreateDefaultChargeLinkMessagesRequestAsync(new CreateDefaultChargeLinkMessagesDto(notification.GsrnNumber), "Insert CorrelationId").ConfigureAwait(false);
+            }
         }
     }
 }

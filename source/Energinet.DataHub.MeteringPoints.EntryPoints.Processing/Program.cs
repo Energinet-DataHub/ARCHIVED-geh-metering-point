@@ -14,6 +14,10 @@
 
 using System;
 using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
+using Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages;
+using Energinet.DataHub.Charges.Libraries.Factories;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
@@ -118,6 +122,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
             container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
             container.Register<IntegrationEventReceiver>(Lifestyle.Scoped);
+            container.Register<ChargesResponseReceiver>(Lifestyle.Scoped);
             container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
             container.Register<IMarketMeteringPointRepository, MarketMeteringPointRepository>(Lifestyle.Scoped);
             container.Register<IGridAreaRepository, GridAreaRepository>(Lifestyle.Scoped);
@@ -157,6 +162,27 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             container.Register<IActorMessageFactory, ActorMessageFactory>(Lifestyle.Scoped);
             container.Register<IMessageHubDispatcher, MessageHubDispatcher>(Lifestyle.Scoped);
+
+            // SB for communicating with Charges
+            var serviceBusConnectionString =
+                Environment.GetEnvironmentVariable("SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING");
+
+            container.Register<ServiceBusClient>(
+                () => new ServiceBusClient(serviceBusConnectionString),
+                Lifestyle.Singleton);
+            var chargesResponseQueueName = Environment.GetEnvironmentVariable("CHARGES_RESPONSE_QUEUE") ?? throw new InvalidOperationException();
+            container.Register<DefaultChargeLinkRequestClient>(
+                () => new DefaultChargeLinkRequestClient(
+                    container.GetInstance<ServiceBusClient>(),
+                    new ServiceBusRequestSenderFactory(),
+                    chargesResponseQueueName),
+                Lifestyle.Singleton);
+            container.Register<DefaultChargeLinkMessagesRequestClient>(
+                () => new DefaultChargeLinkMessagesRequestClient(
+                    container.GetInstance<ServiceBusClient>(),
+                    new ServiceBusRequestSenderFactory(),
+                    chargesResponseQueueName),
+                Lifestyle.Singleton);
 
             container.AddValidationErrorConversion(
                 validateRegistrations: false,

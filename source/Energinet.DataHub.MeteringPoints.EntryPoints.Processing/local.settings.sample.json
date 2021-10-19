@@ -8,6 +8,8 @@
     "METERINGPOINT_QUEUE_TOPIC_NAME": "<Name of Service Bus queue for receiving business requests and internal commands>",
     "METERINGPOINT_QUEUE_CONNECTION_STRING": "<Service Bus connection string where business requests and internal commands are received>",
     "INTEGRATION_EVENT_QUEUE": "<Name of Service Bus queue for receiving integration/notification events>",
-    "INTEGRATION_EVENT_QUEUE_CONNECTION": "<Service Bus connection string where integration/notification events are received>"
+    "INTEGRATION_EVENT_QUEUE_CONNECTION": "<Service Bus connection string where integration/notification events are received>",
+    "SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING": "<Shared Azure Service Bus connection string>",
+    "CHARGES_RESPONSE_QUEUE": "<Queue name that Charges response to in request/response pattern>"
   }
 }

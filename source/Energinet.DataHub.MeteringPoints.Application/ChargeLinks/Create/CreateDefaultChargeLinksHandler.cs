@@ -12,30 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
+using Energinet.DataHub.Charges.Libraries.Models;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChargeLinks.Create
 {
     public class CreateDefaultChargeLinksHandler : IRequestHandler<CreateDefaultChargeLinks>
     {
-        private readonly IDefaultChargeLinkRequestClientMock _defaultChargeLinkRequestClientMock;
+        private readonly DefaultChargeLinkRequestClient _defaultChargeLinkRequestClient;
 
-        public CreateDefaultChargeLinksHandler(
-            IDefaultChargeLinkRequestClientMock defaultChargeLinkRequestClientMock)
+        public CreateDefaultChargeLinksHandler(DefaultChargeLinkRequestClient defaultChargeLinkRequestClient)
         {
-            _defaultChargeLinkRequestClientMock = defaultChargeLinkRequestClientMock;
+            _defaultChargeLinkRequestClient = defaultChargeLinkRequestClient;
         }
 
         public async Task<Unit> Handle(CreateDefaultChargeLinks request, CancellationToken cancellationToken)
         {
-            // TODO: Call Charges DLL to request default charge links
-            // TODO: Error Handling if something fails within Volt client package
+            if (request == null) throw new ArgumentNullException(nameof(request));
             // TODO: On some point add this to some process manager
-            await _defaultChargeLinkRequestClientMock.CreateDefaultChargeLinksRequestAsync(
-                new CreateDefaultChargeLinksDto(request.GsrnNumber),
-                request.CorrelationId).ConfigureAwait(false);
+            await _defaultChargeLinkRequestClient.CreateDefaultChargeLinksRequestAsync(new CreateDefaultChargeLinksDto(request.GsrnNumber), request.CorrelationId).ConfigureAwait(false);
+
             return default;
         }
     }
