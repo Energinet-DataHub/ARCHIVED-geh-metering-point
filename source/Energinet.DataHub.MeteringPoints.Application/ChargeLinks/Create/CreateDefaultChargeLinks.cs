@@ -13,12 +13,10 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
-using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChargeLinks.Create
 {
-    public class CreateDefaultChargeLinks : InternalCommand, IRequest, IInboundMessage, IOutboundMessage
+    public class CreateDefaultChargeLinks : InternalCommand
     {
         public CreateDefaultChargeLinks(string gsrnNumber, string correlationId)
         {

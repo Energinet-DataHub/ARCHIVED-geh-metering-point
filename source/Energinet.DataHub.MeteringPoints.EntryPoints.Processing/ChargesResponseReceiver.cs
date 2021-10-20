@@ -18,6 +18,7 @@ using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
 using Energinet.DataHub.Charges.Libraries.Enums;
 using Energinet.DataHub.Charges.Libraries.Models;
 using Energinet.DataHub.MeteringPoints.Application.ChargeLinks.Create;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using MediatR;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -28,13 +29,16 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
     {
         private readonly ILogger _logger;
         private readonly IMediator _mediator;
+        private readonly ICorrelationContext _correlationContext;
 
         public ChargesResponseReceiver(
             ILogger logger,
-            IMediator mediator)
+            IMediator mediator,
+            ICorrelationContext correlationContext)
         {
             _logger = logger;
             _mediator = mediator;
+            _correlationContext = correlationContext;
         }
 
         [Function("ChargesResponseReceiver")]
@@ -57,7 +61,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
         private async Task HandleSuccessAsync(CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceeded)
         {
             _logger.LogInformation($"Add default Charge Link request was successful.");
-            CreateDefaultChargeLinksSucceeded notification = new(createDefaultChargeLinksSucceeded.meteringPointId, createDefaultChargeLinksSucceeded.didCreateChargeLinks);
+            CreateDefaultChargeLinksSucceeded notification = new(createDefaultChargeLinksSucceeded.meteringPointId, createDefaultChargeLinksSucceeded.didCreateChargeLinks, _correlationContext.Id);
             await _mediator.Publish(notification).ConfigureAwait(false);
             await Task.CompletedTask.ConfigureAwait(false);
         }

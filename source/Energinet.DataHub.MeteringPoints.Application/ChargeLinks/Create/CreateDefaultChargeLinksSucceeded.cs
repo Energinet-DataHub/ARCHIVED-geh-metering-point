@@ -17,5 +17,5 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChargeLinks.Create
 {
-    public record CreateDefaultChargeLinksSucceeded(string GsrnNumber, bool DidCreateChargeLinks) : INotification;
+    public record CreateDefaultChargeLinksSucceeded(string GsrnNumber, bool DidCreateChargeLinks, string CorrelationId) : INotification;
 }

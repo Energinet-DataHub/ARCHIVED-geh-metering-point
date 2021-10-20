@@ -36,10 +36,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChargeLinks.Create
             // TODO: Handle process state
             if (notification == null) throw new ArgumentNullException(nameof(notification));
 
-            // TODO: Get correct CorrelationId
             if (notification.DidCreateChargeLinks)
             {
-                await _defaultChargeLinkMessagesRequestClient.CreateDefaultChargeLinkMessagesRequestAsync(new CreateDefaultChargeLinkMessagesDto(notification.GsrnNumber), "Insert CorrelationId").ConfigureAwait(false);
+                await _defaultChargeLinkMessagesRequestClient.CreateDefaultChargeLinkMessagesRequestAsync(new CreateDefaultChargeLinkMessagesDto(notification.GsrnNumber), notification.CorrelationId).ConfigureAwait(false);
             }
         }
     }

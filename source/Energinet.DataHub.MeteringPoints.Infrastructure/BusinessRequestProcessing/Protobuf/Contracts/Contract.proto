@@ -74,7 +74,6 @@ message CreateDefaultChargeLinks {
 message MeteringPointEnvelope {
   oneof MeteringPointMessages {
     MasterDataDocument masterDataDocument = 1;
-    CreateDefaultChargeLinks createDefaultChargeLinks = 2;
-    
+    CreateDefaultChargeLinks createDefaultChargeLinks = 2;    
   }
 }
