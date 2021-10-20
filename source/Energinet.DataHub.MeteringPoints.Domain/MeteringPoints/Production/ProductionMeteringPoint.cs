@@ -42,7 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
             MeteringMethod meteringMethod,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
-            GsrnNumber? powerPlantGsrnNumber,
+            GsrnNumber powerPlantGsrnNumber,
             LocationDescription? locationDescription,
             MeterId? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
@@ -100,7 +100,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 address.CitySubDivision,
                 address.IsActual,
                 address.GeoInfoReference,
-                powerPlantGsrnNumber?.Value,
+                powerPlantGsrnNumber.Value,
                 locationDescription.Value,
                 meterNumber?.Value,
                 powerLimit.Ampere,
@@ -153,6 +153,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
             {
                 new CapacityRequirementRule(meteringPointDetails.Capacity, meteringPointDetails.NetSettlementGroup),
                 new AssetTypeRequirementRule(meteringPointDetails.AssetType),
+                new PowerplantRequirementRule(meteringPointDetails.GsrnNumber, meteringPointDetails.PowerPlantGsrnNumber),
             };
 
             return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));

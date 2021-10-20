@@ -22,6 +22,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Categories;
@@ -141,6 +142,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Productio
             var checkResult = CheckCreationRules(details);
 
             AssertContainsValidationError<AssetTypeIsRequiredRuleError>(checkResult);
+        }
+
+        [Fact]
+        public void Powerplant_is_required()
+        {
+            var details = CreateProductionDetails()
+                with
+                {
+                    PowerPlantGsrnNumber = null!,
+                };
+
+            var checkResult = CheckCreationRules(details);
+
+            AssertContainsValidationError<PowerPlantRequirementRuleError>(checkResult);
         }
 
         [Fact]
