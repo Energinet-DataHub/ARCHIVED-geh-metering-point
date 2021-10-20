@@ -12,20 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
-
-namespace Energinet.DataHub.MeteringPoints.Messaging
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub
 {
     /// <summary>
-    /// Local Post Office
+    /// Handling of outgoing messages
     /// </summary>
-    public interface ILocalMessageHubDataAvailableClient
+    public interface IOutboxDispatcher<in T>
     {
         /// <summary>
-        /// Dispatch message to Local Post Office
+        /// Handle a single outgoing message
         /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        void DataAvailable(MessageHubEnvelope messageHub);
+        /// <param name="message"></param>
+        public void Dispatch(T message);
     }
 }
