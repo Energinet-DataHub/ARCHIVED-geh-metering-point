@@ -137,9 +137,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             container.Register<MessageHubMessageFactory>(Lifestyle.Scoped);
 
             var messageHubStorageConnectionString = Environment.GetEnvironmentVariable("MESSAGEHUB_STORAGE_CONNECTION_STRING") ?? throw new InvalidOperationException("MessageHub storage connection string not found.");
+            var messageHubStorageContainerName = Environment.GetEnvironmentVariable("MESSAGEHUB_STORAGE_CONTAINER_NAME") ?? throw new InvalidOperationException("MessageHub storage container name not found.");
             var messageHubServiceBusConnectionString = Environment.GetEnvironmentVariable("MESSAGEHUB_QUEUE_CONNECTION_STRING") ?? throw new InvalidOperationException("MessageHub queue connection string not found.");
 
-            container.AddPostOfficeCommunication(messageHubServiceBusConnectionString, new MessageHubConfig("sbq-dataavailable", "sbq-meteringpoints-reply"), messageHubStorageConnectionString, new StorageConfig("postoffice-blobstorage"));
+            container.AddPostOfficeCommunication(messageHubServiceBusConnectionString, new MessageHubConfig("sbq-dataavailable", "sbq-meteringpoints-reply"), messageHubStorageConnectionString, new StorageConfig(messageHubStorageContainerName));
 
             // Setup pipeline behaviors
             container.BuildMediator(
