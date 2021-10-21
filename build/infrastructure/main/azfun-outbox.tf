@@ -43,6 +43,7 @@ module "azfun_outbox" {
     ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER                          = "*/10 * * * * *"
     EVENT_MESSAGE_DISPATCH_TRIGGER_TIMER                          = "*/10 * * * * *"
     MESSAGEHUB_STORAGE_CONNECTION_STRING                          = data.azurerm_key_vault_secret.shared_resources_marketoperator_response_connection_string.value
+    MESSAGEHUB_STORAGE_CONTAINER_NAME                             = data.azurerm_key_vault_secret.shared_resources_marketoperator_container_reply_name.value
     MESSAGEHUB_QUEUE_CONNECTION_STRING                            = data.azurerm_key_vault_secret.shared_resources_integrationevents_transceiver_connection_string.value
   }
   dependencies                              = [
