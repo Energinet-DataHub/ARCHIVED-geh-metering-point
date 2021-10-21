@@ -12,9 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChargeLinks.Messages
 {
-    public record CreateDefaultChargeLinkMessages(string GsrnNumber) : IRequest;
+    public class CreateDefaultChargeLinksMessages : InternalCommand
+    {
+        public CreateDefaultChargeLinksMessages(string gsrnNumber, string correlationId)
+        {
+            GsrnNumber = gsrnNumber;
+            CorrelationId = correlationId;
+        }
+
+        public string GsrnNumber { get; private set; }
+
+        public string CorrelationId { get; private set; }
+    }
 }

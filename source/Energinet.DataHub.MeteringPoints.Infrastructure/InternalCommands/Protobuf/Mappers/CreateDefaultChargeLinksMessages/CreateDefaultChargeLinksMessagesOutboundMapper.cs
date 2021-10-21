@@ -1,4 +1,4 @@
-﻿// Copyright 2020 Energinet DataHub A/S
+// Copyright 2020 Energinet DataHub A/S
 //
 // Licensed under the Apache License, Version 2.0 (the "License2");
 // you may not use this file except in compliance with the License.
@@ -13,21 +13,25 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
+using Google.Protobuf;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Protobuf.Mappers
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands.Protobuf.Mappers.CreateDefaultChargeLinksMessages
 {
-    public class CreateDefaultChargeLinksMapper : ProtobufInboundMapper<CreateDefaultChargeLinks>
+    public class CreateDefaultChargeLinksMessagesOutboundMapper : ProtobufOutboundMapper<Application.ChargeLinks.Messages.CreateDefaultChargeLinksMessages>
     {
-        protected override IInboundMessage Convert(CreateDefaultChargeLinks obj)
+        protected override IMessage Convert(Application.ChargeLinks.Messages.CreateDefaultChargeLinksMessages obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 
-            return new Application.ChargeLinks.Create.CreateDefaultChargeLinks(
-                obj.GsrnNumber,
-                obj.CorrelationId);
+            return new MeteringPointEnvelope
+            {
+                CreateDefaultChargeLinksMessages = new Contracts.CreateDefaultChargeLinksMessages()
+                {
+                    CorrelationId = obj.CorrelationId, GsrnNumber = obj.GsrnNumber,
+                },
+            };
         }
     }
 }
