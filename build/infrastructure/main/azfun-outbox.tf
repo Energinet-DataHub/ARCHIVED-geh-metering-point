@@ -38,6 +38,7 @@ module "azfun_outbox" {
     METERING_POINT_CREATED_TOPIC                                  = "metering-point-created"
     CONSUMPTION_METERING_POINT_CREATED_TOPIC                      = "consumption-metering-point-created"
     PRODUCTION_METERING_POINT_CREATED_TOPIC                       = "production-metering-point-created"
+    EXCHANGE_METERING_POINT_CREATED_TOPIC                         = "exchange-metering-point-created"
     METERING_POINT_CONNECTED_TOPIC                                = "metering-point-connected"
     METERING_POINT_MESSAGE_DEQUEUED_TOPIC                         = "metering-point-message-dequeued"
     ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER                          = "*/10 * * * * *"
