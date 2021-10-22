@@ -29,7 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             When(request => !string.IsNullOrWhiteSpace(request.NetSettlementGroup), () =>
             {
                 RuleFor(request => request.NetSettlementGroup)
-                    .Must(value => EnumerationType.GetAll<NetSettlementGroup>().Select(item => item.Name).Contains(value))
+                    .Must(value => AllowedNetSettlementGroupValues().Contains(value!))
                     .WithState(createMeteringPoint => new NetSettlementGroupInvalidValueValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.TypeOfMeteringPoint));
             });
         }
