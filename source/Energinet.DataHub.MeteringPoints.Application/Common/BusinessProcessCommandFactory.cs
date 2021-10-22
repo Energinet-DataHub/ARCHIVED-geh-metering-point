@@ -116,7 +116,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
                 };
             }
 
-            if (meteringPointType == MeteringPointType.Production)
+            if (meteringPointType == MeteringPointType.Exchange)
             {
                 return new CreateExchangeMeteringPoint
                 {
