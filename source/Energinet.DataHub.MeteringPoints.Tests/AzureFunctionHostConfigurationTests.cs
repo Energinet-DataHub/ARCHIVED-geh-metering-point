@@ -90,7 +90,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
             Environment.SetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME", SomeString);
             Environment.SetEnvironmentVariable("MESSAGEHUB_QUEUE_CONNECTION_STRING", SomeString);
             Environment.SetEnvironmentVariable("MESSAGEHUB_STORAGE_CONNECTION_STRING", SomeString);
-            Environment.SetEnvironmentVariable("CONSUMPTION_METERING_POINT_CREATED_TOPIC", SomeString);
+            Environment.SetEnvironmentVariable("MESSAGEHUB_STORAGE_CONTAINER_NAME", SomeString);
             Environment.SetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", SomeString);
             var program = new EntryPoints.LocalMessageHub.Program();
 
