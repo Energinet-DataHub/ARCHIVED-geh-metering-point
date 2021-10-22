@@ -13,17 +13,17 @@
 // limitations under the License.
 
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Exchange;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDispatchers
 {
-    public class MeteringPointConnectedDispatcher : IntegrationEventDispatcher<MeteringPointConnectedTopic, MeteringPointConnectedIntegrationEvent>
+    public class ExchangeMeteringPointCreatedDispatcher : IntegrationEventDispatcher<ExchangeMeteringPointCreatedTopic, ExchangeMeteringPointCreatedIntegrationEvent>
     {
-        public MeteringPointConnectedDispatcher(ITopicSender<MeteringPointConnectedTopic> topicSender, ProtobufOutboundMapper<MeteringPointConnectedIntegrationEvent> mapper, IIntegrationEventMessageFactory integrationEventMessageFactory, IIntegrationMetadataContext integrationMetadataContext)
+        public ExchangeMeteringPointCreatedDispatcher(ITopicSender<ExchangeMeteringPointCreatedTopic> topicSender, ProtobufOutboundMapper<ExchangeMeteringPointCreatedIntegrationEvent> mapper, IIntegrationEventMessageFactory integrationEventMessageFactory, IIntegrationMetadataContext integrationMetadataContext)
             : base(topicSender, mapper, integrationEventMessageFactory, integrationMetadataContext)
         {
         }
@@ -31,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDi
         protected override void EnrichMessage(ServiceBusMessage serviceBusMessage)
         {
             serviceBusMessage.EnrichMetadata(
-                nameof(MeteringPointCreated),
+                nameof(ExchangeMeteringPointCreated),
                 1);
         }
     }

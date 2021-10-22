@@ -12,11 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Create.Exchange
 {
-    public class MeterReadingOccurenceMandatoryValidationError : ValidationError
+    public class ToGridAreaMustExistRuleErrorConverter : ErrorConverter<ToGridAreaMustExistRuleError>
     {
+        protected override ErrorMessage Convert(ToGridAreaMustExistRuleError validationError)
+        {
+            return new("D46", $"Target grid area {validationError?.GridArea?.Code} is not an existing grid area");
+        }
     }
 }

@@ -12,11 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Exchange
 {
-    public class MeterReadingOccurenceMandatoryValidationError : ValidationError
-    {
-    }
+    public record ExchangeMeteringPointCreatedTopic(string Name) : Topic;
 }

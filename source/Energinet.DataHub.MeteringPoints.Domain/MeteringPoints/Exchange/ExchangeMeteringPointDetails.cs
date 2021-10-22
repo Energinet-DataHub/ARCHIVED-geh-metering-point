@@ -14,29 +14,22 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
 {
-    public record ConsumptionMeteringPointDetails(
-        SettlementMethod SettlementMethod,
-        ScheduledMeterReadingDate? ScheduledMeterReadingDate,
-        AssetType? AssetType,
-        Capacity? Capacity,
+    public record ExchangeMeteringPointDetails(
         MeteringPointId Id,
         GsrnNumber GsrnNumber,
         Address Address,
         MeteringMethod MeteringMethod,
         GridAreaLinkId GridAreaLinkId,
-        GsrnNumber? PowerPlantGsrnNumber,
         LocationDescription? LocationDescription,
         MeterId? MeterNumber,
         ReadingOccurrence ReadingOccurrence,
         PowerLimit PowerLimit,
         EffectiveDate EffectiveDate,
-        NetSettlementGroup NetSettlementGroup,
-        DisconnectionType DisconnectionType,
-        ConnectionType? ConnectionType) : MeteringPointDetails(
+        GridAreaLinkId FromGridLinkId,
+        GridAreaLinkId ToGridLinkId) : MeteringPointDetails(
         Id,
         GsrnNumber,
         Address,

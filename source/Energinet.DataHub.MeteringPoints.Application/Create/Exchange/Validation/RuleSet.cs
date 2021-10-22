@@ -15,20 +15,16 @@
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Create.Production.Validation
+namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange.Validation
 {
-    public class RuleSet : AbstractValidator<CreateProductionMeteringPoint>
+    public class RuleSet : AbstractValidator<CreateExchangeMeteringPoint>
     {
         public RuleSet()
         {
-            RuleFor(request => request.NetSettlementGroup)
-                    .Cascade(CascadeMode.Stop)
-                    .NotEmpty()
-                    .WithState(createMeteringPoint => new NetSettlementGroupMandatoryValidationError());
-            RuleFor(request => request.MeterReadingOccurrence)
+                RuleFor(request => request.MeterReadingOccurrence)
                     .NotEmpty()
                     .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError());
-            RuleFor(createMeteringPoint => createMeteringPoint.MeteringMethod)
+                RuleFor(createMeteringPoint => createMeteringPoint.MeteringMethod)
                     .NotEmpty()
                     .WithState(createMeteringPoint => new MeteringMethodIsMandatoryValidationError());
         }

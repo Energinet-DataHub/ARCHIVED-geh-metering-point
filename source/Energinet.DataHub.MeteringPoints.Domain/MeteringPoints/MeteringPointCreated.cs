@@ -53,12 +53,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             ReadingOccurrence meterReadingOccurrence,
             ProductType productType,
             MeasurementUnitType measurementUnitType,
-            string? toGrid,
-            string? fromGrid)
+            GridAreaLinkId toGridAreaLinkId,
+            GridAreaLinkId fromGridAreaLinkId)
             : this(meteringPointId, gsrnNumber, meteringPointType, gridAreaLinkId, meteringMethod, connectionStatePhysicalState, meterReadingOccurrence, productType, measurementUnitType)
         {
-            ToGrid = toGrid;
-            FromGrid = fromGrid;
+            ToGridAreaLinkId = toGridAreaLinkId;
+            FromGridAreaLinkId = fromGridAreaLinkId;
         }
 
         public MeteringPointCreated(
@@ -117,8 +117,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public NetSettlementGroup? NetSettlementGroup { get; }
 
-        public string? FromGrid { get; }
+        public GridAreaLinkId? FromGridAreaLinkId { get; }
 
-        public string? ToGrid { get; }
+        public GridAreaLinkId? ToGridAreaLinkId { get; }
     }
 }

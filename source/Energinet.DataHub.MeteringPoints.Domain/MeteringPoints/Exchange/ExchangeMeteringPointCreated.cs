@@ -16,20 +16,17 @@ using System;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
 {
-    public class ConsumptionMeteringPointCreated : DomainEventBase
+    public class ExchangeMeteringPointCreated : DomainEventBase
     {
-        public ConsumptionMeteringPointCreated(
+        public ExchangeMeteringPointCreated(
             Guid meteringPointId,
             string gsrnNumber,
             Guid gridAreaId,
             string meteringPointSubType,
             string productType,
             string readingOccurrence,
-            string unitType,
-            string settlementMethod,
-            string netSettlementGroup,
             string? city,
             string? floor,
             string? room,
@@ -40,20 +37,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             string? streetCode,
             string? streetName,
             string? citySubDivision,
-            bool isActualAddress,
-            Guid? geoInfoReference,
-            string? powerPlantGsrnNumber,
             string? locationDescription,
             string? meterNumber,
             int maximumCurrent,
             int maximumPower,
             Instant effectiveDate,
-            string disconnectionType,
-            string? connectionType,
-            string? assetType,
             string physicalState,
-            string? scheduledMeterReadingDate,
-            double? capacity)
+            Guid fromGrid,
+            Guid toGrid)
         {
             MeteringPointId = meteringPointId;
             GsrnNumber = gsrnNumber;
@@ -61,9 +52,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             MeteringPointSubType = meteringPointSubType;
             ProductType = productType;
             ReadingOccurrence = readingOccurrence;
-            UnitType = unitType;
-            SettlementMethod = settlementMethod;
-            NetSettlementGroup = netSettlementGroup;
             City = city;
             Floor = floor;
             Room = room;
@@ -74,20 +62,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             StreetCode = streetCode;
             StreetName = streetName;
             CitySubDivision = citySubDivision;
-            IsActualAddress = isActualAddress;
-            GeoInfoReference = geoInfoReference;
-            PowerPlantGsrnNumber = powerPlantGsrnNumber;
             LocationDescription = locationDescription;
             MeterNumber = meterNumber;
             MaximumCurrent = maximumCurrent;
             MaximumPower = maximumPower;
             EffectiveDate = effectiveDate;
-            DisconnectionType = disconnectionType;
-            ConnectionType = connectionType;
-            AssetType = assetType;
             PhysicalState = physicalState;
-            ScheduledMeterReadingDate = scheduledMeterReadingDate;
-            Capacity = capacity;
+            FromGrid = fromGrid;
+            ToGrid = toGrid;
         }
 
         public Guid MeteringPointId { get; }
@@ -101,12 +83,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         public string ProductType { get; }
 
         public string ReadingOccurrence { get; }
-
-        public string UnitType { get; }
-
-        public string SettlementMethod { get; }
-
-        public string NetSettlementGroup { get; }
 
         public string? City { get; }
 
@@ -128,10 +104,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 
         public string? CitySubDivision { get; }
 
-        public bool IsActualAddress { get; }
-
-        public string? PowerPlantGsrnNumber { get; }
-
         public string? LocationDescription { get; }
 
         public string? MeterNumber { get; }
@@ -142,18 +114,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 
         public Instant EffectiveDate { get; }
 
-        public string DisconnectionType { get; }
-
-        public string? ConnectionType { get; }
-
-        public string? AssetType { get; }
-
         public string PhysicalState { get; }
 
-        public string? ScheduledMeterReadingDate { get; }
+        public Guid FromGrid { get; }
 
-        public Guid? GeoInfoReference { get; }
-
-        public double? Capacity { get; }
+        public Guid ToGrid { get; }
     }
 }
