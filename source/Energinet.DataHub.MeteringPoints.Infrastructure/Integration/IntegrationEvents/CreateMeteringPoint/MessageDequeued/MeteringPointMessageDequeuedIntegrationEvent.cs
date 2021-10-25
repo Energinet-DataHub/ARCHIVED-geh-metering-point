@@ -17,6 +17,6 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.MessageDequeued
 {
-    public record MeteringPointMessageDequeuedIntegrationEvent(string Correlation)
+    public record MeteringPointMessageDequeuedIntegrationEvent(string Correlation, string GsrnNumber)
         : IIntegrationEvent, IRequest, IOutboundMessage;
 }
