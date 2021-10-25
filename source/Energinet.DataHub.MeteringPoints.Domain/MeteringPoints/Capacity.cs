@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
@@ -39,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             if (CheckRules(capacityInKw).Success == false)
             {
-                throw new InvalidCapacityExeception(capacityInKw);
+                throw new InvalidCapacityException(capacityInKw);
             }
 
             var convertedValue = double.Parse(capacityInKw, CultureInfo.InvariantCulture);

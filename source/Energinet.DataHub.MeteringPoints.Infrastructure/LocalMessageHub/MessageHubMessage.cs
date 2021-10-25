@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using NodaTime;
 
@@ -20,18 +21,19 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub
 {
     public class MessageHubMessage
     {
-        public MessageHubMessage(string content, string correlation, DocumentType type, string recipient, Instant date)
+        public MessageHubMessage(string content, string correlation, DocumentType type, string recipient, Instant date, string gsrnNumber)
         {
             Id = Guid.NewGuid();
             Correlation = correlation;
             Type = type;
             Recipient = recipient;
             Date = date;
+            GsrnNumber = gsrnNumber;
             Content = content;
         }
 
-        public MessageHubMessage(Guid id, string messageContent, string correlation, DocumentType type, string recipient, Instant date)
-            : this(messageContent, correlation, type, recipient, date)
+        public MessageHubMessage(Guid id, string messageContent, string correlation, DocumentType type, string recipient, Instant date, string gsrnNumber)
+            : this(messageContent, correlation, type, recipient, date, gsrnNumber)
         {
             Id = id;
         }
@@ -47,6 +49,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub
         public string Recipient { get; }
 
         public Instant Date { get; }
+
+        public string GsrnNumber { get; }
 
         public Instant? DequeuedDate { get; private set; }
 

@@ -18,8 +18,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
 {
     public class OutboxMessageCategory : EnumerationType
     {
-        public static readonly OutboxMessageCategory IntegrationEvent = new OutboxMessageCategory(0, nameof(IntegrationEvent));
-        public static readonly OutboxMessageCategory ActorMessage = new OutboxMessageCategory(1, nameof(ActorMessage));
+        public static readonly OutboxMessageCategory IntegrationEvent = new(0, nameof(IntegrationEvent));
+        public static readonly OutboxMessageCategory ActorMessage = new(1, nameof(ActorMessage));
+        public static readonly OutboxMessageCategory MessageHub = new(2, nameof(MessageHub));
 
         public OutboxMessageCategory(int id, string name)
             : base(id, name)

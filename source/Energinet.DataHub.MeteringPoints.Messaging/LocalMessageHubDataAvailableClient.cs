@@ -13,8 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Threading.Tasks;
-using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Client.Model;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
@@ -23,32 +21,31 @@ namespace Energinet.DataHub.MeteringPoints.Messaging
 {
     public class LocalMessageHubDataAvailableClient : ILocalMessageHubDataAvailableClient
     {
-        private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
+        private readonly IOutboxDispatcher<DataAvailableNotification> _dataAvailableOutboxDispatcher;
         private readonly MessageHubMessageFactory _messageHubMessageFactory;
         private readonly IMessageHubMessageRepository _messageHubMessageRepository;
 
         public LocalMessageHubDataAvailableClient(
             IMessageHubMessageRepository messageHubMessageRepository,
-            IDataAvailableNotificationSender dataAvailableNotificationSender,
+            IOutboxDispatcher<DataAvailableNotification> dataAvailableOutboxDispatcher,
             MessageHubMessageFactory messageHubMessageFactory)
         {
             _messageHubMessageRepository = messageHubMessageRepository;
-            _dataAvailableNotificationSender = dataAvailableNotificationSender;
+            _dataAvailableOutboxDispatcher = dataAvailableOutboxDispatcher;
             _messageHubMessageFactory = messageHubMessageFactory;
         }
 
-        public async Task DataAvailableAsync(MessageHubEnvelope messageHub)
+        public void DataAvailable(MessageHubEnvelope messageHubEnvelope)
         {
-            if (messageHub is null)
+            if (messageHubEnvelope is null)
             {
-                throw new ArgumentNullException(nameof(messageHub));
+                throw new ArgumentNullException(nameof(messageHubEnvelope));
             }
 
-            var messageMetadata = _messageHubMessageFactory.Create(messageHub.Correlation, messageHub.Content, messageHub.MessageType, messageHub.Recipient);
+            var messageMetadata = _messageHubMessageFactory.Create(messageHubEnvelope.Correlation, messageHubEnvelope.Content, messageHubEnvelope.MessageType, messageHubEnvelope.Recipient, messageHubEnvelope.GsrnNumber);
             _messageHubMessageRepository.AddMessageMetadata(messageMetadata);
 
-            // TODO - add notification to Outbox instead of sending immediately
-            await _dataAvailableNotificationSender.SendAsync(new DataAvailableNotificationDto(messageMetadata.Id, new GlobalLocationNumberDto(messageHub.Recipient), new MessageTypeDto(messageHub.MessageType.Name), DomainOrigin.MeteringPoints, true, 1)).ConfigureAwait(false);
+            _dataAvailableOutboxDispatcher.Dispatch(new DataAvailableNotification(messageMetadata.Id, new GlobalLocationNumberDto(messageHubEnvelope.Recipient), new MessageTypeDto(messageHubEnvelope.MessageType.Name), DomainOrigin.MeteringPoints, true, 1));
         }
     }
 }

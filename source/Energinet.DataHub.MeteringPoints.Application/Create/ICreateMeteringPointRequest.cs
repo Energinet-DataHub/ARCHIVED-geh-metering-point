@@ -12,24 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Linq;
-using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 
-namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
+namespace Energinet.DataHub.MeteringPoints.Application.Create
 {
-    public class MeteringPointIntegrationEventHandlerMock : INotificationHandler
+    /// <summary>
+    /// Request for creation of a metering point
+    /// </summary>
+    public interface ICreateMeteringPointRequest : IBusinessRequest
     {
-        private readonly List<MessageHubMessage> _messages = new();
+        /// <summary>
+        /// GsrnNumber
+        /// </summary>
+        string GsrnNumber { get; init; }
 
-        public bool IsDispatched(string correlation)
-        {
-            return _messages.Any(x => x.Correlation == correlation);
-        }
-
-        public void Handle(MessageHubMessage messageHubMessage)
-        {
-            _messages.Add(messageHubMessage);
-        }
+        /// <summary>
+        /// EffectiveDate
+        /// </summary>
+        string EffectiveDate { get; init; }
     }
 }
