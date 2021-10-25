@@ -26,11 +26,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.GridAreas.Create
     public class CreateGridAreaHandler : IBusinessRequestHandler<CreateGridArea>
     {
         private readonly IGridAreaRepository _gridAreaRepository;
+        private readonly ISystemDateTimeProvider _dateTimeProvider;
 
         public CreateGridAreaHandler(
-            IGridAreaRepository gridAreaRepository)
+            IGridAreaRepository gridAreaRepository,
+            ISystemDateTimeProvider dateTimeProvider)
         {
             _gridAreaRepository = gridAreaRepository;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         public async Task<BusinessProcessResult> Handle(CreateGridArea request, CancellationToken cancellationToken)
@@ -65,14 +68,15 @@ namespace Energinet.DataHub.MeteringPoints.Application.GridAreas.Create
             return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
         }
 
-        private static GridAreaDetails CreateDetails(CreateGridArea request)
+        private GridAreaDetails CreateDetails(CreateGridArea request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             return new GridAreaDetails(
                 GridAreaName.Create(request.Name),
                 GridAreaCode.Create(request.Code),
-                EnumerationType.FromName<PriceAreaCode>(request.PriceAreaCode));
+                EnumerationType.FromName<PriceAreaCode>(request.PriceAreaCode),
+                FullFlexFromDate.Create(_dateTimeProvider.Now().ToDateTimeOffset().Date));
         }
 
         private async Task<BusinessProcessResult> ValidateInputAsync(CreateGridArea request)

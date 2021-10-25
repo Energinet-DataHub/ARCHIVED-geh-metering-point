@@ -24,6 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
     {
         private readonly GridAreaName _name;
         private readonly PriceAreaCode _priceAreaCode;
+        private readonly FullFlexFromDate _fullFlexFromDate;
         private readonly List<GridAreaLink> _gridAreaLinks = new();
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind complex types in constructor
@@ -34,12 +35,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
             GridAreaId gridAreaId,
             GridAreaName name,
             GridAreaCode code,
-            PriceAreaCode priceAreaCode)
+            PriceAreaCode priceAreaCode,
+            FullFlexFromDate fullFlexFromDate)
         {
             Id = gridAreaId;
             Code = code;
             _name = name;
             _priceAreaCode = priceAreaCode;
+            _fullFlexFromDate = fullFlexFromDate;
 
             AddDefaultLink();
         }
@@ -75,7 +78,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
                 GridAreaId.New(),
                 gridAreaDetails.Name,
                 gridAreaDetails.Code,
-                gridAreaDetails.PriceAreaCode);
+                gridAreaDetails.PriceAreaCode,
+                gridAreaDetails.FullFlexFromDate);
         }
 
         private void AddDefaultLink()
