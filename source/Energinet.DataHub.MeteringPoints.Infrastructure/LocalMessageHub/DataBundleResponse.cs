@@ -12,20 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
+using System;
+using Energinet.DataHub.MessageHub.Client.Model;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Messaging
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub
 {
-    /// <summary>
-    /// Local Post Office
-    /// </summary>
-    public interface ILocalMessageHubDataAvailableClient
-    {
-        /// <summary>
-        /// Dispatch message to Local Post Office
-        /// </summary>
-        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        void DataAvailable(MessageHubEnvelope messageHub);
-    }
+    public record DataBundleResponse(DataBundleRequestDto DataBundleRequestDto, Uri Path, string SessionId) : IRequest;
 }
