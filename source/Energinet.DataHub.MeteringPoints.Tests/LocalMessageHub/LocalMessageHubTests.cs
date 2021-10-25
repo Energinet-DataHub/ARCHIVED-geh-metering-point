@@ -127,7 +127,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
         {
             var correlationId = Guid.NewGuid().ToString();
 
-            _localMessageHubDataAvailableClient.DataAvailable(new MessageHubEnvelope("recipient", "content", DocumentType.AccountingPointCharacteristicsMessage, correlationId));
+            _localMessageHubDataAvailableClient.DataAvailable(new MessageHubEnvelope("recipient", "content", DocumentType.AccountingPointCharacteristicsMessage, correlationId, "gsrnNumber"));
 
             var message = _messageHubMessageRepository.GetMessageByCorrelation(correlationId);
             return (message, correlationId);
