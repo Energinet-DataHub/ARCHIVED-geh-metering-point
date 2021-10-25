@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class StreetNameIsRequiredRuleError : ValidationError
+    public class FromGridAreaMustExistRuleError : ValidationError
     {
-        public StreetNameIsRequiredRuleError(GsrnNumber meteringPointGSRN)
+        public FromGridAreaMustExistRuleError(GridArea? gridArea)
         {
-            MeteringPointGSRN = meteringPointGSRN;
+            GridArea = gridArea;
         }
 
-        public GsrnNumber MeteringPointGSRN { get; }
+        public GridArea? GridArea { get; }
     }
 }

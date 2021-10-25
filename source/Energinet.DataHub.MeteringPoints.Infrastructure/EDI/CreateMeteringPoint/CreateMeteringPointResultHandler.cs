@@ -16,16 +16,15 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
-using Energinet.DataHub.MeteringPoints.Application.Create.Production;
+using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint
 {
-    public class CreateMeteringPointResultHandler :
-        IBusinessProcessResultHandler<CreateConsumptionMeteringPoint>,
-        IBusinessProcessResultHandler<CreateProductionMeteringPoint>
+    public class CreateMeteringPointResultHandler<TMeteringPoint> :
+        IBusinessProcessResultHandler<TMeteringPoint>
+        where TMeteringPoint : ICreateMeteringPointRequest
     {
         private readonly IActorMessageFactory _actorMessageFactory;
         private readonly IMessageHubDispatcher _messageHubDispatcher;
@@ -41,17 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
             _errorMessageFactory = errorMessageFactory;
         }
 
-        public Task HandleAsync(CreateConsumptionMeteringPoint request, BusinessProcessResult result)
-        {
-            if (request == null) throw new ArgumentNullException(nameof(request));
-            if (result == null) throw new ArgumentNullException(nameof(result));
-
-            return result.Success
-                ? CreateAcceptMessageAsync(request.GsrnNumber, request.EffectiveDate, request.TransactionId)
-                : CreateRejectResponseAsync(request.GsrnNumber, request.EffectiveDate, request.TransactionId, result);
-        }
-
-        public Task HandleAsync(CreateProductionMeteringPoint request, BusinessProcessResult result)
+        public Task HandleAsync(TMeteringPoint request, BusinessProcessResult result)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (result == null) throw new ArgumentNullException(nameof(result));

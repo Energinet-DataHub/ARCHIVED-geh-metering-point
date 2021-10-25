@@ -20,7 +20,40 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 {
     public class ConsumptionMeteringPointCreated : DomainEventBase
     {
-        public ConsumptionMeteringPointCreated(Guid meteringPointId, string gsrnNumber, Guid gridAreaId, string meteringPointSubType, string productType, string readingOccurrence, string unitType, string settlementMethod, string netSettlementGroup, string city, string floor, string room, string buildingNumber, string countryCode, int? municipalityCode, string postCode, string streetCode, string streetName, string citySubDivision, bool isActualAddress, Guid? geoInfoReference, string powerPlantGsrnNumber, string locationDescription, string meterNumber, int maximumCurrent, int maximumPower, Instant effectiveDate, string disconnectionType, string connectionType, string assetType, string physicalState, string scheduledMeterReadingDate, double? capacity)
+        public ConsumptionMeteringPointCreated(
+            Guid meteringPointId,
+            string gsrnNumber,
+            Guid gridAreaId,
+            string meteringPointSubType,
+            string productType,
+            string readingOccurrence,
+            string unitType,
+            string settlementMethod,
+            string netSettlementGroup,
+            string? city,
+            string? floor,
+            string? room,
+            string? buildingNumber,
+            string? countryCode,
+            int? municipalityCode,
+            string? postCode,
+            string? streetCode,
+            string? streetName,
+            string? citySubDivision,
+            bool isActualAddress,
+            Guid? geoInfoReference,
+            string? powerPlantGsrnNumber,
+            string? locationDescription,
+            string? meterNumber,
+            int maximumCurrent,
+            int maximumPower,
+            Instant effectiveDate,
+            string disconnectionType,
+            string? connectionType,
+            string? assetType,
+            string physicalState,
+            string? scheduledMeterReadingDate,
+            double? capacity)
         {
             MeteringPointId = meteringPointId;
             GsrnNumber = gsrnNumber;
@@ -75,31 +108,31 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 
         public string NetSettlementGroup { get; }
 
-        public string City { get; }
+        public string? City { get; }
 
-        public string Floor { get; }
+        public string? Floor { get; }
 
-        public string Room { get; }
+        public string? Room { get; }
 
-        public string BuildingNumber { get; }
+        public string? BuildingNumber { get; }
 
-        public string CountryCode { get; }
+        public string? CountryCode { get; }
 
         public int? MunicipalityCode { get; }
 
-        public string PostCode { get; }
+        public string? PostCode { get; }
 
-        public string StreetCode { get; }
+        public string? StreetCode { get; }
 
-        public string StreetName { get; }
+        public string? StreetName { get; }
 
-        public string CitySubDivision { get; }
+        public string? CitySubDivision { get; }
 
         public bool IsActualAddress { get; }
 
-        public string PowerPlantGsrnNumber { get; }
+        public string? PowerPlantGsrnNumber { get; }
 
-        public string LocationDescription { get; }
+        public string? LocationDescription { get; }
 
         public string? MeterNumber { get; }
 
@@ -111,13 +144,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 
         public string DisconnectionType { get; }
 
-        public string ConnectionType { get; }
+        public string? ConnectionType { get; }
 
-        public string AssetType { get; }
+        public string? AssetType { get; }
 
         public string PhysicalState { get; }
 
-        public string ScheduledMeterReadingDate { get; }
+        public string? ScheduledMeterReadingDate { get; }
 
         public Guid? GeoInfoReference { get; }
 
