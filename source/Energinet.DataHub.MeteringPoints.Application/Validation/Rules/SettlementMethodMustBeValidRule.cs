@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
@@ -24,16 +25,24 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
     public class SettlementMethodMustBeValidRule : AbstractValidator<MasterDataDocument>
     {
-        private readonly List<string> _allowedDomainValuesForConsumptionAndNetLossCorrection =
+        private readonly HashSet<string> _allowedDomainValues =
             EnumerationType.GetAll<SettlementMethod>()
                 .Select(item => item.Name)
-                .ToList();
+                .ToHashSet();
 
         public SettlementMethodMustBeValidRule()
         {
-            RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
-                .Must(settlementMethod => _allowedDomainValuesForConsumptionAndNetLossCorrection.Contains(settlementMethod!))
-                .WithState(createMeteringPoint => new SettlementMethodMissingRequiredDomainValuesValidationError(createMeteringPoint.SettlementMethod!));
+            When(
+                createMeteringPoint => !string.IsNullOrWhiteSpace(createMeteringPoint.SettlementMethod),
+                () =>
+                {
+                    RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
+                        .Must(settlementMethod =>
+                            _allowedDomainValues.Contains(settlementMethod!))
+                        .WithState(createMeteringPoint =>
+                            new SettlementMethodMissingRequiredDomainValuesValidationError(createMeteringPoint
+                                .SettlementMethod!));
+                });
         }
     }
 }
