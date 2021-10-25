@@ -57,9 +57,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
 
         private static List<MessageHubMessage> CreateMessages(IEnumerable<ConfirmMessage> createConfirmMessages)
         {
+            var jsonSerializer = new JsonSerializer();
+
             var officeMessages = createConfirmMessages
-                .Select(message => new JsonSerializer().Serialize(message))
-                .Select(message => new MessageHubMessage(message, "correlation", DocumentType.CreateMeteringPointAccepted, "recipient", SystemClock.Instance.GetCurrentInstant()))
+                .Select(message => new
+                {
+                    Content = jsonSerializer.Serialize(message),
+                    GsrnNumber = message.MarketActivityRecord.MarketEvaluationPoint,
+                })
+                .Select(message => new MessageHubMessage(message.Content, "correlation", DocumentType.CreateMeteringPointAccepted, "recipient", SystemClock.Instance.GetCurrentInstant(), message.GsrnNumber))
                 .ToList();
             return officeMessages;
         }

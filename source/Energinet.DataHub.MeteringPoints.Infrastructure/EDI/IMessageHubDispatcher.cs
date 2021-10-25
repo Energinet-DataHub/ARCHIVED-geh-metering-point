@@ -26,8 +26,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
         /// </summary>
         /// <param name="message"></param>
         /// <param name="documentType">Type of document</param>
+        /// <param name="gsrnNumber">Gsrn number of a metering point</param>
         /// <typeparam name="TMessage">Message to be delivered to message hub</typeparam>
         /// <returns><see cref="Task"/></returns>
-        Task DispatchAsync<TMessage>(TMessage message, DocumentType documentType);
+        Task DispatchAsync<TMessage>(TMessage message, DocumentType documentType, string gsrnNumber);
     }
 }
