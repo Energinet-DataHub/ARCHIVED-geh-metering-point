@@ -25,10 +25,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
     public class SettlementMethodMustBeValidRule : AbstractValidator<MasterDataDocument>
     {
-        private readonly List<string> _allowedDomainValues =
+        private readonly HashSet<string> _allowedDomainValues =
             EnumerationType.GetAll<SettlementMethod>()
                 .Select(item => item.Name)
-                .ToList();
+                .ToHashSet();
 
         public SettlementMethodMustBeValidRule()
         {
@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 {
                     RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
                         .Must(settlementMethod =>
-                            _allowedDomainValuesForConsumption.Contains(settlementMethod!))
+                            _allowedDomainValues.Contains(settlementMethod!))
                         .WithState(createMeteringPoint =>
                             new SettlementMethodMissingRequiredDomainValuesValidationError(createMeteringPoint
                                 .SettlementMethod!));
