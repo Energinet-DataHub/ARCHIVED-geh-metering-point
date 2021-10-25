@@ -17,6 +17,7 @@ using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -93,11 +94,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<MeteringPointType>(fromDbValue));
 
-            builder.Property<GridAreaId>("_gridAreaId")
+            builder.Property<GridAreaLinkId>("_gridAreaLinkId")
                 .HasColumnName("MeteringGridArea")
                 .HasConversion(
                     toDbValue => toDbValue.Value,
-                    fromDbValue => new GridAreaId(fromDbValue));
+                    fromDbValue => new GridAreaLinkId(fromDbValue));
 
             builder.Property<GsrnNumber>("_powerPlantGsrnNumber")
                 .HasColumnName("PowerPlant")
@@ -259,10 +260,13 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.ToTable("ExchangeMeteringPoints", "dbo");
 
-            builder.Property("_toGrid")
-                .HasColumnName("ToGrid");
-            builder.Property("_fromGrid")
-                .HasColumnName("FromGrid");
+            builder.Property<GridAreaLinkId>("_fromGrid")
+                .HasColumnName("FromGrid")
+                .HasConversion(toDbValue => toDbValue.Value, fromDbValue => new GridAreaLinkId(fromDbValue));
+
+            builder.Property<GridAreaLinkId>("_toGrid")
+                .HasColumnName("ToGrid")
+                .HasConversion(toDbValue => toDbValue.Value, fromDbValue => new GridAreaLinkId(fromDbValue));
         }
     }
 }

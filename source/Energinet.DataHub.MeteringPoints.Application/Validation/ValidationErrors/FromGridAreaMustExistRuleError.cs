@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    /// <summary>
-    /// Handling of outgoing notifications
-    /// </summary>
-    public interface INotificationHandler
+    public class FromGridAreaMustExistRuleError : ValidationError
     {
-        /// <summary>
-        /// Handle a single outgoing notification
-        /// </summary>
-        /// <param name="messageHubMessage"></param>
-        public void Handle(MessageHubMessage messageHubMessage);
+        public FromGridAreaMustExistRuleError(GridArea? gridArea)
+        {
+            GridArea = gridArea;
+        }
+
+        public GridArea? GridArea { get; }
     }
 }

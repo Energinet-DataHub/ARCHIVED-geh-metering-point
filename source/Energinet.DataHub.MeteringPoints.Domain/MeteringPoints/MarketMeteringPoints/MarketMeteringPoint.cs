@@ -18,9 +18,9 @@ using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints
@@ -28,9 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
     public abstract class MarketMeteringPoint : MeteringPoint
     {
         #pragma warning disable CS8618 // Ignore uninitialized properties
-        protected MarketMeteringPoint()
-        {
-        }
+        protected MarketMeteringPoint() { }
         #pragma warning restore
 
         protected MarketMeteringPoint(
@@ -70,19 +68,38 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             ConnectionType = connectionType;
             DisconnectionType = disconnectionType;
             NetSettlementGroup = netSettlementGroup;
+            PowerPlantGsrnNumber = powerPlantGsrnNumber;
         }
 
         protected EnergySupplierDetails? EnergySupplierDetails { get; private set; }
 
-        protected ConnectionType? ConnectionType { get; private set; }
+        protected ConnectionType? ConnectionType { get; }
 
-        protected DisconnectionType DisconnectionType { get; private set; }
+        protected DisconnectionType DisconnectionType { get; }
 
-        protected NetSettlementGroup NetSettlementGroup { get; private set; }
+        protected NetSettlementGroup NetSettlementGroup { get;  }
 
-#pragma warning disable 108,114
-        public static BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
-#pragma warning restore 108,114
+        protected GsrnNumber? PowerPlantGsrnNumber { get; }
+
+        public static BusinessRulesValidationResult CanCreate(ProductionMeteringPointDetails meteringPointDetails)
+        {
+            if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
+            var generalRuleCheckResult = MeteringPoint.CanCreate(meteringPointDetails);
+            var rules = new List<IBusinessRule>()
+            {
+                new MeterReadingOccurrenceRule(meteringPointDetails.ReadingOccurrence),
+                new GeoInfoReferenceRequirementRule(meteringPointDetails.Address),
+                new ConnectionTypeRequirementRule(meteringPointDetails.NetSettlementGroup, meteringPointDetails.ConnectionType),
+                new MeteringMethodRule(meteringPointDetails.NetSettlementGroup, meteringPointDetails.MeteringMethod),
+                new PostCodeIsRequiredRule(meteringPointDetails.Address),
+                new CityIsRequiredRule(meteringPointDetails.Address),
+                new StreetNameIsRequiredRule(meteringPointDetails.GsrnNumber, meteringPointDetails.Address),
+            };
+
+            return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
+        }
+
+        public static BusinessRulesValidationResult CanCreate(ConsumptionMeteringPointDetails meteringPointDetails)
         {
             if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
             var generalRuleCheckResult = MeteringPoint.CanCreate(meteringPointDetails);

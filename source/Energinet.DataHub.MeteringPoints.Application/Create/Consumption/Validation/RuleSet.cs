@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Data;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
@@ -33,11 +32,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Valida
             RuleFor(request => request.NetSettlementGroup)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .WithState(createMeteringPoint =>
-                    new NetSettlementGroupMandatoryValidationError("Consumption"));
+                .WithState(createMeteringPoint => new NetSettlementGroupMandatoryValidationError());
             RuleFor(request => request.MeterReadingOccurrence)
                 .NotEmpty()
-                .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError("Consumption"));
+                .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError());
             RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
                 .NotEmpty()
                 .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError());

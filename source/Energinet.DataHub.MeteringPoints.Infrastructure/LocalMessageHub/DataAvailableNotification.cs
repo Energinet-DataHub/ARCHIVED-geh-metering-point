@@ -12,25 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
+using System;
 using Energinet.DataHub.MessageHub.Client.Model;
-using Energinet.DataHub.MessageHub.Client.Peek;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub
 {
-    public class DataBundleResponseSenderMock : IDataBundleResponseSender
-    {
-        private bool _isSent;
-
-        public bool IsSent()
-        {
-            return _isSent;
-        }
-
-        public Task SendAsync(DataBundleResponseDto dataBundleResponseDto, DataBundleRequestDto requestDto, string sessionId)
-        {
-            _isSent = true;
-            return Task.CompletedTask;
-        }
-    }
+    public record DataAvailableNotification(Guid Uuid, GlobalLocationNumberDto Recipient, MessageTypeDto MessageType, DomainOrigin Origin, bool SupportsBundling, int RelativeWeight) : IRequest;
 }

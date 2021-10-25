@@ -29,6 +29,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Exchange;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.MessageDequeued;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Production;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
@@ -114,6 +115,14 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                     throw new InvalidOperationException(
                         "No Production Metering Point Created Topic found")),
                 Lifestyle.Singleton);
+
+            container.Register(
+                () => new ExchangeMeteringPointCreatedTopic(
+                    Environment.GetEnvironmentVariable("EXCHANGE_METERING_POINT_CREATED_TOPIC") ??
+                    throw new InvalidOperationException(
+                        "No Exchange Metering Point Created Topic found")),
+                Lifestyle.Singleton);
+
             container.Register(
                 () => new MeteringPointConnectedTopic(
                     Environment.GetEnvironmentVariable("METERING_POINT_CONNECTED_TOPIC") ??
@@ -133,13 +142,18 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
 
             container.Register<IMessageHubMessageRepository, MessageHubMessageRepository>(Lifestyle.Scoped);
             container.Register<ILocalMessageHubDataAvailableClient, LocalMessageHubDataAvailableClient>(Lifestyle.Scoped);
+
+            container.Register<IOutboxDispatcher<DataAvailableNotification>, DataAvailableNotificationOutboxDispatcher>();
+            container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Scoped);
+            container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
+
             container.Register<MessageHubMessageFactory>(Lifestyle.Scoped);
 
             var messageHubStorageConnectionString = Environment.GetEnvironmentVariable("MESSAGEHUB_STORAGE_CONNECTION_STRING") ?? throw new InvalidOperationException("MessageHub storage connection string not found.");
             var messageHubStorageContainerName = Environment.GetEnvironmentVariable("MESSAGEHUB_STORAGE_CONTAINER_NAME") ?? throw new InvalidOperationException("MessageHub storage container name not found.");
             var messageHubServiceBusConnectionString = Environment.GetEnvironmentVariable("MESSAGEHUB_QUEUE_CONNECTION_STRING") ?? throw new InvalidOperationException("MessageHub queue connection string not found.");
 
-            container.AddPostOfficeCommunication(messageHubServiceBusConnectionString, new MessageHubConfig("sbq-dataavailable", "sbq-meteringpoints-reply"), messageHubStorageConnectionString, new StorageConfig(messageHubStorageContainerName));
+            container.AddMessageHubCommunication(messageHubServiceBusConnectionString, new MessageHubConfig("sbq-dataavailable", "sbq-meteringpoints-reply"), messageHubStorageConnectionString, new StorageConfig(messageHubStorageContainerName));
 
             // Setup pipeline behaviors
             container.BuildMediator(
