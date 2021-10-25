@@ -19,13 +19,15 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notifications.MeteringPointMessageDequeued
 {
-    public class MeteteringPointMessageDequeuedInboundMapper : ProtobufInboundMapper<IntegrationEventContracts.MeteringPointMessageDequeued>
+    public class MeteteringPointMessageDequeuedInboundMapper : ProtobufInboundMapper<IntegrationEventContracts.MeteringPointMessageDequeuedIntegrationEvent>
     {
-        protected override IInboundMessage Convert(IntegrationEventContracts.MeteringPointMessageDequeued obj)
+        protected override IInboundMessage Convert(IntegrationEventContracts.MeteringPointMessageDequeuedIntegrationEvent obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 
-            return new CreateDefaultChargeLinksNotification(obj.Correlation);
+            return new CreateDefaultChargeLinksNotification(
+                obj.GsrnNumber,
+                obj.Correlation);
         }
     }
 }

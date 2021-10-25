@@ -14,7 +14,6 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
-using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using Google.Protobuf;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.MessageDequeued
@@ -25,7 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 
-            return new MeteringPointMessageDequeued
+            return new IntegrationEventContracts.MeteringPointMessageDequeuedIntegrationEvent
             {
                 Correlation = obj.Correlation,
                 GsrnNumber = obj.GsrnNumber,
