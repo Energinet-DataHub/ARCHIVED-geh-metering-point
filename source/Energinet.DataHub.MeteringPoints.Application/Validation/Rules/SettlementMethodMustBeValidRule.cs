@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
     public class SettlementMethodMustBeValidRule : AbstractValidator<MasterDataDocument>
     {
-        private readonly List<string> _allowedDomainValuesForConsumption =
+        private readonly List<string> _allowedDomainValues =
             EnumerationType.GetAll<SettlementMethod>()
                 .Select(item => item.Name)
                 .ToList();
