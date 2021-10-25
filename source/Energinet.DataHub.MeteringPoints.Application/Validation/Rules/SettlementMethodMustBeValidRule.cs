@@ -33,19 +33,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         public SettlementMethodMustBeValidRule()
         {
             When(
-                createMeteringPoint => createMeteringPoint.TypeOfMeteringPoint == MeteringPointType.Consumption.Name,
+                createMeteringPoint => !string.IsNullOrWhiteSpace(createMeteringPoint.SettlementMethod),
                 () =>
                 {
                     RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
                         .Must(settlementMethod =>
                             _allowedDomainValuesForConsumption.Contains(settlementMethod!))
-                        .WithState(createMeteringPoint => new SettlementMethodMissingRequiredDomainValuesValidationError(createMeteringPoint.SettlementMethod!));
-                }).Otherwise(() =>
-                {
-                RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
-                        .Empty()
-                        .WithState(createMeteringPoint => new SettlementMethodMissingRequiredDomainValuesValidationError(createMeteringPoint.SettlementMethod!));
+                        .WithState(createMeteringPoint =>
+                            new SettlementMethodMissingRequiredDomainValuesValidationError(createMeteringPoint
+                                .SettlementMethod!));
                 });
-            }
+        }
     }
 }

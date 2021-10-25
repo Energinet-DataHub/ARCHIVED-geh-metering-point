@@ -226,20 +226,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
         }
 
         [Fact]
-        public async Task Should_reject_when_settlement_method_is_present_and_mp_not_consumption()
-        {
-            var request = CreateDocument()
-                with
-                {
-                    TypeOfMeteringPoint = nameof(MeteringPointType.Production),
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("D15");
-        }
-
-        [Fact]
         public async Task Should_reject_when_metering_method_is_invalid()
         {
             var request = CreateDocument()
