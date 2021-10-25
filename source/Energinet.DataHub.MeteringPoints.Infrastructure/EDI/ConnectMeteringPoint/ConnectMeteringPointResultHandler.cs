@@ -97,7 +97,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
                 string.Empty,
                 serializedMessage,
                 DocumentType.ConnectMeteringPointAccepted,
-                _correlationContext.AsTraceContext());
+                _correlationContext.AsTraceContext(),
+                request.GsrnNumber);
 
             return envelope;
         }
@@ -195,7 +196,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
                 string.Empty,
                 _jsonSerializer.Serialize(serializedMessage),
                 DocumentType.AccountingPointCharacteristicsMessage,
-                _correlationContext.Id);
+                _correlationContext.Id,
+                request.GsrnNumber);
 
             return messageHubEnvelope;
         }
@@ -213,7 +215,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
                 Reason: "TODO",
                 Errors: errors);
 
-            var envelope = new MessageHubEnvelope(string.Empty, _jsonSerializer.Serialize(ediMessage), DocumentType.ConnectMeteringPointRejected, _correlationContext.AsTraceContext());
+            var envelope = new MessageHubEnvelope(string.Empty, _jsonSerializer.Serialize(ediMessage), DocumentType.ConnectMeteringPointRejected, _correlationContext.AsTraceContext(), request.GsrnNumber);
             AddToOutbox(envelope);
 
             return Task.CompletedTask;
