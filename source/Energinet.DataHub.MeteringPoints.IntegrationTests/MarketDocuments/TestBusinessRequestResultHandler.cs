@@ -53,7 +53,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var message = _actorMessageFactory.CreateNewMeteringPointConfirmation(request.GsrnNumber, request.EffectiveDate, request.TransactionId);
-            return _messageHubDispatcher.DispatchAsync(message, DocumentType.CreateMeteringPointAccepted);
+            return _messageHubDispatcher.DispatchAsync(message, DocumentType.CreateMeteringPointAccepted, request.GsrnNumber);
         }
 
         private Task CreateRejectResponseAsync(TestBusinessRequest request, BusinessProcessResult result)
@@ -63,7 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
                 .AsEnumerable();
 
             var message = _actorMessageFactory.CreateNewMeteringPointReject(request.GsrnNumber, request.EffectiveDate, request.TransactionId, errors);
-            return _messageHubDispatcher.DispatchAsync(message, DocumentType.CreateMeteringPointRejected);
+            return _messageHubDispatcher.DispatchAsync(message, DocumentType.CreateMeteringPointRejected, request.GsrnNumber);
         }
     }
 }

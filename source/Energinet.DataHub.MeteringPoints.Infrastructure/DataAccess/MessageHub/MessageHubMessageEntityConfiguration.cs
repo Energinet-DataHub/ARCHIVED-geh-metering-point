@@ -52,6 +52,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub
 
             builder.Property(x => x.Recipient)
                 .HasColumnName("Recipient");
+
+            builder.Property(x => x.GsrnNumber)
+                .HasColumnName("GsrnNumber");
         }
     }
 }
