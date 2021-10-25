@@ -13,30 +13,27 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.MessageDequeued;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
 namespace Energinet.DataHub.MeteringPoints.Messaging
 {
-    public class MeteringPointMessageDequeuedIntegrationEventOutboxDispatcher : IOutboxDispatcher<MessageHubMessage>
+    public class DataBundleResponseOutboxDispatcher : IOutboxDispatcher<DataBundleResponse>
     {
         private readonly IOutboxMessageFactory _outboxMessageFactory;
         private readonly IOutbox _outbox;
 
-        public MeteringPointMessageDequeuedIntegrationEventOutboxDispatcher(IOutboxMessageFactory outboxMessageFactory, IOutbox outbox)
+        public DataBundleResponseOutboxDispatcher(IOutboxMessageFactory outboxMessageFactory, IOutbox outbox)
         {
             _outboxMessageFactory = outboxMessageFactory;
             _outbox = outbox;
         }
 
-        public void Dispatch(MessageHubMessage message)
+        public void Dispatch(DataBundleResponse message)
         {
             if (message is null) throw new ArgumentNullException(nameof(message));
 
-            var integrationEvent = new MeteringPointMessageDequeuedIntegrationEvent(message.Correlation);
-
-            var outboxMessage = _outboxMessageFactory.CreateFrom(integrationEvent, OutboxMessageCategory.IntegrationEvent);
+            var outboxMessage = _outboxMessageFactory.CreateFrom(message, OutboxMessageCategory.MessageHub);
             _outbox.Add(outboxMessage);
         }
     }

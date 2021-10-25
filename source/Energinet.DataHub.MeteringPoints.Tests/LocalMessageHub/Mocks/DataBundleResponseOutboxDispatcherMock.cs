@@ -12,17 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub
+using System.Collections.Generic;
+using System.Linq;
+using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
+
+namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
 {
-    /// <summary>
-    /// Handling of outgoing notifications
-    /// </summary>
-    public interface INotificationHandler
+    public class DataBundleResponseOutboxDispatcherMock : IOutboxDispatcher<DataBundleResponse>
     {
-        /// <summary>
-        /// Handle a single outgoing notification
-        /// </summary>
-        /// <param name="messageHubMessage"></param>
-        public void Handle(MessageHubMessage messageHubMessage);
+        private readonly List<DataBundleResponse> _messages = new();
+
+        public void Dispatch(DataBundleResponse message)
+        {
+            _messages.Add(message);
+        }
+
+        public bool IsDispatched()
+        {
+            return _messages.Any();
+        }
     }
 }

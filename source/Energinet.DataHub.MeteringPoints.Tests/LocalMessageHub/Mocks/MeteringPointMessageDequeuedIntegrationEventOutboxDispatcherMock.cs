@@ -18,7 +18,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
 {
-    public class MeteringPointIntegrationEventHandlerMock : INotificationHandler
+    public class MeteringPointMessageDequeuedIntegrationEventOutboxDispatcherMock : IOutboxDispatcher<MessageHubMessage>
     {
         private readonly List<MessageHubMessage> _messages = new();
 
@@ -27,9 +27,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
             return _messages.Any(x => x.Correlation == correlation);
         }
 
-        public void Handle(MessageHubMessage messageHubMessage)
+        public void Dispatch(MessageHubMessage message)
         {
-            _messages.Add(messageHubMessage);
+            _messages.Add(message);
         }
     }
 }

@@ -12,13 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
-using Microsoft.Extensions.DependencyInjection;
-using SimpleInjector;
-using SimpleInjector.Lifestyles;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
 {
