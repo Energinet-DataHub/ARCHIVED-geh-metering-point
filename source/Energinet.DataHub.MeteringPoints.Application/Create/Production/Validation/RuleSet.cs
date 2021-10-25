@@ -12,12 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Data;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Create.Production.Validation
@@ -27,21 +22,15 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Production.Validat
         public RuleSet()
         {
             RuleFor(request => request.NetSettlementGroup)
-                .Cascade(CascadeMode.Stop)
-                .NotEmpty()
-                .WithState(createMeteringPoint =>
-                    new NetSettlementGroupMandatoryValidationError("Production"));
+                    .Cascade(CascadeMode.Stop)
+                    .NotEmpty()
+                    .WithState(createMeteringPoint => new NetSettlementGroupMandatoryValidationError());
             RuleFor(request => request.MeterReadingOccurrence)
-                .NotEmpty()
-                .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError("Production"));
+                    .NotEmpty()
+                    .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError());
             RuleFor(createMeteringPoint => createMeteringPoint.MeteringMethod)
-                .NotEmpty()
-                .WithState(createMeteringPoint => new MeteringMethodIsMandatoryValidationError());
-            RuleFor(request => request.AssetType)
-                .Cascade(CascadeMode.Stop)
-                .NotEmpty()
-                .NotNull()
-                .WithState(createMeteringPoint => new AssetTypeIsRequiredRuleError());
+                    .NotEmpty()
+                    .WithState(createMeteringPoint => new MeteringMethodIsMandatoryValidationError());
         }
     }
 }

@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
@@ -41,13 +40,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
         Address,
         MeteringMethod,
         GridAreaLinkId,
-        PowerPlantGsrnNumber,
         LocationDescription,
         MeterNumber,
         ReadingOccurrence,
         PowerLimit,
-        EffectiveDate,
-        NetSettlementGroup,
-        DisconnectionType,
-        ConnectionType);
+        EffectiveDate);
 }

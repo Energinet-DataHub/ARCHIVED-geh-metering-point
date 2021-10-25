@@ -20,14 +20,12 @@ using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 {
-    #pragma warning disable
     public class ConsumptionMeteringPoint : MarketMeteringPoint
     {
         private SettlementMethod _settlementMethod;
@@ -45,7 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             LocationDescription? locationDescription,
             MeterId? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
-            PowerLimit? powerLimit,
+            PowerLimit powerLimit,
             EffectiveDate effectiveDate,
             SettlementMethod settlementMethod,
             NetSettlementGroup netSettlementGroup,
@@ -121,39 +119,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         private ConsumptionMeteringPoint() { }
 #pragma warning restore 8618
 
-        public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
-        {
-            var rules = new Collection<IBusinessRule>
-            {
-                new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, _meteringPointType, ConnectionState.PhysicalState),
-                new MustHaveEnergySupplierRule(GsrnNumber, connectionDetails, EnergySupplierDetails),
-            };
-
-            return new BusinessRulesValidationResult(rules);
-        }
-
-        public override void Connect(ConnectionDetails connectionDetails)
-        {
-            if (connectionDetails == null) throw new ArgumentNullException(nameof(connectionDetails));
-            if (!ConnectAcceptable(connectionDetails).Success)
-            {
-                throw MeteringPointConnectException.Create(Id, GsrnNumber);
-            }
-
-            ConnectionState = ConnectionState.Connected(connectionDetails.EffectiveDate);
-            AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
-        }
-
-        public static BusinessRulesValidationResult CanCreate(ConsumptionMeteringPointDetails meteringPointDetails)
+        public static new BusinessRulesValidationResult CanCreate(ConsumptionMeteringPointDetails meteringPointDetails)
         {
             if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
-            var generalRuleCheckResult= MarketMeteringPoint.CanCreate(meteringPointDetails);
+            var generalRuleCheckResult = MarketMeteringPoint.CanCreate(meteringPointDetails);
             var rules = new List<IBusinessRule>()
             {
-                new PowerPlantIsRequiredForNetSettlementGroupRule(meteringPointDetails.GsrnNumber,
-                    meteringPointDetails.NetSettlementGroup, meteringPointDetails.PowerPlantGsrnNumber),
-                new ScheduledMeterReadingDateRule(meteringPointDetails.ScheduledMeterReadingDate,
-                    meteringPointDetails.NetSettlementGroup),
+                new PowerPlantIsRequiredForNetSettlementGroupRule(meteringPointDetails.GsrnNumber, meteringPointDetails.NetSettlementGroup, meteringPointDetails.PowerPlantGsrnNumber),
+                new ScheduledMeterReadingDateRule(meteringPointDetails.ScheduledMeterReadingDate, meteringPointDetails.NetSettlementGroup),
                 new CapacityRequirementRule(meteringPointDetails.Capacity, meteringPointDetails.NetSettlementGroup),
                 new AssetTypeRequirementRule(meteringPointDetails.AssetType, meteringPointDetails.NetSettlementGroup),
                 new SettlementMethodMustBeFlexOrNonProfiledRule(meteringPointDetails.SettlementMethod),
@@ -168,6 +141,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             {
                 throw new ConsumptionMeteringPointException($"Cannot create consumption metering point due to violation of one or more business rules.");
             }
+
             return new ConsumptionMeteringPoint(
                 meteringPointDetails.Id,
                 meteringPointDetails.GsrnNumber,
@@ -188,6 +162,25 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointDetails.AssetType,
                 meteringPointDetails.ScheduledMeterReadingDate,
                 meteringPointDetails.Capacity);
+        }
+
+        public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
+        {
+            var rules = new Collection<IBusinessRule> { new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, _meteringPointType, ConnectionState.PhysicalState), new MustHaveEnergySupplierRule(GsrnNumber, connectionDetails, EnergySupplierDetails), };
+
+            return new BusinessRulesValidationResult(rules);
+        }
+
+        public override void Connect(ConnectionDetails connectionDetails)
+        {
+            if (connectionDetails == null) throw new ArgumentNullException(nameof(connectionDetails));
+            if (!ConnectAcceptable(connectionDetails).Success)
+            {
+                throw MeteringPointConnectException.Create(Id, GsrnNumber);
+            }
+
+            ConnectionState = ConnectionState.Connected(connectionDetails.EffectiveDate);
+            AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
     }
 }

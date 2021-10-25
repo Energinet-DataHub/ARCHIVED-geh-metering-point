@@ -17,7 +17,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.Dequeue;
-using Energinet.DataHub.MessageHub.Client.Extensions;
 using Energinet.DataHub.MessageHub.Client.Peek;
 using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -28,8 +27,8 @@ namespace Energinet.DataHub.MeteringPoints.Messaging
 {
     public class LocalMessageHubClient : ILocalMessageHubClient
     {
-        private readonly INotificationHandler _notificationHandler;
-        private readonly IDataBundleResponseSender _dataBundleResponseSender;
+        private readonly IOutboxDispatcher<MessageHubMessage> _messageHubMessageOutboxDispatcher;
+        private readonly IOutboxDispatcher<DataBundleResponse> _dataBundleResponseOutboxDispatcher;
         private readonly IDequeueNotificationParser _dequeueNotificationParser;
         private readonly IRequestBundleParser _requestBundleParser;
         private readonly IBundleCreator _bundleCreator;
@@ -40,8 +39,8 @@ namespace Energinet.DataHub.MeteringPoints.Messaging
         public LocalMessageHubClient(
             IStorageHandler storageHandler,
             IMessageHubMessageRepository messageHubMessageRepository,
-            INotificationHandler notificationHandler,
-            IDataBundleResponseSender dataBundleResponseSender,
+            IOutboxDispatcher<MessageHubMessage> messageHubMessageOutboxDispatcher,
+            IOutboxDispatcher<DataBundleResponse> dataBundleResponseOutboxDispatcher,
             IDequeueNotificationParser dequeueNotificationParser,
             IRequestBundleParser requestBundleParser,
             IBundleCreator bundleCreator,
@@ -49,8 +48,8 @@ namespace Energinet.DataHub.MeteringPoints.Messaging
         {
             _storageHandler = storageHandler;
             _messageHubMessageRepository = messageHubMessageRepository;
-            _notificationHandler = notificationHandler;
-            _dataBundleResponseSender = dataBundleResponseSender;
+            _messageHubMessageOutboxDispatcher = messageHubMessageOutboxDispatcher;
+            _dataBundleResponseOutboxDispatcher = dataBundleResponseOutboxDispatcher;
             _dequeueNotificationParser = dequeueNotificationParser;
             _requestBundleParser = requestBundleParser;
             _bundleCreator = bundleCreator;
@@ -74,8 +73,7 @@ namespace Energinet.DataHub.MeteringPoints.Messaging
 
             var uri = await _storageHandler.AddStreamToStorageAsync(stream, bundleRequestDto).ConfigureAwait(false);
 
-            // TODO - add notification to Outbox instead of sending immediately
-            await _dataBundleResponseSender.SendAsync(bundleRequestDto.CreateResponse(uri), bundleRequestDto, sessionId).ConfigureAwait(false);
+            _dataBundleResponseOutboxDispatcher.Dispatch(new DataBundleResponse(bundleRequestDto, uri, sessionId));
         }
 
         public async Task BundleDequeuedAsync(byte[] notification)
@@ -87,7 +85,7 @@ namespace Energinet.DataHub.MeteringPoints.Messaging
             foreach (var message in messages)
             {
                 message.Dequeue(_systemDateTimeProvider.Now());
-                _notificationHandler.Handle(message);
+                _messageHubMessageOutboxDispatcher.Dispatch(message);
             }
         }
     }

@@ -45,3 +45,8 @@ data "azurerm_key_vault_secret" "shared_resources_marketoperator_response_connec
   name         = "SHARED-RESOURCES-MARKETOPERATOR-RESPONSE-CONNECTION-STRING"
   key_vault_id = data.azurerm_key_vault.kv_sharedresources.id
 }
+
+data "azurerm_key_vault_secret" "shared_resources_marketoperator_container_reply_name" {
+  name         = "SHARED-RESOURCES-MARKETOPERATOR-CONTAINER-REPLY-NAME"
+  key_vault_id = data.azurerm_key_vault.kv_sharedresources.id
+}

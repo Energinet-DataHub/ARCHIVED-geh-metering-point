@@ -12,31 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Runtime.Serialization;
+using System.Collections.Generic;
+using System.Linq;
+using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
 {
-    [Serializable]
-    public class InvalidCapacityExeception : BusinessRuleException
+    public class DataAvailableNotificationOutboxDispatcherMock : IOutboxDispatcher<DataAvailableNotification>
     {
-        public InvalidCapacityExeception()
+        private readonly List<DataAvailableNotification> _messages = new();
+
+        public void Dispatch(DataAvailableNotification message)
         {
+            _messages.Add(message);
         }
 
-        public InvalidCapacityExeception(string? message)
-            : base(message)
+        public bool IsDispatched()
         {
-        }
-
-        public InvalidCapacityExeception(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
-
-        protected InvalidCapacityExeception(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
+            return _messages.Any();
         }
     }
 }

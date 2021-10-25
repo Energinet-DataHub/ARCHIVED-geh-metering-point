@@ -12,17 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using System.Collections.Generic;
+using System.Linq;
+using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
 {
-    public class StreetNameIsRequiredRuleError : ValidationError
+    public class DataBundleResponseOutboxDispatcherMock : IOutboxDispatcher<DataBundleResponse>
     {
-        public StreetNameIsRequiredRuleError(GsrnNumber meteringPointGSRN)
+        private readonly List<DataBundleResponse> _messages = new();
+
+        public void Dispatch(DataBundleResponse message)
         {
-            MeteringPointGSRN = meteringPointGSRN;
+            _messages.Add(message);
         }
 
-        public GsrnNumber MeteringPointGSRN { get; }
+        public bool IsDispatched()
+        {
+            return _messages.Any();
+        }
     }
 }

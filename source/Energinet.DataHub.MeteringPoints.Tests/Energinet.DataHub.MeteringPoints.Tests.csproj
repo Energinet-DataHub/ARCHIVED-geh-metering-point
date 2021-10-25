@@ -60,4 +60,9 @@ limitations under the License.
     <EmbeddedResource Include="EDI\CreateMeteringPoint\CreateMeteringPointCimXml.xml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="LocalMessageHub\Mocks\DataAvailableNotificationSenderMock.cs" />
+    <Compile Remove="LocalMessageHub\Mocks\DataBundleResponseSenderMock.cs" />
+  </ItemGroup>
+
 </Project>

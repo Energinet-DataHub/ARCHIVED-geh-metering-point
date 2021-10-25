@@ -41,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         {
             var invalidCapacityValue = "1234567890";
 
-            Assert.Throws<InvalidCapacityExeception>(() => Capacity.Create(invalidCapacityValue));
+            Assert.Throws<InvalidCapacityException>(() => Capacity.Create(invalidCapacityValue));
         }
 
         [Fact]

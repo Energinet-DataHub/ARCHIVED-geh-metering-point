@@ -42,13 +42,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         Address,
         MeteringMethod,
         GridAreaLinkId,
-        PowerPlantGsrnNumber,
         LocationDescription,
         MeterNumber,
         ReadingOccurrence,
         PowerLimit,
-        EffectiveDate,
-        NetSettlementGroup,
-        DisconnectionType,
-        ConnectionType);
+        EffectiveDate);
 }
