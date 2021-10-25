@@ -34,7 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.Messaging
         {
             if (message is null) throw new ArgumentNullException(nameof(message));
 
-            var integrationEvent = new MeteringPointMessageDequeuedIntegrationEvent(message.Correlation);
+            var integrationEvent = new MeteringPointMessageDequeuedIntegrationEvent(message.Correlation, message.GsrnNumber);
 
             var outboxMessage = _outboxMessageFactory.CreateFrom(integrationEvent, OutboxMessageCategory.IntegrationEvent);
             _outbox.Add(outboxMessage);

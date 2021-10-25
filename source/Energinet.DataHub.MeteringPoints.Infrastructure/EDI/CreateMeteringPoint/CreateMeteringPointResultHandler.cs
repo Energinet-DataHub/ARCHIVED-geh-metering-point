@@ -64,7 +64,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
         private Task CreateAcceptMessageAsync(string gsrnNumber, string effectiveDate, string transactionId)
         {
             var message = _actorMessageFactory.CreateNewMeteringPointConfirmation(gsrnNumber, effectiveDate, transactionId);
-            return _messageHubDispatcher.DispatchAsync(message, DocumentType.CreateMeteringPointAccepted);
+            return _messageHubDispatcher.DispatchAsync(message, DocumentType.CreateMeteringPointAccepted, gsrnNumber);
         }
 
         private Task CreateRejectResponseAsync(string gsrnNumber, string effectiveDate, string transactionId, BusinessProcessResult result)
@@ -74,7 +74,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
                 .AsEnumerable();
 
             var message = _actorMessageFactory.CreateNewMeteringPointReject(gsrnNumber, effectiveDate, transactionId, errors);
-            return _messageHubDispatcher.DispatchAsync(message, DocumentType.CreateMeteringPointRejected);
+            return _messageHubDispatcher.DispatchAsync(message, DocumentType.CreateMeteringPointRejected, gsrnNumber);
         }
     }
 }
