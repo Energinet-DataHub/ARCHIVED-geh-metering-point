@@ -44,5 +44,5 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Production
         string? ConnectionType = null,
         string AssetType = "",
         string? PhysicalConnectionCapacity = null,
-        string? GeoInfoReference = null) : IBusinessRequest;
+        string? GeoInfoReference = null) : ICreateMeteringPointRequest;
 }

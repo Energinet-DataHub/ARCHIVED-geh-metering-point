@@ -70,6 +70,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
             Environment.SetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", SomeString);
             Environment.SetEnvironmentVariable("METERING_POINT_CREATED_TOPIC", SomeString);
             Environment.SetEnvironmentVariable("CONSUMPTION_METERING_POINT_CREATED_TOPIC", SomeString);
+            Environment.SetEnvironmentVariable("EXCHANGE_METERING_POINT_CREATED_TOPIC", SomeString);
             Environment.SetEnvironmentVariable("PRODUCTION_METERING_POINT_CREATED_TOPIC", SomeString);
             Environment.SetEnvironmentVariable("METERING_POINT_MESSAGE_DEQUEUED_TOPIC", SomeString);
             Environment.SetEnvironmentVariable("METERING_POINT_CONNECTED_TOPIC", SomeString);
@@ -92,7 +93,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests
             Environment.SetEnvironmentVariable("MESSAGEHUB_QUEUE_CONNECTION_STRING", SomeString);
             Environment.SetEnvironmentVariable("MESSAGEHUB_STORAGE_CONNECTION_STRING", SomeString);
             Environment.SetEnvironmentVariable("MESSAGEHUB_STORAGE_CONTAINER_NAME", SomeString);
-            Environment.SetEnvironmentVariable("CONSUMPTION_METERING_POINT_CREATED_TOPIC", SomeString);
             Environment.SetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", SomeString);
             var program = new EntryPoints.LocalMessageHub.Program();
 

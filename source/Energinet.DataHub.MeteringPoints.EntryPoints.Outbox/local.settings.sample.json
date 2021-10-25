@@ -8,6 +8,7 @@
     "METERING_POINT_CREATED_TOPIC": "<Topic name for MeteringPointCreated events>",
     "CONSUMPTION_METERING_POINT_CREATED_TOPIC": "<Topic name for ConsumptionMeteringPointCreated events>",
     "PRODUCTION_METERING_POINT_CREATED_TOPIC": "<Topic name for ProductionMeteringPointCreated events>",
+    "EXCHANGE_METERING_POINT_CREATED_TOPIC": "<Topic name for ExchangeMeteringPointCreated events>",
     "METERING_POINT_CONNECTED_TOPIC": "<Topic name for MeteringPointConnected events>",
     "METERING_POINT_MESSAGE_DEQUEUED_TOPIC": "<Topic name for MeteringPointMessageDequeued events>",
     "METERINGPOINT_DB_CONNECTION_STRING": "<Main SQL database connection string>",

@@ -12,24 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
-    public class StreetNameIsRequiredRule : IBusinessRule
+    public class StreetNameIsRequiredRuleError : ValidationError
     {
-        private readonly GsrnNumber _meteringpointGsrn;
-        private readonly Address _address;
-
-        public StreetNameIsRequiredRule(GsrnNumber meteringpointGSRN, Address address)
+        public StreetNameIsRequiredRuleError(GsrnNumber meteringPointGSRN)
         {
-            _meteringpointGsrn = meteringpointGSRN;
-            _address = address;
+            MeteringPointGSRN = meteringPointGSRN;
         }
 
-        public bool IsBroken => string.IsNullOrWhiteSpace(_address.StreetName);
-
-        public ValidationError ValidationError => new StreetNameIsRequiredRuleError(_meteringpointGsrn);
+        public GsrnNumber MeteringPointGSRN { get; }
     }
 }

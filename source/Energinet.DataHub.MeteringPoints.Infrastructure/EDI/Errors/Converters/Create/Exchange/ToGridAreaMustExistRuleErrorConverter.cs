@@ -12,13 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.Create
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Create.Exchange
 {
-    // TODO: Add all the remaining address fields!
-    public record Address(
-        string StreetName = "",
-        string PostCode = "",
-        string CityName = "",
-        string CountryCode = "",
-        bool IsWashable = false);
+    public class ToGridAreaMustExistRuleErrorConverter : ErrorConverter<ToGridAreaMustExistRuleError>
+    {
+        protected override ErrorMessage Convert(ToGridAreaMustExistRuleError validationError)
+        {
+            return new("D46", $"Target grid area {validationError?.GridArea?.Code} is not an existing grid area");
+        }
+    }
 }

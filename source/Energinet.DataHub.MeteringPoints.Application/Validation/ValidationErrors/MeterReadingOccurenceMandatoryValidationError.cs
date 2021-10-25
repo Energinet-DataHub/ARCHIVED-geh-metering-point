@@ -18,11 +18,5 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class MeterReadingOccurenceMandatoryValidationError : ValidationError
     {
-        public MeterReadingOccurenceMandatoryValidationError(string meteringPointType)
-        {
-            MeteringPointType = meteringPointType;
-        }
-
-        public string MeteringPointType { get; }
     }
 }

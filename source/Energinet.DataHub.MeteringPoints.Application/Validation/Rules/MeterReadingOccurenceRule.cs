@@ -28,10 +28,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             RuleFor(request => request.MeterReadingOccurrence)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError(createMeteringPoint.TypeOfMeteringPoint))
+                .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError())
                 .Must(value => EnumerationType.GetAll<ReadingOccurrence>().Select(item => item.Name).Contains(value))
-                .WithState(request =>
-                    new MeterReadingOccurenceInvalidValueValidationError(request.MeterReadingOccurrence));
+                .WithState(request => new MeterReadingOccurenceInvalidValueValidationError(request.MeterReadingOccurrence));
 
             //TODO: The remaining rules should be moved to domain layer
             When(createMeteringPoint => createMeteringPoint.TypeOfMeteringPoint == MeteringPointType.SurplusProductionGroup.Name || createMeteringPoint.TypeOfMeteringPoint == MeteringPointType.NetConsumption.Name, () =>

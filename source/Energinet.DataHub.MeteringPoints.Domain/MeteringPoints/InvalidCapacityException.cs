@@ -18,23 +18,23 @@ using System.Runtime.Serialization;
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     [Serializable]
-    public class InvalidCapacityExeception : BusinessRuleException
+    public class InvalidCapacityException : BusinessRuleException
     {
-        public InvalidCapacityExeception()
+        public InvalidCapacityException()
         {
         }
 
-        public InvalidCapacityExeception(string? message)
+        public InvalidCapacityException(string? message)
             : base(message)
         {
         }
 
-        public InvalidCapacityExeception(string message, Exception innerException)
+        public InvalidCapacityException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
-        protected InvalidCapacityExeception(SerializationInfo info, StreamingContext context)
+        protected InvalidCapacityException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
