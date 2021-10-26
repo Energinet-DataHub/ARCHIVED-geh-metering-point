@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.Infrastructure", "Energinet.DataHub.MeteringPoints.Infrastructure\Energinet.DataHub.MeteringPoints.Infrastructure.csproj", "{6525F5BF-B10A-434B-A5F5-DA72C2FF1AB1}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{251113C8-9673-45D2-AFA6-2D53AF6E8756}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Tests", "_Tests", "{251113C8-9673-45D2-AFA6-2D53AF6E8756}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.IntegrationTests", "Energinet.DataHub.MeteringPoints.IntegrationTests\Energinet.DataHub.MeteringPoints.IntegrationTests.csproj", "{9E85728F-B8F0-49EE-AAC6-922AD394CFBA}"
 EndProject
@@ -31,7 +31,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.EntryPoints.Outbox", "Energinet.DataHub.MeteringPoints.EntryPoints.Outbox\Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.csproj", "{5FF039DF-D923-4C6D-84CB-AA615B62532E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EntryPoints", "EntryPoints", "{698CCD74-174C-493E-BDC4-69A0E3EA3F82}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_EntryPoints", "_EntryPoints", "{698CCD74-174C-493E-BDC4-69A0E3EA3F82}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.EntryPoints.Common", "Energinet.DataHub.MeteringPoints.EntryPoints.Common\Energinet.DataHub.MeteringPoints.EntryPoints.Common.csproj", "{4C501166-76F4-4A6F-A4DF-07CC4B41BE2E}"
 EndProject
@@ -52,6 +52,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.Application.MeteringPoints", "Energinet.DataHub.MeteringPoints.Application.MeteringPoints\Energinet.DataHub.MeteringPoints.Application.MeteringPoints.csproj", "{8AEB4B6F-C5A9-4C38-AD6E-751D4B741C23}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.Application.MarketDocuments", "Energinet.DataHub.MeteringPoints.Application.MarketDocuments\Energinet.DataHub.MeteringPoints.Application.MarketDocuments.csproj", "{003A3D80-B7E7-4320-B51C-1F345D44A6DE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{0B452047-8F47-4A31-8469-A5F8B0FA5CFB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{49A5933E-F632-45AD-AD6C-F5E01FA9E9FA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{FEB8030A-8ABE-4742-953A-B9D58FB0F8A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -141,7 +147,15 @@ Global
 		{4C501166-76F4-4A6F-A4DF-07CC4B41BE2E} = {698CCD74-174C-493E-BDC4-69A0E3EA3F82}
 		{59EA4350-50A9-4091-A7DB-281E9498A286} = {251113C8-9673-45D2-AFA6-2D53AF6E8756}
 		{00AD3FF1-2571-4D5C-9BFC-1BC927AE7911} = {698CCD74-174C-493E-BDC4-69A0E3EA3F82}
-		{1E8BC6B4-C2D2-4343-8C9A-474452FB0BC2} = {698CCD74-174C-493E-BDC4-69A0E3EA3F82}
 		{C4CCE071-5E60-4558-B6C0-937A0F97A15D} = {698CCD74-174C-493E-BDC4-69A0E3EA3F82}
+		{84D753D3-9EB9-4271-A59B-EDF02762BDEE} = {0B452047-8F47-4A31-8469-A5F8B0FA5CFB}
+		{003A3D80-B7E7-4320-B51C-1F345D44A6DE} = {0B452047-8F47-4A31-8469-A5F8B0FA5CFB}
+		{8AEB4B6F-C5A9-4C38-AD6E-751D4B741C23} = {0B452047-8F47-4A31-8469-A5F8B0FA5CFB}
+		{6525F5BF-B10A-434B-A5F5-DA72C2FF1AB1} = {49A5933E-F632-45AD-AD6C-F5E01FA9E9FA}
+		{4F54002A-F205-4343-B9D3-4030A0574274} = {49A5933E-F632-45AD-AD6C-F5E01FA9E9FA}
+		{9028F8A2-D06C-42AC-9085-EC51061D57AB} = {49A5933E-F632-45AD-AD6C-F5E01FA9E9FA}
+		{D7233786-C557-4A8F-AEAC-C2CB64053F43} = {FEB8030A-8ABE-4742-953A-B9D58FB0F8A7}
+		{D2E41AEC-6B72-4FEF-95AB-99E08BD3E56B} = {0B452047-8F47-4A31-8469-A5F8B0FA5CFB}
+		{1E8BC6B4-C2D2-4343-8C9A-474452FB0BC2} = {698CCD74-174C-493E-BDC4-69A0E3EA3F82}
 	EndGlobalSection
 EndGlobal
