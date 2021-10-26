@@ -14,10 +14,8 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
-using Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentAssertions;
-using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
