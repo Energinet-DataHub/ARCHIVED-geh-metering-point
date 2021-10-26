@@ -1,3 +1,3 @@
 ALTER TABLE [dbo].[GridAreas]
     ADD
-        FullFlexFromDate [DATETIME2](7) DEFAULT GETDATE()
+        FullFlexFromDate [DATETIME2](7) NULL
