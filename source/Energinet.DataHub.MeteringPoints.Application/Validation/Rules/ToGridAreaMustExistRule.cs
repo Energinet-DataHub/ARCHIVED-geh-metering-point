@@ -18,7 +18,7 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    internal class ToGridAreaMustExistRule : IBusinessRule
+    public class ToGridAreaMustExistRule : IBusinessRule
     {
         private readonly GridArea? _gridArea;
 

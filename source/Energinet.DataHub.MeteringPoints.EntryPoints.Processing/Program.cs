@@ -175,6 +175,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 new[]
                 {
                     typeof(MasterDataDocument).Assembly,
+                    typeof(CreateConsumptionMeteringPointHandler).Assembly,
+                    typeof(MasterDataDocumentHandler).Assembly,
                     typeof(MeteringPointCreatedNotificationHandler).Assembly,
                 },
                 new[]
