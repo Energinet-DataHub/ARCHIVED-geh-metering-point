@@ -18,5 +18,5 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
         GridAreaName Name,
         GridAreaCode Code,
         PriceAreaCode PriceAreaCode,
-        FullFlexFromDate FullFlexFromDate);
+        FullFlexFromDate? FullFlexFromDate);
 }
