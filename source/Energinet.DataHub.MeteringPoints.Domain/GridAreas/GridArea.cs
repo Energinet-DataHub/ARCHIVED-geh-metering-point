@@ -24,7 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
     {
         private readonly GridAreaName _name;
         private readonly PriceAreaCode _priceAreaCode;
-        private readonly FullFlexFromDate _fullFlexFromDate;
+        private readonly FullFlexFromDate? _fullFlexFromDate;
         private readonly List<GridAreaLink> _gridAreaLinks = new();
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind complex types in constructor
@@ -36,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
             GridAreaName name,
             GridAreaCode code,
             PriceAreaCode priceAreaCode,
-            FullFlexFromDate fullFlexFromDate)
+            FullFlexFromDate? fullFlexFromDate)
         {
             Id = gridAreaId;
             Code = code;
