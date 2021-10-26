@@ -34,6 +34,7 @@ module "azfun_localmessagehub" {
     MESSAGEHUB_QUEUE_CONNECTION_STRING    = data.azurerm_key_vault_secret.shared_resources_integrationevents_transceiver_connection_string.value
     MESSAGEHUB_STORAGE_CONTAINER_NAME     = data.azurerm_key_vault_secret.shared_resources_marketoperator_container_reply_name.value
     METERINGPOINT_QUEUE_CONNECTION_STRING = module.sbnar_meteringpoint_sender.primary_connection_string
+    METERINGPOINT_QUEUE_TOPIC_NAME        = module.sbq_meteringpoint.name
   }
   dependencies                              = [
     module.appi.dependent_on,
