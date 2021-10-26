@@ -22,7 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         protected override ErrorMessage Convert(PowerPlantRequirementRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-            return new("D57", $"Power plant for Production (E18) metering point {validationError.MeteringPointGSRN} is missing.");
+            return new("D57", $"Power plant for Production (E18) metering point is missing.");
         }
     }
 }
