@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
 

@@ -14,7 +14,6 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Address
 {

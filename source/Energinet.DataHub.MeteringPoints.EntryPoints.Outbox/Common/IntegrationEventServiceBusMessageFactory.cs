@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
 {

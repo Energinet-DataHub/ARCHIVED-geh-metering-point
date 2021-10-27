@@ -14,8 +14,6 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.MeteringPoints.Connect;
-using Energinet.DataHub.MeteringPoints.Application.Validation;
-using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Xunit;

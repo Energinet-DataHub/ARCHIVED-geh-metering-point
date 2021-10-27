@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Queries
 {

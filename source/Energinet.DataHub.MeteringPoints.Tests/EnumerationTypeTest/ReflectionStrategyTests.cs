@@ -14,11 +14,9 @@
 
 using System;
 using System.Linq;
-using System.Reflection.Metadata;
 using Energinet.DataHub.MeteringPoints.Benchmarks.ReflectionStrategies;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork.Internals;
 using Energinet.DataHub.MeteringPoints.Tests.Assets;
-using Microsoft.Diagnostics.Tracing.Analysis.JIT;
 using Xunit;
 using Xunit.Categories;
 
