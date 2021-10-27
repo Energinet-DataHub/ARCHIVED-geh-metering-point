@@ -28,6 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
             return new MeteringPointMessageDequeued
             {
                 Correlation = obj.Correlation,
+                GsrnNumber = obj.GsrnNumber,
             };
         }
     }

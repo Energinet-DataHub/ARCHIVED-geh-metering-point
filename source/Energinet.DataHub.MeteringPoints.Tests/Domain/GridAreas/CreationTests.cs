@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
-using Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentAssertions;
 using Xunit;
@@ -39,7 +39,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.GridAreas
             return new GridAreaDetails(
                 GridAreaName.Create(SampleData.GridAreaName),
                 GridAreaCode.Create(SampleData.GridAreaCode),
-                EnumerationType.FromName<PriceAreaCode>(SampleData.PriceAreaCode));
+                EnumerationType.FromName<PriceAreaCode>(SampleData.PriceAreaCode),
+                FullFlexFromDate.Create(DateTime.Now));
         }
 
         private static void AssertContainsValidationError<TValidationError>(BusinessRulesValidationResult result)

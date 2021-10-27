@@ -19,22 +19,22 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
 namespace Energinet.DataHub.MeteringPoints.Messaging
 {
-    public class MeteringPointNotificationHandler : INotificationHandler
+    public class MeteringPointMessageDequeuedIntegrationEventOutboxDispatcher : IOutboxDispatcher<MessageHubMessage>
     {
         private readonly IOutboxMessageFactory _outboxMessageFactory;
         private readonly IOutbox _outbox;
 
-        public MeteringPointNotificationHandler(IOutboxMessageFactory outboxMessageFactory, IOutbox outbox)
+        public MeteringPointMessageDequeuedIntegrationEventOutboxDispatcher(IOutboxMessageFactory outboxMessageFactory, IOutbox outbox)
         {
             _outboxMessageFactory = outboxMessageFactory;
             _outbox = outbox;
         }
 
-        public void Handle(MessageHubMessage messageHubMessage)
+        public void Dispatch(MessageHubMessage message)
         {
-            if (messageHubMessage is null) throw new ArgumentNullException(nameof(messageHubMessage));
+            if (message is null) throw new ArgumentNullException(nameof(message));
 
-            var integrationEvent = new MeteringPointMessageDequeuedIntegrationEvent(messageHubMessage.Correlation);
+            var integrationEvent = new MeteringPointMessageDequeuedIntegrationEvent(message.Correlation, message.GsrnNumber);
 
             var outboxMessage = _outboxMessageFactory.CreateFrom(integrationEvent, OutboxMessageCategory.IntegrationEvent);
             _outbox.Add(outboxMessage);

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
@@ -27,9 +28,14 @@ namespace Energinet.DataHub.MeteringPoints.Messaging
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public MessageHubMessage Create(string correlation, string messageContent, DocumentType type, string recipient)
+        public MessageHubMessage Create(
+            string correlation,
+            string messageContent,
+            DocumentType type,
+            string recipient,
+            string gsrnNumber)
         {
-            return new MessageHubMessage(messageContent, correlation, type, recipient, _dateTimeProvider.Now());
+            return new MessageHubMessage(messageContent, correlation, type, recipient, _dateTimeProvider.Now(), gsrnNumber);
         }
     }
 }

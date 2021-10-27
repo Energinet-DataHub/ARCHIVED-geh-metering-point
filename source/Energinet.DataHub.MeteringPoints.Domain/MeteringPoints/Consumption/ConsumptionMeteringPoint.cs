@@ -28,7 +28,6 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 {
-    #pragma warning disable
     public class ConsumptionMeteringPoint : MarketMeteringPoint
     {
         private SettlementMethod _settlementMethod;
@@ -47,7 +46,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             LocationDescription? locationDescription,
             MeterId? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
-            PowerLimit? powerLimit,
+            PowerLimit powerLimit,
             EffectiveDate effectiveDate,
             SettlementMethod settlementMethod,
             NetSettlementGroup netSettlementGroup,
@@ -123,8 +122,54 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         private ConsumptionMeteringPoint() { }
 #pragma warning restore 8618
 
+        public static new BusinessRulesValidationResult CanCreate(ConsumptionMeteringPointDetails meteringPointDetails)
+        {
+            if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
+            var generalRuleCheckResult = MarketMeteringPoint.CanCreate(meteringPointDetails);
+            var rules = new List<IBusinessRule>()
+            {
+                new PowerPlantIsRequiredForNetSettlementGroupRule(meteringPointDetails.GsrnNumber, meteringPointDetails.NetSettlementGroup, meteringPointDetails.PowerPlantGsrnNumber),
+                new ScheduledMeterReadingDateRule(meteringPointDetails.ScheduledMeterReadingDate, meteringPointDetails.NetSettlementGroup),
+                new CapacityRequirementRule(meteringPointDetails.Capacity, meteringPointDetails.NetSettlementGroup),
+                new AssetTypeRequirementRule(meteringPointDetails.AssetType, meteringPointDetails.NetSettlementGroup),
+                new SettlementMethodMustBeFlexOrNonProfiledRule(meteringPointDetails.SettlementMethod),
+            };
+
+            return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
+        }
+
+        public static ConsumptionMeteringPoint Create(ConsumptionMeteringPointDetails meteringPointDetails)
+        {
+            if (!CanCreate(meteringPointDetails).Success)
+            {
+                throw new ConsumptionMeteringPointException($"Cannot create consumption metering point due to violation of one or more business rules.");
+            }
+
+            return new ConsumptionMeteringPoint(
+                meteringPointDetails.Id,
+                meteringPointDetails.GsrnNumber,
+                meteringPointDetails.Address,
+                meteringPointDetails.MeteringMethod,
+                MeteringPointType.Consumption,
+                meteringPointDetails.GridAreaLinkId,
+                meteringPointDetails.PowerPlantGsrnNumber,
+                meteringPointDetails.LocationDescription,
+                meteringPointDetails.MeterNumber,
+                meteringPointDetails.ReadingOccurrence,
+                meteringPointDetails.PowerLimit,
+                meteringPointDetails.EffectiveDate,
+                meteringPointDetails.SettlementMethod,
+                meteringPointDetails.NetSettlementGroup,
+                meteringPointDetails.DisconnectionType,
+                meteringPointDetails.ConnectionType,
+                meteringPointDetails.AssetType,
+                meteringPointDetails.ScheduledMeterReadingDate,
+                meteringPointDetails.Capacity);
+        }
+
         public override void Change(MasterDataDetails masterDataDetails)
         {
+            if (masterDataDetails == null) throw new ArgumentNullException(nameof(masterDataDetails));
             if (CanChange(masterDataDetails).Success == false)
             {
                 throw new MasterDataChangeException();
@@ -133,6 +178,41 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             ChangeAddress(masterDataDetails);
 
             RegisterMasterDataChangedEvent();
+        }
+
+        public override BusinessRulesValidationResult CanChange(MasterDataDetails details)
+        {
+            if (details == null) throw new ArgumentNullException(nameof(details));
+            var rules = new List<IBusinessRule>()
+            {
+                new StreetNameIsRequiredRule(GsrnNumber, details.StreetName),
+                new PostCodeIsRequiredRule(details.PostCode),
+                new CityIsRequiredRule(details.City),
+            };
+            return new BusinessRulesValidationResult(rules);
+        }
+
+        public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
+        {
+            var rules = new Collection<IBusinessRule>
+            {
+                new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, _meteringPointType, ConnectionState.PhysicalState),
+                new MustHaveEnergySupplierRule(GsrnNumber, connectionDetails, EnergySupplierDetails),
+            };
+
+            return new BusinessRulesValidationResult(rules);
+        }
+
+        public override void Connect(ConnectionDetails connectionDetails)
+        {
+            if (connectionDetails == null) throw new ArgumentNullException(nameof(connectionDetails));
+            if (!ConnectAcceptable(connectionDetails).Success)
+            {
+                throw MeteringPointConnectException.Create(Id, GsrnNumber);
+            }
+
+            ConnectionState = ConnectionState.Connected(connectionDetails.EffectiveDate);
+            AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
 
         private void ChangeAddress(MasterDataDetails masterDataDetails)
@@ -174,93 +254,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                     Address.StreetCode,
                     Address.BuildingNumber,
                     Address.CitySubDivision,
-                    Address.CountryCode.Name,
+                    Address.CountryCode?.Name,
                     Address.Floor,
                     Address.Room,
                     Address.MunicipalityCode.GetValueOrDefault(),
                     Address.IsActual,
                     Address.GeoInfoReference.GetValueOrDefault()));
             }
-        }
-
-        public override BusinessRulesValidationResult CanChange(MasterDataDetails details)
-        {
-            var rules = new List<IBusinessRule>()
-            {
-                new StreetNameIsRequiredRule(GsrnNumber, details.StreetName),
-                new PostCodeIsRequiredRule(details.PostCode),
-                new CityIsRequiredRule(details.City),
-            };
-            return new BusinessRulesValidationResult(rules);
-        }
-
-        public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
-        {
-            var rules = new Collection<IBusinessRule>
-            {
-                new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, _meteringPointType, ConnectionState.PhysicalState),
-                new MustHaveEnergySupplierRule(GsrnNumber, connectionDetails, EnergySupplierDetails),
-            };
-
-            return new BusinessRulesValidationResult(rules);
-        }
-
-        public override void Connect(ConnectionDetails connectionDetails)
-        {
-            if (connectionDetails == null) throw new ArgumentNullException(nameof(connectionDetails));
-            if (!ConnectAcceptable(connectionDetails).Success)
-            {
-                throw MeteringPointConnectException.Create(Id, GsrnNumber);
-            }
-
-            ConnectionState = ConnectionState.Connected(connectionDetails.EffectiveDate);
-            AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
-        }
-
-        public static BusinessRulesValidationResult CanCreate(ConsumptionMeteringPointDetails meteringPointDetails)
-        {
-            if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
-            var generalRuleCheckResult= MarketMeteringPoint.CanCreate(meteringPointDetails);
-            var rules = new List<IBusinessRule>()
-            {
-                new PowerPlantIsRequiredForNetSettlementGroupRule(meteringPointDetails.GsrnNumber,
-                    meteringPointDetails.NetSettlementGroup, meteringPointDetails.PowerPlantGsrnNumber),
-                new ScheduledMeterReadingDateRule(meteringPointDetails.ScheduledMeterReadingDate,
-                    meteringPointDetails.NetSettlementGroup),
-                new CapacityRequirementRule(meteringPointDetails.Capacity, meteringPointDetails.NetSettlementGroup),
-                new AssetTypeRequirementRule(meteringPointDetails.AssetType, meteringPointDetails.NetSettlementGroup),
-                new SettlementMethodMustBeFlexOrNonProfiledRule(meteringPointDetails.SettlementMethod),
-            };
-
-            return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
-        }
-
-        public static ConsumptionMeteringPoint Create(ConsumptionMeteringPointDetails meteringPointDetails)
-        {
-            if (!CanCreate(meteringPointDetails).Success)
-            {
-                throw new ConsumptionMeteringPointException($"Cannot create consumption metering point due to violation of one or more business rules.");
-            }
-            return new ConsumptionMeteringPoint(
-                meteringPointDetails.Id,
-                meteringPointDetails.GsrnNumber,
-                meteringPointDetails.Address,
-                meteringPointDetails.MeteringMethod,
-                MeteringPointType.Consumption,
-                meteringPointDetails.GridAreaLinkId,
-                meteringPointDetails.PowerPlantGsrnNumber,
-                meteringPointDetails.LocationDescription,
-                meteringPointDetails.MeterNumber,
-                meteringPointDetails.ReadingOccurrence,
-                meteringPointDetails.PowerLimit,
-                meteringPointDetails.EffectiveDate,
-                meteringPointDetails.SettlementMethod,
-                meteringPointDetails.NetSettlementGroup,
-                meteringPointDetails.DisconnectionType,
-                meteringPointDetails.ConnectionType,
-                meteringPointDetails.AssetType,
-                meteringPointDetails.ScheduledMeterReadingDate,
-                meteringPointDetails.Capacity);
         }
     }
 }

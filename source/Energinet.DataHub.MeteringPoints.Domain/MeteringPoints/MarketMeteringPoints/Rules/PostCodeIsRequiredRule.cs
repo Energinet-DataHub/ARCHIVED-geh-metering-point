@@ -20,7 +20,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
 {
     public class PostCodeIsRequiredRule : IBusinessRule
     {
-        public PostCodeIsRequiredRule(string postCode)
+        public PostCodeIsRequiredRule(string? postCode)
         {
             IsBroken = postCode?.Length == 0;
         }

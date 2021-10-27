@@ -38,13 +38,14 @@ module "azfun_outbox" {
     METERING_POINT_CREATED_TOPIC                                  = "metering-point-created"
     CONSUMPTION_METERING_POINT_CREATED_TOPIC                      = "consumption-metering-point-created"
     PRODUCTION_METERING_POINT_CREATED_TOPIC                       = "production-metering-point-created"
+    EXCHANGE_METERING_POINT_CREATED_TOPIC                         = "exchange-metering-point-created"
     METERING_POINT_CONNECTED_TOPIC                                = "metering-point-connected"
+    METERING_POINT_MESSAGE_DEQUEUED_TOPIC                         = "metering-point-message-dequeued"
     ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER                          = "*/10 * * * * *"
     EVENT_MESSAGE_DISPATCH_TRIGGER_TIMER                          = "*/10 * * * * *"
-  }
-  connection_string                         = {
-    MESSAGEHUB_STORAGE_CONNECTION_STRING  = module.stor_postoffice.primary_connection_string
-    MESSAGEHUB_QUEUE_CONNECTION_STRING    = data.azurerm_key_vault_secret.shared_resources_integrationevents_transceiver_connection_string.value
+    MESSAGEHUB_STORAGE_CONNECTION_STRING                          = data.azurerm_key_vault_secret.shared_resources_marketoperator_response_connection_string.value
+    MESSAGEHUB_STORAGE_CONTAINER_NAME                             = data.azurerm_key_vault_secret.shared_resources_marketoperator_container_reply_name.value
+    MESSAGEHUB_QUEUE_CONNECTION_STRING                            = data.azurerm_key_vault_secret.shared_resources_integrationevents_transceiver_connection_string.value
   }
   dependencies                              = [
     module.appi.dependent_on,

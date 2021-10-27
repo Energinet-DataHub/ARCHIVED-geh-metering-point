@@ -16,7 +16,7 @@ using System;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
     public class StreetNameIsRequiredRule : IBusinessRule
     {
@@ -29,7 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             IsBroken = string.IsNullOrWhiteSpace(address.StreetName);
         }
 
-        public StreetNameIsRequiredRule(GsrnNumber gsrnNumber, string streetName)
+        public StreetNameIsRequiredRule(GsrnNumber gsrnNumber, string? streetName)
         {
             _meteringpointGsrn = gsrnNumber;
             IsBroken = streetName?.Length == 0;

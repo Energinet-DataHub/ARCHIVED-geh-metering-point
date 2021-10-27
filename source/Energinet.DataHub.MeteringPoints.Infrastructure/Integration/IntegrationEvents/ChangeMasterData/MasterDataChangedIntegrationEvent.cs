@@ -18,7 +18,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
 {
     public class MasterDataChangedIntegrationEvent : IIntegrationEvent
     {
-        public MasterDataChangedIntegrationEvent(string streetName, string postCode, string city, string streetCode, string buildingNumber, string citySubDivision, string countryCode, string floor, string room, int municipalityCode, bool isActual, Guid geoInfoReference)
+        public MasterDataChangedIntegrationEvent(string? streetName, string? postCode, string? city, string? streetCode, string? buildingNumber, string? citySubDivision, string? countryCode, string? floor, string? room, int municipalityCode, bool isActual, Guid geoInfoReference)
         {
             StreetName = streetName;
             PostCode = postCode;
@@ -34,23 +34,23 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
             GeoInfoReference = geoInfoReference;
         }
 
-        public string StreetName { get; }
+        public string? StreetName { get; }
 
-        public string PostCode { get; }
+        public string? PostCode { get; }
 
-        public string City { get; }
+        public string? City { get; }
 
-        public string StreetCode { get; }
+        public string? StreetCode { get; }
 
-        public string BuildingNumber { get; }
+        public string? BuildingNumber { get; }
 
-        public string CitySubDivision { get; }
+        public string? CitySubDivision { get; }
 
-        public string CountryCode { get; }
+        public string? CountryCode { get; }
 
-        public string Floor { get; }
+        public string? Floor { get; }
 
-        public string Room { get; }
+        public string? Room { get; }
 
         public int MunicipalityCode { get; }
 

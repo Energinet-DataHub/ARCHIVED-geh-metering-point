@@ -18,8 +18,10 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Exchange;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.MessageDequeued;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Production;
+using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
 {
@@ -30,9 +32,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
             { typeof(MeteringPointCreatedEventMessage).FullName!, typeof(MeteringPointCreatedEventMessage) },
             { typeof(ConsumptionMeteringPointCreatedIntegrationEvent).FullName!, typeof(ConsumptionMeteringPointCreatedIntegrationEvent) },
             { typeof(ProductionMeteringPointCreatedIntegrationEvent).FullName!, typeof(ProductionMeteringPointCreatedIntegrationEvent) },
+            { typeof(ExchangeMeteringPointCreatedIntegrationEvent).FullName!, typeof(ExchangeMeteringPointCreatedIntegrationEvent) },
             { typeof(MeteringPointConnectedIntegrationEvent).FullName!, typeof(MeteringPointConnectedIntegrationEvent) },
             { typeof(MessageHubEnvelope).FullName!, typeof(MessageHubEnvelope) },
             { typeof(MeteringPointMessageDequeuedIntegrationEvent).FullName!, typeof(MeteringPointMessageDequeuedIntegrationEvent) },
+            { typeof(DataBundleResponse).FullName!, typeof(DataBundleResponse) },
+            { typeof(DataAvailableNotification).FullName!, typeof(DataAvailableNotification) },
         };
 
         public static Type GetType(string type)

@@ -111,14 +111,16 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub
             container.Register<IRequestHandler<BundleRequest<ConfirmMessage>, string>, ConfirmMessageBundleHandler>(Lifestyle.Scoped);
             container.Register<IRequestHandler<BundleRequest<RejectMessage>, string>, RejectMessageBundleHandler>(Lifestyle.Scoped);
 
-            var messageHubStorageConnectionString = Environment.GetEnvironmentVariable("ConnectionStrings:MESSAGEHUB_STORAGE_CONNECTION_STRING") ?? throw new InvalidOperationException("MessageHub storage connection string not found.");
-            var messageHubServiceBusConnectionString = Environment.GetEnvironmentVariable("ConnectionStrings:MESSAGEHUB_QUEUE_CONNECTION_STRING") ?? throw new InvalidOperationException("MessageHub queue connection string not found.");
+            var messageHubStorageConnectionString = Environment.GetEnvironmentVariable("MESSAGEHUB_STORAGE_CONNECTION_STRING") ?? throw new InvalidOperationException("MessageHub storage connection string not found.");
+            var messageHubStorageContainerName = Environment.GetEnvironmentVariable("MESSAGEHUB_STORAGE_CONTAINER_NAME") ?? throw new InvalidOperationException("MessageHub storage container name not found.");
+            var messageHubServiceBusConnectionString = Environment.GetEnvironmentVariable("MESSAGEHUB_QUEUE_CONNECTION_STRING") ?? throw new InvalidOperationException("MessageHub queue connection string not found.");
 
-            container.AddPostOfficeCommunication(messageHubServiceBusConnectionString, new MessageHubConfig("sbq-dataavailable", "sbq-meteringpoints-reply"), messageHubStorageConnectionString, new StorageConfig("postoffice-blobstorage"));
+            container.AddMessageHubCommunication(messageHubServiceBusConnectionString, new MessageHubConfig("sbq-dataavailable", "sbq-meteringpoints-reply"), messageHubStorageConnectionString, new StorageConfig(messageHubStorageContainerName));
 
             container.Register<ILocalMessageHubClient, LocalMessageHubClient>(Lifestyle.Scoped);
             container.Register<IMessageHubMessageRepository, MessageHubMessageRepository>(Lifestyle.Scoped);
-            container.Register<INotificationHandler, MeteringPointNotificationHandler>(Lifestyle.Scoped);
+            container.Register<IOutboxDispatcher<DataBundleResponse>, DataBundleResponseOutboxDispatcher>();
+            container.Register<IOutboxDispatcher<MessageHubMessage>, MeteringPointMessageDequeuedIntegrationEventOutboxDispatcher>(Lifestyle.Scoped);
             container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Scoped);
             container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
             container.Register<IBundleCreator, BundleCreator>(Lifestyle.Scoped);

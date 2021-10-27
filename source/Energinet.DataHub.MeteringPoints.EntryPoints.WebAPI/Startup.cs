@@ -13,10 +13,12 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
@@ -40,6 +42,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +51,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using SimpleInjector;
+using MasterDataDocument = Energinet.DataHub.MeteringPoints.Application.MarketDocuments.MasterDataDocument;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
 {
@@ -101,6 +105,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             _container.Register<ISystemDateTimeProvider, SystemDateTimeProvider>(Lifestyle.Singleton);
             _container.Register(typeof(IBusinessProcessResultHandler<CreateGridArea>), typeof(CreateGridAreaNullResultHandler), Lifestyle.Scoped);
             _container.Register<IValidator<CreateGridArea>, CreateGridAreaRuleSet>(Lifestyle.Scoped);
+            _container.Register<IValidator<MasterDataDocument>, ValidationRuleSet>(Lifestyle.Scoped);
             _container.Register<IDomainEventsAccessor, DomainEventsAccessor>();
             _container.Register<IDomainEventsDispatcher, DomainEventsDispatcher>();
             _container.Register<IDomainEventPublisher, DomainEventPublisher>();
@@ -117,22 +122,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
                 typeof(MeteringPoint).Assembly, // Domain
                 typeof(ErrorMessageFactory).Assembly); // Infrastructure
 
-            _container.BuildMediator(
-                new[]
-                {
-                    typeof(CreateGridArea).Assembly,
-                    typeof(GridAreaRepository).Assembly,
-                },
-                new[]
-                {
-                    typeof(UnitOfWorkBehavior<,>),
-
-                    // typeof(AuthorizationBehavior<,>),
-                    typeof(InputValidationBehavior<,>),
-                    typeof(DomainEventsDispatcherBehaviour<,>),
-                    typeof(InternalCommandHandlingBehaviour<,>),
-                    typeof(BusinessProcessResultBehavior<,>),
-                });
+            _container.BuildMinimalMediator(typeof(Startup).Assembly);
+            _container.Register<IRequestHandler<CreateGridArea, BusinessProcessResult>, CreateGridAreaHandler>();
 
             _container.SendProtobuf<MeteringPointEnvelope>();
         }

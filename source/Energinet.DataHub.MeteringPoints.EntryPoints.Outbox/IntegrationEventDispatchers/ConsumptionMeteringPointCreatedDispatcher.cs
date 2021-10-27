@@ -23,12 +23,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDi
 {
     public class ConsumptionMeteringPointCreatedDispatcher : IntegrationEventDispatcher<ConsumptionMeteringPointCreatedTopic, ConsumptionMeteringPointCreatedIntegrationEvent>
     {
-        private readonly IIntegrationEventMessageFactory _integrationEventMessageFactory;
-
         public ConsumptionMeteringPointCreatedDispatcher(ITopicSender<ConsumptionMeteringPointCreatedTopic> topicSender, ProtobufOutboundMapper<ConsumptionMeteringPointCreatedIntegrationEvent> mapper, IIntegrationEventMessageFactory integrationEventMessageFactory, IIntegrationMetadataContext integrationMetadataContext)
             : base(topicSender, mapper, integrationEventMessageFactory, integrationMetadataContext)
         {
-            _integrationEventMessageFactory = integrationEventMessageFactory;
         }
 
         protected override void EnrichMessage(ServiceBusMessage serviceBusMessage)

@@ -7,9 +7,8 @@
     "METERINGPOINT_DB_CONNECTION_STRING": "<Main SQL server database connection string>",
     "METERINGPOINT_QUEUE_TOPIC_NAME": "<Name of Service Bus queue for receiving business requests and internal commands>",
     "METERINGPOINT_QUEUE_CONNECTION_STRING": "<Service Bus connection string where business requests and internal commands are received>",
-  },
-  "ConnectionStrings": {
     "MESSAGEHUB_QUEUE_CONNECTION_STRING": "<PostOffice Service Bus connection string>",
-    "MESSAGEHUB_STORAGE_CONNECTION_STRING": "<PostOffice Storage connection string>"
+    "MESSAGEHUB_STORAGE_CONNECTION_STRING": "<MessageHub Storage Account connection string>",
+    "MESSAGEHUB_STORAGE_CONTAINER_NAME": "<MessageHub Storage Account container name>"
   }
 }
