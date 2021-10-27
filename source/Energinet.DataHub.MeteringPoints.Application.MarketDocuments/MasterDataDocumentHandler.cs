@@ -17,6 +17,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments.CommandFactories;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 using MediatR;

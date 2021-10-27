@@ -19,7 +19,7 @@ using Energinet.DataHub.MeteringPoints.InternalCommandsContracts;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands.Protobuf.Mappers.Connect
 {
-    public class SetEnergySupplierInfoInbound : ProtobufInboundMapper<InternalCommandsContracts.SetEnergySupplierInfo>
+    public class SetEnergySupplierInfoInbound : ProtobufInboundMapper<SetEnergySupplierInfo>
     {
         protected override IInboundMessage Convert(SetEnergySupplierInfo obj)
         {

@@ -12,19 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
-using Energinet.DataHub.MeteringPoints.Application.MarketDocuments.CommandFactories;
+using Energinet.DataHub.MeteringPoints.Application.Validation.Extensions;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
+namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments.Validation
 {
-    public class TestBusinessProcessCommandFactory : IBusinessProcessCommandFactory
+    public class CapacityRule : AbstractValidator<MasterDataDocument>
     {
-        public IBusinessRequest? CreateFrom(MasterDataDocument document)
+        public CapacityRule()
         {
-            if (document == null) throw new ArgumentNullException(nameof(document));
-            return new TestBusinessRequest(document.TransactionId, "TestDate", "TestGsrn");
+            When(request => string.IsNullOrWhiteSpace(request.PhysicalConnectionCapacity) == false, () =>
+            {
+                RuleFor(request => request.PhysicalConnectionCapacity)
+                    .CheckRules(value => Capacity.CheckRules(value!));
+            });
         }
     }
 }

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.MeteringPoints.Connect;
 using Energinet.DataHub.MeteringPoints.Application.MeteringPoints.Create.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.MeteringPoints.Create.Exchange;
@@ -22,7 +22,7 @@ using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Common
+namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments.CommandFactories
 {
     public class BusinessProcessCommandFactory : IBusinessProcessCommandFactory
     {

@@ -12,22 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
+using System.Linq;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments.Validation
 {
-    public class LocationDescriptionMustBeValidRule : AbstractValidator<MasterDataDocument>
+    public class AssetTypeRule : AbstractValidator<MasterDataDocument>
     {
-        public LocationDescriptionMustBeValidRule()
+        public AssetTypeRule()
         {
-            When(request => !string.IsNullOrWhiteSpace(request.LocationDescription), () =>
+            When(request => string.IsNullOrWhiteSpace(request.AssetType) == false, () =>
             {
-                RuleFor(createMeteringPoint => createMeteringPoint.LocationDescription)
-                    .Must(value => LocationDescription.CheckRules(value!).Success)
-                    .WithState(createMeteringPoint => new InvalidLocationDescriptionRuleError(createMeteringPoint.LocationDescription!));
+                RuleFor(request => request.AssetType)
+                    .Must(value => EnumerationType.GetAll<AssetType>().Select(item => item.Name).Contains(value))
+                    .WithState(request =>
+                        new InvalidAssetTypeValueValidationError(request.AssetType!));
             });
         }
     }
