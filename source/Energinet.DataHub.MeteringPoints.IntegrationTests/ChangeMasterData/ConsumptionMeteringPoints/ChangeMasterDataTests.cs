@@ -13,13 +13,11 @@
 // limitations under the License.
 
 using System;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
 
@@ -58,20 +56,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
             await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
 
             AssertConfirmMessage(DocumentType.ChangeMasterDataAccepted);
-            var integrationEvent = FindIntegrationEvent<MasterDataChangedIntegrationEvent>();
-            Assert.NotNull(integrationEvent);
-            Assert.Equal(request.StreetName, integrationEvent?.StreetName);
-            Assert.Equal(request.PostCode, integrationEvent?.PostCode);
-            Assert.Equal(request.City, integrationEvent?.City);
-            Assert.Equal(request.Floor, integrationEvent?.Floor);
-            Assert.Equal(request.Room, integrationEvent?.Room);
-            Assert.Equal(request.BuildingNumber, integrationEvent?.BuildingNumber);
-            Assert.Equal(request.CountryCode, integrationEvent?.CountryCode);
-            Assert.Equal(request.StreetCode, integrationEvent?.StreetCode);
-            Assert.Equal(request.CitySubDivision, integrationEvent?.CitySubDivision);
-            Assert.Equal(request.IsActual, integrationEvent?.IsActual);
-            Assert.Equal(request.MunicipalityCode, integrationEvent?.MunicipalityCode);
-            Assert.Equal(request.GeoInfoReference, integrationEvent?.GeoInfoReference);
         }
 
         [Fact]
@@ -89,7 +73,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
             await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
 
             AssertConfirmMessage(DocumentType.ChangeMasterDataAccepted);
-            AseertNoIntegrationEventIsRaised<MasterDataChangedIntegrationEvent>();
         }
 
         [Fact]
