@@ -55,6 +55,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<PriceAreaCode>(fromDbValue));
 
+            builder.Property<FullFlexFromDate>("_fullFlexFromDate")
+                .HasColumnName("FullFlexFromDate")
+                .HasConversion<DateTime>(toDbValue => toDbValue.DateInUtc.ToDateTimeUtc(), fromDbValue => FullFlexFromDate.Create(fromDbValue));
+
             builder
                 .OwnsMany<GridAreaLink>("_gridAreaLinks", area =>
                 {

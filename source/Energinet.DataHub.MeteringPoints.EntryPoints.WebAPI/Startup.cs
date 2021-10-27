@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
@@ -41,6 +42,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -120,22 +122,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI
                 typeof(MeteringPoint).Assembly, // Domain
                 typeof(ErrorMessageFactory).Assembly); // Infrastructure
 
-            _container.BuildMediator(
-                new[]
-                {
-                    typeof(CreateGridArea).Assembly,
-                    typeof(GridAreaRepository).Assembly,
-                },
-                new[]
-                {
-                    typeof(UnitOfWorkBehavior<,>),
-
-                    // typeof(AuthorizationBehavior<,>),
-                    typeof(InputValidationBehavior<,>),
-                    typeof(DomainEventsDispatcherBehaviour<,>),
-                    typeof(InternalCommandHandlingBehaviour<,>),
-                    typeof(BusinessProcessResultBehavior<,>),
-                });
+            _container.BuildMinimalMediator(typeof(Startup).Assembly);
+            _container.Register<IRequestHandler<CreateGridArea, BusinessProcessResult>, CreateGridAreaHandler>();
 
             _container.SendProtobuf<MeteringPointEnvelope>();
         }

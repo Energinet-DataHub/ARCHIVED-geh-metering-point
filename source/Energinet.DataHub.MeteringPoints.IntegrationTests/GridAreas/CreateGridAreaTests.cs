@@ -54,6 +54,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.GridAreas
         }
 
         [Fact]
+        public async Task Existing_grid_area_with_fullflex_null_should_be_retrievable_from_repository()
+        {
+            const string code = "870";
+            var found = await _gridAreaRepository.GetByCodeAsync(code).ConfigureAwait(false);
+
+            found.Should().NotBeNull();
+            found!.Code.Value.Should().Be(code);
+        }
+
+        [Fact]
         public async Task Creating_grid_area_with_existing_code_should_be_rejected()
         {
             var request = CreateRequest();
