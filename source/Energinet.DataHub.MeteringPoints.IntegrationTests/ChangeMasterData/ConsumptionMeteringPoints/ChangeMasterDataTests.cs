@@ -31,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
         }
 
         [Fact]
-        public async Task Should_change_address()
+        public async Task Address_is_changed()
         {
             await CreateMeteringPointAsync().ConfigureAwait(false);
             var request = new ChangeMasterDataRequest()
@@ -76,7 +76,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
         }
 
         [Fact]
-        public async Task Should_reject_when_street_name_is_empty()
+        public async Task Reject_when_street_name_is_empty()
         {
             await CreateMeteringPointAsync().ConfigureAwait(false);
 
@@ -94,7 +94,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
         }
 
         [Fact]
-        public async Task Should_reject_if_post_code_is_empty()
+        public async Task Reject_if_post_code_is_empty()
         {
             await CreateMeteringPointAsync().ConfigureAwait(false);
 
@@ -112,7 +112,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
         }
 
         [Fact]
-        public async Task Should_reject_if_city_is_empty()
+        public async Task Reject_if_city_is_empty()
         {
             await CreateMeteringPointAsync().ConfigureAwait(false);
 
