@@ -39,7 +39,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private EffectiveDate _effectiveDate;
         private MeterId? _meterNumber;
         private Capacity? _capacity;
-        private bool _hasChanges;
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
         protected MeteringPoint() { }
@@ -125,14 +124,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             if (newAddress.Equals(Address) == false)
             {
                 Address = newAddress;
-                MasterDataChanged();
-            }
-        }
-
-        protected void RegisterMasterDataChangedEvent()
-        {
-            if (_hasChanges)
-            {
                 AddDomainEvent(new AddressChanged(
                     Address.StreetName,
                     Address.PostCode,
@@ -147,11 +138,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                     Address.IsActual,
                     Address.GeoInfoReference.GetValueOrDefault()));
             }
-        }
-
-        private void MasterDataChanged()
-        {
-            _hasChanges = true;
         }
     }
 }

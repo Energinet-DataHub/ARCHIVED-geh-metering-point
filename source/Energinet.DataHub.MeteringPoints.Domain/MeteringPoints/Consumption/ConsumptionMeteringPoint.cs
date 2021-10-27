@@ -174,8 +174,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             }
 
             ChangeAddress(masterDataDetails);
-
-            RegisterMasterDataChangedEvent();
         }
 
         public override BusinessRulesValidationResult CanChange(MasterDataDetails details)
