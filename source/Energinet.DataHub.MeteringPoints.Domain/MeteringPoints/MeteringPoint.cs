@@ -100,23 +100,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public abstract void Connect(ConnectionDetails connectionDetails);
 
-        protected void ChangeAddress(MasterDataDetails masterDataDetails)
+        private protected void ChangeAddress(Address newAddress)
         {
-            if (masterDataDetails == null) throw new ArgumentNullException(nameof(masterDataDetails));
-            var newAddress = Address.Create(
-                masterDataDetails.StreetName ?? Address.StreetName,
-                masterDataDetails.StreetCode ?? Address.StreetCode,
-                masterDataDetails.BuildingNumber ?? Address.BuildingNumber,
-                masterDataDetails.City ?? Address.City,
-                masterDataDetails.CitySubDivision ?? Address.CitySubDivision,
-                masterDataDetails.PostCode ?? Address.PostCode,
-                masterDataDetails.CountryCode ?? Address.CountryCode,
-                masterDataDetails.Floor ?? Address.Floor,
-                masterDataDetails.Room ?? Address.Room,
-                masterDataDetails.MunicipalityCode ?? Address.MunicipalityCode,
-                masterDataDetails.IsActual ?? Address.IsActual,
-                masterDataDetails.GeoInfoReference ?? Address.GeoInfoReference);
-
+            if (newAddress == null) throw new ArgumentNullException(nameof(newAddress));
             if (newAddress.Equals(Address) == false)
             {
                 Address = newAddress;
