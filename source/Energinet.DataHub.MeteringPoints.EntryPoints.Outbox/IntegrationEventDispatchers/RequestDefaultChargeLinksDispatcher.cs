@@ -37,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDi
 
             await _defaultChargeLinkRequestClient.CreateDefaultChargeLinksRequestAsync(
                 new CreateDefaultChargeLinksDto(request.GsrnNumber), request.CorrelationId).ConfigureAwait(false);
-            return default;
+            return Unit.Value;
         }
     }
 }

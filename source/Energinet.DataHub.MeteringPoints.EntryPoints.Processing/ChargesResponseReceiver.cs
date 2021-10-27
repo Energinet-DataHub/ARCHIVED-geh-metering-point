@@ -14,6 +14,10 @@
 
 using System;
 using System.Threading.Tasks;
+using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
+using Energinet.DataHub.Charges.Libraries.Enums;
+using Energinet.DataHub.Charges.Libraries.Models;
+using Energinet.DataHub.MeteringPoints.Application.Integrations.ChargeLinks.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using MediatR;
 using Microsoft.Azure.Functions.Worker;
@@ -44,24 +48,24 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             if (context == null) throw new ArgumentNullException(nameof(context));
             _logger.LogInformation($"Received an response from Charges.");
 
-        // var reader = new DefaultChargeLinkReplyReader(HandleSuccessAsync, HandleFailureAsync);
-        //     await reader.ReadAsync(data, RequestStatus.Succeeded).ConfigureAwait(false);
+        var reader = new DefaultChargeLinkReplyReader(HandleSuccessAsync, HandleFailureAsync);
+            await reader.ReadAsync(data, RequestStatus.Succeeded).ConfigureAwait(false);
             await Task.CompletedTask.ConfigureAwait(false);
         }
 
-        // private async Task HandleFailureAsync(CreateDefaultChargeLinksFailedDto createDefaultChargeLinksFailed)
-        // {
-        //     // TODO: Implement error handling
-        //     _logger.LogInformation($"Add default Charge Links has failed.");
-        //     await Task.CompletedTask.ConfigureAwait(false);
-        // }
-        //
-        // private async Task HandleSuccessAsync(CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceeded)
-        // {
-        //     _logger.LogInformation($"Add default Charge Link request was successful.");
-        //     CreateDefaultChargeLinksSucceeded notification = new(createDefaultChargeLinksSucceeded.meteringPointId, createDefaultChargeLinksSucceeded.didCreateChargeLinks, _correlationContext.Id);
-        //     await _mediator.Publish(notification).ConfigureAwait(false);
-        //     await Task.CompletedTask.ConfigureAwait(false);
-        // }
+        private async Task HandleFailureAsync(CreateDefaultChargeLinksFailedDto createDefaultChargeLinksFailed)
+        {
+            // TODO: Implement error handling
+            _logger.LogInformation($"Add default Charge Links has failed.");
+            await Task.CompletedTask.ConfigureAwait(false);
+        }
+
+        private async Task HandleSuccessAsync(CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceeded)
+        {
+            _logger.LogInformation($"Add default Charge Link request was successful.");
+            CreateDefaultChargeLinksSucceeded notification = new(createDefaultChargeLinksSucceeded.MeteringPointId, createDefaultChargeLinksSucceeded.DidCreateChargeLinks, _correlationContext.Id);
+            await _mediator.Publish(notification).ConfigureAwait(false);
+            await Task.CompletedTask.ConfigureAwait(false);
+        }
     }
 }

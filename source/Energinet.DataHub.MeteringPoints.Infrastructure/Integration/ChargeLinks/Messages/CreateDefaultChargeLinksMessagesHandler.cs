@@ -16,21 +16,30 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Integrations.ChargeLinks.Messages;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.ChargeLinks.Messages
 {
     public class CreateDefaultChargeLinksMessagesHandler : IRequestHandler<CreateDefaultChargeLinksMessages>
     {
-        public CreateDefaultChargeLinksMessagesHandler()
+        private readonly IOutbox _outbox;
+        private readonly IOutboxMessageFactory _outboxMessageFactory;
+
+        public CreateDefaultChargeLinksMessagesHandler(IOutbox outbox, IOutboxMessageFactory outboxMessageFactory)
         {
+            _outbox = outbox;
+            _outboxMessageFactory = outboxMessageFactory;
         }
 
         public Task<Unit> Handle(CreateDefaultChargeLinksMessages request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            return Task.FromResult<Unit>(default);
+            var requestDefaultChargeLinks = new RequestDefaultChargeLinksMessages(request.GsrnNumber, request.CorrelationId);
+            var message = _outboxMessageFactory.CreateFrom(requestDefaultChargeLinks, OutboxMessageCategory.IntegrationEvent);
+            _outbox.Add(message);
+            return Task.FromResult(Unit.Value);
         }
     }
 }
