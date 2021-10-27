@@ -15,7 +15,7 @@
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange.Validation
+namespace Energinet.DataHub.MeteringPoints.Application.MeteringPoints.Create.Exchange.Validation
 {
     public class RuleSet : AbstractValidator<CreateExchangeMeteringPoint>
     {

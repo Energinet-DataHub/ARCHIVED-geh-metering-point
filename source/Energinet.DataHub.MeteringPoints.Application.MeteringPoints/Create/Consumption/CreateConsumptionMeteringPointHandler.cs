@@ -30,7 +30,7 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using MediatR;
 using ConsumptionMeteringPoint = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.ConsumptionMeteringPoint;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
+namespace Energinet.DataHub.MeteringPoints.Application.MeteringPoints.Create.Consumption
 {
     public class CreateConsumptionMeteringPointHandler : IBusinessRequestHandler<CreateConsumptionMeteringPoint>
     {

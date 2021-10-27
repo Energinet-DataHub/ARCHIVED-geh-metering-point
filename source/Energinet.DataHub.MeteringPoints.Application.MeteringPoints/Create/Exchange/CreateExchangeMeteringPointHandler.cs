@@ -28,7 +28,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange
+namespace Energinet.DataHub.MeteringPoints.Application.MeteringPoints.Create.Exchange
 {
     public class CreateExchangeMeteringPointHandler : IBusinessRequestHandler<CreateExchangeMeteringPoint>
     {

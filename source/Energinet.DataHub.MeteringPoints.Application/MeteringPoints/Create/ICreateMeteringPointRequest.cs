@@ -14,7 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Application.Common;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Create
+namespace Energinet.DataHub.MeteringPoints.Application.MeteringPoints.Create
 {
     /// <summary>
     /// Request for creation of a metering point

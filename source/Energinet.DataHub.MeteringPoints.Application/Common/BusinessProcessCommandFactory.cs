@@ -13,11 +13,11 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.Connect;
-using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
-using Energinet.DataHub.MeteringPoints.Application.Create.Exchange;
-using Energinet.DataHub.MeteringPoints.Application.Create.Production;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
+using Energinet.DataHub.MeteringPoints.Application.MeteringPoints.Connect;
+using Energinet.DataHub.MeteringPoints.Application.MeteringPoints.Create.Consumption;
+using Energinet.DataHub.MeteringPoints.Application.MeteringPoints.Create.Exchange;
+using Energinet.DataHub.MeteringPoints.Application.MeteringPoints.Create.Production;
 using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;

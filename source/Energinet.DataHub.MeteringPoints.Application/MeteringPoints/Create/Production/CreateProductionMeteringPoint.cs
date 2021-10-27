@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common;
-
-namespace Energinet.DataHub.MeteringPoints.Application.Create.Production
+namespace Energinet.DataHub.MeteringPoints.Application.MeteringPoints.Create.Production
 {
     public record CreateProductionMeteringPoint(
         string? StreetName = null,

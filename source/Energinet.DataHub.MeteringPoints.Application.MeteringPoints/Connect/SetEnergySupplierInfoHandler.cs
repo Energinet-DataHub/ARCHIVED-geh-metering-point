@@ -20,7 +20,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Connect
+namespace Energinet.DataHub.MeteringPoints.Application.MeteringPoints.Connect
 {
     public class SetEnergySupplierInfoHandler : ICommandHandler<SetEnergySupplierInfo>
     {

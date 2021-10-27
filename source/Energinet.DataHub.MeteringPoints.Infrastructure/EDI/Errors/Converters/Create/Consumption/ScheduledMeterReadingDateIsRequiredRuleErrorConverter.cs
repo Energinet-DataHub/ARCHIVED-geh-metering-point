@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Validation;
+using Energinet.DataHub.MeteringPoints.Application.MeteringPoints.Create.Consumption.Validation;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Create.Consumption
 {

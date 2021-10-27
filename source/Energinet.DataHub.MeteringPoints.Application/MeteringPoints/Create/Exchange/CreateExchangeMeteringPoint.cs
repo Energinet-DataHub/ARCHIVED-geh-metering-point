@@ -14,7 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange
+namespace Energinet.DataHub.MeteringPoints.Application.MeteringPoints.Create.Exchange
 {
     public record CreateExchangeMeteringPoint(
             string? StreetName = null,

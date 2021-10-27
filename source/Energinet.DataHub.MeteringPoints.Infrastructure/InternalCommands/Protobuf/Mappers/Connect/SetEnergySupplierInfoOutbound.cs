@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.Connect;
+using Energinet.DataHub.MeteringPoints.Application.MeteringPoints.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Google.Protobuf;
 
@@ -21,7 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands.Proto
 {
     public class SetEnergySupplierInfoOutbound : ProtobufOutboundMapper<SetEnergySupplierInfo>
     {
-        protected override IMessage Convert(Application.Connect.SetEnergySupplierInfo obj)
+        protected override IMessage Convert(SetEnergySupplierInfo obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
             return new InternalCommandsContracts.SetEnergySupplierInfo()

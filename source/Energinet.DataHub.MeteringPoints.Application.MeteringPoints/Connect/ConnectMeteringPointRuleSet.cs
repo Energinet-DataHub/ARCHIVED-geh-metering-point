@@ -15,7 +15,7 @@
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Connect
+namespace Energinet.DataHub.MeteringPoints.Application.MeteringPoints.Connect
 {
     public class ConnectMeteringPointRuleSet : AbstractValidator<ConnectMeteringPoint>
     {

@@ -22,7 +22,7 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Connect
+namespace Energinet.DataHub.MeteringPoints.Application.MeteringPoints.Connect
 {
     public class ConnectMeteringPointHandler : IBusinessRequestHandler<ConnectMeteringPoint>
     {

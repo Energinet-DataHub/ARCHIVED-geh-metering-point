@@ -32,7 +32,7 @@ using ConsumptionMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Qu
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint
 {
-    public sealed class ConnectMeteringPointResultHandler : IBusinessProcessResultHandler<Application.Connect.ConnectMeteringPoint>
+    public sealed class ConnectMeteringPointResultHandler : IBusinessProcessResultHandler<Application.MeteringPoints.Connect.ConnectMeteringPoint>
     {
         private const string XmlNamespace = "urn:ebix.org:structure:accountingpointcharacteristics:0:1";
 
@@ -62,7 +62,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public Task HandleAsync(Application.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
+        public Task HandleAsync(Application.MeteringPoints.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (result == null) throw new ArgumentNullException(nameof(result));
@@ -72,7 +72,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
                 : RejectAsync(request, result);
         }
 
-        private async Task SuccessAsync(Application.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
+        private async Task SuccessAsync(Application.MeteringPoints.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
         {
             var confirmMessage = CreateConfirmMessage(request, result);
             AddToOutbox(confirmMessage);
@@ -84,7 +84,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
             AddToOutbox(accountingPointCharacteristicsMessage);
         }
 
-        private MessageHubEnvelope? CreateConfirmMessage(Application.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
+        private MessageHubEnvelope? CreateConfirmMessage(Application.MeteringPoints.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
         {
             var confirmMessage = new ConnectMeteringPointAccepted(
                 TransactionId: result.TransactionId,
@@ -104,7 +104,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
         }
 
         private MessageHubEnvelope CreateAccountingPointCharacteristicsMessage(
-            Application.Connect.ConnectMeteringPoint request,
+            Application.MeteringPoints.Connect.ConnectMeteringPoint request,
             ConsumptionMeteringPoint meteringPoint)
         {
             var accountingPointCharacteristicsMessage = new AccountingPointCharacteristicsMessage(
@@ -202,7 +202,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
             return messageHubEnvelope;
         }
 
-        private Task RejectAsync(Application.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
+        private Task RejectAsync(Application.MeteringPoints.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
         {
             var errors = result.ValidationErrors
                 .Select(error => _errorMessageFactory.GetErrorMessage(error))

@@ -24,7 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands.Proto
         protected override IInboundMessage Convert(SetEnergySupplierInfo obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
-            return new Application.Connect.SetEnergySupplierInfo(Guid.Parse(obj.Id), obj.MeteringPointGsrn);
+            return new Application.MeteringPoints.Connect.SetEnergySupplierInfo(Guid.Parse(obj.Id), obj.MeteringPointGsrn);
         }
     }
 }

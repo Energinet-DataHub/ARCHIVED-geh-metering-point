@@ -17,7 +17,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Validation
+namespace Energinet.DataHub.MeteringPoints.Application.MeteringPoints.Create.Consumption.Validation
 {
     public class RuleSet : AbstractValidator<CreateConsumptionMeteringPoint>
     {

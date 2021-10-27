@@ -16,7 +16,7 @@ using System;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Connect
+namespace Energinet.DataHub.MeteringPoints.Application.MeteringPoints.Connect
 {
     public class SetEnergySupplierInfo : InternalCommand
     {
