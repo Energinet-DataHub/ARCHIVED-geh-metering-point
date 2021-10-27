@@ -30,12 +30,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             When(createMeteringPoint => !string.IsNullOrWhiteSpace(createMeteringPoint.DisconnectionType), () =>
             {
                 RuleFor(createMeteringPoint => createMeteringPoint.DisconnectionType)
-                    .Must(AllowedDisconnectionTypes)
+                    .Must(IsAllowedDisconnectionType)
                     .WithState(createMeteringPoint => new DisconnectionTypeWrongValueValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.DisconnectionType));
             });
         }
 
-        private static bool AllowedDisconnectionTypes(string disconnectionType)
+        private static bool IsAllowedDisconnectionType(string disconnectionType)
         {
             return new HashSet<string>
             {
