@@ -13,17 +13,18 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules;
+using Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.Create.Validation.Errors;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.GridAreas
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.Create.Validation.Converters
 {
-    public class GridAreaCodeFormatRuleErrorConverter : ErrorConverter<GridAreaCodeFormatRuleError>
+    public class PriceAreaCodeRuleErrorConverter : ErrorConverter<PriceAreaCodeRuleError>
     {
-        protected override ErrorMessage Convert(GridAreaCodeFormatRuleError validationError)
+        protected override ErrorMessage Convert(PriceAreaCodeRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("?", $"Code of the Grid Area must consist of 3 digits.");
+            return new("?", $"Price area code {validationError.PriceAreaCode} has wrong value (outside domain).");
         }
     }
 }

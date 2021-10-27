@@ -14,8 +14,9 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.GridAreas
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.Create.Validation.Converters
 {
     public class GridAreaNameMaxLengthRuleErrorConverter : ErrorConverter<GridAreaNameMaxLengthRuleError>
     {

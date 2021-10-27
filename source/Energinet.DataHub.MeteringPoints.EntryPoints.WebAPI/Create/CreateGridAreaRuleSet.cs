@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Extensions;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.Create.Validation.Rules;
 using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.GridAreas.Create
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.Create
 {
     public class CreateGridAreaRuleSet : AbstractValidator<CreateGridArea>
     {

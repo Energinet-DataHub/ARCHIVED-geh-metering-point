@@ -12,17 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.Create.Validation.Errors;
+using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.GridAreas.Create.Validation.Errors
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.Create.Validation.Rules
 {
-    public class PriceAreaCodeRuleError : ValidationError
+    public class PriceAreaCodeRule : AbstractValidator<CreateGridArea>
     {
-        public PriceAreaCodeRuleError(string priceAreaCode)
+        public PriceAreaCodeRule()
         {
-            PriceAreaCode = priceAreaCode;
+            RuleFor(request => request.PriceAreaCode)
+                .Must(priceAreaCode => EnumerationType.GetAll<PriceAreaCode>().Select(x => x.Name).ToHashSet().Contains(priceAreaCode!))
+                .WithState(createMeteringPoint => new PriceAreaCodeRuleError(createMeteringPoint.PriceAreaCode!));
         }
-
-        public string PriceAreaCode { get; }
     }
 }
