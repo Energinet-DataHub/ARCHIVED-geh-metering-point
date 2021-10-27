@@ -15,28 +15,22 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages;
-using Energinet.DataHub.Charges.Libraries.Models;
+using Energinet.DataHub.MeteringPoints.Application.Integrations.ChargeLinks.Messages;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Application.ChargeLinks.Messages
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.ChargeLinks.Messages
 {
     public class CreateDefaultChargeLinksMessagesHandler : IRequestHandler<CreateDefaultChargeLinksMessages>
     {
-        private readonly DefaultChargeLinkMessagesRequestClient _defaultChargeLinkMessagesRequestClient;
-
-        public CreateDefaultChargeLinksMessagesHandler(
-            DefaultChargeLinkMessagesRequestClient defaultChargeLinkMessagesRequestClient)
+        public CreateDefaultChargeLinksMessagesHandler()
         {
-            _defaultChargeLinkMessagesRequestClient = defaultChargeLinkMessagesRequestClient;
         }
 
-        public async Task<Unit> Handle(CreateDefaultChargeLinksMessages request, CancellationToken cancellationToken)
+        public Task<Unit> Handle(CreateDefaultChargeLinksMessages request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            await _defaultChargeLinkMessagesRequestClient.CreateDefaultChargeLinkMessagesRequestAsync(new CreateDefaultChargeLinkMessagesDto(request.GsrnNumber), request.CorrelationId).ConfigureAwait(false);
-            return default;
+            return Task.FromResult<Unit>(default);
         }
     }
 }

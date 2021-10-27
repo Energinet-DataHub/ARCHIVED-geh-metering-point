@@ -19,9 +19,9 @@ using Google.Protobuf;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands.Protobuf.Mappers.CreateDefaultChargeLinksMessages
 {
-    public class CreateDefaultChargeLinksMessagesOutboundMapper : ProtobufOutboundMapper<Application.ChargeLinks.Messages.CreateDefaultChargeLinksMessages>
+    public class CreateDefaultChargeLinksMessagesOutboundMapper : ProtobufOutboundMapper<Application.Integrations.ChargeLinks.Messages.CreateDefaultChargeLinksMessages>
     {
-        protected override IMessage Convert(Application.ChargeLinks.Messages.CreateDefaultChargeLinksMessages obj)
+        protected override IMessage Convert(Application.Integrations.ChargeLinks.Messages.CreateDefaultChargeLinksMessages obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 

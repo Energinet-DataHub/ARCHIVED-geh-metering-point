@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcess
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 
-            return new Application.ChargeLinks.Messages.CreateDefaultChargeLinksMessages(
+            return new Application.Integrations.ChargeLinks.Messages.CreateDefaultChargeLinksMessages(
                 obj.GsrnNumber, obj.CorrelationId);
         }
     }

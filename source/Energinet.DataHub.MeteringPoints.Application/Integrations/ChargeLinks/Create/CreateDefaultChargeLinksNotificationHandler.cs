@@ -15,34 +15,26 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages;
-using Energinet.DataHub.Charges.Libraries.Models;
-using Energinet.DataHub.MeteringPoints.Application.ChargeLinks.Messages;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Application.ChargeLinks.Create
+namespace Energinet.DataHub.MeteringPoints.Application.Integrations.ChargeLinks.Create
 {
-    public class CreateDefaultChargeLinksSucceededHandler : INotificationHandler<CreateDefaultChargeLinksSucceeded>
+    public class CreateDefaultChargeLinksNotificationHandler : INotificationHandler<CreateDefaultChargeLinksNotification>
     {
         private readonly ICommandScheduler _commandScheduler;
 
-        public CreateDefaultChargeLinksSucceededHandler(
-            ICommandScheduler commandScheduler)
+        public CreateDefaultChargeLinksNotificationHandler(ICommandScheduler commandScheduler)
         {
             _commandScheduler = commandScheduler;
         }
 
-        public async Task Handle(CreateDefaultChargeLinksSucceeded notification, CancellationToken cancellationToken)
+        public Task Handle(CreateDefaultChargeLinksNotification notification, CancellationToken cancellationToken)
         {
-            // TODO: Handle process state
             if (notification == null) throw new ArgumentNullException(nameof(notification));
+            var command = new CreateDefaultChargeLinks(notification.GsrnNumber, notification.CorrelationId);
 
-            if (notification.DidCreateChargeLinks)
-            {
-                var command = new CreateDefaultChargeLinksMessages(notification.GsrnNumber, notification.CorrelationId);
-                await _commandScheduler.EnqueueAsync(command).ConfigureAwait(false);
-            }
+            return _commandScheduler.EnqueueAsync(command);
         }
     }
 }

@@ -15,28 +15,31 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
-using Energinet.DataHub.Charges.Libraries.Models;
+using Energinet.DataHub.MeteringPoints.Application.Integrations.ChargeLinks.Create;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Application.ChargeLinks.Create
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.ChargeLinks.Create
 {
     public class CreateDefaultChargeLinksHandler : IRequestHandler<CreateDefaultChargeLinks>
     {
-        private readonly DefaultChargeLinkRequestClient _defaultChargeLinkRequestClient;
+        private readonly IOutbox _outbox;
+        private readonly IOutboxMessageFactory _outboxMessageFactory;
 
-        public CreateDefaultChargeLinksHandler(DefaultChargeLinkRequestClient defaultChargeLinkRequestClient)
+        public CreateDefaultChargeLinksHandler(IOutbox outbox, IOutboxMessageFactory outboxMessageFactory)
         {
-            _defaultChargeLinkRequestClient = defaultChargeLinkRequestClient;
+            _outbox = outbox;
+            _outboxMessageFactory = outboxMessageFactory;
         }
 
-        public async Task<Unit> Handle(CreateDefaultChargeLinks request, CancellationToken cancellationToken)
+        public Task<Unit> Handle(CreateDefaultChargeLinks request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             // TODO: On some point add this to some process manager
-            await _defaultChargeLinkRequestClient.CreateDefaultChargeLinksRequestAsync(new CreateDefaultChargeLinksDto(request.GsrnNumber), request.CorrelationId).ConfigureAwait(false);
-
-            return default;
+            var requestDefaultChargeLinks = new RequestDefaultChargeLinks(request.GsrnNumber, request.CorrelationId);
+            var message = _outboxMessageFactory.CreateFrom(requestDefaultChargeLinks, OutboxMessageCategory.IntegrationEvent);
+            _outbox.Add(message);
+            return Task.FromResult(Unit.Value);
         }
     }
 }

@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Application.ChargeLinks.Create
+namespace Energinet.DataHub.MeteringPoints.Application.Integrations.ChargeLinks.Create
 {
-    public record CreateDefaultChargeLinksSucceeded(string GsrnNumber, bool DidCreateChargeLinks, string CorrelationId) : INotification;
+    public record RequestDefaultChargeLinks(string GsrnNumber, string CorrelationId) : IRequest;
 }
