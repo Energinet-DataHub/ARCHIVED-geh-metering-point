@@ -13,10 +13,9 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Events
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events
 {
     public class AddressChanged : DomainEventBase
     {
