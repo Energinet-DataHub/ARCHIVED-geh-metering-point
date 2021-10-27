@@ -153,6 +153,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             {
                 MeteringMethod = MeteringMethod.Virtual,
                 MeterNumber = null,
+                ScheduledMeterReadingDate = null,
             };
 
             var meteringPoint = ConsumptionMeteringPoint.Create(details);
