@@ -33,7 +33,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         private SettlementMethod _settlementMethod;
         private AssetType? _assetType;
         private ScheduledMeterReadingDate? _scheduledMeterReadingDate;
-        private bool _hasChanges;
 
         private ConsumptionMeteringPoint(
             MeteringPointId id,
@@ -213,54 +212,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 
             ConnectionState = ConnectionState.Connected(connectionDetails.EffectiveDate);
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
-        }
-
-        private void ChangeAddress(MasterDataDetails masterDataDetails)
-        {
-            var newAddress = Address.Create(
-                masterDataDetails.StreetName ?? Address.StreetName,
-                masterDataDetails.StreetCode ?? Address.StreetCode,
-                masterDataDetails.BuildingNumber ?? Address.BuildingNumber,
-                masterDataDetails.City ?? Address.City,
-                masterDataDetails.CitySubDivision ?? Address.CitySubDivision,
-                masterDataDetails.PostCode ?? Address.PostCode,
-                masterDataDetails.CountryCode ?? Address.CountryCode,
-                masterDataDetails.Floor ?? Address.Floor,
-                masterDataDetails.Room ?? Address.Room,
-                masterDataDetails.MunicipalityCode ?? Address.MunicipalityCode,
-                masterDataDetails.IsActual ?? Address.IsActual,
-                masterDataDetails.GeoInfoReference ?? Address.GeoInfoReference);
-
-            if (newAddress.Equals(Address) == false)
-            {
-                Address = newAddress;
-                MasterDataChanged();
-            }
-        }
-
-        private void MasterDataChanged()
-        {
-            _hasChanges = true;
-        }
-
-        private void RegisterMasterDataChangedEvent()
-        {
-            if (_hasChanges)
-            {
-                AddDomainEvent(new MasterDataChanged(
-                    Address.StreetName,
-                    Address.PostCode,
-                    Address.City,
-                    Address.StreetCode,
-                    Address.BuildingNumber,
-                    Address.CitySubDivision,
-                    Address.CountryCode?.Name,
-                    Address.Floor,
-                    Address.Room,
-                    Address.MunicipalityCode.GetValueOrDefault(),
-                    Address.IsActual,
-                    Address.GeoInfoReference.GetValueOrDefault()));
-            }
         }
     }
 }

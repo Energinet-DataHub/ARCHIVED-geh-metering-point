@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -38,6 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private EffectiveDate _effectiveDate;
         private MeterId? _meterNumber;
         private Capacity? _capacity;
+        private bool _hasChanges;
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
         protected MeteringPoint() { }
@@ -102,5 +104,54 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public abstract BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails);
 
         public abstract void Connect(ConnectionDetails connectionDetails);
+
+        protected void ChangeAddress(MasterDataDetails masterDataDetails)
+        {
+            if (masterDataDetails == null) throw new ArgumentNullException(nameof(masterDataDetails));
+            var newAddress = Address.Create(
+                masterDataDetails.StreetName ?? Address.StreetName,
+                masterDataDetails.StreetCode ?? Address.StreetCode,
+                masterDataDetails.BuildingNumber ?? Address.BuildingNumber,
+                masterDataDetails.City ?? Address.City,
+                masterDataDetails.CitySubDivision ?? Address.CitySubDivision,
+                masterDataDetails.PostCode ?? Address.PostCode,
+                masterDataDetails.CountryCode ?? Address.CountryCode,
+                masterDataDetails.Floor ?? Address.Floor,
+                masterDataDetails.Room ?? Address.Room,
+                masterDataDetails.MunicipalityCode ?? Address.MunicipalityCode,
+                masterDataDetails.IsActual ?? Address.IsActual,
+                masterDataDetails.GeoInfoReference ?? Address.GeoInfoReference);
+
+            if (newAddress.Equals(Address) == false)
+            {
+                Address = newAddress;
+                MasterDataChanged();
+            }
+        }
+
+        protected void RegisterMasterDataChangedEvent()
+        {
+            if (_hasChanges)
+            {
+                AddDomainEvent(new MasterDataChanged(
+                    Address.StreetName,
+                    Address.PostCode,
+                    Address.City,
+                    Address.StreetCode,
+                    Address.BuildingNumber,
+                    Address.CitySubDivision,
+                    Address.CountryCode?.Name,
+                    Address.Floor,
+                    Address.Room,
+                    Address.MunicipalityCode.GetValueOrDefault(),
+                    Address.IsActual,
+                    Address.GeoInfoReference.GetValueOrDefault()));
+            }
+        }
+
+        private void MasterDataChanged()
+        {
+            _hasChanges = true;
+        }
     }
 }
