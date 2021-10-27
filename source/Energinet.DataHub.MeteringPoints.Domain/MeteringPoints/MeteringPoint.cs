@@ -133,7 +133,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             if (_hasChanges)
             {
-                AddDomainEvent(new MasterDataChanged(
+                AddDomainEvent(new AddressChanged(
                     Address.StreetName,
                     Address.PostCode,
                     Address.City,

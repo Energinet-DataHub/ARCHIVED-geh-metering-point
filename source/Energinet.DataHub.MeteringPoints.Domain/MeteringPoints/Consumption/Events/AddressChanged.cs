@@ -18,9 +18,9 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Events
 {
-    public class MasterDataChanged : DomainEventBase
+    public class AddressChanged : DomainEventBase
     {
-        public MasterDataChanged(string? streetName, string? postCode, string? city, string? streetCode, string? buildingNumber, string? citySubDivision, string? countryCode, string? floor, string? room, int municipalityCode, bool isActual, Guid geoInfoReference)
+        public AddressChanged(string? streetName, string? postCode, string? city, string? streetCode, string? buildingNumber, string? citySubDivision, string? countryCode, string? floor, string? room, int municipalityCode, bool isActual, Guid geoInfoReference)
         {
             StreetName = streetName;
             PostCode = postCode;

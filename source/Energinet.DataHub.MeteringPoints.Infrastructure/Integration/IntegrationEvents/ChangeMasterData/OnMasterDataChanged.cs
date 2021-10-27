@@ -20,14 +20,14 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData
 {
-    public class OnMasterDataChanged : IntegrationEventPublisher<MasterDataChanged>
+    public class OnMasterDataChanged : IntegrationEventPublisher<AddressChanged>
     {
         public OnMasterDataChanged(IOutbox outbox, IOutboxMessageFactory outboxMessageFactory)
             : base(outbox, outboxMessageFactory)
         {
         }
 
-        public override Task Handle(MasterDataChanged notification, CancellationToken cancellationToken)
+        public override Task Handle(AddressChanged notification, CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
             var integration = new MasterDataChangedIntegrationEvent(

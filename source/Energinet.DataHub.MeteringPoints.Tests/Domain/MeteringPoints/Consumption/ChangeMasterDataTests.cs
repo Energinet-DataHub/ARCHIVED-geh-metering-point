@@ -129,7 +129,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
 
             meteringPoint.Change(details);
 
-            var changeEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MasterDataChanged) as MasterDataChanged;
+            var changeEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is AddressChanged) as AddressChanged;
             Assert.NotNull(changeEvent);
             Assert.Equal(details.City, changeEvent?.City);
             Assert.Equal(details.Floor, changeEvent?.Floor);
