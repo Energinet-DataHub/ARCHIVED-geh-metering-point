@@ -41,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
 
             return new ConsumptionMeteringPointDetails(
                 SettlementMethod.Flex,
-                ScheduledMeterReadingDate.Create("0101"),
+                null,
                 AssetType.GasTurbine,
                 Capacity.Create(SampleData.Capacity),
                 MeteringPointId.New(),
