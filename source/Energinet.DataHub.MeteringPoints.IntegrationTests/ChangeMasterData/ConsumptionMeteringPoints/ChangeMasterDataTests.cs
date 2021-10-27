@@ -59,7 +59,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
         }
 
         [Fact]
-        public async Task When_no_changes_are_made_no_integration_event_is_raised()
+        public async Task Accept_when_no_changes_are_made()
         {
             await CreateMeteringPointAsync().ConfigureAwait(false);
             var request = new ChangeMasterDataRequest()
