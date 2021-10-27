@@ -165,7 +165,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointDetails.Capacity);
         }
 
-        public override void Change(MasterDataDetails masterDataDetails)
+        public void Change(MasterDataDetails masterDataDetails)
         {
             if (masterDataDetails == null) throw new ArgumentNullException(nameof(masterDataDetails));
             if (CanChange(masterDataDetails).Success == false)
@@ -176,7 +176,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             ChangeAddress(masterDataDetails);
         }
 
-        public override BusinessRulesValidationResult CanChange(MasterDataDetails details)
+        public BusinessRulesValidationResult CanChange(MasterDataDetails details)
         {
             if (details == null) throw new ArgumentNullException(nameof(details));
             var rules = new List<IBusinessRule>()

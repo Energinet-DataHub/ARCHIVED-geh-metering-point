@@ -132,16 +132,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
                 meteringPointDetails.FromGridLinkId);
         }
 
-        public override void Change(MasterDataDetails masterDataDetails)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override BusinessRulesValidationResult CanChange(MasterDataDetails details)
-        {
-            throw new NotImplementedException();
-        }
-
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
         {
             throw new NotImplementedException();

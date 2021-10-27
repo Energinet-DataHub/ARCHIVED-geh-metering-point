@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -41,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
 
             var meteringPoint = await _meteringPointRepository
                 .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
-                .ConfigureAwait(false);
+                .ConfigureAwait(false) as Domain.MeteringPoints.Consumption.ConsumptionMeteringPoint;
 
             var validationResult = Validate(request, meteringPoint);
             if (!validationResult.Success)
@@ -83,7 +82,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
             return new BusinessProcessResult(request.TransactionId, validationRules);
         }
 
-        private static BusinessProcessResult CheckBusinessRules(ChangeMasterDataRequest request, MasterDataDetails details, MeteringPoint meteringPoint)
+        private static BusinessProcessResult CheckBusinessRules(ChangeMasterDataRequest request, MasterDataDetails details, ConsumptionMeteringPoint meteringPoint)
         {
             var validationResult = meteringPoint.CanChange(details);
 

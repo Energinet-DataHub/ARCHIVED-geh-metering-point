@@ -62,16 +62,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
         {
         }
 
-        public override void Change(MasterDataDetails masterDataDetails)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override BusinessRulesValidationResult CanChange(MasterDataDetails details)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
         {
             throw new System.NotImplementedException();

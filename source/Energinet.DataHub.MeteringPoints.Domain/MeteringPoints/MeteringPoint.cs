@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -94,10 +95,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
             return new BusinessRulesValidationResult(rules);
         }
-
-        public abstract void Change(MasterDataDetails masterDataDetails);
-
-        public abstract BusinessRulesValidationResult CanChange(MasterDataDetails details);
 
         public abstract BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails);
 

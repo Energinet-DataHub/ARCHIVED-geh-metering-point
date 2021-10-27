@@ -121,16 +121,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
         private ProductionMeteringPoint() { }
 #pragma warning restore 8618
 
-        public override void Change(MasterDataDetails masterDataDetails)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override BusinessRulesValidationResult CanChange(MasterDataDetails details)
-        {
-            throw new NotImplementedException();
-        }
-
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
         {
             var rules = new Collection<IBusinessRule>
