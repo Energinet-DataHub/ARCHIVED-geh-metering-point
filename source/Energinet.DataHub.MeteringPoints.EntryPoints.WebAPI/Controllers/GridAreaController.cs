@@ -14,7 +14,7 @@
 
 using System.Linq;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create;
+using Energinet.DataHub.MeteringPoints.Application.Backend.GridAreas.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

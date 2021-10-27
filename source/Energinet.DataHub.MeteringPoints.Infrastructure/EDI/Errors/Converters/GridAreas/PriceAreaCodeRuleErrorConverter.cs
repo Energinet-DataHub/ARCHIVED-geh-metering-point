@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create.Validation.Errors;
+using Energinet.DataHub.MeteringPoints.Application.Backend.GridAreas.Create.Validation.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.GridAreas
 {

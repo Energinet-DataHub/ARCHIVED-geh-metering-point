@@ -18,7 +18,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
     {
         public CreateGridAreaXmlMappingConfiguration()
         {
-            CreateMapping<Application.GridAreas.Create.CreateGridArea>("MktActivityRecord", mapper => mapper
+            CreateMapping<Application.Backend.GridAreas.Create.CreateGridArea>("MktActivityRecord", mapper => mapper
                 .AddProperty(x => x.Code, "TODO")
                 .AddProperty(x => x.Name, "TODO")
                 .AddProperty(x => x.PriceAreaCode, "TODO")
