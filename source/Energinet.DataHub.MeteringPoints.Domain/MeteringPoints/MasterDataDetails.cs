@@ -15,7 +15,7 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public record MasterDataDetails(
         string? StreetName = null,
