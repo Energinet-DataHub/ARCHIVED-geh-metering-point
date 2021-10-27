@@ -111,6 +111,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             _container.Register<IDomainEventPublisher, DomainEventPublisher>();
             _container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Singleton);
             _container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
+            _container.Register<IBusinessProcessValidationContext, BusinessProcessValidationContext>(Lifestyle.Scoped);
 
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
             _container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
@@ -122,8 +123,17 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
                 typeof(MeteringPoint).Assembly, // Domain
                 typeof(ErrorMessageFactory).Assembly); // Infrastructure
 
-            _container.BuildMinimalMediator(typeof(Startup).Assembly);
-            _container.Register<IRequestHandler<CreateGridArea, BusinessProcessResult>, CreateGridAreaHandler>();
+            _container.BuildMediator(
+                new[]
+                {
+                    typeof(CreateGridAreaHandler).Assembly,
+                },
+                new[]
+                {
+                    typeof(UnitOfWorkBehavior<,>),
+                    typeof(InputValidationBehavior<,>),
+                    typeof(BusinessProcessResultBehavior<,>),
+                });
 
             _container.SendProtobuf<MeteringPointEnvelope>();
         }

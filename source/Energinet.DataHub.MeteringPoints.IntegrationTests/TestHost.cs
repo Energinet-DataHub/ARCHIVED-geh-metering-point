@@ -171,6 +171,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 {
                     typeof(MasterDataDocument).Assembly,
                     typeof(MeteringPointCreatedNotificationHandler).Assembly,
+                    typeof(CreateGridAreaHandler).Assembly,
                 },
                 new[]
                 {
