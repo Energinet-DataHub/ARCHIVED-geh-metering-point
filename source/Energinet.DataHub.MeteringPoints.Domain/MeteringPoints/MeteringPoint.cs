@@ -96,11 +96,22 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             return new BusinessRulesValidationResult(rules);
         }
 
+        public BusinessRulesValidationResult CanChangeAddress(Address address)
+        {
+            var rules = new List<IBusinessRule>()
+            {
+                new StreetNameIsRequiredRule(GsrnNumber, address),
+                new PostCodeIsRequiredRule(address),
+                new CityIsRequiredRule(address),
+            };
+            return new BusinessRulesValidationResult(rules);
+        }
+
         public abstract BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails);
 
         public abstract void Connect(ConnectionDetails connectionDetails);
 
-        private protected void ChangeAddress(Address newAddress)
+        public void ChangeAddress(Address newAddress)
         {
             if (newAddress == null) throw new ArgumentNullException(nameof(newAddress));
             if (newAddress.Equals(Address) == false)

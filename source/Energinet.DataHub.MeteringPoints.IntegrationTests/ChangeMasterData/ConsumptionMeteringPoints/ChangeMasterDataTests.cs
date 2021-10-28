@@ -62,7 +62,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
         public async Task Accept_when_no_changes_are_made()
         {
             await CreateMeteringPointAsync().ConfigureAwait(false);
-            var request = new ChangeMasterDataRequest()
+            var request = CreateRequest()
                 with
                 {
                     TransactionId = SampleData.Transaction,
@@ -80,7 +80,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
         {
             await CreateMeteringPointAsync().ConfigureAwait(false);
 
-            var request = new ChangeMasterDataRequest()
+            var request = CreateRequest()
                 with
                 {
                     TransactionId = SampleData.Transaction,
@@ -98,7 +98,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
         {
             await CreateMeteringPointAsync().ConfigureAwait(false);
 
-            var request = new ChangeMasterDataRequest()
+            var request = CreateRequest()
                 with
                 {
                     TransactionId = SampleData.Transaction,
@@ -116,7 +116,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
         {
             await CreateMeteringPointAsync().ConfigureAwait(false);
 
-            var request = new ChangeMasterDataRequest()
+            var request = CreateRequest()
                 with
                 {
                     TransactionId = SampleData.Transaction,
@@ -127,6 +127,18 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
             await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
 
             AssertValidationError("E86");
+        }
+
+        private static ChangeMasterDataRequest CreateRequest()
+        {
+            return new ChangeMasterDataRequest()
+                with
+                {
+                    City = SampleData.CityName,
+                    StreetName = SampleData.StreetName,
+                    PostCode = SampleData.PostCode,
+                    CountryCode = SampleData.CountryCode,
+                };
         }
 
         private Task<BusinessProcessResult> CreateMeteringPointAsync()

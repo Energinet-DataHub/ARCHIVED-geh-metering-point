@@ -17,10 +17,9 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
@@ -28,6 +27,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
     public class ChangeMasterDataHandler : IBusinessRequestHandler<ChangeMasterDataRequest>
     {
         private IMeteringPointRepository _meteringPointRepository;
+        private MeteringPoint? _targetMeteringPoint;
+        private Address? _newAddress;
 
         public ChangeMasterDataHandler(IMeteringPointRepository meteringPointRepository)
         {
@@ -38,55 +39,92 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var meteringPoint = await _meteringPointRepository
-                .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
-                .ConfigureAwait(false) as Domain.MeteringPoints.Consumption.ConsumptionMeteringPoint;
+            await InitializeAsync(request).ConfigureAwait(false);
 
-            var validationResult = Validate(request, meteringPoint);
-            if (!validationResult.Success)
+            var preValidationResult = await PreValidateAsync(request).ConfigureAwait(false);
+            if (preValidationResult.Success == false)
             {
-                return validationResult;
+                return new BusinessProcessResult(request.TransactionId, preValidationResult.Errors);
             }
 
-            var masterDataDetails = new MasterDataDetails(
+            await PrepareAsync(request).ConfigureAwait(false);
+
+            var validationResult = await ValidateAsync(request).ConfigureAwait(false);
+            if (!validationResult.Success)
+            {
+                return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
+            }
+
+            return await ExecuteBusinessProcessAsync(request).ConfigureAwait(false);
+        }
+
+        private static Task<BusinessRulesValidationResult> PreValidateAsync(ChangeMasterDataRequest request)
+        {
+            var addressValidationResult = Address.CheckRules(
                 request.StreetName,
-                request.PostCode,
-                request.City,
                 request.StreetCode,
                 request.BuildingNumber,
+                request.City,
                 request.CitySubDivision,
-                request.CountryCode == null ? null : EnumerationType.FromName<CountryCode>(request.CountryCode),
+                request.PostCode,
+                request.CountryCode != null ? EnumerationType.FromName<CountryCode>(request.CountryCode) : null,
+                request.Floor,
+                request.Room,
+                request.MunicipalityCode);
+
+            return Task.FromResult(addressValidationResult);
+        }
+
+        private async Task InitializeAsync(ChangeMasterDataRequest request)
+        {
+            _targetMeteringPoint = await _meteringPointRepository
+                .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
+                .ConfigureAwait(false);
+        }
+
+        private Task<BusinessProcessResult> ExecuteBusinessProcessAsync(ChangeMasterDataRequest request)
+        {
+            _targetMeteringPoint!.ChangeAddress(_newAddress!);
+            return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
+        }
+
+        private Task PrepareAsync(ChangeMasterDataRequest request)
+        {
+            CreateNewAddressFrom(request);
+            return Task.CompletedTask;
+        }
+
+        private void CreateNewAddressFrom(ChangeMasterDataRequest request)
+        {
+            _newAddress = Address.Create(
+                request.StreetName,
+                request.StreetCode,
+                request.BuildingNumber,
+                request.City,
+                request.CitySubDivision,
+                request.PostCode,
+                request.CountryCode != null ? EnumerationType.FromName<CountryCode>(request.CountryCode) : null,
                 request.Floor,
                 request.Room,
                 request.MunicipalityCode,
-                request.IsActual,
+                request.IsActual.GetValueOrDefault(),
                 request.GeoInfoReference);
-            var rulesCheckResult = CheckBusinessRules(request, masterDataDetails, meteringPoint!);
-            if (!rulesCheckResult.Success)
+        }
+
+        private Task<BusinessRulesValidationResult> ValidateAsync(ChangeMasterDataRequest request)
+        {
+            var errors = new List<ValidationError>();
+
+            if (_targetMeteringPoint == null)
             {
-                return rulesCheckResult;
+                errors.Add(new MeteringPointMustBeKnownValidationError(request.GsrnNumber));
+            }
+            else
+            {
+                errors.AddRange(_targetMeteringPoint.CanChangeAddress(_newAddress!).Errors);
             }
 
-            meteringPoint!.Change(masterDataDetails);
-
-            return BusinessProcessResult.Ok(request.TransactionId);
-        }
-
-        private static BusinessProcessResult Validate(ChangeMasterDataRequest request, MeteringPoint? meteringPoint)
-        {
-            var validationRules = new List<IBusinessRule>()
-            {
-                new MeteringPointMustBeKnownRule(meteringPoint, request.GsrnNumber),
-            };
-
-            return new BusinessProcessResult(request.TransactionId, validationRules);
-        }
-
-        private static BusinessProcessResult CheckBusinessRules(ChangeMasterDataRequest request, MasterDataDetails details, ConsumptionMeteringPoint meteringPoint)
-        {
-            var validationResult = meteringPoint.CanChange(details);
-
-            return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
+            return Task.FromResult(new BusinessRulesValidationResult(errors));
         }
     }
 }
