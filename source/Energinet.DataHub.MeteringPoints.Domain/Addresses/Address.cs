@@ -112,5 +112,23 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
                 new MunicipalityCodeRule(municipalityCode),
             });
         }
+
+        public Address MergeFrom(Address address)
+        {
+            if (address == null) throw new ArgumentNullException(nameof(address));
+            return Create(
+                address.StreetName ?? StreetName,
+                address.StreetCode ?? StreetCode,
+                address.BuildingNumber ?? BuildingNumber,
+                address.City ?? City,
+                address.CitySubDivision ?? CitySubDivision,
+                address.PostCode ?? PostCode,
+                address.CountryCode ?? CountryCode,
+                address.Floor ?? Floor,
+                address.Room ?? Room,
+                address.MunicipalityCode ?? MunicipalityCode,
+                address.IsActual,
+                address.GeoInfoReference ?? GeoInfoReference);
+        }
     }
 }
