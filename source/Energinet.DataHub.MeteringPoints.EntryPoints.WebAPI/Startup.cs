@@ -19,6 +19,8 @@ using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
+using Energinet.DataHub.MeteringPoints.Application.Queries;
+using Energinet.DataHub.MeteringPoints.Client.Core;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
@@ -26,12 +28,12 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
-using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
 using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints.Queries;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GridAreas;
@@ -55,7 +57,7 @@ using MasterDataDocument = Energinet.DataHub.MeteringPoints.Application.MarketDo
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
 {
-    public class Startup : System.IDisposable
+    public class Startup : IDisposable
     {
         private readonly Container _container;
         private bool _disposed;
@@ -124,6 +126,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
 
             _container.BuildMinimalMediator(typeof(Startup).Assembly);
             _container.Register<IRequestHandler<CreateGridArea, BusinessProcessResult>, CreateGridAreaHandler>();
+            _container.Register<IRequestHandler<MeteringPointByGsrnQuery, MeteringPointDTO?>, MeteringPointByGsrnQueryHandler>();
 
             _container.SendProtobuf<MeteringPointEnvelope>();
         }
