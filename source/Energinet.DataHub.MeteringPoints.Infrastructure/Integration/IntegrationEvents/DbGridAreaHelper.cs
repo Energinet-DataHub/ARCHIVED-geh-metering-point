@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 using Dapper;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents
 {
     public class DbGridAreaHelper
     {
