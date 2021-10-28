@@ -30,7 +30,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
     {
         private NetSettlementGroup _netSettlementGroup;
         private AssetType? _assetType;
-        private bool _isAddressWashable;
         private bool _productionObligation;
 
         private ProductionMeteringPoint(
