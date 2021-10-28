@@ -12,17 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.Create.Validation.Errors
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.GridAreas.Create.Validation.Converters
 {
-    public class PriceAreaCodeRuleError : ValidationError
+    public class GridAreaCodeFormatRuleErrorConverter : ErrorConverter<GridAreaCodeFormatRuleError>
     {
-        public PriceAreaCodeRuleError(string priceAreaCode)
+        protected override ErrorMessage Convert(GridAreaCodeFormatRuleError validationError)
         {
-            PriceAreaCode = priceAreaCode;
-        }
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-        public string PriceAreaCode { get; }
+            return new("?", $"Code of the Grid Area must consist of 3 digits.");
+        }
     }
 }

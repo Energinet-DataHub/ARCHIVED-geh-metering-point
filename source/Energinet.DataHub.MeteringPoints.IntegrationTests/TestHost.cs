@@ -34,7 +34,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
-using Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.Create;
+using Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.GridAreas.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
 using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
@@ -171,6 +171,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 {
                     typeof(MasterDataDocument).Assembly,
                     typeof(MeteringPointCreatedNotificationHandler).Assembly,
+                    typeof(CreateGridAreaHandler).Assembly,
                 },
                 new[]
                 {

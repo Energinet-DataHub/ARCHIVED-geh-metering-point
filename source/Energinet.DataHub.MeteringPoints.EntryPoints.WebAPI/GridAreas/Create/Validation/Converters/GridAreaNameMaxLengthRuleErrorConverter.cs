@@ -16,15 +16,15 @@ using System;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.Create.Validation.Converters
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.GridAreas.Create.Validation.Converters
 {
-    public class GridAreaCodeFormatRuleErrorConverter : ErrorConverter<GridAreaCodeFormatRuleError>
+    public class GridAreaNameMaxLengthRuleErrorConverter : ErrorConverter<GridAreaNameMaxLengthRuleError>
     {
-        protected override ErrorMessage Convert(GridAreaCodeFormatRuleError validationError)
+        protected override ErrorMessage Convert(GridAreaNameMaxLengthRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("?", $"Code of the Grid Area must consist of 3 digits.");
+            return new("?", $"Name of the Grid Area must have length of maximum {validationError.MaxLength} characters.");
         }
     }
 }

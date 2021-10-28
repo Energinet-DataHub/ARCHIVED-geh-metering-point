@@ -13,18 +13,18 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules;
+using Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.GridAreas.Create.Validation.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.Create.Validation.Converters
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.GridAreas.Create.Validation.Converters
 {
-    public class GridAreaNameMaxLengthRuleErrorConverter : ErrorConverter<GridAreaNameMaxLengthRuleError>
+    public class PriceAreaCodeRuleErrorConverter : ErrorConverter<PriceAreaCodeRuleError>
     {
-        protected override ErrorMessage Convert(GridAreaNameMaxLengthRuleError validationError)
+        protected override ErrorMessage Convert(PriceAreaCodeRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("?", $"Name of the Grid Area must have length of maximum {validationError.MaxLength} characters.");
+            return new("?", $"Price area code {validationError.PriceAreaCode} has wrong value (outside domain).");
         }
     }
 }

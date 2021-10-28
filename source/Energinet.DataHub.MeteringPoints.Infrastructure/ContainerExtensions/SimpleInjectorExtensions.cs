@@ -52,19 +52,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions
                 return;
             }
 
-            var isAllValidationErrorsCoveredByConverters = validationErrorTypes
-                .All(error => converterRegistrations
-                    .Find(converter => error == converter.Error) != null);
-
-            if (!isAllValidationErrorsCoveredByConverters)
-            {
-                var missingRegistrations = validationErrorTypes
-                    .Except(converterRegistrations.Select(converterRegistration => converterRegistration.Error))
-                    .ToList();
-                throw new InvalidOperationException(
-                    $"Not all validation errors are covered by error converters. Missing:{Environment.NewLine}{string.Join(Environment.NewLine, missingRegistrations)}");
-            }
-
             var hasDuplicateRegistrations = converterRegistrations
                 .GroupBy(registration => registration.Error)
                 .Any(group => group.Count() > 1);

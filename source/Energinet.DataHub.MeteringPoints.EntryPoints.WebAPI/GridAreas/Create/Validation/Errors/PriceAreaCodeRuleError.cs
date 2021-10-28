@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.Create
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.GridAreas.Create.Validation.Errors
 {
-    public record CreateGridArea(
-            string Name = "",
-            string Code = "",
-            string PriceAreaCode = "",
-            string TransactionId = "")
-        : IBusinessRequest,
-            IOutboundMessage,
-            IInboundMessage;
+    public class PriceAreaCodeRuleError : ValidationError
+    {
+        public PriceAreaCodeRuleError(string priceAreaCode)
+        {
+            PriceAreaCode = priceAreaCode;
+        }
+
+        public string PriceAreaCode { get; }
+    }
 }
