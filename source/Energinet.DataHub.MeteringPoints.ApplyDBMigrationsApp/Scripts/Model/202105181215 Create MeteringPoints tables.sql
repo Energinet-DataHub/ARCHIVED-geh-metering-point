@@ -42,7 +42,6 @@ CREATE TABLE [dbo].[ConsumptionMeteringPoints]
 (
     [Id] UNIQUEIDENTIFIER NOT NULL,
     [RecordId] INT IDENTITY(1,1) NOT NULL,
-    [IsAddressWashable] BIT NOT NULL DEFAULT(0),
     [SettlementMethod] NVARCHAR(255) NULL,
     [NetSettlementGroup] NVARCHAR(255) NULL,
     [DisconnectionType] NVARCHAR(255) NULL,
@@ -59,7 +58,6 @@ CREATE TABLE [dbo].[ProductionMeteringPoints]
 (
     [Id] UNIQUEIDENTIFIER NOT NULL,
     [RecordId] INT IDENTITY(1,1) NOT NULL,
-    [IsAddressWashable] BIT NOT NULL DEFAULT(0),
     [ProductionObligation] NVARCHAR(255) NULL,
     [NetSettlementGroup] NVARCHAR(255) NULL,
     [DisconnectionType] NVARCHAR(255) NULL,
