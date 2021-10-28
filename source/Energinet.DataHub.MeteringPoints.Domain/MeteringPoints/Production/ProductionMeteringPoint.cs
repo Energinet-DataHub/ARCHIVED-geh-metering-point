@@ -71,6 +71,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 netSettlementGroup)
         {
             _netSettlementGroup = netSettlementGroup;
+            _productionObligation = productionObligation;
             _assetType = assetType;
             _productType = ProductType.EnergyActive;
             ProductionObligation = false;
