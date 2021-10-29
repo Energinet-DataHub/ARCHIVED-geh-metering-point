@@ -35,7 +35,7 @@ limitations under the License.
 
   <ItemGroup>
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Application\Energinet.DataHub.MeteringPoints.Application.csproj" />
-    <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Client.Core\Energinet.DataHub.MeteringPoints.Client.Core.csproj" />
+    <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Client.Abstractions\Energinet.DataHub.MeteringPoints.Client.Abstractions.csproj" />
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.EntryPoints.Common\Energinet.DataHub.MeteringPoints.EntryPoints.Common.csproj" />
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Infrastructure\Energinet.DataHub.MeteringPoints.Infrastructure.csproj" />
   </ItemGroup>

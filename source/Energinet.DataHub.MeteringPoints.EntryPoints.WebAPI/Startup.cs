@@ -19,7 +19,7 @@ using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
-using Energinet.DataHub.MeteringPoints.Client.Core;
+using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
@@ -139,7 +139,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI
                     typeof(BusinessProcessResultBehavior<,>),
                 });
 
-            _container.Register<IRequestHandler<MeteringPointByGsrnQuery, MeteringPointDTO?>, MeteringPointByGsrnQueryHandler>();
+            _container.Register<IRequestHandler<MeteringPointByGsrnQuery, MeteringPointDto?>, MeteringPointByGsrnQueryHandler>();
 
             _container.SendProtobuf<MeteringPointEnvelope>();
         }

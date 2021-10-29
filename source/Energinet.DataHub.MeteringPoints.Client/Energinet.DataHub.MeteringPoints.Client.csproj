@@ -52,7 +52,7 @@ limitations under the License.
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Client.Core\Energinet.DataHub.MeteringPoints.Client.Core.csproj" />
+    <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Client.Abstractions\Energinet.DataHub.MeteringPoints.Client.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -13,8 +13,9 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 
-namespace Energinet.DataHub.MeteringPoints.Client.Core
+namespace Energinet.DataHub.MeteringPoints.Client.Abstractions
 {
     /// <summary>
     /// Metering point client
@@ -26,6 +27,6 @@ namespace Energinet.DataHub.MeteringPoints.Client.Core
         /// </summary>
         /// <param name="gsrn"></param>
         /// <returns>A Metering Point DTO if found</returns>
-        public Task<MeteringPointDTO?> GetMeteringPointByGsrnAsync(string gsrn);
+        public Task<MeteringPointDto?> GetMeteringPointByGsrnAsync(string gsrn);
     }
 }

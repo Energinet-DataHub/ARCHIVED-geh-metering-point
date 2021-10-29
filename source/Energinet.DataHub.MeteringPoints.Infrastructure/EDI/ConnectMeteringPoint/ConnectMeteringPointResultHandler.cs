@@ -18,7 +18,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
-using Energinet.DataHub.MeteringPoints.Client.Core;
+using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
@@ -105,7 +105,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
 
         private MessageHubEnvelope CreateAccountingPointCharacteristicsMessage(
             Application.Connect.ConnectMeteringPoint request,
-            MeteringPointDTO meteringPoint)
+            MeteringPointDto meteringPoint)
         {
             var accountingPointCharacteristicsMessage = new AccountingPointCharacteristicsMessage(
                 Id: Guid.NewGuid().ToString(),

@@ -51,7 +51,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringP
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{6ADA8295-FA91-4DBC-96C6-B1028AED6032}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.Client.Core", "Energinet.DataHub.MeteringPoints.Client.Core\Energinet.DataHub.MeteringPoints.Client.Core.csproj", "{C83F8BF9-8CFE-4743-BBDC-4CD7D20614F4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.Client.Abstractions", "Energinet.DataHub.MeteringPoints.Client.Abstractions\Energinet.DataHub.MeteringPoints.Client.Abstractions.csproj", "{C83F8BF9-8CFE-4743-BBDC-4CD7D20614F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

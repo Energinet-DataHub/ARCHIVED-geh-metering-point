@@ -14,15 +14,15 @@
 
 using System;
 
-namespace Energinet.DataHub.MeteringPoints.Client.Core
+namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
 {
-    public class MeteringPointDTO
+    public class MeteringPointDto
     {
 #pragma warning disable 8618 // Remove parameterless constructor when all fields are included and named properly in MeteringPointByGsrnQueryHandler
-        public MeteringPointDTO() { }
+        public MeteringPointDto() { }
 #pragma warning restore 8618
 
-        public MeteringPointDTO(
+        public MeteringPointDto(
             Guid meteringPointId,
             string gsrnNumber,
             string settlementMethod,

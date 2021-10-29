@@ -16,7 +16,8 @@ using System;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Client.Core;
+using Energinet.DataHub.MeteringPoints.Client.Abstractions;
+using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 
 namespace Energinet.DataHub.MeteringPoints.Client
 {
@@ -29,7 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Client
             _httpClient = httpClient;
         }
 
-        public async Task<MeteringPointDTO?> GetMeteringPointByGsrnAsync(string gsrn)
+        public async Task<MeteringPointDto?> GetMeteringPointByGsrnAsync(string gsrn)
         {
             var response = await _httpClient.GetAsync(new Uri("MeteringPoint/GetMeteringPointByGsrn/?gsrn=" + gsrn, UriKind.Relative)).ConfigureAwait(false);
 
@@ -37,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Client
 
             var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
-            return await JsonSerializer.DeserializeAsync<MeteringPointDTO>(responseStream).ConfigureAwait(false);
+            return await JsonSerializer.DeserializeAsync<MeteringPointDto>(responseStream).ConfigureAwait(false);
         }
     }
 }
