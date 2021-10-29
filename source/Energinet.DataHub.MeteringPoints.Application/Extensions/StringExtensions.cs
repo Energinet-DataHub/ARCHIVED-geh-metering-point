@@ -22,8 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Extensions
     {
         public static Instant ToInstant(this string value)
         {
-            var datetime = DateTime.Parse(value, CultureInfo.InvariantCulture);
-            datetime = DateTime.SpecifyKind(datetime, DateTimeKind.Utc);
+            var datetime = DateTimeOffset.Parse(value, CultureInfo.InvariantCulture).UtcDateTime;
             return Instant.FromDateTimeUtc(datetime);
         }
     }
