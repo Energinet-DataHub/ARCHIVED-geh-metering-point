@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Client
 {
-    public class WebApiFactory : WebApplicationFactory<EntryPoints.WebApi.Startup>
+    public class WebApiFactory : WebApplicationFactory<EntryPoints.WebAPI.Startup>
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
