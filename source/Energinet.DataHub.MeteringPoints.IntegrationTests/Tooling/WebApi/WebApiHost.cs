@@ -13,10 +13,9 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Client
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling.WebApi
 {
     [Collection("IntegrationTest")]
     public abstract class WebApiHost : IClassFixture<WebApiFactory>

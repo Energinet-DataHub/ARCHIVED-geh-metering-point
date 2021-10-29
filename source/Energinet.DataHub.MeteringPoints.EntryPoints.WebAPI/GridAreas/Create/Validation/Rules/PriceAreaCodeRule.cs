@@ -15,10 +15,10 @@
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.GridAreas.Create.Validation.Errors;
+using Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create.Validation.Errors;
 using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.GridAreas.Create.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create.Validation.Rules
 {
     public class PriceAreaCodeRule : AbstractValidator<CreateGridArea>
     {

@@ -16,7 +16,7 @@ using System;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.GridAreas.Create.Validation.Converters
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create.Validation.Converters
 {
     public class GridAreaCodeFormatRuleErrorConverter : ErrorConverter<GridAreaCodeFormatRuleError>
     {

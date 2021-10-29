@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
 {
     public static class Program
     {

@@ -18,12 +18,10 @@ limitations under the License.
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <LangVersion>9.0</LangVersion>
-    <AssemblyName>Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI</AssemblyName>
-    <RootNamespace>Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI</RootNamespace>
-    <PackageId>Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI</PackageId>
-    <Authors>Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI</Authors>
-    <Company>Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI</Company>
-    <Product>Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI</Product>
+    <PackageId>Energinet.DataHub.MeteringPoints.EntryPoints.WebApi</PackageId>
+    <Authors>Energinet.DataHub.MeteringPoints.EntryPoints.WebApi</Authors>
+    <Company>Energinet.DataHub.MeteringPoints.EntryPoints.WebApi</Company>
+    <Product>Energinet.DataHub.MeteringPoints.EntryPoints.WebApi</Product>
   </PropertyGroup>
 
   <ItemGroup>

@@ -22,7 +22,7 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.GridAreas.Create
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create
 {
     public class CreateGridAreaHandler : IBusinessRequestHandler<CreateGridArea>
     {

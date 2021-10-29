@@ -15,7 +15,7 @@
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.GridAreas.Create
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create
 {
     public record CreateGridArea(
             string Name = "",

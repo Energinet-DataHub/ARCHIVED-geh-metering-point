@@ -25,7 +25,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
-using Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.GridAreas.Create;
+using Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
@@ -55,7 +55,7 @@ using Microsoft.OpenApi.Models;
 using SimpleInjector;
 using MasterDataDocument = Energinet.DataHub.MeteringPoints.Application.MarketDocuments.MasterDataDocument;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
 {
     public class Startup : IDisposable
     {
@@ -76,7 +76,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Energinet.DataHub.MeteringPoints.EntryPoints.WebApi", Version = "v1" });
             });
 
             var connectionString = Configuration.GetConnectionString("METERINGPOINT_DB_CONNECTION_STRING") ?? throw new InvalidOperationException("Metering point db connection string not found.");
@@ -153,7 +153,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI
             }
 
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI v1"));
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Energinet.DataHub.MeteringPoints.EntryPoints.WebApi v1"));
 
             app.UseHttpsRedirection();
 

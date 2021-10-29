@@ -15,6 +15,7 @@
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Client;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
+using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling.WebApi;
 using FluentAssertions;
 using Xunit;
 using Xunit.Categories;

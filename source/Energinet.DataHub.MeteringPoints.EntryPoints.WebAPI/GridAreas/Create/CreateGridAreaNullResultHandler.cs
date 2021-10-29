@@ -19,7 +19,7 @@ using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.GridAreas.Create
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create
 {
     public sealed class CreateGridAreaNullResultHandler : IBusinessProcessResultHandler<CreateGridArea>
     {

@@ -14,10 +14,10 @@
 
 using Energinet.DataHub.MeteringPoints.Application.Validation.Extensions;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
-using Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.GridAreas.Create.Validation.Rules;
+using Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create.Validation.Rules;
 using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.GridAreas.Create
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create
 {
     public class CreateGridAreaRuleSet : AbstractValidator<CreateGridArea>
     {

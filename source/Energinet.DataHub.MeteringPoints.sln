@@ -43,7 +43,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub", "Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub\Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub.csproj", "{C4CCE071-5E60-4558-B6C0-937A0F97A15D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI", "Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI\Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.csproj", "{1E8BC6B4-C2D2-4343-8C9A-474452FB0BC2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.EntryPoints.WebApi", "Energinet.DataHub.MeteringPoints.EntryPoints.WebApi\Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.csproj", "{1E8BC6B4-C2D2-4343-8C9A-474452FB0BC2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.Messaging", "Energinet.DataHub.MeteringPoints.Messaging\Energinet.DataHub.MeteringPoints.Messaging.csproj", "{4F54002A-F205-4343-B9D3-4030A0574274}"
 EndProject
