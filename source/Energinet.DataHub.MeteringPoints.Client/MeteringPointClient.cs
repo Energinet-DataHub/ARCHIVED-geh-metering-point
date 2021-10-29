@@ -21,11 +21,11 @@ using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 
 namespace Energinet.DataHub.MeteringPoints.Client
 {
-    public class MeteringPointClient : IMeteringPointClient
+    public sealed class MeteringPointClient : IMeteringPointClient
     {
         private readonly HttpClient _httpClient;
 
-        protected internal MeteringPointClient(HttpClient httpClient)
+        internal MeteringPointClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
