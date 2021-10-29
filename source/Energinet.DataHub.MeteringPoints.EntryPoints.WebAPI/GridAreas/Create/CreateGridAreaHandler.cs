@@ -17,11 +17,12 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.GridAreas.Create
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.GridAreas.Create
 {
     public class CreateGridAreaHandler : IBusinessRequestHandler<CreateGridArea>
     {
@@ -76,7 +77,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.GridAreas.Create
                 GridAreaName.Create(request.Name),
                 GridAreaCode.Create(request.Code),
                 EnumerationType.FromName<PriceAreaCode>(request.PriceAreaCode),
-                FullFlexFromDate.Create(_dateTimeProvider.Now().ToDateTimeOffset().Date));
+                FullFlexFromDate.Create(_dateTimeProvider.Now().ToDateTimeOffset().Date.ToUniversalTime()));
         }
 
         private async Task<BusinessProcessResult> ValidateInputAsync(CreateGridArea request)

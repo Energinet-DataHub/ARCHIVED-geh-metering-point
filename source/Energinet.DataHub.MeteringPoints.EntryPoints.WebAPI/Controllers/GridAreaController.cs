@@ -14,12 +14,12 @@
 
 using System.Linq;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create;
+using Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.GridAreas.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.Controllers
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
