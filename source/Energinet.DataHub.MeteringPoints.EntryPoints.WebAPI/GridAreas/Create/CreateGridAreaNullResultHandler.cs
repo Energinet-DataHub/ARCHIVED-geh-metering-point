@@ -16,11 +16,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Application.GridAreas.Create;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GridAreas
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.GridAreas.Create
 {
     public sealed class CreateGridAreaNullResultHandler : IBusinessProcessResultHandler<CreateGridArea>
     {
