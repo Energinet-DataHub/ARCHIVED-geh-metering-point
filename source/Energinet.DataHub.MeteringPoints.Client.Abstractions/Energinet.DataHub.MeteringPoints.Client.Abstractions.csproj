@@ -35,19 +35,19 @@ limitations under the License.
       Is shown in Azure DevOps artifacts Release Notes section.
     -->
     <PackageReleaseNotes>
-      [Release Notes](https://github.com/Energinet-DataHub/geh-core/blob/master/source/TestCommon/documents/release-notes/release-notes.md)
-      [Documentation](https://github.com/Energinet-DataHub/geh-core/blob/master/source/TestCommon/documents/documentation.md)
+      [Release Notes](https://github.com/Energinet-DataHub/geh-metering-point/tree/main/docs/metering-point-client/release-notes/release-notes.md)
+      [Documentation](https://github.com/Energinet-DataHub/geh-metering-point/tree/main/docs/metering-point-client/documentation.md)
     </PackageReleaseNotes>
     <!-- PackageDescription:
       Is shown in GitHub packages "About this package" section,
       and in Visual Studio package manager view.
     -->
     <PackageDescription>
-      [Release Notes](https://github.com/Energinet-DataHub/geh-core/blob/master/source/TestCommon/documents/release-notes/release-notes.md)
-      [Documentation](https://github.com/Energinet-DataHub/geh-core/blob/master/source/TestCommon/documents/documentation.md)
+      [Release Notes](https://github.com/Energinet-DataHub/geh-metering-point/tree/main/docs/metering-point-client/release-notes/release-notes.md)
+      [Documentation](https://github.com/Energinet-DataHub/geh-metering-point/tree/main/docs/metering-point-client/documentation.md)
     </PackageDescription>
-    <Description>Library to support the implementation of xUnit tests of Energinet DataHub components.</Description>
-    <PackageTags>energinet;datahub;testing</PackageTags>
+    <Description>Library with abstractions supporting communication with Metering Point Domain.</Description>
+    <PackageTags>energinet;datahub;meteringpoints;abstractions</PackageTags>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
