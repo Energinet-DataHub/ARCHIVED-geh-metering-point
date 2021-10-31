@@ -141,8 +141,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
                         MeteringGridAreaDomainId: new Mrid(meteringPoint.GridAreaCode, "N/A"),
                         InMeteringGridAreaDomainId: new Mrid(meteringPoint.FromGridAreaCode, "N/A"), // TODO: Only applicable for exchange
                         OutMeteringGridAreaDomainId: new Mrid(meteringPoint.ToGridAreaCode, "N/A"), // TODO: Only applicable for exchange
-                        LinkedMarketEvaluationPoint: new Mrid(meteringPoint.PowerPlantGsrnNumber ?? string.Empty, "N/A"),
-                        PhysicalConnectionCapacity: new UnitValue(meteringPoint.Capacity, "N/A"),
+                        LinkedMarketEvaluationPoint: new Mrid(meteringPoint.PowerPlantGsrnNumber, "N/A"),
+                        PhysicalConnectionCapacity: new UnitValue(meteringPoint.Capacity.ToString(CultureInfo.InvariantCulture), "N/A"),
                         ConnectionType: meteringPoint.ConnectionType,
                         DisconnectionMethod: meteringPoint.DisconnectionType,
                         AssetMarketPSRTypePsrType: meteringPoint.AssetType,

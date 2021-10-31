@@ -43,20 +43,18 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                                 ,MP.[CountryCode]
                                 ,MP.[ConnectionState_PhysicalState] AS ConnectionState
                                 ,MP.[MeteringPointSubType]
-                                ,MP.[MeterReadingOccurrence]
+                                ,MP.[MeterReadingOccurrence] AS ReadingOccurrence
                                 ,MP.[TypeOfMeteringPoint] AS MeteringPointType
                                 ,MP.[MaximumCurrent]
                                 ,MP.[MaximumPower]
 					            ,(SELECT TOP(1) G.[Name] FROM [GridAreas] G INNER JOIN [GridAreaLinks] GL ON G.Id = GL.GridAreaId WHERE GL.Id = MP.[MeteringGridArea]) AS GridAreaName
                                 ,(SELECT TOP(1) G.[Code] FROM [GridAreas] G INNER JOIN [GridAreaLinks] GL ON G.Id = GL.GridAreaId WHERE GL.Id = MP.[MeteringGridArea]) AS GridAreaCode
-                                ,MP.[PowerPlant]
+                                ,MP.[PowerPlant] AS PowerPlantGsrnNumber
                                 ,MP.[LocationDescription]
-                                ,MP.[ProductType]
-                                ,MP.[ParentRelatedMeteringPoint]
+                                ,MP.[ProductType] AS Product
                                 ,MP.[UnitType]
                                 ,MP.[EffectiveDate]
                                 ,MP.[MeterNumber]
-                                ,MP.[ConnectionState_EffectiveDate] AS EffectiveDate
                                 ,MP.[StreetCode]
                                 ,MP.[CitySubDivision] AS CitySubDivisionName
                                 ,MP.[Floor]
@@ -66,20 +64,15 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                                 ,MP.[IsActualAddress]
                                 ,MP.[GeoInfoReference]
                                 ,MP.[Capacity]
-	                            ,CMP.[RecordId]
                                 ,CMP.[SettlementMethod]
                                 ,CMP.[NetSettlementGroup]
                                 ,CMP.[AssetType]
-                                ,CMP.[ScheduledMeterReadingDate]
 	                            ,(SELECT TOP(1) G.Code FROM [GridAreas] G INNER JOIN [GridAreaLinks] GL ON G.Id = GL.GridAreaId WHERE GL.Id = EMP.[ToGrid]) AS ToGridAreaCode
                                 ,(SELECT TOP(1) G.Code FROM [GridAreas] G INNER JOIN [GridAreaLinks] GL ON G.Id = GL.GridAreaId WHERE GL.Id = EMP.[FromGrid]) AS FromGridAreaCode
-	                            ,MMP.[StartOfSupplyDate]
+	                            ,MMP.[StartOfSupplyDate] AS SupplyStart
                                 ,MMP.[ConnectionType]
                                 ,MMP.[DisconnectionType]
                                 ,PMP.[ProductionObligation]
-                                ,PMP.[NetSettlementGroup]
-                                ,PMP.[DisconnectionType]
-	                            ,PMP.[ConnectionType]
                           FROM  [dbo].[MeteringPoints] MP LEFT OUTER JOIN
 	                            [dbo].[ExchangeMeteringPoints] EMP ON EMP.Id = MP.Id LEFT OUTER JOIN
 	                            [dbo].[MarketMeteringPoints] MMP ON MMP.Id = MP.Id LEFT OUTER JOIN
