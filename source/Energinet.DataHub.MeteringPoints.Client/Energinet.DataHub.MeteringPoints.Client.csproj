@@ -20,6 +20,8 @@ limitations under the License.
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
     <IsPackable>true</IsPackable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
   </PropertyGroup>
 
   <PropertyGroup>
