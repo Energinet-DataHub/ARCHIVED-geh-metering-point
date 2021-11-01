@@ -32,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Client
 
         public async Task<MeteringPointDto?> GetMeteringPointByGsrnAsync(string gsrn)
         {
-            var response = await _httpClient.GetFromJsonAsync<MeteringPointDto?>(new Uri("MeteringPoint/GetMeteringPointByGsrn/?gsrn=" + gsrn, UriKind.Relative)).ConfigureAwait(false);
+            var response = await _httpClient.GetFromJsonAsync<MeteringPointDto?>(new Uri($"MeteringPoint/GetMeteringPointByGsrn/?gsrn={gsrn}", UriKind.Relative)).ConfigureAwait(false);
 
             return response;
         }
