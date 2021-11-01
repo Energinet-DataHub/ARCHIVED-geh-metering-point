@@ -77,7 +77,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.GridAreas.Create
                 GridAreaName.Create(request.Name),
                 GridAreaCode.Create(request.Code),
                 EnumerationType.FromName<PriceAreaCode>(request.PriceAreaCode),
-                FullFlexFromDate.Create(_dateTimeProvider.Now().ToDateTimeOffset().Date));
+                FullFlexFromDate.Create(_dateTimeProvider.Now().ToDateTimeOffset().Date.ToUniversalTime()));
         }
 
         private async Task<BusinessProcessResult> ValidateInputAsync(CreateGridArea request)
