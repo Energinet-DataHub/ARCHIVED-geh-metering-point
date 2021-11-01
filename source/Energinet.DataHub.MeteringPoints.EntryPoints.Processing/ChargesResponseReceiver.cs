@@ -49,7 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             _logger.LogInformation($"Received an response from Charges.");
 
             var reader = new DefaultChargeLinkReplyReader(HandleSuccessAsync, HandleFailureAsync);
-            await reader.ReadAsync(data, RequestStatus.Succeeded).ConfigureAwait(false);
+            await reader.ReadAsync(data).ConfigureAwait(false);
             await Task.CompletedTask.ConfigureAwait(false);
         }
 
