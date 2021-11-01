@@ -23,10 +23,10 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions
     public interface IMeteringPointClient
     {
         /// <summary>
-        /// Get a single metering point by id
+        /// Get a single metering point by GSRN number
         /// </summary>
-        /// <param name="gsrn"></param>
-        /// <returns>A Metering Point DTO if found</returns>
+        /// <param name="gsrn">GSRN number to identify a Metering Point</param>
+        /// <returns>A Metering Point DTO if found. If not found null will be returned.</returns>
         public Task<MeteringPointDto?> GetMeteringPointByGsrnAsync(string gsrn);
     }
 }
