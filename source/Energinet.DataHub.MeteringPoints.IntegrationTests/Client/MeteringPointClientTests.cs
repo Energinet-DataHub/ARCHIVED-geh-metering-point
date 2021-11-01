@@ -34,7 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Client
         }
 
         [Fact]
-        public async Task Get_metering_point_by_id_should_not_be_null()
+        public async Task Get_metering_point_by_gsrn_should_not_be_null()
         {
             // Arrange
             var httpClient = _factory.CreateClient();
