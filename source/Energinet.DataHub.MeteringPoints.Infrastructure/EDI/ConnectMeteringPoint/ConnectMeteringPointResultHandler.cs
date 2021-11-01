@@ -142,7 +142,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
                         InMeteringGridAreaDomainId: new Mrid(meteringPoint.FromGridAreaCode, "N/A"), // TODO: Only applicable for exchange
                         OutMeteringGridAreaDomainId: new Mrid(meteringPoint.ToGridAreaCode, "N/A"), // TODO: Only applicable for exchange
                         LinkedMarketEvaluationPoint: new Mrid(meteringPoint.PowerPlantGsrnNumber, "N/A"),
-                        PhysicalConnectionCapacity: new UnitValue(meteringPoint.Capacity.ToString(CultureInfo.InvariantCulture), "N/A"),
+                        PhysicalConnectionCapacity: new UnitValue(meteringPoint.Capacity.HasValue ? meteringPoint.Capacity.Value.ToString(CultureInfo.InvariantCulture) : string.Empty, "N/A"),
                         ConnectionType: meteringPoint.ConnectionType,
                         DisconnectionMethod: meteringPoint.DisconnectionType,
                         AssetMarketPSRTypePsrType: meteringPoint.AssetType,
@@ -152,7 +152,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
                             EstimatedAnnualVolumeQuantity: "EstimatedAnnualVolumeQuantity",
                             QuantityMeasureUnit: "QuantityMeasureUnit"),
                         ContractedConnectionCapacity: new UnitValue("ContractedConnectionCapacity", "Foo"),
-                        RatedCurrent: new UnitValue(meteringPoint.MaximumCurrent.ToString(CultureInfo.InvariantCulture), "AMP"),
+                        RatedCurrent: new UnitValue(meteringPoint.MaximumCurrent.HasValue ? meteringPoint.MaximumCurrent.Value.ToString(CultureInfo.InvariantCulture) : string.Empty, "AMP"),
                         MeterId: "MeterId",
                         EnergySupplierMarketParticipantId: new MarketParticipant("EnergySupplierMarketParticipantId", "Foo"),
                         SupplyStartDateAndOrTimeDateTime: DateTime.Now,
