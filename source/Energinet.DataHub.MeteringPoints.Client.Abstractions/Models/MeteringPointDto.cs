@@ -27,8 +27,8 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
         string MeteringPointSubType,
         string ReadingOccurrence,
         string MeteringPointType,
-        int MaximumCurrent,
-        int MaximumPower,
+        int? MaximumCurrent,
+        int? MaximumPower,
         string GridAreaName,
         string GridAreaCode,
         string PowerPlantGsrnNumber,
@@ -42,10 +42,10 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
         string Floor,
         string Suite,
         string BuildingNumber,
-        int MunicipalityCode,
-        bool IsActualAddress,
+        int? MunicipalityCode,
+        bool? IsActualAddress,
         Guid? GeoInfoReference,
-        double Capacity,
+        double? Capacity,
         string SettlementMethod,
         string NetSettlementGroup,
         string AssetType,
@@ -54,5 +54,5 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
         DateTime? SupplyStart,
         string ConnectionType,
         string DisconnectionType,
-        bool ProductionObligation);
+        bool? ProductionObligation);
 }
