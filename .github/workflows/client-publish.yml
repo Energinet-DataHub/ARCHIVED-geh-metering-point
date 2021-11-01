@@ -49,7 +49,7 @@ env:
 
 jobs:
   build_and_publish:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     name: Publish bundle to NuGet.org
 
     permissions:
