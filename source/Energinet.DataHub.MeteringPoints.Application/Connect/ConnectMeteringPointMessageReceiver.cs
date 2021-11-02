@@ -20,14 +20,14 @@ using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Create
+namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
-    public class CreateMeteringPointMessageReceiver : IMessageReceiver
+    public class ConnectMeteringPointMessageReceiver : IMessageReceiver
     {
         private readonly IMediator _mediator;
         private readonly IMessageReceiver _next;
 
-        public CreateMeteringPointMessageReceiver(IMediator mediator, IMessageReceiver next)
+        public ConnectMeteringPointMessageReceiver(IMediator mediator, IMessageReceiver next)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _next = next;
@@ -40,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             {
                 var masterDataDocument = (MasterDataDocument)message;
                 var processType = EnumerationType.FromName<BusinessProcessType>(masterDataDocument.ProcessType);
-                if (processType == BusinessProcessType.CreateMeteringPoint)
+                if (processType == BusinessProcessType.ConnectMeteringPoint)
                 {
                     return _mediator.Send(message);
                 }
