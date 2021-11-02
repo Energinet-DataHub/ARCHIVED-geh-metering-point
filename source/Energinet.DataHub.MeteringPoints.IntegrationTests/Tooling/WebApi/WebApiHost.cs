@@ -12,18 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
-using MediatR;
+using System;
+using Xunit;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Queries
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling.WebApi
 {
-    public class MeteringPointByGsrnQuery : IRequest<MeteringPointDto?>
+    [Collection("IntegrationTest")]
+    public abstract class WebApiHost : IClassFixture<WebApiFactory>
     {
-        public MeteringPointByGsrnQuery(string gsrnNumber)
+        protected WebApiHost(DatabaseFixture databaseFixture)
         {
-            GsrnNumber = gsrnNumber;
-        }
+            if (databaseFixture == null) throw new ArgumentNullException(nameof(databaseFixture));
 
-        public string GsrnNumber { get; }
+            Environment.SetEnvironmentVariable("CONNECTIONSTRINGS:METERINGPOINT_DB_CONNECTION_STRING", databaseFixture.GetConnectionString());
+        }
     }
 }

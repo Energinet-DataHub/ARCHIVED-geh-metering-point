@@ -20,7 +20,7 @@ on:
   workflow_dispatch: {}
 
 env:
-  CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI/Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.csproj'
+  CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.WebApi/Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.csproj'
   SOLUTION_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.sln'
 
 jobs:

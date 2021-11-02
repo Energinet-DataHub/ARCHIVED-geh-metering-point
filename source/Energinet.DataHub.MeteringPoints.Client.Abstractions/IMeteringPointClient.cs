@@ -12,18 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
-using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Queries
+namespace Energinet.DataHub.MeteringPoints.Client.Abstractions
 {
-    public class MeteringPointByGsrnQuery : IRequest<MeteringPointDto?>
+    /// <summary>
+    /// Metering point client
+    /// </summary>
+    public interface IMeteringPointClient
     {
-        public MeteringPointByGsrnQuery(string gsrnNumber)
-        {
-            GsrnNumber = gsrnNumber;
-        }
-
-        public string GsrnNumber { get; }
+        /// <summary>
+        /// Get a single metering point by GSRN number
+        /// </summary>
+        /// <param name="gsrn">GSRN number to identify a Metering Point</param>
+        /// <returns>A Metering Point DTO if found. If not found null will be returned.</returns>
+        public Task<MeteringPointDto?> GetMeteringPointByGsrnAsync(string gsrn);
     }
 }
