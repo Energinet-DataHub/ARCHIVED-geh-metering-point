@@ -13,11 +13,14 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Messages;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using FluentValidation;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
@@ -26,23 +29,49 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
     {
         private readonly IMediator _mediator;
         private readonly IMessageReceiver _next;
+        private readonly IValidator<MasterDataDocument> _validator;
+        private readonly IBusinessProcessValidationContext _validationContext;
 
-        public ConnectMeteringPointMessageReceiver(IMediator mediator, IMessageReceiver next)
+        public ConnectMeteringPointMessageReceiver(IMediator mediator, IMessageReceiver next, IValidator<MasterDataDocument> validator, IBusinessProcessValidationContext validationContext)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _next = next;
+            _validator = validator;
+            _validationContext = validationContext ?? throw new ArgumentNullException(nameof(validationContext));
         }
 
         public Task HandleAsync(MasterDataDocument message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
-            var processType = EnumerationType.FromName<BusinessProcessType>(message.ProcessType);
-            return processType == BusinessProcessType.ConnectMeteringPoint ? _mediator.Send(CreateCommandFrom(message)) : _next?.HandleAsync(message)!;
+            return HandleOrCallNextAsync(message);
         }
 
         private static ConnectMeteringPoint CreateCommandFrom(MasterDataDocument document)
         {
             return new ConnectMeteringPoint(document.GsrnNumber, document.EffectiveDate, document.TransactionId);
+        }
+
+        private Task HandleOrCallNextAsync(MasterDataDocument message)
+        {
+            var processType = EnumerationType.FromName<BusinessProcessType>(message.ProcessType);
+            return processType == BusinessProcessType.ConnectMeteringPoint ? HandleInternalAsync(message) : _next?.HandleAsync(message)!;
+        }
+
+        private async Task HandleInternalAsync(MasterDataDocument message)
+        {
+            var validationResult = await _validator.ValidateAsync(message).ConfigureAwait(false);
+            if (!validationResult.IsValid)
+            {
+                var validationErrors = validationResult
+                    .Errors
+                    .Select(error => (ValidationError)error.CustomState)
+                    .ToList()
+                    .AsReadOnly();
+
+                _validationContext.Add(validationErrors);
+            }
+
+            await _mediator.Send(CreateCommandFrom(message)).ConfigureAwait(false);
         }
     }
 }
