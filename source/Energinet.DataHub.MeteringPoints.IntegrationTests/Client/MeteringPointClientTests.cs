@@ -45,6 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Client
 
             // Assert
             response.Should().NotBeNull();
+            response?.MeteringPointId.Should().Be("e4e88496-1bfd-456d-afcc-3aa9ddd4ef72");
         }
     }
 }

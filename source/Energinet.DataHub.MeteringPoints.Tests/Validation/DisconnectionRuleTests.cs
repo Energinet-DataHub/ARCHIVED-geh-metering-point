@@ -40,20 +40,5 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 
             ShouldValidateWithNoErrors(request);
         }
-
-        [Theory]
-        [InlineData(nameof(DisconnectionType.Manual), nameof(MeteringPointType.VEProduction), typeof(DisconnectionTypeMandatoryValidationError))]
-        [InlineData("", nameof(MeteringPointType.Production), typeof(DisconnectionTypeMandatoryValidationError))]
-        [InlineData("Disconnection Test Type", nameof(MeteringPointType.Production), typeof(DisconnectionTypeWrongValueValidationError))]
-        public void DisconnectShouldResultInError(string disconnectionType, string meteringPointType, Type expectedError)
-        {
-            var request = CreateRequest() with
-            {
-                DisconnectionType = disconnectionType,
-                TypeOfMeteringPoint = meteringPointType,
-            };
-
-            ShouldValidateWithSingleError(request, expectedError);
-        }
     }
 }

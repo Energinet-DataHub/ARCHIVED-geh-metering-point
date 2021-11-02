@@ -35,6 +35,7 @@ module "azfun_processing" {
     METERINGPOINT_QUEUE_TOPIC_NAME          = module.sbq_meteringpoint.name
     INTEGRATION_EVENT_QUEUE                 = data.azurerm_key_vault_secret.SHARED_RESOURCES_EVENT_FORWARDED_QUEUE.value
     INTEGRATION_EVENT_QUEUE_CONNECTION      = data.azurerm_key_vault_secret.INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING.value
+    CHARGES_DEFAULT_LINK_RESPONSE_QUEUE     = "create-link-reply"
   }
   dependencies                              = [
     module.appi.dependent_on,
