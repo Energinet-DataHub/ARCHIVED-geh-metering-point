@@ -29,7 +29,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands.Proto
             {
                 CreateDefaultChargeLinksMessages = new Contracts.CreateDefaultChargeLinksMessages()
                 {
-                    CorrelationId = obj.CorrelationId, GsrnNumber = obj.GsrnNumber,
+                    CorrelationId = obj.CorrelationId,
+                    GsrnNumber = obj.GsrnNumber,
                 },
             };
         }

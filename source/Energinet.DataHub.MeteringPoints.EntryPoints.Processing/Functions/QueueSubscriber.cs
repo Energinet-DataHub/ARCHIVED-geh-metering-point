@@ -20,7 +20,7 @@ using MediatR;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
 {
     public class QueueSubscriber
     {

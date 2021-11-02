@@ -14,7 +14,7 @@
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 {
-        public class EventMetadata
+    public class EventMetadata
     {
         public string? MessageType { get; set; }
     }
