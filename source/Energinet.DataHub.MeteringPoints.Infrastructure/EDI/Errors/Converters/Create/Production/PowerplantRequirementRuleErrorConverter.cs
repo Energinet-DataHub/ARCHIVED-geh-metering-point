@@ -13,18 +13,16 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class AssetTypeIsRequiredRuleErrorConverter : ErrorConverter<AssetTypeIsRequiredRuleError>
+    public class PowerplantRequirementRuleErrorConverter : ErrorConverter<PowerPlantRequirementRuleError>
     {
-        protected override ErrorMessage Convert(AssetTypeIsRequiredRuleError validationError)
+        protected override ErrorMessage Convert(PowerPlantRequirementRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-
-            return new("D59", $"AssetType is missing. It must be applied for Production (E18) and Consumption (E17) in net settlement groups other than 0.");
+            return new("D57", $"Power plant for Production (E18) metering point is missing.");
         }
     }
 }

@@ -42,6 +42,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Valida
             RuleFor(createMeteringPoint => createMeteringPoint.MeteringMethod)
                 .NotEmpty()
                 .WithState(createMeteringPoint => new MeteringMethodIsMandatoryValidationError());
+            RuleFor(createMeteringPoint => createMeteringPoint.DisconnectionType)
+                .NotEmpty()
+                .WithState(createMeteringPoint => new DisconnectionTypeMandatoryValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.DisconnectionType));
         }
     }
 }

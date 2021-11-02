@@ -12,19 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production.Rules
 {
-    public class AssetTypeIsRequiredRuleErrorConverter : ErrorConverter<AssetTypeIsRequiredRuleError>
+    public class AssetTypeRequirementRule : IBusinessRule
     {
-        protected override ErrorMessage Convert(AssetTypeIsRequiredRuleError validationError)
+        public AssetTypeRequirementRule(AssetType? assetType)
         {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-
-            return new("D59", $"AssetType is missing. It must be applied for Production (E18) and Consumption (E17) in net settlement groups other than 0.");
+            IsBroken = assetType is null;
         }
+
+        public bool IsBroken { get; }
+
+        public ValidationError ValidationError => new AssetTypeIsRequiredRuleError();
     }
 }

@@ -22,15 +22,21 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Production.Validat
         public RuleSet()
         {
             RuleFor(request => request.NetSettlementGroup)
-                    .Cascade(CascadeMode.Stop)
-                    .NotEmpty()
-                    .WithState(createMeteringPoint => new NetSettlementGroupMandatoryValidationError());
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty()
+                .WithState(createMeteringPoint => new NetSettlementGroupMandatoryValidationError());
             RuleFor(request => request.MeterReadingOccurrence)
-                    .NotEmpty()
-                    .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError());
+                .NotEmpty()
+                .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError());
             RuleFor(createMeteringPoint => createMeteringPoint.MeteringMethod)
-                    .NotEmpty()
-                    .WithState(createMeteringPoint => new MeteringMethodIsMandatoryValidationError());
+                .NotEmpty()
+                .WithState(createMeteringPoint => new MeteringMethodIsMandatoryValidationError());
+            RuleFor(createMeteringPoint => createMeteringPoint.DisconnectionType)
+                .NotEmpty()
+                .WithState(createMeteringPoint => new DisconnectionTypeMandatoryValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.DisconnectionType));
+            RuleFor(createMeteringPoint => createMeteringPoint.PowerPlant)
+                .NotEmpty()
+                .WithState(createMeteringPoint => new PowerPlantValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.PowerPlant));
         }
     }
 }
