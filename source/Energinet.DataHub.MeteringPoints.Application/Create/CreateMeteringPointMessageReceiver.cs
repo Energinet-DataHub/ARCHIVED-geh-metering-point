@@ -33,26 +33,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             _next = next;
         }
 
-        public Task HandleAsync(object message)
+        public Task HandleAsync(MasterDataDocument message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
-            if (message is MasterDataDocument)
-            {
-                var masterDataDocument = (MasterDataDocument)message;
-                var processType = EnumerationType.FromName<BusinessProcessType>(masterDataDocument.ProcessType);
-                if (processType == BusinessProcessType.CreateMeteringPoint)
-                {
-                    return _mediator.Send(message);
-                }
-                else
-                {
-                    return _next?.HandleAsync(message)!;
-                }
-            }
-            else
-            {
-                return _next?.HandleAsync(message)!;
-            }
+            var processType = EnumerationType.FromName<BusinessProcessType>(message.ProcessType);
+            return processType == BusinessProcessType.CreateMeteringPoint ? _mediator.Send(message) : _next?.HandleAsync(message)!;
         }
     }
 }

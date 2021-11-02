@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Common.Messages
 {
@@ -27,6 +27,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common.Messages
         /// </summary>
         /// <param name="message"></param>
         /// <returns><see cref="Task"/></returns>
-        Task HandleAsync(object message);
+        Task HandleAsync(MasterDataDocument message);
     }
 }

@@ -22,6 +22,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 using MediatR;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
+using MasterDataDocument = Energinet.DataHub.MeteringPoints.Application.MarketDocuments.MasterDataDocument;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 {
@@ -59,7 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             // TODO: This must be handled otherwise. Maybe a separate queue for market documents
             if (message is IInternalMarketDocument)
             {
-                await _messageReceiver.HandleAsync(message).ConfigureAwait(false);
+                await _messageReceiver.HandleAsync((MasterDataDocument)message).ConfigureAwait(false);
             }
             else
             {
