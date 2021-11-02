@@ -159,3 +159,4 @@ ulong
 unicode
 NINETYNINE
 MessageHub
+NuGet
