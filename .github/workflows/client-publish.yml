@@ -1,0 +1,114 @@
+# Copyright 2020 Energinet DataHub A/S
+#
+# Licensed under the Apache License, Version 2.0 (the "License2");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Publish Metering Point Client bundle
+
+on:
+  # Build, test, pack and publish release packages
+  # Only executed if Client or Client.Abstraction or this file itself has changed; not if solution file, documentation or tests has changed
+  push:
+    branches:
+      - main
+    paths:
+      - source/Energinet.DataHub.MeteringPoints.Client/**
+      - source/Energinet.DataHub.MeteringPoints.Client.Abstractions/**
+      - .github/workflows/client-publish.yml
+  # Build, test, pack
+  # Executed if Client or Client.Abstraction folder or this file itself has changed; including if documentation or tests has changed
+  pull_request:
+    branches:
+      - main
+    paths:
+      - source/Energinet.DataHub.MeteringPoints.Client/**
+      - source/Energinet.DataHub.MeteringPoints.Client.Abstractions/**
+      - .github/workflows/client-publish.yml
+      - docs/metering-point-client/**
+      - source/Energinet.DataHub.MeteringPoints.IntegrationTests/Client/**
+  # Build, test, pack and publish prerelease packages
+  # Executed if manually triggered
+  workflow_dispatch: {}
+
+env:
+  SOLUTION_FILE_PATH: source/Energinet.DataHub.MeteringPoints.sln
+  BUILD_CONFIGURATION: Release
+  # Conditions
+  PUSH_PACKAGES: ${{ github.event_name != 'pull_request' }}
+  # Tool versions
+  DOTNET_VERSION: '5.0.202'
+
+jobs:
+  build_and_publish:
+    runs-on: ubuntu-latest
+    name: Publish bundle to NuGet.org
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@master
+
+      - name: Setup .NET 3.1 environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x'
+
+      - name: Setup .NET ${{ env.DOTNET_VERSION }} environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v2
+        id: cache-nuget
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }} #hash of project files
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore NuGet packages
+        run: dotnet restore ${{ env.SOLUTION_FILE_PATH }}
+
+      - name: Build solution
+        run: dotnet build ${{ env.SOLUTION_FILE_PATH }} --no-restore --configuration ${{ env.BUILD_CONFIGURATION }}
+
+      - name: Run tests
+        run: dotnet test ${{ env.SOLUTION_FILE_PATH }} --no-build --configuration ${{ env.BUILD_CONFIGURATION }} --verbosity normal
+
+      - name: Get version suffix property value
+        uses: ./.github/actions/get-version-suffix
+        id: get_version_suffix
+
+      - name: Pack MeteringPoints.Client project
+        run: dotnet pack ${{ env.PROJECT_PATH }} --configuration ${{ env.BUILD_CONFIGURATION }} --include-symbols -p:SymbolPackageFormat=snupkg -p:RepositoryCommit=${{ github.sha }} ${{ steps.get_version_suffix.outputs.version_suffix_property }}
+        env:
+          PROJECT_PATH: 'source/Energinet.DataHub.MeteringPoints.Client/Energinet.DataHub.MeteringPoints.Client.csproj'
+
+      - name: Pack MeteringPoints.Client.Abstractions project
+        run: dotnet pack ${{ env.PROJECT_PATH }} --configuration ${{ env.BUILD_CONFIGURATION }} --include-symbols -p:SymbolPackageFormat=snupkg -p:RepositoryCommit=${{ github.sha }} ${{ steps.get_version_suffix.outputs.version_suffix_property }}
+        env:
+          PROJECT_PATH: 'source/Energinet.DataHub.MeteringPoints.Client.Abstractions/Energinet.DataHub.MeteringPoints.Client.Abstractions.csproj'
+
+      - name: Check each NuGet package version does not exists (not looking at prereleases)
+        uses: ./.github/actions/nuget-assert-release-version
+        with:
+          NUPKG_RECURSE_PATH: 'source'
+
+      - name: Push to NuGet.org
+        if: ${{ env.PUSH_PACKAGES == 'true' }}
+        run: dotnet nuget push ${{ env.NUPKG_FILTER_PATTERN }} --api-key ${{ secrets.NUGET_TOKEN }} --source ${{ env.NUGET_FEED_PATH }}
+        env:
+          NUPKG_FILTER_PATTERN: 'source/**/*.nupkg'
+          NUGET_FEED_PATH: 'https://api.nuget.org/v3/index.json'

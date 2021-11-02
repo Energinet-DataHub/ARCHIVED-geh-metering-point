@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
-using MediatR;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Queries
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create.Validation.Errors
 {
-    public class MeteringPointByGsrnQuery : IRequest<MeteringPointDto?>
+    public class PriceAreaCodeRuleError : ValidationError
     {
-        public MeteringPointByGsrnQuery(string gsrnNumber)
+        public PriceAreaCodeRuleError(string priceAreaCode)
         {
-            GsrnNumber = gsrnNumber;
+            PriceAreaCode = priceAreaCode;
         }
 
-        public string GsrnNumber { get; }
+        public string PriceAreaCode { get; }
     }
 }

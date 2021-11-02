@@ -12,18 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
-using MediatR;
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Queries
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create.Validation.Converters
 {
-    public class MeteringPointByGsrnQuery : IRequest<MeteringPointDto?>
+    public class GridAreaCodeFormatRuleErrorConverter : ErrorConverter<GridAreaCodeFormatRuleError>
     {
-        public MeteringPointByGsrnQuery(string gsrnNumber)
+        protected override ErrorMessage Convert(GridAreaCodeFormatRuleError validationError)
         {
-            GsrnNumber = gsrnNumber;
-        }
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-        public string GsrnNumber { get; }
+            return new("?", $"Code of the Grid Area must consist of 3 digits.");
+        }
     }
 }
