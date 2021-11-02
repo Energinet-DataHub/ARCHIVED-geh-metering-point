@@ -19,7 +19,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
     /// <summary>
     /// Internal representation of an actor document
     /// </summary>
-    public interface IInternalMarketDocument : IRequest
+    public interface IInternalMarketDocument
     {
         /// <summary>
         /// Process type
