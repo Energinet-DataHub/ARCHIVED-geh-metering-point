@@ -17,44 +17,34 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.Messages;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
 {
-    public class MasterDataDocumentHandler : IRequestHandler<MasterDataDocument, BusinessProcessResult>
+    public class MasterDataDocumentHandler : IRequestHandler<MasterDataDocument>
     {
         private readonly IValidator<MasterDataDocument> _validator;
         private readonly IMediator _mediator;
         private readonly IBusinessProcessValidationContext _validationContext;
         private readonly IBusinessProcessCommandFactory _commandFactory;
+        private readonly IMessageReceiver _messageReceiver;
 
-        public MasterDataDocumentHandler(IValidator<MasterDataDocument> validator, IMediator mediator, IBusinessProcessValidationContext validationContext, IBusinessProcessCommandFactory commandFactory)
+        public MasterDataDocumentHandler(IValidator<MasterDataDocument> validator, IMediator mediator, IBusinessProcessValidationContext validationContext, IBusinessProcessCommandFactory commandFactory, IMessageReceiver messageReceiver)
         {
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _validationContext = validationContext ?? throw new ArgumentNullException(nameof(validationContext));
             _commandFactory = commandFactory ?? throw new ArgumentNullException(nameof(commandFactory));
+            _messageReceiver = messageReceiver ?? throw new ArgumentNullException(nameof(messageReceiver));
         }
 
-        public async Task<BusinessProcessResult> Handle(MasterDataDocument request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(MasterDataDocument request, CancellationToken cancellationToken)
         {
-            var validationResult = await _validator.ValidateAsync(request, cancellationToken).ConfigureAwait(false);
-            if (!validationResult.IsValid)
-            {
-                var validationErrors = validationResult
-                    .Errors
-                    .Select(error => (ValidationError)error.CustomState)
-                    .ToList()
-                    .AsReadOnly();
-
-                _validationContext.Add(validationErrors);
-            }
-
-            var businessProcessCommand = _commandFactory.CreateFrom(request);
-            var result = await _mediator.Send(businessProcessCommand!, cancellationToken).ConfigureAwait(false);
-            return result;
+            await _messageReceiver.HandleAsync(request).ConfigureAwait(false);
+            return Unit.Value;
         }
     }
 }

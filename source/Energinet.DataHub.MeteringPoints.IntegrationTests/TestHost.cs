@@ -21,8 +21,10 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
+using Energinet.DataHub.MeteringPoints.Application.Common.Messages;
 using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
+using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Create.Exchange;
 using Energinet.DataHub.MeteringPoints.Application.Create.Production;
@@ -38,6 +40,7 @@ using Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.GridAreas.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
 using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
+using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions.ChainOfResponsibility;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas;
@@ -182,6 +185,19 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                     typeof(InternalCommandHandlingBehaviour<,>),
                     typeof(BusinessProcessResultBehavior<,>),
                 });
+
+            // Add message receiver chain
+            _container.AddChain<IMessageReceiver>()
+                .WithHandler<CreateMeteringPointMessageReceiver>()
+                .WithHandler<ConnectMeteringPointMessageReceiver>()
+                .BuildChain();
+
+            // Add process initiator chain for create metering point
+            _container.AddChain<ICreateMeteringPointInitiator<MasterDataDocument>>()
+                .WithHandler<CreateProductionMeteringPointInitiator>()
+                .WithHandler<CreateExchangeMeteringPointInitiator>()
+                .WithHandler<CreateConsumptionMeteringPointInitiator>()
+                .BuildChain();
 
             _container.Verify();
 
