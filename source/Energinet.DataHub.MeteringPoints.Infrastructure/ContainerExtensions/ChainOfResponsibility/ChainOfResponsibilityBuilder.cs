@@ -93,7 +93,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions.Ch
 
                 if (type == typeof(TChain))
                 {
-                    parametersInstances.Add(InstantiateRecursively(services, current + 1));
+                    if (current == _handlers.Count - 1)
+                    {
+                        parametersInstances.Add(null!);
+                    }
+                    else
+                    {
+                        parametersInstances.Add(InstantiateRecursively(services, current + 1));
+                    }
                 }
                 else
                 {
