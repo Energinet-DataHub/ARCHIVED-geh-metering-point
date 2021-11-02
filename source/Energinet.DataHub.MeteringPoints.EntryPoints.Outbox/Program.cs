@@ -15,8 +15,12 @@
 using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
+using Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages;
+using Energinet.DataHub.Charges.Libraries.Factories;
 using Energinet.DataHub.MessageHub.Client;
 using Energinet.DataHub.MessageHub.Client.SimpleInjector;
+using Energinet.DataHub.MeteringPoints.Application.Integrations;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
@@ -95,6 +99,20 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                 Environment.GetEnvironmentVariable("SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING");
             container.Register<ServiceBusClient>(
                 () => new ServiceBusClient(connectionString),
+                Lifestyle.Singleton);
+
+            // SB for communicating with Charges
+            container.Register<DefaultChargeLinkClient>(
+                () => new DefaultChargeLinkClient(
+                    container.GetInstance<ServiceBusClient>(),
+                    new ServiceBusRequestSenderFactory(),
+                    Environment.GetEnvironmentVariable("CHARGES_DEFAULT_LINK_RESPONSE_QUEUE") ?? throw new InvalidOperationException()),
+                Lifestyle.Singleton);
+            container.Register<DefaultChargeLinkMessagesRequestClient>(
+                () => new DefaultChargeLinkMessagesRequestClient(
+                    container.GetInstance<ServiceBusClient>(),
+                    new ServiceBusRequestSenderFactory(),
+                    Environment.GetEnvironmentVariable("CHARGES_DEFAULT_MESSAGES_RESPONSE_QUEUE") ?? throw new InvalidOperationException()),
                 Lifestyle.Singleton);
 
             container.Register(

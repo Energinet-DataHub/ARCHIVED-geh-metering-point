@@ -12,10 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
+using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
+
+namespace Energinet.DataHub.MeteringPoints.Application.Integrations.ChargeLinks.Messages
 {
-    public class EventMetadata
+    public class CreateDefaultChargeLinksMessages : InternalCommand
     {
-        public string? MessageType { get; set; }
+        public CreateDefaultChargeLinksMessages(string gsrnNumber, string correlationId)
+        {
+            GsrnNumber = gsrnNumber;
+            CorrelationId = correlationId;
+        }
+
+        public string GsrnNumber { get; private set; }
+
+        public string CorrelationId { get; private set; }
     }
 }

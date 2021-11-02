@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
+using MediatR;
+
+namespace Energinet.DataHub.MeteringPoints.Application.Integrations.ChargeLinks.Create
 {
-    public class EventMetadata
-    {
-        public string? MessageType { get; set; }
-    }
+    public record RequestDefaultChargeLinks(string GsrnNumber, string CorrelationId) : IRequest;
 }

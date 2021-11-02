@@ -13,22 +13,20 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
-using Google.Protobuf;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.MessageDequeued
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Protobuf.Mappers
 {
-    public class MeteringPointMessageDequeuedOutBoundMapper : ProtobufOutboundMapper<MeteringPointMessageDequeuedIntegrationEvent>
+    public class CreateDefaultChargeLinksMessagesMapper : ProtobufInboundMapper<CreateDefaultChargeLinksMessages>
     {
-        protected override IMessage Convert(MeteringPointMessageDequeuedIntegrationEvent obj)
+        protected override IInboundMessage Convert(CreateDefaultChargeLinksMessages obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 
-            return new IntegrationEventContracts.MeteringPointMessageDequeuedIntegrationEvent
-            {
-                Correlation = obj.Correlation,
-                GsrnNumber = obj.GsrnNumber,
-            };
+            return new Application.Integrations.ChargeLinks.Messages.CreateDefaultChargeLinksMessages(
+                obj.GsrnNumber, obj.CorrelationId);
         }
     }
 }

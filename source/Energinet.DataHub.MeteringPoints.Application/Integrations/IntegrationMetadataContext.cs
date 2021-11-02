@@ -12,10 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
+using System;
+using NodaTime;
+
+namespace Energinet.DataHub.MeteringPoints.Application.Integrations
 {
-    public class EventMetadata
+    public class IntegrationMetadataContext : IIntegrationMetadataContext
     {
-        public string? MessageType { get; set; }
+        public Instant Timestamp { get; private set; }
+
+        public string? CorrelationId { get; private set; }
+
+        public Guid EventId { get; private set; }
+
+        public void SetMetadata(Instant timestamp, string correlationId, Guid eventId)
+        {
+            Timestamp = timestamp;
+            CorrelationId = correlationId;
+            EventId = eventId;
+        }
     }
 }

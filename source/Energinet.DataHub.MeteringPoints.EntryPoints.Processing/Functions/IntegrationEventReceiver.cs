@@ -13,16 +13,14 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.Eventing.Reader;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notifications;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
-using MediatR;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
 {
     public class IntegrationEventReceiver
     {
