@@ -23,9 +23,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
 {
     public class CreateMeteringPointMessageReceiver : MessageReceiver<MasterDataDocument>
     {
-        private readonly ICreateMeteringPointInitiator<MasterDataDocument> _processInitiator;
+        private readonly ICreateMeteringPointInitiator _processInitiator;
 
-        public CreateMeteringPointMessageReceiver(IMessageReceiver<MasterDataDocument> next, ICreateMeteringPointInitiator<MasterDataDocument> processInitiator)
+        public CreateMeteringPointMessageReceiver(IMessageReceiver<MasterDataDocument> next, ICreateMeteringPointInitiator processInitiator)
             : base(next)
         {
             _processInitiator = processInitiator ?? throw new ArgumentNullException(nameof(processInitiator));
@@ -40,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
 
         protected override Task ProcessAsync(MasterDataDocument message)
         {
-            return _processInitiator.ProcessAsync(message);
+            return _processInitiator.HandleAsync(message);
         }
     }
 }

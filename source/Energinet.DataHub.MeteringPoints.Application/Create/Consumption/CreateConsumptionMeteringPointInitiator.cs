@@ -16,6 +16,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.Messages;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -24,25 +25,32 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
 {
-    public class CreateConsumptionMeteringPointInitiator : ICreateMeteringPointInitiator<MasterDataDocument>
+    public class CreateConsumptionMeteringPointInitiator : MessageReceiver<MasterDataDocument>, ICreateMeteringPointInitiator
     {
         private readonly IMediator _mediator;
-        private readonly ICreateMeteringPointInitiator<MasterDataDocument> _next;
         private readonly IValidator<MasterDataDocument> _validator;
         private readonly IBusinessProcessValidationContext _validationContext;
 
-        public CreateConsumptionMeteringPointInitiator(IMediator mediator, ICreateMeteringPointInitiator<MasterDataDocument> next, IValidator<MasterDataDocument> validator, IBusinessProcessValidationContext validationContext)
+        public CreateConsumptionMeteringPointInitiator(IMediator mediator, ICreateMeteringPointInitiator next, IValidator<MasterDataDocument> validator, IBusinessProcessValidationContext validationContext)
+            : base(next)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            _next = next;
             _validator = validator;
             _validationContext = validationContext ?? throw new ArgumentNullException(nameof(validationContext));
         }
 
-        public Task ProcessAsync(MasterDataDocument message)
+        protected override bool ShouldHandle(MasterDataDocument message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
-            return HandleOrCallNextAsync(message);
+            var meteringPointType = EnumerationType.FromName<MeteringPointType>(message.TypeOfMeteringPoint);
+            return meteringPointType == MeteringPointType.Consumption;
+        }
+
+        protected override async Task ProcessAsync(MasterDataDocument message)
+        {
+            if (message == null) throw new ArgumentNullException(nameof(message));
+            await ValidateMessageAsync(message).ConfigureAwait(false);
+            await _mediator.Send(CreateCommandFrom(message)).ConfigureAwait(false);
         }
 
         private static CreateConsumptionMeteringPoint CreateCommandFrom(MasterDataDocument document)
@@ -82,29 +90,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
             };
         }
 
-        private Task HandleOrCallNextAsync(MasterDataDocument message)
+        private Task ValidateMessageAsync(MasterDataDocument message)
         {
-            var meteringPointType = EnumerationType.FromName<MeteringPointType>(message.TypeOfMeteringPoint);
-            return meteringPointType == MeteringPointType.Consumption
-                ? HandleInternalAsync(message)
-                : _next?.ProcessAsync(message)!;
-        }
-
-        private async Task HandleInternalAsync(MasterDataDocument message)
-        {
-            var validationResult = await _validator.ValidateAsync(message).ConfigureAwait(false);
-            if (!validationResult.IsValid)
-            {
-                var validationErrors = validationResult
-                    .Errors
-                    .Select(error => (ValidationError)error.CustomState)
-                    .ToList()
-                    .AsReadOnly();
-
-                _validationContext.Add(validationErrors);
-            }
-
-            await _mediator.Send(CreateCommandFrom(message)).ConfigureAwait(false);
+            return _validationContext.ValidateAsync(_validator, message);
         }
     }
 }

@@ -12,19 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Common.Messages;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Create
 {
     /// <summary>
     /// Initiates the business process of creating a new metering point
     /// </summary>
-    public interface ICreateMeteringPointInitiator<in TMessage>
+    public interface ICreateMeteringPointInitiator : IMessageReceiver<MasterDataDocument>
     {
-        /// <summary>
-        /// Initiate process
-        /// </summary>
-        /// <param name="message"></param>
-        Task ProcessAsync(TMessage message);
     }
 }

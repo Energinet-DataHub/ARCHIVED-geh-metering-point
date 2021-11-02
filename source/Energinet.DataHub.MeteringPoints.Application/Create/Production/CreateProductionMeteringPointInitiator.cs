@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.Messages;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -24,26 +24,32 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Create.Production
 {
-    public class CreateProductionMeteringPointInitiator : ICreateMeteringPointInitiator<MasterDataDocument>
+    public class CreateProductionMeteringPointInitiator : MessageReceiver<MasterDataDocument>, ICreateMeteringPointInitiator
     {
         private readonly IMediator _mediator;
-        private readonly ICreateMeteringPointInitiator<MasterDataDocument> _next;
         private readonly IValidator<MasterDataDocument> _validator;
         private readonly IBusinessProcessValidationContext _validationContext;
 
-        public CreateProductionMeteringPointInitiator(IMediator mediator, ICreateMeteringPointInitiator<MasterDataDocument> next, IValidator<MasterDataDocument> validator, IBusinessProcessValidationContext validationContext)
+        public CreateProductionMeteringPointInitiator(IMediator mediator, ICreateMeteringPointInitiator next, IValidator<MasterDataDocument> validator, IBusinessProcessValidationContext validationContext)
+            : base(next)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            _next = next;
             _validator = validator;
             _validationContext = validationContext ?? throw new ArgumentNullException(nameof(validationContext));
         }
 
-        public Task ProcessAsync(MasterDataDocument message)
+        protected override bool ShouldHandle(MasterDataDocument message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
             var meteringPointType = EnumerationType.FromName<MeteringPointType>(message.TypeOfMeteringPoint);
-            return meteringPointType == MeteringPointType.Production ? _mediator.Send(CreateCommandFrom(message)) : _next?.ProcessAsync(message)!;
+            return meteringPointType == MeteringPointType.Production;
+        }
+
+        protected override async Task ProcessAsync(MasterDataDocument message)
+        {
+            if (message == null) throw new ArgumentNullException(nameof(message));
+            await _validationContext.ValidateAsync(_validator, message).ConfigureAwait(false);
+            await _mediator.Send(CreateCommandFrom(message)).ConfigureAwait(false);
         }
 
         private static CreateProductionMeteringPoint CreateCommandFrom(MasterDataDocument document)
@@ -79,31 +85,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Production
                 PhysicalConnectionCapacity = document.PhysicalConnectionCapacity,
                 CitySubDivisionName = document.CitySubDivisionName,
             };
-        }
-
-        private Task HandleOrCallNextAsync(MasterDataDocument message)
-        {
-            var meteringPointType = EnumerationType.FromName<MeteringPointType>(message.TypeOfMeteringPoint);
-            return meteringPointType == MeteringPointType.Production
-                ? HandleInternalAsync(message)
-                : _next?.ProcessAsync(message)!;
-        }
-
-        private async Task HandleInternalAsync(MasterDataDocument message)
-        {
-            var validationResult = await _validator.ValidateAsync(message).ConfigureAwait(false);
-            if (!validationResult.IsValid)
-            {
-                var validationErrors = validationResult
-                    .Errors
-                    .Select(error => (ValidationError)error.CustomState)
-                    .ToList()
-                    .AsReadOnly();
-
-                _validationContext.Add(validationErrors);
-            }
-
-            await _mediator.Send(CreateCommandFrom(message)).ConfigureAwait(false);
         }
     }
 }
