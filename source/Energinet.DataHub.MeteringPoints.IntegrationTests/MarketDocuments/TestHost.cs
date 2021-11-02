@@ -30,6 +30,7 @@ using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.GridAreas.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
 using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
@@ -38,6 +39,8 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
@@ -96,7 +99,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
             _container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Singleton);
             _container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
             _container.Register<ISystemDateTimeProvider, SystemDateTimeProviderStub>(Lifestyle.Singleton);
+
+            _container.Register(typeof(IBusinessProcessResultHandler<CreateConsumptionMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateConsumptionMeteringPoint>), Lifestyle.Scoped);
+            _container.Register(typeof(IBusinessProcessResultHandler<CreateProductionMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateProductionMeteringPoint>), Lifestyle.Scoped);
+            _container.Register(typeof(IBusinessProcessResultHandler<CreateExchangeMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateExchangeMeteringPoint>), Lifestyle.Scoped);
+            _container.Register(typeof(IBusinessProcessResultHandler<ConnectMeteringPoint>), typeof(ConnectMeteringPointResultHandler), Lifestyle.Scoped);
+            _container.Register(typeof(IBusinessProcessResultHandler<CreateGridArea>), typeof(CreateGridAreaNullResultHandler), Lifestyle.Singleton);
+
             _container.Register<IValidator<MasterDataDocument>, ValidationRuleSet>(Lifestyle.Scoped);
+            _container.Register<IValidator<ConnectMeteringPoint>, ConnectMeteringPointRuleSet>(Lifestyle.Scoped);
+            _container.Register<IValidator<CreateGridArea>, CreateGridAreaRuleSet>(Lifestyle.Scoped);
+            _container.Register<IValidator<CreateConsumptionMeteringPoint>, Application.Create.Consumption.Validation.RuleSet>(Lifestyle.Scoped);
+            _container.Register<IValidator<CreateProductionMeteringPoint>, NullValidationSet<CreateProductionMeteringPoint>>(Lifestyle.Scoped);
+            _container.Register<IValidator<CreateExchangeMeteringPoint>, Application.Create.Exchange.Validation.RuleSet>(Lifestyle.Scoped);
+
             _container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Singleton);
             _container.Register<IBusinessProcessValidationContext, BusinessProcessValidationContext>(Lifestyle.Scoped);
             _container.Register<IBusinessProcessCommandFactory, TestBusinessProcessCommandFactory>(Lifestyle.Singleton);
@@ -112,7 +128,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
 
             var testAssembly = typeof(TestBusinessRequest).Assembly;
             _container.RegisterSingleton<IMediator, Mediator>();
-            _container.Register(typeof(IRequestHandler<MasterDataDocument>), typeof(MasterDataDocumentHandler));
+            _container.Register(typeof(IRequestHandler<MasterDataDocument, Unit>), typeof(MasterDataDocumentHandler));
             _container.Register(typeof(IRequestHandler<TestBusinessRequest, BusinessProcessResult>), typeof(TestBusinessRequestHandler));
 
             var pipelineBehaviors = new[]
@@ -125,6 +141,19 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
             _container.Register(() => new ServiceFactory(_container.GetInstance), Lifestyle.Singleton);
 
             _container.Register<IValidator<TestBusinessRequest>, NullValidationSet<TestBusinessRequest>>(Lifestyle.Scoped);
+
+            // Add message receiver chain
+            _container.AddChain<IMessageReceiver>()
+                .WithHandler<CreateMeteringPointMessageReceiver>()
+                .WithHandler<ConnectMeteringPointMessageReceiver>()
+                .BuildChain();
+
+            // Add process initiator chain for create metering point
+            _container.AddChain<ICreateMeteringPointInitiator<MasterDataDocument>>()
+                .WithHandler<CreateProductionMeteringPointInitiator>()
+                .WithHandler<CreateExchangeMeteringPointInitiator>()
+                .WithHandler<CreateConsumptionMeteringPointInitiator>()
+                .BuildChain();
 
             _container.Verify();
 
