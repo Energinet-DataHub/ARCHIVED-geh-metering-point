@@ -236,7 +236,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
                     DisconnectionType = "invalid_dc_type",
                 };
 
-            await SendCommandAsync(request).ConfigureAwait(false);
+            await SendMessageAsync(request).ConfigureAwait(false);
 
             AssertValidationError("D02");
         }

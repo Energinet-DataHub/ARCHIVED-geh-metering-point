@@ -30,7 +30,6 @@ using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI.GridAreas.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
 using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
@@ -104,11 +103,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
             _container.Register(typeof(IBusinessProcessResultHandler<CreateProductionMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateProductionMeteringPoint>), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<CreateExchangeMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateExchangeMeteringPoint>), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<ConnectMeteringPoint>), typeof(ConnectMeteringPointResultHandler), Lifestyle.Scoped);
-            _container.Register(typeof(IBusinessProcessResultHandler<CreateGridArea>), typeof(CreateGridAreaNullResultHandler), Lifestyle.Singleton);
 
             _container.Register<IValidator<MasterDataDocument>, ValidationRuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<ConnectMeteringPoint>, ConnectMeteringPointRuleSet>(Lifestyle.Scoped);
-            _container.Register<IValidator<CreateGridArea>, CreateGridAreaRuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<CreateConsumptionMeteringPoint>, Application.Create.Consumption.Validation.RuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<CreateProductionMeteringPoint>, NullValidationSet<CreateProductionMeteringPoint>>(Lifestyle.Scoped);
             _container.Register<IValidator<CreateExchangeMeteringPoint>, Application.Create.Exchange.Validation.RuleSet>(Lifestyle.Scoped);
