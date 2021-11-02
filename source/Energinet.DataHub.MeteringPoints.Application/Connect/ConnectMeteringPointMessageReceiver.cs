@@ -37,7 +37,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
             var processType = EnumerationType.FromName<BusinessProcessType>(message.ProcessType);
-            return processType == BusinessProcessType.ConnectMeteringPoint ? _mediator.Send(message) : _next?.HandleAsync(message)!;
+            return processType == BusinessProcessType.ConnectMeteringPoint ? _mediator.Send(CreateCommandFrom(message)) : _next?.HandleAsync(message)!;
+        }
+
+        private static ConnectMeteringPoint CreateCommandFrom(MasterDataDocument document)
+        {
+            return new ConnectMeteringPoint(document.GsrnNumber, document.EffectiveDate, document.TransactionId);
         }
     }
 }
