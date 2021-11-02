@@ -157,7 +157,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<INotificationReceiver, NotificationReceiver>(Lifestyle.Scoped);
 
             container.Register<IBusinessProcessValidationContext, BusinessProcessValidationContext>(Lifestyle.Scoped);
-            container.Register<IBusinessProcessCommandFactory, BusinessProcessCommandFactory>(Lifestyle.Singleton);
 
             // TODO: remove this when infrastructure and application has been split into more assemblies.
             container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageSerializer>(Lifestyle.Singleton);
