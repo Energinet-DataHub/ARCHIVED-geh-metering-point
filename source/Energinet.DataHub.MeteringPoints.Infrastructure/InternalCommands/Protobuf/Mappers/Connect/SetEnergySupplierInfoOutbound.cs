@@ -13,21 +13,26 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.Connect;
+using Energinet.DataHub.MeteringPoints.Contracts;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Google.Protobuf;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands.Protobuf.Mappers.Connect
 {
-    public class SetEnergySupplierInfoOutbound : ProtobufOutboundMapper<SetEnergySupplierInfo>
+    public class SetEnergySupplierInfoOutbound : ProtobufOutboundMapper<Application.Connect.SetEnergySupplierInfo>
     {
         protected override IMessage Convert(Application.Connect.SetEnergySupplierInfo obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
-            return new InternalCommandsContracts.SetEnergySupplierInfo()
+            return new MeteringPointEnvelope()
             {
-                Id = obj.Id.ToString(),
-                MeteringPointGsrn = obj.MeteringPointGsrn,
+                SetEnergySupplierInfo = new SetEnergySupplierInfo
+                {
+                    Id = obj.Id.ToString(),
+                    MeteringPointGsrn = obj.MeteringPointGsrn,
+                    EffectiveDate = obj.StartOfSupply.ToTimestamp(),
+                },
             };
         }
     }
