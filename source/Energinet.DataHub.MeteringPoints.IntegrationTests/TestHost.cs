@@ -342,6 +342,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             Assert.NotNull(await GetService<IMeteringPointRepository>().GetByGsrnNumberAsync(GsrnNumber.Create(gsrnNumber)).ConfigureAwait(false));
         }
 
+        protected Task SendMessageAsync(MasterDataDocument message)
+        {
+            return GetService<IMessageReceiver>().HandleAsync(message);
+        }
+
         private void CleanupDatabase()
         {
             var cleanupStatement = new StringBuilder();

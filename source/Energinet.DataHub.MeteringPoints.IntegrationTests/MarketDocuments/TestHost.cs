@@ -128,7 +128,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
 
             var testAssembly = typeof(TestBusinessRequest).Assembly;
             _container.RegisterSingleton<IMediator, Mediator>();
-            _container.Register(typeof(IRequestHandler<MasterDataDocument, Unit>), typeof(MasterDataDocumentHandler));
+            _container.Register(typeof(IRequestHandler<MasterDataDocument>), typeof(MasterDataDocumentHandler));
             _container.Register(typeof(IRequestHandler<TestBusinessRequest, BusinessProcessResult>), typeof(TestBusinessRequestHandler));
 
             var pipelineBehaviors = new[]

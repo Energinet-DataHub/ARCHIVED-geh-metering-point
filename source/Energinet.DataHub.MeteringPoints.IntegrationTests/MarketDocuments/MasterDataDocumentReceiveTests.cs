@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Common.Messages;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -41,7 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
                     CountryCode = invalidCountryCode,
                 };
 
-            await SendCommandAsync(request).ConfigureAwait(false);
+            await SendMessageAsync(request).ConfigureAwait(false);
 
             AssertValidationError("E86");
         }
@@ -55,7 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
                     NetSettlementGroup = "Invalid_netsettlement_group_value",
                 };
 
-            await SendCommandAsync(request).ConfigureAwait(false);
+            await SendMessageAsync(request).ConfigureAwait(false);
 
             AssertValidationError("D02");
         }
@@ -70,7 +71,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
                     MaximumPower = invalidPowerLimit,
                 };
 
-            await SendCommandAsync(document).ConfigureAwait(false);
+            await SendMessageAsync(document).ConfigureAwait(false);
 
             AssertValidationError("E86");
         }
@@ -85,7 +86,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
                     MaximumCurrent = invalidCurrent,
                 };
 
-            await SendCommandAsync(request).ConfigureAwait(false);
+            await SendMessageAsync(request).ConfigureAwait(false);
 
             AssertValidationError("E86");
         }
@@ -100,7 +101,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
                     LocationDescription = invalidLocationDescription,
                 };
 
-            await SendCommandAsync(request).ConfigureAwait(false);
+            await SendMessageAsync(request).ConfigureAwait(false);
 
             AssertValidationError("E86");
         }
@@ -117,7 +118,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
                     MeterNumber = null,
                 };
 
-            await SendCommandAsync(request).ConfigureAwait(false);
+            await SendMessageAsync(request).ConfigureAwait(false);
 
             AssertValidationError("E86");
         }
@@ -132,7 +133,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
                     GeoInfoReference = invalidGeoInfoReference,
                 };
 
-            await SendCommandAsync(request).ConfigureAwait(false);
+            await SendMessageAsync(request).ConfigureAwait(false);
 
             AssertValidationError("E86");
         }
@@ -147,7 +148,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
                     IsActualAddress = null,
                 };
 
-            await SendCommandAsync(request).ConfigureAwait(false);
+            await SendMessageAsync(request).ConfigureAwait(false);
 
             AssertValidationError("D63");
         }
@@ -162,7 +163,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
                     ConnectionType = invalidConnectionType,
                 };
 
-            await SendCommandAsync(request).ConfigureAwait(false);
+            await SendMessageAsync(request).ConfigureAwait(false);
 
             AssertValidationError("D02");
         }
@@ -176,7 +177,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
                     MeasureUnitType = string.Empty,
                 };
 
-            await SendCommandAsync(request).ConfigureAwait(false);
+            await SendMessageAsync(request).ConfigureAwait(false);
 
             AssertValidationError("D02");
         }
@@ -192,7 +193,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
                     MeasureUnitType = measurementUnitType,
                 };
 
-            await SendCommandAsync(request).ConfigureAwait(false);
+            await SendMessageAsync(request).ConfigureAwait(false);
 
             AssertValidationError("D02");
         }
@@ -206,7 +207,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
                     MeterReadingOccurrence = "Not_valid_Reading_occurence_value",
                 };
 
-            await SendCommandAsync(request).ConfigureAwait(false);
+            await SendMessageAsync(request).ConfigureAwait(false);
 
             AssertValidationError("D02");
         }
@@ -220,7 +221,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
                     SettlementMethod = "Invalid_Method_Name",
                 };
 
-            await SendCommandAsync(request).ConfigureAwait(false);
+            await SendMessageAsync(request).ConfigureAwait(false);
 
             AssertValidationError("D15");
         }
@@ -234,7 +235,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
                     MeteringMethod = "Invalid_value",
                 };
 
-            await SendCommandAsync(request).ConfigureAwait(false);
+            await SendMessageAsync(request).ConfigureAwait(false);
 
             AssertValidationError("D02");
         }
@@ -248,8 +249,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
                     AssetType = "invalid_value",
                 };
 
-            await SendCommandAsync(request).ConfigureAwait(false);
-
+            await SendMessageAsync(request).ConfigureAwait(false);
             AssertValidationError("D59");
         }
 
@@ -294,6 +294,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
                 SampleData.GeoInfoReference,
                 SampleData.MeasurementUnitType,
                 SampleData.ScheduledMeterReadingDate);
+        }
+
+        private Task SendMessageAsync(MasterDataDocument message)
+        {
+            return GetService<IMessageReceiver>().HandleAsync(message);
         }
     }
 }

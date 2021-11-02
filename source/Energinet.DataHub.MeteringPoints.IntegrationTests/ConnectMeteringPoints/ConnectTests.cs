@@ -49,7 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             var createMeteringPointRequest = CreateMeteringPointRequest();
             var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
 
-            await SendCommandAsync(createMeteringPointRequest).ConfigureAwait(false);
+            await SendMessageAsync(createMeteringPointRequest).ConfigureAwait(false);
             await MarkAsEnergySupplierAssigned(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
             await SendCommandAsync(connectMeteringPointRequest).ConfigureAwait(false);
 
@@ -62,7 +62,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             var createMeteringPointRequest = CreateMeteringPointRequest();
             var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
 
-            await SendCommandAsync(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await SendMessageAsync(createMeteringPointRequest).ConfigureAwait(false);
             await MarkAsEnergySupplierAssigned(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
             await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
@@ -75,7 +75,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             var createMeteringPointRequest = CreateMeteringPointRequest();
             var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
 
-            await SendCommandAsync(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await SendMessageAsync(createMeteringPointRequest).ConfigureAwait(false);
             await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
             AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConnectMeteringPointRejected);
@@ -87,7 +87,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             var createMeteringPointRequest = CreateMeteringPointRequest();
             var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
 
-            await SendCommandAsync(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await SendMessageAsync(createMeteringPointRequest).ConfigureAwait(false);
             await MarkAsEnergySupplierAssigned(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
             await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
@@ -104,7 +104,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
                 GsrnNumber = "This is not a valid GSRN number",
             };
 
-            await SendCommandAsync(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await SendMessageAsync(createMeteringPointRequest).ConfigureAwait(false);
             await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
             AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConnectMeteringPointRejected);
@@ -127,7 +127,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
 
             var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
 
-            await SendCommandAsync(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await SendMessageAsync(createMeteringPointRequest).ConfigureAwait(false);
             await MarkAsEnergySupplierAssigned(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
             await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
             await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
