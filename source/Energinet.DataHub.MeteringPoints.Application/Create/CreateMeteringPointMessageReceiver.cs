@@ -26,18 +26,20 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
     {
         private readonly IMediator _mediator;
         private readonly IMessageReceiver _next;
+        private readonly ICreateMeteringPointInitiator<MasterDataDocument> _processInitiator;
 
-        public CreateMeteringPointMessageReceiver(IMediator mediator, IMessageReceiver next)
+        public CreateMeteringPointMessageReceiver(IMediator mediator, IMessageReceiver next, ICreateMeteringPointInitiator<MasterDataDocument> processInitiator)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _next = next;
+            _processInitiator = processInitiator ?? throw new ArgumentNullException(nameof(processInitiator));
         }
 
         public Task HandleAsync(MasterDataDocument message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
             var processType = EnumerationType.FromName<BusinessProcessType>(message.ProcessType);
-            return processType == BusinessProcessType.CreateMeteringPoint ? _mediator.Send(message) : _next?.HandleAsync(message)!;
+            return processType == BusinessProcessType.CreateMeteringPoint ? _processInitiator.ProcessAsync(message) : _next?.HandleAsync(message)!;
         }
     }
 }
