@@ -13,11 +13,13 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using FluentValidation;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
@@ -26,18 +28,21 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
     {
         private readonly IMediator _mediator;
         private readonly ICreateMeteringPointInitiator<MasterDataDocument> _next;
+        private readonly IValidator<MasterDataDocument> _validator;
+        private readonly IBusinessProcessValidationContext _validationContext;
 
-        public CreateConsumptionMeteringPointInitiator(IMediator mediator, ICreateMeteringPointInitiator<MasterDataDocument> next)
+        public CreateConsumptionMeteringPointInitiator(IMediator mediator, ICreateMeteringPointInitiator<MasterDataDocument> next, IValidator<MasterDataDocument> validator, IBusinessProcessValidationContext validationContext)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _next = next;
+            _validator = validator;
+            _validationContext = validationContext ?? throw new ArgumentNullException(nameof(validationContext));
         }
 
         public Task ProcessAsync(MasterDataDocument message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
-            var meteringPointType = EnumerationType.FromName<MeteringPointType>(message.TypeOfMeteringPoint);
-            return meteringPointType == MeteringPointType.Consumption ? _mediator.Send(CreateCommandFrom(message)) : _next?.ProcessAsync(message)!;
+            return HandleOrCallNextAsync(message);
         }
 
         private static CreateConsumptionMeteringPoint CreateCommandFrom(MasterDataDocument document)
@@ -75,6 +80,31 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
                 CitySubDivisionName = document.CitySubDivisionName,
                 ScheduledMeterReadingDate = document.ScheduledMeterReadingDate,
             };
+        }
+
+        private Task HandleOrCallNextAsync(MasterDataDocument message)
+        {
+            var meteringPointType = EnumerationType.FromName<MeteringPointType>(message.TypeOfMeteringPoint);
+            return meteringPointType == MeteringPointType.Consumption
+                ? HandleInternalAsync(message)
+                : _next?.ProcessAsync(message)!;
+        }
+
+        private async Task HandleInternalAsync(MasterDataDocument message)
+        {
+            var validationResult = await _validator.ValidateAsync(message).ConfigureAwait(false);
+            if (!validationResult.IsValid)
+            {
+                var validationErrors = validationResult
+                    .Errors
+                    .Select(error => (ValidationError)error.CustomState)
+                    .ToList()
+                    .AsReadOnly();
+
+                _validationContext.Add(validationErrors);
+            }
+
+            await _mediator.Send(CreateCommandFrom(message)).ConfigureAwait(false);
         }
     }
 }
