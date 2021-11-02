@@ -202,6 +202,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             // Add process initiator chain for create metering point
             container.AddChain<ICreateMeteringPointInitiator<MasterDataDocument>>()
+                .WithHandler<CreateExchangeMeteringPointInitiator>()
                 .WithHandler<CreateConsumptionMeteringPointInitiator>()
                 .BuildChain();
         }
