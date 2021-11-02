@@ -14,6 +14,9 @@
 
 using System;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.Messages;
+using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 using MediatR;
@@ -28,17 +31,20 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor _messageExtractor;
         private readonly IMediator _mediator;
+        private readonly IMessageReceiver _messageReceiver;
 
         public QueueSubscriber(
             ILogger logger,
             ICorrelationContext correlationContext,
             MessageExtractor messageExtractor,
-            IMediator mediator)
+            IMediator mediator,
+            IMessageReceiver messageReceiver)
         {
             _logger = logger;
             _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
             _mediator = mediator;
+            _messageReceiver = messageReceiver ?? throw new ArgumentNullException(nameof(messageReceiver));
         }
 
         [Function("QueueSubscriber")]
@@ -50,7 +56,15 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             var message = await _messageExtractor.ExtractAsync(data).ConfigureAwait(false);
 
-            var result = await _mediator.Send(message).ConfigureAwait(false);
+            // TODO: This must be handled otherwise. Maybe a separate queue for market documents
+            if (message is IInternalMarketDocument)
+            {
+                await _messageReceiver.HandleAsync(message).ConfigureAwait(false);
+            }
+            else
+            {
+                await _mediator.Send(message).ConfigureAwait(false);
+            }
 
             _logger.LogInformation("Dequeued with correlation id: {correlationId}", _correlationContext.Id);
         }
