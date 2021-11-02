@@ -72,10 +72,21 @@ message SetEnergySupplierInfo {
   google.protobuf.Timestamp effective_date = 3; // Date which the change of supplier goes into effect.
 }
 
+message CreateDefaultChargeLinks {
+    string gsrnNumber = 1;
+    string correlationId = 2;
+}
+
+message CreateDefaultChargeLinksMessages {
+    string gsrnNumber = 1;
+    string correlationId = 2;
+}
+
 message MeteringPointEnvelope {
   oneof MeteringPointMessages {
     MasterDataDocument masterDataDocument = 1;
-    SetEnergySupplierInfo setEnergySupplierInfo = 2;
+    CreateDefaultChargeLinks createDefaultChargeLinks = 2;
+    CreateDefaultChargeLinksMessages createDefaultChargeLinksMessages = 3;   
+    SetEnergySupplierInfo setEnergySupplierInfo = 4;
   }
 }
-

@@ -20,7 +20,7 @@ option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEventCont
 /**
  * This message is sent out when a metering point message is dequeued in MessageHub.
  */
-message MeteringPointMessageDequeued {
+message MeteringPointMessageDequeuedIntegrationEvent {
  
   string correlation = 1; // Correlation ID used for tracking
   string gsrnNumber = 2; // Gsrn number of a metering point  

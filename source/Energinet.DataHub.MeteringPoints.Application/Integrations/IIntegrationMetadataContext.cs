@@ -15,7 +15,7 @@
 using System;
 using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
+namespace Energinet.DataHub.MeteringPoints.Application.Integrations
 {
     /// <summary>
     /// Context for the current fetched integration event scope

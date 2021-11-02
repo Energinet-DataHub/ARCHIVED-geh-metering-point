@@ -13,21 +13,17 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production.Rules
 {
-    public class CapacityRequirementRule : IBusinessRule
+    public class PowerPlantRequirementRuleError : ValidationError
     {
-        public CapacityRequirementRule(Capacity? capacity, NetSettlementGroup netSettlementGroup)
+        public PowerPlantRequirementRuleError(GsrnNumber meteringPointGsrn)
         {
-            IsBroken = netSettlementGroup != NetSettlementGroup.Zero && capacity == null;
-            ValidationError = new CapacityIsRequiredRuleError();
+            MeteringPointGSRN = meteringPointGsrn;
         }
 
-        public bool IsBroken { get; }
-
-        public ValidationError ValidationError { get; }
+        public GsrnNumber MeteringPointGSRN { get; }
     }
 }

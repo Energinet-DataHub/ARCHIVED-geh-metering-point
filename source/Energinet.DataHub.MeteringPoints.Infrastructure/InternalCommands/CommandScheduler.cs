@@ -40,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
             _correlationContext = correlationContext ?? throw new ArgumentNullException(nameof(correlationContext));
         }
 
-        public async Task EnqueueAsync<TCommand>(TCommand command, Instant? scheduleDate)
+        public async Task EnqueueAsync<TCommand>(TCommand command, Instant? scheduleDate = null)
             where TCommand : InternalCommand
         {
             if (command == null) throw new ArgumentNullException(nameof(command));

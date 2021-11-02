@@ -12,24 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using NodaTime;
+using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
+namespace Energinet.DataHub.MeteringPoints.Application.Integrations.ChargeLinks.Create
 {
-    public class IntegrationMetadataContext : IIntegrationMetadataContext
-    {
-        public Instant Timestamp { get; private set; }
-
-        public string? CorrelationId { get; private set; }
-
-        public Guid EventId { get; private set; }
-
-        public void SetMetadata(Instant timestamp, string correlationId, Guid eventId)
-        {
-            Timestamp = timestamp;
-            CorrelationId = correlationId;
-            EventId = eventId;
-        }
-    }
+    public record CreateDefaultChargeLinksNotification(string GsrnNumber, string CorrelationId)
+        : INotification, IInboundMessage;
 }
