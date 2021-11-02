@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Queries
 {
-    public class MeteringPointByGsrnQuery : IRequest<ConsumptionMeteringPoint>
+    public class MeteringPointByGsrnQuery : IRequest<MeteringPointDto?>
     {
         public MeteringPointByGsrnQuery(string gsrnNumber)
         {
