@@ -13,7 +13,9 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Common
 {
@@ -38,5 +40,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
         /// </summary>
         /// <returns><see cref="ValidationError"/></returns>
         IEnumerable<ValidationError> GetErrors();
+
+        /// <summary>
+        /// Invokes validation and save validation errors
+        /// </summary>
+        /// <param name="validator"></param>
+        /// <param name="message">Message to validate</param>
+        Task ValidateAsync<TMessage>(IValidator<TMessage> validator, TMessage message);
     }
 }

@@ -13,20 +13,19 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Common.Messages
 {
     /// <summary>
     /// Message handler for incoming messages
     /// </summary>
-    public interface IMessageReceiver
+    public interface IMessageReceiver<TMessage>
     {
         /// <summary>
         /// Handles incoming message
         /// </summary>
         /// <param name="message"></param>
         /// <returns><see cref="Task"/></returns>
-        Task HandleAsync(MasterDataDocument message);
+        Task HandleAsync(TMessage message);
     }
 }

@@ -296,9 +296,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
                 SampleData.ScheduledMeterReadingDate);
         }
 
-        private Task SendMessageAsync(MasterDataDocument message)
+        private Task SendMessageAsync<TMessage>(TMessage message)
         {
-            return GetService<IMessageReceiver>().HandleAsync(message);
+            return GetService<IMessageReceiver<TMessage>>().HandleAsync(message);
         }
     }
 }

@@ -142,7 +142,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
             _container.Register<IValidator<TestBusinessRequest>, NullValidationSet<TestBusinessRequest>>(Lifestyle.Scoped);
 
             // Add message receiver chain
-            _container.AddChain<IMessageReceiver>()
+            _container.AddChain<IMessageReceiver<MasterDataDocument>>()
                 .WithHandler<CreateMeteringPointMessageReceiver>()
                 .WithHandler<ConnectMeteringPointMessageReceiver>()
                 .BuildChain();

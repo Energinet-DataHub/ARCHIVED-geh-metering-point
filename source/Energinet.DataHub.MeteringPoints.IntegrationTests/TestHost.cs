@@ -187,7 +187,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 });
 
             // Add message receiver chain
-            _container.AddChain<IMessageReceiver>()
+            _container.AddChain<IMessageReceiver<MasterDataDocument>>()
                 .WithHandler<CreateMeteringPointMessageReceiver>()
                 .WithHandler<ConnectMeteringPointMessageReceiver>()
                 .BuildChain();
@@ -342,9 +342,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             Assert.NotNull(await GetService<IMeteringPointRepository>().GetByGsrnNumberAsync(GsrnNumber.Create(gsrnNumber)).ConfigureAwait(false));
         }
 
-        protected Task SendMessageAsync(MasterDataDocument message)
+        protected Task SendMessageAsync<TMessage>(TMessage message)
         {
-            return GetService<IMessageReceiver>().HandleAsync(message);
+            return GetService<IMessageReceiver<TMessage>>().HandleAsync(message);
         }
 
         private void CleanupDatabase()

@@ -18,28 +18,29 @@ using Energinet.DataHub.MeteringPoints.Application.Common.Messages;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Create
 {
-    public class CreateMeteringPointMessageReceiver : IMessageReceiver
+    public class CreateMeteringPointMessageReceiver : MessageReceiver<MasterDataDocument>
     {
-        private readonly IMediator _mediator;
-        private readonly IMessageReceiver _next;
         private readonly ICreateMeteringPointInitiator<MasterDataDocument> _processInitiator;
 
-        public CreateMeteringPointMessageReceiver(IMediator mediator, IMessageReceiver next, ICreateMeteringPointInitiator<MasterDataDocument> processInitiator)
+        public CreateMeteringPointMessageReceiver(IMessageReceiver<MasterDataDocument> next, ICreateMeteringPointInitiator<MasterDataDocument> processInitiator)
+            : base(next)
         {
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            _next = next;
             _processInitiator = processInitiator ?? throw new ArgumentNullException(nameof(processInitiator));
         }
 
-        public Task HandleAsync(MasterDataDocument message)
+        protected override bool ShouldHandle(MasterDataDocument message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
             var processType = EnumerationType.FromName<BusinessProcessType>(message.ProcessType);
-            return processType == BusinessProcessType.CreateMeteringPoint ? _processInitiator.ProcessAsync(message) : _next?.HandleAsync(message)!;
+            return processType == BusinessProcessType.CreateMeteringPoint;
+        }
+
+        protected override Task ProcessAsync(MasterDataDocument message)
+        {
+            return _processInitiator.ProcessAsync(message);
         }
     }
 }

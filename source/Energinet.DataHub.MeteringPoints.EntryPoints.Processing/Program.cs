@@ -195,7 +195,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.SendProtobuf<MeteringPointEnvelope>();
 
             // Add message receiver chain
-            container.AddChain<IMessageReceiver>()
+            container.AddChain<IMessageReceiver<MasterDataDocument>>()
                 .WithHandler<CreateMeteringPointMessageReceiver>()
                 .WithHandler<ConnectMeteringPointMessageReceiver>()
                 .BuildChain();

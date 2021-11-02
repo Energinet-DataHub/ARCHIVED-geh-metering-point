@@ -32,14 +32,14 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor _messageExtractor;
         private readonly IMediator _mediator;
-        private readonly IMessageReceiver _messageReceiver;
+        private readonly IMessageReceiver<MasterDataDocument> _messageReceiver;
 
         public QueueSubscriber(
             ILogger logger,
             ICorrelationContext correlationContext,
             MessageExtractor messageExtractor,
             IMediator mediator,
-            IMessageReceiver messageReceiver)
+            IMessageReceiver<MasterDataDocument> messageReceiver)
         {
             _logger = logger;
             _correlationContext = correlationContext;

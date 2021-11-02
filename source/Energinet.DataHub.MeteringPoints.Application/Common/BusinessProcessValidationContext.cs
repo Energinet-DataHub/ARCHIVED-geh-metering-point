@@ -12,8 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Common
 {
@@ -31,6 +36,23 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
         public IEnumerable<ValidationError> GetErrors()
         {
             return _validationErrors.AsReadOnly();
+        }
+
+        public async Task ValidateAsync<TMessage>(IValidator<TMessage> validator, TMessage message)
+        {
+            if (validator == null) throw new ArgumentNullException(nameof(validator));
+            if (message == null) throw new ArgumentNullException(nameof(message));
+            var validationResult = await validator.ValidateAsync(message).ConfigureAwait(false);
+            if (!validationResult.IsValid)
+            {
+                var validationErrors = validationResult
+                    .Errors
+                    .Select(error => (ValidationError)error.CustomState)
+                    .ToList()
+                    .AsReadOnly();
+
+                Add(validationErrors);
+            }
         }
     }
 }

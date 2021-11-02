@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Messages;
@@ -25,25 +24,32 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
-    public class ConnectMeteringPointMessageReceiver : IMessageReceiver
+    public class ConnectMeteringPointMessageReceiver : MessageReceiver<MasterDataDocument>
     {
         private readonly IMediator _mediator;
-        private readonly IMessageReceiver _next;
         private readonly IValidator<MasterDataDocument> _validator;
         private readonly IBusinessProcessValidationContext _validationContext;
 
-        public ConnectMeteringPointMessageReceiver(IMediator mediator, IMessageReceiver next, IValidator<MasterDataDocument> validator, IBusinessProcessValidationContext validationContext)
+        public ConnectMeteringPointMessageReceiver(IMediator mediator, IMessageReceiver<MasterDataDocument> next, IValidator<MasterDataDocument> validator, IBusinessProcessValidationContext validationContext)
+            : base(next)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            _next = next;
             _validator = validator;
             _validationContext = validationContext ?? throw new ArgumentNullException(nameof(validationContext));
         }
 
-        public Task HandleAsync(MasterDataDocument message)
+        protected override bool ShouldHandle(MasterDataDocument message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
-            return HandleOrCallNextAsync(message);
+            var processType = EnumerationType.FromName<BusinessProcessType>(message.ProcessType);
+            return processType == BusinessProcessType.ConnectMeteringPoint;
+        }
+
+        protected override async Task ProcessAsync(MasterDataDocument message)
+        {
+            if (message == null) throw new ArgumentNullException(nameof(message));
+            await ValidateMessageAsync(message).ConfigureAwait(false);
+            await _mediator.Send(CreateCommandFrom(message)).ConfigureAwait(false);
         }
 
         private static ConnectMeteringPoint CreateCommandFrom(MasterDataDocument document)
@@ -51,27 +57,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
             return new ConnectMeteringPoint(document.GsrnNumber, document.EffectiveDate, document.TransactionId);
         }
 
-        private Task HandleOrCallNextAsync(MasterDataDocument message)
+        private Task ValidateMessageAsync(MasterDataDocument message)
         {
-            var processType = EnumerationType.FromName<BusinessProcessType>(message.ProcessType);
-            return processType == BusinessProcessType.ConnectMeteringPoint ? HandleInternalAsync(message) : _next?.HandleAsync(message)!;
-        }
-
-        private async Task HandleInternalAsync(MasterDataDocument message)
-        {
-            var validationResult = await _validator.ValidateAsync(message).ConfigureAwait(false);
-            if (!validationResult.IsValid)
-            {
-                var validationErrors = validationResult
-                    .Errors
-                    .Select(error => (ValidationError)error.CustomState)
-                    .ToList()
-                    .AsReadOnly();
-
-                _validationContext.Add(validationErrors);
-            }
-
-            await _mediator.Send(CreateCommandFrom(message)).ConfigureAwait(false);
+            return _validationContext.ValidateAsync(_validator, message);
         }
     }
 }
