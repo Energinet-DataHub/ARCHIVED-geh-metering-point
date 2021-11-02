@@ -5,6 +5,8 @@
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
     "APPINSIGHTS_INSTRUMENTATIONKEY": "<Azure application insights instrumentation key>",
     "SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING": "<Shared Azure Service Bus connection string>",
+    "CHARGES_DEFAULT_LINK_RESPONSE_QUEUE": "<Queue name that Charges response to in request/response pattern for default charge links>",
+    "CHARGES_DEFAULT_MESSAGES_RESPONSE_QUEUE": "<Queue name that Charges response to in request/response pattern for messages sent>",
     "METERING_POINT_CREATED_TOPIC": "<Topic name for MeteringPointCreated events>",
     "CONSUMPTION_METERING_POINT_CREATED_TOPIC": "<Topic name for ConsumptionMeteringPointCreated events>",
     "PRODUCTION_METERING_POINT_CREATED_TOPIC": "<Topic name for ProductionMeteringPointCreated events>",

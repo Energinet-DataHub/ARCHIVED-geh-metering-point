@@ -80,6 +80,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
+        public async Task Should_reject_when_disconnection_type_is_missing()
+        {
+            var request = CreateCommand()
+                with
+                {
+                    DisconnectionType = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02", DocumentType.CreateMeteringPointRejected);
+        }
+
+        [Fact]
         public async Task Should_reject_when_post_code_is_missing()
         {
             var request = CreateCommand()

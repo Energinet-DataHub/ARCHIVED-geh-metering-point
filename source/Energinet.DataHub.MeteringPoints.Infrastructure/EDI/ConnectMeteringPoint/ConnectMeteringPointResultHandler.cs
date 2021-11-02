@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
+using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
@@ -28,7 +29,6 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using MediatR;
-using ConsumptionMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Queries.ConsumptionMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint
 {
@@ -77,10 +77,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
             var confirmMessage = CreateConfirmMessage(request, result);
             AddToOutbox(confirmMessage);
 
-            var meteringPoint = await _mediator.Send(new MeteringPointByGsrnQuery(request.GsrnNumber)).ConfigureAwait(false)
+            var meteringPointDto = await _mediator.Send(new MeteringPointByGsrnQuery(request.GsrnNumber)).ConfigureAwait(false)
                                 ?? throw new InvalidOperationException("Metering point not found");
 
-            var accountingPointCharacteristicsMessage = CreateAccountingPointCharacteristicsMessage(request, meteringPoint);
+            var accountingPointCharacteristicsMessage = CreateAccountingPointCharacteristicsMessage(request, meteringPointDto);
             AddToOutbox(accountingPointCharacteristicsMessage);
         }
 
@@ -105,7 +105,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
 
         private MessageHubEnvelope CreateAccountingPointCharacteristicsMessage(
             Application.Connect.ConnectMeteringPoint request,
-            ConsumptionMeteringPoint meteringPoint)
+            MeteringPointDto meteringPoint)
         {
             var accountingPointCharacteristicsMessage = new AccountingPointCharacteristicsMessage(
                 Id: Guid.NewGuid().ToString(),
@@ -134,25 +134,25 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
                         Type: meteringPoint.MeteringPointType,
                         SettlementMethod: meteringPoint.SettlementMethod,
                         MeteringMethod: meteringPoint.MeteringPointSubType,
-                        ConnectionState: meteringPoint.PhysicalState,
-                        ReadCycle: meteringPoint.MeterReadingOccurrence,
+                        ConnectionState: meteringPoint.ConnectionState,
+                        ReadCycle: meteringPoint.ReadingOccurrence,
                         NetSettlementGroup: meteringPoint.NetSettlementGroup,
                         NextReadingDate: "N/A",
-                        MeteringGridAreaDomainId: new Mrid(meteringPoint.GridAreaId, "N/A"),
-                        InMeteringGridAreaDomainId: new Mrid("InMeteringGridAreaDomainId", "N/A"), // TODO: Only applicable for exchange
-                        OutMeteringGridAreaDomainId: new Mrid("OutMeteringGridAreaDomainId", "N/A"), // TODO: Only applicable for exchange
-                        LinkedMarketEvaluationPoint: new Mrid(meteringPoint.PowerPlantGsrnNumber ?? string.Empty, "N/A"),
-                        PhysicalConnectionCapacity: new UnitValue("PhysicalConnectionCapacity", "N/A"),
+                        MeteringGridAreaDomainId: new Mrid(meteringPoint.GridAreaCode, "N/A"),
+                        InMeteringGridAreaDomainId: new Mrid(meteringPoint.FromGridAreaCode, "N/A"), // TODO: Only applicable for exchange
+                        OutMeteringGridAreaDomainId: new Mrid(meteringPoint.ToGridAreaCode, "N/A"), // TODO: Only applicable for exchange
+                        LinkedMarketEvaluationPoint: new Mrid(meteringPoint.PowerPlantGsrnNumber, "N/A"),
+                        PhysicalConnectionCapacity: new UnitValue(meteringPoint.Capacity.HasValue ? meteringPoint.Capacity.Value.ToString(CultureInfo.InvariantCulture) : string.Empty, "N/A"),
                         ConnectionType: meteringPoint.ConnectionType,
                         DisconnectionMethod: meteringPoint.DisconnectionType,
-                        AssetMarketPSRTypePsrType: "AssetMarketPSRTypePsrType",
+                        AssetMarketPSRTypePsrType: meteringPoint.AssetType,
                         ProductionObligation: false,
                         Series: new Series(
                             Id: "Id",
                             EstimatedAnnualVolumeQuantity: "EstimatedAnnualVolumeQuantity",
                             QuantityMeasureUnit: "QuantityMeasureUnit"),
                         ContractedConnectionCapacity: new UnitValue("ContractedConnectionCapacity", "Foo"),
-                        RatedCurrent: new UnitValue(meteringPoint.MaximumCurrent.ToString(CultureInfo.InvariantCulture), "AMP"),
+                        RatedCurrent: new UnitValue(meteringPoint.MaximumCurrent.HasValue ? meteringPoint.MaximumCurrent.Value.ToString(CultureInfo.InvariantCulture) : string.Empty, "AMP"),
                         MeterId: "MeterId",
                         EnergySupplierMarketParticipantId: new MarketParticipant("EnergySupplierMarketParticipantId", "Foo"),
                         SupplyStartDateAndOrTimeDateTime: DateTime.Now,

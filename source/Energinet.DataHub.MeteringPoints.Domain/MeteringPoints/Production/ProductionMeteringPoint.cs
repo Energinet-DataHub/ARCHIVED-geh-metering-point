@@ -19,7 +19,9 @@ using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules.Connect;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -30,7 +32,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
     {
         private NetSettlementGroup _netSettlementGroup;
         private AssetType? _assetType;
-        private bool _isAddressWashable;
         private bool _productionObligation;
 
         private ProductionMeteringPoint(
@@ -40,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
             MeteringMethod meteringMethod,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
-            GsrnNumber? powerPlantGsrnNumber,
+            GsrnNumber powerPlantGsrnNumber,
             LocationDescription? locationDescription,
             MeterId? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
@@ -72,6 +73,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 netSettlementGroup)
         {
             _netSettlementGroup = netSettlementGroup;
+            _productionObligation = productionObligation;
             _assetType = assetType;
             _productType = ProductType.EnergyActive;
             ProductionObligation = false;
@@ -98,7 +100,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 address.CitySubDivision,
                 address.IsActual,
                 address.GeoInfoReference,
-                powerPlantGsrnNumber?.Value,
+                powerPlantGsrnNumber.Value,
                 locationDescription.Value,
                 meterNumber?.Value,
                 powerLimit.Ampere,
@@ -149,7 +151,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
             var generalRuleCheckResult= MarketMeteringPoint.CanCreate(meteringPointDetails);
             var rules = new List<IBusinessRule>()
             {
-                // TODO: Implement production specific rules
+                new CapacityRequirementRule(meteringPointDetails.Capacity, meteringPointDetails.NetSettlementGroup),
+                new AssetTypeRequirementRule(meteringPointDetails.AssetType),
+                new PowerplantRequirementRule(meteringPointDetails.GsrnNumber, meteringPointDetails.PowerPlantGsrnNumber),
             };
 
             return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
