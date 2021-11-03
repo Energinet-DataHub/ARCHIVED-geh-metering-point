@@ -12,21 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
+using Xunit;
+using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.ConsumptionMeteringPoints
 {
-    public static class TestUtils
+    [IntegrationTest]
+    public class ChangeTests : TestHost
     {
-        internal static ChangeMasterDataRequest CreateRequest()
+        public ChangeTests(DatabaseFixture databaseFixture)
+            : base(databaseFixture)
         {
-            return new ChangeMasterDataRequest()
-                with
-                {
-                    TransactionId = SampleData.Transaction,
-                    GsrnNumber = SampleData.GsrnNumber,
-                    Address = Scenarios.CreateAddress(),
-                };
+        }
+
+        [Fact]
+        public async Task Metering_point_must_exist()
+        {
+            await InvokeBusinessProcessAsync(TestUtils.CreateRequest()).ConfigureAwait(false);
+
+            AssertValidationError("E10");
         }
     }
 }
