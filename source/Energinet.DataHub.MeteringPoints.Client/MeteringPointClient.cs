@@ -31,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Client
             _httpClient = httpClient;
         }
 
-        public async Task<MeteringPointDto?> GetMeteringPointByGsrnAsync(string gsrn, CancellationToken cancellationToken)
+        public async Task<MeteringPointDto?> GetMeteringPointByGsrnAsync(string gsrn, CancellationToken cancellationToken = default)
         {
             var response = await _httpClient.GetAsync(new Uri($"MeteringPoint/GetMeteringPointByGsrn/?gsrn={gsrn}", UriKind.Relative), cancellationToken).ConfigureAwait(false);
 
