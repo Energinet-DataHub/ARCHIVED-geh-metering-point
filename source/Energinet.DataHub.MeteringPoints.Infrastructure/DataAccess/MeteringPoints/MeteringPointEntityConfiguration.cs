@@ -226,9 +226,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.ToTable("ProductionMeteringPoints", "dbo");
 
-            builder.Property<bool>("_isAddressWashable")
-                .HasColumnName("IsAddressWashable");
-
             builder.Property("_productionObligation")
                 .HasColumnName("ProductionObligation");
             builder.Property<NetSettlementGroup>("_netSettlementGroup")

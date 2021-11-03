@@ -66,6 +66,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests
         public void OutboxHostConfigurationTest()
         {
             Environment.SetEnvironmentVariable("SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING", ServiceBusConnectionString);
+            Environment.SetEnvironmentVariable("CHARGES_DEFAULT_LINK_RESPONSE_QUEUE", SomeString);
+            Environment.SetEnvironmentVariable("CHARGES_DEFAULT_MESSAGES_RESPONSE_QUEUE", SomeString);
             Environment.SetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING", SomeString);
             Environment.SetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", SomeString);
             Environment.SetEnvironmentVariable("METERING_POINT_CREATED_TOPIC", SomeString);

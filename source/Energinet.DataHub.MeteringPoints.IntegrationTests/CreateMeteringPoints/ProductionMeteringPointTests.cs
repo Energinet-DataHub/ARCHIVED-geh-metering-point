@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Create.Production;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
@@ -44,6 +45,62 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             Assert.Equal(request.MeteringGridArea, integrationEvent?.GridAreaCode);
             Assert.Equal(request.MeterReadingOccurrence, integrationEvent?.MeterReadingPeriodicity);
             Assert.Equal(request.NetSettlementGroup, integrationEvent?.NetSettlementGroup);
+        }
+
+        [Fact]
+        public async Task Should_reject_when_disconnection_type_is_missing()
+        {
+            var request = CreateCommand()
+                with
+                {
+                    DisconnectionType = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02", DocumentType.CreateMeteringPointRejected);
+        }
+
+        [Fact]
+        public async Task Should_reject_when_powerplant_is_missing()
+        {
+            var request = CreateCommand()
+                with
+                {
+                    PowerPlant = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D57", DocumentType.CreateMeteringPointRejected);
+        }
+
+        [Fact]
+        public async Task Should_reject_when_reading_occurence_is_missing()
+        {
+            var request = CreateCommand()
+                with
+                {
+                    MeterReadingOccurrence = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02", DocumentType.CreateMeteringPointRejected);
+        }
+
+        [Fact]
+        public async Task Should_reject_when_net_settlement_group_is_missing()
+        {
+            var request = CreateCommand()
+                with
+                {
+                    NetSettlementGroup = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02", DocumentType.CreateMeteringPointRejected);
         }
 
         private static CreateProductionMeteringPoint CreateCommand()

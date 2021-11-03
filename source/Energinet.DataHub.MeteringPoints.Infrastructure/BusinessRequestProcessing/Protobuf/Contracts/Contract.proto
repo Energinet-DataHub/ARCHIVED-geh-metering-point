@@ -15,7 +15,7 @@
 
 syntax = "proto3";
 
-// import "google/protobuf/timestamp.proto";
+ import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
 option csharp_namespace = "Energinet.DataHub.MeteringPoints.Contracts";
@@ -66,8 +66,27 @@ message MasterDataDocument {
   string processType = 28;
 }
 
+message SetEnergySupplierInfo {
+  string id = 1;
+  string metering_point_gsrn = 2;
+  google.protobuf.Timestamp effective_date = 3; // Date which the change of supplier goes into effect.
+}
+
+message CreateDefaultChargeLinks {
+    string gsrnNumber = 1;
+    string correlationId = 2;
+}
+
+message CreateDefaultChargeLinksMessages {
+    string gsrnNumber = 1;
+    string correlationId = 2;
+}
+
 message MeteringPointEnvelope {
   oneof MeteringPointMessages {
     MasterDataDocument masterDataDocument = 1;
+    CreateDefaultChargeLinks createDefaultChargeLinks = 2;
+    CreateDefaultChargeLinksMessages createDefaultChargeLinksMessages = 3;   
+    SetEnergySupplierInfo setEnergySupplierInfo = 4;
   }
 }

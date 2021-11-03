@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.MeteringPoints.Application.Integrations;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
 {
