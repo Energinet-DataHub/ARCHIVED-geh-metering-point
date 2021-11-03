@@ -81,9 +81,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public GsrnNumber GsrnNumber { get; }
 
-        protected ConnectionState ConnectionState { get; set; } = ConnectionState.New();
+        public Address Address { get; private set; }
 
-        protected Address Address { get; set; }
+        protected ConnectionState ConnectionState { get; set; } = ConnectionState.New();
 
         public static BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
         {
@@ -128,7 +128,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                     Address.Floor,
                     Address.Room,
                     Address.MunicipalityCode.GetValueOrDefault(),
-                    Address.IsActual,
+                    Address.IsActual.GetValueOrDefault(),
                     Address.GeoInfoReference.GetValueOrDefault()));
             }
         }

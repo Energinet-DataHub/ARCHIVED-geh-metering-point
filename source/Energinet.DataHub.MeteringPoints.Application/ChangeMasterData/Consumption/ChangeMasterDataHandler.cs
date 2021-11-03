@@ -20,6 +20,7 @@ using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
@@ -27,8 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
     public class ChangeMasterDataHandler : IBusinessRequestHandler<ChangeMasterDataRequest>
     {
         private IMeteringPointRepository _meteringPointRepository;
-        private MeteringPoint? _targetMeteringPoint;
-        private Domain.Addresses.Address? _newAddress;
+        private ConsumptionMeteringPoint? _targetMeteringPoint;
 
         public ChangeMasterDataHandler(IMeteringPointRepository meteringPointRepository)
         {
@@ -39,9 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            await InitializeAsync(request).ConfigureAwait(false);
-
-            await PrepareAsync(request).ConfigureAwait(false);
+            await FetchTargetMeteringPointAsync(request).ConfigureAwait(false);
 
             var validationResult = await ValidateAsync(request).ConfigureAwait(false);
             if (!validationResult.Success)
@@ -52,43 +50,40 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
             return await ExecuteBusinessProcessAsync(request).ConfigureAwait(false);
         }
 
-        private async Task InitializeAsync(ChangeMasterDataRequest request)
+        private async Task FetchTargetMeteringPointAsync(ChangeMasterDataRequest request)
         {
             _targetMeteringPoint = await _meteringPointRepository
                 .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
-                .ConfigureAwait(false);
+                .ConfigureAwait(false) as ConsumptionMeteringPoint;
         }
 
         private Task<BusinessProcessResult> ExecuteBusinessProcessAsync(ChangeMasterDataRequest request)
         {
-            _targetMeteringPoint!.ChangeAddress(_newAddress!);
+            _targetMeteringPoint!.Change(CreateChangeDetails(request));
             return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
         }
 
-        private Task PrepareAsync(ChangeMasterDataRequest request)
+        private Domain.Addresses.Address? CreateNewAddressFrom(ChangeMasterDataRequest request)
         {
-            CreateNewAddressFrom(request);
-            return Task.CompletedTask;
-        }
-
-        private void CreateNewAddressFrom(ChangeMasterDataRequest request)
-        {
-            if (request.Address != null)
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (request.Address is null || _targetMeteringPoint is null)
             {
-                _newAddress = Domain.Addresses.Address.Create(
-                    request.Address.StreetName,
-                    request.Address.StreetCode,
-                    request.Address.BuildingNumber,
-                    request.Address.City,
-                    request.Address.CitySubDivision,
-                    request.Address.PostCode,
-                    request.Address.CountryCode != null ? EnumerationType.FromName<CountryCode>(request.Address.CountryCode) : null,
-                    request.Address.Floor,
-                    request.Address.Room,
-                    request.Address.MunicipalityCode,
-                    request.Address.IsActual.GetValueOrDefault(),
-                    request.Address.GeoInfoReference);
+                return null;
             }
+
+            return _targetMeteringPoint.Address.MergeFrom(Domain.Addresses.Address.Create(
+                request.Address.StreetName,
+                request.Address.StreetCode,
+                request.Address.BuildingNumber,
+                request.Address.City,
+                request.Address.CitySubDivision,
+                request.Address.PostCode,
+                string.IsNullOrEmpty(request.Address.CountryCode) ? null : EnumerationType.FromName<CountryCode>(request.Address.CountryCode),
+                request.Address.Floor,
+                request.Address.Room,
+                request.Address.MunicipalityCode,
+                request.Address.IsActual.GetValueOrDefault(),
+                request.Address.GeoInfoReference));
         }
 
         private Task<BusinessRulesValidationResult> ValidateAsync(ChangeMasterDataRequest request)
@@ -101,10 +96,20 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
             }
             else
             {
-                errors.AddRange(_targetMeteringPoint.CanChangeAddress(_newAddress!).Errors);
+                errors.AddRange(_targetMeteringPoint.CanChange(CreateChangeDetails(request)).Errors);
             }
 
             return Task.FromResult(new BusinessRulesValidationResult(errors));
+        }
+
+        private MasterDataDetails CreateChangeDetails(ChangeMasterDataRequest request)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            return new MasterDataDetails()
+                with
+                {
+                    Address = CreateNewAddressFrom(request),
+                };
         }
     }
 }
