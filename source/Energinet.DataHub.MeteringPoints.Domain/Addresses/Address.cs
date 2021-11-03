@@ -63,18 +63,18 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
         public Guid? GeoInfoReference { get; }
 
         public static Address Create(
-            string? streetName,
-            string? streetCode,
-            string? buildingNumber,
-            string? city,
-            string? citySubDivision,
-            string? postCode,
-            CountryCode? countryCode,
-            string? floor,
-            string? room,
-            int? municipalityCode,
-            bool isActual,
-            Guid? geoInfoReference)
+            string? streetName = null,
+            string? streetCode = null,
+            string? buildingNumber = null,
+            string? city = null,
+            string? citySubDivision = null,
+            string? postCode = null,
+            CountryCode? countryCode = null,
+            string? floor = null,
+            string? room = null,
+            int? municipalityCode = null,
+            bool isActual = false,
+            Guid? geoInfoReference = null)
         {
             var result = CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode);
             if (result.Success == false)
