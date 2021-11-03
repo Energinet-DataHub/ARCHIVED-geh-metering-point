@@ -34,5 +34,17 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
 
             AssertValidationError("E10");
         }
+
+        [Fact]
+        public async Task Valid_gsrn_number_is_required()
+        {
+            await InvokeBusinessProcessAsync(TestUtils.CreateRequest()
+                with
+                {
+                    GsrnNumber = "Invalid_Grsn_number",
+                }).ConfigureAwait(false);
+
+            AssertValidationError("E10");
+        }
     }
 }
