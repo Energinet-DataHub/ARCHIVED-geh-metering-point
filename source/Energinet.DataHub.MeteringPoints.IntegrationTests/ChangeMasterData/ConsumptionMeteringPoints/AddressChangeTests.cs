@@ -145,11 +145,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
 
         private static ChangeMasterDataRequest CreateRequest()
         {
-            return new ChangeMasterDataRequest()
-                with
-                {
-                    Address = Scenarios.CreateAddress(),
-                };
+            return TestUtils.CreateRequest();
         }
 
         private Task<BusinessProcessResult> CreateMeteringPointAsync()
