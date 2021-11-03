@@ -56,7 +56,20 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
                 Room: document.RoomIdentification,
                 MunicipalityCode: int.Parse(document.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()),
                 IsActual: document.IsActualAddress,
-                GeoInfoReference: Guid.Parse(document.GeoInfoReference!));
+                GeoInfoReference: Guid.Parse(document.GeoInfoReference!),
+                Address: new Address(
+                    document.StreetName,
+                    document.PostCode,
+                    document.CityName,
+                    document.StreetCode,
+                    document.BuildingNumber,
+                    document.CitySubDivisionName,
+                    document.CountryCode,
+                    document.FloorIdentification,
+                    document.RoomIdentification,
+                    string.IsNullOrWhiteSpace(document.MunicipalityCode) ? null : int.Parse(document.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()),
+                    document.IsActualAddress,
+                    document.GeoInfoReference == null ? null : Guid.Parse(document.GeoInfoReference)));
         }
 
         private static IBusinessRequest? CreateConnectMeteringPointCommand(MasterDataDocument document)

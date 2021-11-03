@@ -165,41 +165,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointDetails.Capacity);
         }
 
-        public void Change(MasterDataDetails masterDataDetails)
-        {
-            if (masterDataDetails == null) throw new ArgumentNullException(nameof(masterDataDetails));
-            if (CanChange(masterDataDetails).Success == false)
-            {
-                throw new MasterDataChangeException();
-            }
-
-            ChangeAddress(Address.Create(
-                    masterDataDetails.StreetName ?? Address.StreetName,
-                    masterDataDetails.StreetCode ?? Address.StreetCode,
-                    masterDataDetails.BuildingNumber ?? Address.BuildingNumber,
-                    masterDataDetails.City ?? Address.City,
-                    masterDataDetails.CitySubDivision ?? Address.CitySubDivision,
-                    masterDataDetails.PostCode ?? Address.PostCode,
-                    masterDataDetails.CountryCode ?? Address.CountryCode,
-                    masterDataDetails.Floor ?? Address.Floor,
-                    masterDataDetails.Room ?? Address.Room,
-                    masterDataDetails.MunicipalityCode ?? Address.MunicipalityCode,
-                    masterDataDetails.IsActual ?? Address.IsActual,
-                    masterDataDetails.GeoInfoReference ?? Address.GeoInfoReference));
-        }
-
-        public BusinessRulesValidationResult CanChange(MasterDataDetails details)
-        {
-            if (details == null) throw new ArgumentNullException(nameof(details));
-            var rules = new List<IBusinessRule>()
-            {
-                new StreetNameIsRequiredRule(GsrnNumber, details.StreetName),
-                new PostCodeIsRequiredRule(details.PostCode),
-                new CityIsRequiredRule(details.City),
-            };
-            return new BusinessRulesValidationResult(rules);
-        }
-
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
         {
             var rules = new Collection<IBusinessRule>
@@ -221,6 +186,16 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 
             ConnectionState = ConnectionState.Connected(connectionDetails.EffectiveDate);
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
+        }
+
+        public BusinessRulesValidationResult CanChange(MasterDataDetails details)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Change(MasterDataDetails details)
+        {
+            throw new NotImplementedException();
         }
     }
 }

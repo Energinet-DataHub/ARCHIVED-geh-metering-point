@@ -13,14 +13,10 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.Common;
 
-namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
+namespace Energinet.DataHub.MeteringPoints.Application
 {
-    public record ChangeMasterDataRequest(
-        string TransactionId = "",
-        string GsrnNumber = "",
-        string EffectiveDate = "",
+    public record Address(
         string? StreetName = null,
         string? PostCode = null,
         string? City = null,
@@ -32,6 +28,5 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
         string? Room = null,
         int? MunicipalityCode = null,
         bool? IsActual = null,
-        Guid? GeoInfoReference = null,
-        Address? Address = null) : IBusinessRequest;
+        Guid? GeoInfoReference = null);
 }

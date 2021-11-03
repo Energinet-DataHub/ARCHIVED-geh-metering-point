@@ -28,7 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
     {
         private IMeteringPointRepository _meteringPointRepository;
         private MeteringPoint? _targetMeteringPoint;
-        private Address? _newAddress;
+        private Domain.Addresses.Address? _newAddress;
 
         public ChangeMasterDataHandler(IMeteringPointRepository meteringPointRepository)
         {
@@ -60,7 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
 
         private static Task<BusinessRulesValidationResult> PreValidateAsync(ChangeMasterDataRequest request)
         {
-            var addressValidationResult = Address.CheckRules(
+            var addressValidationResult = Domain.Addresses.Address.CheckRules(
                 request.StreetName,
                 request.StreetCode,
                 request.BuildingNumber,
@@ -96,7 +96,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
 
         private void CreateNewAddressFrom(ChangeMasterDataRequest request)
         {
-            _newAddress = Address.Create(
+            _newAddress = Domain.Addresses.Address.Create(
                 request.StreetName,
                 request.StreetCode,
                 request.BuildingNumber,
