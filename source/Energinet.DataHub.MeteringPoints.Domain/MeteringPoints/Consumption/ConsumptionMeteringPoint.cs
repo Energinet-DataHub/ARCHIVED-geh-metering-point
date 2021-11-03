@@ -98,7 +98,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 address.StreetCode,
                 address.StreetName,
                 address.CitySubDivision,
-                address.IsActual,
+                address.IsActual.GetValueOrDefault(),
                 address.GeoInfoReference,
                 powerPlantGsrnNumber?.Value,
                 locationDescription?.Value,
