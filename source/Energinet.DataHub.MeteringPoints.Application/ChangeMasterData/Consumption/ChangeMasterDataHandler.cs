@@ -27,8 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
 {
     public class ChangeMasterDataHandler : IBusinessRequestHandler<ChangeMasterDataRequest>
     {
-        private IMeteringPointRepository _meteringPointRepository;
-        private ConsumptionMeteringPoint? _targetMeteringPoint;
+        private readonly IMeteringPointRepository _meteringPointRepository;
 
         public ChangeMasterDataHandler(IMeteringPointRepository meteringPointRepository)
         {
@@ -39,39 +38,49 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            await FetchTargetMeteringPointAsync(request).ConfigureAwait(false);
+            var targetMeteringPoint = await FetchTargetMeteringPointAsync(request).ConfigureAwait(false);
+            if (targetMeteringPoint == null)
+            {
+                return new BusinessProcessResult(request.TransactionId, new List<ValidationError>()
+                {
+                    new MeteringPointMustBeKnownValidationError(request.GsrnNumber),
+                });
+            }
 
-            var validationResult = await ValidateAsync(request).ConfigureAwait(false);
+            var validationResult = await ValidateAsync(request, targetMeteringPoint).ConfigureAwait(false);
             if (!validationResult.Success)
             {
                 return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
             }
 
-            return await ExecuteBusinessProcessAsync(request).ConfigureAwait(false);
+            return await ChangeMasterDataAsync(request, targetMeteringPoint).ConfigureAwait(false);
         }
 
-        private async Task FetchTargetMeteringPointAsync(ChangeMasterDataRequest request)
+        private static MasterDataDetails CreateChangeDetails(ChangeMasterDataRequest request, ConsumptionMeteringPoint targetMeteringPoint)
         {
-            _targetMeteringPoint = await _meteringPointRepository
-                .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
-                .ConfigureAwait(false) as ConsumptionMeteringPoint;
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            return new MasterDataDetails()
+                with
+                {
+                    Address = CreateNewAddressFrom(request, targetMeteringPoint),
+                };
         }
 
-        private Task<BusinessProcessResult> ExecuteBusinessProcessAsync(ChangeMasterDataRequest request)
+        private static Task<BusinessProcessResult> ChangeMasterDataAsync(ChangeMasterDataRequest request, ConsumptionMeteringPoint targetMeteringPoint)
         {
-            _targetMeteringPoint!.Change(CreateChangeDetails(request));
+            targetMeteringPoint.Change(CreateChangeDetails(request, targetMeteringPoint));
             return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
         }
 
-        private Domain.Addresses.Address? CreateNewAddressFrom(ChangeMasterDataRequest request)
+        private static Domain.Addresses.Address? CreateNewAddressFrom(ChangeMasterDataRequest request, ConsumptionMeteringPoint targetMeteringPoint)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            if (request.Address is null || _targetMeteringPoint is null)
+            if (request.Address is null)
             {
                 return null;
             }
 
-            return _targetMeteringPoint.Address.MergeFrom(Domain.Addresses.Address.Create(
+            return targetMeteringPoint.Address.MergeFrom(Domain.Addresses.Address.Create(
                 request.Address.StreetName,
                 request.Address.StreetCode,
                 request.Address.BuildingNumber,
@@ -86,30 +95,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 request.Address.GeoInfoReference));
         }
 
-        private Task<BusinessRulesValidationResult> ValidateAsync(ChangeMasterDataRequest request)
+        private static Task<BusinessRulesValidationResult> ValidateAsync(ChangeMasterDataRequest request, ConsumptionMeteringPoint targetMeteringPoint)
         {
-            var errors = new List<ValidationError>();
-
-            if (_targetMeteringPoint == null)
-            {
-                errors.Add(new MeteringPointMustBeKnownValidationError(request.GsrnNumber));
-            }
-            else
-            {
-                errors.AddRange(_targetMeteringPoint.CanChange(CreateChangeDetails(request)).Errors);
-            }
-
-            return Task.FromResult(new BusinessRulesValidationResult(errors));
+            return Task.FromResult(new BusinessRulesValidationResult(targetMeteringPoint.CanChange(CreateChangeDetails(request, targetMeteringPoint)).Errors));
         }
 
-        private MasterDataDetails CreateChangeDetails(ChangeMasterDataRequest request)
+        private async Task<ConsumptionMeteringPoint?> FetchTargetMeteringPointAsync(ChangeMasterDataRequest request)
         {
-            if (request == null) throw new ArgumentNullException(nameof(request));
-            return new MasterDataDetails()
-                with
-                {
-                    Address = CreateNewAddressFrom(request),
-                };
+            return await _meteringPointRepository
+                .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
+                .ConfigureAwait(false) as ConsumptionMeteringPoint;
         }
     }
 }
