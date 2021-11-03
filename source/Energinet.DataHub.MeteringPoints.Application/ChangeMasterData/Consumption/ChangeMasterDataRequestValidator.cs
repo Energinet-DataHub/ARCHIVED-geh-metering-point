@@ -14,7 +14,7 @@
 
 using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
+namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
 {
     public class ChangeMasterDataRequestValidator : AbstractValidator<ChangeMasterDataRequest>
     {

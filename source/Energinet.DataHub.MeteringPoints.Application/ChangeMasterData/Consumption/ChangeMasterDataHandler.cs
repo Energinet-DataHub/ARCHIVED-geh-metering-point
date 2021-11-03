@@ -22,7 +22,7 @@ using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
+namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
 {
     public class ChangeMasterDataHandler : IBusinessRequestHandler<ChangeMasterDataRequest>
     {
