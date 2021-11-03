@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Globalization;
+using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Create.Exchange;
 using Energinet.DataHub.MeteringPoints.Application.Create.Production;
@@ -23,6 +25,23 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
     public static class Scenarios
     {
+        internal static Address CreateAddress()
+        {
+            return new Address(
+                SampleData.StreetName,
+                SampleData.PostCode,
+                SampleData.CityName,
+                SampleData.StreetCode,
+                SampleData.BuildingNumber,
+                SampleData.CitySubDivisionName,
+                SampleData.CountryCode,
+                SampleData.FloorIdentification,
+                SampleData.RoomIdentification,
+                int.Parse(SampleData.MunicipalityCode, NumberStyles.Any, new NumberFormatInfo()),
+                SampleData.IsActualAddress,
+                Guid.Parse(SampleData.GeoInfoReference));
+        }
+
         internal static CreateConsumptionMeteringPoint CreateConsumptionMeteringPointCommand()
         {
             return new CreateConsumptionMeteringPoint(

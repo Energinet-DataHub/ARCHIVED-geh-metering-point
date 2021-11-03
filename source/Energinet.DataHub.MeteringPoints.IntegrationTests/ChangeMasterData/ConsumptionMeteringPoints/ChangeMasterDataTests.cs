@@ -39,18 +39,19 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
                 {
                     TransactionId = SampleData.Transaction,
                     GsrnNumber = SampleData.GsrnNumber,
-                    StreetName = "New Street Name",
-                    PostCode = "6000",
-                    City = "New City Name",
-                    StreetCode = "0500",
-                    BuildingNumber = "4",
-                    CitySubDivision = "New",
-                    CountryCode = CountryCode.DK.Name,
-                    Floor = "9",
-                    Room = "9",
-                    MunicipalityCode = 999,
-                    IsActual = true,
-                    GeoInfoReference = Guid.NewGuid(),
+                    Address = new Application.Address(
+                        StreetName: "New Street Name",
+                        PostCode: "6000",
+                        City: "New City Name",
+                        StreetCode: "0500",
+                        BuildingNumber: "4",
+                        CitySubDivision: "New",
+                        CountryCode: CountryCode.DK.Name,
+                        Floor: "9",
+                        Room: "9",
+                        MunicipalityCode: 999,
+                        IsActual: true,
+                        GeoInfoReference: Guid.NewGuid()),
                 };
 
             await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
@@ -67,7 +68,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
                 {
                     TransactionId = SampleData.Transaction,
                     GsrnNumber = SampleData.GsrnNumber,
-                    StreetName = SampleData.StreetName,
+                    Address = Scenarios.CreateAddress(),
                 };
 
             await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
@@ -85,7 +86,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
                 {
                     TransactionId = SampleData.Transaction,
                     GsrnNumber = SampleData.GsrnNumber,
-                    StreetName = string.Empty,
+                    Address = Scenarios.CreateAddress()
+                        with
+                        {
+                            StreetName = string.Empty,
+                        },
                 };
 
             await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
@@ -103,7 +108,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
                 {
                     TransactionId = SampleData.Transaction,
                     GsrnNumber = SampleData.GsrnNumber,
-                    PostCode = string.Empty,
+                    Address = Scenarios.CreateAddress()
+                        with
+                        {
+                            PostCode = string.Empty,
+                        },
                 };
 
             await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
@@ -121,7 +130,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
                 {
                     TransactionId = SampleData.Transaction,
                     GsrnNumber = SampleData.GsrnNumber,
-                    City = string.Empty,
+                    Address = Scenarios.CreateAddress()
+                        with
+                        {
+                            City = string.Empty,
+                        },
                 };
 
             await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
@@ -134,10 +147,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
             return new ChangeMasterDataRequest()
                 with
                 {
-                    City = SampleData.CityName,
-                    StreetName = SampleData.StreetName,
-                    PostCode = SampleData.PostCode,
-                    CountryCode = SampleData.CountryCode,
+                    Address = Scenarios.CreateAddress(),
                 };
         }
 

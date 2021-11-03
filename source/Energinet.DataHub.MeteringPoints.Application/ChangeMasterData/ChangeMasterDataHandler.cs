@@ -41,12 +41,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
 
             await InitializeAsync(request).ConfigureAwait(false);
 
-            var preValidationResult = await PreValidateAsync(request).ConfigureAwait(false);
-            if (preValidationResult.Success == false)
-            {
-                return new BusinessProcessResult(request.TransactionId, preValidationResult.Errors);
-            }
-
             await PrepareAsync(request).ConfigureAwait(false);
 
             var validationResult = await ValidateAsync(request).ConfigureAwait(false);
@@ -56,23 +50,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
             }
 
             return await ExecuteBusinessProcessAsync(request).ConfigureAwait(false);
-        }
-
-        private static Task<BusinessRulesValidationResult> PreValidateAsync(ChangeMasterDataRequest request)
-        {
-            var addressValidationResult = Domain.Addresses.Address.CheckRules(
-                request.StreetName,
-                request.StreetCode,
-                request.BuildingNumber,
-                request.City,
-                request.CitySubDivision,
-                request.PostCode,
-                request.CountryCode != null ? EnumerationType.FromName<CountryCode>(request.CountryCode) : null,
-                request.Floor,
-                request.Room,
-                request.MunicipalityCode);
-
-            return Task.FromResult(addressValidationResult);
         }
 
         private async Task InitializeAsync(ChangeMasterDataRequest request)
@@ -96,19 +73,22 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
 
         private void CreateNewAddressFrom(ChangeMasterDataRequest request)
         {
-            _newAddress = Domain.Addresses.Address.Create(
-                request.StreetName,
-                request.StreetCode,
-                request.BuildingNumber,
-                request.City,
-                request.CitySubDivision,
-                request.PostCode,
-                request.CountryCode != null ? EnumerationType.FromName<CountryCode>(request.CountryCode) : null,
-                request.Floor,
-                request.Room,
-                request.MunicipalityCode,
-                request.IsActual.GetValueOrDefault(),
-                request.GeoInfoReference);
+            if (request.Address != null)
+            {
+                _newAddress = Domain.Addresses.Address.Create(
+                    request.Address.StreetName,
+                    request.Address.StreetCode,
+                    request.Address.BuildingNumber,
+                    request.Address.City,
+                    request.Address.CitySubDivision,
+                    request.Address.PostCode,
+                    request.Address.CountryCode != null ? EnumerationType.FromName<CountryCode>(request.Address.CountryCode) : null,
+                    request.Address.Floor,
+                    request.Address.Room,
+                    request.Address.MunicipalityCode,
+                    request.Address.IsActual.GetValueOrDefault(),
+                    request.Address.GeoInfoReference);
+            }
         }
 
         private Task<BusinessRulesValidationResult> ValidateAsync(ChangeMasterDataRequest request)
