@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Client;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
@@ -41,7 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Client
             var meteringPointClient = MeteringPointClientFactory.CreateClient(httpClient);
 
             // Act
-            var response = await meteringPointClient.GetMeteringPointByGsrnAsync("571313180400013469").ConfigureAwait(false);
+            var response = await meteringPointClient.GetMeteringPointByGsrnAsync("571313180400013469", CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             response.Should().NotBeNull();
