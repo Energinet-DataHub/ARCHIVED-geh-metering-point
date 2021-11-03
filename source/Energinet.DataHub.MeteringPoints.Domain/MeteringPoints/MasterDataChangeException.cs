@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -35,9 +36,17 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
         }
 
+        public MasterDataChangeException(IEnumerable<ValidationError> validationErrors)
+            : base("Change of master data failed due violation of one or more business rules.")
+        {
+            ValidationErrors = validationErrors;
+        }
+
         protected MasterDataChangeException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
+
+        public IEnumerable<ValidationError>? ValidationErrors { get; }
     }
 }

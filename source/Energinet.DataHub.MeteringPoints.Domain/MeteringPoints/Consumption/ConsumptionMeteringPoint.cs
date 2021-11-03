@@ -190,12 +190,31 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 
         public BusinessRulesValidationResult CanChange(MasterDataDetails details)
         {
-            throw new NotImplementedException();
+            if (details == null) throw new ArgumentNullException(nameof(details));
+
+            var validationErrors = new List<ValidationError>();
+            if (details.Address is not null)
+            {
+                validationErrors.AddRange(CanChangeAddress(details.Address).Errors);
+            }
+
+            return new BusinessRulesValidationResult(validationErrors);
         }
 
         public void Change(MasterDataDetails details)
         {
-            throw new NotImplementedException();
+            if (details == null) throw new ArgumentNullException(nameof(details));
+
+            var checkResult = CanChange(details);
+            if (checkResult.Success == false)
+            {
+                throw new MasterDataChangeException(checkResult.Errors.ToList());
+            }
+
+            if (details.Address is not null)
+            {
+                ChangeAddress(details.Address);
+            }
         }
     }
 }

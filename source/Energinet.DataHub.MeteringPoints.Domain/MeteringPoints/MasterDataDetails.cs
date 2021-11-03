@@ -18,16 +18,5 @@ using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public record MasterDataDetails(
-        string? StreetName = null,
-        string? PostCode = null,
-        string? City = null,
-        string? StreetCode = null,
-        string? BuildingNumber = null,
-        string? CitySubDivision = null,
-        CountryCode? CountryCode = null,
-        string? Floor = null,
-        string? Room = null,
-        int? MunicipalityCode = null,
-        bool? IsActual = null,
-        Guid? GeoInfoReference = null);
+        Address? Address = null);
 }
