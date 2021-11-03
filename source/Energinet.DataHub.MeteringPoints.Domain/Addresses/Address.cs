@@ -22,7 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
 {
     public class Address : ValueObject
     {
-        private Address(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode, bool isActual, Guid? geoInfoReference)
+        private Address(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode, bool? isActual, Guid? geoInfoReference)
         {
             StreetName = streetName;
             StreetCode = streetCode;
@@ -58,7 +58,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
 
         public int? MunicipalityCode { get; }
 
-        public bool IsActual { get; }
+        public bool? IsActual { get; }
 
         public Guid? GeoInfoReference { get; }
 
@@ -73,7 +73,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
             string? floor = null,
             string? room = null,
             int? municipalityCode = null,
-            bool isActual = false,
+            bool? isActual = null,
             Guid? geoInfoReference = null)
         {
             var result = CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode);
@@ -127,7 +127,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
                 address.Floor ?? Floor,
                 address.Room ?? Room,
                 address.MunicipalityCode ?? MunicipalityCode,
-                address.IsActual,
+                address.IsActual ?? IsActual,
                 address.GeoInfoReference ?? GeoInfoReference);
         }
     }
