@@ -24,9 +24,9 @@ using Xunit;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.ConsumptionMeteringPoints
 {
-    public class ChangeMasterDataTests : TestHost
+    public class AddressChangeTests : TestHost
     {
-        public ChangeMasterDataTests(DatabaseFixture databaseFixture)
+        public AddressChangeTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
         {
         }
