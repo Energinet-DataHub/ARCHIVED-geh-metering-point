@@ -26,7 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
             RuleFor(request => request.Address)
                 .SetValidator(new AddressValidator());
             RuleFor(request => request.GsrnNumber)
-                .SetValidator(new GsrnNumberMustBeValidRule());
+                .SetValidator(new GsrnNumberValidator());
         }
     }
 }
