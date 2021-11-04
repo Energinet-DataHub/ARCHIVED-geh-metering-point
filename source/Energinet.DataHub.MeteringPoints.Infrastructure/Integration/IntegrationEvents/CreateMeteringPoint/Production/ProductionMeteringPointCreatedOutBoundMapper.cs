@@ -35,12 +35,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 MeteringPointId = obj.MeteringPointId,
                 GsrnNumber = obj.GsrnNumber,
                 GridAreaCode = obj.GridAreaCode,
-                MeteringMethod = EnumerationType.FromName<MeteringMethod>(obj.MeteringMethod).MapToEnum<ProductionMeteringPointCreated.Types.MeteringMethod>(),
-                MeterReadingPeriodicity = EnumerationType.FromName<ReadingOccurrence>(obj.MeterReadingPeriodicity).MapToEnum<ProductionMeteringPointCreated.Types.MeterReadingPeriodicity>(),
-                NetSettlementGroup = EnumerationType.FromName<NetSettlementGroup>(obj.NetSettlementGroup).MapToEnum<ProductionMeteringPointCreated.Types.NetSettlementGroup>(),
-                Product = EnumerationType.FromName<ProductType>(obj.ProductType).MapToEnum<ProductionMeteringPointCreated.Types.ProductType>(),
-                ConnectionState = EnumerationType.FromName<PhysicalState>(obj.ConnectionState).MapToEnum<ProductionMeteringPointCreated.Types.ConnectionState>(),
-                UnitType = EnumerationType.FromName<MeasurementUnitType>(obj.UnitType).MapToEnum<ProductionMeteringPointCreated.Types.UnitType>(),
+                MeteringMethod = obj.GetMeteringMethod(),
+                MeterReadingPeriodicity = obj.GetMeterReadingPeriodicity(),
+                NetSettlementGroup = obj.GetNetSettlementGroup(),
+                Product = obj.GetProductType(),
+                ConnectionState = obj.GetConnectionState(),
+                UnitType = obj.GetUnitType(),
                 EffectiveDate = obj.EffectiveDate.ToTimestamp(),
             };
         }
