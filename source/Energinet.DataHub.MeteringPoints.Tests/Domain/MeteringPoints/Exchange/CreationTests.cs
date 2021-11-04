@@ -51,7 +51,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
                 room: string.Empty,
                 municipalityCode: null,
                 isActual: false,
-                geoInfoReference: null);
+                geoInfoReference: SampleData.GeoInfoReference);
 
             var exchangeMeteringPointDetails = CreateExchangeDetails()
                 with

@@ -27,6 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange
             string StreetCode = "",
             string? FloorIdentification = null,
             string? RoomIdentification = null,
+            bool? IsActualAddress = null,
             string GsrnNumber = "",
             string MeteringMethod = "",
             string MeterReadingOccurrence = "",
@@ -39,7 +40,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange
             string FromGrid = "",
             string ToGrid = "",
             string TransactionId = "",
-            string? PhysicalConnectionCapacity = null)
+            string? PhysicalConnectionCapacity = null,
+            string? GeoInfoReference = null)
         : ICreateMeteringPointRequest,
             IOutboundMessage,
             IInboundMessage;
