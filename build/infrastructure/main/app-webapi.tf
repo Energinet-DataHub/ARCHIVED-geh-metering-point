@@ -12,13 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 resource "azurerm_app_service" "webapi" {
-  name                = "app-webapi-${var.project}-${var.organisation}-${var.environment}"
-  resource_group_name = data.azurerm_resource_group.main.name
-  location            = data.azurerm_resource_group.main.location
-  app_service_plan_id = azurerm_app_service_plan.meteringpoint.id
+  name                = "app-webapi-${lower(var.domain_name_short)}-${lower(var.environment_short)}-${lower(var.environment_instance)}"
+  resource_group_name = azurerm_resource_group.this.name
+  location            = azurerm_resource_group.this.location
+  app_service_plan_id = module.plan_func_shared.id
 
   site_config {
-    linux_fx_version = "DOTNETCORE|5.0"
     dotnet_framework_version = "v5.0"
     cors {
       allowed_origins = ["*"]
@@ -26,9 +25,9 @@ resource "azurerm_app_service" "webapi" {
   }
 
   app_settings = {
-      METERINGPOINT_QUEUE_TOPIC_NAME: module.sbq_meteringpoint.name,
-      INTEGRATION_EVENT_QUEUE: data.azurerm_key_vault_secret.INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING.value
-      }
+    METERINGPOINT_QUEUE_TOPIC_NAME: module.sbq_meteringpoint.name,
+    INTEGRATION_EVENT_QUEUE: data.azurerm_key_vault_secret.sb_domain_relay_listen_connection_string.value
+  }
 
   connection_string {
     name  = "METERINGPOINT_DB_CONNECTION_STRING"
@@ -39,13 +38,22 @@ resource "azurerm_app_service" "webapi" {
   connection_string {
     name  = "INTEGRATION_EVENT_QUEUE_CONNECTION"
     type  = "Custom"
-    value = data.azurerm_key_vault_secret.INTEGRATION_EVENTS_LISTENER_CONNECTION_STRING.value
+    value = data.azurerm_key_vault_secret.sb_domain_relay_listen_connection_string.value
   }
 
   connection_string {
     name  = "METERINGPOINT_QUEUE_CONNECTION_STRING"
     type  = "Custom"
-    value = module.sbnar_meteringpoint_listener.primary_connection_string
+    value = module.sb_meteringpoint.primary_connection_strings["listen"]
   }
 
+  tags              = azurerm_resource_group.this.tags
+
+  lifecycle {
+    ignore_changes = [
+      # Ignore changes to tags, e.g. because a management agent
+      # updates these based on some ruleset managed elsewhere.
+      tags,
+    ]
+  }
 }
