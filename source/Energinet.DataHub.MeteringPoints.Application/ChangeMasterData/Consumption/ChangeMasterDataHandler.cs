@@ -21,8 +21,8 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.Policies;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
 {
@@ -101,9 +101,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
 
         private Task<BusinessRulesValidationResult> ValidateAsync(ChangeMasterDataRequest request, ConsumptionMeteringPoint targetMeteringPoint)
         {
-            var timePeriodPolicy = new TimePeriodPolicy();
-            var result = timePeriodPolicy.Check( _systemDateTimeProvider.Now(), EffectiveDate.Create(request.EffectiveDate));
-
+            var result = TimePeriodPolicy.Check( _systemDateTimeProvider.Now(), EffectiveDate.Create(request.EffectiveDate));
             if (result.Success == false)
             {
                 return Task.FromResult(result);
@@ -117,45 +115,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
             return await _meteringPointRepository
                 .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
                 .ConfigureAwait(false) as ConsumptionMeteringPoint;
-        }
-    }
-
-    internal class TimePeriodPolicy
-    {
-        public TimePeriodPolicy()
-        {
-        }
-
-        public BusinessRulesValidationResult Check(Instant today, EffectiveDate effectiveDate)
-        {
-            if (effectiveDate == null) throw new ArgumentNullException(nameof(effectiveDate));
-
-            if (!EffectiveDateIsWithinAllowedTimePeriod(DifferenceInDays(today, effectiveDate)))
-            {
-                return new BusinessRulesValidationResult(new List<ValidationError>()
-                {
-                    new EffectiveDateIsNotWithinAllowedTimePeriod(),
-                });
-            }
-            else
-            {
-                return new BusinessRulesValidationResult(new List<ValidationError>());
-            }
-        }
-
-        private static bool EffectiveDateIsWithinAllowedTimePeriod(TimeSpan diff)
-        {
-            return diff.Days is 0 or 1;
-        }
-
-        private TimeSpan DifferenceInDays(Instant today, EffectiveDate effectiveDate)
-        {
-            return ToDate(today) - ToDate(effectiveDate.DateInUtc);
-        }
-
-        private DateTime ToDate(Instant instant)
-        {
-            return instant.ToDateTimeUtc().Date;
         }
     }
 }

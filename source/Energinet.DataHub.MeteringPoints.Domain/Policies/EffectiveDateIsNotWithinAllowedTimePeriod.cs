@@ -14,7 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
+namespace Energinet.DataHub.MeteringPoints.Domain.Policies
 {
     public class EffectiveDateIsNotWithinAllowedTimePeriod : ValidationError
     {
