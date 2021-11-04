@@ -51,7 +51,6 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
         string AssetType,
         string ToGridAreaCode,
         string FromGridAreaCode,
-        DateTime? SupplyStart,
         string ConnectionType,
         string DisconnectionType,
         bool? ProductionObligation);

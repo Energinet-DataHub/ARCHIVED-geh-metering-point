@@ -66,7 +66,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
             modelBuilder.ApplyConfiguration(new OutboxMessageEntityConfiguration());
             modelBuilder.ApplyConfiguration(new MeteringPointEntityConfiguration());
             modelBuilder.ApplyConfiguration(new MarketMeteringPointEntityConfiguration());
-            modelBuilder.ApplyConfiguration(new EnergySupplierDetailsEntityConfiguration());
             modelBuilder.ApplyConfiguration(new ConsumptionMeteringPointEntityConfiguration());
             modelBuilder.ApplyConfiguration(new ProductionMeteringPointEntityConfiguration());
             modelBuilder.ApplyConfiguration(new ExchangeMeteringPointEntityConfiguration());

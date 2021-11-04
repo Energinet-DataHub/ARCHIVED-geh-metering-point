@@ -27,19 +27,19 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
 
         private EnergySupplierDetails(
             Guid id,
-            MeteringPointId meteringPointId,
+            MeteringPointId marketMeteringPointId,
             Instant startOfSupply,
             GlnNumber glnNumber)
         {
-            MeteringPointId = meteringPointId;
+            MarketMeteringPointId = marketMeteringPointId;
             StartOfSupply = startOfSupply;
             GlnNumber = glnNumber;
             Id = id;
         }
 
-        public Guid Id { get; set; } // TODO: TBA: value object
+        public Guid Id { get; }
 
-        public MeteringPointId MeteringPointId { get; set; }
+        public MeteringPointId MarketMeteringPointId { get; }
 
         public Instant StartOfSupply { get; }
 

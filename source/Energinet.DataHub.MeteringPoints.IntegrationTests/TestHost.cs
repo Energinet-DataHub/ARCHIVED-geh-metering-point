@@ -330,6 +330,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         {
             var cleanupStatement = new StringBuilder();
 
+            cleanupStatement.AppendLine($"DELETE FROM EnergySupplierDetails");
             cleanupStatement.AppendLine($"DELETE FROM ConsumptionMeteringPoints");
             cleanupStatement.AppendLine($"DELETE FROM ProductionMeteringPoints");
             cleanupStatement.AppendLine($"DELETE FROM ExchangeMeteringPoints");

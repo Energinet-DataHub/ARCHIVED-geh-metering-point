@@ -160,7 +160,27 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.ToTable("MarketMeteringPoints", "dbo");
 
-            builder.HasMany<EnergySupplierDetails>("EnergySupplierDetails");
+            builder.OwnsMany<EnergySupplierDetails>("EnergySupplierDetails", navigationBuilder =>
+            {
+                navigationBuilder.ToTable("EnergySupplierDetails");
+
+                navigationBuilder.HasKey(energySupplierDetails => energySupplierDetails.Id);
+
+                navigationBuilder.Property(energySupplierDetails => energySupplierDetails.Id).ValueGeneratedNever();
+
+                navigationBuilder.Property(energySupplierDetails => energySupplierDetails.MarketMeteringPointId)
+                    .HasConversion(
+                        toDbValue => toDbValue.Value,
+                        fromDbValue => new MeteringPointId(fromDbValue));
+
+                navigationBuilder.Property(energySupplierDetails => energySupplierDetails.StartOfSupply)
+                    .HasColumnName("StartOfSupplyDate");
+
+                navigationBuilder.Property(energySupplierDetails => energySupplierDetails.GlnNumber)
+                    .HasConversion(
+                        toDbValue => toDbValue.Value,
+                        fromDbValue => GlnNumber.Create(fromDbValue));
+            });
 
             builder.Property<ConnectionType>("ConnectionType")
                 .HasColumnName("ConnectionType")
