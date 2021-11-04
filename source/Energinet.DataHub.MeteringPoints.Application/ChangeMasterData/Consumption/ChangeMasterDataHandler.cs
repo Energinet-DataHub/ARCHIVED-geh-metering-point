@@ -133,9 +133,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
         {
             if (details == null) throw new ArgumentNullException(nameof(details));
 
-            var diff = CalculateDifference(details);
-
-            if (!(diff.Days is 0 or 1))
+            if (!EffectiveDateIsWithinAllowedTimePeriod(DifferenceInDays(details)))
             {
                 return new BusinessRulesValidationResult(new List<ValidationError>()
                 {
@@ -148,7 +146,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
             }
         }
 
-        private TimeSpan CalculateDifference(MasterDataDetails details)
+        private static bool EffectiveDateIsWithinAllowedTimePeriod(TimeSpan diff)
+        {
+            return diff.Days is 0 or 1;
+        }
+
+        private TimeSpan DifferenceInDays(MasterDataDetails details)
         {
             return ToDate(_now) - ToDate(details.EffectiveDate.DateInUtc);
         }
