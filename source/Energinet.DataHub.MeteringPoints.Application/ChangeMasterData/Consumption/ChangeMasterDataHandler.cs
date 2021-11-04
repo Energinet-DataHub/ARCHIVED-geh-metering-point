@@ -102,7 +102,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
         private Task<BusinessRulesValidationResult> ValidateAsync(ChangeMasterDataRequest request, ConsumptionMeteringPoint targetMeteringPoint)
         {
             var timePeriodPolicy = new TimePeriodPolicy(_systemDateTimeProvider.Now());
-            var result = timePeriodPolicy.Check(CreateChangeDetails(request, targetMeteringPoint), _systemDateTimeProvider.Now(), EffectiveDate.Create(request.EffectiveDate));
+            var result = timePeriodPolicy.Check( _systemDateTimeProvider.Now(), EffectiveDate.Create(request.EffectiveDate));
 
             if (result.Success == false)
             {
@@ -129,11 +129,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
             _now = now;
         }
 
-        public BusinessRulesValidationResult Check(MasterDataDetails details, Instant today, EffectiveDate effectiveDate)
+        public BusinessRulesValidationResult Check(Instant today, EffectiveDate effectiveDate)
         {
-            if (details == null) throw new ArgumentNullException(nameof(details));
+            if (effectiveDate == null) throw new ArgumentNullException(nameof(effectiveDate));
 
-            if (!EffectiveDateIsWithinAllowedTimePeriod(DifferenceInDays(details)))
+            if (!EffectiveDateIsWithinAllowedTimePeriod(DifferenceInDays(today, effectiveDate)))
             {
                 return new BusinessRulesValidationResult(new List<ValidationError>()
                 {
@@ -151,9 +151,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
             return diff.Days is 0 or 1;
         }
 
-        private TimeSpan DifferenceInDays(MasterDataDetails details)
+        private TimeSpan DifferenceInDays(Instant today, EffectiveDate effectiveDate)
         {
-            return ToDate(_now) - ToDate(details.EffectiveDate.DateInUtc);
+            return ToDate(today) - ToDate(effectiveDate.DateInUtc);
         }
 
         private DateTime ToDate(Instant instant)
