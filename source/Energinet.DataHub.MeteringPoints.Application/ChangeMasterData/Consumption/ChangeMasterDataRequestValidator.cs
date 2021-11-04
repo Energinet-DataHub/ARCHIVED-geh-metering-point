@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application.Validation.Extensions;
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using FluentValidation;
 
@@ -25,7 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
             RuleFor(request => request.Address)
                 .SetValidator(new AddressValidator());
             RuleFor(request => request.GsrnNumber)
-                .CheckRules(GsrnNumber.CheckRules);
+                .SetValidator(new GsrnNumberMustBeValidRule());
         }
     }
 }
