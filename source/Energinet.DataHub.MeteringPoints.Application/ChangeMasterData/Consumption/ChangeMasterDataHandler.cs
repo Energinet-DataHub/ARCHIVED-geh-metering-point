@@ -101,7 +101,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
 
         private Task<BusinessRulesValidationResult> ValidateAsync(ChangeMasterDataRequest request, ConsumptionMeteringPoint targetMeteringPoint)
         {
-            var timePeriodPolicy = new TimePeriodPolicy(_systemDateTimeProvider.Now());
+            var timePeriodPolicy = new TimePeriodPolicy();
             var result = timePeriodPolicy.Check( _systemDateTimeProvider.Now(), EffectiveDate.Create(request.EffectiveDate));
 
             if (result.Success == false)
@@ -122,11 +122,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
 
     internal class TimePeriodPolicy
     {
-        private readonly Instant _now;
-
-        public TimePeriodPolicy(Instant now)
+        public TimePeriodPolicy()
         {
-            _now = now;
         }
 
         public BusinessRulesValidationResult Check(Instant today, EffectiveDate effectiveDate)
