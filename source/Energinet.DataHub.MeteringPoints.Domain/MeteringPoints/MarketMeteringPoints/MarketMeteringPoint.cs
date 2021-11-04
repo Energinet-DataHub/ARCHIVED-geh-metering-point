@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
@@ -71,7 +72,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             PowerPlantGsrnNumber = powerPlantGsrnNumber;
         }
 
-        protected EnergySupplierDetails? EnergySupplierDetails { get; private set; }
+        protected Collection<EnergySupplierDetails> EnergySupplierDetails { get; } = new();
 
         protected ConnectionType? ConnectionType { get; }
 
@@ -120,9 +121,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
         public void SetEnergySupplierDetails(EnergySupplierDetails energySupplierDetails)
         {
             if (energySupplierDetails == null) throw new ArgumentNullException(nameof(energySupplierDetails));
-            if (EnergySupplierDetails! == energySupplierDetails) return;
-            EnergySupplierDetails = energySupplierDetails;
-            AddDomainEvent(new EnergySupplierDetailsChanged(Id.Value, EnergySupplierDetails.StartOfSupply));
+
+            // TODO: verify behaviour, equals?
+            if (EnergySupplierDetails.Contains(energySupplierDetails))
+            {
+                return;
+            }
+
+            EnergySupplierDetails.Add(energySupplierDetails);
+            AddDomainEvent(new EnergySupplierDetailsChanged(Id.Value, energySupplierDetails.StartOfSupply, energySupplierDetails.GlnNumber));
         }
     }
 }

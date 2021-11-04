@@ -14,6 +14,7 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
@@ -159,11 +160,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.ToTable("MarketMeteringPoints", "dbo");
 
-            builder.OwnsOne<EnergySupplierDetails>("EnergySupplierDetails", config =>
-            {
-                config.Property(x => x.StartOfSupply)
-                    .HasColumnName("StartOfSupplyDate");
-            });
+            builder.HasMany<EnergySupplierDetails>("EnergySupplierDetails");
+
             builder.Property<ConnectionType>("ConnectionType")
                 .HasColumnName("ConnectionType")
                 .HasConversion(

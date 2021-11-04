@@ -16,6 +16,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
+using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using MediatR;
@@ -38,7 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
             var meteringPoint =
                 await _marketMeteringPointRepository.GetByGSRNAsync(GsrnNumber.Create(request.MeteringPointGsrn)).ConfigureAwait(false);
 
-            meteringPoint.SetEnergySupplierDetails(EnergySupplierDetails.Create(request.StartOfSupply));
+            meteringPoint.SetEnergySupplierDetails(EnergySupplierDetails.Create(meteringPoint.Id, request.StartOfSupply, GlnNumber.Create(request.EnergySupplierGlnNumber)));
             return Unit.Value;
         }
     }

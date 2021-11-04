@@ -15,6 +15,7 @@
 using System;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
@@ -39,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
         public void Should_set_energy_supplier_details()
         {
             var marketMeteringPoint = CreateMarketMeteringPoint();
-            marketMeteringPoint.SetEnergySupplierDetails(EnergySupplierDetails.Create(_systemDateTimeProvider.Now()));
+            marketMeteringPoint.SetEnergySupplierDetails(EnergySupplierDetails.Create(marketMeteringPoint.Id, _systemDateTimeProvider.Now(), GlnNumber.Create(SampleData.GlnNumber)));
 
             Assert.Contains(marketMeteringPoint.DomainEvents, e => e is EnergySupplierDetailsChanged);
         }
@@ -48,7 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
         public void Does_not_change_energy_supplier_details_when_details_are_the_same()
         {
             var marketMeteringPoint = CreateMarketMeteringPoint();
-            marketMeteringPoint.SetEnergySupplierDetails(EnergySupplierDetails.Create(_systemDateTimeProvider.Now()));
+            marketMeteringPoint.SetEnergySupplierDetails(EnergySupplierDetails.Create(marketMeteringPoint.Id, _systemDateTimeProvider.Now(), GlnNumber.Create(SampleData.GlnNumber)));
 
             Assert.Equal(1, marketMeteringPoint.DomainEvents.Count(e => e is EnergySupplierDetailsChanged));
         }

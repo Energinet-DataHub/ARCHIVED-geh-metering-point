@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
@@ -20,14 +21,20 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
 {
     public class EnergySupplierDetailsChanged : DomainEventBase
     {
-        public EnergySupplierDetailsChanged(Guid meteringPointId, Instant startOfSupply)
+        public EnergySupplierDetailsChanged(
+            Guid meteringPointId,
+            Instant startOfSupply,
+            GlnNumber glnNumber)
         {
             MeteringPointId = meteringPointId;
             StartOfSupply = startOfSupply;
+            GlnNumber = glnNumber;
         }
 
         public Guid MeteringPointId { get; }
 
         public Instant StartOfSupply { get; }
+
+        public GlnNumber GlnNumber { get; }
     }
 }

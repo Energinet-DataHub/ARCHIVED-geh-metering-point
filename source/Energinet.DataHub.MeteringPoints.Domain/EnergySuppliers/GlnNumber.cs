@@ -12,18 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
-using MediatR;
-using NodaTime;
+using System;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Connect
+namespace Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers
 {
-    public class EnergySupplierChanged : INotification, IInboundMessage
+    public class GlnNumber
     {
-        public string GsrnNumber { get; set; } = string.Empty;
+        public GlnNumber(string value)
+        {
+            Value = value;
+        }
 
-        public Instant StartOfSupply { get; set; }
+        public string Value { get; }
 
-        public string GlnNumber { get; set; } = string.Empty;
+        public static GlnNumber Create(string gln)
+        {
+            if (string.IsNullOrWhiteSpace(gln)) throw new ArgumentException($"'{nameof(gln)}' cannot be null or whitespace", nameof(gln));
+
+            var formattedValue = gln.Trim();
+
+            return new GlnNumber(formattedValue);
+        }
     }
 }

@@ -167,7 +167,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
         {
-            var rules = new Collection<IBusinessRule> { new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, _meteringPointType, ConnectionState.PhysicalState), new MustHaveEnergySupplierRule(GsrnNumber, connectionDetails, EnergySupplierDetails), };
+            var rules = new Collection<IBusinessRule> { new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, _meteringPointType, ConnectionState.PhysicalState), new MustHaveEnergySupplierRule(GsrnNumber, connectionDetails, EnergySupplierDetails.FirstOrDefault()), }; // TODO: first?
 
             return new BusinessRulesValidationResult(rules);
         }

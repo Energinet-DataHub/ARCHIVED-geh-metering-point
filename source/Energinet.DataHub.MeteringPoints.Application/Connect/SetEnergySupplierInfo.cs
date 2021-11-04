@@ -20,20 +20,30 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
     public class SetEnergySupplierInfo : InternalCommand
     {
-        public SetEnergySupplierInfo(Guid id, string meteringPointGSRN)
+        public SetEnergySupplierInfo(
+            Guid id,
+            string meteringPointGsrn,
+            string energySupplierGlnNumber)
         {
             Id = id;
-            MeteringPointGsrn = meteringPointGSRN;
+            MeteringPointGsrn = meteringPointGsrn;
+            EnergySupplierGlnNumber = energySupplierGlnNumber;
         }
 
-        public SetEnergySupplierInfo(string meteringPointGSRN, Instant startOfSupply)
+        public SetEnergySupplierInfo(
+            string meteringPointGsrn,
+            Instant startOfSupply,
+            string energySupplierGlnNumber)
         {
-            MeteringPointGsrn = meteringPointGSRN;
+            MeteringPointGsrn = meteringPointGsrn;
             StartOfSupply = startOfSupply;
+            EnergySupplierGlnNumber = energySupplierGlnNumber;
         }
 
         public string MeteringPointGsrn { get; }
 
         public Instant StartOfSupply { get; }
+
+        public string EnergySupplierGlnNumber { get; }
     }
 }

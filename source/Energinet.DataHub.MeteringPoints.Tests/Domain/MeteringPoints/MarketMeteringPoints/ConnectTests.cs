@@ -12,15 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Domain.Addresses;
-using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -96,14 +93,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
         private static void SetStartOfSupplyAheadOfEffectiveDate(ConsumptionMeteringPoint meteringPoint, Instant effectiveDate)
         {
             var startOfSupply = effectiveDate.Plus(Duration.FromDays(1));
-            var energySupplierDetails = EnergySupplierDetails.Create(startOfSupply);
+            var energySupplierDetails = EnergySupplierDetails.Create(meteringPoint.Id, startOfSupply, GlnNumber.Create(SampleData.GlnNumber));
             meteringPoint.SetEnergySupplierDetails(energySupplierDetails);
         }
 
         private static void SetStartOfSupplyPriorToEffectiveDate(MarketMeteringPoint meteringPoint, Instant effectiveDate)
         {
             var startOfSupply = effectiveDate.Minus(Duration.FromDays(1));
-            var energySupplierDetails = EnergySupplierDetails.Create(startOfSupply);
+            var energySupplierDetails = EnergySupplierDetails.Create(meteringPoint.Id, startOfSupply, GlnNumber.Create(SampleData.GlnNumber));
             meteringPoint.SetEnergySupplierDetails(energySupplierDetails);
         }
 
