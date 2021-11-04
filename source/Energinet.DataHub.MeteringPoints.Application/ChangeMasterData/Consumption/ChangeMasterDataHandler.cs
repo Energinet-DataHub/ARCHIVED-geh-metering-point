@@ -137,7 +137,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
             {
                 return new BusinessRulesValidationResult(new List<ValidationError>()
                 {
-                    new EffectiveDateNotAllowed(),
+                    new EffectiveDateIsNotWithinAllowedTimePeriod(),
                 });
             }
             else

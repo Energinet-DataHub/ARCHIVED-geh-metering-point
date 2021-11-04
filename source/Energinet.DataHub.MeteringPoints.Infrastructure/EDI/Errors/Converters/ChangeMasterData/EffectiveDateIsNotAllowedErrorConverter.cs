@@ -16,9 +16,9 @@ using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.ChangeMasterData
 {
-    public class EffectiveDateIsNotAllowedErrorConverter : ErrorConverter<EffectiveDateNotAllowed>
+    public class EffectiveDateIsNotAllowedErrorConverter : ErrorConverter<EffectiveDateIsNotWithinAllowedTimePeriod>
     {
-        protected override ErrorMessage Convert(EffectiveDateNotAllowed validationError)
+        protected override ErrorMessage Convert(EffectiveDateIsNotWithinAllowedTimePeriod validationError)
         {
             return new ErrorMessage("E17", "Effectuation date incorrect: The information is not received within the correct time period (either too soon or too late).");
         }
