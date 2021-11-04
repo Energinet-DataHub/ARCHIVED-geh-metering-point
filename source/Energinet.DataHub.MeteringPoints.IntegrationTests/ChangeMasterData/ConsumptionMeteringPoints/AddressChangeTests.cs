@@ -18,8 +18,10 @@ using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
+using NodaTime;
 using Xunit;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.ConsumptionMeteringPoints
@@ -35,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
         public async Task Address_is_changed()
         {
             await CreateMeteringPointAsync().ConfigureAwait(false);
-            var request = new ChangeMasterDataRequest()
+            var request = CreateRequest()
                 with
                 {
                     TransactionId = SampleData.Transaction,
@@ -143,9 +145,15 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
             AssertValidationError("E86");
         }
 
-        private static ChangeMasterDataRequest CreateRequest()
+        private ChangeMasterDataRequest CreateRequest()
         {
-            return TestUtils.CreateRequest();
+            var today = GetService<ISystemDateTimeProvider>().Now().ToDateTimeUtc();
+            var effectiveDate = Instant.FromUtc(today.Year, today.Month, today.Day, 22, 0, 0);
+            return TestUtils.CreateRequest()
+                with
+                {
+                    EffectiveDate = effectiveDate.ToString(),
+                };
         }
 
         private Task<BusinessProcessResult> CreateMeteringPointAsync()

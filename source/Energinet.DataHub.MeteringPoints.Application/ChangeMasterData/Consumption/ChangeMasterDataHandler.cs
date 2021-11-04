@@ -22,16 +22,19 @@ using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
 {
     public class ChangeMasterDataHandler : IBusinessRequestHandler<ChangeMasterDataRequest>
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
+        private readonly ISystemDateTimeProvider _systemDateTimeProvider;
 
-        public ChangeMasterDataHandler(IMeteringPointRepository meteringPointRepository)
+        public ChangeMasterDataHandler(IMeteringPointRepository meteringPointRepository, ISystemDateTimeProvider systemDateTimeProvider)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
+            _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
         }
 
         public async Task<BusinessProcessResult> Handle(ChangeMasterDataRequest request, CancellationToken cancellationToken)
@@ -95,8 +98,23 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 request.Address.GeoInfoReference));
         }
 
-        private static Task<BusinessRulesValidationResult> ValidateAsync(ChangeMasterDataRequest request, ConsumptionMeteringPoint targetMeteringPoint)
+        private Task<BusinessRulesValidationResult> ValidateAsync(ChangeMasterDataRequest request, ConsumptionMeteringPoint targetMeteringPoint)
         {
+            var effectiveDate = EffectiveDate.Create(request.EffectiveDate);
+            var today = _systemDateTimeProvider.Now().InUtc().ToDateTimeUtc();
+
+            var tmpEffectiveDate = new DateTime(effectiveDate.DateInUtc.ToDateTimeUtc().Year, effectiveDate.DateInUtc.ToDateTimeUtc().Month, effectiveDate.DateInUtc.ToDateTimeUtc().Day);
+            var tmpToday = new DateTime(today.Year, today.Month, today.Day);
+            var diff = tmpToday - tmpEffectiveDate;
+
+            if (!(diff.Days is 0 or 1))
+            {
+                return Task.FromResult(new BusinessRulesValidationResult(new List<ValidationError>()
+                {
+                    new EffectiveDateNotAllowed(),
+                }));
+            }
+
             return Task.FromResult(new BusinessRulesValidationResult(targetMeteringPoint.CanChange(CreateChangeDetails(request, targetMeteringPoint)).Errors));
         }
 

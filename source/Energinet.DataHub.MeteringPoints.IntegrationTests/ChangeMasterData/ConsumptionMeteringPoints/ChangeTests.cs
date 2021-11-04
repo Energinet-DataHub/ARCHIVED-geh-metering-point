@@ -12,8 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
+using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
 
@@ -45,6 +49,32 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
                 }).ConfigureAwait(false);
 
             AssertValidationError("E10");
+        }
+
+        [Theory]
+        [InlineData("2021-01-01T18:00:00Z", "2021-01-02T22:00:00Z", true)]
+        [InlineData("2021-01-01T18:00:00Z", "2020-12-30T22:00:00Z", true)]
+        [InlineData("2021-01-01T18:00:00Z", "2021-01-01T22:00:00Z", false)]
+        [InlineData("2021-01-01T18:00:00Z", "2020-12-31T22:00:00Z", false)]
+        public async Task Effective_date_is_today_or_the_day_before(string today, string effectiveDate, bool expectError)
+        {
+            var timeProvider = GetService<ISystemDateTimeProvider>() as SystemDateTimeProviderStub;
+            timeProvider!.SetNow(InstantPattern.General.Parse(today).Value);
+
+            await CreateMeteringPointAsync().ConfigureAwait(false);
+
+            await InvokeBusinessProcessAsync(TestUtils.CreateRequest()
+                with
+                {
+                    EffectiveDate = effectiveDate,
+                }).ConfigureAwait(false);
+
+            AssertValidationError("E17", expectError);
+        }
+
+        private Task<BusinessProcessResult> CreateMeteringPointAsync()
+        {
+            return InvokeBusinessProcessAsync(Scenarios.CreateConsumptionMeteringPointCommand());
         }
     }
 }

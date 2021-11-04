@@ -271,13 +271,18 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             Assert.NotNull(validationError);
         }
 
-        protected void AssertValidationError(string expectedErrorCode)
+        protected void AssertValidationError(string expectedErrorCode, bool expectError = true)
         {
             var message = GetOutboxMessages
                     <MessageHubEnvelope>()
-                .Single(msg => msg.MessageType.Name.EndsWith("rejected", StringComparison.OrdinalIgnoreCase));
+                .SingleOrDefault(msg => msg.MessageType.Name.EndsWith("rejected", StringComparison.OrdinalIgnoreCase));
 
-            var rejectMessage = GetService<IJsonSerializer>().Deserialize<RejectMessage>(message.Content);
+            if (message == null && expectError == false)
+            {
+                return;
+            }
+
+            var rejectMessage = GetService<IJsonSerializer>().Deserialize<RejectMessage>(message!.Content);
 
             var errorCount = rejectMessage.MarketActivityRecord.Reasons.Count;
             if (errorCount > 1)
@@ -295,7 +300,14 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             var validationError = rejectMessage.MarketActivityRecord.Reasons
                 .Single(error => error.Code == expectedErrorCode);
 
-            Assert.NotNull(validationError);
+            if (expectError)
+            {
+                Assert.NotNull(validationError);
+            }
+            else
+            {
+                Assert.Null(validationError);
+            }
         }
 
         protected TIntegrationEvent? FindIntegrationEvent<TIntegrationEvent>()
