@@ -133,9 +133,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
         {
             if (details == null) throw new ArgumentNullException(nameof(details));
 
-            var tmpEffectiveDate = new DateTime(details.EffectiveDate.DateInUtc.ToDateTimeUtc().Year, details.EffectiveDate.DateInUtc.ToDateTimeUtc().Month, details.EffectiveDate.DateInUtc.ToDateTimeUtc().Day);
-            var tmpToday = new DateTime(_now.ToDateTimeUtc().Year, _now.ToDateTimeUtc().Month, _now.ToDateTimeUtc().Day);
-            var diff = tmpToday - tmpEffectiveDate;
+            var diff = CalculateDifference(details);
 
             if (!(diff.Days is 0 or 1))
             {
@@ -148,6 +146,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
             {
                 return new BusinessRulesValidationResult(new List<ValidationError>());
             }
+        }
+
+        private TimeSpan CalculateDifference(MasterDataDetails details)
+        {
+            return ToDate(_now) - ToDate(details.EffectiveDate.DateInUtc);
+        }
+
+        private DateTime ToDate(Instant instant)
+        {
+            return instant.ToDateTimeUtc().Date;
         }
     }
 }
