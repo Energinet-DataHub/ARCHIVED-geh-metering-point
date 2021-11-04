@@ -18,5 +18,6 @@ using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public record MasterDataDetails(
+        EffectiveDate EffectiveDate,
         Address? Address = null);
 }

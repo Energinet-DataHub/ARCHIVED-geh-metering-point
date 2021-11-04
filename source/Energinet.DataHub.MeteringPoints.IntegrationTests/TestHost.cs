@@ -282,6 +282,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 return;
             }
 
+            if (message == null)
+            {
+                throw new XunitException("No message was found in outbox.");
+            }
+
             var rejectMessage = GetService<IJsonSerializer>().Deserialize<RejectMessage>(message!.Content);
 
             var errorCount = rejectMessage.MarketActivityRecord.Reasons.Count;

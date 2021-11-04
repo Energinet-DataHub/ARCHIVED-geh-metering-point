@@ -26,6 +26,7 @@ using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
 {
+    #pragma warning disable
     public class ChangeMasterDataHandler : IBusinessRequestHandler<ChangeMasterDataRequest>
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
@@ -62,7 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
         private static MasterDataDetails CreateChangeDetails(ChangeMasterDataRequest request, ConsumptionMeteringPoint targetMeteringPoint)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            return new MasterDataDetails()
+            return new MasterDataDetails(EffectiveDate.Create(request.EffectiveDate))
                 with
                 {
                     Address = CreateNewAddressFrom(request, targetMeteringPoint),
@@ -100,19 +101,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
 
         private Task<BusinessRulesValidationResult> ValidateAsync(ChangeMasterDataRequest request, ConsumptionMeteringPoint targetMeteringPoint)
         {
-            var effectiveDate = EffectiveDate.Create(request.EffectiveDate);
-            var today = _systemDateTimeProvider.Now().InUtc().ToDateTimeUtc();
+            var timePeriodPolicy = new TimePeriodPolicy(_systemDateTimeProvider.Now());
+            var result = timePeriodPolicy.Check(CreateChangeDetails(request, targetMeteringPoint));
 
-            var tmpEffectiveDate = new DateTime(effectiveDate.DateInUtc.ToDateTimeUtc().Year, effectiveDate.DateInUtc.ToDateTimeUtc().Month, effectiveDate.DateInUtc.ToDateTimeUtc().Day);
-            var tmpToday = new DateTime(today.Year, today.Month, today.Day);
-            var diff = tmpToday - tmpEffectiveDate;
-
-            if (!(diff.Days is 0 or 1))
+            if (result.Success == false)
             {
-                return Task.FromResult(new BusinessRulesValidationResult(new List<ValidationError>()
-                {
-                    new EffectiveDateNotAllowed(),
-                }));
+                return Task.FromResult(result);
             }
 
             return Task.FromResult(new BusinessRulesValidationResult(targetMeteringPoint.CanChange(CreateChangeDetails(request, targetMeteringPoint)).Errors));
@@ -123,6 +117,37 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
             return await _meteringPointRepository
                 .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
                 .ConfigureAwait(false) as ConsumptionMeteringPoint;
+        }
+    }
+
+    internal class TimePeriodPolicy
+    {
+        private readonly Instant _now;
+
+        public TimePeriodPolicy(Instant now)
+        {
+            _now = now;
+        }
+
+        public BusinessRulesValidationResult Check(MasterDataDetails details)
+        {
+            if (details == null) throw new ArgumentNullException(nameof(details));
+
+            var tmpEffectiveDate = new DateTime(details.EffectiveDate.DateInUtc.ToDateTimeUtc().Year, details.EffectiveDate.DateInUtc.ToDateTimeUtc().Month, details.EffectiveDate.DateInUtc.ToDateTimeUtc().Day);
+            var tmpToday = new DateTime(_now.ToDateTimeUtc().Year, _now.ToDateTimeUtc().Month, _now.ToDateTimeUtc().Day);
+            var diff = tmpToday - tmpEffectiveDate;
+
+            if (!(diff.Days is 0 or 1))
+            {
+                return new BusinessRulesValidationResult(new List<ValidationError>()
+                {
+                    new EffectiveDateNotAllowed(),
+                });
+            }
+            else
+            {
+                return new BusinessRulesValidationResult(new List<ValidationError>());
+            }
         }
     }
 }
