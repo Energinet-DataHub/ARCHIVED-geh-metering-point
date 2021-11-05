@@ -35,56 +35,42 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Policies
         {
             if (effectiveDate == null) throw new ArgumentNullException(nameof(effectiveDate));
 
-            if (ToDate(effectiveDate.DateInUtc) < ToDate(today))
+            var maxDifferenceInDays = IsBeforeToday(today, effectiveDate)
+                ? _allowedNumberOfDaysBeforeToday
+                : _allowedNumberOfDaysAfterToday;
+
+            if (EffectiveDateIsWithinAllowedTimePeriod(today, effectiveDate, maxDifferenceInDays) == false)
             {
-                var diff = ToDate(today) - ToDate(effectiveDate.DateInUtc);
-                var isAllowed = diff.Days <= _allowedNumberOfDaysBeforeToday;
-
-                if (isAllowed == false)
+                return new BusinessRulesValidationResult(new List<ValidationError>()
                 {
-                    return new BusinessRulesValidationResult(new List<ValidationError>()
-                    {
-                        new EffectiveDateIsNotWithinAllowedTimePeriod(),
-                    });
-                }
-            }
-            else
-            {
-                var diff = ToDate(effectiveDate.DateInUtc) - ToDate(today);
-                var isAllowed = diff.Days <= _allowedNumberOfDaysAfterToday;
-
-                if (isAllowed == false)
-                {
-                    return new BusinessRulesValidationResult(new List<ValidationError>()
-                    {
-                        new EffectiveDateIsNotWithinAllowedTimePeriod(),
-                    });
-                }
-
-                // if (!EffectiveDateIsWithinAllowedTimePeriod(DifferenceInDays(today, effectiveDate)))
-                // {
-                //     return new BusinessRulesValidationResult(new List<ValidationError>()
-                //     {
-                //         new EffectiveDateIsNotWithinAllowedTimePeriod(),
-                //     });
-                // }
-                // else
-                // {
-                //     return new BusinessRulesValidationResult(new List<ValidationError>());
-                // }
+                    new EffectiveDateIsNotWithinAllowedTimePeriod(),
+                });
             }
 
             return new BusinessRulesValidationResult(new List<ValidationError>());
         }
 
-        private static bool EffectiveDateIsWithinAllowedTimePeriod(TimeSpan diff)
+        private static bool IsBeforeToday(Instant today, EffectiveDate effectiveDate)
         {
-            return diff.Days is 0 or 1;
+            return ToDate(effectiveDate.DateInUtc) < ToDate(today);
         }
 
-        private static TimeSpan DifferenceInDays(Instant today, EffectiveDate effectiveDate)
+        private static bool EffectiveDateIsWithinAllowedTimePeriod(Instant today, EffectiveDate effectiveDate, int maxDifferenceInDays)
         {
-            return ToDate(today) - ToDate(effectiveDate.DateInUtc);
+            return !(DifferenceInDays(today, effectiveDate) > maxDifferenceInDays);
+        }
+
+        private static int DifferenceInDays(Instant today, EffectiveDate effectiveDate)
+        {
+            var todayDatetime = ToDate(today);
+            var effectiveDateTime = ToDate(effectiveDate.DateInUtc);
+
+            if (todayDatetime > effectiveDateTime)
+            {
+                return (todayDatetime - effectiveDateTime).Days;
+            }
+
+            return (effectiveDateTime - todayDatetime).Days;
         }
 
         private static DateTime ToDate(Instant instant)
