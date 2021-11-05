@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
+using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notifications.FutureEnergySupplierChangeRegistered
 {
@@ -21,7 +23,13 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notificati
     {
         protected override IInboundMessage Convert(NotificationContracts.FutureEnergySupplierChangeRegistered obj)
         {
-            throw new System.NotImplementedException();
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
+
+            return new Application.Connect.FutureEnergySupplierChangeRegistered(
+                obj.AccountingpointId,
+                obj.GsrnNumber,
+                obj.EnergySupplierGln,
+                Instant.FromUnixTimeSeconds(obj.EffectiveDate.Seconds));
         }
     }
 }
