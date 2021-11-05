@@ -15,19 +15,18 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperatorPolicies
 {
-    public class GridOperatorOwnsMeteringPointPolicy
+    public class GridOperatorIsOwnerPolicy
     {
         private readonly IMeteringPointOwnershipProvider _ownershipProvider;
         private readonly IUserContext _userContext;
 
-        public GridOperatorOwnsMeteringPointPolicy(IMeteringPointOwnershipProvider ownershipProvider, IUserContext userContext)
+        public GridOperatorIsOwnerPolicy(IMeteringPointOwnershipProvider ownershipProvider, IUserContext userContext)
         {
             _ownershipProvider = ownershipProvider ?? throw new ArgumentNullException(nameof(ownershipProvider));
             _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));

@@ -57,7 +57,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 throw new AuthenticationException("No authenticated user");
             }
 
-            var authorizationHandler = new GridOperatorOwnsMeteringPointPolicy(_ownershipProvider, _authenticatedUserContext);
+            var authorizationHandler = new GridOperatorIsOwnerPolicy(_ownershipProvider, _authenticatedUserContext);
             var authResult = await authorizationHandler.AuthorizeAsync(request.GsrnNumber).ConfigureAwait(false);
             if (authResult.Success == false)
             {
