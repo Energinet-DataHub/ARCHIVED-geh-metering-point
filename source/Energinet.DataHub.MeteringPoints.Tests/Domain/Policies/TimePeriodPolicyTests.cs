@@ -49,5 +49,17 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.Policies
 
             AssertError<EffectiveDateIsNotWithinAllowedTimePeriod>(result, expectError);
         }
+
+        [Fact]
+        public void Same_date_is_allowed()
+        {
+            var policy = new TimePeriodPolicy(10, 10);
+            var today = InstantPattern.General.Parse("2021-01-10T10:00:00Z").Value;
+            var effective = EffectiveDate.Create("2021-01-10T22:00:00Z");
+
+            var result = policy.Check(today, effective);
+
+            AssertError<EffectiveDateIsNotWithinAllowedTimePeriod>(result, false);
+        }
     }
 }
