@@ -100,7 +100,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
 
         private Task<BusinessRulesValidationResult> ValidateAsync(ChangeMasterDataRequest request, ConsumptionMeteringPoint targetMeteringPoint)
         {
-            var timePeriodPolicy = new TimePeriodPolicy(1);
+            var timePeriodPolicy = new TimePeriodPolicy(1, 0);
             var result = timePeriodPolicy.Check(_systemDateTimeProvider.Now(), EffectiveDate.Create(request.EffectiveDate));
             if (result.Success == false)
             {

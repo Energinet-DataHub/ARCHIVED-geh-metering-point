@@ -20,23 +20,61 @@ using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.Policies
 {
-    public static class TimePeriodPolicy
+    public class TimePeriodPolicy
     {
-        public static BusinessRulesValidationResult Check(Instant today, EffectiveDate effectiveDate)
+        private readonly int _allowedNumberOfDaysBeforeToday;
+        private readonly int _allowedNumberOfDaysAfterToday;
+
+        public TimePeriodPolicy(int allowedNumberOfDaysBeforeToday, int allowedNumberOfDaysAfterToday)
+        {
+            _allowedNumberOfDaysBeforeToday = allowedNumberOfDaysBeforeToday;
+            _allowedNumberOfDaysAfterToday = allowedNumberOfDaysAfterToday;
+        }
+
+        public BusinessRulesValidationResult Check(Instant today, EffectiveDate effectiveDate)
         {
             if (effectiveDate == null) throw new ArgumentNullException(nameof(effectiveDate));
 
-            if (!EffectiveDateIsWithinAllowedTimePeriod(DifferenceInDays(today, effectiveDate)))
+            if (ToDate(effectiveDate.DateInUtc) < ToDate(today))
             {
-                return new BusinessRulesValidationResult(new List<ValidationError>()
+                var diff = ToDate(today) - ToDate(effectiveDate.DateInUtc);
+                var isAllowed = diff.Days <= _allowedNumberOfDaysBeforeToday;
+
+                if (isAllowed == false)
                 {
-                    new EffectiveDateIsNotWithinAllowedTimePeriod(),
-                });
+                    return new BusinessRulesValidationResult(new List<ValidationError>()
+                    {
+                        new EffectiveDateIsNotWithinAllowedTimePeriod(),
+                    });
+                }
             }
             else
             {
-                return new BusinessRulesValidationResult(new List<ValidationError>());
+                var diff = ToDate(effectiveDate.DateInUtc) - ToDate(today);
+                var isAllowed = diff.Days <= _allowedNumberOfDaysAfterToday;
+
+                if (isAllowed == false)
+                {
+                    return new BusinessRulesValidationResult(new List<ValidationError>()
+                    {
+                        new EffectiveDateIsNotWithinAllowedTimePeriod(),
+                    });
+                }
+
+                // if (!EffectiveDateIsWithinAllowedTimePeriod(DifferenceInDays(today, effectiveDate)))
+                // {
+                //     return new BusinessRulesValidationResult(new List<ValidationError>()
+                //     {
+                //         new EffectiveDateIsNotWithinAllowedTimePeriod(),
+                //     });
+                // }
+                // else
+                // {
+                //     return new BusinessRulesValidationResult(new List<ValidationError>());
+                // }
             }
+
+            return new BusinessRulesValidationResult(new List<ValidationError>());
         }
 
         private static bool EffectiveDateIsWithinAllowedTimePeriod(TimeSpan diff)

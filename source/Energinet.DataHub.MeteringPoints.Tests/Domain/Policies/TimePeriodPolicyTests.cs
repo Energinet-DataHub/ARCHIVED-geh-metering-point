@@ -14,22 +14,40 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.Policies;
+using NodaTime;
+using NodaTime.Text;
 using Xunit;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.Policies
 {
     public class TimePeriodPolicyTests : TestBase
     {
-        [Fact]
-        public void Effective_date_is_within_the_allowed_time_period()
+        [Theory]
+        [InlineData("2021-01-01T11:00:00Z", "2020-12-26T22:00:00Z", 5, true)]
+        [InlineData("2021-01-01T11:00:00Z", "2020-12-26T22:00:00Z", 10, false)]
+        public void Effective_date_is_within_range_of_allowed_number_of_days_before_today(string todayDate, string effectiveDate, int allowedNumberOfDaysBeforeToday, bool expectError)
         {
-            var timeProvider = new SystemDateTimeProviderStub();
-            var today = timeProvider.Now();
-            var effectiveDate = EffectiveDate.Create("2021-11-01T22:00:00Z");
+            var policy = new TimePeriodPolicy(allowedNumberOfDaysBeforeToday, 0);
+            var today = InstantPattern.General.Parse(todayDate).Value;
+            var effective = EffectiveDate.Create(effectiveDate);
 
-            var result = TimePeriodPolicy.Check(today, effectiveDate);
+            var result = policy.Check(today, effective);
 
-            AssertError<EffectiveDateIsNotWithinAllowedTimePeriod>(result, true);
+            AssertError<EffectiveDateIsNotWithinAllowedTimePeriod>(result, expectError);
+        }
+
+        [Theory]
+        [InlineData("2021-01-01T11:00:00Z", "2021-01-10T22:00:00Z", 5, true)]
+        [InlineData("2021-01-01T11:00:00Z", "2021-01-10T22:00:00Z", 10, false)]
+        public void Effective_date_is_within_range_of_allowed_number_of_days_after_today(string todayDate, string effectiveDate, int allowedNumberOfDaysAfterToday, bool expectError)
+        {
+            var policy = new TimePeriodPolicy(0, allowedNumberOfDaysAfterToday);
+            var today = InstantPattern.General.Parse(todayDate).Value;
+            var effective = EffectiveDate.Create(effectiveDate);
+
+            var result = policy.Check(today, effective);
+
+            AssertError<EffectiveDateIsNotWithinAllowedTimePeriod>(result, expectError);
         }
     }
 }
