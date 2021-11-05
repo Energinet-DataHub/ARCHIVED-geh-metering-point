@@ -164,6 +164,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             _container.Register<ChangeMasterDataSettings>(() => new ChangeMasterDataSettings(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1));
 
+            _container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
+
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
                 typeof(MasterDataDocument).Assembly, // Application

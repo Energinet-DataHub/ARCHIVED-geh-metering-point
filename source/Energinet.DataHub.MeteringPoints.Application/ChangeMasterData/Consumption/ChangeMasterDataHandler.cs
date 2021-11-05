@@ -36,13 +36,15 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
         private readonly ChangeMasterDataSettings _settings;
         private readonly IUserContext _authenticatedUserContext;
+        private readonly IMeteringPointOwnershipProvider _ownershipProvider;
 
-        public ChangeMasterDataHandler(IMeteringPointRepository meteringPointRepository, ISystemDateTimeProvider systemDateTimeProvider, ChangeMasterDataSettings settings, IUserContext authenticatedUserContext)
+        public ChangeMasterDataHandler(IMeteringPointRepository meteringPointRepository, ISystemDateTimeProvider systemDateTimeProvider, ChangeMasterDataSettings settings, IUserContext authenticatedUserContext, IMeteringPointOwnershipProvider ownershipProvider)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
             _settings = settings;
             _authenticatedUserContext = authenticatedUserContext ?? throw new ArgumentNullException(nameof(authenticatedUserContext));
+            _ownershipProvider = ownershipProvider ?? throw new ArgumentNullException(nameof(ownershipProvider));
         }
 
         public async Task<BusinessProcessResult> Handle(ChangeMasterDataRequest request, CancellationToken cancellationToken)
@@ -54,7 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 throw new AuthenticationException("No authenticated user");
             }
 
-            var authorizationHandler = new GridOperatorOwnsMeteringPointPolicy();
+            var authorizationHandler = new GridOperatorOwnsMeteringPointPolicy(_ownershipProvider);
             var authResult = await authorizationHandler.AuthorizeAsync(request.GsrnNumber, _authenticatedUserContext.CurrentUser.GlnNumber).ConfigureAwait(false);
             if (authResult.Success == false)
             {
@@ -146,14 +148,44 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
 #pragma warning disable
     public class GridOperatorOwnsMeteringPointPolicy
     {
+        private readonly IMeteringPointOwnershipProvider _ownershipProvider;
+
+        public GridOperatorOwnsMeteringPointPolicy(IMeteringPointOwnershipProvider ownershipProvider)
+        {
+            _ownershipProvider = ownershipProvider ?? throw new ArgumentNullException(nameof(ownershipProvider));
+        }
+
         public async Task<AuthorizationResult> AuthorizeAsync(string gsrnNumber, string gridOperatorGlnNumber)
         {
+            if (gsrnNumber == null) throw new ArgumentNullException(nameof(gsrnNumber));
+            if (gridOperatorGlnNumber == null) throw new ArgumentNullException(nameof(gridOperatorGlnNumber));
+            var ownerOfMeteringPoint = await _ownershipProvider.GetOwnerAsync(gsrnNumber).ConfigureAwait(false);
+            if (ownerOfMeteringPoint.GlnNumber.Equals(gridOperatorGlnNumber, StringComparison.OrdinalIgnoreCase))
+            {
+                return AuthorizationResult.Ok();
+            }
+
             return new AuthorizationResult(new List<ValidationError>()
             {
                 new GridOperatorIsNotOwnerOfMeteringPoint(gsrnNumber),
             });
         }
     }
+
+    public interface IMeteringPointOwnershipProvider
+    {
+        Task<Owner> GetOwnerAsync(string gsrnNumber);
+    }
+
+    public class MeteringPointOwnershipProvider : IMeteringPointOwnershipProvider
+    {
+        public Task<Owner> GetOwnerAsync(string gsrnNumber)
+        {
+            return Task.FromResult(new Owner("8200000001409"));
+        }
+    }
+
+    public record Owner(string GlnNumber);
 
     public class GridOperatorIsNotOwnerOfMeteringPoint : ValidationError
     {
