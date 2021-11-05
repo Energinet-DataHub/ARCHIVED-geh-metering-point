@@ -53,6 +53,18 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
             AssertValidationError("E10");
         }
 
+        [Fact]
+        public async Task Effective_date_is_required()
+        {
+            await InvokeBusinessProcessAsync(TestUtils.CreateRequest()
+                with
+                {
+                    EffectiveDate = string.Empty,
+                }).ConfigureAwait(false);
+
+            AssertValidationError("D02");
+        }
+
         [Theory]
         [InlineData("2021-01-01T18:00:00Z", "2021-01-02T22:00:00Z", true)]
         [InlineData("2021-01-01T18:00:00Z", "2020-12-30T22:00:00Z", true)]
