@@ -21,7 +21,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
         public ChangeMasterDataRequestValidator()
         {
             RuleFor(request => request.Address)
-                .SetValidator(new AddressValidator());
+                .SetValidator(new AddressValidator())
+                .Unless(request => request.Address is null);
         }
     }
 }
