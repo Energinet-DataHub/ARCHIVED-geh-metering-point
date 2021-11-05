@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Authorization;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Users;
+using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -171,21 +172,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
             });
         }
     }
-
-    public interface IMeteringPointOwnershipProvider
-    {
-        Task<Owner> GetOwnerAsync(string gsrnNumber);
-    }
-
-    public class MeteringPointOwnershipProvider : IMeteringPointOwnershipProvider
-    {
-        public Task<Owner> GetOwnerAsync(string gsrnNumber)
-        {
-            return Task.FromResult(new Owner("8200000001409"));
-        }
-    }
-
-    public record Owner(string GlnNumber);
 
     public class GridOperatorIsNotOwnerOfMeteringPoint : ValidationError
     {
