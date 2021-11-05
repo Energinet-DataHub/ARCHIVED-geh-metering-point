@@ -32,10 +32,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
         public Task Handle(FutureEnergySupplierChangeRegistered notification, CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
-            var command = new SetFutureEnergySupplierInfo(
+            var command = new SetEnergySupplierInfo(
                 notification.GsrnNumber,
-                notification.EffectiveDate,
-                notification.EnergySupplierGln);
+                notification.EffectiveDate);
             return _commandScheduler.EnqueueAsync(command);
         }
     }
