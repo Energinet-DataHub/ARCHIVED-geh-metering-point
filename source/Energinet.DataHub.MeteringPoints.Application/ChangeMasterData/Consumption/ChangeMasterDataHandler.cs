@@ -57,8 +57,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 throw new AuthenticationException("No authenticated user");
             }
 
-            var authorizationHandler = new GridOperatorOwnsMeteringPointPolicy(_ownershipProvider);
-            var authResult = await authorizationHandler.AuthorizeAsync(request.GsrnNumber, _authenticatedUserContext.CurrentUser.GlnNumber).ConfigureAwait(false);
+            var authorizationHandler = new GridOperatorOwnsMeteringPointPolicy(_ownershipProvider, _authenticatedUserContext);
+            var authResult = await authorizationHandler.AuthorizeAsync(request.GsrnNumber).ConfigureAwait(false);
             if (authResult.Success == false)
             {
                 return new BusinessProcessResult(request.TransactionId, new List<ValidationError>()
@@ -150,18 +150,20 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
     public class GridOperatorOwnsMeteringPointPolicy
     {
         private readonly IMeteringPointOwnershipProvider _ownershipProvider;
+        private readonly IUserContext _userContext;
 
-        public GridOperatorOwnsMeteringPointPolicy(IMeteringPointOwnershipProvider ownershipProvider)
+        public GridOperatorOwnsMeteringPointPolicy(IMeteringPointOwnershipProvider ownershipProvider, IUserContext userContext)
         {
             _ownershipProvider = ownershipProvider ?? throw new ArgumentNullException(nameof(ownershipProvider));
+            _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
         }
 
-        public async Task<AuthorizationResult> AuthorizeAsync(string gsrnNumber, string gridOperatorGlnNumber)
+        public async Task<AuthorizationResult> AuthorizeAsync(string gsrnNumber)
         {
             if (gsrnNumber == null) throw new ArgumentNullException(nameof(gsrnNumber));
-            if (gridOperatorGlnNumber == null) throw new ArgumentNullException(nameof(gridOperatorGlnNumber));
+
             var ownerOfMeteringPoint = await _ownershipProvider.GetOwnerAsync(gsrnNumber).ConfigureAwait(false);
-            if (ownerOfMeteringPoint.GlnNumber.Equals(gridOperatorGlnNumber, StringComparison.OrdinalIgnoreCase))
+            if (ownerOfMeteringPoint.GlnNumber.Equals(_userContext.CurrentUser?.GlnNumber, StringComparison.OrdinalIgnoreCase))
             {
                 return AuthorizationResult.Ok();
             }
