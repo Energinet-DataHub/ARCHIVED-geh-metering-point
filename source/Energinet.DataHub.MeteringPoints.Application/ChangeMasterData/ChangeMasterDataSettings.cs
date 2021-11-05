@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
+namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
 {
     public record ChangeMasterDataSettings(int NumberOfDaysEffectiveDateIsAllowedToBeforeToday = 0);
 }
