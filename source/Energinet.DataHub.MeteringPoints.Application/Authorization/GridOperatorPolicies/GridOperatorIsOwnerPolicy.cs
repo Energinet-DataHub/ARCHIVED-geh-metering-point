@@ -21,7 +21,7 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperatorPolicies
 {
-    public class GridOperatorIsOwnerPolicy
+    public class GridOperatorIsOwnerPolicy : IGridOperatorIsOwnerPolicy
     {
         private readonly IMeteringPointOwnershipProvider _ownershipProvider;
         private readonly IUserContext _userContext;
