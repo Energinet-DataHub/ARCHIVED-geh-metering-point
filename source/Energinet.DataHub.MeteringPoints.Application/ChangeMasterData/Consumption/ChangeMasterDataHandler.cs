@@ -26,7 +26,6 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
 {
-    #pragma warning disable
     public class ChangeMasterDataHandler : IBusinessRequestHandler<ChangeMasterDataRequest>
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
@@ -101,7 +100,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
 
         private Task<BusinessRulesValidationResult> ValidateAsync(ChangeMasterDataRequest request, ConsumptionMeteringPoint targetMeteringPoint)
         {
-            var result = TimePeriodPolicy.Check( _systemDateTimeProvider.Now(), EffectiveDate.Create(request.EffectiveDate));
+            var timePeriodPolicy = new TimePeriodPolicy(1);
+            var result = timePeriodPolicy.Check(_systemDateTimeProvider.Now(), EffectiveDate.Create(request.EffectiveDate));
             if (result.Success == false)
             {
                 return Task.FromResult(result);
