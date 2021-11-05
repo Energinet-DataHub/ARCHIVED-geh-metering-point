@@ -359,6 +359,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             Assert.NotNull(await GetService<IMeteringPointRepository>().GetByGsrnNumberAsync(GsrnNumber.Create(gsrnNumber)).ConfigureAwait(false));
         }
 
+        protected void SetGridOperatorAsAuthenticatedUser(string glnNumber)
+        {
+            ((UserContextStub)GetService<IUserContext>()).SetCurrentUser(new UserIdentity("Fake", glnNumber));
+        }
+
         private void CleanupDatabase()
         {
             var cleanupStatement = new StringBuilder();
