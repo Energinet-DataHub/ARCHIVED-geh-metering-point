@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 
@@ -27,8 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions
         /// Get a single metering point by GSRN number
         /// </summary>
         /// <param name="gsrn">GSRN number to identify a Metering Point.</param>
-        /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
         /// <returns>A Metering Point DTO if found. If not found null will be returned.</returns>
-        public Task<MeteringPointDto?> GetMeteringPointByGsrnAsync(string gsrn, CancellationToken cancellationToken = default);
+        public Task<MeteringPointDto?> GetMeteringPointByGsrnAsync(string gsrn);
     }
 }

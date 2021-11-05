@@ -13,10 +13,6 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Google.Protobuf;
@@ -34,14 +30,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 MeteringPointId = obj.MeteringPointId,
                 GsrnNumber = obj.GsrnNumber,
                 GridAreaCode = obj.GridAreaCode,
-                SettlementMethod = EnumerationType.FromName<SettlementMethod>(obj.SettlementMethod).MapToEnum<ConsumptionMeteringPointCreated.Types.SettlementMethod>(),
-                MeteringMethod = EnumerationType.FromName<MeteringMethod>(obj.MeteringMethod).MapToEnum<ConsumptionMeteringPointCreated.Types.MeteringMethod>(),
-                MeterReadingPeriodicity = EnumerationType.FromName<ReadingOccurrence>(obj.MeterReadingPeriodicity).MapToEnum<ConsumptionMeteringPointCreated.Types.MeterReadingPeriodicity>(),
-                NetSettlementGroup = EnumerationType.FromName<NetSettlementGroup>(obj.NetSettlementGroup).MapToEnum<ConsumptionMeteringPointCreated.Types.NetSettlementGroup>(),
-                Product = EnumerationType.FromName<ProductType>(obj.ProductType).MapToEnum<ConsumptionMeteringPointCreated.Types.ProductType>(),
+                SettlementMethod = obj.GetSettlementMethod(),
+                MeteringMethod = obj.GetMeteringMethod(),
+                MeterReadingPeriodicity = obj.GetMeterReadingPeriodicity(),
+                NetSettlementGroup = obj.GetNetSettlementGroup(),
+                Product = obj.GetProductType(),
                 EffectiveDate = obj.EffectiveDate.ToTimestamp(),
-                UnitType = EnumerationType.FromName<MeasurementUnitType>(obj.UnitType).MapToEnum<ConsumptionMeteringPointCreated.Types.UnitType>(),
-                ConnectionState = EnumerationType.FromName<PhysicalState>(obj.ConnectionState).MapToEnum<ConsumptionMeteringPointCreated.Types.ConnectionState>(),
+                UnitType = obj.GetUnitType(),
+                ConnectionState = obj.GetConnectionState(),
             };
         }
     }
