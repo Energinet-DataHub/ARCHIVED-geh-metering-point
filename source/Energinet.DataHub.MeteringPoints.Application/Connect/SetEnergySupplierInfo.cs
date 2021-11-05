@@ -26,20 +26,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
             MeteringPointGsrn = meteringPointGSRN;
         }
 
-        public SetEnergySupplierInfo(
-            string meteringPointGsrn,
-            Instant startOfSupply,
-            string energySupplierGlnNumber)
+        public SetEnergySupplierInfo(string meteringPointGSRN, Instant startOfSupply)
         {
-            MeteringPointGsrn = meteringPointGsrn;
+            MeteringPointGsrn = meteringPointGSRN;
             StartOfSupply = startOfSupply;
-            EnergySupplierGlnNumber = energySupplierGlnNumber;
         }
 
         public string MeteringPointGsrn { get; }
 
         public Instant StartOfSupply { get; }
-
-        public string EnergySupplierGlnNumber { get; }
     }
 }
