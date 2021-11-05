@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
@@ -100,14 +101,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
 
         private Task<BusinessRulesValidationResult> ValidateAsync(ChangeMasterDataRequest request, ConsumptionMeteringPoint targetMeteringPoint)
         {
-            var timePeriodPolicy = new EffectiveDatePolicy(1, 0);
-            var result = timePeriodPolicy.Check(_systemDateTimeProvider.Now(), EffectiveDate.Create(request.EffectiveDate));
-            if (result.Success == false)
+            var details = CreateChangeDetails(request, targetMeteringPoint);
+            var validationResults = new List<BusinessRulesValidationResult>()
             {
-                return Task.FromResult(result);
-            }
+                targetMeteringPoint.CanChange(details),
+                new EffectiveDatePolicy(1, 0).Check(_systemDateTimeProvider.Now(), details.EffectiveDate),
+            };
 
-            return Task.FromResult(new BusinessRulesValidationResult(targetMeteringPoint.CanChange(CreateChangeDetails(request, targetMeteringPoint)).Errors));
+            var validationErrors = validationResults.SelectMany(results => results.Errors);
+
+            return Task.FromResult(new BusinessRulesValidationResult(validationErrors));
         }
 
         private async Task<ConsumptionMeteringPoint?> FetchTargetMeteringPointAsync(ChangeMasterDataRequest request)
