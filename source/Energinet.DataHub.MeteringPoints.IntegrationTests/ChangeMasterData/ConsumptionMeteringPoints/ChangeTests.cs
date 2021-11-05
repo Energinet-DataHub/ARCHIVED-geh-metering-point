@@ -42,7 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
         [Theory]
         [InlineData("invalid_gsrn_number")]
         [InlineData("")]
-        public async Task Valid_gsrn_number_is_required(string gsrnNumber)
+        public async Task Gsrn_number_is_required(string gsrnNumber)
         {
             await InvokeBusinessProcessAsync(TestUtils.CreateRequest()
                 with
