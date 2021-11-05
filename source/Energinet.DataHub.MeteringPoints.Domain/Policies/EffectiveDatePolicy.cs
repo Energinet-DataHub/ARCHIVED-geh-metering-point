@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Policies
         private readonly int _allowedNumberOfDaysBeforeToday;
         private readonly int _allowedNumberOfDaysAfterToday;
 
-        public EffectiveDatePolicy(int allowedNumberOfDaysBeforeToday, int allowedNumberOfDaysAfterToday)
+        public EffectiveDatePolicy(int allowedNumberOfDaysBeforeToday = 0, int allowedNumberOfDaysAfterToday = 0)
         {
             _allowedNumberOfDaysBeforeToday = allowedNumberOfDaysBeforeToday;
             _allowedNumberOfDaysAfterToday = allowedNumberOfDaysAfterToday;

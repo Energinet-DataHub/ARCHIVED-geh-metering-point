@@ -107,7 +107,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
             var validationResults = new List<BusinessRulesValidationResult>()
             {
                 targetMeteringPoint.CanChange(details),
-                new EffectiveDatePolicy(_settings.NumberOfDaysEffectiveDateIsAllowedToBeforeToday, 0).Check(_systemDateTimeProvider.Now(), details.EffectiveDate),
+                new EffectiveDatePolicy(_settings.NumberOfDaysEffectiveDateIsAllowedToBeforeToday).Check(_systemDateTimeProvider.Now(), details.EffectiveDate),
             };
 
             var validationErrors = validationResults.SelectMany(results => results.Errors);
