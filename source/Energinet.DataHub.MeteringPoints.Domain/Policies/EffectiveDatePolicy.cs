@@ -20,12 +20,12 @@ using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.Policies
 {
-    public class TimePeriodPolicy
+    public class EffectiveDatePolicy
     {
         private readonly int _allowedNumberOfDaysBeforeToday;
         private readonly int _allowedNumberOfDaysAfterToday;
 
-        public TimePeriodPolicy(int allowedNumberOfDaysBeforeToday, int allowedNumberOfDaysAfterToday)
+        public EffectiveDatePolicy(int allowedNumberOfDaysBeforeToday, int allowedNumberOfDaysAfterToday)
         {
             _allowedNumberOfDaysBeforeToday = allowedNumberOfDaysBeforeToday;
             _allowedNumberOfDaysAfterToday = allowedNumberOfDaysAfterToday;
