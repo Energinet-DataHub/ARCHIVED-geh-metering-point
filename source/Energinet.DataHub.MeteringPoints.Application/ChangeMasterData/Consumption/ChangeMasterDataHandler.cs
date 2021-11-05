@@ -15,9 +15,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Authorization;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -32,17 +35,34 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
         private readonly ChangeMasterDataSettings _settings;
+        private readonly IUserContext _authenticatedUserContext;
 
-        public ChangeMasterDataHandler(IMeteringPointRepository meteringPointRepository, ISystemDateTimeProvider systemDateTimeProvider, ChangeMasterDataSettings settings)
+        public ChangeMasterDataHandler(IMeteringPointRepository meteringPointRepository, ISystemDateTimeProvider systemDateTimeProvider, ChangeMasterDataSettings settings, IUserContext authenticatedUserContext)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
             _settings = settings;
+            _authenticatedUserContext = authenticatedUserContext ?? throw new ArgumentNullException(nameof(authenticatedUserContext));
         }
 
         public async Task<BusinessProcessResult> Handle(ChangeMasterDataRequest request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
+
+            if (_authenticatedUserContext.CurrentUser is null)
+            {
+                throw new AuthenticationException("No authenticated user");
+            }
+
+            var authorizationHandler = new GridOperatorOwnsMeteringPointPolicy();
+            var authResult = await authorizationHandler.AuthorizeAsync(request.GsrnNumber, _authenticatedUserContext.CurrentUser.GlnNumber).ConfigureAwait(false);
+            if (authResult.Success == false)
+            {
+                return new BusinessProcessResult(request.TransactionId, new List<ValidationError>()
+                {
+                    new GridOperatorIsNotOwnerOfMeteringPoint(request.GsrnNumber),
+                });
+            }
 
             var targetMeteringPoint = await FetchTargetMeteringPointAsync(request).ConfigureAwait(false);
             if (targetMeteringPoint == null)
@@ -121,5 +141,27 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
                 .ConfigureAwait(false) as ConsumptionMeteringPoint;
         }
+    }
+
+#pragma warning disable
+    public class GridOperatorOwnsMeteringPointPolicy
+    {
+        public async Task<AuthorizationResult> AuthorizeAsync(string gsrnNumber, string gridOperatorGlnNumber)
+        {
+            return new AuthorizationResult(new List<ValidationError>()
+            {
+                new GridOperatorIsNotOwnerOfMeteringPoint(gsrnNumber),
+            });
+        }
+    }
+
+    public class GridOperatorIsNotOwnerOfMeteringPoint : ValidationError
+    {
+        public GridOperatorIsNotOwnerOfMeteringPoint(string gsrnNumber)
+        {
+            GsrnNumber = gsrnNumber;
+        }
+
+        public string GsrnNumber { get; }
     }
 }

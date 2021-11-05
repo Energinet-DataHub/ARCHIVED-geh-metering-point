@@ -86,6 +86,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
             AssertValidationError("E17", expectError);
         }
 
+        [Fact]
+        public async Task Grid_operator_is_the_owner_of_the_metering_point()
+        {
+            await CreateMeteringPointAsync().ConfigureAwait(false);
+
+            await InvokeBusinessProcessAsync(TestUtils.CreateRequest()).ConfigureAwait(false);
+
+            AssertValidationError("E10");
+        }
+
         private Task<BusinessProcessResult> CreateMeteringPointAsync()
         {
             return InvokeBusinessProcessAsync(Scenarios.CreateConsumptionMeteringPointCommand());
