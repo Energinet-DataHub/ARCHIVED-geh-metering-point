@@ -35,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Policies
         {
             if (effectiveDate == null) throw new ArgumentNullException(nameof(effectiveDate));
 
-            var maxDifferenceInDays = IsBeforeToday(today, effectiveDate)
+            var maxDifferenceInDays = EffectiveDateIsBeforeToday(today, effectiveDate)
                 ? _allowedNumberOfDaysBeforeToday
                 : _allowedNumberOfDaysAfterToday;
 
@@ -50,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Policies
             return new BusinessRulesValidationResult(new List<ValidationError>());
         }
 
-        private static bool IsBeforeToday(Instant today, EffectiveDate effectiveDate)
+        private static bool EffectiveDateIsBeforeToday(Instant today, EffectiveDate effectiveDate)
         {
             return ToDate(effectiveDate.DateInUtc) < ToDate(today);
         }
