@@ -18,7 +18,7 @@ using System.Linq;
 using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Authorization;
+using Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperatorPolicies;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
@@ -144,44 +144,5 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
                 .ConfigureAwait(false) as ConsumptionMeteringPoint;
         }
-    }
-
-#pragma warning disable
-    public class GridOperatorOwnsMeteringPointPolicy
-    {
-        private readonly IMeteringPointOwnershipProvider _ownershipProvider;
-        private readonly IUserContext _userContext;
-
-        public GridOperatorOwnsMeteringPointPolicy(IMeteringPointOwnershipProvider ownershipProvider, IUserContext userContext)
-        {
-            _ownershipProvider = ownershipProvider ?? throw new ArgumentNullException(nameof(ownershipProvider));
-            _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
-        }
-
-        public async Task<AuthorizationResult> AuthorizeAsync(string gsrnNumber)
-        {
-            if (gsrnNumber == null) throw new ArgumentNullException(nameof(gsrnNumber));
-
-            var ownerOfMeteringPoint = await _ownershipProvider.GetOwnerAsync(gsrnNumber).ConfigureAwait(false);
-            if (ownerOfMeteringPoint.GlnNumber.Equals(_userContext.CurrentUser?.GlnNumber, StringComparison.OrdinalIgnoreCase))
-            {
-                return AuthorizationResult.Ok();
-            }
-
-            return new AuthorizationResult(new List<ValidationError>()
-            {
-                new GridOperatorIsNotOwnerOfMeteringPoint(gsrnNumber),
-            });
-        }
-    }
-
-    public class GridOperatorIsNotOwnerOfMeteringPoint : ValidationError
-    {
-        public GridOperatorIsNotOwnerOfMeteringPoint(string gsrnNumber)
-        {
-            GsrnNumber = gsrnNumber;
-        }
-
-        public string GsrnNumber { get; }
     }
 }
