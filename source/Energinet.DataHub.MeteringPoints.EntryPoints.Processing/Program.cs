@@ -167,6 +167,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IActorMessageFactory, ActorMessageFactory>(Lifestyle.Scoped);
             container.Register<IMessageHubDispatcher, MessageHubDispatcher>(Lifestyle.Scoped);
 
+            container.Register<ChangeMasterDataSettings>(() => new ChangeMasterDataSettings(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1));
+
             container.AddValidationErrorConversion(
                 validateRegistrations: false,
                 typeof(MasterDataDocument).Assembly, // Application

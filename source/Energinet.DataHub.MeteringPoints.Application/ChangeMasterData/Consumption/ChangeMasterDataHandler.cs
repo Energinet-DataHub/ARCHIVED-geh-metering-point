@@ -31,11 +31,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
+        private readonly ChangeMasterDataSettings _settings;
 
-        public ChangeMasterDataHandler(IMeteringPointRepository meteringPointRepository, ISystemDateTimeProvider systemDateTimeProvider)
+        public ChangeMasterDataHandler(IMeteringPointRepository meteringPointRepository, ISystemDateTimeProvider systemDateTimeProvider, ChangeMasterDataSettings settings)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
+            _settings = settings;
         }
 
         public async Task<BusinessProcessResult> Handle(ChangeMasterDataRequest request, CancellationToken cancellationToken)
@@ -105,7 +107,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
             var validationResults = new List<BusinessRulesValidationResult>()
             {
                 targetMeteringPoint.CanChange(details),
-                new EffectiveDatePolicy(1, 0).Check(_systemDateTimeProvider.Now(), details.EffectiveDate),
+                new EffectiveDatePolicy(_settings.NumberOfDaysEffectiveDateIsAllowedToBeforeToday, 0).Check(_systemDateTimeProvider.Now(), details.EffectiveDate),
             };
 
             var validationErrors = validationResults.SelectMany(results => results.Errors);
