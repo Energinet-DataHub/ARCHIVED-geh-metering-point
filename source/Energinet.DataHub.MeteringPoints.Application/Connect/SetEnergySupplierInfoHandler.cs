@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
@@ -26,10 +27,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
     public class SetEnergySupplierInfoHandler : ICommandHandler<SetEnergySupplierInfo>
     {
         private readonly IMarketMeteringPointRepository _marketMeteringPointRepository;
+        private readonly ISystemDateTimeProvider _systemDateTimeProvider;
 
-        public SetEnergySupplierInfoHandler(IMarketMeteringPointRepository meteringPointRepository)
+        public SetEnergySupplierInfoHandler(
+            IMarketMeteringPointRepository meteringPointRepository,
+            ISystemDateTimeProvider systemDateTimeProvider)
         {
             _marketMeteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
+            _systemDateTimeProvider = systemDateTimeProvider;
         }
 
         public async Task<Unit> Handle(SetEnergySupplierInfo request, CancellationToken cancellationToken)
@@ -39,7 +44,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
             var meteringPoint =
                 await _marketMeteringPointRepository.GetByGSRNAsync(GsrnNumber.Create(request.MeteringPointGsrn)).ConfigureAwait(false);
 
-            meteringPoint.SetEnergySupplierDetails(EnergySupplierDetails.Create(meteringPoint.Id, request.StartOfSupply, GlnNumber.Create(request.EnergySupplierGlnNumber)));
+            meteringPoint.AddEnergySupplierDetails(
+                EnergySupplierDetails.Create(meteringPoint.Id, request.StartOfSupply, GlnNumber.Create(request.EnergySupplierGlnNumber)));
             return Unit.Value;
         }
     }

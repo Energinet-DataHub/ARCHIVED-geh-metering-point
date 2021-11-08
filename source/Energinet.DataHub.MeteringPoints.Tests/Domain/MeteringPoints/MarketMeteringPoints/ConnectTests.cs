@@ -90,20 +90,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             Assert.Throws<MeteringPointConnectException>(() => meteringPoint.Connect(connectionDetails));
         }
 
-        private static void SetStartOfSupplyAheadOfEffectiveDate(ConsumptionMeteringPoint meteringPoint, Instant effectiveDate)
-        {
-            var startOfSupply = effectiveDate.Plus(Duration.FromDays(1));
-            var energySupplierDetails = EnergySupplierDetails.Create(meteringPoint.Id, startOfSupply, GlnNumber.Create(SampleData.GlnNumber));
-            meteringPoint.SetEnergySupplierDetails(energySupplierDetails);
-        }
-
-        private static void SetStartOfSupplyPriorToEffectiveDate(MarketMeteringPoint meteringPoint, Instant effectiveDate)
-        {
-            var startOfSupply = effectiveDate.Minus(Duration.FromDays(1));
-            var energySupplierDetails = EnergySupplierDetails.Create(meteringPoint.Id, startOfSupply, GlnNumber.Create(SampleData.GlnNumber));
-            meteringPoint.SetEnergySupplierDetails(energySupplierDetails);
-        }
-
         private static ConsumptionMeteringPoint CreateConsumptionMeteringPoint()
         {
             var details = CreateConsumptionDetails()
@@ -124,6 +110,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                     MeterNumber = null,
                 };
             return ProductionMeteringPoint.Create(details);
+        }
+
+        private static void SetStartOfSupplyAheadOfEffectiveDate(MarketMeteringPoint meteringPoint, Instant effectiveDate)
+        {
+            var startOfSupply = effectiveDate.Plus(Duration.FromDays(1));
+            var energySupplierDetails = EnergySupplierDetails.Create(meteringPoint.Id, startOfSupply, GlnNumber.Create(SampleData.GlnNumber));
+            meteringPoint.AddEnergySupplierDetails(energySupplierDetails);
+        }
+
+        private static void SetStartOfSupplyPriorToEffectiveDate(MarketMeteringPoint meteringPoint, Instant effectiveDate)
+        {
+            var startOfSupply = effectiveDate.Minus(Duration.FromDays(1));
+            var energySupplierDetails = EnergySupplierDetails.Create(meteringPoint.Id, startOfSupply, GlnNumber.Create(SampleData.GlnNumber));
+            meteringPoint.AddEnergySupplierDetails(energySupplierDetails);
         }
 
         private ConnectionDetails ConnectNow()
