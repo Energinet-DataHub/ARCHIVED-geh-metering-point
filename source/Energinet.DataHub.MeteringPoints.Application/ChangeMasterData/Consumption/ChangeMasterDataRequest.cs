@@ -20,5 +20,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
         string TransactionId = "",
         string GsrnNumber = "",
         string EffectiveDate = "",
+        string SettlementMethod = "",
         Address? Address = null) : IBusinessRequest;
 }
