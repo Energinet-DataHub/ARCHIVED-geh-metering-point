@@ -14,13 +14,15 @@
 
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Authorization;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
 {
     /// <summary>
     /// Service for handling business process specific authorization
     /// </summary>
-    public interface IAuthorizer<TBusinessRequest>
+    public interface IAuthorizer<in TBusinessRequest>
+        where TBusinessRequest : IBusinessRequest
     {
         /// <summary>
         /// Invoke authorization process

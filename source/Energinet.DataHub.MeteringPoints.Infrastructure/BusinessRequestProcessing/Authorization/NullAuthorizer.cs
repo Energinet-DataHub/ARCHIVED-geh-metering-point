@@ -15,10 +15,12 @@
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Authorization;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Authorization
 {
     public class NullAuthorizer<TRequest> : IAuthorizer<TRequest>
+        where TRequest : IBusinessRequest
     {
         public Task<AuthorizationResult> AuthorizeAsync(TRequest request)
         {
