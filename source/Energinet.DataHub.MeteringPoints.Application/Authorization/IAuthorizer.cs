@@ -13,10 +13,9 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Authorization;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 
-namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
+namespace Energinet.DataHub.MeteringPoints.Application.Authorization
 {
     /// <summary>
     /// Service for handling business process specific authorization
