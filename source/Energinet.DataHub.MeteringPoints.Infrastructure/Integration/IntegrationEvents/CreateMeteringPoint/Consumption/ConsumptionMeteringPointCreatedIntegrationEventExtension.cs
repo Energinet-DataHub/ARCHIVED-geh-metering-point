@@ -41,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 "Two" => ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgTwo,
                 "Three" => ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgThree,
                 "Six" => ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgSix,
-                "NinetyNine" => ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgNinetynine,
+                "Ninetynine" => ConsumptionMeteringPointCreated.Types.NetSettlementGroup.NsgNinetynine,
                 _ => throw new ArgumentException("Net settlement group is not recognized."),
             };
         }
