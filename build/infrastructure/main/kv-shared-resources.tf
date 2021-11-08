@@ -66,11 +66,6 @@ data "azurerm_key_vault_secret" "st_market_operator_response_postofficereply_con
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
-data "azurerm_key_vault_secret" "st_market_operator_response_postofficereply_container_name" {
-  name         = "st-marketres-postofficereply-container-name"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
 data "azurerm_key_vault_secret" "sql_data_name" {
   name         = "sql-data-name"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
