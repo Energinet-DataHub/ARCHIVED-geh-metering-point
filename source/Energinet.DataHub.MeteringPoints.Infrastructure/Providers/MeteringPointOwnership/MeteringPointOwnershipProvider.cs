@@ -13,8 +13,9 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Providers.MeteringPointOwnership
 {
     public class MeteringPointOwnershipProvider : IMeteringPointOwnershipProvider
     {
