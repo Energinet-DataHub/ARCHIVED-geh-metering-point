@@ -15,7 +15,7 @@ resource "azurerm_app_service" "webapi" {
   name                = "app-webapi-${lower(var.domain_name_short)}-${lower(var.environment_short)}-${lower(var.environment_instance)}"
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
-  app_service_plan_id = module.plan_func_shared.id
+  app_service_plan_id = module.plan_shared.id
 
   site_config {
     dotnet_framework_version = "v5.0"
