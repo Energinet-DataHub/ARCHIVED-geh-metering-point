@@ -174,11 +174,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
 
-            container.Register<IAuthorizer<ChangeMasterDataRequest>, Authorizer>();
-            container.Register<IAuthorizer<CreateConsumptionMeteringPoint>, NullAuthorizer<CreateConsumptionMeteringPoint>>();
-            container.Register<IAuthorizer<CreateProductionMeteringPoint>, NullAuthorizer<CreateProductionMeteringPoint>>();
-            container.Register<IAuthorizer<CreateExchangeMeteringPoint>, NullAuthorizer<CreateExchangeMeteringPoint>>();
-            container.Register<IAuthorizer<ConnectMeteringPoint>, NullAuthorizer<ConnectMeteringPoint>>();
+            container.AddBusinessProcessAuthorizers();
 
             container.AddValidationErrorConversion(
                 validateRegistrations: false,
