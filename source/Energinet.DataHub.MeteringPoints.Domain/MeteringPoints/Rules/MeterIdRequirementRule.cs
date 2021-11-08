@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
@@ -21,12 +20,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
     {
         public MeterIdRequirementRule(MeterId? meterId, MeteringMethod meteringMethod)
         {
-            if (meteringMethod == MeteringMethod.Physical && meterId == null)
+            if (meteringMethod == MeteringMethod.Physical && IsUndefined(meterId))
             {
                 IsBroken = true;
                 ValidationError = new MeterIdIsRequiredRuleError();
             }
-            else if (meteringMethod != MeteringMethod.Physical && meterId! != null!)
+            else if (meteringMethod != MeteringMethod.Physical && !IsUndefined(meterId))
             {
                 IsBroken = true;
                 ValidationError = new MeterIdIsNotAllowedRuleError();
@@ -36,5 +35,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
         public bool IsBroken { get; }
 
         public ValidationError ValidationError { get; } = new MeterIdIsRequiredRuleError();
+
+        private static bool IsUndefined(MeterId? meterId)
+        {
+            return meterId == null || string.IsNullOrEmpty(meterId.Value);
+        }
     }
 }

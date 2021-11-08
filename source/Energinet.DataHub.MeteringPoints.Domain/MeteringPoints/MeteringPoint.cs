@@ -29,9 +29,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         protected MeteringPointType _meteringPointType;
         protected ProductType _productType;
         protected MeasurementUnitType _unitType;
+        protected MeteringMethod _meteringMethod;
 #pragma warning restore
         private GridAreaLinkId _gridAreaLinkId;
-        private MeteringMethod _meteringMethod;
         private ReadingOccurrence _meterReadingOccurrence;
         private PowerLimit _powerLimit;
         private GsrnNumber? _powerPlantGsrnNumber;

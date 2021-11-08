@@ -23,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
     {
         private MeterId(string meterId)
         {
-            Value = meterId ?? throw new ArgumentNullException(nameof(meterId));
+            Value = meterId;
         }
 
         public string Value { get; }
@@ -46,6 +46,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             }
 
             return new MeterId(meterId);
+        }
+
+        public static MeterId NotSet()
+        {
+            return new MeterId(string.Empty);
         }
     }
 }

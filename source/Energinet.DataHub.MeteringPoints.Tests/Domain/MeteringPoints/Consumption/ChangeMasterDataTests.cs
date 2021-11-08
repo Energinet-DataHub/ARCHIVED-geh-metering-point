@@ -18,6 +18,7 @@ using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Xunit;
@@ -129,9 +130,37 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(details.Address?.GeoInfoReference, changeEvent?.GeoInfoReference);
         }
 
+        [Fact]
+        public void Meter_id_is_required_when_physical()
+        {
+            var meteringPoint = CreatePhysical();
+            var details = CreateDetails()
+                with
+                {
+                    MeterId = MeterId.NotSet(),
+                };
+
+            var result = meteringPoint.CanChange(details);
+
+            AssertError<MeterIdIsRequiredRuleError>(result, true);
+        }
+
         private static ConsumptionMeteringPoint CreateMeteringPoint()
         {
             return ConsumptionMeteringPoint.Create(CreateConsumptionDetails());
+        }
+
+        private static ConsumptionMeteringPoint CreatePhysical()
+        {
+            var details = CreateConsumptionDetails()
+                with
+                {
+                    MeteringMethod = MeteringMethod.Physical,
+                    MeterNumber = MeterId.Create("1"),
+                    NetSettlementGroup = NetSettlementGroup.Zero,
+                    ConnectionType = null,
+                };
+            return ConsumptionMeteringPoint.Create(details);
         }
 
         private static MasterDataDetails CreateDetails()

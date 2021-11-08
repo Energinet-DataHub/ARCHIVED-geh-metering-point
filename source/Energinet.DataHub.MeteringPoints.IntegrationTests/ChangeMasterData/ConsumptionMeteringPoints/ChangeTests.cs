@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Application.Common.Users;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using NodaTime.Text;
@@ -112,9 +112,41 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
             AssertValidationError("D15");
         }
 
+        [Fact]
+        public async Task Meter_is_required_when_physical()
+        {
+            var timeProvider = GetService<ISystemDateTimeProvider>() as SystemDateTimeProviderStub;
+            timeProvider!.SetNow(InstantPattern.General.Parse(SampleData.EffectiveDate).Value);
+
+            await CreatePhysicalConsumptionMeteringPoint().ConfigureAwait(false);
+
+            var request = TestUtils.CreateRequest()
+                with
+                {
+                    MeterId = string.Empty,
+                };
+            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D31");
+        }
+
         private Task<BusinessProcessResult> CreateMeteringPointAsync()
         {
             return InvokeBusinessProcessAsync(Scenarios.CreateConsumptionMeteringPointCommand());
+        }
+
+        private async Task CreatePhysicalConsumptionMeteringPoint()
+        {
+            var request = Scenarios.CreateConsumptionMeteringPointCommand()
+                with
+                {
+                    MeteringMethod = MeteringMethod.Physical.Name,
+                    MeterNumber = "1",
+                    NetSettlementGroup = NetSettlementGroup.Zero.Name,
+                    ConnectionType = null,
+                    ScheduledMeterReadingDate = null,
+                };
+            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
         }
     }
 }
