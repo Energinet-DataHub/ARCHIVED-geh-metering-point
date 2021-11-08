@@ -14,15 +14,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Authentication;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Authorization;
 using Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperatorPolicies;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
-using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
 {
@@ -37,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
             _ownershipProvider = ownershipProvider ?? throw new ArgumentNullException(nameof(ownershipProvider));
         }
 
-        public async Task<AuthorizationResult> AuthorizeAsync(ChangeMasterDataRequest request)
+        public Task<AuthorizationResult> AuthorizeAsync(ChangeMasterDataRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (_authenticatedUserContext.CurrentUser is null)
@@ -45,17 +44,21 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
                 throw new AuthenticationException("No authenticated user");
             }
 
-            var authorizationHandler = new GridOperatorIsOwnerPolicy(_ownershipProvider, _authenticatedUserContext);
-            var authResult = await authorizationHandler.AuthorizeAsync(request.GsrnNumber).ConfigureAwait(false);
-            if (authResult.Success == false)
-            {
-                return new AuthorizationResult(new List<ValidationError>()
-                {
-                    new GridOperatorIsNotOwnerOfMeteringPoint(request.GsrnNumber),
-                });
-            }
+            return SummarizeResultFromAsync(GetAuthorizationHandlers(request));
+        }
 
-            return AuthorizationResult.Ok();
+        private static async Task<AuthorizationResult> SummarizeResultFromAsync(IEnumerable<Task<AuthorizationResult>> authorizationTasks)
+        {
+            var results = await Task.WhenAll(authorizationTasks).ConfigureAwait(false);
+            return new AuthorizationResult(results.SelectMany(result => result.Errors).ToList());
+        }
+
+        private IReadOnlyList<Task<AuthorizationResult>> GetAuthorizationHandlers(ChangeMasterDataRequest request)
+        {
+            return new List<Task<AuthorizationResult>>()
+            {
+                new GridOperatorIsOwnerPolicy(_ownershipProvider, _authenticatedUserContext).AuthorizeAsync(request.GsrnNumber),
+            };
         }
     }
 }
