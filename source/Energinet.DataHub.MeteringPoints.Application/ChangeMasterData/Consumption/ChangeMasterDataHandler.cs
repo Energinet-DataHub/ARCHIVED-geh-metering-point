@@ -36,25 +36,17 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
         private readonly ChangeMasterDataSettings _settings;
-        private readonly IAuthorizer<ChangeMasterDataRequest> _authorizer;
 
-        public ChangeMasterDataHandler(IMeteringPointRepository meteringPointRepository, ISystemDateTimeProvider systemDateTimeProvider, ChangeMasterDataSettings settings, IAuthorizer<ChangeMasterDataRequest> authorizer)
+        public ChangeMasterDataHandler(IMeteringPointRepository meteringPointRepository, ISystemDateTimeProvider systemDateTimeProvider, ChangeMasterDataSettings settings)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
             _settings = settings;
-            _authorizer = authorizer ?? throw new ArgumentNullException(nameof(authorizer));
         }
 
         public async Task<BusinessProcessResult> Handle(ChangeMasterDataRequest request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-
-            var authorizationResult = await _authorizer.AuthorizeAsync(request).ConfigureAwait(false);
-            if (authorizationResult.Success == false)
-            {
-                return new BusinessProcessResult(request.TransactionId, authorizationResult.Errors);
-            }
 
             var targetMeteringPoint = await FetchTargetMeteringPointAsync(request).ConfigureAwait(false);
             if (targetMeteringPoint == null)

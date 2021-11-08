@@ -39,6 +39,7 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
+using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Authorization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
 using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
@@ -168,6 +169,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
 
             _container.Register<IAuthorizer<ChangeMasterDataRequest>, Authorizer>();
+            _container.Register<IAuthorizer<CreateConsumptionMeteringPoint>, NullAuthorizer<CreateConsumptionMeteringPoint>>();
+            _container.Register<IAuthorizer<CreateProductionMeteringPoint>, NullAuthorizer<CreateProductionMeteringPoint>>();
+            _container.Register<IAuthorizer<CreateExchangeMeteringPoint>, NullAuthorizer<CreateExchangeMeteringPoint>>();
+            _container.Register<IAuthorizer<CreateGridArea>, NullAuthorizer<CreateGridArea>>();
+            _container.Register<IAuthorizer<ConnectMeteringPoint>, NullAuthorizer<ConnectMeteringPoint>>();
 
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
@@ -185,7 +191,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 new[]
                 {
                     typeof(UnitOfWorkBehavior<,>),
-                    // typeof(AuthorizationBehavior<,>),
+                    typeof(AuthorizationBehavior<,>),
                     typeof(InputValidationBehavior<,>),
                     typeof(DomainEventsDispatcherBehaviour<,>),
                     typeof(InternalCommandHandlingBehaviour<,>),
