@@ -57,7 +57,7 @@ runs:
         name: localmessagehub
         path: ${{ inputs.RELEASE_FOLDER_PATH }}/functions/localmessagehub
 
-    - name: Publish Wepapi to release folder
+    - name: Publish Internal command dispatcher to release folder
       uses: actions/download-artifact@v2
       with:
         name: internalcommanddispatcher
