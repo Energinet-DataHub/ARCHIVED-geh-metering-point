@@ -36,35 +36,24 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
         private readonly ChangeMasterDataSettings _settings;
-        private readonly IUserContext _authenticatedUserContext;
-        private readonly IMeteringPointOwnershipProvider _ownershipProvider;
+        private readonly IAuthorizer<ChangeMasterDataRequest> _authorizer;
 
-        public ChangeMasterDataHandler(IMeteringPointRepository meteringPointRepository, ISystemDateTimeProvider systemDateTimeProvider, ChangeMasterDataSettings settings, IUserContext authenticatedUserContext, IMeteringPointOwnershipProvider ownershipProvider)
+        public ChangeMasterDataHandler(IMeteringPointRepository meteringPointRepository, ISystemDateTimeProvider systemDateTimeProvider, ChangeMasterDataSettings settings, IAuthorizer<ChangeMasterDataRequest> authorizer)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
             _settings = settings;
-            _authenticatedUserContext = authenticatedUserContext ?? throw new ArgumentNullException(nameof(authenticatedUserContext));
-            _ownershipProvider = ownershipProvider ?? throw new ArgumentNullException(nameof(ownershipProvider));
+            _authorizer = authorizer ?? throw new ArgumentNullException(nameof(authorizer));
         }
 
         public async Task<BusinessProcessResult> Handle(ChangeMasterDataRequest request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            if (_authenticatedUserContext.CurrentUser is null)
+            var authorizationResult = await _authorizer.AuthorizeAsync(request).ConfigureAwait(false);
+            if (authorizationResult.Success == false)
             {
-                throw new AuthenticationException("No authenticated user");
-            }
-
-            var authorizationHandler = new GridOperatorIsOwnerPolicy(_ownershipProvider, _authenticatedUserContext);
-            var authResult = await authorizationHandler.AuthorizeAsync(request.GsrnNumber).ConfigureAwait(false);
-            if (authResult.Success == false)
-            {
-                return new BusinessProcessResult(request.TransactionId, new List<ValidationError>()
-                {
-                    new GridOperatorIsNotOwnerOfMeteringPoint(request.GsrnNumber),
-                });
+                return new BusinessProcessResult(request.TransactionId, authorizationResult.Errors);
             }
 
             var targetMeteringPoint = await FetchTargetMeteringPointAsync(request).ConfigureAwait(false);

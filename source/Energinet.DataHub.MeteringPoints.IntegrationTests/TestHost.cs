@@ -167,6 +167,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             _container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
 
+            _container.Register<IAuthorizer<ChangeMasterDataRequest>, Authorizer>();
+
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
                 typeof(MasterDataDocument).Assembly, // Application
