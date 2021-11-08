@@ -34,7 +34,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
             if (notification == null) throw new ArgumentNullException(nameof(notification));
             var command = new SetEnergySupplierInfo(
                 notification.GsrnNumber,
-                notification.EffectiveDate);
+                notification.EffectiveDate,
+                notification.EnergySupplierGln);
             return _commandScheduler.EnqueueAsync(command);
         }
     }
