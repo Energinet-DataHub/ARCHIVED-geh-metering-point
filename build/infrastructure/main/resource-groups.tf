@@ -11,14 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-name: 'Azure CLI Install and Login'
-description: 'Installs Azure CLI and logs into Azure Account'
-runs:
-  using: "composite"
-  steps: 
-    - run: curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-      shell: bash
-    - run: |
-        az login --service-principal --username ${{ env.ARM_CLIENT_ID }} --password ${{ env.ARM_CLIENT_SECRET }} --tenant ${{ env.ARM_TENANT_ID}}
-        az account set --subscription ${{ env.ARM_SUBSCRIPTION_ID }}
-      shell: bash
+resource "azurerm_resource_group" "this" {
+  name      = var.resource_group_name
+  location  = "West Europe"
+  tags      = data.azurerm_subscription.this.tags
+}
+
+data "azurerm_resource_group" "shared_resources" {
+  name = var.shared_resources_resource_group_name
+}
