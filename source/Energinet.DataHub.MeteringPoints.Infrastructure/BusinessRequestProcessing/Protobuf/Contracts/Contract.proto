@@ -83,11 +83,18 @@ message CreateDefaultChargeLinksMessages {
     string correlationId = 2;
 }
 
+message SendAccountingPointCharacteristicsMessage {
+  string id = 1;
+  string metering_point_gsrn = 2;
+  string transation_id = 3;
+}
+
 message MeteringPointEnvelope {
   oneof MeteringPointMessages {
     MasterDataDocument masterDataDocument = 1;
     CreateDefaultChargeLinks createDefaultChargeLinks = 2;
     CreateDefaultChargeLinksMessages createDefaultChargeLinksMessages = 3;
     SetEnergySupplierInfo setEnergySupplierInfo = 4;
+    SendAccountingPointCharacteristicsMessage sendAccountingPointCharacteristicsMessage = 5;
   }
 }

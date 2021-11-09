@@ -27,6 +27,7 @@ using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Create.Exchange;
 using Energinet.DataHub.MeteringPoints.Application.Create.Production;
+using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
@@ -53,8 +54,11 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
+using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands.Protobuf.Mappers.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments;
@@ -63,6 +67,7 @@ using Energinet.DataHub.MeteringPoints.Messaging.Bundling;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentAssertions;
 using FluentValidation;
+using Google.Protobuf;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -159,6 +164,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             _container.Register<IActorMessageFactory, ActorMessageFactory>(Lifestyle.Scoped);
             _container.Register<IMessageHubDispatcher, MessageHubDispatcher>(Lifestyle.Scoped);
+            _container.Register<IBusinessDocumentFactory, BusinessDocumentFactory>(Lifestyle.Scoped);
 
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
@@ -225,7 +231,38 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 .Select(message => jsonSerializer.Deserialize<TMessage>(message.Data));
         }
 
+        protected async Task AssertAndRunInternalCommandAsync<TCommand>()
+            where TCommand : ICommand
+        {
+            var meteringPointContext = GetService<MeteringPointContext>();
+            var commands = meteringPointContext
+                .QueuedInternalCommands
+                .Where(c => c.ProcessedDate == null && c.Type == typeof(TCommand).FullName)
+                .ToList();
+
+            var messageExtractor = GetService<MessageExtractor>();
+
+            foreach (var command in commands)
+            {
+                var message = await messageExtractor.ExtractAsync(command.Data).ConfigureAwait(false);
+
+                // var meteringPointEnvelope = MeteringPointEnvelope.Parser.ParseFrom(command.Data);
+                //     meteringPointEnvelope.SendAccountingPointCharacteristicsMessage.
+                await SendCommandAsync(message).ConfigureAwait(false);
+            }
+        }
+
         protected void AssertOutboxMessage<TMessage>(Func<TMessage, bool> funcAssert)
+        {
+            if (funcAssert == null) throw new ArgumentNullException(nameof(funcAssert));
+
+            var message = GetOutboxMessages<TMessage>().SingleOrDefault(funcAssert.Invoke);
+
+            message.Should().NotBeNull();
+            message.Should().BeOfType<TMessage>();
+        }
+
+        protected void AssertInternalCommand<TMessage>(Func<TMessage, bool> funcAssert)
         {
             if (funcAssert == null) throw new ArgumentNullException(nameof(funcAssert));
 
