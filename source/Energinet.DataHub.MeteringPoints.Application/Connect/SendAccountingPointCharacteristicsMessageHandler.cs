@@ -13,11 +13,13 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
@@ -46,7 +48,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
                                        .ConfigureAwait(false)
                                    ?? throw new InvalidOperationException("Metering point not found");
 
-            _businessDocumentFactory.CreateAccountingPointCharacteristicsMessage(request.TransactionId, meteringPointDto);
+            // TODO: Current and future suppliers
+            var energySuppliers = new List<EnergySupplierDetails>();
+
+            foreach (var energySupplier in energySuppliers)
+            {
+                _businessDocumentFactory.CreateAccountingPointCharacteristicsMessage(request.TransactionId, meteringPointDto, energySupplier.GlnNumber);
+            }
 
             return Unit.Value;
         }

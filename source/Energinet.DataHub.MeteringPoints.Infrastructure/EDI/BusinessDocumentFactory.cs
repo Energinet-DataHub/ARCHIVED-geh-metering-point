@@ -2,6 +2,7 @@
 using System.Globalization;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
+using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
@@ -40,10 +41,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
 
         public void CreateAccountingPointCharacteristicsMessage(
             string requestTransactionId,
-            MeteringPointDto meteringPointDto)
+            MeteringPointDto meteringPointDto,
+            GlnNumber energySupplierGlnNumber)
         {
             if (requestTransactionId == null) throw new ArgumentNullException(nameof(requestTransactionId));
             if (meteringPointDto == null) throw new ArgumentNullException(nameof(meteringPointDto));
+            if (energySupplierGlnNumber == null) throw new ArgumentNullException(nameof(energySupplierGlnNumber));
 
             var accountingPointCharacteristicsMessage = new AccountingPointCharacteristicsMessage(
                 Id: Guid.NewGuid().ToString(),
@@ -55,7 +58,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     CodingScheme: "9",
                     Role: "DDZ"),
                 Receiver: new MarketRoleParticipant(
-                    Id: "consumptionMeteringPoint.,", // TODO: Get from energy supplier changed event-ish
+                    Id: energySupplierGlnNumber.Value,
                     CodingScheme: "9",
                     Role: "DDQ"),
                 CreatedDateTime: _dateTimeProvider.Now(),
