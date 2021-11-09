@@ -48,7 +48,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             return new MeterId(meterId);
         }
 
-        public static MeterId NotSet()
+        public static MeterId Empty()
         {
             return new MeterId(string.Empty);
         }

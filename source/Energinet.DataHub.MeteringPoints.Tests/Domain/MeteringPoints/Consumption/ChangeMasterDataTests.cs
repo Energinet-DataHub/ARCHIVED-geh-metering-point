@@ -137,7 +137,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             var details = CreateDetails()
                 with
                 {
-                    MeterId = MeterId.NotSet(),
+                    MeterId = MeterId.Empty(),
                 };
 
             var result = meteringPoint.CanChange(details);
