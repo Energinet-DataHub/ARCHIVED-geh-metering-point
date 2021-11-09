@@ -222,6 +222,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             {
                 ChangeAddress(details.Address);
             }
+
+            if (details.MeterId is not null)
+            {
+                ChangeMeter(details.MeterId, details.EffectiveDate);
+            }
         }
     }
 }

@@ -21,6 +21,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Categories;
 
@@ -145,6 +146,29 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             AssertError<MeterIdIsRequiredRuleError>(result, true);
         }
 
+        [Fact]
+        public void MeterId_is_changed()
+        {
+            var meteringPoint = CreatePhysical();
+            var details = CreateDetailsWithRequiredValues()
+                with
+                {
+                    MeterId = MeterId.Create("NewId"),
+                };
+
+            meteringPoint.Change(details);
+
+            var expectedEvent = FindDomainEvent<MeterIdChanged>(meteringPoint);
+            Assert.Equal(details.MeterId.Value, expectedEvent?.MeterId);
+            Assert.Equal(details.EffectiveDate.ToString(), expectedEvent?.EffectiveDate);
+        }
+
+        private static TDomainEvent? FindDomainEvent<TDomainEvent>(Entity domainEntity)
+            where TDomainEvent : DomainEventBase
+        {
+            return domainEntity.DomainEvents.FirstOrDefault(e => e is TDomainEvent) as TDomainEvent;
+        }
+
         private static ConsumptionMeteringPoint CreateMeteringPoint()
         {
             return ConsumptionMeteringPoint.Create(CreateConsumptionDetails());
@@ -168,6 +192,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             return new MasterDataDetails(
                 EffectiveDate: EffectiveDate.Create(SampleData.EffectiveDate),
                 Address: Address.Create(city: null, streetName: SampleData.StreetName, countryCode: CountryCode.DK, postCode: SampleData.PostCode));
+        }
+
+        private static MasterDataDetails CreateDetailsWithRequiredValues()
+        {
+            return new MasterDataDetails(
+                EffectiveDate: EffectiveDate.Create(SampleData.EffectiveDate));
         }
     }
 }

@@ -132,5 +132,16 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                     Address.GeoInfoReference.GetValueOrDefault()));
             }
         }
+
+        protected void ChangeMeter(MeterId meterId, EffectiveDate effectiveDate)
+        {
+            if (meterId == null) throw new ArgumentNullException(nameof(meterId));
+            if (effectiveDate == null) throw new ArgumentNullException(nameof(effectiveDate));
+
+            if (_meterNumber?.Equals(meterId) != false) return;
+
+            _meterNumber = meterId;
+            AddDomainEvent(new MeterIdChanged(_meterNumber.Value, effectiveDate.ToString()));
+        }
     }
 }
