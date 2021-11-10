@@ -55,6 +55,9 @@ limitations under the License.
     <None Update="integrationtest.local.settings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestFiles\Cim\CreateMeteringPoint.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

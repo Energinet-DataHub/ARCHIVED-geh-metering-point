@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures;
@@ -29,7 +31,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
         public MeteringPointHttpTriggerTests_RunAsync(IngestionFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
             : base(fixture, testOutputHelper)
         {
+            TestFileLoader = new TestFileLoader();
         }
+
+        private TestFileLoader TestFileLoader { get; }
 
         public Task InitializeAsync()
         {
@@ -45,7 +50,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
         public async Task When_CallingMeteringPoint_Then_RequestIsProcessed()
         {
             // Arrange
+            var xml = TestFileLoader.ReadFile("TestFiles/Cim/CreateMeteringPoint.xml")
+                .Replace("{{transactionId}}", "1", StringComparison.OrdinalIgnoreCase)
+                .Replace("{{gsrn}}", "571234567891234567", StringComparison.OrdinalIgnoreCase);
             using var request = new HttpRequestMessage(HttpMethod.Post, "api/MeteringPoint");
+            request.Content = new StringContent(xml, Encoding.UTF8, "application/xml");
 
             // Act
             var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request)
