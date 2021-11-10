@@ -31,16 +31,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
         public IngestionFunctionAppFixture()
         {
             AzuriteManager = new AzuriteManager();
-
-            var integrationTestConfiguration = new IntegrationTestConfiguration();
-            ApplicationInsightsInstrumentationKey = integrationTestConfiguration.Configuration.GetValue("AZURE-APPINSIGHTS-INSTRUMENTATIONKEY");
-
-            ServiceBusResourceProvider = new ServiceBusResourceProvider(integrationTestConfiguration.ServiceBusConnectionString, new TestDiagnosticsLogger());
+            IntegrationTestConfiguration = new IntegrationTestConfiguration();
+            ServiceBusResourceProvider = new ServiceBusResourceProvider(IntegrationTestConfiguration.ServiceBusConnectionString, new TestDiagnosticsLogger());
         }
 
         private AzuriteManager AzuriteManager { get; }
 
-        private string ApplicationInsightsInstrumentationKey { get; }
+        private IntegrationTestConfiguration IntegrationTestConfiguration { get; }
 
         private ServiceBusResourceProvider ServiceBusResourceProvider { get; }
 
@@ -53,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
         protected override void OnConfigureEnvironment()
         {
             Environment.SetEnvironmentVariable("AzureWebJobsStorage", "UseDevelopmentStorage=true");
-            Environment.SetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", ApplicationInsightsInstrumentationKey);
+            Environment.SetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
 
             Environment.SetEnvironmentVariable("INTERNAL_SERVICEBUS_RETRY_COUNT", "3");
         }
