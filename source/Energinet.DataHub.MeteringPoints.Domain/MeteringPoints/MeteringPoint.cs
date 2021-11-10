@@ -31,6 +31,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         protected ProductType _productType;
         protected MeasurementUnitType _unitType;
         protected MeteringMethod _meteringMethod;
+        protected MeterId? _meterNumber;
+        protected MeteringConfiguration _meteringConfiguration;
 #pragma warning restore
         private GridAreaLinkId _gridAreaLinkId;
         private ReadingOccurrence _meterReadingOccurrence;
@@ -38,7 +40,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private GsrnNumber? _powerPlantGsrnNumber;
         private LocationDescription? _locationDescription;
         private EffectiveDate _effectiveDate;
-        private MeterId? _meterNumber;
         private Capacity? _capacity;
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
@@ -76,6 +77,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _powerLimit = powerLimit;
             _effectiveDate = effectiveDate;
             _capacity = capacity;
+
+            _meteringConfiguration = MeteringConfiguration.Create(_meteringMethod, _meterNumber ?? MeterId.Empty());
         }
 
         public MeteringPointId Id { get; }
@@ -134,24 +137,19 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             }
         }
 
-        protected void ChangeMeter(MeterId meterId, EffectiveDate effectiveDate)
+        protected void ChangeMeteringConfiguration(MeteringConfiguration configuration, EffectiveDate effectiveDate)
         {
-            if (meterId == null) throw new ArgumentNullException(nameof(meterId));
             if (effectiveDate == null) throw new ArgumentNullException(nameof(effectiveDate));
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
-            if (_meterNumber?.Equals(meterId) != false) return;
-
-            _meterNumber = meterId;
-            AddDomainEvent(new MeterIdChanged(_meterNumber.Value, effectiveDate.ToString()));
-        }
-
-        protected BusinessRulesValidationResult CanChangeMeter(MeterId meterId)
-        {
-            if (meterId == null) throw new ArgumentNullException(nameof(meterId));
-            return new BusinessRulesValidationResult(new List<IBusinessRule>()
+            if (_meteringConfiguration.Equals(configuration))
             {
-                new MeterIdRequirementRule(meterId, _meteringMethod),
-            });
+                return;
+            }
+
+            _meteringConfiguration = configuration;
+
+            AddDomainEvent(new MeterIdChanged(_meteringConfiguration.Meter.Value, _meteringConfiguration.Method.Name, effectiveDate.ToString()));
         }
     }
 }

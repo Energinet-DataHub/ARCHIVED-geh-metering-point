@@ -199,9 +199,21 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 validationErrors.AddRange(CanChangeAddress(details.Address).Errors);
             }
 
-            if (details.MeterId is not null)
+            if (details.MeterId is not null || details.MeteringMethod is not null)
             {
-                validationErrors.AddRange(CanChangeMeter(details.MeterId).Errors);
+                var meteringMethod = details.MeteringMethod ?? _meteringMethod;
+                MeterId meterId;
+                if (meteringMethod == MeteringMethod.Physical)
+                {
+                    meterId = details.MeterId ?? _meterNumber!;
+                }
+                else
+                {
+                    meterId = MeterId.Empty();
+                }
+
+                var checkResult = MeteringConfiguration.CheckRules(meteringMethod, meterId!);
+                validationErrors.AddRange(checkResult.Errors);
             }
 
             return new BusinessRulesValidationResult(validationErrors);
@@ -222,9 +234,22 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 ChangeAddress(details.Address);
             }
 
-            if (details.MeterId is not null)
+            if (details.MeterId is not null || details.MeteringMethod is not null)
             {
-                ChangeMeter(details.MeterId, details.EffectiveDate);
+                var meteringMethod = details.MeteringMethod ?? _meteringMethod;
+                MeterId meterId;
+                if (meteringMethod == MeteringMethod.Physical)
+                {
+                    meterId = details.MeterId ?? _meterNumber!;
+                }
+                else
+                {
+                    meterId = MeterId.Empty();
+                }
+
+                ChangeMeteringConfiguration(
+                    MeteringConfiguration.Create(meteringMethod, meterId),
+                    details.EffectiveDate);
             }
         }
     }

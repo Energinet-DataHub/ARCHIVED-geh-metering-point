@@ -14,8 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringDetails
@@ -30,7 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringDetails
 
         public MeteringMethod Method { get; }
 
-        public MeterId? Meter { get; }
+        public MeterId Meter { get; }
 
         public static BusinessRulesValidationResult CheckRules(MeteringMethod method, MeterId meter)
         {
