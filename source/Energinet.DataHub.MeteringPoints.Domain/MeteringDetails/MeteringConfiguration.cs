@@ -43,6 +43,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringDetails
 
         public static MeteringConfiguration Create(MeteringMethod method, MeterId? meter)
         {
+            if (CheckRules(method, meter).Success == false)
+            {
+                throw new InvalidMeteringConfigurationException();
+            }
+
             return new MeteringConfiguration(method, meter);
         }
     }
