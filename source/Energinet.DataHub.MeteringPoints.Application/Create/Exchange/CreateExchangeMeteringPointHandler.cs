@@ -115,7 +115,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange
                 fromGrid);
         }
 
-        private static Address CreateAddress(CreateExchangeMeteringPoint request)
+        private static Domain.Addresses.Address CreateAddress(CreateExchangeMeteringPoint request)
         {
             return Domain.Addresses.Address.Create(
                 streetName: request.StreetName,
