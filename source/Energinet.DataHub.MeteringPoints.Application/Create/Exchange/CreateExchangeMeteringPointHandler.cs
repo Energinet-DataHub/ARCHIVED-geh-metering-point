@@ -128,8 +128,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange
                 floor: request.FloorIdentification,
                 room: request.RoomIdentification,
                 municipalityCode: string.IsNullOrWhiteSpace(request.MunicipalityCode) ? default : int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()),
-                isActual: false,
-                geoInfoReference: null);
+                isActual: request.IsActualAddress.GetValueOrDefault(),
+                geoInfoReference: string.IsNullOrWhiteSpace(request.GeoInfoReference) ? default : Guid.Parse(request.GeoInfoReference));
         }
 
         private static BusinessRulesValidationResult ValidateAddress(CreateExchangeMeteringPoint request)

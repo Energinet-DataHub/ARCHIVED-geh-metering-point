@@ -123,6 +123,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 SampleData.StreetCode,
                 SampleData.FloorIdentification,
                 SampleData.RoomIdentification,
+                SampleData.IsActualAddress,
                 SampleData.GsrnNumber,
                 MeteringMethod.Physical.Name,
                 SampleData.ReadingOccurrence,
@@ -135,7 +136,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 SampleData.MeteringGridArea,
                 SampleData.MeteringGridArea,
                 Guid.NewGuid().ToString(),
-                ConnectionType.Installation.Name);
+                ConnectionType.Installation.Name,
+                SampleData.GeoInfoReference);
         }
     }
 }
