@@ -198,12 +198,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 validationErrors.AddRange(CanChangeAddress(details.Address).Errors);
             }
 
-            var rules = new List<IBusinessRule>()
+            if (details.MeterId is not null)
             {
-                new MeterIdRequirementRule(details.MeterId, _meteringMethod),
-            };
-
-            validationErrors.AddRange(rules.Where(rule => rule.IsBroken).Select(rule => rule.ValidationError));
+                validationErrors.AddRange(CanChangeMeter(details.MeterId).Errors);
+            }
 
             return new BusinessRulesValidationResult(validationErrors);
         }

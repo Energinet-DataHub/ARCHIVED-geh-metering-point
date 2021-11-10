@@ -143,5 +143,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _meterNumber = meterId;
             AddDomainEvent(new MeterIdChanged(_meterNumber.Value, effectiveDate.ToString()));
         }
+
+        protected BusinessRulesValidationResult CanChangeMeter(MeterId meterId)
+        {
+            if (meterId == null) throw new ArgumentNullException(nameof(meterId));
+            return new BusinessRulesValidationResult(new List<IBusinessRule>()
+            {
+                new MeterIdRequirementRule(meterId, _meteringMethod),
+            });
+        }
     }
 }
