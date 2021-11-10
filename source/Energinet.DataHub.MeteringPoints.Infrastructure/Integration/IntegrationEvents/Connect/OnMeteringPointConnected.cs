@@ -30,7 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         public override Task Handle(MeteringPointConnected notification, CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
-            var integrationEvent = new MeteringPointConnectedIntegrationEvent(notification.MeteringPointId, notification.GsrnNumber, notification.EffectiveDate.ToDateTimeUtc().ToShortDateString());
+            var integrationEvent = new MeteringPointConnectedIntegrationEvent(notification.MeteringPointId, notification.GsrnNumber, notification.EffectiveDate);
 
             CreateAndAddOutboxMessage(integrationEvent);
 
