@@ -22,26 +22,27 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringDetails
 {
     public class MeteringConfiguration : ValueObject
     {
-        private MeteringConfiguration(MeteringMethod method, MeterId? meter)
+        private MeteringConfiguration(MeteringMethod method, MeterId meter)
         {
             Method = method ?? throw new ArgumentNullException(nameof(method));
-            Meter = meter;
+            Meter = meter ?? throw new ArgumentNullException(nameof(meter));
         }
 
         public MeteringMethod Method { get; }
 
         public MeterId? Meter { get; }
 
-        public static BusinessRulesValidationResult CheckRules(MeteringMethod method, MeterId? meter)
+        public static BusinessRulesValidationResult CheckRules(MeteringMethod method, MeterId meter)
         {
             if (method is null) throw new ArgumentNullException(nameof(method));
+            if (meter == null) throw new ArgumentNullException(nameof(meter));
             return new BusinessRulesValidationResult(new List<IBusinessRule>()
             {
                new MeterIdRequirementRule(meter, method),
             });
         }
 
-        public static MeteringConfiguration Create(MeteringMethod method, MeterId? meter)
+        public static MeteringConfiguration Create(MeteringMethod method, MeterId meter)
         {
             if (CheckRules(method, meter).Success == false)
             {

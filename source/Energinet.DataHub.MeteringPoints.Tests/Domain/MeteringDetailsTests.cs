@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
         [Fact]
         public void Meter_is_required_when_physical()
         {
-            var result = MeteringConfiguration.CheckRules(MeteringMethod.Physical, null);
+            var result = MeteringConfiguration.CheckRules(MeteringMethod.Physical, MeterId.Empty());
 
             AssertError<MeterIdIsRequiredRuleError>(result, true);
         }
@@ -62,7 +62,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
         public void Cannot_create()
         {
             Assert.Throws<InvalidMeteringConfigurationException>(() =>
-                MeteringConfiguration.Create(MeteringMethod.Physical, null));
+                MeteringConfiguration.Create(MeteringMethod.Physical, MeterId.Empty()));
         }
     }
 }
