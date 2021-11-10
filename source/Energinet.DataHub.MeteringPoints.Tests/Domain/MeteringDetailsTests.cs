@@ -44,5 +44,17 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
 
             AssertError<MeterIdIsNotAllowedRuleError>(result, true);
         }
+
+        [Fact]
+        public void Can_create()
+        {
+            var method = MeteringMethod.Physical;
+            var meter = MeterId.Create("FakeId");
+
+            var sut = MeteringConfiguration.Create(method, meter);
+
+            Assert.Equal(method, sut.Method);
+            Assert.Equal(meter, sut.Meter);
+        }
     }
 }

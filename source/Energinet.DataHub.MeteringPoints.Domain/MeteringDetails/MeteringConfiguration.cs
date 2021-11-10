@@ -22,7 +22,16 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringDetails
 {
     public class MeteringConfiguration : ValueObject
     {
-        #pragma warning disable
+        private MeteringConfiguration(MeteringMethod method, MeterId? meter)
+        {
+            Method = method ?? throw new ArgumentNullException(nameof(method));
+            Meter = meter;
+        }
+
+        public MeteringMethod Method { get; }
+
+        public MeterId? Meter { get; }
+
         public static BusinessRulesValidationResult CheckRules(MeteringMethod method, MeterId? meter)
         {
             if (method is null) throw new ArgumentNullException(nameof(method));
@@ -30,6 +39,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringDetails
             {
                new MeterIdRequirementRule(meter, method),
             });
+        }
+
+        public static MeteringConfiguration Create(MeteringMethod method, MeterId? meter)
+        {
+            return new MeteringConfiguration(method, meter);
         }
     }
 }
