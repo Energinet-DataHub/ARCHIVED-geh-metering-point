@@ -32,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDi
         protected override void EnrichMessage(ServiceBusMessage serviceBusMessage)
         {
             serviceBusMessage.EnrichMetadata(
-                nameof(MeteringPointCreated),
+                nameof(MeteringPointConnected),
                 1);
         }
     }
