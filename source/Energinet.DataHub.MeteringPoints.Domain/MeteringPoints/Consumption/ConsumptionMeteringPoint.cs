@@ -98,7 +98,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 address.StreetCode,
                 address.StreetName,
                 address.CitySubDivision,
-                address.IsActual,
+                address.IsActual.GetValueOrDefault(),
                 address.GeoInfoReference,
                 powerPlantGsrnNumber?.Value,
                 locationDescription?.Value,
@@ -167,7 +167,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
         {
-            var rules = new Collection<IBusinessRule> { new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, _meteringPointType, ConnectionState.PhysicalState), new MustHaveEnergySupplierRule(GsrnNumber, connectionDetails, EnergySupplierDetails), };
+            var rules = new Collection<IBusinessRule>
+            {
+                new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, _meteringPointType, ConnectionState.PhysicalState),
+                new MustHaveEnergySupplierRule(GsrnNumber, connectionDetails, EnergySupplierDetails),
+            };
 
             return new BusinessRulesValidationResult(rules);
         }
@@ -182,6 +186,35 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 
             ConnectionState = ConnectionState.Connected(connectionDetails.EffectiveDate);
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
+        }
+
+        public BusinessRulesValidationResult CanChange(MasterDataDetails details)
+        {
+            if (details == null) throw new ArgumentNullException(nameof(details));
+
+            var validationErrors = new List<ValidationError>();
+            if (details.Address is not null)
+            {
+                validationErrors.AddRange(CanChangeAddress(details.Address).Errors);
+            }
+
+            return new BusinessRulesValidationResult(validationErrors);
+        }
+
+        public void Change(MasterDataDetails details)
+        {
+            if (details == null) throw new ArgumentNullException(nameof(details));
+
+            var checkResult = CanChange(details);
+            if (checkResult.Success == false)
+            {
+                throw new MasterDataChangeException(checkResult.Errors.ToList());
+            }
+
+            if (details.Address is not null)
+            {
+                ChangeAddress(details.Address);
+            }
         }
     }
 }

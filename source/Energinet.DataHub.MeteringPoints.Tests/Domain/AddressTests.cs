@@ -289,6 +289,44 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             Assert.Equal(geoInfoReference, address.GeoInfoReference);
         }
 
+        [Fact]
+        public void Null_values_are_ignored_and_existing_values_preserved()
+        {
+            var originalAddress = Address.Create(
+                streetName: "Original Street Name",
+                countryCode: null,
+                city: "Original City",
+                streetCode: null,
+                buildingNumber: null,
+                citySubDivision: null,
+                postCode: null,
+                floor: null,
+                room: null,
+                municipalityCode: null,
+                isActual: false,
+                geoInfoReference: null);
+
+            var updatedAddress = Address.Create(
+                streetName: "Updated Street Name",
+                countryCode: CountryCode.DK,
+                city: null,
+                streetCode: null,
+                buildingNumber: null,
+                citySubDivision: null,
+                postCode: null,
+                floor: null,
+                room: null,
+                municipalityCode: null,
+                isActual: false,
+                geoInfoReference: null);
+
+            var mergedAddress = originalAddress.MergeFrom(updatedAddress);
+
+            Assert.Equal(updatedAddress.StreetName, mergedAddress.StreetName);
+            Assert.Equal(updatedAddress.CountryCode, mergedAddress.CountryCode);
+            Assert.Equal(originalAddress.City, mergedAddress.City);
+        }
+
         private static Address Create(
             string streetName = "",
             string streetCode = "",

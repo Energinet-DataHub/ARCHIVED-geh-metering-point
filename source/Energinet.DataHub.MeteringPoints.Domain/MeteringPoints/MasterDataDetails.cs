@@ -14,25 +14,9 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public class CityIsRequiredRule : IBusinessRule
-    {
-        public CityIsRequiredRule(Address address)
-        {
-            if (address == null) throw new ArgumentNullException(nameof(address));
-            IsBroken = string.IsNullOrWhiteSpace(address.City);
-        }
-
-        public CityIsRequiredRule(string? city)
-        {
-            IsBroken = city?.Length == 0;
-        }
-
-        public bool IsBroken { get; }
-
-        public ValidationError ValidationError => new CityIsRequiredRuleError();
-    }
+    public record MasterDataDetails(
+        Address? Address = null);
 }

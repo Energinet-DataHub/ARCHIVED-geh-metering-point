@@ -68,6 +68,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             {
                 "E02" => nameof(BusinessProcessType.CreateMeteringPoint),
                 "D15" => nameof(BusinessProcessType.ConnectMeteringPoint),
+                "E32" => nameof(BusinessProcessType.ChangeMasterData),
                 _ => value,
             };
         }
