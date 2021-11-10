@@ -36,10 +36,6 @@ variable domain_name_short {
   description   = "Shortest possible edition of the domain name."
 }
 
-variable project_name {
-  type          = string
-}
-
 variable shared_resources_keyvault_name {
   type          = string
   description   = "Name of the KeyVault, that contains the shared secrets"
@@ -48,9 +44,4 @@ variable shared_resources_keyvault_name {
 variable shared_resources_resource_group_name {
   type          = string
   description   = "Name of the Resource Group, that contains the shared resources."
-}
-
-variable shared_resources_sql_server_name {
-  type          = string
-  description   = "Name of the SQL Server, that contains the shared SQL Databases."
 }
