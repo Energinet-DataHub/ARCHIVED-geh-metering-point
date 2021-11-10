@@ -14,6 +14,7 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
