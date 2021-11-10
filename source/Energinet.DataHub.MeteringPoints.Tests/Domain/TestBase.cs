@@ -41,21 +41,21 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
 
             return new ConsumptionMeteringPointDetails(
                 SettlementMethod.Flex,
-                ScheduledMeterReadingDate.Create(SampleData.ScheduledMeterReadingDate),
+                null,
                 AssetType.GasTurbine,
                 Capacity.Create(SampleData.Capacity),
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 address,
-                MeteringMethod.Physical,
+                MeteringMethod.Virtual,
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
                 GsrnNumber.Create(SampleData.PowerPlant),
                 LocationDescription.Create(SampleData.LocationDescription),
-                string.IsNullOrWhiteSpace(SampleData.MeterNumber) ? null : MeterId.Create(SampleData.MeterNumber),
+                null,
                 ReadingOccurrence.Hourly,
                 PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
                 EffectiveDate.Create(SampleData.EffectiveDate),
-                NetSettlementGroup.Six,
+                NetSettlementGroup.One,
                 DisconnectionType.Manual,
                 ConnectionType.Installation);
         }

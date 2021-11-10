@@ -50,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
                         FloorIdentification = obj.FloorIdentification,
                         RoomIdentification = obj.RoomIdentification,
                         BuildingNumber = obj.BuildingNumber,
-                        MunicipalityCode = obj.MunicipalityCode,
+                        MunicipalityCode = obj.MunicipalityCode.ToString()!,
                         CityNameSubDivision = obj.CitySubDivisionName,
                         GeoInfoReference = obj.GeoInfoReference,
                     },

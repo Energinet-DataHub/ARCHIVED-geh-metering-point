@@ -13,6 +13,9 @@
 // limitations under the License.
 
 using System;
+using System.Globalization;
+using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
+using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Create.Exchange;
@@ -33,7 +36,29 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
 
             if (processType == BusinessProcessType.CreateMeteringPoint) return CreateNewMeteringPointCommand(document);
             if (processType == BusinessProcessType.ConnectMeteringPoint) return CreateConnectMeteringPointCommand(document);
+            if (processType == BusinessProcessType.ChangeMasterData) return CreateChangeMasterDataCommand(document);
             return null;
+        }
+
+        private static IBusinessRequest? CreateChangeMasterDataCommand(MasterDataDocument document)
+        {
+            return new ChangeMasterDataRequest(
+                TransactionId: document.TransactionId,
+                GsrnNumber: document.GsrnNumber,
+                EffectiveDate: document.EffectiveDate,
+                Address: new Address(
+                    document.StreetName,
+                    document.PostCode,
+                    document.CityName,
+                    document.StreetCode,
+                    document.BuildingNumber,
+                    document.CitySubDivisionName,
+                    document.CountryCode,
+                    document.FloorIdentification,
+                    document.RoomIdentification,
+                    string.IsNullOrWhiteSpace(document.MunicipalityCode) ? null : int.Parse(document.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()),
+                    document.IsActualAddress,
+                    document.GeoInfoReference == null ? null : Guid.Parse(document.GeoInfoReference)));
         }
 
         private static IBusinessRequest? CreateConnectMeteringPointCommand(MasterDataDocument document)

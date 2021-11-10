@@ -12,19 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Domain
+namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
 {
-    public class BusinessProcessType : EnumerationType
+    public class ChangeMasterDataRequestValidator : AbstractValidator<ChangeMasterDataRequest>
     {
-        public static readonly BusinessProcessType CreateMeteringPoint = new BusinessProcessType(0, nameof(CreateMeteringPoint));
-        public static readonly BusinessProcessType ConnectMeteringPoint = new BusinessProcessType(1, nameof(ConnectMeteringPoint));
-        public static readonly BusinessProcessType ChangeMasterData = new BusinessProcessType(2, nameof(ChangeMasterData));
-
-        public BusinessProcessType(int id, string name)
-            : base(id, name)
+        public ChangeMasterDataRequestValidator()
         {
+            RuleFor(request => request.Address)
+                .SetValidator(new AddressValidator())
+                .Unless(request => request.Address is null);
         }
     }
 }

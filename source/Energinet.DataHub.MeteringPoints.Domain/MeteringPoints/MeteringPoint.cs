@@ -16,6 +16,8 @@ using System;
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -28,7 +30,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         protected ProductType _productType;
         protected MeasurementUnitType _unitType;
 #pragma warning restore
-        private Address _address;
         private GridAreaLinkId _gridAreaLinkId;
         private MeteringMethod _meteringMethod;
         private ReadingOccurrence _meterReadingOccurrence;
@@ -62,7 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             Id = id;
             GsrnNumber = gsrnNumber;
-            _address = address;
+            Address = address;
             _meteringMethod = meteringMethod;
             _meteringPointType = meteringPointType;
             _gridAreaLinkId = gridAreaLinkId;
@@ -80,6 +81,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public GsrnNumber GsrnNumber { get; }
 
+        public Address Address { get; private set; }
+
         protected ConnectionState ConnectionState { get; set; } = ConnectionState.New();
 
         public static BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
@@ -93,8 +96,41 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             return new BusinessRulesValidationResult(rules);
         }
 
+        public BusinessRulesValidationResult CanChangeAddress(Address address)
+        {
+            var rules = new List<IBusinessRule>()
+            {
+                new StreetNameIsRequiredRule(GsrnNumber, address),
+                new PostCodeIsRequiredRule(address),
+                new CityIsRequiredRule(address),
+            };
+            return new BusinessRulesValidationResult(rules);
+        }
+
         public abstract BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails);
 
         public abstract void Connect(ConnectionDetails connectionDetails);
+
+        public void ChangeAddress(Address newAddress)
+        {
+            if (newAddress == null) throw new ArgumentNullException(nameof(newAddress));
+            if (newAddress.Equals(Address) == false)
+            {
+                Address = newAddress;
+                AddDomainEvent(new AddressChanged(
+                    Address.StreetName,
+                    Address.PostCode,
+                    Address.City,
+                    Address.StreetCode,
+                    Address.BuildingNumber,
+                    Address.CitySubDivision,
+                    Address.CountryCode?.Name,
+                    Address.Floor,
+                    Address.Room,
+                    Address.MunicipalityCode.GetValueOrDefault(),
+                    Address.IsActual.GetValueOrDefault(),
+                    Address.GeoInfoReference.GetValueOrDefault()));
+            }
+        }
     }
 }
