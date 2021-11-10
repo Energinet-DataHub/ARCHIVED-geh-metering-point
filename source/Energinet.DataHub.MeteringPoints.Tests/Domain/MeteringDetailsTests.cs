@@ -28,5 +28,21 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
 
             AssertError<MeterIdIsRequiredRuleError>(result, true);
         }
+
+        [Fact]
+        public void Meter_is_not_allowed_when_virtual()
+        {
+            var result = MeteringConfiguration.CheckRules(MeteringMethod.Virtual, MeterId.Create("fakeId"));
+
+            AssertError<MeterIdIsNotAllowedRuleError>(result, true);
+        }
+
+        [Fact]
+        public void Meter_is_not_allowed_when_calculated()
+        {
+            var result = MeteringConfiguration.CheckRules(MeteringMethod.Calculated, MeterId.Create("fakeId"));
+
+            AssertError<MeterIdIsNotAllowedRuleError>(result, true);
+        }
     }
 }
