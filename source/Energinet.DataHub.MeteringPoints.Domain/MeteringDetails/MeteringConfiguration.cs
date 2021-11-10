@@ -1,0 +1,35 @@
+﻿// Copyright 2020 Energinet DataHub A/S
+//
+// Licensed under the Apache License, Version 2.0 (the "License2");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+using System;
+using System.Collections.Generic;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringDetails
+{
+    public class MeteringConfiguration : ValueObject
+    {
+        #pragma warning disable
+        public static BusinessRulesValidationResult CheckRules(MeteringMethod method, MeterId? meter)
+        {
+            if (method is null) throw new ArgumentNullException(nameof(method));
+            return new BusinessRulesValidationResult(new List<IBusinessRule>()
+            {
+               new MeterIdRequirementRule(meter, method),
+            });
+        }
+    }
+}
