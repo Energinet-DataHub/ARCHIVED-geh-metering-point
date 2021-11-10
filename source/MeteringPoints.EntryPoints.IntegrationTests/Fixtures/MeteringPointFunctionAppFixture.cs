@@ -70,39 +70,56 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             var processingHostSettings = HostConfigurationBuilder.CreateFunctionAppHostSettings();
             var outboxHostSettings = HostConfigurationBuilder.CreateFunctionAppHostSettings();
 
+#if DEBUG
+            var configuration = "Debug";
+#else
+            var configuration = "Release";
+#endif
             var port = 8000;
+            ingestionHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion\\bin\\{configuration}\\net5.0";
             ingestionHostSettings.Functions = "MeteringPoint";
             ingestionHostSettings.Port = ++port;
 
-            ////processingHostSettings.Functions = "QueueSubscriber";
-            ////processingHostSettings.Port = ++port;
+            processingHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Processing\\bin\\{configuration}\\net5.0";
+            processingHostSettings.Functions = "QueueSubscriber";
+            processingHostSettings.Port = ++port;
 
             ////outboxHostSettings.Functions = "OutboxWatcher";
             ////outboxHostSettings.Port = ++port;
 
-            ingestionHostSettings.ProcessEnvironmentVariables.Add("AzureWebJobsStorage", "UseDevelopmentStorage=true");
-            ingestionHostSettings.ProcessEnvironmentVariables.Add("APPINSIGHTS_INSTRUMENTATIONKEY", IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
             ingestionHostSettings.ProcessEnvironmentVariables.Add("INTERNAL_SERVICEBUS_RETRY_COUNT", "3");
 
+            ingestionHostSettings.ProcessEnvironmentVariables.Add("AzureWebJobsStorage", "UseDevelopmentStorage=true");
+            processingHostSettings.ProcessEnvironmentVariables.Add("AzureWebJobsStorage", "UseDevelopmentStorage=true");
+
+            ingestionHostSettings.ProcessEnvironmentVariables.Add("APPINSIGHTS_INSTRUMENTATIONKEY", IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
+            processingHostSettings.ProcessEnvironmentVariables.Add("APPINSIGHTS_INSTRUMENTATIONKEY", IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
+
             ingestionHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
+            processingHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
+
             await ServiceBusResourceProvider
                 .BuildQueue("sbq-meteringpoint")
-                .Do(p => ingestionHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_TOPIC_NAME", p.Name))
+                .Do(p =>
+                {
+                    ingestionHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_TOPIC_NAME", p.Name);
+                    processingHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_TOPIC_NAME", p.Name);
+                })
                 .CreateAsync().ConfigureAwait(false);
 
             IngestionHostManager = new FunctionAppHostManager(ingestionHostSettings, TestLogger);
-            ////ProcessingHostManager = new FunctionAppHostManager(processingHostSettings, TestLogger);
+            ProcessingHostManager = new FunctionAppHostManager(processingHostSettings, TestLogger);
             ////OutboxHostManager = new FunctionAppHostManager(outboxHostSettings, TestLogger);
 
             StartHost(IngestionHostManager);
-            ////StartHost(ProcessingHostManager);
+            StartHost(ProcessingHostManager);
             ////StartHost(OutboxHostManager);
         }
 
         public async Task DisposeAsync()
         {
             IngestionHostManager.Dispose();
-            ////ProcessingHostManager.Dispose();
+            ProcessingHostManager.Dispose();
             ////OutboxHostManager.Dispose();
 
             AzuriteManager.Dispose();

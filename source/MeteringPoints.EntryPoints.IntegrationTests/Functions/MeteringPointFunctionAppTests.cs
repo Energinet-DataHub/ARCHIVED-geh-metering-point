@@ -68,6 +68,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
 
             // Assert
             actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            await Task.Delay(60).ConfigureAwait(false);
         }
     }
 }
