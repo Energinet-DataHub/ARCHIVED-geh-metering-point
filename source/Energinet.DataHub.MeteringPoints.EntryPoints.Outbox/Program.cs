@@ -101,7 +101,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                 Lifestyle.Singleton);
 
             // SB for communicating with Charges
-            container.Register<DefaultChargeLinkClient>(
+            container.Register(
                 () => new DefaultChargeLinkClient(
                     new DefaultChargeLinkClientServiceBusRequestSenderProvider(
                         container.GetInstance<ServiceBusClient>(),
