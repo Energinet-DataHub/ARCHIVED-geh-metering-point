@@ -43,23 +43,14 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
         /// <inheritdoc/>
         protected override void OnConfigureHostSettings(FunctionAppHostSettings hostSettings)
         {
-            if (hostSettings == null)
-                return;
-
-            hostSettings.Functions = "MeteringPoint";
-
-            hostSettings.ProcessEnvironmentVariables.Add("AzureWebJobsStorage", "UseDevelopmentStorage=true");
-            ////hostSettings.ProcessEnvironmentVariables.Add("APPINSIGHTS_INSTRUMENTATIONKEY", IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
-            hostSettings.ProcessEnvironmentVariables.Add("INTERNAL_SERVICEBUS_RETRY_COUNT", "3");
         }
 
         /// <inheritdoc/>
         protected override void OnConfigureEnvironment()
         {
-            ////Environment.SetEnvironmentVariable("AzureWebJobsStorage", "UseDevelopmentStorage=true");
+            Environment.SetEnvironmentVariable("AzureWebJobsStorage", "UseDevelopmentStorage=true");
             Environment.SetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
-
-            ////Environment.SetEnvironmentVariable("INTERNAL_SERVICEBUS_RETRY_COUNT", "3");
+            Environment.SetEnvironmentVariable("INTERNAL_SERVICEBUS_RETRY_COUNT", "3");
         }
 
         /// <inheritdoc/>
