@@ -114,54 +114,32 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         }
 
         [Fact]
-        public void Meter_id_is_required_when_physical()
-        {
-            var meteringPoint = CreatePhysical();
-            var details = CreateDetails()
-                with
-                {
-                    MeterId = MeterId.Empty(),
-                };
-
-            var result = meteringPoint.CanChange(details);
-
-            AssertError<MeterIdIsRequiredRuleError>(result, true);
-        }
-
-        [Fact]
         public void MeterId_is_changed()
         {
             var meteringPoint = CreatePhysical();
-            var details = CreateDetailsWithRequiredValues()
-                with
-                {
-                    MeterId = MeterId.Create("NewId"),
-                };
-
-            meteringPoint.Change(details);
+            var effectiveDate = EffectiveDate.Create(SampleData.EffectiveDate);
+            var configuration =
+                MeteringConfiguration.Create(meteringPoint.MeteringConfiguration.Method, MeterId.Create("NewId"));
+            meteringPoint.ChangeMeteringConfiguration(configuration, effectiveDate);
 
             var expectedEvent = FindDomainEvent<MeterIdChanged>(meteringPoint);
-            Assert.Equal(details.MeterId.Value, expectedEvent?.MeterId);
-            Assert.Equal(details.EffectiveDate.ToString(), expectedEvent?.EffectiveDate);
+            Assert.Equal(configuration.Meter.Value, expectedEvent?.MeterId);
+            Assert.Equal(effectiveDate.ToString(), expectedEvent?.EffectiveDate);
         }
 
         [Fact]
         public void Metering_method_is_changed_to_virtual()
         {
             var meteringPoint = CreatePhysical();
-            var details = CreateDetailsWithRequiredValues()
-                with
-                {
-                    MeterId = MeterId.Create("NewId"),
-                    MeteringMethod = MeteringMethod.Virtual,
-                };
 
-            meteringPoint.Change(details);
+            var effectiveDate = EffectiveDate.Create(SampleData.EffectiveDate);
+            var configuration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty());
+            meteringPoint.ChangeMeteringConfiguration(configuration, effectiveDate);
 
             var expectedEvent = FindDomainEvent<MeterIdChanged>(meteringPoint);
             Assert.Equal(string.Empty, expectedEvent?.MeterId);
             Assert.Equal(MeteringMethod.Virtual.Name, expectedEvent?.MeteringMethod);
-            Assert.Equal(details.EffectiveDate.ToString(), expectedEvent?.EffectiveDate);
+            Assert.Equal(effectiveDate.ToString(), expectedEvent?.EffectiveDate);
         }
 
         private static TDomainEvent? FindDomainEvent<TDomainEvent>(Entity domainEntity)

@@ -145,7 +145,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             }
         }
 
-        protected void ChangeMeteringConfiguration(MeteringConfiguration configuration, EffectiveDate effectiveDate)
+        public void ChangeMeteringConfiguration(MeteringConfiguration configuration, EffectiveDate effectiveDate)
         {
             if (effectiveDate == null) throw new ArgumentNullException(nameof(effectiveDate));
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
