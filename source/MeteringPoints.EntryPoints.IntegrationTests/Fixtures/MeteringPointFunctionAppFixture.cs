@@ -87,17 +87,24 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             processingHostSettings.Functions = "QueueSubscriber";
             processingHostSettings.Port = ++port;
 
-            ////outboxHostSettings.Functions = "OutboxWatcher";
-            ////outboxHostSettings.Port = ++port;
+            outboxHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Outbox\\bin\\{configuration}\\net5.0";
+            outboxHostSettings.Functions = "OutboxWatcher";
+            outboxHostSettings.Port = ++port;
 
             ingestionHostSettings.ProcessEnvironmentVariables.Add("INTERNAL_SERVICEBUS_RETRY_COUNT", "3");
 
+            // 8:00 1. January ~ we must set this setting, but we do not want the trigger to run automatically, we want to trigger it manually
+            outboxHostSettings.ProcessEnvironmentVariables.Add("ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER", "0 0 8 1 1 *");
+
             ingestionHostSettings.ProcessEnvironmentVariables.Add("AzureWebJobsStorage", "UseDevelopmentStorage=true");
             processingHostSettings.ProcessEnvironmentVariables.Add("AzureWebJobsStorage", "UseDevelopmentStorage=true");
+            outboxHostSettings.ProcessEnvironmentVariables.Add("AzureWebJobsStorage", "UseDevelopmentStorage=true");
 
             ingestionHostSettings.ProcessEnvironmentVariables.Add("APPINSIGHTS_INSTRUMENTATIONKEY", IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
             processingHostSettings.ProcessEnvironmentVariables.Add("APPINSIGHTS_INSTRUMENTATIONKEY", IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
+            outboxHostSettings.ProcessEnvironmentVariables.Add("APPINSIGHTS_INSTRUMENTATIONKEY", IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
 
+            // => MeteringPoint
             ingestionHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
             processingHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
 
@@ -110,25 +117,69 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
                 })
                 .CreateAsync().ConfigureAwait(false);
 
+            // => MessageHub
+            outboxHostSettings.ProcessEnvironmentVariables.Add("MESSAGEHUB_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
+
+            await ServiceBusResourceProvider
+                .BuildQueue("sbq-dataavailable").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("MESSAGEHUB_QUEUE_DATAAVAILABLE", p.Name))
+                .CreateAsync().ConfigureAwait(false);
+
+            await ServiceBusResourceProvider
+                .BuildQueue("sbq-meteringpoints-reply").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("MESSAGEHUB_QUEUE_REPLY", p.Name))
+                .CreateAsync().ConfigureAwait(false);
+
+            outboxHostSettings.ProcessEnvironmentVariables.Add("MESSAGEHUB_STORAGE_CONNECTION_STRING", "UseDevelopmentStorage=true");
+            outboxHostSettings.ProcessEnvironmentVariables.Add("MESSAGEHUB_STORAGE_CONTAINER_NAME", "meteringpoint");
+
+            // => Integration events
+            outboxHostSettings.ProcessEnvironmentVariables.Add("SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
+
+            await ServiceBusResourceProvider
+                .BuildQueue("sbq-charges-link").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("CHARGES_DEFAULT_LINK_RESPONSE_QUEUE", p.Name))
+                .CreateAsync().ConfigureAwait(false);
+            await ServiceBusResourceProvider
+                .BuildQueue("sbq-charges-messages").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("CHARGES_DEFAULT_MESSAGES_RESPONSE_QUEUE", p.Name))
+                .CreateAsync().ConfigureAwait(false);
+
+            await ServiceBusResourceProvider
+                .BuildTopic("sbt-meteringpoint-created").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("METERING_POINT_CREATED_TOPIC", p.Name))
+                .CreateAsync().ConfigureAwait(false);
+            await ServiceBusResourceProvider
+                .BuildTopic("sbt-consumption-meteringpoint-created").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("CONSUMPTION_METERING_POINT_CREATED_TOPIC", p.Name))
+                .CreateAsync().ConfigureAwait(false);
+            await ServiceBusResourceProvider
+                .BuildTopic("sbt-production-meteringpoint-created").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("PRODUCTION_METERING_POINT_CREATED_TOPIC", p.Name))
+                .CreateAsync().ConfigureAwait(false);
+            await ServiceBusResourceProvider
+                .BuildTopic("sbt-exchange-meteringpoint-created").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("EXCHANGE_METERING_POINT_CREATED_TOPIC", p.Name))
+                .CreateAsync().ConfigureAwait(false);
+            await ServiceBusResourceProvider
+                .BuildTopic("sbt-meteringpoint-connected").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("METERING_POINT_CONNECTED_TOPIC", p.Name))
+                .CreateAsync().ConfigureAwait(false);
+            await ServiceBusResourceProvider
+                .BuildTopic("sbt-meteringpoint-dequeued").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("METERING_POINT_MESSAGE_DEQUEUED_TOPIC", p.Name))
+                .CreateAsync().ConfigureAwait(false);
+
             // => Database
             await DatabaseManager.CreateDatabaseAsync().ConfigureAwait(false);
 
             processingHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
+            outboxHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
 
             IngestionHostManager = new FunctionAppHostManager(ingestionHostSettings, TestLogger);
             ProcessingHostManager = new FunctionAppHostManager(processingHostSettings, TestLogger);
-            ////OutboxHostManager = new FunctionAppHostManager(outboxHostSettings, TestLogger);
+            OutboxHostManager = new FunctionAppHostManager(outboxHostSettings, TestLogger);
 
             StartHost(IngestionHostManager);
             StartHost(ProcessingHostManager);
-            ////StartHost(OutboxHostManager);
+            StartHost(OutboxHostManager);
         }
 
         public async Task DisposeAsync()
         {
             IngestionHostManager.Dispose();
             ProcessingHostManager.Dispose();
-            ////OutboxHostManager.Dispose();
+            OutboxHostManager.Dispose();
 
             AzuriteManager.Dispose();
 
