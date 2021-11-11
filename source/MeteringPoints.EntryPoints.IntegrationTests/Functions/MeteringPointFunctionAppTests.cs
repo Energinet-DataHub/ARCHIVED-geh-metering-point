@@ -20,6 +20,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using Energinet.DataHub.Core.TestCommon;
 using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures;
 using FluentAssertions;
@@ -51,6 +52,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
         public Task DisposeAsync()
         {
             Fixture.SetTestOutputHelper(null!);
+            Fixture.MessageHubListenerMock.ResetMessageHandlersAndReceivedMessages();
 
             return Task.CompletedTask;
         }
@@ -66,12 +68,12 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
             request.Content = new StringContent(xml, Encoding.UTF8, "application/xml");
 
             // Act
-            var actualResponse = await Fixture.IngestionHostManager.HttpClient.SendAsync(request)
+            var ingestionResponse = await Fixture.IngestionHostManager.HttpClient.SendAsync(request)
                 .ConfigureAwait(false);
 
             // Assert
             // => Ingestion
-            actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            ingestionResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
             // => Queue subscriber
             var queueSubscriberExecuted = await Awaiter
@@ -82,9 +84,18 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
 
             queueSubscriberExecuted.Should().BeTrue();
 
-            //// TODO: Manually trigger "OutboxWatcher"
+            // => Outbox
+            var outboxResponse = await Fixture.OutboxHostManager.TriggerFunctionAsync("OutboxWatcher")
+                .ConfigureAwait(false);
 
-            //// TODO: Listen for message in "MESSAGEHUB_QUEUE_DATAAVAILABLE"
+            outboxResponse.StatusCode.Should().Be(HttpStatusCode.Accepted);
+
+            using var isMessageReceivedEvent = await Fixture.MessageHubListenerMock
+                .WhenAny()
+                .VerifyOnceAsync().ConfigureAwait(false);
+
+            var isMessageReceived = isMessageReceivedEvent.Wait(TimeSpan.FromSeconds(5));
+            isMessageReceived.Should().BeTrue();
         }
     }
 }

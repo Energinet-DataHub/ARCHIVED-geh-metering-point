@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Azurite;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ResourceProvider;
 using Energinet.DataHub.Core.TestCommon.Diagnostics;
 using Xunit;
@@ -54,6 +55,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
 
         [NotNull]
         public FunctionAppHostManager? OutboxHostManager { get; private set; }
+
+        [NotNull]
+        public ServiceBusListenerMock? MessageHubListenerMock { get; private set; }
 
         public MeteringPointDatabaseManager DatabaseManager { get; }
 
@@ -124,12 +128,15 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             // => MessageHub
             outboxHostSettings.ProcessEnvironmentVariables.Add("MESSAGEHUB_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
 
-            await ServiceBusResourceProvider
+            var dataAvailableQueue = await ServiceBusResourceProvider
                 .BuildQueue("sbq-dataavailable").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("MESSAGEHUB_QUEUE_DATAAVAILABLE", p.Name))
                 .CreateAsync().ConfigureAwait(false);
             await ServiceBusResourceProvider
                 .BuildQueue("sbq-meteringpoints-reply").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("MESSAGEHUB_QUEUE_REPLY", p.Name))
                 .CreateAsync().ConfigureAwait(false);
+
+            MessageHubListenerMock = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
+            await MessageHubListenerMock.AddQueueListenerAsync(dataAvailableQueue.Name).ConfigureAwait(false);
 
             outboxHostSettings.ProcessEnvironmentVariables.Add("MESSAGEHUB_STORAGE_CONNECTION_STRING", "UseDevelopmentStorage=true");
             outboxHostSettings.ProcessEnvironmentVariables.Add("MESSAGEHUB_STORAGE_CONTAINER_NAME", "meteringpoint");
@@ -187,6 +194,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             AzuriteManager.Dispose();
 
             // => Service Bus
+            await MessageHubListenerMock.DisposeAsync().ConfigureAwait(false);
             await ServiceBusResourceProvider.DisposeAsync().ConfigureAwait(false);
 
             // => Database
