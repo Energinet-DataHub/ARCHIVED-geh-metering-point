@@ -67,6 +67,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
 
         public async Task InitializeAsync()
         {
+            // => Storage emulator
+            AzuriteManager.StartAzurite();
+
+            // => Prepare host settings
             var localSettingsSnapshot = HostConfigurationBuilder.BuildLocalSettingsConfiguration();
 
             var ingestionHostSettings = HostConfigurationBuilder.CreateFunctionAppHostSettings();

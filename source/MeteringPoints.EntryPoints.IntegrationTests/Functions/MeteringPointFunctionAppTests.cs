@@ -13,11 +13,14 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
+using Energinet.DataHub.Core.TestCommon;
 using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures;
 using FluentAssertions;
 using Xunit;
@@ -67,9 +70,21 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
                 .ConfigureAwait(false);
 
             // Assert
+            // => Ingestion
             actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            await Task.Delay(30000).ConfigureAwait(false);
+            // => Queue subscriber
+            var queueSubscriberExecuted = await Awaiter
+                .TryWaitUntilConditionAsync(
+                    () => Fixture.ProcessingHostManager.CheckIfFunctionWasExecuted("Functions.QueueSubscriber"),
+                    TimeSpan.FromSeconds(5))
+                .ConfigureAwait(false);
+
+            queueSubscriberExecuted.Should().BeTrue();
+
+            //// TODO: Manually trigger "OutboxWatcher"
+
+            //// TODO: Listen for message in "MESSAGEHUB_QUEUE_DATAAVAILABLE"
         }
     }
 }
