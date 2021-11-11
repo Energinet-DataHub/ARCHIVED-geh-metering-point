@@ -18,6 +18,7 @@ resource "azurerm_app_service" "webapi" {
   app_service_plan_id = module.plan_webapi.id
 
   site_config {
+    linux_fx_version = "DOTNETCORE|5.0"
     dotnet_framework_version = "v5.0"
     cors {
       allowed_origins = ["*"]
