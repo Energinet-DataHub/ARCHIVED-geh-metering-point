@@ -32,7 +32,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         protected MeasurementUnitType _unitType;
         protected MeteringMethod _meteringMethod;
         protected MeterId? _meterNumber;
-        protected MeteringConfiguration _meteringConfiguration;
 #pragma warning restore
         private GridAreaLinkId _gridAreaLinkId;
         private ReadingOccurrence _meterReadingOccurrence;
@@ -78,7 +77,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _effectiveDate = effectiveDate;
             _capacity = capacity;
 
-            _meteringConfiguration = MeteringConfiguration.Create(_meteringMethod, _meterNumber ?? MeterId.Empty());
+            MeteringConfiguration = MeteringConfiguration.Create(_meteringMethod, _meterNumber ?? MeterId.Empty());
         }
 
         public MeteringPointId Id { get; }
@@ -86,6 +85,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public GsrnNumber GsrnNumber { get; }
 
         public Address Address { get; private set; }
+
+        internal MeteringConfiguration MeteringConfiguration { get; private set; }
 
         protected ConnectionState ConnectionState { get; set; } = ConnectionState.New();
 
@@ -142,14 +143,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             if (effectiveDate == null) throw new ArgumentNullException(nameof(effectiveDate));
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
-            if (_meteringConfiguration.Equals(configuration))
+            if (MeteringConfiguration.Equals(configuration))
             {
                 return;
             }
 
-            _meteringConfiguration = configuration;
+            MeteringConfiguration = configuration;
 
-            AddDomainEvent(new MeterIdChanged(_meteringConfiguration.Meter.Value, _meteringConfiguration.Method.Name, effectiveDate.ToString()));
+            AddDomainEvent(new MeterIdChanged(MeteringConfiguration.Meter.Value, MeteringConfiguration.Method.Name, effectiveDate.ToString()));
         }
     }
 }

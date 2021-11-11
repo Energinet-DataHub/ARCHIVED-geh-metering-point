@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
@@ -35,6 +36,23 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             if (_details.Address is not null)
             {
                 validationErrors.AddRange(_target.CanChangeAddress(_details.Address).Errors);
+            }
+
+            if (_details.MeterId is not null || _details.MeteringMethod is not null)
+            {
+                var meteringMethod = _details.MeteringMethod ?? _target.MeteringConfiguration.Method;
+                MeterId meterId;
+                if (meteringMethod == MeteringMethod.Physical)
+                {
+                    meterId = _details.MeterId ?? _target.MeteringConfiguration.Meter;
+                }
+                else
+                {
+                    meterId = MeterId.Empty();
+                }
+
+                var checkResult = MeteringConfiguration.CheckRules(meteringMethod, meterId!);
+                validationErrors.AddRange(checkResult.Errors);
             }
 
             validationErrors.AddRange(_target.CanChange(_details).Errors);

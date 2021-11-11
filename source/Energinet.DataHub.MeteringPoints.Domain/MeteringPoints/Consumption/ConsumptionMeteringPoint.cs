@@ -189,29 +189,29 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
 
+        #pragma warning disable
         public BusinessRulesValidationResult CanChange(MasterDataDetails details)
         {
             if (details == null) throw new ArgumentNullException(nameof(details));
 
             var validationErrors = new List<ValidationError>();
 
-            if (details.MeterId is not null || details.MeteringMethod is not null)
-            {
-                var meteringMethod = details.MeteringMethod ?? _meteringMethod;
-                MeterId meterId;
-                if (meteringMethod == MeteringMethod.Physical)
-                {
-                    meterId = details.MeterId ?? _meterNumber!;
-                }
-                else
-                {
-                    meterId = MeterId.Empty();
-                }
-
-                var checkResult = MeteringConfiguration.CheckRules(meteringMethod, meterId!);
-                validationErrors.AddRange(checkResult.Errors);
-            }
-
+            // if (details.MeterId is not null || details.MeteringMethod is not null)
+            // {
+            //     var meteringMethod = details.MeteringMethod ?? _meteringMethod;
+            //     MeterId meterId;
+            //     if (meteringMethod == MeteringMethod.Physical)
+            //     {
+            //         meterId = details.MeterId ?? _meterNumber!;
+            //     }
+            //     else
+            //     {
+            //         meterId = MeterId.Empty();
+            //     }
+            //
+            //     var checkResult = MeteringConfiguration.CheckRules(meteringMethod, meterId!);
+            //     validationErrors.AddRange(checkResult.Errors);
+            // }
             return new BusinessRulesValidationResult(validationErrors);
         }
 
