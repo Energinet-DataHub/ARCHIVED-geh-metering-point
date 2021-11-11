@@ -15,7 +15,7 @@ resource "azurerm_app_service" "webapi" {
   name                = "app-webapi-${lower(var.domain_name_short)}-${lower(var.environment_short)}-${lower(var.environment_instance)}"
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
-  app_service_plan_id = module.plan_shared.id
+  app_service_plan_id = module.plan_webapi.id
 
   site_config {
     dotnet_framework_version = "v5.0"
@@ -24,27 +24,10 @@ resource "azurerm_app_service" "webapi" {
     }
   }
 
-  app_settings = {
-    METERINGPOINT_QUEUE_TOPIC_NAME: module.sbq_meteringpoint.name,
-    INTEGRATION_EVENT_QUEUE: data.azurerm_key_vault_secret.sb_domain_relay_listen_connection_string.value
-  }
-
   connection_string {
     name  = "METERINGPOINT_DB_CONNECTION_STRING"
     type  = "SQLServer"
     value = local.METERING_POINT_CONNECTION_STRING
-  }
-
-  connection_string {
-    name  = "INTEGRATION_EVENT_QUEUE_CONNECTION"
-    type  = "Custom"
-    value = data.azurerm_key_vault_secret.sb_domain_relay_listen_connection_string.value
-  }
-
-  connection_string {
-    name  = "METERINGPOINT_QUEUE_CONNECTION_STRING"
-    type  = "Custom"
-    value = module.sb_meteringpoint.primary_connection_strings["listen"]
   }
 
   tags              = azurerm_resource_group.this.tags
@@ -56,4 +39,23 @@ resource "azurerm_app_service" "webapi" {
       tags,
     ]
   }
+}
+
+module "plan_webapi" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/app-service-plan?ref=5.1.0"
+
+  name                  = "webapi"
+  project_name          = var.domain_name_short
+  environment_short     = var.environment_short
+  environment_instance  = var.environment_instance
+  resource_group_name   = azurerm_resource_group.this.name
+  location              = azurerm_resource_group.this.location
+  kind                  = "Linux"
+  reserved              = true
+  sku                   = {
+    tier  = "Basic"
+    size  = "B1"
+  }
+
+  tags                = azurerm_resource_group.this.tags
 }
