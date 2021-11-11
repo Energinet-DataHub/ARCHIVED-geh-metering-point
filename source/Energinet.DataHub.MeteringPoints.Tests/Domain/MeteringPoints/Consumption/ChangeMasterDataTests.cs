@@ -35,17 +35,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         public void Should_return_error_when_street_name_is_blank()
         {
             var meteringPoint = CreateMeteringPoint();
-            var details = CreateDetails()
-                with
-                {
-                    Address = Address.Create(
-                        city: SampleData.CityName,
-                        streetName: string.Empty,
-                        countryCode: CountryCode.DK,
-                        postCode: SampleData.PostCode),
-                };
 
-            var result = meteringPoint.CanChange(details);
+            var result = meteringPoint.CanChangeAddress(Address.Create(
+                city: SampleData.CityName,
+                streetName: string.Empty,
+                countryCode: CountryCode.DK,
+                postCode: SampleData.PostCode));
 
             AssertError<StreetNameIsRequiredRuleError>(result, true);
         }
@@ -54,25 +49,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         public void Should_throw_if_any_business_rule_are_violated()
         {
             var meteringPoint = CreateMeteringPoint();
-            var details = CreateDetails()
-                with
-                {
-                    Address = Address.Create(city: SampleData.CityName, streetName: string.Empty, countryCode: CountryCode.DK, postCode: SampleData.PostCode),
-                };
 
-            Assert.Throws<MasterDataChangeException>(() => meteringPoint.Change(details));
+            Assert.Throws<MasterDataChangeException>(() => meteringPoint.ChangeAddress(Address.Create(city: SampleData.CityName, streetName: string.Empty, countryCode: CountryCode.DK, postCode: SampleData.PostCode)));
         }
 
         [Fact]
         public void Should_return_error_when_post_code_is_blank()
         {
             var meteringPoint = CreateMeteringPoint();
-            var details = CreateDetails()
-                with
-                {
-                    Address = Address.Create(city: SampleData.CityName, streetName: SampleData.StreetName, countryCode: CountryCode.DK, postCode: string.Empty),
-                };
-            var result = meteringPoint.CanChange(details);
+
+            var result = meteringPoint.CanChangeAddress(Address.Create(city: SampleData.CityName, streetName: SampleData.StreetName, countryCode: CountryCode.DK, postCode: string.Empty));
 
             AssertError<PostCodeIsRequiredRuleError>(result, true);
         }
@@ -81,13 +67,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         public void Should_return_error_when_city_is_blank()
         {
             var meteringPoint = CreateMeteringPoint();
-            var details = CreateDetails()
-                with
-                {
-                    Address = Address.Create(city: null, streetName: SampleData.StreetName, countryCode: CountryCode.DK, postCode: SampleData.PostCode),
-                };
 
-            var result = meteringPoint.CanChange(details);
+            var result = meteringPoint.CanChangeAddress(Address.Create(city: null, streetName: SampleData.StreetName, countryCode: CountryCode.DK, postCode: SampleData.PostCode));
 
             AssertError<CityIsRequiredRuleError>(result, true);
         }

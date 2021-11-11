@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
@@ -119,6 +120,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public void ChangeAddress(Address newAddress)
         {
             if (newAddress == null) throw new ArgumentNullException(nameof(newAddress));
+            var checkResult = CanChangeAddress(newAddress);
+            if (checkResult.Success == false)
+            {
+                throw new MasterDataChangeException(checkResult.Errors.ToList());
+            }
+
             if (newAddress.Equals(Address) == false)
             {
                 Address = newAddress;
