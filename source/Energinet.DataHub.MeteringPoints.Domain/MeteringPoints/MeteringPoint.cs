@@ -31,7 +31,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         protected MeteringPointType _meteringPointType;
         protected ProductType _productType;
         protected MeasurementUnitType _unitType;
-        protected MeteringMethod _meteringMethod;
 #pragma warning restore
         private GridAreaLinkId _gridAreaLinkId;
         private ReadingOccurrence _meterReadingOccurrence;
@@ -50,7 +49,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            MeteringMethod meteringMethod,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
@@ -65,7 +63,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             Id = id;
             GsrnNumber = gsrnNumber;
             Address = address;
-            _meteringMethod = meteringMethod;
             _meteringPointType = meteringPointType;
             _gridAreaLinkId = gridAreaLinkId;
             _powerPlantGsrnNumber = powerPlantGsrnNumber;
