@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
@@ -30,7 +31,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 
         public BusinessRulesValidationResult CanChange()
         {
-            return _target.CanChange(_details);
+            var validationErrors = new List<ValidationError>();
+            if (_details.Address is not null)
+            {
+                validationErrors.AddRange(_target.CanChangeAddress(_details.Address).Errors);
+            }
+
+            validationErrors.AddRange(_target.CanChange(_details).Errors);
+            return new BusinessRulesValidationResult(validationErrors);
         }
 
         public void Change()

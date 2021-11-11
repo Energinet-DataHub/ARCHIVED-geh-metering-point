@@ -194,10 +194,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             if (details == null) throw new ArgumentNullException(nameof(details));
 
             var validationErrors = new List<ValidationError>();
-            if (details.Address is not null)
-            {
-                validationErrors.AddRange(CanChangeAddress(details.Address).Errors);
-            }
 
             if (details.MeterId is not null || details.MeteringMethod is not null)
             {
