@@ -161,18 +161,5 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 };
             return ConsumptionMeteringPoint.Create(details);
         }
-
-        private static MasterDataDetails CreateDetails()
-        {
-            return new MasterDataDetails(
-                EffectiveDate: EffectiveDate.Create(SampleData.EffectiveDate),
-                Address: Address.Create(city: null, streetName: SampleData.StreetName, countryCode: CountryCode.DK, postCode: SampleData.PostCode));
-        }
-
-        private static MasterDataDetails CreateDetailsWithRequiredValues()
-        {
-            return new MasterDataDetails(
-                EffectiveDate: EffectiveDate.Create(SampleData.EffectiveDate));
-        }
     }
 }
