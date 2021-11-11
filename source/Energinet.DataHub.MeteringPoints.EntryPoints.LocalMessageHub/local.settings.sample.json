@@ -11,6 +11,8 @@
     "MESSAGEHUB_STORAGE_CONNECTION_STRING": "<MessageHub Storage Account connection string>",
     "MESSAGEHUB_STORAGE_CONTAINER_NAME": "<MessageHub Storage Account container name>",
     "MESSAGEHUB_DATA_AVAILABLE_QUEUE": "<MessageHub Data Available Queue name>",
-    "MESSAGEHUB_DOMAIN_REPLY_QUEUE": "<MessageHub Domain Reply Queue name>"
+    "MESSAGEHUB_DOMAIN_REPLY_QUEUE": "<MessageHub Domain Reply Queue name>",
+    "REQEUST_BUNDLE_QUEUE_SUBSCRIBER_QUEUE" : "<Queue for post office to request bundle>",
+    "BUNDLE_DEQUEUED_SUBSCRIBER_QUEUE" : "<Queue for post office to inform on dequeue>"
   }
 }
