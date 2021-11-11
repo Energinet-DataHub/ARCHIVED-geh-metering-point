@@ -17,6 +17,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.Extensions;
 using Energinet.DataHub.MessageHub.Client.Peek;
+using Energinet.DataHub.MessageHub.Model.Extensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 using MediatR;
 
@@ -35,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.MessageHub
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            await _dataBundleResponseSender.SendAsync(request.DataBundleRequestDto.CreateResponse(request.Path), request.DataBundleRequestDto, request.SessionId).ConfigureAwait(false);
+            await _dataBundleResponseSender.SendAsync(request.DataBundleRequestDto.CreateResponse(request.Path)).ConfigureAwait(false);
 
             return Unit.Value;
         }

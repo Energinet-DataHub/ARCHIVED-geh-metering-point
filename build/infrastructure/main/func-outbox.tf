@@ -45,7 +45,9 @@ module "func_outbox" {
     MESSAGEHUB_QUEUE_CONNECTION_STRING                            = data.azurerm_key_vault_secret.sb_domain_relay_transceiver_connection_string.value
     MESSAGEHUB_STORAGE_CONTAINER_NAME                             = data.azurerm_key_vault_secret.st_market_operator_response_postofficereply_container_name.value
     CHARGES_DEFAULT_LINK_RESPONSE_QUEUE                           = "create-link-reply"
-    CHARGES_DEFAULT_MESSAGES_RESPONSE_QUEUE                       = "create-link-messages-reply"
+    CHARGES_DEFAULT_MESSAGES_RESPONSE_QUEUE                       = "create-link-messages-reply",
+    MESSAGEHUB_DATA_AVAILABLE_QUEUE                               = "dataavailable",
+    MESSAGEHUB_DOMAIN_REPLY_QUEUE                                 = "meteringpoints-reply"
   }
 
   tags                                      = azurerm_resource_group.this.tags
