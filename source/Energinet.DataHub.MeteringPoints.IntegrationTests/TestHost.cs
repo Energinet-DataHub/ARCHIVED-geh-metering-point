@@ -279,8 +279,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 if (message.ContainsKey("Errors"))
                 {
                     var errorMessages =
-                        JsonConvert.DeserializeObject<List<Infrastructure.EDI.Errors.ErrorMessage>>(message
-                            .GetValue("Errors", StringComparison.OrdinalIgnoreCase).ToString());
+                        JsonConvert.DeserializeObject<List<Infrastructure.EDI.Errors.ErrorMessage>>(
+                            message.GetValue("Errors", StringComparison.OrdinalIgnoreCase)!.ToString());
                     Assert.Contains(errorMessages, error => error.Code == expectedErrorCode);
                     break;
                 }
