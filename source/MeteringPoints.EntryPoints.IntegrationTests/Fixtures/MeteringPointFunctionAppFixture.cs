@@ -37,6 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             TestLogger = new TestDiagnosticsLogger();
 
             AzuriteManager = new AzuriteManager();
+            DatabaseManager = new MeteringPointDatabaseManager();
             IntegrationTestConfiguration = new IntegrationTestConfiguration();
             ServiceBusResourceProvider = new ServiceBusResourceProvider(IntegrationTestConfiguration.ServiceBusConnectionString, TestLogger);
 
@@ -53,6 +54,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
 
         [NotNull]
         public FunctionAppHostManager? OutboxHostManager { get; private set; }
+
+        public MeteringPointDatabaseManager DatabaseManager { get; }
 
         private AzuriteManager AzuriteManager { get; }
 
@@ -107,6 +110,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
                 })
                 .CreateAsync().ConfigureAwait(false);
 
+            // => Database
+            await DatabaseManager.CreateDatabaseAsync().ConfigureAwait(false);
+
+            processingHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
+
             IngestionHostManager = new FunctionAppHostManager(ingestionHostSettings, TestLogger);
             ProcessingHostManager = new FunctionAppHostManager(processingHostSettings, TestLogger);
             ////OutboxHostManager = new FunctionAppHostManager(outboxHostSettings, TestLogger);
@@ -126,6 +134,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
 
             // => Service Bus
             await ServiceBusResourceProvider.DisposeAsync().ConfigureAwait(false);
+
+            // => Database
+            await DatabaseManager.DeleteDatabaseAsync().ConfigureAwait(false);
         }
 
         /// <summary>
