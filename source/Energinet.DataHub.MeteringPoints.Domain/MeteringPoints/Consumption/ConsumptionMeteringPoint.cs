@@ -53,7 +53,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             ConnectionType? connectionType,
             AssetType? assetType,
             ScheduledMeterReadingDate? scheduledMeterReadingDate,
-            Capacity? capacity)
+            Capacity? capacity,
+            MeteringConfiguration meteringConfiguration)
             : base(
                 id,
                 gsrnNumber,
@@ -71,7 +72,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 capacity,
                 connectionType,
                 disconnectionType,
-                netSettlementGroup)
+                netSettlementGroup,
+                meteringConfiguration)
         {
             _settlementMethod = settlementMethod;
             _assetType = assetType;
@@ -163,7 +165,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointDetails.ConnectionType,
                 meteringPointDetails.AssetType,
                 meteringPointDetails.ScheduledMeterReadingDate,
-                meteringPointDetails.Capacity);
+                meteringPointDetails.Capacity,
+                MeteringConfiguration.Create(meteringPointDetails.MeteringMethod, meteringPointDetails.MeterNumber ?? MeterId.Empty()));
         }
 
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)

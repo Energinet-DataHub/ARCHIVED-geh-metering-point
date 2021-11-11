@@ -54,7 +54,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
             DisconnectionType disconnectionType,
             ConnectionType? connectionType,
             AssetType assetType,
-            Capacity capacity)
+            Capacity capacity,
+            MeteringConfiguration meteringConfiguration)
             : base(
                 id,
                 gsrnNumber,
@@ -72,7 +73,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 capacity,
                 connectionType,
                 disconnectionType,
-                netSettlementGroup)
+                netSettlementGroup,
+                meteringConfiguration)
         {
             _netSettlementGroup = netSettlementGroup;
             _productionObligation = productionObligation;
@@ -185,7 +187,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 meteringPointDetails.DisconnectionType,
                 meteringPointDetails.ConnectionType,
                 meteringPointDetails.AssetType,
-                meteringPointDetails.Capacity);
+                meteringPointDetails.Capacity,
+                MeteringConfiguration.Create(meteringPointDetails.MeteringMethod, meteringPointDetails.MeterNumber ?? MeterId.Empty()));
         }
     }
 }

@@ -115,7 +115,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 Capacity.Create(SampleData.Capacity),
                 ConnectionType.Installation,
                 DisconnectionType.Remote,
-                NetSettlementGroup.Six);
+                NetSettlementGroup.Six,
+                MeteringConfiguration.Create(EnumerationType.FromName<MeteringMethod>(SampleData.SubTypeName), MeterId.Create(SampleData.MeterNumber)));
         }
     }
 }

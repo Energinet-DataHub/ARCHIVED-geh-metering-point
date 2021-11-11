@@ -43,7 +43,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
             [NotNull]PowerLimit powerLimit,
             [NotNull]EffectiveDate effectiveDate,
             [NotNull]GridAreaLinkId toGrid,
-            [NotNull]GridAreaLinkId fromGrid)
+            [NotNull]GridAreaLinkId fromGrid,
+            MeteringConfiguration meteringConfiguration)
             : base(
                 id,
                 gsrnNumber,
@@ -58,7 +59,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
                 meterReadingOccurrence,
                 powerLimit,
                 effectiveDate,
-                capacity: null)
+                capacity: null,
+                meteringConfiguration)
         {
             _toGrid = toGrid;
             _fromGrid = fromGrid;
@@ -130,7 +132,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
                 meteringPointDetails.PowerLimit,
                 meteringPointDetails.EffectiveDate,
                 meteringPointDetails.ToGridLinkId,
-                meteringPointDetails.FromGridLinkId);
+                meteringPointDetails.FromGridLinkId,
+                MeteringConfiguration.Create(meteringPointDetails.MeteringMethod, meteringPointDetails.MeterNumber ?? MeterId.Empty()));
         }
 
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)

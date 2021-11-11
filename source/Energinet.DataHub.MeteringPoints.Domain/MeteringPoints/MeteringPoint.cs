@@ -61,7 +61,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit powerLimit,
             EffectiveDate effectiveDate,
-            Capacity? capacity)
+            Capacity? capacity,
+            MeteringConfiguration meteringConfiguration)
         {
             Id = id;
             GsrnNumber = gsrnNumber;
@@ -78,7 +79,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _effectiveDate = effectiveDate;
             _capacity = capacity;
 
-            MeteringConfiguration = MeteringConfiguration.Create(_meteringMethod, _meterNumber ?? MeterId.Empty());
+            MeteringConfiguration = meteringConfiguration;
         }
 
         public MeteringPointId Id { get; }
