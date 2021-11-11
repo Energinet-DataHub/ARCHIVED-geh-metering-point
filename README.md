@@ -1,7 +1,5 @@
 # MeteringPoints
 
-[![codecov](https://codecov.io/gh/Energinet-DataHub/geh-metering-point/branch/main/graph/badge.svg?token=XR3CF7GC90)](https://codecov.io/gh/Energinet-DataHub/geh-metering-point)
-
 ## Intro
 
 The metering point domain is in charge of maintaining grid areas and creating the different metering point types in their respective grid areas, as well as maintaining the metering point state.
