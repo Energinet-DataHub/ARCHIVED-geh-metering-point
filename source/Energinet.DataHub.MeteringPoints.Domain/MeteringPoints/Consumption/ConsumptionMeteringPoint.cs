@@ -43,7 +43,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
             LocationDescription? locationDescription,
-            MeterId? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit powerLimit,
             EffectiveDate effectiveDate,
@@ -65,7 +64,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 powerPlantGsrnNumber,
                 locationDescription,
                 MeasurementUnitType.KWh,
-                meterNumber,
                 meterReadingOccurrence,
                 powerLimit,
                 effectiveDate,
@@ -105,7 +103,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 address.GeoInfoReference,
                 powerPlantGsrnNumber?.Value,
                 locationDescription?.Value,
-                meterNumber?.Value,
+                MeteringConfiguration.Meter?.Value,
                 powerLimit.Ampere,
                 powerLimit.Kwh,
                 effectiveDate.DateInUtc,
@@ -155,7 +153,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointDetails.GridAreaLinkId,
                 meteringPointDetails.PowerPlantGsrnNumber,
                 meteringPointDetails.LocationDescription,
-                meteringPointDetails.MeterNumber,
                 meteringPointDetails.ReadingOccurrence,
                 meteringPointDetails.PowerLimit,
                 meteringPointDetails.EffectiveDate,
@@ -191,15 +188,5 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             ConnectionState = ConnectionState.Connected(connectionDetails.EffectiveDate);
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
-
-        // public void CangeMasterData(MasterDataDetails details)
-        // {
-        //
-        // }
-        //
-        // public void CanCangeMasterData(MasterDataDetails details)
-        // {
-        //
-        // }
     }
 }

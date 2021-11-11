@@ -32,7 +32,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         protected ProductType _productType;
         protected MeasurementUnitType _unitType;
         protected MeteringMethod _meteringMethod;
-        protected MeterId? _meterNumber;
 #pragma warning restore
         private GridAreaLinkId _gridAreaLinkId;
         private ReadingOccurrence _meterReadingOccurrence;
@@ -57,7 +56,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GsrnNumber? powerPlantGsrnNumber,
             LocationDescription? locationDescription,
             MeasurementUnitType unitType,
-            MeterId? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit powerLimit,
             EffectiveDate effectiveDate,
@@ -73,7 +71,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _powerPlantGsrnNumber = powerPlantGsrnNumber;
             _locationDescription = locationDescription;
             _unitType = unitType;
-            _meterNumber = meterNumber;
             _meterReadingOccurrence = meterReadingOccurrence;
             _powerLimit = powerLimit;
             _effectiveDate = effectiveDate;
