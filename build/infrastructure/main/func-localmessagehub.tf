@@ -35,11 +35,11 @@ module "func_localmessagehub" {
     MESSAGEHUB_QUEUE_CONNECTION_STRING    = data.azurerm_key_vault_secret.sb_domain_relay_transceiver_connection_string.value
     MESSAGEHUB_STORAGE_CONTAINER_NAME     = data.azurerm_key_vault_secret.st_market_operator_response_postofficereply_container_name.value
     METERINGPOINT_QUEUE_CONNECTION_STRING = module.sb_meteringpoint.primary_connection_strings["send"]
-    METERINGPOINT_QUEUE_TOPIC_NAME        = module.sbq_meteringpoint.name,
-    MESSAGEHUB_DATA_AVAILABLE_QUEUE       = "dataavailable",
-    MESSAGEHUB_DOMAIN_REPLY_QUEUE         = "meteringpoints-reply",
-    REQEUST_BUNDLE_QUEUE_SUBSCRIBER_QUEUE = "meteringpoints",
-    BUNDLE_DEQUEUED_SUBSCRIBER_QUEUE      = "meteringpoints-dequeue"
+    METERINGPOINT_QUEUE_TOPIC_NAME        = module.sbq_meteringpoint.name
+    MESSAGEHUB_DATA_AVAILABLE_QUEUE       = data.azurerm_key_vault_secret.sbq_data_available_name.value
+    MESSAGEHUB_DOMAIN_REPLY_QUEUE         = data.azurerm_key_vault_secret.sbq_metering_points_reply_name.value
+    REQEUST_BUNDLE_QUEUE_SUBSCRIBER_QUEUE = data.azurerm_key_vault_secret.sbq_metering_points_name.value
+    BUNDLE_DEQUEUED_SUBSCRIBER_QUEUE      = data.azurerm_key_vault_secret.sbq_metering_points_dequeue_name.value
   }
 
   tags                                    = azurerm_resource_group.this.tags
