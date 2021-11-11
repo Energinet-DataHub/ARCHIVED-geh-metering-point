@@ -71,7 +71,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
             _container = new Container();
             _container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
 
-            var connectionString = databaseFixture.GetConnectionString();
+            var connectionString = databaseFixture.DatabaseManager.ConnectionString;
 
             var serviceCollection = new ServiceCollection();
 

@@ -84,11 +84,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 #pragma warning disable CA1724 // TODO: TestHost is reserved. Maybe refactor to base EntryPoint?
     public class TestHost : IDisposable
     {
+        private readonly JsonSerializer _jsonSerializer = new();
         private readonly Scope _scope;
         private readonly Container _container;
         private readonly IServiceProvider _serviceProvider;
         private bool _disposed;
-        private JsonSerializer _jsonSerializer = new();
 
         protected TestHost(DatabaseFixture databaseFixture)
         {
@@ -97,7 +97,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container = new Container();
             _container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
 
-            var connectionString = databaseFixture.GetConnectionString();
+            var connectionString = databaseFixture.DatabaseManager.ConnectionString;
 
             var serviceCollection = new ServiceCollection();
 

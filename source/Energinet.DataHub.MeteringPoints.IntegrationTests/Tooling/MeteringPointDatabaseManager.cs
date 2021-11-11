@@ -20,7 +20,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
 {
     public class MeteringPointDatabaseManager : SqlServerDatabaseManager<MeteringPointContext>
     {

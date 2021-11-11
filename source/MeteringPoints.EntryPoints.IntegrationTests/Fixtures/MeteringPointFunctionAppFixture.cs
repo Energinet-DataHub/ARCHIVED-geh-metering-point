@@ -20,9 +20,9 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Azurite;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
-using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ResourceProvider;
 using Energinet.DataHub.Core.TestCommon.Diagnostics;
+using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -56,9 +56,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
         [NotNull]
         public FunctionAppHostManager? OutboxHostManager { get; private set; }
 
-        [NotNull]
-        public ServiceBusListenerMock? MessageHubListenerMock { get; private set; }
-
         public MeteringPointDatabaseManager DatabaseManager { get; }
 
         private AzuriteManager AzuriteManager { get; }
@@ -71,27 +68,27 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
 
         public async Task InitializeAsync()
         {
-            // => Storage emulator
-            AzuriteManager.StartAzurite();
-
-            // => Prepare host settings
             var localSettingsSnapshot = HostConfigurationBuilder.BuildLocalSettingsConfiguration();
 
             var ingestionHostSettings = HostConfigurationBuilder.CreateFunctionAppHostSettings();
             var processingHostSettings = HostConfigurationBuilder.CreateFunctionAppHostSettings();
             var outboxHostSettings = HostConfigurationBuilder.CreateFunctionAppHostSettings();
 
-            var buildConfiguration = GetBuildConfiguration();
+#if DEBUG
+            var configuration = "Debug";
+#else
+            var configuration = "Release";
+#endif
             var port = 8000;
-            ingestionHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion\\bin\\{buildConfiguration}\\net5.0";
+            ingestionHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion\\bin\\{configuration}\\net5.0";
             ingestionHostSettings.Functions = "MeteringPoint";
             ingestionHostSettings.Port = ++port;
 
-            processingHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Processing\\bin\\{buildConfiguration}\\net5.0";
+            processingHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Processing\\bin\\{configuration}\\net5.0";
             processingHostSettings.Functions = "QueueSubscriber";
             processingHostSettings.Port = ++port;
 
-            outboxHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Outbox\\bin\\{buildConfiguration}\\net5.0";
+            outboxHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Outbox\\bin\\{configuration}\\net5.0";
             outboxHostSettings.Functions = "OutboxWatcher";
             outboxHostSettings.Port = ++port;
 
@@ -124,15 +121,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             // => MessageHub
             outboxHostSettings.ProcessEnvironmentVariables.Add("MESSAGEHUB_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
 
-            var dataAvailableQueue = await ServiceBusResourceProvider
+            await ServiceBusResourceProvider
                 .BuildQueue("sbq-dataavailable").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("MESSAGEHUB_QUEUE_DATAAVAILABLE", p.Name))
                 .CreateAsync().ConfigureAwait(false);
+
             await ServiceBusResourceProvider
                 .BuildQueue("sbq-meteringpoints-reply").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("MESSAGEHUB_QUEUE_REPLY", p.Name))
                 .CreateAsync().ConfigureAwait(false);
-
-            MessageHubListenerMock = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
-            await MessageHubListenerMock.AddQueueListenerAsync(dataAvailableQueue.Name).ConfigureAwait(false);
 
             outboxHostSettings.ProcessEnvironmentVariables.Add("MESSAGEHUB_STORAGE_CONNECTION_STRING", "UseDevelopmentStorage=true");
             outboxHostSettings.ProcessEnvironmentVariables.Add("MESSAGEHUB_STORAGE_CONTAINER_NAME", "meteringpoint");
@@ -190,7 +185,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             AzuriteManager.Dispose();
 
             // => Service Bus
-            await MessageHubListenerMock.DisposeAsync().ConfigureAwait(false);
             await ServiceBusResourceProvider.DisposeAsync().ConfigureAwait(false);
 
             // => Database
@@ -232,15 +226,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
 
             // Function App Host started.
             hostStartupLog = hostManager.GetHostLogSnapshot();
-        }
-
-        private static string GetBuildConfiguration()
-        {
-#if DEBUG
-            return "Debug";
-#else
-            var configuration = "Release";
-#endif
         }
     }
 }
