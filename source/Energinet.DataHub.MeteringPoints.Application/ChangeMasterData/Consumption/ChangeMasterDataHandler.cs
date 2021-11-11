@@ -54,26 +54,21 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 });
             }
 
-            var details = CreateChangeDetails(request);
-            var changeFacade =
+            var details = CreateChangeDetailsFrom(request);
+            var changeHandler =
                 new ChangeMasterDataFacade(targetMeteringPoint, details);
 
-            var validationResults = new List<BusinessRulesValidationResult>()
+            var checkResult = await CheckIfMasterDataCanBeChangedAsync(changeHandler, details).ConfigureAwait(false);
+            if (checkResult.Success == false)
             {
-                changeFacade.CanChange(),
-                new EffectiveDatePolicy(_settings.NumberOfDaysEffectiveDateIsAllowedToBeforeToday).Check(_systemDateTimeProvider.Now(), details.EffectiveDate),
-            };
-
-            var validationErrors = validationResults.SelectMany(results => results.Errors).ToList();
-            if (validationErrors.Count > 0)
-            {
-                return new BusinessProcessResult(request.TransactionId, validationErrors);
+                return new BusinessProcessResult(request.TransactionId, checkResult.Errors);
             }
 
-            return await ChangeMasterDataAsync(request, changeFacade).ConfigureAwait(false);
+            changeHandler.Change();
+            return BusinessProcessResult.Ok(request.TransactionId);
         }
 
-        private static MasterDataDetails CreateChangeDetails(ChangeMasterDataRequest request)
+        private static MasterDataDetails CreateChangeDetailsFrom(ChangeMasterDataRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             return new MasterDataDetails(EffectiveDate.Create(request.EffectiveDate))
@@ -82,12 +77,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                     Address = CreateNewAddressFrom(request),
                     MeterId = request.MeterId.Length == 0 ? MeterId.Empty() : null,
                 };
-        }
-
-        private static Task<BusinessProcessResult> ChangeMasterDataAsync(ChangeMasterDataRequest request, ChangeMasterDataFacade changeHandler)
-        {
-            changeHandler.Change();
-            return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
         }
 
         private static Domain.Addresses.Address? CreateNewAddressFrom(ChangeMasterDataRequest request)
@@ -118,6 +107,20 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
             return await _meteringPointRepository
                 .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
                 .ConfigureAwait(false) as ConsumptionMeteringPoint;
+        }
+
+        private Task<BusinessRulesValidationResult> CheckIfMasterDataCanBeChangedAsync(ChangeMasterDataFacade handler, MasterDataDetails details)
+        {
+            if (handler == null) throw new ArgumentNullException(nameof(handler));
+            if (details == null) throw new ArgumentNullException(nameof(details));
+            var validationResults = new List<BusinessRulesValidationResult>()
+            {
+                handler.CanChange(),
+                new EffectiveDatePolicy(_settings.NumberOfDaysEffectiveDateIsAllowedToBeforeToday).Check(_systemDateTimeProvider.Now(), details.EffectiveDate),
+            };
+
+            var validationErrors = validationResults.SelectMany(results => results.Errors).ToList();
+            return Task.FromResult<BusinessRulesValidationResult>(new BusinessRulesValidationResult(validationErrors));
         }
     }
 }
