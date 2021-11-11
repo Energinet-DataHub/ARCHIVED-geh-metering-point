@@ -123,7 +123,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             await ServiceBusResourceProvider
                 .BuildQueue("sbq-dataavailable").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("MESSAGEHUB_QUEUE_DATAAVAILABLE", p.Name))
                 .CreateAsync().ConfigureAwait(false);
-
             await ServiceBusResourceProvider
                 .BuildQueue("sbq-meteringpoints-reply").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("MESSAGEHUB_QUEUE_REPLY", p.Name))
                 .CreateAsync().ConfigureAwait(false);
