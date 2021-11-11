@@ -26,7 +26,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands.Proto
             if (obj == null) throw new ArgumentNullException(nameof(obj));
             return new Application.Connect.SendAccountingPointCharacteristicsMessage(
                 obj.MeteringPointGsrn,
-                obj.TransationId);
+                obj.TransationId,
+                obj.Reason);
         }
     }
 }

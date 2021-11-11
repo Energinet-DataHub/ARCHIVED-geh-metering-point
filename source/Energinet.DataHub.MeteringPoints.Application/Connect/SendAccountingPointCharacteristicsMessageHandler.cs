@@ -53,7 +53,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
 
             foreach (var energySupplier in energySuppliers)
             {
-                _businessDocumentFactory.CreateAccountingPointCharacteristicsMessage(request.TransactionId, meteringPointDto, energySupplier.GlnNumber);
+                _businessDocumentFactory.CreateAccountingPointCharacteristicsMessage(request.TransactionId, request.Reason, meteringPointDto, energySupplier.GlnNumber);
             }
 
             return Unit.Value;

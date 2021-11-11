@@ -62,7 +62,6 @@ limitations under the License.
   <ItemGroup>
     <Folder Include="EDI\Errors\Converters\Common" />
     <Folder Include="EDI\Errors\Converters\GridAreas" />
-    <Folder Include="EDI\GridAreas" />
     <Folder Include="Messaging\Incoming\Protobuf\Contracts" />
   </ItemGroup>
 

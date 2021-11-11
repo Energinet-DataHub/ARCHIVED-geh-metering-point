@@ -12,7 +12,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.EDI
         /// RSM 22
         /// </summary>
         void CreateAccountingPointCharacteristicsMessage(
-            string requestTransactionId,
+            string transactionId,
+            string businessReasonCode,
             MeteringPointDto meteringPointDto,
             GlnNumber energySupplierGlnNumber);
     }

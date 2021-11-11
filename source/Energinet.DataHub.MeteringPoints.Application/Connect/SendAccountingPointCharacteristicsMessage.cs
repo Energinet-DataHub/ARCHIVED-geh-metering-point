@@ -18,14 +18,17 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
     public class SendAccountingPointCharacteristicsMessage : InternalCommand
     {
-        public SendAccountingPointCharacteristicsMessage(string meteringPointGsrn, string transactionId)
+        public SendAccountingPointCharacteristicsMessage(string meteringPointGsrn, string transactionId, string reason)
         {
             MeteringPointGsrn = meteringPointGsrn;
             TransactionId = transactionId;
+            Reason = reason;
         }
 
         public string MeteringPointGsrn { get; }
 
-        public string TransactionId { get; set; }
+        public string TransactionId { get; }
+
+        public string Reason { get; }
     }
 }

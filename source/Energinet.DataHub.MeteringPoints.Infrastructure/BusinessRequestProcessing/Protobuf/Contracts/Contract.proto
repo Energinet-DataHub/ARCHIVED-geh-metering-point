@@ -87,6 +87,7 @@ message SendAccountingPointCharacteristicsMessage {
   string id = 1;
   string metering_point_gsrn = 2;
   string transation_id = 3;
+  string reason = 4;
 }
 
 message MeteringPointEnvelope {

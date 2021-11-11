@@ -24,13 +24,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands.Proto
         protected override IMessage Convert(Application.Connect.SendAccountingPointCharacteristicsMessage obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
-            return new MeteringPointEnvelope()
+            return new MeteringPointEnvelope
             {
                 SendAccountingPointCharacteristicsMessage = new SendAccountingPointCharacteristicsMessage
                 {
                     Id = obj.Id.ToString(),
                     MeteringPointGsrn = obj.MeteringPointGsrn,
                     TransationId = obj.TransactionId,
+                    Reason = obj.Reason,
                 },
             };
         }

@@ -49,8 +49,8 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
         string SettlementMethod,
         string NetSettlementGroup,
         string AssetType,
-        string ToGridAreaCode,
-        string FromGridAreaCode,
+        string? ToGridAreaCode,
+        string? FromGridAreaCode,
         string ConnectionType,
         string DisconnectionType,
         bool? ProductionObligation);

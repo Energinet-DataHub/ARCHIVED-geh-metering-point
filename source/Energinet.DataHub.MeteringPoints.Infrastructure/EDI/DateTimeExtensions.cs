@@ -12,11 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common.Address
+using System;
+using System.Globalization;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
 {
-    public record Status(
-        string Value,
-        string DateTime,
-        string Remark,
-        string Reason);
+    public static class DateTimeExtensions
+    {
+        public static string ToUtcString(this DateTime dateTime)
+        {
+            return dateTime.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture);
+        }
+    }
 }

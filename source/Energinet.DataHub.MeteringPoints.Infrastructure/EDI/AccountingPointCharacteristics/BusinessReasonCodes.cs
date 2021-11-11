@@ -14,9 +14,8 @@
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics
 {
-    public record MarketActivityRecord(
-        string Id,
-        string ValidityStartDateAndOrTime,
-        string OriginalTransaction,
-        MarketEvaluationPoint MarketEvaluationPoint);
+    public static class BusinessReasonCodes
+    {
+        public const string ConnectMeteringPoint = "D15";
+    }
 }
