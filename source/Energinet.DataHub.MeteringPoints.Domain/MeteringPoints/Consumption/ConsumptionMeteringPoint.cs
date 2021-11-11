@@ -188,5 +188,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             ConnectionState = ConnectionState.Connected(connectionDetails.EffectiveDate);
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
+
+        // public void CangeMasterData(MasterDataDetails details)
+        // {
+        //
+        // }
+        //
+        // public void CanCangeMasterData(MasterDataDetails details)
+        // {
+        //
+        // }
     }
 }
