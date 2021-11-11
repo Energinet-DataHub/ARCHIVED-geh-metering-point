@@ -81,21 +81,17 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             var processingHostSettings = HostConfigurationBuilder.CreateFunctionAppHostSettings();
             var outboxHostSettings = HostConfigurationBuilder.CreateFunctionAppHostSettings();
 
-#if DEBUG
-            var configuration = "Debug";
-#else
-            var configuration = "Release";
-#endif
+            var buildConfiguration = GetBuildConfiguration();
             var port = 8000;
-            ingestionHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion\\bin\\{configuration}\\net5.0";
+            ingestionHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion\\bin\\{buildConfiguration}\\net5.0";
             ingestionHostSettings.Functions = "MeteringPoint";
             ingestionHostSettings.Port = ++port;
 
-            processingHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Processing\\bin\\{configuration}\\net5.0";
+            processingHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Processing\\bin\\{buildConfiguration}\\net5.0";
             processingHostSettings.Functions = "QueueSubscriber";
             processingHostSettings.Port = ++port;
 
-            outboxHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Outbox\\bin\\{configuration}\\net5.0";
+            outboxHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Outbox\\bin\\{buildConfiguration}\\net5.0";
             outboxHostSettings.Functions = "OutboxWatcher";
             outboxHostSettings.Port = ++port;
 
@@ -236,6 +232,15 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
 
             // Function App Host started.
             hostStartupLog = hostManager.GetHostLogSnapshot();
+        }
+
+        private static string GetBuildConfiguration()
+        {
+#if DEBUG
+            return "Debug";
+#else
+            var configuration = "Release";
+#endif
         }
     }
 }
