@@ -77,40 +77,36 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         public void Should_change_address()
         {
             var meteringPoint = CreateMeteringPoint();
-            var details = CreateDetails()
-                with
-                {
-                    Address = Address.Create(
-                        streetName: "New Street Name",
-                        postCode: "6000",
-                        city: "New City Name",
-                        streetCode: "0500",
-                        buildingNumber: "4",
-                        citySubDivision: "New",
-                        countryCode: CountryCode.DK,
-                        floor: "9",
-                        room: "9",
-                        municipalityCode: 999,
-                        isActual: true,
-                        geoInfoReference: Guid.NewGuid()),
-                };
+            var address = Address.Create(
+                streetName: "New Street Name",
+                postCode: "6000",
+                city: "New City Name",
+                streetCode: "0500",
+                buildingNumber: "4",
+                citySubDivision: "New",
+                countryCode: CountryCode.DK,
+                floor: "9",
+                room: "9",
+                municipalityCode: 999,
+                isActual: true,
+                geoInfoReference: Guid.NewGuid());
 
-            meteringPoint.Change(details);
+            meteringPoint.ChangeAddress(address);
 
             var changeEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is AddressChanged) as AddressChanged;
             Assert.NotNull(changeEvent);
-            Assert.Equal(details.Address?.City, changeEvent?.City);
-            Assert.Equal(details.Address?.Floor, changeEvent?.Floor);
-            Assert.Equal(details.Address?.Room, changeEvent?.Room);
-            Assert.Equal(details.Address?.BuildingNumber, changeEvent?.BuildingNumber);
-            Assert.Equal(details.Address?.CountryCode?.Name, changeEvent?.CountryCode);
-            Assert.Equal(details.Address?.PostCode, changeEvent?.PostCode);
-            Assert.Equal(details.Address?.StreetCode, changeEvent?.StreetCode);
-            Assert.Equal(details.Address?.StreetName, changeEvent?.StreetName);
-            Assert.Equal(details.Address?.CitySubDivision, changeEvent?.CitySubDivision);
-            Assert.Equal(details.Address?.IsActual, changeEvent?.IsActual);
-            Assert.Equal(details.Address?.MunicipalityCode, changeEvent?.MunicipalityCode);
-            Assert.Equal(details.Address?.GeoInfoReference, changeEvent?.GeoInfoReference);
+            Assert.Equal(address.City, changeEvent?.City);
+            Assert.Equal(address.Floor, changeEvent?.Floor);
+            Assert.Equal(address.Room, changeEvent?.Room);
+            Assert.Equal(address.BuildingNumber, changeEvent?.BuildingNumber);
+            Assert.Equal(address.CountryCode?.Name, changeEvent?.CountryCode);
+            Assert.Equal(address.PostCode, changeEvent?.PostCode);
+            Assert.Equal(address.StreetCode, changeEvent?.StreetCode);
+            Assert.Equal(address.StreetName, changeEvent?.StreetName);
+            Assert.Equal(address.CitySubDivision, changeEvent?.CitySubDivision);
+            Assert.Equal(address.IsActual, changeEvent?.IsActual);
+            Assert.Equal(address.MunicipalityCode, changeEvent?.MunicipalityCode);
+            Assert.Equal(address.GeoInfoReference, changeEvent?.GeoInfoReference);
         }
 
         [Fact]

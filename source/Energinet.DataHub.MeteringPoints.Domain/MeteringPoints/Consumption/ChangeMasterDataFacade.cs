@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -55,13 +56,42 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 validationErrors.AddRange(checkResult.Errors);
             }
 
-            validationErrors.AddRange(_target.CanChange(_details).Errors);
             return new BusinessRulesValidationResult(validationErrors);
         }
 
         public void Change()
         {
-            _target.Change(_details);
+            var checkResult = CanChange();
+            if (checkResult.Success == false)
+            {
+                throw new MasterDataChangeException(checkResult.Errors.ToList());
+            }
+
+            if (_details.Address is not null)
+            {
+                _target.ChangeAddress(_details.Address);
+            }
+
+            if (_details.MeterId is not null || _details.MeteringMethod is not null)
+            {
+                var meteringMethod = _details.MeteringMethod ?? _target.MeteringConfiguration.Method;
+                MeterId meterId;
+                if (meteringMethod == MeteringMethod.Physical)
+                {
+                    meterId = _details.MeterId ?? _target.MeteringConfiguration.Meter;
+                }
+                else
+                {
+                    meterId = MeterId.Empty();
+                }
+
+                _target.ChangeMeteringConfiguration(
+                    MeteringConfiguration.Create(meteringMethod, meterId),
+                    _details.EffectiveDate);
+            }
+
+            // _details.Address ?? _target.ChangeAddress(_details.Address);
+            // _target.Change(_details);
         }
     }
 }
