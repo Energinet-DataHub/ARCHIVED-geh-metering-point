@@ -13,12 +13,20 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
-using MediatR;
-using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect
+namespace Energinet.DataHub.MeteringPoints.Application
 {
-    public record MeteringPointConnectedIntegrationEvent(Guid MeteringPointId, string GSRNNumber, Instant EffectiveDate)
-        : IIntegrationEvent, IRequest, IOutboundMessage;
+    public record Address(
+        string? StreetName = null,
+        string? PostCode = null,
+        string? City = null,
+        string? StreetCode = null,
+        string? BuildingNumber = null,
+        string? CitySubDivision = null,
+        string? CountryCode = null,
+        string? Floor = null,
+        string? Room = null,
+        int? MunicipalityCode = null,
+        bool? IsActual = null,
+        Guid? GeoInfoReference = null);
 }

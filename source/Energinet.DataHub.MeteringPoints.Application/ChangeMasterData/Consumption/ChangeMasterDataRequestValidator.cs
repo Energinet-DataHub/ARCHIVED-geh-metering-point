@@ -12,20 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
+using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Integrations.ChargeLinks.Messages
+namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
 {
-    public class CreateDefaultChargeLinksMessages : InternalCommand
+    public class ChangeMasterDataRequestValidator : AbstractValidator<ChangeMasterDataRequest>
     {
-        public CreateDefaultChargeLinksMessages(string gsrnNumber, string correlationId)
+        public ChangeMasterDataRequestValidator()
         {
-            GsrnNumber = gsrnNumber;
-            CorrelationId = correlationId;
+            RuleFor(request => request.Address)
+                .SetValidator(new AddressValidator())
+                .Unless(request => request.Address is null);
         }
-
-        public string GsrnNumber { get; private set; }
-
-        public string CorrelationId { get; private set; }
     }
 }

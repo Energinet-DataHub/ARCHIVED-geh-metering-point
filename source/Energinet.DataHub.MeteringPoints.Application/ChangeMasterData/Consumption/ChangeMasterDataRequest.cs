@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
-using MediatR;
-using NodaTime;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect
+namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
 {
-    public record MeteringPointConnectedIntegrationEvent(Guid MeteringPointId, string GSRNNumber, Instant EffectiveDate)
-        : IIntegrationEvent, IRequest, IOutboundMessage;
+    public record ChangeMasterDataRequest(
+        string TransactionId = "",
+        string GsrnNumber = "",
+        string EffectiveDate = "",
+        Address? Address = null) : IBusinessRequest;
 }

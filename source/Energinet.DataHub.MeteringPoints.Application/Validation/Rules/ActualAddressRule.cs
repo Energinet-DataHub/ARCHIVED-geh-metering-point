@@ -15,7 +15,6 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
@@ -38,27 +37,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         private static bool IsGuid(string value)
         {
             return Guid.TryParse(value, out _);
-        }
-
-        private static bool HasGeoInfoReference(MasterDataDocument request)
-        {
-            return !string.IsNullOrWhiteSpace(request.GeoInfoReference);
-        }
-
-        private static bool IsActualAddress(MasterDataDocument request)
-        {
-            return request.IsActualAddress.GetValueOrDefault();
-        }
-
-        private static bool IsValidReference(string? reference)
-        {
-            return !string.IsNullOrWhiteSpace(reference) && Guid.TryParseExact(reference, "D", out _);
-        }
-
-        private static bool IsProductionOrConsumption(MasterDataDocument request)
-        {
-            return request.TypeOfMeteringPoint == MeteringPointType.Production.Name ||
-                   request.TypeOfMeteringPoint == MeteringPointType.Consumption.Name;
         }
     }
 }

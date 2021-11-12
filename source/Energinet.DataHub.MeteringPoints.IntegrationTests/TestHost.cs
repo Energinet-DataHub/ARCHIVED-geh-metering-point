@@ -18,12 +18,12 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
-using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Create.Exchange;
 using Energinet.DataHub.MeteringPoints.Application.Create.Production;
@@ -48,6 +48,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
@@ -71,8 +72,6 @@ using Google.Protobuf;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Xunit;
@@ -133,6 +132,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Singleton);
             _container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
             _container.Register<ISystemDateTimeProvider, SystemDateTimeProviderStub>(Lifestyle.Singleton);
+            _container.Register(typeof(IBusinessProcessResultHandler<ChangeMasterDataRequest>), typeof(ChangeMasterDataResultHandler), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<CreateConsumptionMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateConsumptionMeteringPoint>), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<CreateProductionMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateProductionMeteringPoint>), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<CreateExchangeMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateExchangeMeteringPoint>), Lifestyle.Scoped);
@@ -142,6 +142,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IValidator<ConnectMeteringPoint>, ConnectMeteringPointRuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<CreateGridArea>, CreateGridAreaRuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<CreateConsumptionMeteringPoint>, Application.Create.Consumption.Validation.RuleSet>(Lifestyle.Scoped);
+            _container.Register<IValidator<ChangeMasterDataRequest>, ChangeMasterDataRequestValidator>(Lifestyle.Scoped);
             _container.Register<IValidator<CreateProductionMeteringPoint>, Application.Create.Production.Validation.RuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<CreateExchangeMeteringPoint>, Application.Create.Exchange.Validation.RuleSet>(Lifestyle.Scoped);
             _container.Register<IDomainEventsAccessor, DomainEventsAccessor>();
@@ -309,19 +310,29 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         protected void AssertValidationError(string expectedErrorCode)
         {
-            var envelopes = GetOutboxMessages<MessageHubEnvelope>();
-            foreach (var envelope in envelopes)
+            var message = GetOutboxMessages
+                    <MessageHubEnvelope>()
+                .Single(msg => msg.MessageType.Name.EndsWith("rejected", StringComparison.OrdinalIgnoreCase));
+
+            var rejectMessage = GetService<IJsonSerializer>().Deserialize<RejectMessage>(message.Content);
+
+            var errorCount = rejectMessage.MarketActivityRecord.Reasons.Count;
+            if (errorCount > 1)
             {
-                var message = JObject.Parse(envelope.Content);
-                if (message.ContainsKey("Errors"))
+                var errorMessage = new StringBuilder();
+                errorMessage.AppendLine($"Reject message contains more ({errorCount}) than 1 error:");
+                foreach (var error in rejectMessage.MarketActivityRecord.Reasons)
                 {
-                    var errorMessages =
-                        JsonConvert.DeserializeObject<List<Infrastructure.EDI.Errors.ErrorMessage>>(message
-                            .GetValue("Errors", StringComparison.OrdinalIgnoreCase).ToString());
-                    Assert.Contains(errorMessages, error => error.Code == expectedErrorCode);
-                    break;
+                    errorMessage.AppendLine($"Code: {error.Code}. Description: {error.Text}.");
                 }
+
+                throw new XunitException(errorMessage.ToString());
             }
+
+            var validationError = rejectMessage.MarketActivityRecord.Reasons
+                .Single(error => error.Code == expectedErrorCode);
+
+            Assert.NotNull(validationError);
         }
 
         protected TIntegrationEvent? FindIntegrationEvent<TIntegrationEvent>()

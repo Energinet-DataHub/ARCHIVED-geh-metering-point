@@ -20,33 +20,33 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     [Serializable]
-    public class InvalidAddressException : BusinessRuleException
+    public class MasterDataChangeException : BusinessOperationException
     {
-        public InvalidAddressException()
-        {
-        }
-
-        public InvalidAddressException(string message)
-            : base(message)
-        {
-        }
-
-        public InvalidAddressException(IReadOnlyCollection<ValidationError> validationErrors)
-            : base()
-        {
-            ValidationErrors = validationErrors;
-        }
-
-        public InvalidAddressException(string message, Exception innerException)
+        public MasterDataChangeException(string? message, Exception? innerException)
             : base(message, innerException)
         {
         }
 
-        protected InvalidAddressException(SerializationInfo info, StreamingContext context)
+        public MasterDataChangeException()
+        {
+        }
+
+        public MasterDataChangeException(string? message)
+            : base(message)
+        {
+        }
+
+        public MasterDataChangeException(IEnumerable<ValidationError> validationErrors)
+            : base("Change of master data failed due violation of one or more business rules.")
+        {
+            ValidationErrors = validationErrors;
+        }
+
+        protected MasterDataChangeException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
 
-        public IReadOnlyCollection<ValidationError> ValidationErrors { get; } = new List<ValidationError>();
+        public IEnumerable<ValidationError>? ValidationErrors { get; }
     }
 }

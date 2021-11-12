@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using MediatR;
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Integrations.ChargeLinks.Messages
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public record RequestDefaultChargeLinksMessages(string GsrnNumber, string CorrelationId) : IRequest;
+    public record MasterDataDetails(
+        Address? Address = null);
 }
