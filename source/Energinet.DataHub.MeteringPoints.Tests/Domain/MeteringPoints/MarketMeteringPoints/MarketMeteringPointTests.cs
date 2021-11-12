@@ -114,7 +114,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 Capacity.Create(SampleData.Capacity),
                 ConnectionType.Installation,
                 DisconnectionType.Remote,
-                NetSettlementGroup.Six);
+                NetSettlementGroup.Six,
+                AssetType.HydroelectricPower);
         }
     }
 }

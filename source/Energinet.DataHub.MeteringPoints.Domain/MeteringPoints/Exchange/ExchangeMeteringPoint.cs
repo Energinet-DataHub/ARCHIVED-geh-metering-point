@@ -58,7 +58,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
                 meterReadingOccurrence,
                 powerLimit,
                 effectiveDate,
-                capacity: null)
+                capacity: null,
+                assetType: null)
         {
             _toGrid = toGrid;
             _fromGrid = fromGrid;
@@ -71,6 +72,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
                 meteringMethod.Name,
                 _productType.Name,
                 meterReadingOccurrence.Name,
+                _unitType.Name,
                 address.City,
                 address.Floor,
                 address.Room,
