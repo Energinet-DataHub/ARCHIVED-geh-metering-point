@@ -43,6 +43,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
         /// <inheritdoc/>
         protected override void OnConfigureHostSettings(FunctionAppHostSettings hostSettings)
         {
+            if (hostSettings == null)
+                return;
+
+            var buildConfiguration = GetBuildConfiguration();
+            hostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion\\bin\\{buildConfiguration}\\net5.0";
         }
 
         /// <inheritdoc/>
@@ -83,6 +88,15 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
 
             // => Service Bus
             await ServiceBusResourceProvider.DisposeAsync().ConfigureAwait(false);
+        }
+
+        private static string GetBuildConfiguration()
+        {
+#if DEBUG
+            return "Debug";
+#else
+            return "Release";
+#endif
         }
     }
 }
