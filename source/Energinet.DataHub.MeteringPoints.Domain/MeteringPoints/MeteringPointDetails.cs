@@ -28,5 +28,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         MeterId? MeterNumber,
         ReadingOccurrence ReadingOccurrence,
         PowerLimit PowerLimit,
-        EffectiveDate EffectiveDate);
+        EffectiveDate EffectiveDate,
+        MeteringConfiguration MeteringConfiguration);
 }

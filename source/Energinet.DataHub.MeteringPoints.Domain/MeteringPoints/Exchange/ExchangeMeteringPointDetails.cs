@@ -30,7 +30,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
         PowerLimit PowerLimit,
         EffectiveDate EffectiveDate,
         GridAreaLinkId FromGridLinkId,
-        GridAreaLinkId ToGridLinkId) : MeteringPointDetails(
+        GridAreaLinkId ToGridLinkId,
+        MeteringConfiguration MeteringConfiguration) : MeteringPointDetails(
         Id,
         GsrnNumber,
         Address,
@@ -40,5 +41,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
         MeterNumber,
         ReadingOccurrence,
         PowerLimit,
-        EffectiveDate);
+        EffectiveDate,
+        MeteringConfiguration);
 }

@@ -44,5 +44,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
         MeteringConfiguration.Meter,
         ReadingOccurrence,
         PowerLimit,
-        EffectiveDate);
+        EffectiveDate,
+        MeteringConfiguration);
 }

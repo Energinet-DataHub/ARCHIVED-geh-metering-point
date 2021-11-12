@@ -98,7 +98,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
                 EffectiveDate.Create(SampleData.EffectiveDate),
                 GridAreaLinkId.New(),
-                GridAreaLinkId.New());
+                GridAreaLinkId.New(),
+                MeteringConfiguration.Create(MeteringMethod.Physical, MeterId.Create(SampleData.MeterNumber)));
         }
 
         protected static Address CreateAddress()
