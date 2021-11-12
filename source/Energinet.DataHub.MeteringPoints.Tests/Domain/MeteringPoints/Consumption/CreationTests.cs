@@ -325,15 +325,5 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         {
             return ConsumptionMeteringPoint.CanCreate(meteringPointDetails);
         }
-
-        private static void AssertContainsValidationError<TValidationError>(BusinessRulesValidationResult result)
-        {
-            Assert.Contains(result.Errors, error => error is TValidationError);
-        }
-
-        private static void AssertDoesNotContainValidationError<TValidationError>(BusinessRulesValidationResult result)
-        {
-            Assert.DoesNotContain(result.Errors, error => error is TValidationError);
-        }
     }
 }
