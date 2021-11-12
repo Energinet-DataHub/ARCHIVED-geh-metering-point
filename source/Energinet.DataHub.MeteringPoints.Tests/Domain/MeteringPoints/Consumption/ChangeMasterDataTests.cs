@@ -110,7 +110,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         }
 
         [Fact]
-        public void MeterId_is_changed()
+        public void Metering_configuration_is_changed()
         {
             var meteringPoint = CreatePhysical();
             var effectiveDate = EffectiveDate.Create(SampleData.EffectiveDate);
