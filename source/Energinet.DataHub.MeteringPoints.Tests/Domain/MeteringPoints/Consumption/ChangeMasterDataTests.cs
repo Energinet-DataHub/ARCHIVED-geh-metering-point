@@ -116,10 +116,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             var effectiveDate = EffectiveDate.Create(SampleData.EffectiveDate);
             var configuration =
                 MeteringConfiguration.Create(meteringPoint.MeteringConfiguration.Method, MeterId.Create("NewId"));
+
             meteringPoint.ChangeMeteringConfiguration(configuration, effectiveDate);
 
             var expectedEvent = FindDomainEvent<MeterIdChanged>(meteringPoint);
             Assert.Equal(configuration.Meter.Value, expectedEvent?.MeterId);
+            Assert.Equal(configuration.Method.Name, expectedEvent?.MeteringMethod);
             Assert.Equal(effectiveDate.ToString(), expectedEvent?.EffectiveDate);
         }
 
