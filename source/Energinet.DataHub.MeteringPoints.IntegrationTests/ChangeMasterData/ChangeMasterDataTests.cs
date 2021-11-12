@@ -111,6 +111,31 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData
             AssertValidationError("D31");
         }
 
+        [Fact]
+        public async Task Meter_is_changed()
+        {
+            await CreatePhysicalConsumptionMeteringPoint().ConfigureAwait(false);
+            var message = new MasterDataDocument()
+                with
+                {
+                    EffectiveDate = _timeProvider.Now().ToString(),
+                    TransactionId = SampleData.Transaction,
+                    GsrnNumber = SampleData.GsrnNumber,
+                    ProcessType = BusinessProcessType.ChangeMasterData.Name,
+                    MeterNumber = "000002",
+                };
+
+            await SendCommandAsync(message).ConfigureAwait(false);
+
+            AssertConfirmMessage(DocumentType.ChangeMasterDataAccepted);
+            var integrationEvent = FindIntegrationEvent<MeteringConfigurationChangedIntegrationEvent>();
+            Assert.NotNull(integrationEvent);
+            Assert.NotEmpty(integrationEvent?.MeteringPointId);
+            Assert.Equal(SampleData.GsrnNumber, integrationEvent?.GsrnNumber);
+            Assert.Equal(MeteringMethod.Physical.Name, integrationEvent?.Method);
+            Assert.Equal(message.MeterNumber, integrationEvent?.Meter);
+        }
+
         private async Task CreatePhysicalConsumptionMeteringPoint()
         {
             var request = Scenarios.CreateConsumptionMeteringPointCommand()
