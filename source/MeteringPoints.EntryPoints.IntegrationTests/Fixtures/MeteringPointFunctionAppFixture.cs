@@ -240,7 +240,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
 #if DEBUG
             return "Debug";
 #else
-            var configuration = "Release";
+            return "Release";
 #endif
         }
     }
