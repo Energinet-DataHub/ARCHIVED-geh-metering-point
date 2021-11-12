@@ -113,7 +113,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             var details = CreateConsumptionDetails()
                 with
                 {
-                    MeteringMethod = MeteringMethod.Virtual,
+                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                     MeterNumber = null,
                 };
             return ConsumptionMeteringPoint.Create(details);
@@ -124,7 +124,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             var details = CreateProductionDetails()
                 with
                 {
-                    MeteringMethod = MeteringMethod.Virtual,
                     MeterNumber = null,
                     MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                 };

@@ -64,7 +64,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
                     LocationDescription = locationDescription,
                     PowerLimit = powerLimit,
                     MeterNumber = null,
-                    MeteringMethod = meteringMethod,
                     MeteringConfiguration = meteringConfiguration,
                 };
 
@@ -98,7 +97,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
             var details = CreateExchangeDetails()
             with
             {
-                MeteringMethod = MeteringMethod.Virtual,
                 MeterNumber = null,
             };
 
@@ -144,8 +142,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
                 with
                 {
                     Address = address,
-                    MeteringMethod = MeteringMethod.Virtual,
                     MeterNumber = null,
+                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                 };
 
             var meteringPoint = ExchangeMeteringPoint.Create(meteringPointDetails);

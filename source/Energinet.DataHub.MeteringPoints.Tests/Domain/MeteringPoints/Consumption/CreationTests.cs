@@ -55,7 +55,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 with
                 {
                     NetSettlementGroup = EnumerationType.FromName<NetSettlementGroup>(netSettlementGroup),
-                    MeteringMethod = EnumerationType.FromName<MeteringMethod>(meteringMethod),
                     MeteringConfiguration = MeteringConfiguration.Create(method, meter),
                 };
 
@@ -112,7 +111,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                     Capacity = capacity,
                     NetSettlementGroup = netSettlementGroup,
                     MeterNumber = null,
-                    MeteringMethod = meteringMethod,
                 };
 
             var meteringPoint = ConsumptionMeteringPoint.Create(consumptionMeteringPointDetails);
@@ -184,7 +182,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             var details = CreateConsumptionDetails()
             with
             {
-                MeteringMethod = MeteringMethod.Virtual,
+                MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                 MeterNumber = null,
                 ScheduledMeterReadingDate = null,
             };
@@ -203,7 +201,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 {
                     PowerPlantGsrnNumber = null,
                     NetSettlementGroup = NetSettlementGroup.Six,
-                    MeteringMethod = MeteringMethod.Virtual,
+                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                     MeterNumber = null,
                 };
 
@@ -294,7 +292,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 {
                     Address = address,
                     NetSettlementGroup = NetSettlementGroup.Six,
-                    MeteringMethod = MeteringMethod.Virtual,
+                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                     MeterNumber = null,
                     ScheduledMeterReadingDate = ScheduledMeterReadingDate.Create("0101"),
                 };

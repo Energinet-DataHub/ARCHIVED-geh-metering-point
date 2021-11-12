@@ -112,8 +112,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 with
                 {
                     Address = address,
-                    MeteringMethod = MeteringMethod.Virtual,
                     MeterNumber = null,
+                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                 };
 
             var checkResult = CheckCreationRules(meteringPointDetails);
@@ -141,7 +141,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 with
                 {
                     Address = address,
-                    MeteringMethod = MeteringMethod.Virtual,
+                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                     MeterNumber = null,
                 };
 
@@ -173,7 +173,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 with
                 {
                     NetSettlementGroup = EnumerationType.FromName<NetSettlementGroup>(netSettlementGroup),
-                    MeteringMethod = EnumerationType.FromName<MeteringMethod>(meteringMethod),
                     MeteringConfiguration = MeteringConfiguration.Create(method, meter),
                 };
 

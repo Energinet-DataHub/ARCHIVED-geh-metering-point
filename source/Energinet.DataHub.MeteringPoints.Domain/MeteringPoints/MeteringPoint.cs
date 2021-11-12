@@ -91,7 +91,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
             var rules = new List<IBusinessRule>()
             {
-                new MeterIdRequirementRule(meteringPointDetails.MeterNumber, meteringPointDetails.MeteringMethod),
+                //new MeterIdRequirementRule(meteringPointDetails.MeterNumber, meteringPointDetails.MeteringMethod),
             };
 
             return new BusinessRulesValidationResult(rules);

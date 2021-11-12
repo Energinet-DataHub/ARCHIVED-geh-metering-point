@@ -154,7 +154,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             var details = CreateConsumptionDetails()
                 with
                 {
-                    MeteringMethod = MeteringMethod.Physical,
                     MeterNumber = MeterId.Create("1"),
                     NetSettlementGroup = NetSettlementGroup.Zero,
                     ConnectionType = null,

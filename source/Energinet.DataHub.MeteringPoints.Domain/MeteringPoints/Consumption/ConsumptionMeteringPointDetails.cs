@@ -40,7 +40,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         Id,
         GsrnNumber,
         Address,
-        MeteringMethod.Physical,
         GridAreaLinkId,
         LocationDescription,
         MeterId.Create("1"),

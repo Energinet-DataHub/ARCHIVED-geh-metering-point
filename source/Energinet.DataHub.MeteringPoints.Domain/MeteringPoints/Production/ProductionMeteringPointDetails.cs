@@ -38,7 +38,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
         Id,
         GsrnNumber,
         Address,
-        MeteringConfiguration.Method,
         GridAreaLinkId,
         LocationDescription,
         MeteringConfiguration.Meter,

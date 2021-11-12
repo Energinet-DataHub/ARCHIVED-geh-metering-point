@@ -22,7 +22,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         MeteringPointId Id,
         GsrnNumber GsrnNumber,
         Address Address,
-        MeteringMethod MeteringMethod,
         GridAreaLinkId GridAreaLinkId,
         LocationDescription? LocationDescription,
         MeterId? MeterNumber,

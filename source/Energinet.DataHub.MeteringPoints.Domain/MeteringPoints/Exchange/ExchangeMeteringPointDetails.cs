@@ -33,7 +33,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
         Id,
         GsrnNumber,
         Address,
-        MeteringConfiguration.Method,
         GridAreaLinkId,
         LocationDescription,
         MeteringConfiguration.Meter,
