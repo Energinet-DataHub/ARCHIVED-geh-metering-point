@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Domain.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Domain.Policies
 {
-    public record MasterDataDetails(
-        EffectiveDate EffectiveDate,
-        Address? Address = null);
+    public class EffectiveDateIsNotWithinAllowedTimePeriod : ValidationError
+    {
+    }
 }
