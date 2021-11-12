@@ -48,17 +48,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 address,
-                MeteringMethod.Virtual,
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
                 GsrnNumber.Create(SampleData.PowerPlant),
                 LocationDescription.Create(SampleData.LocationDescription),
-                null,
                 ReadingOccurrence.Hourly,
                 PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
                 EffectiveDate.Create(SampleData.EffectiveDate),
                 NetSettlementGroup.One,
                 DisconnectionType.Manual,
-                ConnectionType.Installation);
+                ConnectionType.Installation,
+                MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()));
         }
 
         protected static ProductionMeteringPointDetails CreateProductionDetails()

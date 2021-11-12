@@ -32,6 +32,38 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
     [UnitTest]
     public class CreationTests : TestBase
     {
+        [Theory]
+        [InlineData("Zero", "Physical", false)]
+        [InlineData("One", "Physical", true)]
+        [InlineData("One", "Virtual", false)]
+        [InlineData("One", "Calculated", false)]
+        [InlineData("Two", "Physical", true)]
+        [InlineData("Two", "Virtual", false)]
+        [InlineData("Two", "Calculated", false)]
+        [InlineData("Three", "Physical", true)]
+        [InlineData("Three", "Virtual", false)]
+        [InlineData("Three", "Calculated", false)]
+        [InlineData("Six", "Physical", true)]
+        [InlineData("Six", "Virtual", false)]
+        [InlineData("Six", "Calculated", false)]
+        [InlineData("NinetyNine", "Physical", false)]
+        public void Metering_method_must_be_virtual_or_calculated_when_net_settlement_group_is_not_0_or_99(string netSettlementGroup, string meteringMethod, bool expectError)
+        {
+            var method = EnumerationType.FromName<MeteringMethod>(meteringMethod);
+            var meter = method == MeteringMethod.Physical ? MeterId.Create("Fake") : MeterId.Empty();
+            var details = CreateConsumptionDetails()
+                with
+                {
+                    NetSettlementGroup = EnumerationType.FromName<NetSettlementGroup>(netSettlementGroup),
+                    MeteringMethod = EnumerationType.FromName<MeteringMethod>(meteringMethod),
+                    MeteringConfiguration = MeteringConfiguration.Create(method, meter),
+                };
+
+            var result = ConsumptionMeteringPoint.CanCreate(details);
+
+            AssertError<MeteringMethodDoesNotMatchNetSettlementGroupRuleError>(result, expectError);
+        }
+
         [Fact]
         public void Should_succeed()
         {

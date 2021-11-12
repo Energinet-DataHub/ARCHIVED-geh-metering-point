@@ -167,11 +167,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
         [InlineData("NinetyNine", "Physical", false)]
         public void Metering_method_must_be_virtual_or_calculated_when_net_settlement_group_is_not_0_or_99(string netSettlementGroup, string meteringMethod, bool expectError)
         {
+            var method = EnumerationType.FromName<MeteringMethod>(meteringMethod);
+            var meter = method == MeteringMethod.Physical ? MeterId.Create("Fake") : MeterId.Empty();
             var details = CreateConsumptionDetails()
                 with
                 {
                     NetSettlementGroup = EnumerationType.FromName<NetSettlementGroup>(netSettlementGroup),
                     MeteringMethod = EnumerationType.FromName<MeteringMethod>(meteringMethod),
+                    MeteringConfiguration = MeteringConfiguration.Create(method, meter),
                 };
 
             var result = MarketMeteringPoint.CanCreate(details);

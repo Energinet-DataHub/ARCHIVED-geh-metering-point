@@ -160,7 +160,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointDetails.AssetType,
                 meteringPointDetails.ScheduledMeterReadingDate,
                 meteringPointDetails.Capacity,
-                MeteringConfiguration.Create(meteringPointDetails.MeteringMethod, meteringPointDetails.MeterNumber ?? MeterId.Empty()));
+                meteringPointDetails.MeteringConfiguration);
         }
 
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)

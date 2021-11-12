@@ -107,7 +107,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
                 new MeterReadingOccurrenceRule(meteringPointDetails.ReadingOccurrence),
                 new GeoInfoReferenceRequirementRule(meteringPointDetails.Address),
                 new ConnectionTypeRequirementRule(meteringPointDetails.NetSettlementGroup, meteringPointDetails.ConnectionType),
-                new MeteringMethodRule(meteringPointDetails.NetSettlementGroup, meteringPointDetails.MeteringMethod),
+                new MeteringMethodRule(meteringPointDetails.NetSettlementGroup, meteringPointDetails.MeteringConfiguration.Method),
                 new PostCodeIsRequiredRule(meteringPointDetails.Address),
                 new CityIsRequiredRule(meteringPointDetails.Address),
                 new StreetNameIsRequiredRule(meteringPointDetails.GsrnNumber, meteringPointDetails.Address),
