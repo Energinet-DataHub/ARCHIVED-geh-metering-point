@@ -40,7 +40,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             Capacity? capacity,
             ConnectionType? connectionType,
             DisconnectionType disconnectionType,
-            NetSettlementGroup netSettlementGroup)
+            NetSettlementGroup netSettlementGroup,
+            AssetType? assetType)
             : base(
                 id,
                 gsrnNumber,
@@ -58,7 +59,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 capacity,
                 connectionType,
                 disconnectionType,
-                netSettlementGroup)
+                netSettlementGroup,
+                assetType)
         {
         }
 
