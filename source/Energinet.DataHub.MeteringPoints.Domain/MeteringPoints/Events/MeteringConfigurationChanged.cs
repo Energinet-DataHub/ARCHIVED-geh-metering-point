@@ -17,9 +17,9 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events
 {
-    public class MeterIdChanged : DomainEventBase
+    public class MeteringConfigurationChanged : DomainEventBase
     {
-        public MeterIdChanged(string meterId, string meteringMethod, string effectiveDate)
+        public MeteringConfigurationChanged(string meterId, string meteringMethod, string effectiveDate)
         {
             MeterId = meterId;
             MeteringMethod = meteringMethod;

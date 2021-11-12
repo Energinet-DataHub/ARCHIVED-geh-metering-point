@@ -119,7 +119,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
 
             meteringPoint.ChangeMeteringConfiguration(configuration, effectiveDate);
 
-            var expectedEvent = FindDomainEvent<MeterIdChanged>(meteringPoint);
+            var expectedEvent = FindDomainEvent<MeteringConfigurationChanged>(meteringPoint);
             Assert.Equal(configuration.Meter.Value, expectedEvent?.MeterId);
             Assert.Equal(configuration.Method.Name, expectedEvent?.MeteringMethod);
             Assert.Equal(effectiveDate.ToString(), expectedEvent?.EffectiveDate);
