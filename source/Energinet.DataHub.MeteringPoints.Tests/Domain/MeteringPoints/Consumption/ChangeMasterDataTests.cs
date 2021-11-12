@@ -32,8 +32,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         public void Should_return_error_when_street_name_is_blank()
         {
             var meteringPoint = CreateMeteringPoint();
-            var details = new MasterDataDetails(Address:
-                Address.Create(city: SampleData.CityName, streetName: string.Empty, countryCode: CountryCode.DK, postCode: SampleData.PostCode));
+            var details = CreateDetails()
+                with
+                {
+                    Address = Address.Create(
+                        city: SampleData.CityName,
+                        streetName: string.Empty,
+                        countryCode: CountryCode.DK,
+                        postCode: SampleData.PostCode),
+                };
 
             var result = meteringPoint.CanChange(details);
 
@@ -44,8 +51,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         public void Should_throw_if_any_business_rule_are_violated()
         {
             var meteringPoint = CreateMeteringPoint();
-            var details = new MasterDataDetails(Address:
-                Address.Create(city: SampleData.CityName, streetName: string.Empty, countryCode: CountryCode.DK, postCode: SampleData.PostCode));
+            var details = CreateDetails()
+                with
+                {
+                    Address = Address.Create(city: SampleData.CityName, streetName: string.Empty, countryCode: CountryCode.DK, postCode: SampleData.PostCode),
+                };
 
             Assert.Throws<MasterDataChangeException>(() => meteringPoint.Change(details));
         }
@@ -54,9 +64,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         public void Should_return_error_when_post_code_is_blank()
         {
             var meteringPoint = CreateMeteringPoint();
-            var details = new MasterDataDetails(Address:
-                Address.Create(city: SampleData.CityName, streetName: SampleData.StreetName, countryCode: CountryCode.DK, postCode: string.Empty));
-
+            var details = CreateDetails()
+                with
+                {
+                    Address = Address.Create(city: SampleData.CityName, streetName: SampleData.StreetName, countryCode: CountryCode.DK, postCode: string.Empty),
+                };
             var result = meteringPoint.CanChange(details);
 
             AssertError<PostCodeIsRequiredRuleError>(result, true);
@@ -66,8 +78,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         public void Should_return_error_when_city_is_blank()
         {
             var meteringPoint = CreateMeteringPoint();
-            var details = new MasterDataDetails(Address:
-                Address.Create(city: null, streetName: SampleData.StreetName, countryCode: CountryCode.DK, postCode: SampleData.PostCode));
+            var details = CreateDetails()
+                with
+                {
+                    Address = Address.Create(city: null, streetName: SampleData.StreetName, countryCode: CountryCode.DK, postCode: SampleData.PostCode),
+                };
 
             var result = meteringPoint.CanChange(details);
 
@@ -78,20 +93,23 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         public void Should_change_address()
         {
             var meteringPoint = CreateMeteringPoint();
-            var details = new MasterDataDetails(
-                Address: Address.Create(
-                    streetName: "New Street Name",
-                    postCode: "6000",
-                    city: "New City Name",
-                    streetCode: "0500",
-                    buildingNumber: "4",
-                    citySubDivision: "New",
-                    countryCode: CountryCode.DK,
-                    floor: "9",
-                    room: "9",
-                    municipalityCode: 999,
-                    isActual: true,
-                    geoInfoReference: Guid.NewGuid()));
+            var details = CreateDetails()
+                with
+                {
+                    Address = Address.Create(
+                        streetName: "New Street Name",
+                        postCode: "6000",
+                        city: "New City Name",
+                        streetCode: "0500",
+                        buildingNumber: "4",
+                        citySubDivision: "New",
+                        countryCode: CountryCode.DK,
+                        floor: "9",
+                        room: "9",
+                        municipalityCode: 999,
+                        isActual: true,
+                        geoInfoReference: Guid.NewGuid()),
+                };
 
             meteringPoint.Change(details);
 
@@ -114,6 +132,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         private static ConsumptionMeteringPoint CreateMeteringPoint()
         {
             return ConsumptionMeteringPoint.Create(CreateConsumptionDetails());
+        }
+
+        private static MasterDataDetails CreateDetails()
+        {
+            return new MasterDataDetails(
+                EffectiveDate: EffectiveDate.Create(SampleData.EffectiveDate),
+                Address: Address.Create(city: null, streetName: SampleData.StreetName, countryCode: CountryCode.DK, postCode: SampleData.PostCode));
         }
     }
 }
