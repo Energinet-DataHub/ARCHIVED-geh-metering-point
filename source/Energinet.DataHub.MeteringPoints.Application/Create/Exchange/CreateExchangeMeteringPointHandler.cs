@@ -107,7 +107,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange
                 CreateAddress(request),
                 gridAreaLinkId,
                 LocationDescription.Create(request.LocationDescription!),
-                string.IsNullOrWhiteSpace(request.MeterNumber) ? null : MeterId.Create(request.MeterNumber),
                 EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
                 PowerLimit.Create(request.MaximumPower, request.MaximumCurrent),
                 EffectiveDate.Create(request.EffectiveDate),
