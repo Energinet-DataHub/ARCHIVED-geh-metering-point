@@ -26,7 +26,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
         GridAreaLinkId GridAreaLinkId,
         GsrnNumber PowerPlantGsrnNumber,
         LocationDescription? LocationDescription,
-        MeterId? MeterNumber,
         ReadingOccurrence ReadingOccurrence,
         PowerLimit PowerLimit,
         EffectiveDate EffectiveDate,
@@ -42,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
         MeteringConfiguration.Method,
         GridAreaLinkId,
         LocationDescription,
-        MeterNumber,
+        MeteringConfiguration.Meter,
         ReadingOccurrence,
         PowerLimit,
         EffectiveDate);
