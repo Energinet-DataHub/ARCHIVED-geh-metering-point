@@ -105,7 +105,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange
                 MeteringPointId.New(),
                 GsrnNumber.Create(request.GsrnNumber),
                 CreateAddress(request),
-                EnumerationType.FromName<MeteringMethod>(request.MeteringMethod),
                 gridAreaLinkId,
                 LocationDescription.Create(request.LocationDescription!),
                 string.IsNullOrWhiteSpace(request.MeterNumber) ? null : MeterId.Create(request.MeterNumber),

@@ -90,7 +90,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 address,
-                MeteringMethod.Physical,
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
                 LocationDescription.Create(SampleData.LocationDescription),
                 string.IsNullOrWhiteSpace(SampleData.MeterNumber) ? null : MeterId.Create(SampleData.MeterNumber),
