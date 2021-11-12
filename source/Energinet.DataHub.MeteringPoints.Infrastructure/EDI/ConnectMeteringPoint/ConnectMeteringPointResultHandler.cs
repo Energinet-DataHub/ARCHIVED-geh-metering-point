@@ -136,7 +136,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
                         MeteringMethod: meteringPoint.MeteringPointSubType,
                         ConnectionState: meteringPoint.ConnectionState,
                         ReadCycle: meteringPoint.ReadingOccurrence,
-                        NetSettlementGroup: meteringPoint.NetSettlementGroup,
+                        NetSettlementGroup: meteringPoint.NetSettlementGroup ?? string.Empty,
                         NextReadingDate: "N/A",
                         MeteringGridAreaDomainId: new Mrid(meteringPoint.GridAreaCode, "N/A"),
                         InMeteringGridAreaDomainId: new Mrid(meteringPoint.FromGridAreaCode, "N/A"), // TODO: Only applicable for exchange
