@@ -32,6 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
         [Fact]
         public void Should_succeed()
         {
+            var meteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty());
             var meteringPointId = MeteringPointId.New();
             var meteringPointGsrn = GsrnNumber.Create(SampleData.GsrnNumber);
             var meteringMethod = MeteringMethod.Virtual;
@@ -64,6 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
                     PowerLimit = powerLimit,
                     MeterNumber = null,
                     MeteringMethod = meteringMethod,
+                    MeteringConfiguration = meteringConfiguration,
                 };
 
             var meteringPoint = ExchangeMeteringPoint.Create(exchangeMeteringPointDetails);
@@ -81,7 +83,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
             Assert.Equal(address.CitySubDivision, createdEvent.CitySubDivision);
             Assert.Equal(meteringPointId.Value, createdEvent.MeteringPointId);
             Assert.Equal(meteringPointGsrn.Value, createdEvent.GsrnNumber);
-            Assert.Equal(meteringMethod.Name, createdEvent.MeteringPointSubType);
+            Assert.Equal(meteringConfiguration.Method.Name, createdEvent.MeteringPointSubType);
             Assert.Equal(areadLinkId.Value, createdEvent.GridAreaLinkId);
             Assert.Equal(locationDescription.Value, createdEvent.LocationDescription);
             Assert.Equal(readingOccurrence.Name, createdEvent.ReadingOccurrence);

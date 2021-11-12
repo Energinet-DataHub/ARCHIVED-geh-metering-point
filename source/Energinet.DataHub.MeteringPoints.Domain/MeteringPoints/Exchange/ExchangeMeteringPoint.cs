@@ -127,7 +127,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
                 meteringPointDetails.EffectiveDate,
                 meteringPointDetails.ToGridLinkId,
                 meteringPointDetails.FromGridLinkId,
-                MeteringConfiguration.Create(meteringPointDetails.MeteringMethod, meteringPointDetails.MeterNumber ?? MeterId.Empty()));
+                meteringPointDetails.MeteringConfiguration);
         }
 
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
