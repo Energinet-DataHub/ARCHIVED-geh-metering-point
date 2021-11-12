@@ -12,15 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Runtime.CompilerServices;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Xunit;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain
 {
-    public class MeteringDetailsTests : TestBase
+    public class MeteringConfigurationTests : TestBase
     {
         [Fact]
         public void Meter_is_required_when_physical()
