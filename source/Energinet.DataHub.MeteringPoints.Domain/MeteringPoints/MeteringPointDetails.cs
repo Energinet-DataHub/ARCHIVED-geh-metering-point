@@ -24,7 +24,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         Address Address,
         GridAreaLinkId GridAreaLinkId,
         LocationDescription? LocationDescription,
-        MeterId? MeterNumber,
         ReadingOccurrence ReadingOccurrence,
         PowerLimit PowerLimit,
         EffectiveDate EffectiveDate,

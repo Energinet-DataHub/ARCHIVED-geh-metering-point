@@ -110,7 +110,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                     ScheduledMeterReadingDate = null,
                     Capacity = capacity,
                     NetSettlementGroup = netSettlementGroup,
-                    MeterNumber = null,
                 };
 
             var meteringPoint = ConsumptionMeteringPoint.Create(consumptionMeteringPointDetails);
@@ -183,7 +182,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             with
             {
                 MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
-                MeterNumber = null,
                 ScheduledMeterReadingDate = null,
             };
 
@@ -202,7 +200,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                     PowerPlantGsrnNumber = null,
                     NetSettlementGroup = NetSettlementGroup.Six,
                     MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
-                    MeterNumber = null,
                 };
 
             var checkResult = CheckCreationRules(meteringPointDetails);
@@ -293,7 +290,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                     Address = address,
                     NetSettlementGroup = NetSettlementGroup.Six,
                     MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
-                    MeterNumber = null,
                     ScheduledMeterReadingDate = ScheduledMeterReadingDate.Create("0101"),
                 };
 

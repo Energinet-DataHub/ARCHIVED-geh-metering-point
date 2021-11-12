@@ -63,7 +63,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
                     GridAreaLinkId = areadLinkId,
                     LocationDescription = locationDescription,
                     PowerLimit = powerLimit,
-                    MeterNumber = null,
                     MeteringConfiguration = meteringConfiguration,
                 };
 
@@ -94,11 +93,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
         [Fact]
         public void Product_type_should_as_default_be_active_energy()
         {
-            var details = CreateExchangeDetails()
-            with
-            {
-                MeterNumber = null,
-            };
+            var details = CreateExchangeDetails();
 
             var meteringPoint = ExchangeMeteringPoint.Create(details);
 
@@ -142,7 +137,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
                 with
                 {
                     Address = address,
-                    MeterNumber = null,
                     MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                 };
 

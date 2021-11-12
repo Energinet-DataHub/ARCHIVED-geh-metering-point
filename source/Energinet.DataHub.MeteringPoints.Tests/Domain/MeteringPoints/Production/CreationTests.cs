@@ -78,7 +78,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Productio
                     ConnectionType = null,
                     Capacity = capacity,
                     NetSettlementGroup = netSettlementGroup,
-                    MeterNumber = null,
                     MeteringConfiguration = meteringConfiguration,
                 };
 
@@ -122,7 +121,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Productio
             var details = CreateProductionDetails()
             with
             {
-                MeterNumber = null,
                 MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
             };
 
@@ -170,7 +168,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Productio
                 {
                     Address = address,
                     NetSettlementGroup = NetSettlementGroup.Six,
-                    MeterNumber = null,
                     MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                 };
 
