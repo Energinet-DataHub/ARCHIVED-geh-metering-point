@@ -27,6 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
             string meteringPointSubType,
             string productType,
             string readingOccurrence,
+            string unitType,
             string? city,
             string? floor,
             string? room,
@@ -52,6 +53,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
             MeteringPointSubType = meteringPointSubType;
             ProductType = productType;
             ReadingOccurrence = readingOccurrence;
+            UnitType = unitType;
             City = city;
             Floor = floor;
             Room = room;
@@ -83,6 +85,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
         public string ProductType { get; }
 
         public string ReadingOccurrence { get; }
+
+        public string UnitType { get; }
 
         public string? City { get; }
 
