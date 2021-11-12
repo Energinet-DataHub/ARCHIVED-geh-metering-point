@@ -107,7 +107,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.AccountingPointCharacterist
                             Id: "579999993331812325",
                             Description: "D06"))));
 
-            var serialized = AccountingPointCharacteristicsXmlSerializer.Serialize(message).Replace("\r\n", "\n", StringComparison.Ordinal);
+            var serialized = AccountingPointCharacteristicsXmlSerializer.Serialize(message);
 
             // For easier debugging/diff
             // File.WriteAllText(@"C:\code\geh-metering-point\source\Energinet.DataHub.MeteringPoints.Tests\EDI\AccountingPointCharacteristics\AccountingPointCharacteristicsSerializerTestOutput.xml", serialized, new UTF8Encoding(true));
@@ -140,7 +140,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.AccountingPointCharacterist
                 "pumpestation",
                 "8716867000115",
                 "KWH",
-                DateTimeOffset.Parse("2019-02-11T23:00:00Z", CultureInfo.InvariantCulture).UtcDateTime,
+                DateTimeOffset.Parse("2021-12-17T23:00:00Z", CultureInfo.InvariantCulture).UtcDateTime,
                 "29746",
                 "0304",
                 "Strib",
@@ -170,7 +170,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.AccountingPointCharacterist
                 energySupplierGlnNumber: glnNumber,
                 createdDate: createdDate);
 
-            var serialized = AccountingPointCharacteristicsXmlSerializer.Serialize(message).Replace("\r\n", "\n", StringComparison.Ordinal);
+            var serialized = AccountingPointCharacteristicsXmlSerializer.Serialize(message);
 
             // For easier debugging/diff
             // File.WriteAllText(@"C:\code\geh-metering-point\source\Energinet.DataHub.MeteringPoints.Tests\EDI\AccountingPointCharacteristics\AccountingPointCharacteristicsSerializerTestOutput.xml", serialized, new UTF8Encoding(true));

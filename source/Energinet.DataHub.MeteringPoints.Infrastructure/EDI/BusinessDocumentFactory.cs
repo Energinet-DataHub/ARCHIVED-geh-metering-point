@@ -105,7 +105,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                             "AMP"),
                         MeterId: meteringPointDto.MeterNumber,
                         EnergySupplierMarketParticipantId: new MarketParticipant(energySupplierGlnNumber.Value, "A10"), // TODO: Hardcoded, correct?
-                        SupplyStartDateAndOrTimeDateTime: meteringPointDto.EffectiveDate.Value,
+                        SupplyStartDateAndOrTimeDateTime: DateTime.MinValue, // TODO: EnergySupplier_StartOfSupply?
                         Description: meteringPointDto.LocationDescription,
                         UsagePointLocationMainAddress: new MainAddress(
                             StreetDetail: new StreetDetail(

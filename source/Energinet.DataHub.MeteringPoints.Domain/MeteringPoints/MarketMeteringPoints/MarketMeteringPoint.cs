@@ -120,7 +120,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
         public void SetEnergySupplierDetails(EnergySupplierDetails energySupplierDetails)
         {
             if (energySupplierDetails == null) throw new ArgumentNullException(nameof(energySupplierDetails));
-            if (EnergySupplierDetails?.StartOfSupply != null) return;
+            if (EnergySupplierDetails?.StartOfSupply != null) return; // TODO: set to incoming startOfSupply, if not already connected? Check for dates? Priority?
 
             EnergySupplierDetails = energySupplierDetails;
             AddDomainEvent(new EnergySupplierDetailsChanged(Id.Value, EnergySupplierDetails.StartOfSupply));
