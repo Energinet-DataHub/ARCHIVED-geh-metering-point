@@ -40,6 +40,17 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
         }
 
         /// <summary>
+        /// Upgrade database.
+        /// Used from some tests to seed database.
+        /// </summary>
+        public void UpgradeDatabase()
+        {
+            var result = DefaultUpgrader.Upgrade(ConnectionString);
+            if (result.Successful is false)
+                throw new InvalidOperationException("Database migration failed", result.Error);
+        }
+
+        /// <summary>
         /// Creates the database schema using DbUp instead of a database context.
         /// </summary>
         protected override Task<bool> CreateDatabaseSchemaAsync(MeteringPointContext context)
@@ -52,10 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
         /// </summary>
         protected override bool CreateDatabaseSchema(MeteringPointContext context)
         {
-            var result = DefaultUpgrader.Upgrade(ConnectionString);
-            if (result.Successful is false)
-                throw new InvalidOperationException("Database migration failed", result.Error);
-
+            UpgradeDatabase();
             return true;
         }
     }

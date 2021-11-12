@@ -37,26 +37,22 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
-using FluentAssertions;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Xunit;
 using Xunit.Categories;
 using Xunit.Sdk;
-using ErrorMessage = Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.ErrorMessage;
 using JsonSerializer = Energinet.DataHub.MeteringPoints.Infrastructure.Serialization.JsonSerializer;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
 {
     [Collection("IntegrationTest")]
     [IntegrationTest]
-    #pragma warning disable CA1724 // TODO: TestHost is reserved. Maybe refactor to base EntryPoint?
+#pragma warning disable CA1724 // TODO: TestHost is reserved. Maybe refactor to base EntryPoint?
     public class TestHost : IDisposable
     {
         private readonly Scope _scope;
@@ -66,18 +62,18 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
 
         protected TestHost(DatabaseFixture databaseFixture)
         {
-            if (databaseFixture == null) throw new ArgumentNullException(nameof(databaseFixture));
+            if (databaseFixture == null)
+                throw new ArgumentNullException(nameof(databaseFixture));
+            databaseFixture.DatabaseManager.UpgradeDatabase();
 
             _container = new Container();
             _container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
-
-            var connectionString = databaseFixture.DatabaseManager.ConnectionString;
 
             var serviceCollection = new ServiceCollection();
 
             serviceCollection.AddDbContext<MeteringPointContext>(
                 x =>
-                x.UseSqlServer(connectionString, y => y.UseNodaTime()),
+                    x.UseSqlServer(databaseFixture.DatabaseManager.ConnectionString, y => y.UseNodaTime()),
                 ServiceLifetime.Scoped);
             serviceCollection.AddSimpleInjector(_container);
             _serviceProvider = serviceCollection.BuildServiceProvider().UseSimpleInjector(_container);

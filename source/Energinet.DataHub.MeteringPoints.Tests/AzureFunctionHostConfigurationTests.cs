@@ -77,6 +77,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests
             Environment.SetEnvironmentVariable("METERING_POINT_MESSAGE_DEQUEUED_TOPIC", SomeString);
             Environment.SetEnvironmentVariable("METERING_POINT_CONNECTED_TOPIC", SomeString);
             Environment.SetEnvironmentVariable("MESSAGEHUB_QUEUE_CONNECTION_STRING", SomeString);
+            Environment.SetEnvironmentVariable("MESSAGEHUB_QUEUE_DATAAVAILABLE", SomeString);
+            Environment.SetEnvironmentVariable("MESSAGEHUB_QUEUE_REPLY", SomeString);
             Environment.SetEnvironmentVariable("MESSAGEHUB_STORAGE_CONNECTION_STRING", SomeString);
             Environment.SetEnvironmentVariable("MESSAGEHUB_STORAGE_CONTAINER_NAME", SomeString);
             var program = new EntryPoints.Outbox.Program();
