@@ -59,7 +59,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
                     string.IsNullOrWhiteSpace(document.MunicipalityCode) ? null : int.Parse(document.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()),
                     document.IsActualAddress,
                     document.GeoInfoReference == null ? null : Guid.Parse(document.GeoInfoReference)),
-                MeteringMethod: document.MeteringMethod);
+                MeteringMethod: document.MeteringMethod,
+                MeterId: document.MeterNumber);
         }
 
         private static IBusinessRequest? CreateConnectMeteringPointCommand(MasterDataDocument document)

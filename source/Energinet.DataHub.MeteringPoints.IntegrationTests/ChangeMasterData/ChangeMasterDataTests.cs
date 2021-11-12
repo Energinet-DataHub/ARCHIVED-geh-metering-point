@@ -65,6 +65,52 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData
             Assert.Empty(integrationEvent!.Meter);
         }
 
+        [Fact]
+        public async Task Metering_method_is_changed_from_virtual_to_physical()
+        {
+            await CreateVirtualConsumptionMeteringPoint().ConfigureAwait(false);
+            var message = new MasterDataDocument()
+                with
+                {
+                    EffectiveDate = _timeProvider.Now().ToString(),
+                    TransactionId = SampleData.Transaction,
+                    GsrnNumber = SampleData.GsrnNumber,
+                    ProcessType = BusinessProcessType.ChangeMasterData.Name,
+                    MeteringMethod = MeteringMethod.Physical.Name,
+                    MeterNumber = "000001",
+                };
+
+            await SendCommandAsync(message).ConfigureAwait(false);
+
+            AssertConfirmMessage(DocumentType.ChangeMasterDataAccepted);
+            var integrationEvent = FindIntegrationEvent<MeteringConfigurationChangedIntegrationEvent>();
+            Assert.NotNull(integrationEvent);
+            Assert.NotEmpty(integrationEvent?.MeteringPointId);
+            Assert.Equal(SampleData.GsrnNumber, integrationEvent?.GsrnNumber);
+            Assert.Equal(MeteringMethod.Physical.Name, integrationEvent?.Method);
+            Assert.Equal(message.MeterNumber, integrationEvent?.Meter);
+        }
+
+        [Fact]
+        public async Task Meter_is_required_when_changing_method_to_physical()
+        {
+            await CreateVirtualConsumptionMeteringPoint().ConfigureAwait(false);
+            var message = new MasterDataDocument()
+                with
+                {
+                    EffectiveDate = _timeProvider.Now().ToString(),
+                    TransactionId = SampleData.Transaction,
+                    GsrnNumber = SampleData.GsrnNumber,
+                    ProcessType = BusinessProcessType.ChangeMasterData.Name,
+                    MeteringMethod = MeteringMethod.Physical.Name,
+                    MeterNumber = null,
+                };
+
+            await SendCommandAsync(message).ConfigureAwait(false);
+
+            AssertValidationError("D31");
+        }
+
         private async Task CreatePhysicalConsumptionMeteringPoint()
         {
             var request = Scenarios.CreateConsumptionMeteringPointCommand()
@@ -72,6 +118,19 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData
                 {
                     MeteringMethod = MeteringMethod.Physical.Name,
                     MeterNumber = "1",
+                    NetSettlementGroup = NetSettlementGroup.Zero.Name,
+                    ConnectionType = null,
+                    ScheduledMeterReadingDate = null,
+                };
+            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+        }
+
+        private async Task CreateVirtualConsumptionMeteringPoint()
+        {
+            var request = Scenarios.CreateConsumptionMeteringPointCommand()
+                with
+                {
+                    MeteringMethod = MeteringMethod.Virtual.Name,
                     NetSettlementGroup = NetSettlementGroup.Zero.Name,
                     ConnectionType = null,
                     ScheduledMeterReadingDate = null,
