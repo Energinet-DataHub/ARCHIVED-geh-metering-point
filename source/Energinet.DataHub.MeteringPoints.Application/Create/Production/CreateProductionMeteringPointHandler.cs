@@ -124,7 +124,19 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Production
                 EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
                 !string.IsNullOrWhiteSpace(request.ConnectionType) ? EnumerationType.FromName<ConnectionType>(request.ConnectionType!) : null,
                 !string.IsNullOrEmpty(request.AssetType) ? EnumerationType.FromName<AssetType>(request.AssetType) : null !,
-                !string.IsNullOrWhiteSpace(request.PhysicalConnectionCapacity) ? Capacity.Create(request.PhysicalConnectionCapacity) : null !);
+                !string.IsNullOrWhiteSpace(request.PhysicalConnectionCapacity) ? Capacity.Create(request.PhysicalConnectionCapacity) : null !,
+                CreateMeteringConfiguration(request.MeteringMethod, request.MeterNumber ?? string.Empty));
+        }
+
+        private static MeteringConfiguration CreateMeteringConfiguration(string method, string? meter)
+        {
+            var meteringMethod = EnumerationType.FromName<MeteringMethod>(method);
+            if (meteringMethod != MeteringMethod.Physical)
+            {
+                return MeteringConfiguration.Create(meteringMethod, MeterId.Empty());
+            }
+
+            return MeteringConfiguration.Create(meteringMethod, MeterId.Create(meter!));
         }
 
         private static Domain.Addresses.Address CreateAddress(CreateProductionMeteringPoint request)

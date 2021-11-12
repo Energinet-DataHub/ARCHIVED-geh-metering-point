@@ -80,7 +80,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 DisconnectionType.Manual,
                 ConnectionType.Installation,
                 AssetType.GasTurbine,
-                Capacity.Create(SampleData.Capacity));
+                Capacity.Create(SampleData.Capacity),
+                MeteringConfiguration.Create(MeteringMethod.Physical, MeterId.Create(SampleData.MeterNumber)));
         }
 
         protected static ExchangeMeteringPointDetails CreateExchangeDetails()
