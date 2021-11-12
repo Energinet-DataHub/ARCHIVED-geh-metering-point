@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
+using Energinet.DataHub.MeteringPoints.Domain;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
@@ -21,28 +22,31 @@ namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
     {
         public ValidationRuleSet()
         {
-            RuleFor(request => request).SetValidator(new ConnectionTypeRule());
-            RuleFor(request => request).SetValidator(new DisconnectionTypeRule());
-            RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberValidator());
-            RuleFor(request => request).SetValidator(new SettlementMethodMustBeValidRule());
-            RuleFor(request => request).SetValidator(new MeteringGridAreaValidRule());
-            RuleFor(request => request.EffectiveDate).SetValidator(new EffectiveDateRule());
-            RuleFor(request => request).SetValidator(new MeteringPointTypeValidRule());
-            RuleFor(request => request).SetValidator(new MeteringMethodMustBeValidRule());
-            RuleFor(request => request).SetValidator(new MeterNumberMustBeValidRule());
-            RuleFor(request => request).SetValidator(new NetSettlementGroupRule());
-            RuleFor(request => request).SetValidator(new ProductTypeRule());
-            RuleFor(request => request).SetValidator(new MeasureUnitTypeRule());
-            RuleFor(request => request).SetValidator(new MeterReadingOccurenceRule());
-            RuleFor(request => request).SetValidator(new CapacityRule());
-            RuleFor(request => request).SetValidator(new LocationDescriptionMustBeValidRule());
-            RuleFor(request => request).SetValidator(new PowerPlantMustBeValidRule());
-            RuleFor(request => request).SetValidator(new ActualAddressRule());
-            RuleFor(request => request).SetValidator(new AssetTypeRule());
-            RuleFor(request => request).SetValidator(new PowerLimitRule());
-            RuleFor(request => request).SetValidator(new PhysicalStateRule());
-            RuleFor(request => request.TransactionId).SetValidator(new TransactionIdentificationRule());
-            RuleFor(request => request.CountryCode).SetValidator(new CountryCodeRule());
+            When(request => request.ProcessType.Equals(BusinessProcessType.CreateMeteringPoint), () =>
+            {
+                RuleFor(request => request).SetValidator(new ConnectionTypeRule());
+                RuleFor(request => request).SetValidator(new DisconnectionTypeRule());
+                RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberValidator());
+                RuleFor(request => request).SetValidator(new SettlementMethodMustBeValidRule());
+                RuleFor(request => request).SetValidator(new MeteringGridAreaValidRule());
+                RuleFor(request => request.EffectiveDate).SetValidator(new EffectiveDateRule());
+                RuleFor(request => request).SetValidator(new MeteringPointTypeValidRule());
+                RuleFor(request => request).SetValidator(new MeteringMethodMustBeValidRule());
+                RuleFor(request => request).SetValidator(new MeterNumberMustBeValidRule());
+                RuleFor(request => request).SetValidator(new NetSettlementGroupRule());
+                RuleFor(request => request).SetValidator(new ProductTypeRule());
+                RuleFor(request => request).SetValidator(new MeasureUnitTypeRule());
+                RuleFor(request => request).SetValidator(new MeterReadingOccurenceRule());
+                RuleFor(request => request).SetValidator(new CapacityRule());
+                RuleFor(request => request).SetValidator(new LocationDescriptionMustBeValidRule());
+                RuleFor(request => request).SetValidator(new PowerPlantMustBeValidRule());
+                RuleFor(request => request).SetValidator(new ActualAddressRule());
+                RuleFor(request => request).SetValidator(new AssetTypeRule());
+                RuleFor(request => request).SetValidator(new PowerLimitRule());
+                RuleFor(request => request).SetValidator(new PhysicalStateRule());
+                RuleFor(request => request.TransactionId).SetValidator(new TransactionIdentificationRule());
+                RuleFor(request => request.CountryCode).SetValidator(new CountryCodeRule());
+            });
         }
     }
 }

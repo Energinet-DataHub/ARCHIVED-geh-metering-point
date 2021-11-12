@@ -152,7 +152,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
             MeteringConfiguration = configuration;
 
-            AddDomainEvent(new MeteringConfigurationChanged(MeteringConfiguration.Meter.Value, MeteringConfiguration.Method.Name, effectiveDate.ToString()));
+            AddDomainEvent(new MeteringConfigurationChanged(
+                Id.Value.ToString(),
+                GsrnNumber.Value,
+                MeteringConfiguration.Meter.Value,
+                MeteringConfiguration.Method.Name,
+                effectiveDate.ToString()));
         }
     }
 }

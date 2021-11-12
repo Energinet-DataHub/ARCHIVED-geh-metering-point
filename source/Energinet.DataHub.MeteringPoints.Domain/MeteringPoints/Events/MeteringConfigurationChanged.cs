@@ -19,12 +19,18 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events
 {
     public class MeteringConfigurationChanged : DomainEventBase
     {
-        public MeteringConfigurationChanged(string meterId, string meteringMethod, string effectiveDate)
+        public MeteringConfigurationChanged(string meteringPointId, string gsrnNumber, string meterId, string meteringMethod, string effectiveDate)
         {
+            MeteringPointId = meteringPointId;
+            GsrnNumber = gsrnNumber;
             MeterId = meterId;
             MeteringMethod = meteringMethod;
             EffectiveDate = effectiveDate;
         }
+
+        public string MeteringPointId { get; }
+
+        public string GsrnNumber { get; }
 
         public string MeterId { get; }
 

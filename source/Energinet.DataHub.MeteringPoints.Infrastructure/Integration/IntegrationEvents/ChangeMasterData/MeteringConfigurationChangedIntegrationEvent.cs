@@ -12,16 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using System.Collections;
 
-namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData
 {
-    public record ChangeMasterDataRequest(
-        string TransactionId = "",
-        string GsrnNumber = "",
-        string EffectiveDate = "",
-        string SettlementMethod = "",
-        string MeterId = "",
-        string MeteringMethod = "",
-        Address? Address = null) : IBusinessRequest;
+    public record MeteringConfigurationChangedIntegrationEvent(
+        string MeteringPointId,
+        string GsrnNumber,
+        string Method,
+        string Meter,
+        string EffectiveDate) : IIntegrationEvent;
 }

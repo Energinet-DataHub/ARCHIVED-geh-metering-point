@@ -76,6 +76,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 {
                     Address = CreateNewAddressFrom(request),
                     MeterId = request.MeterId.Length == 0 ? MeterId.Empty() : null,
+                    MeteringMethod = request.MeteringMethod.Length == 0 ? null : EnumerationType.FromName<MeteringMethod>(request.MeteringMethod),
                 };
         }
 
