@@ -126,6 +126,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 {
                     MeteringMethod = MeteringMethod.Virtual,
                     MeterNumber = null,
+                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                 };
             return ProductionMeteringPoint.Create(details);
         }

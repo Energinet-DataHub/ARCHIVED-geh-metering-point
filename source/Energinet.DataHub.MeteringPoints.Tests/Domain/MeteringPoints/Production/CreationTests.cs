@@ -125,6 +125,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Productio
             {
                 MeteringMethod = MeteringMethod.Virtual,
                 MeterNumber = null,
+                MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
             };
 
             var meteringPoint = ProductionMeteringPoint.Create(details);
@@ -173,6 +174,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Productio
                     NetSettlementGroup = NetSettlementGroup.Six,
                     MeteringMethod = MeteringMethod.Virtual,
                     MeterNumber = null,
+                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                 };
 
             var meteringPoint = ProductionMeteringPoint.Create(meteringPointDetails);
