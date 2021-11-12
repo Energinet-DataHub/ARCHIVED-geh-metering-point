@@ -181,7 +181,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 meteringPointDetails.ConnectionType,
                 meteringPointDetails.AssetType,
                 meteringPointDetails.Capacity,
-                MeteringConfiguration.Create(meteringPointDetails.MeteringMethod, meteringPointDetails.MeterNumber ?? MeterId.Empty()));
+                meteringPointDetails.MeteringConfiguration);
         }
     }
 }
