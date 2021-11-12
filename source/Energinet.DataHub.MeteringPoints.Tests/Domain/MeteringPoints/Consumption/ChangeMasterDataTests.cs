@@ -125,21 +125,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(effectiveDate.ToString(), expectedEvent?.EffectiveDate);
         }
 
-        [Fact]
-        public void Metering_method_is_changed_to_virtual()
-        {
-            var meteringPoint = CreatePhysical();
-
-            var effectiveDate = EffectiveDate.Create(SampleData.EffectiveDate);
-            var configuration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty());
-            meteringPoint.ChangeMeteringConfiguration(configuration, effectiveDate);
-
-            var expectedEvent = FindDomainEvent<MeterIdChanged>(meteringPoint);
-            Assert.Equal(string.Empty, expectedEvent?.MeterId);
-            Assert.Equal(MeteringMethod.Virtual.Name, expectedEvent?.MeteringMethod);
-            Assert.Equal(effectiveDate.ToString(), expectedEvent?.EffectiveDate);
-        }
-
         private static TDomainEvent? FindDomainEvent<TDomainEvent>(Entity domainEntity)
             where TDomainEvent : DomainEventBase
         {
