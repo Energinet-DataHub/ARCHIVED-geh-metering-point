@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
+using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using MediatR;
 
@@ -49,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
                                    ?? throw new InvalidOperationException("Metering point not found");
 
             // TODO: Current and future suppliers
-            var energySuppliers = new List<EnergySupplierDetails>();
+            var energySuppliers = new List<EnergySupplier>();
 
             foreach (var energySupplier in energySuppliers)
             {

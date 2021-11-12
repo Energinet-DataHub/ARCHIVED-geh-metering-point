@@ -1,4 +1,3 @@
-DELETE FROM [dbo].[EnergySupplierDetails]
 DELETE FROM [dbo].[ConsumptionMeteringPoints]
 DELETE FROM [dbo].[ProductionMeteringPoints]
 DELETE FROM [dbo].[ExchangeMeteringPoints]

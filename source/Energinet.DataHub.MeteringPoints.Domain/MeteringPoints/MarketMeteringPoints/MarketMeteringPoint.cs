@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
@@ -23,7 +22,6 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoint
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints
 {
@@ -73,7 +71,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             PowerPlantGsrnNumber = powerPlantGsrnNumber;
         }
 
-        protected Collection<EnergySupplierDetails> EnergySupplierDetails { get; } = new();
+        protected EnergySupplierDetails? EnergySupplierDetails { get; private set; }
 
         protected ConnectionType? ConnectionType { get; }
 
@@ -119,27 +117,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
         }
 
-        public void AddEnergySupplierDetails(EnergySupplierDetails energySupplierDetails)
+        public void SetEnergySupplierDetails(EnergySupplierDetails energySupplierDetails)
         {
             if (energySupplierDetails == null) throw new ArgumentNullException(nameof(energySupplierDetails));
+            if (EnergySupplierDetails?.StartOfSupply != null) return;
 
-            var energySuppliers = EnergySuppliers.Create(EnergySupplierDetails);
-
-            if (!energySuppliers.CanAdd(energySupplierDetails))
-            {
-                return;
-            }
-
-            energySuppliers.Add(energySupplierDetails);
-
-            EnergySupplierDetails.Add(energySupplierDetails);
-            AddDomainEvent(new EnergySupplierDetailsChanged(Id.Value, energySupplierDetails.StartOfSupply, energySupplierDetails.GlnNumber));
-        }
-
-        internal EnergySupplierDetails? GetCurrentEnergySupplier(Instant when)
-        {
-            var energySuppliers = EnergySuppliers.Create(EnergySupplierDetails);
-            return energySuppliers.GetCurrent(when);
+            EnergySupplierDetails = energySupplierDetails;
+            AddDomainEvent(new EnergySupplierDetailsChanged(Id.Value, EnergySupplierDetails.StartOfSupply));
         }
     }
 }

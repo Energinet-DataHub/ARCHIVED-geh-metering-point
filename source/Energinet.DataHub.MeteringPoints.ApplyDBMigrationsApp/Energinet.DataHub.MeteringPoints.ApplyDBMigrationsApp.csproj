@@ -49,7 +49,6 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Model\202110211630 Change FromGrid and ToGrid datatypes.sql" />
     <EmbeddedResource Include="Scripts\Model\202110251200 Add GsrnNumber column to MessageHubMessages table.sql" />
     <EmbeddedResource Include="Scripts\Model\202110251315 Add FullFlexFromDate column.sql" />
-    <EmbeddedResource Include="Scripts\Model\202111041429 Add energy supplier details table.sql" />
     <EmbeddedResource Include="Scripts\Seed\202109232130 Create Grid Area seed data.sql" />
     <EmbeddedResource Include="Scripts\Test\202109232129 Clean database.sql" />
     <EmbeddedResource Include="Scripts\Test\202109232130 Create Grid Area test data.sql" />

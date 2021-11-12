@@ -115,15 +115,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
         private static void SetStartOfSupplyAheadOfEffectiveDate(MarketMeteringPoint meteringPoint, Instant effectiveDate)
         {
             var startOfSupply = effectiveDate.Plus(Duration.FromDays(1));
-            var energySupplierDetails = EnergySupplierDetails.Create(meteringPoint.Id, startOfSupply, GlnNumber.Create(SampleData.GlnNumber));
-            meteringPoint.AddEnergySupplierDetails(energySupplierDetails);
+            var energySupplierDetails = EnergySupplierDetails.Create(startOfSupply);
+            meteringPoint.SetEnergySupplierDetails(energySupplierDetails);
         }
 
         private static void SetStartOfSupplyPriorToEffectiveDate(MarketMeteringPoint meteringPoint, Instant effectiveDate)
         {
             var startOfSupply = effectiveDate.Minus(Duration.FromDays(1));
-            var energySupplierDetails = EnergySupplierDetails.Create(meteringPoint.Id, startOfSupply, GlnNumber.Create(SampleData.GlnNumber));
-            meteringPoint.AddEnergySupplierDetails(energySupplierDetails);
+            var energySupplierDetails = EnergySupplierDetails.Create(startOfSupply);
+            meteringPoint.SetEnergySupplierDetails(energySupplierDetails);
         }
 
         private ConnectionDetails ConnectNow()

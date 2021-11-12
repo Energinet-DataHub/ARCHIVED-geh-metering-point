@@ -15,14 +15,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
-using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Extensions;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using NodaTime;
@@ -194,8 +191,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
 
         private async Task MarkAsEnergySupplierAssigned(Instant startOfSupply)
         {
-            var setEnergySupplierAssigned = new SetEnergySupplierInfo(SampleData.GsrnNumber, startOfSupply, SampleData.GlnNumber);
+            var setEnergySupplierAssigned = new SetEnergySupplierInfo(SampleData.GsrnNumber, startOfSupply);
             await SendCommandAsync(setEnergySupplierAssigned).ConfigureAwait(false);
+
+            var addEnergySupplier = new AddEnergySupplier(SampleData.GsrnNumber, startOfSupply, SampleData.GlnNumber);
+            await SendCommandAsync(addEnergySupplier).ConfigureAwait(false);
         }
     }
 }

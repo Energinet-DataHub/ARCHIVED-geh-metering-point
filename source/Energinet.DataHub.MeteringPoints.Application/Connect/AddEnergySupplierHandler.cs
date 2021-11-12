@@ -24,12 +24,12 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
-    public class SetEnergySupplierInfoHandler : ICommandHandler<SetEnergySupplierInfo>
+    public class AddEnergySupplierHandler : ICommandHandler<AddEnergySupplier>
     {
         private readonly IMarketMeteringPointRepository _marketMeteringPointRepository;
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
 
-        public SetEnergySupplierInfoHandler(
+        public AddEnergySupplierHandler(
             IMarketMeteringPointRepository meteringPointRepository,
             ISystemDateTimeProvider systemDateTimeProvider)
         {
@@ -37,16 +37,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
             _systemDateTimeProvider = systemDateTimeProvider;
         }
 
-        public async Task<Unit> Handle(SetEnergySupplierInfo request, CancellationToken cancellationToken)
+        public Task<Unit> Handle(AddEnergySupplier request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var meteringPoint =
-                await _marketMeteringPointRepository.GetByGSRNAsync(GsrnNumber.Create(request.MeteringPointGsrn)).ConfigureAwait(false);
-
-            meteringPoint.AddEnergySupplierDetails(
-                EnergySupplierDetails.Create(meteringPoint.Id, request.StartOfSupply, GlnNumber.Create(request.EnergySupplierGlnNumber)));
-            return Unit.Value;
+            // TODO: Add energy supplier
+            return Task.FromResult(Unit.Value);
         }
     }
 }

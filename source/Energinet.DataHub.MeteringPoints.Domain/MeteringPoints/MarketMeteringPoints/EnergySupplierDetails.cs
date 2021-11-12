@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
@@ -21,33 +19,16 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
 {
     public class EnergySupplierDetails : ValueObject
     {
-#pragma warning disable CS8618 // Ignore uninitialized properties
-        protected EnergySupplierDetails() { }
-#pragma warning restore
-
-        private EnergySupplierDetails(
-            Guid id,
-            MeteringPointId marketMeteringPointId,
-            Instant startOfSupply,
-            GlnNumber glnNumber)
+        public EnergySupplierDetails(Instant startOfSupply)
         {
-            MarketMeteringPointId = marketMeteringPointId;
             StartOfSupply = startOfSupply;
-            GlnNumber = glnNumber;
-            Id = id;
         }
-
-        public Guid Id { get; }
-
-        public MeteringPointId MarketMeteringPointId { get; }
 
         public Instant StartOfSupply { get; }
 
-        public GlnNumber GlnNumber { get; }
-
-        public static EnergySupplierDetails Create(MeteringPointId meteringPointId, Instant startOfSupply, GlnNumber gln)
+        public static EnergySupplierDetails Create(Instant startOfSupply)
         {
-            return new EnergySupplierDetails(Guid.NewGuid(), meteringPointId, startOfSupply, gln);
+            return new EnergySupplierDetails(startOfSupply);
         }
     }
 }

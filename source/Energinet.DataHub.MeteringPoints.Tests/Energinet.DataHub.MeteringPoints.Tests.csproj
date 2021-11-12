@@ -66,6 +66,7 @@ limitations under the License.
   <ItemGroup>
     <Compile Remove="LocalMessageHub\Mocks\DataAvailableNotificationSenderMock.cs" />
     <Compile Remove="LocalMessageHub\Mocks\DataBundleResponseSenderMock.cs" />
+    <Compile Remove="Domain\EnergySuppliers\EnergySuppliersTests.cs" />
   </ItemGroup>
 
 </Project>

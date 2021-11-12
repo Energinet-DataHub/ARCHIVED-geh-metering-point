@@ -14,7 +14,6 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
-using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
@@ -160,28 +159,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.ToTable("MarketMeteringPoints", "dbo");
 
-            builder.OwnsMany<EnergySupplierDetails>("EnergySupplierDetails", navigationBuilder =>
+            builder.OwnsOne<EnergySupplierDetails>("EnergySupplierDetails", config =>
             {
-                navigationBuilder.ToTable("EnergySupplierDetails");
-
-                navigationBuilder.HasKey(energySupplierDetails => energySupplierDetails.Id);
-
-                navigationBuilder.Property(energySupplierDetails => energySupplierDetails.Id).ValueGeneratedNever();
-
-                navigationBuilder.Property(energySupplierDetails => energySupplierDetails.MarketMeteringPointId)
-                    .HasConversion(
-                        toDbValue => toDbValue.Value,
-                        fromDbValue => new MeteringPointId(fromDbValue));
-
-                navigationBuilder.Property(energySupplierDetails => energySupplierDetails.StartOfSupply)
+                config.Property(x => x.StartOfSupply)
                     .HasColumnName("StartOfSupplyDate");
-
-                navigationBuilder.Property(energySupplierDetails => energySupplierDetails.GlnNumber)
-                    .HasConversion(
-                        toDbValue => toDbValue.Value,
-                        fromDbValue => GlnNumber.Create(fromDbValue));
             });
-
             builder.Property<ConnectionType>("ConnectionType")
                 .HasColumnName("ConnectionType")
                 .HasConversion(

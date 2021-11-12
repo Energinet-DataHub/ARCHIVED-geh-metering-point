@@ -127,7 +127,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
             var rules = new Collection<IBusinessRule>
             {
                 new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, _meteringPointType, ConnectionState.PhysicalState),
-                new MustHaveEnergySupplierRule(GsrnNumber, connectionDetails, GetCurrentEnergySupplier(connectionDetails.EffectiveDate)),
+                new MustHaveEnergySupplierRule(GsrnNumber, connectionDetails, EnergySupplierDetails),
             };
 
             return new BusinessRulesValidationResult(rules);

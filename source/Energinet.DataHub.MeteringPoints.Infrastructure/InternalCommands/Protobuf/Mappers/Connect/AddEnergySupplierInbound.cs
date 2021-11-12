@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Globalization;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
@@ -21,14 +20,15 @@ using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands.Protobuf.Mappers.Connect
 {
-    public class SetEnergySupplierInfoInbound : ProtobufInboundMapper<SetEnergySupplierInfo>
+    public class AddEnergySupplierInbound : ProtobufInboundMapper<AddEnergySupplier>
     {
-        protected override IInboundMessage Convert(SetEnergySupplierInfo obj)
+        protected override IInboundMessage Convert(AddEnergySupplier obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
-            return new Application.Connect.SetEnergySupplierInfo(
+            return new Application.Connect.AddEnergySupplier(
                 obj.MeteringPointGsrn,
-                Instant.FromUnixTimeSeconds(obj.EffectiveDate.Seconds));
+                Instant.FromUnixTimeSeconds(obj.EffectiveDate.Seconds),
+                obj.EnergySupplierGln);
         }
     }
 }
