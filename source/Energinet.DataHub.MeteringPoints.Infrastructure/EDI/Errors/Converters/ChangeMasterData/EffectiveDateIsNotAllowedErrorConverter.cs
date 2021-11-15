@@ -12,18 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
-using FluentValidation;
+using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
+using Energinet.DataHub.MeteringPoints.Domain.Policies;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Connect
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.ChangeMasterData
 {
-    public class ConnectMeteringPointRuleSet : AbstractValidator<ConnectMeteringPoint>
+    public class EffectiveDateIsNotAllowedErrorConverter : ErrorConverter<EffectiveDateIsNotWithinAllowedTimePeriod>
     {
-        public ConnectMeteringPointRuleSet()
+        protected override ErrorMessage Convert(EffectiveDateIsNotWithinAllowedTimePeriod validationError)
         {
-            RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberValidator());
-            RuleFor(request => request.EffectiveDate).SetValidator(request => new EffectiveDateRule());
-            RuleFor(request => request.TransactionId).SetValidator(new TransactionIdentificationRule());
+            return new ErrorMessage("E17", "Effectuation date incorrect: The information is not received within the correct time period (either too soon or too late).");
         }
     }
 }

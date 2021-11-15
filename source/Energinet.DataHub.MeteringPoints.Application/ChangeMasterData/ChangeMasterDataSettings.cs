@@ -12,12 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Domain.Addresses;
-
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
 {
-    public record MasterDataDetails(
-        EffectiveDate EffectiveDate,
-        Address? Address = null);
+    public record ChangeMasterDataSettings(int NumberOfDaysEffectiveDateIsAllowedToBeforeToday = 0);
 }
