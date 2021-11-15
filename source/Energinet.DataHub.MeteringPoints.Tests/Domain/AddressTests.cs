@@ -331,7 +331,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
         public void Location_description_is_restricted_to_60_characters()
         {
             var invalidDescription = "1234567890123456789012345678901234567890123456789012345678901234567890";
-            var result = LocationDescription.CheckRules(invalidDescription);
+            var result = CheckRules(locationDescription: invalidDescription);
 
             AssertError<InvalidLocationDescriptionRuleError>(result, true);
         }
