@@ -45,25 +45,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         }
 
         [Theory]
-        [InlineData("", typeof(EffectiveDateRequiredValidationError), true)]
-        [InlineData("2021-11-12T22:00:00Z", typeof(DateFormatMustBeUTCRuleError), false)]
-        [InlineData("12-12-2021T22:00:00Z", typeof(DateFormatMustBeUTCRuleError), true)]
-        [InlineData("12-12-2021T22:00:00", typeof(DateFormatMustBeUTCRuleError), true)]
-        [InlineData("YYYY-12-12T22:00:00Z", typeof(DateFormatMustBeUTCRuleError), true)]
-        [InlineData("2021-12-12T22:00:00.000Z", typeof(DateFormatMustBeUTCRuleError), false)]
-        [InlineData("2021-12-12T22:00:00:1234Z", typeof(DateFormatMustBeUTCRuleError), true)]
-        public void Validate_EffectiveDateMandatoryAndFormat(string occurenceDate, System.Type validationError, bool expectedError)
-        {
-            var businessRequest = CreateRequest() with
-            {
-                GsrnNumber = SampleData.GsrnNumber,
-                EffectiveDate = occurenceDate,
-            };
-
-            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
-        }
-
-        [Theory]
         [InlineData("", typeof(MeteringPointTypeRequiredValidationError), true)]
         [InlineData("Consumption", typeof(MeteringPointTypeValidationError), false)]
         [InlineData("Production", typeof(MeteringPointTypeValidationError), false)]

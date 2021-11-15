@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
+using Energinet.DataHub.MeteringPoints.Domain;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
@@ -21,15 +23,18 @@ namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
     {
         public ValidationRuleSet()
         {
-            RuleFor(request => request).SetValidator(new MeteringGridAreaValidRule());
-            RuleFor(request => request.EffectiveDate).SetValidator(new EffectiveDateRule());
-            RuleFor(request => request).SetValidator(new MeteringPointTypeValidRule());
-            RuleFor(request => request.ProductType).SetValidator(new ProductTypeRule());
-            RuleFor(request => request).SetValidator(new MeasureUnitTypeRule());
-            RuleFor(request => request).SetValidator(new MeterReadingOccurenceRule());
-            RuleFor(request => request).SetValidator(new ActualAddressRule());
-            RuleFor(request => request).SetValidator(new PowerLimitRule());
-            RuleFor(request => request).SetValidator(new PhysicalStateRule());
+            When(message => message.ProcessType.Equals(BusinessProcessType.CreateMeteringPoint.Name, StringComparison.OrdinalIgnoreCase), () =>
+            {
+                RuleFor(request => request).SetValidator(new MeteringGridAreaValidRule());
+                RuleFor(request => request).SetValidator(new MeteringPointTypeValidRule());
+                RuleFor(request => request.ProductType).SetValidator(new ProductTypeRule());
+                RuleFor(request => request).SetValidator(new MeasureUnitTypeRule());
+                RuleFor(request => request).SetValidator(new MeterReadingOccurenceRule());
+                RuleFor(request => request).SetValidator(new ActualAddressRule());
+                RuleFor(request => request).SetValidator(new PowerLimitRule());
+                RuleFor(request => request).SetValidator(new PhysicalStateRule());
+            });
+
             RuleFor(request => request.TransactionId).SetValidator(new TransactionIdentificationRule());
         }
     }
