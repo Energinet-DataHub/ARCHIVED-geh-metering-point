@@ -12,25 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Create;
-using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Application.Validation.Extensions;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class LocationDescriptionMustBeValidRule : AbstractValidator<MasterDataDocument>
+    public class LocationDescriptionMustBeValidRule : AbstractValidator<string>
     {
         public LocationDescriptionMustBeValidRule()
         {
-            When(request => !string.IsNullOrWhiteSpace(request.LocationDescription), () =>
-            {
-                RuleFor(createMeteringPoint => createMeteringPoint.LocationDescription)
-                    .Must(value => LocationDescription.CheckRules(value!).Success)
-                    .WithState(createMeteringPoint => new InvalidLocationDescriptionRuleError(createMeteringPoint.LocationDescription!));
-            });
+            RuleFor(value => value)
+                .CheckRules(LocationDescription.CheckRules);
         }
     }
 }

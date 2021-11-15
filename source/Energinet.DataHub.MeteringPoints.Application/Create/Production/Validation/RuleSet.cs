@@ -24,6 +24,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Production.Validat
     {
         public RuleSet()
         {
+            RuleFor(request => request.LocationDescription).SetValidator(new LocationDescriptionMustBeValidRule()!)
+                .Unless(request => string.IsNullOrWhiteSpace(request.LocationDescription));
             RuleFor(request => request.PhysicalConnectionCapacity)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
