@@ -62,21 +62,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
         }
 
         [Fact]
-        public async Task Should_reject_when_geo_info_reference_is_invalid()
-        {
-            var invalidGeoInfoReference = "xxxxxxx";
-            var request = CreateDocument()
-                with
-                {
-                    GeoInfoReference = invalidGeoInfoReference,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("E86");
-        }
-
-        [Fact]
         public async Task Should_reject_when_geo_info_reference_is_specified_and_official_address_is_empty()
         {
             var request = CreateDocument()

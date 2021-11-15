@@ -337,6 +337,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("D02");
         }
 
+        [Fact]
+        public async Task Should_reject_when_geo_info_reference_is_invalid()
+        {
+            var invalidGeoInfoReference = "xxxxxxx";
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    GeoInfoReference = invalidGeoInfoReference,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
         private static CreateConsumptionMeteringPoint CreateCommand()
         {
             return Scenarios.CreateConsumptionMeteringPointCommand();
