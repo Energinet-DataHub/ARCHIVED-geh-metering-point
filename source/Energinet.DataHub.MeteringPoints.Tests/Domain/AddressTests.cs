@@ -327,6 +327,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             Assert.Equal(originalAddress.City, mergedAddress.City);
         }
 
+        [Fact]
+        public void Location_description_is_restricted_to_60_characters()
+        {
+            var invalidDescription = "1234567890123456789012345678901234567890123456789012345678901234567890";
+            var result = LocationDescription.CheckRules(invalidDescription);
+
+            AssertError<InvalidLocationDescriptionRuleError>(result, true);
+        }
+
         private static Address Create(
             string streetName = "",
             string streetCode = "",
@@ -356,7 +365,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                geoInfoReference: geoInfoReference);
         }
 
-        private static BusinessRulesValidationResult CheckRules(string? streetName = "", string? streetCode = "", string? buildingNumber = "", string? city = "", string? citySubDivision = "", string? postCode = "", CountryCode? countryCode = null, string? floor = "", string room = "", int municipalityCode = default(int))
+        private static BusinessRulesValidationResult CheckRules(string? streetName = "", string? streetCode = "", string? buildingNumber = "", string? city = "", string? citySubDivision = "", string? postCode = "", CountryCode? countryCode = null, string? floor = "", string room = "", int municipalityCode = default(int), string locationDescription = "")
         {
             return Address.CheckRules(
                 streetName: streetName,
@@ -368,7 +377,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 countryCode: countryCode,
                 floor: floor,
                 room: room,
-                municipalityCode: municipalityCode);
+                municipalityCode: municipalityCode,
+                locationDescription: locationDescription);
         }
 
         private static void AssertError<TRuleError>(BusinessRulesValidationResult rulesValidationResult, bool errorExpected)

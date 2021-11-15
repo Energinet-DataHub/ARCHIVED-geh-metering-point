@@ -74,9 +74,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
             string? room = null,
             int? municipalityCode = null,
             bool? isActual = null,
-            Guid? geoInfoReference = null)
+            Guid? geoInfoReference = null,
+            string? locationDescription = null)
         {
-            var result = CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode);
+            var result = CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, locationDescription);
             if (result.Success == false)
             {
                 throw new InvalidAddressException(result.Errors);
@@ -97,7 +98,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
                 geoInfoReference: geoInfoReference);
         }
 
-        public static BusinessRulesValidationResult CheckRules(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode)
+        public static BusinessRulesValidationResult CheckRules(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode, string? locationDescription)
         {
             return new(new Collection<IBusinessRule>()
             {
@@ -110,6 +111,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
                 new PostCodeFormatRule(postCode, countryCode),
                 new CitySubdivisionRule(citySubDivision),
                 new MunicipalityCodeRule(municipalityCode),
+                new LocationDescriptionLengthRule(locationDescription),
             });
         }
 

@@ -145,7 +145,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange
                 countryCode: EnumerationType.FromName<CountryCode>(request.CountryCode),
                 floor: request.FloorIdentification,
                 room: request.RoomIdentification,
-                municipalityCode: municipalityCode);
+                municipalityCode: municipalityCode,
+                locationDescription: request.LocationDescription);
         }
 
         private async Task<(GridArea? GridArea, GridArea? ToGridArea, GridArea? FromGridArea)> GetGridAreasAsync(CreateExchangeMeteringPoint request)
