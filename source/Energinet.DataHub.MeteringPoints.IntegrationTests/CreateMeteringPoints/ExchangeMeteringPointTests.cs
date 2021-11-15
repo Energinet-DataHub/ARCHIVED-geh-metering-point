@@ -94,6 +94,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("D46", DocumentType.CreateMeteringPointRejected);
         }
 
+        [Fact]
+        public async Task Should_reject_if_geo_info_reference_is_missing()
+        {
+            var request = CreateCommand()
+                with
+                {
+                    GeoInfoReference = null,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86", DocumentType.CreateMeteringPointRejected);
+        }
+
         private static CreateExchangeMeteringPoint CreateCommand()
         {
             return Scenarios.CreateExchangeMeteringPointCommand();

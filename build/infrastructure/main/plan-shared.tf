@@ -11,48 +11,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-resource "azurerm_app_service" "webapi" {
-  name                = "app-webapi-${lower(var.domain_name_short)}-${lower(var.environment_short)}-${lower(var.environment_instance)}"
-  resource_group_name = azurerm_resource_group.this.name
-  location            = azurerm_resource_group.this.location
-  app_service_plan_id = module.plan_webapi.id
-
-  site_config {
-    linux_fx_version = "DOTNETCORE|5.0"
-    dotnet_framework_version = "v5.0"
-    cors {
-      allowed_origins = ["*"]
-    }
-  }
-
-  connection_string {
-    name  = "METERINGPOINT_DB_CONNECTION_STRING"
-    type  = "SQLServer"
-    value = local.METERING_POINT_CONNECTION_STRING
-  }
-
-  tags              = azurerm_resource_group.this.tags
-
-  lifecycle {
-    ignore_changes = [
-      # Ignore changes to tags, e.g. because a management agent
-      # updates these based on some ruleset managed elsewhere.
-      tags,
-    ]
-  }
-}
-
-module "plan_webapi" {
+module "plan_shared" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/app-service-plan?ref=5.1.0"
 
-  name                  = "webapi"
+  name                  = "shared"
   project_name          = var.domain_name_short
   environment_short     = var.environment_short
   environment_instance  = var.environment_instance
   resource_group_name   = azurerm_resource_group.this.name
   location              = azurerm_resource_group.this.location
-  kind                  = "Linux"
-  reserved              = true
+  kind                  = "FunctionApp"
   sku                   = {
     tier  = "Basic"
     size  = "B1"

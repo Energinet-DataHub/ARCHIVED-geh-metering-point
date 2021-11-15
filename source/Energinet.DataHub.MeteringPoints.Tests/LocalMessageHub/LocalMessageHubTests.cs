@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.Dequeue;
 using Energinet.DataHub.MessageHub.Client.Model;
 using Energinet.DataHub.MessageHub.Client.Peek;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 using Energinet.DataHub.MeteringPoints.Messaging;
@@ -63,7 +64,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
             _localMessageHubDataAvailableClient = new LocalMessageHubDataAvailableClient(
                 _messageHubMessageRepository,
                 _dataAvailableNotificationOutboxDispatcher,
-                new MessageHubMessageFactory(new SystemDateTimeProviderStub()));
+                new MessageHubMessageFactory(new SystemDateTimeProviderStub()),
+                new CorrelationContext());
         }
 
         [Fact]
