@@ -49,8 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Valida
             RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberValidator());
             RuleFor(request => request.ConnectionType).SetValidator(new ConnectionTypeRule())
                 .Unless(request => string.IsNullOrWhiteSpace(request.ConnectionType));
-            RuleFor(request => request.DisconnectionType).SetValidator(new DisconnectionTypeRule())
-                .Unless(request => string.IsNullOrWhiteSpace(request.DisconnectionType));
+
             When(request => !string.IsNullOrEmpty(request.ScheduledMeterReadingDate), () =>
             {
                 RuleFor(request => request.ScheduledMeterReadingDate)
@@ -70,8 +69,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Valida
                 .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError())
                 .SetValidator(new SettlementMethodMustBeValidRule()!);
             RuleFor(createMeteringPoint => createMeteringPoint.DisconnectionType)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .WithState(createMeteringPoint => new DisconnectionTypeMandatoryValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.DisconnectionType));
+                .WithState(createMeteringPoint =>
+                    new DisconnectionTypeMandatoryValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.DisconnectionType))
+                .SetValidator(new DisconnectionTypeRule());
         }
     }
 }
