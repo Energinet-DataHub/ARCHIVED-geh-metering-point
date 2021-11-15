@@ -24,6 +24,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Valida
     {
         public RuleSet()
         {
+            RuleFor(request => request.CountryCode)
+                .NotEmpty()
+                .SetValidator(new CountryCodeRule());
             RuleFor(request => request.AssetType)
                 .SetValidator(new AssetTypeRule()!)
                 .Unless(request => string.IsNullOrWhiteSpace(request.AssetType));

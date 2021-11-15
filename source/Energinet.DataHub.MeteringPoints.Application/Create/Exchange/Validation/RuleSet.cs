@@ -22,6 +22,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange.Validatio
     {
         public RuleSet()
         {
+            RuleFor(request => request.CountryCode)
+                .NotEmpty()
+                .SetValidator(new CountryCodeRule());
             RuleFor(request => request.LocationDescription).SetValidator(new LocationDescriptionMustBeValidRule()!)
                 .Unless(request => string.IsNullOrWhiteSpace(request.LocationDescription));
             RuleFor(request => request.MeterNumber)

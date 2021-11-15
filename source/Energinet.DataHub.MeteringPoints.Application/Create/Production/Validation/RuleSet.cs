@@ -24,6 +24,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Production.Validat
     {
         public RuleSet()
         {
+            RuleFor(request => request.CountryCode)
+                .NotEmpty()
+                .SetValidator(new CountryCodeRule());
             RuleFor(request => request.AssetType)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()

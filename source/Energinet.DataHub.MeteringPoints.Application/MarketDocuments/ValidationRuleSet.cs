@@ -28,11 +28,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
             RuleFor(request => request).SetValidator(new MeasureUnitTypeRule());
             RuleFor(request => request).SetValidator(new MeterReadingOccurenceRule());
             RuleFor(request => request).SetValidator(new ActualAddressRule());
-
             RuleFor(request => request).SetValidator(new PowerLimitRule());
             RuleFor(request => request).SetValidator(new PhysicalStateRule());
             RuleFor(request => request.TransactionId).SetValidator(new TransactionIdentificationRule());
-            RuleFor(request => request.CountryCode).SetValidator(new CountryCodeRule());
         }
     }
 }
