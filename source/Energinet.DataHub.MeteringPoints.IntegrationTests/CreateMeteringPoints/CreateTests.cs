@@ -352,6 +352,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("E86");
         }
 
+        [Fact]
+        public async Task Should_reject_when_reading_occurence_is_not_a_valid_value()
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    MeterReadingOccurrence = "Not_valid_Reading_occurence_value",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
+        }
+
         private static CreateConsumptionMeteringPoint CreateCommand()
         {
             return Scenarios.CreateConsumptionMeteringPointCommand();
