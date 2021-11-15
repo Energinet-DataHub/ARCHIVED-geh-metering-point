@@ -366,6 +366,35 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("D02");
         }
 
+        [Fact]
+        public async Task Should_reject_when_measurement_unit_is_missing()
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    MeasureUnitType = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_geo_info_reference_is_specified_and_official_address_is_empty()
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    GeoInfoReference = SampleData.GeoInfoReference,
+                    IsActualAddress = null,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D63");
+        }
+
         private static CreateConsumptionMeteringPoint CreateCommand()
         {
             return Scenarios.CreateConsumptionMeteringPointCommand();

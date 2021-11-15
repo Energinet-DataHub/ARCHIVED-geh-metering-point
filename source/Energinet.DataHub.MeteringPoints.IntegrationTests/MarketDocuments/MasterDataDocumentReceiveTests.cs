@@ -61,35 +61,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
             AssertValidationError("E86");
         }
 
-        [Fact]
-        public async Task Should_reject_when_geo_info_reference_is_specified_and_official_address_is_empty()
-        {
-            var request = CreateDocument()
-                with
-                {
-                    GeoInfoReference = SampleData.GeoInfoReference,
-                    IsActualAddress = null,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("D63");
-        }
-
-        [Fact]
-        public async Task Should_reject_when_measurement_unit_is_missing()
-        {
-            var request = CreateDocument()
-                with
-                {
-                    MeasureUnitType = string.Empty,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("D02");
-        }
-
         private static MasterDataDocument CreateDocument()
         {
             return new(
