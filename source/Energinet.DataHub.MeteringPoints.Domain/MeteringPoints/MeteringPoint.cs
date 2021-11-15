@@ -53,7 +53,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
-            LocationDescription? locationDescription,
             MeasurementUnitType unitType,
             MeterId? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
@@ -68,7 +67,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _meteringPointType = meteringPointType;
             _gridAreaLinkId = gridAreaLinkId;
             _powerPlantGsrnNumber = powerPlantGsrnNumber;
-            _locationDescription = locationDescription;
+            _locationDescription = LocationDescription.Create(Address.LocationDescription!);
             _unitType = unitType;
             _meterNumber = meterNumber;
             _meterReadingOccurrence = meterReadingOccurrence;
