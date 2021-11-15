@@ -91,21 +91,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
         }
 
         [Fact]
-        public async Task Should_reject_when_location_description_is_invalid()
-        {
-            var invalidLocationDescription = "1234567890123456789012345678901234567890123456789012345678901234567890";
-            var request = CreateDocument()
-                with
-                {
-                    LocationDescription = invalidLocationDescription,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("E86");
-        }
-
-        [Fact]
         public async Task Should_reject_if_capacity_is_invalid()
         {
             var request = CreateDocument()

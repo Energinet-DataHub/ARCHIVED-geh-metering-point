@@ -42,7 +42,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Productio
             var gridAreadLinkId = new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId));
             var powerPlanGsrn = GsrnNumber.Create(SampleData.PowerPlant);
             var netSettlementGroup = NetSettlementGroup.Zero;
-            var locationDescription = LocationDescription.Create(string.Empty);
             var measurementUnitType = MeasurementUnitType.KWh;
             var readingOccurrence = ReadingOccurrence.Hourly;
             var powerLimit = PowerLimit.Create(0, 0);
@@ -61,7 +60,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Productio
                 room: string.Empty,
                 municipalityCode: null,
                 isActual: true,
-                geoInfoReference: Guid.NewGuid());
+                geoInfoReference: Guid.NewGuid(),
+                locationDescription: string.Empty);
             var capacity = Capacity.Create(SampleData.Capacity);
 
             var productionMeteringPointDetails = CreateProductionDetails()
@@ -94,6 +94,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Productio
             Assert.Equal(address.CitySubDivision, createdEvent.CitySubDivision);
             Assert.Equal(address.IsActual, createdEvent.IsOfficialAddress);
             Assert.Equal(address.GeoInfoReference, createdEvent.GeoInfoReference);
+            Assert.Equal(address.LocationDescription, createdEvent.LocationDescription);
             Assert.Equal(meteringPointId.Value, createdEvent.MeteringPointId);
             Assert.Equal(meteringPointGsrn.Value, createdEvent.GsrnNumber);
             Assert.Equal(isOfficielAddress, createdEvent.IsOfficialAddress);
