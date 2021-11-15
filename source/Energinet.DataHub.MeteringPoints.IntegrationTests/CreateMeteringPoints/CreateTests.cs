@@ -395,6 +395,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("D63");
         }
 
+        [Fact]
+        public async Task Should_reject_when_maximum_current_is_invalid()
+        {
+            var invalidCurrent = 12345567;
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    MaximumCurrent = invalidCurrent,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
         private static CreateConsumptionMeteringPoint CreateCommand()
         {
             return Scenarios.CreateConsumptionMeteringPointCommand();

@@ -46,21 +46,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
             AssertValidationError("E86");
         }
 
-        [Fact]
-        public async Task Should_reject_when_maximum_current_is_invalid()
-        {
-            var invalidCurrent = 12345567;
-            var request = CreateDocument()
-                with
-                {
-                    MaximumCurrent = invalidCurrent,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("E86");
-        }
-
         private static MasterDataDocument CreateDocument()
         {
             return new(
