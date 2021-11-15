@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -22,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
 {
     public class Address : ValueObject
     {
-        private Address(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode, bool? isActual, Guid? geoInfoReference)
+        private Address(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode, bool? isActual, Guid? geoInfoReference, string? locationDescription)
         {
             StreetName = streetName;
             StreetCode = streetCode;
@@ -36,6 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
             MunicipalityCode = municipalityCode;
             IsActual = isActual;
             GeoInfoReference = geoInfoReference;
+            LocationDescription = locationDescription;
         }
 
         public string? StreetName { get; }
@@ -61,6 +63,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
         public bool? IsActual { get; }
 
         public Guid? GeoInfoReference { get; }
+
+        public string? LocationDescription { get; }
 
         public static Address Create(
             string? streetName = null,
@@ -95,7 +99,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
                 room: room,
                 municipalityCode: municipalityCode,
                 isActual: isActual,
-                geoInfoReference: geoInfoReference);
+                geoInfoReference: geoInfoReference,
+                locationDescription: locationDescription);
         }
 
         public static BusinessRulesValidationResult CheckRules(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode, string? locationDescription)
