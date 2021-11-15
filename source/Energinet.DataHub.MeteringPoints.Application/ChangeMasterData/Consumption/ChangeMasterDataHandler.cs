@@ -98,7 +98,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 request.Address.Room,
                 request.Address.MunicipalityCode,
                 request.Address.IsActual.GetValueOrDefault(),
-                request.Address.GeoInfoReference));
+                request.Address.GeoInfoReference,
+                request.Address.LocationDescription));
         }
 
         private Task<BusinessRulesValidationResult> ValidateAsync(ChangeMasterDataRequest request, ConsumptionMeteringPoint targetMeteringPoint)
