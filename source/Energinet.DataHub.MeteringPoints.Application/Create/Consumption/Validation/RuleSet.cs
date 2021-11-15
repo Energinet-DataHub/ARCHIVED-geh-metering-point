@@ -24,6 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Valida
     {
         public RuleSet()
         {
+            RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberValidator());
             RuleFor(request => request.ConnectionType).SetValidator(new ConnectionTypeRule())
                 .Unless(request => string.IsNullOrWhiteSpace(request.ConnectionType));
             RuleFor(request => request.DisconnectionType).SetValidator(new DisconnectionTypeRule())

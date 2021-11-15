@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using FluentValidation;
 
@@ -21,6 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange.Validatio
     {
         public RuleSet()
         {
+            RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberValidator());
             RuleFor(request => request.MeterReadingOccurrence)
                     .NotEmpty()
                     .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError());

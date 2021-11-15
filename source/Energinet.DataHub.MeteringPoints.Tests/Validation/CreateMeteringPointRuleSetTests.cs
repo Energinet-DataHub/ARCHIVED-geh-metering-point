@@ -29,29 +29,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
     [UnitTest]
     public class CreateMeteringPointRuleSetTests
     {
-        [Fact]
-        public void Validate_WhenGsrnNumberIsEmpty_IsFailure()
-        {
-            var businessRequest = CreateRequest();
-
-            var errors = GetValidationErrors(businessRequest);
-
-            Assert.Contains(errors, error => error is GsrnNumberMustBeValidValidationError);
-        }
-
-        [Fact]
-        public void Validate_WhenGsrnNumberIsNotFormattedCorrectly_IsFailure()
-        {
-            var businessRequest = CreateRequest() with
-            {
-                GsrnNumber = "Not_Valid_Gsrn_Number",
-            };
-
-            var errors = GetValidationErrors(businessRequest);
-
-            Assert.Contains(errors, error => error is GsrnNumberMustBeValidValidationError);
-        }
-
         [Theory]
         [InlineData("***", typeof(MeteringGridAreaMandatoryValidationError), false)]
         [InlineData("", typeof(MeteringGridAreaMandatoryValidationError), true)]

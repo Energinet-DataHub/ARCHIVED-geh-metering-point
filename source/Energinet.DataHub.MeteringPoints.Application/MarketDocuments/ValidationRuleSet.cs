@@ -21,7 +21,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
     {
         public ValidationRuleSet()
         {
-            RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberValidator());
             RuleFor(request => request).SetValidator(new SettlementMethodMustBeValidRule());
             RuleFor(request => request).SetValidator(new MeteringGridAreaValidRule());
             RuleFor(request => request.EffectiveDate).SetValidator(new EffectiveDateRule());
