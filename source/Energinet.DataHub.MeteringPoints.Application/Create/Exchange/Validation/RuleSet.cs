@@ -22,13 +22,15 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange.Validatio
     {
         public RuleSet()
         {
+            RuleFor(request => request.MeteringMethod)
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty()
+                .WithState(value => new MeteringMethodIsMandatoryValidationError())
+                .SetValidator(new MeteringMethodMustBeValidRule());
             RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberValidator());
             RuleFor(request => request.MeterReadingOccurrence)
                     .NotEmpty()
                     .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError());
-            RuleFor(createMeteringPoint => createMeteringPoint.MeteringMethod)
-                    .NotEmpty()
-                    .WithState(createMeteringPoint => new MeteringMethodIsMandatoryValidationError());
         }
     }
 }

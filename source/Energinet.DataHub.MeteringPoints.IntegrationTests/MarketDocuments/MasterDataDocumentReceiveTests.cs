@@ -197,20 +197,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
         }
 
         [Fact]
-        public async Task Should_reject_when_metering_method_is_invalid()
-        {
-            var request = CreateDocument()
-                with
-                {
-                    MeteringMethod = "Invalid_value",
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("D02");
-        }
-
-        [Fact]
         public async Task Should_reject_if_asset_type_value_is_invalid()
         {
             var request = CreateDocument()

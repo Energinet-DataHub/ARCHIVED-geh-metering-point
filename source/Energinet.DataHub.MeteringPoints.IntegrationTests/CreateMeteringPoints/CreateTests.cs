@@ -159,6 +159,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
+        public async Task Should_reject_when_metering_method_is_invalid()
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    MeteringMethod = "Invalid_value",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
+        }
+
+        [Fact]
         public async Task Should_reject_if_connection_type_is_unknown()
         {
             var invalidConnectionType = "invalid_value";

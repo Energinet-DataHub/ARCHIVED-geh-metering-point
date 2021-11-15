@@ -24,6 +24,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Valida
     {
         public RuleSet()
         {
+            RuleFor(request => request.MeteringMethod)
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty()
+                .WithState(value => new MeteringMethodIsMandatoryValidationError())
+                .SetValidator(new MeteringMethodMustBeValidRule());
             RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberValidator());
             RuleFor(request => request.ConnectionType).SetValidator(new ConnectionTypeRule())
                 .Unless(request => string.IsNullOrWhiteSpace(request.ConnectionType));
@@ -47,9 +52,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Valida
                 .NotEmpty()
                 .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError())
                 .SetValidator(new SettlementMethodMustBeValidRule()!);
-            RuleFor(createMeteringPoint => createMeteringPoint.MeteringMethod)
-                .NotEmpty()
-                .WithState(createMeteringPoint => new MeteringMethodIsMandatoryValidationError());
             RuleFor(createMeteringPoint => createMeteringPoint.DisconnectionType)
                 .NotEmpty()
                 .WithState(createMeteringPoint => new DisconnectionTypeMandatoryValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.DisconnectionType));
