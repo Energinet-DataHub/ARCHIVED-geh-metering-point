@@ -195,6 +195,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 {
                     TypeOfMeteringPoint = nameof(MeteringPointType.Production),
                     DisconnectionType = "invalid_dc_type",
+                    PhysicalConnectionCapacity = "1",
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
@@ -228,6 +229,23 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError("D02");
+        }
+
+        [Fact]
+        public async Task Should_reject_if_capacity_is_invalid()
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.One.Name,
+                    PhysicalConnectionCapacity = "123.3333670",
+                    MeteringMethod = MeteringMethod.Calculated.Name,
+                    MeterNumber = null,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
         }
 
         private static CreateConsumptionMeteringPoint CreateCommand()

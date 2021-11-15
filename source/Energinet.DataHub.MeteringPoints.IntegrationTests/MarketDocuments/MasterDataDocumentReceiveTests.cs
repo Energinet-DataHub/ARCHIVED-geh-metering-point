@@ -92,23 +92,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
         }
 
         [Fact]
-        public async Task Should_reject_if_capacity_is_invalid()
-        {
-            var request = CreateDocument()
-                with
-                {
-                    NetSettlementGroup = NetSettlementGroup.One.Name,
-                    PhysicalConnectionCapacity = "123.3333670",
-                    MeteringMethod = MeteringMethod.Calculated.Name,
-                    MeterNumber = null,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("E86");
-        }
-
-        [Fact]
         public async Task Should_reject_when_geo_info_reference_is_invalid()
         {
             var invalidGeoInfoReference = "xxxxxxx";

@@ -24,6 +24,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Valida
     {
         public RuleSet()
         {
+            RuleFor(request => request.PhysicalConnectionCapacity)
+                .SetValidator(new CapacityRule()!)
+                .Unless(request => string.IsNullOrWhiteSpace(request.PhysicalConnectionCapacity));
             RuleFor(request => request.MeterNumber)
                 .SetValidator(new MeterNumberMustBeValidRule()!)
                 .Unless(request => string.IsNullOrEmpty(request.MeterNumber));

@@ -15,6 +15,7 @@
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Create.Production.Validation
@@ -23,6 +24,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Production.Validat
     {
         public RuleSet()
         {
+            RuleFor(request => request.PhysicalConnectionCapacity)
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty()
+                .WithState(request => new CapacityIsRequiredRuleError())
+                .SetValidator(new CapacityRule()!);
             RuleFor(request => request.MeterNumber)
                 .SetValidator(new MeterNumberMustBeValidRule()!)
                 .Unless(request => string.IsNullOrEmpty(request.MeterNumber));
