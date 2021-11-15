@@ -26,7 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands.Proto
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
             return new Application.Connect.AddEnergySupplier(
-                obj.MeteringPointGsrn,
+                obj.MeteringPointId,
                 Instant.FromUnixTimeSeconds(obj.EffectiveDate.Seconds),
                 obj.EnergySupplierGln);
         }

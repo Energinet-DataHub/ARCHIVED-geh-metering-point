@@ -14,7 +14,6 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
@@ -38,13 +37,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers
             GlnNumber = glnNumber;
         }
 
-        public Guid Id { get; }
-
-        public MeteringPointId MarketMeteringPointId { get; }
-
         public Instant StartOfSupply { get; }
 
         public GlnNumber GlnNumber { get; }
+
+        public Guid Id { get; }
+
+        public MeteringPointId MarketMeteringPointId { get; }
 
         public static EnergySupplier Create(MeteringPointId meteringPointId, Instant startOfSupply, GlnNumber gln)
         {

@@ -121,12 +121,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                                 Country: meteringPointDto.CountryCode),
                             PostalCode: meteringPointDto.PostCode),
                         UsagePointLocationActualAddressIndicator: meteringPointDto.IsActualAddress ?? false,
-                        UsagePointLocationGeoInfoReference: "f26f8678-6cd3-4e12-b70e-cf96290ada94",
+                        UsagePointLocationGeoInfoReference: meteringPointDto.GeoInfoReference.HasValue ? meteringPointDto.GeoInfoReference.ToString()! : string.Empty,
                         ParentMarketEvaluationPoint: new ParentMarketEvaluationPoint(
-                            Id: "579999993331812345"),
+                            Id: "579999993331812345"), // TODO: Hardcoded
                         ChildMarketEvaluationPoint: new ChildMarketEvaluationPoint(
-                            Id: "579999993331812325",
-                            Description: "D06"))));
+                            Id: "579999993331812325", // TODO: Hardcoded
+                            Description: "D06")))); // TODO: Hardcoded
 
             return accountingPointCharacteristicsMessage;
         }

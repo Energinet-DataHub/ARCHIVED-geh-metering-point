@@ -84,7 +84,7 @@ message CreateDefaultChargeLinksMessages {
 
 message AddEnergySupplier {
   string id = 1;
-  string metering_point_gsrn = 2;
+  string metering_point_id = 2;
   google.protobuf.Timestamp effective_date = 3; // Date which the change of supplier goes into effect.
   string energy_supplier_gln = 4;
 }

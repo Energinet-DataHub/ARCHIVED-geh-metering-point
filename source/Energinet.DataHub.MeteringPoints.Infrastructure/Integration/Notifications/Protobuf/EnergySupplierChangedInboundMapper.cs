@@ -28,6 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notificati
 
             return new EnergySupplierChanged
             {
+                MeteringPointId = obj.AccountingpointId,
                 GsrnNumber = obj.GsrnNumber,
                 StartOfSupply = obj.EffectiveDate.ToInstant(),
                 GlnNumber = obj.EnergySupplierGln,

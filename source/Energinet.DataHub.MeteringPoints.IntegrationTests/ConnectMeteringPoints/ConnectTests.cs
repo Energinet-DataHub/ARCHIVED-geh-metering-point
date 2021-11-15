@@ -18,6 +18,7 @@ using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Extensions;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
@@ -194,7 +195,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             var setEnergySupplierAssigned = new SetEnergySupplierInfo(SampleData.GsrnNumber, startOfSupply);
             await SendCommandAsync(setEnergySupplierAssigned).ConfigureAwait(false);
 
-            var addEnergySupplier = new AddEnergySupplier(SampleData.GsrnNumber, startOfSupply, SampleData.GlnNumber);
+            // TODO: How bad is this?
+            var meteringPointRepository = GetService<IMeteringPointRepository>();
+            var meteringPoint = await meteringPointRepository.GetByGsrnNumberAsync(GsrnNumber.Create(SampleData.GsrnNumber))
+                .ConfigureAwait(false);
+
+            var addEnergySupplier = new AddEnergySupplier(meteringPoint?.Id.Value.ToString()!, startOfSupply, SampleData.GlnNumber);
             await SendCommandAsync(addEnergySupplier).ConfigureAwait(false);
         }
     }

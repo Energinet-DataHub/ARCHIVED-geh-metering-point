@@ -16,32 +16,32 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
+using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
     public class AddEnergySupplierHandler : ICommandHandler<AddEnergySupplier>
     {
-        private readonly IMarketMeteringPointRepository _marketMeteringPointRepository;
-        private readonly ISystemDateTimeProvider _systemDateTimeProvider;
+        private readonly IEnergySupplierRepository _energySupplierRepository;
 
         public AddEnergySupplierHandler(
-            IMarketMeteringPointRepository meteringPointRepository,
-            ISystemDateTimeProvider systemDateTimeProvider)
+            IEnergySupplierRepository energySupplierRepository)
         {
-            _marketMeteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
-            _systemDateTimeProvider = systemDateTimeProvider;
+            _energySupplierRepository = energySupplierRepository ?? throw new ArgumentNullException(nameof(energySupplierRepository));
         }
 
         public Task<Unit> Handle(AddEnergySupplier request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            // TODO: Add energy supplier
+            _energySupplierRepository.Add(EnergySupplier.Create(
+                new MeteringPointId(Guid.Parse(request.MeteringPointId)),
+                request.StartOfSupply,
+                GlnNumber.Create(request.EnergySupplierGlnNumber)));
+
             return Task.FromResult(Unit.Value);
         }
     }

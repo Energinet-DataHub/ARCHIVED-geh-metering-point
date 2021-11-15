@@ -36,7 +36,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
             var setInfoCommand = new SetEnergySupplierInfo(notification.GsrnNumber, notification.StartOfSupply);
             await _commandScheduler.EnqueueAsync(setInfoCommand).ConfigureAwait(false);
 
-            var addSupplierCommand = new AddEnergySupplier(notification.GsrnNumber, notification.StartOfSupply, notification.GlnNumber);
+            var addSupplierCommand = new AddEnergySupplier(
+                notification.MeteringPointId,
+                notification.StartOfSupply,
+                notification.GlnNumber);
             await _commandScheduler.EnqueueAsync(addSupplierCommand).ConfigureAwait(false);
         }
     }

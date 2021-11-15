@@ -30,7 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands.Proto
                 AddEnergySupplier = new AddEnergySupplier
                 {
                     Id = obj.Id.ToString(),
-                    MeteringPointGsrn = obj.MeteringPointGsrn,
+                    MeteringPointId = obj.MeteringPointId,
                     EffectiveDate = obj.StartOfSupply.ToTimestamp(),
                 },
             };
