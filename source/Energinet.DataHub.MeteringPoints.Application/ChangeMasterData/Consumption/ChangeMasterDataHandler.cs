@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
@@ -21,6 +22,7 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.Policies;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
@@ -28,10 +30,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
     public class ChangeMasterDataHandler : IBusinessRequestHandler<ChangeMasterDataRequest>
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
+        private readonly ISystemDateTimeProvider _systemDateTimeProvider;
+        private readonly ChangeMasterDataSettings _settings;
 
-        public ChangeMasterDataHandler(IMeteringPointRepository meteringPointRepository)
+        public ChangeMasterDataHandler(IMeteringPointRepository meteringPointRepository, ISystemDateTimeProvider systemDateTimeProvider, ChangeMasterDataSettings settings)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
+            _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
+            _settings = settings;
         }
 
         public async Task<BusinessProcessResult> Handle(ChangeMasterDataRequest request, CancellationToken cancellationToken)
@@ -59,7 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
         private static MasterDataDetails CreateChangeDetails(ChangeMasterDataRequest request, ConsumptionMeteringPoint targetMeteringPoint)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            return new MasterDataDetails()
+            return new MasterDataDetails(EffectiveDate.Create(request.EffectiveDate))
                 with
                 {
                     Address = CreateNewAddressFrom(request, targetMeteringPoint),
@@ -95,9 +101,18 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 request.Address.GeoInfoReference));
         }
 
-        private static Task<BusinessRulesValidationResult> ValidateAsync(ChangeMasterDataRequest request, ConsumptionMeteringPoint targetMeteringPoint)
+        private Task<BusinessRulesValidationResult> ValidateAsync(ChangeMasterDataRequest request, ConsumptionMeteringPoint targetMeteringPoint)
         {
-            return Task.FromResult(new BusinessRulesValidationResult(targetMeteringPoint.CanChange(CreateChangeDetails(request, targetMeteringPoint)).Errors));
+            var details = CreateChangeDetails(request, targetMeteringPoint);
+            var validationResults = new List<BusinessRulesValidationResult>()
+            {
+                targetMeteringPoint.CanChange(details),
+                new EffectiveDatePolicy(_settings.NumberOfDaysEffectiveDateIsAllowedToBeforeToday).Check(_systemDateTimeProvider.Now(), details.EffectiveDate),
+            };
+
+            var validationErrors = validationResults.SelectMany(results => results.Errors);
+
+            return Task.FromResult(new BusinessRulesValidationResult(validationErrors));
         }
 
         private async Task<ConsumptionMeteringPoint?> FetchTargetMeteringPointAsync(ChangeMasterDataRequest request)

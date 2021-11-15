@@ -18,6 +18,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
@@ -170,6 +171,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IMessageHubDispatcher, MessageHubDispatcher>(Lifestyle.Scoped);
             _container.Register<IBusinessDocumentFactory, BusinessDocumentFactory>(Lifestyle.Scoped);
 
+            _container.Register<ChangeMasterDataSettings>(() => new ChangeMasterDataSettings(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1));
+
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
                 typeof(MasterDataDocument).Assembly, // Application
@@ -311,13 +314,23 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             Assert.NotNull(validationError);
         }
 
-        protected void AssertValidationError(string expectedErrorCode)
+        protected void AssertValidationError(string expectedErrorCode, bool expectError = true)
         {
             var message = GetOutboxMessages
                     <MessageHubEnvelope>()
-                .Single(msg => msg.MessageType.Name.EndsWith("rejected", StringComparison.OrdinalIgnoreCase));
+                .SingleOrDefault(msg => msg.MessageType.Name.EndsWith("rejected", StringComparison.OrdinalIgnoreCase));
 
-            var rejectMessage = GetService<IJsonSerializer>().Deserialize<RejectMessage>(message.Content);
+            if (message == null && expectError == false)
+            {
+                return;
+            }
+
+            if (message == null)
+            {
+                throw new XunitException("No message was found in outbox.");
+            }
+
+            var rejectMessage = GetService<IJsonSerializer>().Deserialize<RejectMessage>(message!.Content);
 
             var errorCount = rejectMessage.MarketActivityRecord.Reasons.Count;
             if (errorCount > 1)
@@ -335,7 +348,14 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             var validationError = rejectMessage.MarketActivityRecord.Reasons
                 .Single(error => error.Code == expectedErrorCode);
 
-            Assert.NotNull(validationError);
+            if (expectError)
+            {
+                Assert.NotNull(validationError);
+            }
+            else
+            {
+                Assert.Null(validationError);
+            }
         }
 
         protected TIntegrationEvent? FindIntegrationEvent<TIntegrationEvent>()
