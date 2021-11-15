@@ -23,6 +23,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Production.Validat
     {
         public RuleSet()
         {
+            RuleFor(request => request.DisconnectionType).SetValidator(new DisconnectionTypeRule())
+                .Unless(request => string.IsNullOrWhiteSpace(request.DisconnectionType));
             RuleFor(request => request.ConnectionType)
                 .SetValidator(new ConnectionTypeRule())
                 .Unless(request => string.IsNullOrWhiteSpace(request.ConnectionType));

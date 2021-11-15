@@ -211,21 +211,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
         }
 
         [Fact]
-        public async Task Should_reject_when_disconnection_type_is_invalid()
-        {
-            var request = CreateDocument()
-                with
-                {
-                    TypeOfMeteringPoint = nameof(MeteringPointType.Production),
-                    DisconnectionType = "invalid_dc_type",
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("D02");
-        }
-
-        [Fact]
         public async Task Should_reject_when_metering_method_is_invalid()
         {
             var request = CreateDocument()

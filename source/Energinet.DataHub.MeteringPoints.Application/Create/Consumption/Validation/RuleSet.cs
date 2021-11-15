@@ -26,6 +26,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Valida
         {
             RuleFor(request => request.ConnectionType).SetValidator(new ConnectionTypeRule())
                 .Unless(request => string.IsNullOrWhiteSpace(request.ConnectionType));
+            RuleFor(request => request.DisconnectionType).SetValidator(new DisconnectionTypeRule())
+                .Unless(request => string.IsNullOrWhiteSpace(request.DisconnectionType));
             When(request => !string.IsNullOrEmpty(request.ScheduledMeterReadingDate), () =>
             {
                 RuleFor(request => request.ScheduledMeterReadingDate)

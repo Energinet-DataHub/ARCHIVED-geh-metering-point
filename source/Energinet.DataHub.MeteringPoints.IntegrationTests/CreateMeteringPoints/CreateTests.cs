@@ -173,6 +173,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("D02");
         }
 
+        [Fact]
+        public async Task Should_reject_when_disconnection_type_is_invalid()
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    TypeOfMeteringPoint = nameof(MeteringPointType.Production),
+                    DisconnectionType = "invalid_dc_type",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
+        }
+
         private static CreateConsumptionMeteringPoint CreateCommand()
         {
             return Scenarios.CreateConsumptionMeteringPointCommand();
