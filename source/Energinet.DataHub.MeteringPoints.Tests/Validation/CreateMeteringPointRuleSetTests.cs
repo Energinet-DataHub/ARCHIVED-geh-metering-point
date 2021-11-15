@@ -78,6 +78,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         {
             var businessRequest = CreateRequest() with
             {
+                ProcessType = BusinessProcessType.CreateMeteringPoint.Name,
                 MeterReadingOccurrence = meterReadingOccurence,
                 TypeOfMeteringPoint = meteringPointType,
             };
