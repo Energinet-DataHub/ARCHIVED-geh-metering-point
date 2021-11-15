@@ -105,22 +105,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
             AssertValidationError("D02");
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("invalid_value")]
-        public async Task Should_reject_when_measurement_unit_is_missing_or_is_invalid(string measurementUnitType)
-        {
-            var request = CreateDocument()
-                with
-                {
-                    MeasureUnitType = measurementUnitType,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("D02");
-        }
-
         [Fact]
         public async Task Should_reject_when_reading_occurence_is_not_a_valid_value()
         {
