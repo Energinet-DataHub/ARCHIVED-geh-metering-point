@@ -18,13 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class ProductTypeInvalidValueValidationError : ValidationError
     {
-        public ProductTypeInvalidValueValidationError(string gsrnNumber, string productType)
+        public ProductTypeInvalidValueValidationError(string productType)
         {
-            GsrnNumber = gsrnNumber;
             ProductType = productType;
         }
-
-        public string GsrnNumber { get; }
 
         public string ProductType { get; }
     }

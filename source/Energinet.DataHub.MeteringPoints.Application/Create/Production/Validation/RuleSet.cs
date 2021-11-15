@@ -42,6 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Production.Validat
                 .NotEmpty()
                 .WithState(createMeteringPoint => new NetSettlementGroupMandatoryValidationError())
                 .SetValidator(new NetSettlementGroupRule()!);
+
             RuleFor(request => request.MeterReadingOccurrence)
                 .NotEmpty()
                 .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError());
