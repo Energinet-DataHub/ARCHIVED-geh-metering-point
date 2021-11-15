@@ -23,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new ErrorMessage("D02", $"Net settlement group {validationError.NetSettlementGroup} for metering point {validationError.GsrnNumber} has wrong value (outside domain)");
+            return new ErrorMessage("D02", $"Net settlement group has wrong value (outside domain)");
         }
     }
 }

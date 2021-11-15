@@ -47,20 +47,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
         }
 
         [Fact]
-        public async Task Should_reject_when_net_settlement_group_is_invalid()
-        {
-            var request = CreateDocument()
-                with
-                {
-                    NetSettlementGroup = "Invalid_netsettlement_group_value",
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("D02");
-        }
-
-        [Fact]
         public async Task Should_reject_when_maximum_power_is_invalid()
         {
             var invalidPowerLimit = 12345567;
