@@ -188,6 +188,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("D02");
         }
 
+        [Fact]
+        public async Task Should_reject_when_settlement_method_is_invalid()
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    SettlementMethod = "Invalid_Method_Name",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D15");
+        }
+
         private static CreateConsumptionMeteringPoint CreateCommand()
         {
             return Scenarios.CreateConsumptionMeteringPointCommand();
