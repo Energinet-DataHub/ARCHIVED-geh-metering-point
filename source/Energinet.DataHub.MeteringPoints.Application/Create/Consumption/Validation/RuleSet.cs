@@ -43,8 +43,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Valida
                 .NotEmpty()
                 .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError());
             RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError());
+                .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError())
+                .SetValidator(new SettlementMethodMustBeValidRule()!);
             RuleFor(createMeteringPoint => createMeteringPoint.MeteringMethod)
                 .NotEmpty()
                 .WithState(createMeteringPoint => new MeteringMethodIsMandatoryValidationError());
