@@ -19,9 +19,9 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class GsrnNumberMustBeValidRule : AbstractValidator<string>
+    public class GsrnNumberValidator : AbstractValidator<string>
     {
-        public GsrnNumberMustBeValidRule()
+        public GsrnNumberValidator()
         {
             RuleFor(gsrnNumber => gsrnNumber)
                 .Cascade(CascadeMode.Stop)
