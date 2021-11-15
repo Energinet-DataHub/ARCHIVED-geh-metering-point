@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MessageHub.Client.Model;
+using Energinet.DataHub.MessageHub.Model.Model;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub
