@@ -82,11 +82,16 @@ data "azurerm_key_vault_secret" "sbq_metering_points_name" {
 }
 
 data "azurerm_key_vault_secret" "sbq_metering_points_reply_name" {
-  name         = "kvs-sbq-metering-points-reply-name"
+  name         = "sbq-metering-points-reply-name"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
 data "azurerm_key_vault_secret" "sbq_metering_points_dequeue_name" {
-  name         = "kvs-sbq-metering-points-dequeue-name"
+  name         = "sbq-metering-points-dequeue-name"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "sbq_create_link_reply_name" {
+  name         = "sbq-create-link-reply-name"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
