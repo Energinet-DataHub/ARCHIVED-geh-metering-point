@@ -135,7 +135,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
                 address.Room ?? Room,
                 address.MunicipalityCode ?? MunicipalityCode,
                 address.IsActual ?? IsActual,
-                address.GeoInfoReference ?? GeoInfoReference);
+                address.GeoInfoReference ?? GeoInfoReference,
+                address.LocationDescription ?? LocationDescription);
         }
     }
 }
