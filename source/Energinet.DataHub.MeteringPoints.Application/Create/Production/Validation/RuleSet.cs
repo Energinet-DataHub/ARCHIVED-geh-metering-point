@@ -58,8 +58,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Production.Validat
                 .NotEmpty()
                 .WithState(createMeteringPoint => new DisconnectionTypeMandatoryValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.DisconnectionType));
             RuleFor(createMeteringPoint => createMeteringPoint.PowerPlant)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .WithState(createMeteringPoint => new PowerPlantValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.PowerPlant));
+                .WithState(createMeteringPoint =>
+                    new PowerPlantValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.PowerPlant))
+                .SetValidator(new PowerPlantMustBeValidRule()!);
         }
     }
 }
