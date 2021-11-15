@@ -22,6 +22,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange.Validatio
     {
         public RuleSet()
         {
+            RuleFor(request => request.MeterNumber)
+                .SetValidator(new MeterNumberMustBeValidRule()!)
+                .Unless(request => string.IsNullOrEmpty(request.MeterNumber));
             RuleFor(request => request.MeteringMethod)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
