@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -21,17 +20,14 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class AssetTypeRule : AbstractValidator<MasterDataDocument>
+    public class AssetTypeRule : AbstractValidator<string>
     {
         public AssetTypeRule()
         {
-            When(request => string.IsNullOrWhiteSpace(request.AssetType) == false, () =>
-            {
-                RuleFor(request => request.AssetType)
-                    .Must(value => EnumerationType.GetAll<AssetType>().Select(item => item.Name).Contains(value))
-                    .WithState(request =>
-                        new InvalidAssetTypeValueValidationError(request.AssetType!));
-            });
+            RuleFor(value => value)
+                .Must(value => EnumerationType.GetAll<AssetType>().Select(item => item.Name).Contains(value))
+                .WithState(value =>
+                    new InvalidAssetTypeValueValidationError(value!));
         }
     }
 }

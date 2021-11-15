@@ -150,20 +150,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
             AssertValidationError("D02");
         }
 
-        [Fact]
-        public async Task Should_reject_if_asset_type_value_is_invalid()
-        {
-            var request = CreateDocument()
-                with
-                {
-                    AssetType = "invalid_value",
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("D59");
-        }
-
         private static MasterDataDocument CreateDocument()
         {
             return new(
