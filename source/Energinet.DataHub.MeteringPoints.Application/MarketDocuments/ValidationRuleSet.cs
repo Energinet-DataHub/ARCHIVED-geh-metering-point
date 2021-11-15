@@ -21,7 +21,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
     {
         public ValidationRuleSet()
         {
-            RuleFor(request => request).SetValidator(new ConnectionTypeRule());
+            RuleFor(request => request.ConnectionType).SetValidator(new ConnectionTypeRule())
+                .Unless(message => string.IsNullOrWhiteSpace(message.ConnectionType));
             RuleFor(request => request).SetValidator(new DisconnectionTypeRule());
             RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberValidator());
             RuleFor(request => request).SetValidator(new SettlementMethodMustBeValidRule());
