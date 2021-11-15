@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
@@ -23,6 +24,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Valida
     {
         public RuleSet()
         {
+            RuleFor(request => request.ConnectionType).SetValidator(new ConnectionTypeRule())
+                .Unless(request => string.IsNullOrWhiteSpace(request.ConnectionType));
             When(request => !string.IsNullOrEmpty(request.ScheduledMeterReadingDate), () =>
             {
                 RuleFor(request => request.ScheduledMeterReadingDate)

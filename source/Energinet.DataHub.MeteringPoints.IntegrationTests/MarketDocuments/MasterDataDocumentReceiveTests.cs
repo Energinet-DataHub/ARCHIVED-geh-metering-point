@@ -153,21 +153,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
         }
 
         [Fact]
-        public async Task Should_reject_if_connection_type_is_unknown()
-        {
-            var invalidConnectionType = "invalid_value";
-            var request = CreateDocument()
-                with
-                {
-                    ConnectionType = invalidConnectionType,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("D02");
-        }
-
-        [Fact]
         public async Task Should_reject_when_measurement_unit_is_missing()
         {
             var request = CreateDocument()

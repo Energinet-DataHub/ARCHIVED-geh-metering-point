@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Create.Production.Validation
@@ -21,6 +23,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Production.Validat
     {
         public RuleSet()
         {
+            RuleFor(request => request.ConnectionType)
+                .SetValidator(new ConnectionTypeRule())
+                .Unless(request => string.IsNullOrWhiteSpace(request.ConnectionType));
             RuleFor(request => request.NetSettlementGroup)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
