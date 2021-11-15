@@ -71,7 +71,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                     Id = meteringPointId,
                     Address = address,
                     GridAreaLinkId = gridAreaLinkId,
-                    LocationDescription = locationDescription,
                     PowerLimit = powerLimit,
                     DisconnectionType = disconnectionType,
                     ConnectionType = null,

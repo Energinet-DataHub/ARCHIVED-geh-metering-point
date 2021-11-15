@@ -59,7 +59,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
                     Id = meteringPointId,
                     Address = address,
                     GridAreaLinkId = areadLinkId,
-                    LocationDescription = locationDescription,
                     PowerLimit = powerLimit,
                     MeterNumber = null,
                     MeteringMethod = meteringMethod,

@@ -70,7 +70,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Productio
                     Id = meteringPointId,
                     Address = address,
                     GridAreaLinkId = gridAreadLinkId,
-                    LocationDescription = locationDescription,
                     PowerLimit = powerLimit,
                     DisconnectionType = disconnectionType,
                     ConnectionType = null,

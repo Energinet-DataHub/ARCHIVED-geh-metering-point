@@ -114,7 +114,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Production
                 EnumerationType.FromName<MeteringMethod>(request.MeteringMethod),
                 gridAreaLinkId,
                 !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null !,
-                LocationDescription.Create(request.LocationDescription!),
                 string.IsNullOrWhiteSpace(request.MeterNumber) ? null : MeterId.Create(request.MeterNumber),
                 EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
                 PowerLimit.Create(request.MaximumPower, request.MaximumCurrent),
