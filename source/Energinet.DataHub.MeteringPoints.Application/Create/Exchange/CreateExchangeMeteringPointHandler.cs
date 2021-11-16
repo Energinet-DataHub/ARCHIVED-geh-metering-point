@@ -106,7 +106,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange
                 CreateAddress(request),
                 EnumerationType.FromName<MeteringMethod>(request.MeteringMethod),
                 gridAreaLinkId,
-                LocationDescription.Create(request.LocationDescription!),
                 string.IsNullOrWhiteSpace(request.MeterNumber) ? null : MeterId.Create(request.MeterNumber),
                 EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
                 PowerLimit.Create(request.MaximumPower, request.MaximumCurrent),
@@ -129,7 +128,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange
                 room: request.RoomIdentification,
                 municipalityCode: string.IsNullOrWhiteSpace(request.MunicipalityCode) ? default : int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()),
                 isActual: request.IsActualAddress.GetValueOrDefault(),
-                geoInfoReference: string.IsNullOrWhiteSpace(request.GeoInfoReference) ? default : Guid.Parse(request.GeoInfoReference));
+                geoInfoReference: string.IsNullOrWhiteSpace(request.GeoInfoReference) ? default : Guid.Parse(request.GeoInfoReference),
+                locationDescription: request.LocationDescription);
         }
 
         private static BusinessRulesValidationResult ValidateAddress(CreateExchangeMeteringPoint request)
@@ -145,7 +145,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange
                 countryCode: EnumerationType.FromName<CountryCode>(request.CountryCode),
                 floor: request.FloorIdentification,
                 room: request.RoomIdentification,
-                municipalityCode: municipalityCode);
+                municipalityCode: municipalityCode,
+                locationDescription: request.LocationDescription);
         }
 
         private async Task<(GridArea? GridArea, GridArea? ToGridArea, GridArea? FromGridArea)> GetGridAreasAsync(CreateExchangeMeteringPoint request)

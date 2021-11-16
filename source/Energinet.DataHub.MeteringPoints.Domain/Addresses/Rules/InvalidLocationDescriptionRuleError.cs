@@ -14,20 +14,15 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules
 {
-    public class LocationDescriptionLengthRule : IBusinessRule
+    public class InvalidLocationDescriptionRuleError : ValidationError
     {
-        private const int MaxLength = 60;
-
-        public LocationDescriptionLengthRule(string? locationDescription)
+        public InvalidLocationDescriptionRuleError(string locationDescription)
         {
-            IsBroken = locationDescription?.Length > MaxLength;
-            ValidationError = new InvalidLocationDescriptionRuleError(locationDescription ?? string.Empty);
+            LocationDescription = locationDescription;
         }
 
-        public bool IsBroken { get; }
-
-        public ValidationError ValidationError { get; }
+        public string LocationDescription { get; }
     }
 }

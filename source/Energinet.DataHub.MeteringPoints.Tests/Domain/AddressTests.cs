@@ -261,6 +261,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             var municipalityCode = 100;
             var isActual = true;
             var geoInfoReference = Guid.Parse("5B736036-7612-4350-A73D-058560350E32");
+            var locationDescription = "Test location";
 
             var address = Create(
                 streetName: streetName,
@@ -274,7 +275,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 room: room,
                 municipalityCode: municipalityCode,
                 isActual: isActual,
-                geoInfoReference: geoInfoReference);
+                geoInfoReference: geoInfoReference,
+                locationDescription: locationDescription);
 
             Assert.Equal(streetName, address.StreetName);
             Assert.Equal(streetCode, address.StreetCode);
@@ -287,6 +289,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             Assert.Equal(room, address.Room);
             Assert.Equal(municipalityCode, address.MunicipalityCode);
             Assert.Equal(geoInfoReference, address.GeoInfoReference);
+            Assert.Equal(locationDescription, address.LocationDescription);
         }
 
         [Fact]
@@ -327,6 +330,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             Assert.Equal(originalAddress.City, mergedAddress.City);
         }
 
+        [Fact]
+        public void Location_description_is_restricted_to_60_characters()
+        {
+            var invalidDescription = "1234567890123456789012345678901234567890123456789012345678901234567890";
+            var result = CheckRules(locationDescription: invalidDescription);
+
+            AssertError<InvalidLocationDescriptionRuleError>(result, true);
+        }
+
         private static Address Create(
             string streetName = "",
             string streetCode = "",
@@ -339,7 +351,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             string room = "",
             int municipalityCode = default(int),
             bool isActual = false,
-            Guid? geoInfoReference = null)
+            Guid? geoInfoReference = null,
+            string? locationDescription = null)
         {
             return Address.Create(
                streetName: streetName,
@@ -353,10 +366,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                room: room,
                municipalityCode: municipalityCode,
                isActual: isActual,
-               geoInfoReference: geoInfoReference);
+               geoInfoReference: geoInfoReference,
+               locationDescription: locationDescription);
         }
 
-        private static BusinessRulesValidationResult CheckRules(string? streetName = "", string? streetCode = "", string? buildingNumber = "", string? city = "", string? citySubDivision = "", string? postCode = "", CountryCode? countryCode = null, string? floor = "", string room = "", int municipalityCode = default(int))
+        private static BusinessRulesValidationResult CheckRules(string? streetName = "", string? streetCode = "", string? buildingNumber = "", string? city = "", string? citySubDivision = "", string? postCode = "", CountryCode? countryCode = null, string? floor = "", string room = "", int municipalityCode = default(int), string locationDescription = "")
         {
             return Address.CheckRules(
                 streetName: streetName,
@@ -368,7 +382,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 countryCode: countryCode,
                 floor: floor,
                 room: room,
-                municipalityCode: municipalityCode);
+                municipalityCode: municipalityCode,
+                locationDescription: locationDescription);
         }
 
         private static void AssertError<TRuleError>(BusinessRulesValidationResult rulesValidationResult, bool errorExpected)
