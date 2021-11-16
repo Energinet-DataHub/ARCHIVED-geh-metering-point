@@ -13,9 +13,11 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Authorization;
+using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using MediatR;
 
@@ -23,30 +25,31 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcess
 {
     public class AuthorizationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IBusinessRequest
-        where TResponse : new()
+        where TResponse : BusinessProcessResult
     {
-        private readonly IAuthorizationHandler<TRequest, TResponse> _authorizationHandler;
+        private readonly IAuthorizer<TRequest> _authorizer;
+        private readonly IBusinessProcessResultHandler<TRequest> _resultHandler;
 
-        public AuthorizationBehavior(IAuthorizationHandler<TRequest, TResponse> authorizationHandler)
+        public AuthorizationBehavior(IAuthorizer<TRequest> authorizer, IBusinessProcessResultHandler<TRequest> resultHandler)
         {
-            _authorizationHandler = authorizationHandler;
+            _authorizer = authorizer ?? throw new ArgumentNullException(nameof(authorizer));
+            _resultHandler = resultHandler ?? throw new ArgumentNullException(nameof(resultHandler));
         }
 
-        public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
             if (next == null) throw new ArgumentNullException(nameof(next));
 
-            var validationResult = _authorizationHandler.Authorize(request);
+            var validationResult = await _authorizer.AuthorizeAsync(request).ConfigureAwait(false);
 
             if (validationResult.Success)
             {
-                return next();
+                return await next().ConfigureAwait(false);
             }
 
-            // TODO: Must be finalized when BusinessProcessResponder is implemented
-            // var result = BusinessProcessResult.Failed(new List<string>() {"Validation errors."}) as TResponse;
-            // _businessProcessResponder.RespondAsync(request, result);
-            return Task.FromResult(new TResponse());
+            var result = BusinessProcessResult.Fail(request.TransactionId, validationResult.Errors.ToList());
+            await _resultHandler.HandleAsync(request, result).ConfigureAwait(false);
+            return (TResponse)result;
         }
     }
 }
