@@ -37,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.EnergySuppl
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var sql = @"SELECT [Id]
-                              ,[StartOfSupplyDate]
+                              ,[StartOfSupplyDate] as StartOfSupplyDate
                               ,[GlnNumber]
                           FROM [dbo].[EnergySuppliers]
                          WHERE [MarketMeteringPointId] = @MeteringPointId";

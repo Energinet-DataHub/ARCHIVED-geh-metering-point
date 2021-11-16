@@ -160,6 +160,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
             _container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
+            Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
 
             _container.Register<IBusinessProcessValidationContext, BusinessProcessValidationContext>(Lifestyle.Scoped);
             _container.Register<IBusinessProcessCommandFactory, BusinessProcessCommandFactory>(Lifestyle.Singleton);

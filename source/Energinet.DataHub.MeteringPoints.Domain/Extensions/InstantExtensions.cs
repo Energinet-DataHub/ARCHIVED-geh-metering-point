@@ -19,9 +19,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Extensions
 {
     public static class InstantExtensions
     {
-        public static DateTime ToDate(this Instant value)
+        public static DateTime AsDateString(this Instant value)
         {
-            return value.ToDateTimeUtc().Date;
+            return value.ToDateTimeOffset().Date.ToUniversalTime();
+            // return value.ToDate().ToUniversalTime();
+            // return value.ToDateTimeUtc().Date;
         }
     }
 }

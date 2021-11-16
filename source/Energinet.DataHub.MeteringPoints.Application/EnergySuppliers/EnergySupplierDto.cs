@@ -21,17 +21,17 @@ namespace Energinet.DataHub.MeteringPoints.Application.EnergySuppliers
         public EnergySupplierDto()
         {
             GlnNumber = string.Empty;
-            StartOfSupply = Instant.MinValue;
+            StartOfSupplyDate = Instant.MinValue;
         }
 
-        public EnergySupplierDto(string glnNumber, Instant startOfSupply)
+        public EnergySupplierDto(string glnNumber, Instant startOfSupplyDate)
         {
             GlnNumber = glnNumber;
-            StartOfSupply = startOfSupply;
+            StartOfSupplyDate = startOfSupplyDate;
         }
 
         public string GlnNumber { get; }
 
-        public Instant StartOfSupply { get; }
+        public Instant StartOfSupplyDate { get; }
     }
 }

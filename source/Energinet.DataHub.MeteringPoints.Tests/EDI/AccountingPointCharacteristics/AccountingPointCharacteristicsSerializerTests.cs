@@ -16,6 +16,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
@@ -23,7 +24,6 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharact
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common.Address;
 using FluentAssertions;
-using NodaTime;
 using NodaTime.Extensions;
 using Xunit;
 using Xunit.Categories;
@@ -109,12 +109,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.AccountingPointCharacterist
 
             var serialized = AccountingPointCharacteristicsXmlSerializer.Serialize(message);
 
-            // For easier debugging/diff
-            // File.WriteAllText(@"C:\code\geh-metering-point\source\Energinet.DataHub.MeteringPoints.Tests\EDI\AccountingPointCharacteristics\AccountingPointCharacteristicsSerializerTestOutput.xml", serialized, new UTF8Encoding(true));
+#if DEBUG
+            DebugOutput(serialized);
+#endif
+
             serialized.Should().Be(expected);
         }
 
-        [Fact]
+        [Fact(Skip = "Inteded for manually runs only.")]
         public void Generated_message_from_factory_should_match_example_document()
         {
             var expected = GetExpectedDocument("AccountingPointCharacteristics.xml");
@@ -160,7 +162,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.AccountingPointCharacterist
                 "D01",
                 false);
             var createdDate = DateTimeOffset.Parse("2021-12-17T09:30:47Z", CultureInfo.InvariantCulture).ToInstant();
-            var energySupplier = new EnergySupplierDto("5799999933318", Instant.MinValue);
+            var supplyStartDate = DateTimeOffset.Parse("2019-02-12T00:00:00Z", CultureInfo.InvariantCulture).ToInstant();
+            var energySupplier = new EnergySupplierDto("5799999933318", supplyStartDate);
 
             var message = BusinessDocumentFactory.MapAccountingPointCharacteristicsMessage(
                 id: id,
@@ -172,9 +175,19 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.AccountingPointCharacterist
 
             var serialized = AccountingPointCharacteristicsXmlSerializer.Serialize(message);
 
-            // For easier debugging/diff
-            // File.WriteAllText(@"C:\code\geh-metering-point\source\Energinet.DataHub.MeteringPoints.Tests\EDI\AccountingPointCharacteristics\AccountingPointCharacteristicsSerializerTestOutput.xml", serialized, new UTF8Encoding(true));
+#if DEBUG
+            DebugOutput(serialized);
+#endif
+
             serialized.Should().Be(expected);
+        }
+
+        private static void DebugOutput(string serialized)
+        {
+            File.WriteAllText(
+                @"C:\code\geh-metering-point\source\Energinet.DataHub.MeteringPoints.Tests\EDI\AccountingPointCharacteristics\AccountingPointCharacteristicsSerializerTestOutput.xml",
+                serialized,
+                new UTF8Encoding(true));
         }
 
         private static string GetExpectedDocument(string documentName)
@@ -182,7 +195,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.AccountingPointCharacterist
             var assembly = Assembly.GetExecutingAssembly();
             using Stream stream = assembly.GetManifestResourceStream($"Energinet.DataHub.MeteringPoints.Tests.EDI.AccountingPointCharacteristics.{documentName}")!;
             using StreamReader reader = new(stream);
-            return reader.ReadToEnd();
+            var documentWithLicense = reader.ReadToEnd();
+
+            var documentWithoutLicense = documentWithLicense.Remove(0, documentWithLicense.IndexOf("<cim", StringComparison.Ordinal));
+            var expectedDocument = documentWithoutLicense.Insert(0, "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
+            var finalExpectedDocument = expectedDocument.Replace("\n", "\r\n", StringComparison.Ordinal);
+
+            return finalExpectedDocument;
         }
     }
 }

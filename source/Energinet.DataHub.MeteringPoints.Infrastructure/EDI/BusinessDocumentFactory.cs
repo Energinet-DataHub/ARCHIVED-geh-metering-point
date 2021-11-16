@@ -3,6 +3,7 @@ using System.Globalization;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
+using Energinet.DataHub.MeteringPoints.Domain.Extensions;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
@@ -50,33 +51,33 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
 
             var accountingPointCharacteristicsMessage = new AccountingPointCharacteristicsMessage(
                 Id: id,
-                Type: "E07", // TODO: Hardcoded, correct?
+                Type: "E07",
                 ProcessType: businessReasonCode,
-                BusinessSectorType: "23", // Hardcoded: Electricity supply industry
+                BusinessSectorType: "23",
                 Sender: new MarketRoleParticipant(
-                    Id: "5790001330552", // TODO: Fix hardcoded Energinet GLN
-                    CodingScheme: "A10", // TODO: Hardcoded, correct?
-                    Role: "DDZ"), // TODO: Hardcoded, correct?
+                    Id: "5790001330552", // TODO: Fix hardcoded Energinet GLN, Actor register?
+                    CodingScheme: "A10", // TODO: A10 = GLN, A01 = EIC, Actor register
+                    Role: "DDZ"), // TODO: Actor register? DDZ is correct for now for this document.
                 Receiver: new MarketRoleParticipant(
                     Id: energySupplier.GlnNumber,
-                    CodingScheme: "A10", // TODO: Hardcoded, correct?
-                    Role: "DDQ"), // TODO: Hardcoded, correct?
+                    CodingScheme: "A10", // TODO: A10 = GLN, A01 = EIC, Actor register
+                    Role: "DDQ"), // TODO: Actor register, this will differ for other RSM22 scenarios
                 CreatedDateTime: createdDate,
                 MarketActivityRecord: new MarketActivityRecord(
-                    Id: Guid.NewGuid().ToString(), // TODO: Generated, correct?
+                    Id: Guid.NewGuid().ToString(),
                     ValidityStartDateAndOrTime: meteringPoint.EffectiveDate!.Value.ToUtcString(),
                     OriginalTransaction: requestTransactionId,
                     MarketEvaluationPoint: new MarketEvaluationPoint(
-                        Id: new Mrid(meteringPoint.GsrnNumber, "A10"), // TODO: Hardcoded, correct?
+                        Id: new Mrid(meteringPoint.GsrnNumber, "A10"),
                         MeteringPointResponsibleMarketRoleParticipant: new MarketParticipant(
-                            "GLN number of grid operator", "A10"), // TODO: Update when grid operators are a thing. And codingScheme, correct?
+                            "GLN number of grid operator", "A10"), // TODO: Update when grid operators are a thing. And codingScheme from Actor Register
                         Type: meteringPoint.MeteringPointType,
                         SettlementMethod: meteringPoint.SettlementMethod,
                         MeteringMethod: meteringPoint.MeteringPointSubType,
                         ConnectionState: meteringPoint.ConnectionState,
                         ReadCycle: meteringPoint.ReadingOccurrence,
                         NetSettlementGroup: meteringPoint.NetSettlementGroup,
-                        NextReadingDate: "N/A", // TODO: What is this?
+                        NextReadingDate: "N/A", // TODO: Only for netsettlement group 6, format: "MMdd"
                         MeteringGridAreaDomainId: new Mrid(meteringPoint.GridAreaCode, "NDK"),
                         InMeteringGridAreaDomainId: meteringPoint.FromGridAreaCode != null ? new Mrid(meteringPoint.FromGridAreaCode!, "NDK") : null!,
                         OutMeteringGridAreaDomainId: meteringPoint.ToGridAreaCode != null ? new Mrid(meteringPoint.ToGridAreaCode!, "NDK") : null!,
@@ -85,11 +86,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                             meteringPoint.Capacity.HasValue
                                 ? meteringPoint.Capacity.Value.ToString(CultureInfo.InvariantCulture)
                                 : string.Empty,
-                            "KWT"), // TODO: Hardcoded, correct?
+                            "KWT"),
                         ConnectionType: meteringPoint.ConnectionType,
                         DisconnectionMethod: meteringPoint.DisconnectionType,
                         AssetMarketPSRTypePsrType: meteringPoint.AssetType,
-                        ProductionObligation: false,
+                        ProductionObligation: meteringPoint.ProductionObligation ?? false,
                         Series: new Series(
                             Product: meteringPoint.Product,
                             QuantityMeasureUnit: meteringPoint.UnitType),
@@ -104,8 +105,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                                 : string.Empty,
                             "AMP"),
                         MeterId: meteringPoint.MeterNumber,
-                        EnergySupplierMarketParticipantId: new MarketParticipant(energySupplier.GlnNumber, "A10"), // TODO: Hardcoded, correct?
-                        SupplyStartDateAndOrTimeDateTime: DateTime.MinValue, // TODO: EnergySupplier_StartOfSupply?
+                        EnergySupplierMarketParticipantId: new MarketParticipant(energySupplier.GlnNumber, "A10"), // TODO: Actor register
+                        SupplyStartDateAndOrTimeDateTime: energySupplier.StartOfSupplyDate.AsDateString(),
                         Description: meteringPoint.LocationDescription,
                         UsagePointLocationMainAddress: new MainAddress(
                             StreetDetail: new StreetDetail(
@@ -123,10 +124,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                         UsagePointLocationActualAddressIndicator: meteringPoint.IsActualAddress ?? false,
                         UsagePointLocationGeoInfoReference: meteringPoint.GeoInfoReference.HasValue ? meteringPoint.GeoInfoReference.ToString()! : string.Empty,
                         ParentMarketEvaluationPoint: new ParentMarketEvaluationPoint(
-                            Id: "579999993331812345"), // TODO: Hardcoded
+                            Id: "579999993331812345"), // TODO: Hardcoded, not implemented yet
+                        // Only for BRS 5, request stam data, possible multiple
                         ChildMarketEvaluationPoint: new ChildMarketEvaluationPoint(
-                            Id: "579999993331812325", // TODO: Hardcoded
-                            Description: "D06")))); // TODO: Hardcoded
+                            Id: "579999993331812325", // TODO: Hardcoded, not implemented yet
+                            Description: "D06")))); // TODO: Hardcoded, not implemented yet
 
             return accountingPointCharacteristicsMessage;
         }
