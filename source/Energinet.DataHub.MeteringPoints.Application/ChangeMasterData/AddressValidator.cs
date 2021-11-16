@@ -36,7 +36,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
                         string.IsNullOrWhiteSpace(address?.CountryCode) ? null : EnumerationType.FromName<CountryCode>(address.CountryCode),
                         address?.Floor,
                         address?.Room,
-                        address?.MunicipalityCode));
+                        address?.MunicipalityCode,
+                        address?.LocationDescription));
             });
         }
     }

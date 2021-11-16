@@ -16,9 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Energinet.DataHub.MessageHub.Client.Dequeue;
-using Energinet.DataHub.MessageHub.Client.Model;
-using Energinet.DataHub.MessageHub.Client.Peek;
+using Energinet.DataHub.MessageHub.Model.Dequeue;
+using Energinet.DataHub.MessageHub.Model.Model;
+using Energinet.DataHub.MessageHub.Model.Peek;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
@@ -118,7 +118,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
 
         private async Task RequestBundle(MessageHubMessage messageHubMessage)
         {
-            var requestBundleDto = new DataBundleRequestDto("idempotencyId", new[] { messageHubMessage!.Id });
+            var requestBundleDto =
+                new DataBundleRequestDto(
+                    messageHubMessage.Id,
+                    "idempotencyId",
+                    DocumentType.CreateMeteringPointAccepted.Name,
+                    new Guid[] { messageHubMessage!.Id });
 
             var bytes = _requestBundleParser.Parse(requestBundleDto);
 

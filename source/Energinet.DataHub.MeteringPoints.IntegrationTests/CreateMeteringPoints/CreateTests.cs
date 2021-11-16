@@ -158,6 +158,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("D02", DocumentType.CreateMeteringPointRejected);
         }
 
+        [Fact]
+        public async Task Should_reject_when_location_description_is_invalid()
+        {
+            var invalidLocationDescription = "1234567890123456789012345678901234567890123456789012345678901234567890";
+            var request = CreateCommand()
+                with
+                {
+                    LocationDescription = invalidLocationDescription,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
         private static CreateConsumptionMeteringPoint CreateCommand()
         {
             return Scenarios.CreateConsumptionMeteringPointCommand();
