@@ -197,11 +197,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.AccountingPointCharacterist
             using StreamReader reader = new(stream);
             var documentWithLicense = reader.ReadToEnd();
 
+            // Note: because of the license check in ci/cd it's necessary to make some jumps through hoops
             var documentWithoutLicense = documentWithLicense.Remove(0, documentWithLicense.IndexOf("<cim", StringComparison.Ordinal));
-            var expectedDocument = documentWithoutLicense.Insert(0, "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
-            var finalExpectedDocument = expectedDocument.Replace("\n", "\r\n", StringComparison.Ordinal);
+            var expectedDocument = documentWithoutLicense.Insert(0, "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n");
 
-            return finalExpectedDocument;
+            return expectedDocument;
         }
     }
 }
