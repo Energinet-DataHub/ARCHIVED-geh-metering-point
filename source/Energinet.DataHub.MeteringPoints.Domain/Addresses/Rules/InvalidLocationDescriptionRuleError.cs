@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Validation.Extensions;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using FluentValidation;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules
 {
-    public class LocationDescriptionMustBeValidRule : AbstractValidator<string>
+    public class InvalidLocationDescriptionRuleError : ValidationError
     {
-        public LocationDescriptionMustBeValidRule()
+        public InvalidLocationDescriptionRuleError(string locationDescription)
         {
-            RuleFor(value => value)
-                .CheckRules(LocationDescription.CheckRules);
+            LocationDescription = locationDescription;
         }
+
+        public string LocationDescription { get; }
     }
 }
