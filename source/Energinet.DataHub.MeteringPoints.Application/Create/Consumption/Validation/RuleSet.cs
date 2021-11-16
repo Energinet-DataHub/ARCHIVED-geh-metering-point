@@ -58,7 +58,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Valida
                     .WithState(value => new InvalidScheduledMeterReadingDateRuleError());
             });
             RuleFor(request => request.NetSettlementGroup)
-                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithState(createMeteringPoint => new NetSettlementGroupMandatoryValidationError());
             RuleFor(request => request.MeterReadingOccurrence)
