@@ -15,6 +15,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
@@ -35,6 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
         private readonly IOutboxMessageFactory _outboxMessageFactory;
         private readonly IJsonSerializer _jsonSerializer;
         private readonly ICorrelationContext _correlationContext;
+        private readonly MeteringPointPipelineContext _pipelineContext;
 
         public ConnectMeteringPointResultHandler(
             ErrorMessageFactory errorMessageFactory,
@@ -42,7 +44,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
             IOutboxMessageFactory outboxMessageFactory,
             IJsonSerializer jsonSerializer,
             ICorrelationContext correlationContext,
-            ICommandScheduler commandScheduler)
+            ICommandScheduler commandScheduler,
+            MeteringPointPipelineContext pipelineContext)
         {
             _errorMessageFactory = errorMessageFactory;
             _outbox = outbox;
@@ -50,6 +53,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
             _jsonSerializer = jsonSerializer;
             _correlationContext = correlationContext;
             _commandScheduler = commandScheduler;
+            _pipelineContext = pipelineContext;
         }
 
         public Task HandleAsync(Application.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
@@ -68,7 +72,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
             AddToOutbox(confirmMessage);
 
             var command = new SendAccountingPointCharacteristicsMessage(
-                request.GsrnNumber,
+                _pipelineContext.MeteringPointId,
                 request.TransactionId,
                 BusinessReasonCodes.ConnectMeteringPoint);
             await _commandScheduler.EnqueueAsync(command).ConfigureAwait(false);

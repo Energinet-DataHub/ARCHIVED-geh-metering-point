@@ -1,4 +1,5 @@
-﻿using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
+﻿using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
+using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
 
 namespace Energinet.DataHub.MeteringPoints.Application.EDI
@@ -14,7 +15,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.EDI
         void CreateAccountingPointCharacteristicsMessage(
             string transactionId,
             string businessReasonCode,
-            MeteringPointDto meteringPointDto,
-            GlnNumber energySupplierGlnNumber);
+            MeteringPointDto meteringPoint,
+            EnergySupplierDto energySupplier);
     }
 }

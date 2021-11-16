@@ -18,6 +18,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
+using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers.Queries;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
@@ -45,16 +46,17 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var meteringPointDto = await _mediator
-                                       .Send(new MeteringPointByGsrnQuery(request.MeteringPointGsrn), cancellationToken)
+                                       .Send(new MeteringPointByIdQuery(request.MeteringPointId), cancellationToken)
                                        .ConfigureAwait(false)
                                    ?? throw new InvalidOperationException("Metering point not found");
 
-            // TODO: Current and future suppliers
-            var energySuppliers = new List<EnergySupplier>();
+            var energySuppliers = await _mediator
+                .Send(new EnergySuppliersByMeteringPointIdQuery(request.MeteringPointId), cancellationToken)
+                .ConfigureAwait(false);
 
             foreach (var energySupplier in energySuppliers)
             {
-                _businessDocumentFactory.CreateAccountingPointCharacteristicsMessage(request.TransactionId, request.Reason, meteringPointDto, energySupplier.GlnNumber);
+                _businessDocumentFactory.CreateAccountingPointCharacteristicsMessage(request.TransactionId, request.Reason, meteringPointDto, energySupplier);
             }
 
             return Unit.Value;

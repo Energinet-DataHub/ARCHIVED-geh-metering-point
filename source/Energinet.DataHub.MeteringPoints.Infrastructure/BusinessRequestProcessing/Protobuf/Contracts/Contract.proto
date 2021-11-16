@@ -91,7 +91,7 @@ message AddEnergySupplier {
 
 message SendAccountingPointCharacteristicsMessage {
   string id = 1;
-  string metering_point_gsrn = 2;
+  string metering_point_id = 2;
   string transation_id = 3;
   string reason = 4;
 }

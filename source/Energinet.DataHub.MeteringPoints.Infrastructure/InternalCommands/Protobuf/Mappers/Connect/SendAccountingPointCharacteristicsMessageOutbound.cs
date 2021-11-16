@@ -29,7 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands.Proto
                 SendAccountingPointCharacteristicsMessage = new SendAccountingPointCharacteristicsMessage
                 {
                     Id = obj.Id.ToString(),
-                    MeteringPointGsrn = obj.MeteringPointGsrn,
+                    MeteringPointId = obj.MeteringPointId,
                     TransationId = obj.TransactionId,
                     Reason = obj.Reason,
                 },

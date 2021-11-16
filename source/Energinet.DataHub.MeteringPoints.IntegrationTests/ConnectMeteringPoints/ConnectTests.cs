@@ -55,18 +55,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
         }
 
         [Fact]
-        public async Task Connect_MeteringPoint_Should_Generate_AccountingPointCharacteristicsMessage_In_Outbox()
+        public async Task Connect_MeteringPoint_Should_Generate_AccountingPointCharacteristicsMessages_In_Outbox()
         {
             var createMeteringPointRequest = CreateMeteringPointRequest();
             var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
 
             await SendCommandAsync(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
             await MarkAsEnergySupplierAssigned(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
+            await AddEnergySupplier(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
+            await AddEnergySupplier(connectMeteringPointRequest.EffectiveDate.ToInstant().Plus(Duration.FromDays(2))).ConfigureAwait(false);
             await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
             await AssertAndRunInternalCommandAsync<SendAccountingPointCharacteristicsMessage>().ConfigureAwait(false);
 
-            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.AccountingPointCharacteristicsMessage);
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.AccountingPointCharacteristicsMessage, 2);
         }
 
         [Fact]
@@ -194,8 +196,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
         {
             var setEnergySupplierAssigned = new SetEnergySupplierInfo(SampleData.GsrnNumber, startOfSupply);
             await SendCommandAsync(setEnergySupplierAssigned).ConfigureAwait(false);
+        }
 
-            // TODO: How bad is this?
+        private async Task AddEnergySupplier(Instant startOfSupply)
+        {
             var meteringPointRepository = GetService<IMeteringPointRepository>();
             var meteringPoint = await meteringPointRepository.GetByGsrnNumberAsync(GsrnNumber.Create(SampleData.GsrnNumber))
                 .ConfigureAwait(false);

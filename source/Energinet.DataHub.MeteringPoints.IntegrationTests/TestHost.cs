@@ -18,6 +18,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Common;
@@ -155,6 +156,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Singleton);
             _container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
             _container.Register<IUserContext>(() => new UserContext { CurrentUser = new UserIdentity(Guid.NewGuid().ToString(), "8200000001409"), }, Lifestyle.Scoped);
+            _container.Register<MeteringPointPipelineContext>(Lifestyle.Scoped);
 
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
             _container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
@@ -259,24 +261,17 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             }
         }
 
-        protected void AssertOutboxMessage<TMessage>(Func<TMessage, bool> funcAssert)
+        protected void AssertOutboxMessage<TMessage>(Func<TMessage, bool> funcAssert, int count = 1)
         {
             if (funcAssert == null) throw new ArgumentNullException(nameof(funcAssert));
 
-            var message = GetOutboxMessages<TMessage>().SingleOrDefault(funcAssert.Invoke);
+            var messages = GetOutboxMessages<TMessage>()
+                .Where(funcAssert.Invoke)
+                .ToList();
 
-            message.Should().NotBeNull();
-            message.Should().BeOfType<TMessage>();
-        }
-
-        protected void AssertInternalCommand<TMessage>(Func<TMessage, bool> funcAssert)
-        {
-            if (funcAssert == null) throw new ArgumentNullException(nameof(funcAssert));
-
-            var message = GetOutboxMessages<TMessage>().SingleOrDefault(funcAssert.Invoke);
-
-            message.Should().NotBeNull();
-            message.Should().BeOfType<TMessage>();
+            messages.Should().NotBeNull();
+            messages.Should().AllBeOfType<TMessage>();
+            messages.Should().HaveCount(count);
         }
 
         protected void AssertOutboxMessage<TMessage>()

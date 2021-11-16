@@ -12,23 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
+using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Connect
+namespace Energinet.DataHub.MeteringPoints.Application.Queries
 {
-    public class SendAccountingPointCharacteristicsMessage : InternalCommand
+    public class MeteringPointByIdQuery : IRequest<MeteringPointDto?>
     {
-        public SendAccountingPointCharacteristicsMessage(string meteringPointId, string transactionId, string reason)
+        public MeteringPointByIdQuery(string meteringPointId)
         {
             MeteringPointId = meteringPointId;
-            TransactionId = transactionId;
-            Reason = reason;
         }
 
         public string MeteringPointId { get; }
-
-        public string TransactionId { get; }
-
-        public string Reason { get; }
     }
 }

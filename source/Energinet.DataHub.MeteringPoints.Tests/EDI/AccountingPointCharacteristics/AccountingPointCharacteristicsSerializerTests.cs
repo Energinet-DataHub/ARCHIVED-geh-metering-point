@@ -16,14 +16,14 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-using System.Text;
+using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
-using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common.Address;
 using FluentAssertions;
+using NodaTime;
 using NodaTime.Extensions;
 using Xunit;
 using Xunit.Categories;
@@ -159,15 +159,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.AccountingPointCharacterist
                 "D01",
                 "D01",
                 false);
-            var glnNumber = GlnNumber.Create("5799999933318");
             var createdDate = DateTimeOffset.Parse("2021-12-17T09:30:47Z", CultureInfo.InvariantCulture).ToInstant();
+            var energySupplier = new EnergySupplierDto("5799999933318", Instant.MinValue);
 
             var message = BusinessDocumentFactory.MapAccountingPointCharacteristicsMessage(
                 id: id,
                 requestTransactionId: transactionId,
                 businessReasonCode: BusinessReasonCodes.ConnectMeteringPoint,
-                meteringPointDto: meteringPointDto,
-                energySupplierGlnNumber: glnNumber,
+                meteringPoint: meteringPointDto,
+                energySupplier: energySupplier,
                 createdDate: createdDate);
 
             var serialized = AccountingPointCharacteristicsXmlSerializer.Serialize(message);

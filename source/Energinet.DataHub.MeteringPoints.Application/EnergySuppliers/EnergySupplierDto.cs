@@ -12,23 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
+using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Connect
+namespace Energinet.DataHub.MeteringPoints.Application.EnergySuppliers
 {
-    public class SendAccountingPointCharacteristicsMessage : InternalCommand
+    public class EnergySupplierDto
     {
-        public SendAccountingPointCharacteristicsMessage(string meteringPointId, string transactionId, string reason)
+        public EnergySupplierDto()
         {
-            MeteringPointId = meteringPointId;
-            TransactionId = transactionId;
-            Reason = reason;
+            GlnNumber = string.Empty;
+            StartOfSupply = Instant.MinValue;
         }
 
-        public string MeteringPointId { get; }
+        public EnergySupplierDto(string glnNumber, Instant startOfSupply)
+        {
+            GlnNumber = glnNumber;
+            StartOfSupply = startOfSupply;
+        }
 
-        public string TransactionId { get; }
+        public string GlnNumber { get; }
 
-        public string Reason { get; }
+        public Instant StartOfSupply { get; }
     }
 }

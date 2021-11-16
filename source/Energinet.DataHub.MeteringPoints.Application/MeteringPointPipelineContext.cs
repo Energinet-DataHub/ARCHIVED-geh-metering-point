@@ -12,23 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
+using System;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Connect
+namespace Energinet.DataHub.MeteringPoints.Application
 {
-    public class SendAccountingPointCharacteristicsMessage : InternalCommand
+    public class MeteringPointPipelineContext
     {
-        public SendAccountingPointCharacteristicsMessage(string meteringPointId, string transactionId, string reason)
+        private string _meteringPointId = string.Empty;
+
+        public string MeteringPointId
         {
-            MeteringPointId = meteringPointId;
-            TransactionId = transactionId;
-            Reason = reason;
+            get => _meteringPointId ?? throw new InvalidOperationException($"{nameof(MeteringPointId)} is not set in pipeline.");
+            set => _meteringPointId = value;
         }
-
-        public string MeteringPointId { get; }
-
-        public string TransactionId { get; }
-
-        public string Reason { get; }
     }
 }

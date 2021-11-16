@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
+using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
-using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
@@ -40,13 +40,13 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
             string id,
             string requestTransactionId,
             string businessReasonCode,
-            MeteringPointDto meteringPointDto,
-            GlnNumber energySupplierGlnNumber,
+            MeteringPointDto meteringPoint,
+            EnergySupplierDto energySupplier,
             Instant createdDate)
         {
             if (requestTransactionId == null) throw new ArgumentNullException(nameof(requestTransactionId));
-            if (meteringPointDto == null) throw new ArgumentNullException(nameof(meteringPointDto));
-            if (energySupplierGlnNumber == null) throw new ArgumentNullException(nameof(energySupplierGlnNumber));
+            if (meteringPoint == null) throw new ArgumentNullException(nameof(meteringPoint));
+            if (energySupplier == null) throw new ArgumentNullException(nameof(energySupplier));
 
             var accountingPointCharacteristicsMessage = new AccountingPointCharacteristicsMessage(
                 Id: id,
@@ -58,70 +58,70 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     CodingScheme: "A10", // TODO: Hardcoded, correct?
                     Role: "DDZ"), // TODO: Hardcoded, correct?
                 Receiver: new MarketRoleParticipant(
-                    Id: energySupplierGlnNumber.Value,
+                    Id: energySupplier.GlnNumber,
                     CodingScheme: "A10", // TODO: Hardcoded, correct?
                     Role: "DDQ"), // TODO: Hardcoded, correct?
                 CreatedDateTime: createdDate,
                 MarketActivityRecord: new MarketActivityRecord(
                     Id: Guid.NewGuid().ToString(), // TODO: Generated, correct?
-                    ValidityStartDateAndOrTime: meteringPointDto.EffectiveDate!.Value.ToUtcString(),
+                    ValidityStartDateAndOrTime: meteringPoint.EffectiveDate!.Value.ToUtcString(),
                     OriginalTransaction: requestTransactionId,
                     MarketEvaluationPoint: new MarketEvaluationPoint(
-                        Id: new Mrid(meteringPointDto.GsrnNumber, "A10"), // TODO: Hardcoded, correct?
+                        Id: new Mrid(meteringPoint.GsrnNumber, "A10"), // TODO: Hardcoded, correct?
                         MeteringPointResponsibleMarketRoleParticipant: new MarketParticipant(
                             "GLN number of grid operator", "A10"), // TODO: Update when grid operators are a thing. And codingScheme, correct?
-                        Type: meteringPointDto.MeteringPointType,
-                        SettlementMethod: meteringPointDto.SettlementMethod,
-                        MeteringMethod: meteringPointDto.MeteringPointSubType,
-                        ConnectionState: meteringPointDto.ConnectionState,
-                        ReadCycle: meteringPointDto.ReadingOccurrence,
-                        NetSettlementGroup: meteringPointDto.NetSettlementGroup,
+                        Type: meteringPoint.MeteringPointType,
+                        SettlementMethod: meteringPoint.SettlementMethod,
+                        MeteringMethod: meteringPoint.MeteringPointSubType,
+                        ConnectionState: meteringPoint.ConnectionState,
+                        ReadCycle: meteringPoint.ReadingOccurrence,
+                        NetSettlementGroup: meteringPoint.NetSettlementGroup,
                         NextReadingDate: "N/A", // TODO: What is this?
-                        MeteringGridAreaDomainId: new Mrid(meteringPointDto.GridAreaCode, "NDK"),
-                        InMeteringGridAreaDomainId: meteringPointDto.FromGridAreaCode != null ? new Mrid(meteringPointDto.FromGridAreaCode!, "NDK") : null!,
-                        OutMeteringGridAreaDomainId: meteringPointDto.ToGridAreaCode != null ? new Mrid(meteringPointDto.ToGridAreaCode!, "NDK") : null!,
-                        LinkedMarketEvaluationPoint: meteringPointDto.PowerPlantGsrnNumber,
+                        MeteringGridAreaDomainId: new Mrid(meteringPoint.GridAreaCode, "NDK"),
+                        InMeteringGridAreaDomainId: meteringPoint.FromGridAreaCode != null ? new Mrid(meteringPoint.FromGridAreaCode!, "NDK") : null!,
+                        OutMeteringGridAreaDomainId: meteringPoint.ToGridAreaCode != null ? new Mrid(meteringPoint.ToGridAreaCode!, "NDK") : null!,
+                        LinkedMarketEvaluationPoint: meteringPoint.PowerPlantGsrnNumber,
                         PhysicalConnectionCapacity: new UnitValue(
-                            meteringPointDto.Capacity.HasValue
-                                ? meteringPointDto.Capacity.Value.ToString(CultureInfo.InvariantCulture)
+                            meteringPoint.Capacity.HasValue
+                                ? meteringPoint.Capacity.Value.ToString(CultureInfo.InvariantCulture)
                                 : string.Empty,
                             "KWT"), // TODO: Hardcoded, correct?
-                        ConnectionType: meteringPointDto.ConnectionType,
-                        DisconnectionMethod: meteringPointDto.DisconnectionType,
-                        AssetMarketPSRTypePsrType: meteringPointDto.AssetType,
+                        ConnectionType: meteringPoint.ConnectionType,
+                        DisconnectionMethod: meteringPoint.DisconnectionType,
+                        AssetMarketPSRTypePsrType: meteringPoint.AssetType,
                         ProductionObligation: false,
                         Series: new Series(
-                            Product: meteringPointDto.Product,
-                            QuantityMeasureUnit: meteringPointDto.UnitType),
+                            Product: meteringPoint.Product,
+                            QuantityMeasureUnit: meteringPoint.UnitType),
                         ContractedConnectionCapacity: new UnitValue(
-                            meteringPointDto.MaximumPower.HasValue
-                                ? meteringPointDto.MaximumPower.Value.ToString(CultureInfo.InvariantCulture)
+                            meteringPoint.MaximumPower.HasValue
+                                ? meteringPoint.MaximumPower.Value.ToString(CultureInfo.InvariantCulture)
                                 : string.Empty,
                             "KWT"),
                         RatedCurrent: new UnitValue(
-                            meteringPointDto.MaximumCurrent.HasValue
-                                ? meteringPointDto.MaximumCurrent.Value.ToString(CultureInfo.InvariantCulture)
+                            meteringPoint.MaximumCurrent.HasValue
+                                ? meteringPoint.MaximumCurrent.Value.ToString(CultureInfo.InvariantCulture)
                                 : string.Empty,
                             "AMP"),
-                        MeterId: meteringPointDto.MeterNumber,
-                        EnergySupplierMarketParticipantId: new MarketParticipant(energySupplierGlnNumber.Value, "A10"), // TODO: Hardcoded, correct?
+                        MeterId: meteringPoint.MeterNumber,
+                        EnergySupplierMarketParticipantId: new MarketParticipant(energySupplier.GlnNumber, "A10"), // TODO: Hardcoded, correct?
                         SupplyStartDateAndOrTimeDateTime: DateTime.MinValue, // TODO: EnergySupplier_StartOfSupply?
-                        Description: meteringPointDto.LocationDescription,
+                        Description: meteringPoint.LocationDescription,
                         UsagePointLocationMainAddress: new MainAddress(
                             StreetDetail: new StreetDetail(
-                                Number: meteringPointDto.BuildingNumber,
-                                Name: meteringPointDto.StreetName,
-                                Code: meteringPointDto.StreetCode,
-                                SuiteNumber: meteringPointDto.Suite,
-                                FloorIdentification: meteringPointDto.Floor),
+                                Number: meteringPoint.BuildingNumber,
+                                Name: meteringPoint.StreetName,
+                                Code: meteringPoint.StreetCode,
+                                SuiteNumber: meteringPoint.Suite,
+                                FloorIdentification: meteringPoint.Floor),
                             TownDetail: new TownDetail(
-                                Code: $"{meteringPointDto.MunicipalityCode:0000}",
-                                Section: meteringPointDto.CitySubDivisionName,
-                                Name: meteringPointDto.CityName,
-                                Country: meteringPointDto.CountryCode),
-                            PostalCode: meteringPointDto.PostCode),
-                        UsagePointLocationActualAddressIndicator: meteringPointDto.IsActualAddress ?? false,
-                        UsagePointLocationGeoInfoReference: meteringPointDto.GeoInfoReference.HasValue ? meteringPointDto.GeoInfoReference.ToString()! : string.Empty,
+                                Code: $"{meteringPoint.MunicipalityCode:0000}",
+                                Section: meteringPoint.CitySubDivisionName,
+                                Name: meteringPoint.CityName,
+                                Country: meteringPoint.CountryCode),
+                            PostalCode: meteringPoint.PostCode),
+                        UsagePointLocationActualAddressIndicator: meteringPoint.IsActualAddress ?? false,
+                        UsagePointLocationGeoInfoReference: meteringPoint.GeoInfoReference.HasValue ? meteringPoint.GeoInfoReference.ToString()! : string.Empty,
                         ParentMarketEvaluationPoint: new ParentMarketEvaluationPoint(
                             Id: "579999993331812345"), // TODO: Hardcoded
                         ChildMarketEvaluationPoint: new ChildMarketEvaluationPoint(
@@ -134,15 +134,15 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
         public void CreateAccountingPointCharacteristicsMessage(
             string transactionId,
             string businessReasonCode,
-            MeteringPointDto meteringPointDto,
-            GlnNumber energySupplierGlnNumber)
+            MeteringPointDto meteringPoint,
+            EnergySupplierDto energySupplier)
         {
             var accountingPointCharacteristicsMessage = MapAccountingPointCharacteristicsMessage(
                 Guid.NewGuid().ToString(),
                 transactionId,
                 businessReasonCode,
-                meteringPointDto,
-                energySupplierGlnNumber,
+                meteringPoint,
+                energySupplier,
                 _dateTimeProvider.Now());
 
             var serializedMessage = AccountingPointCharacteristicsXmlSerializer
@@ -153,7 +153,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                 _jsonSerializer.Serialize(serializedMessage),
                 DocumentType.AccountingPointCharacteristicsMessage,
                 _correlationContext.Id,
-                meteringPointDto.GsrnNumber);
+                meteringPoint.GsrnNumber);
 
             AddToOutbox(messageHubEnvelope);
         }
