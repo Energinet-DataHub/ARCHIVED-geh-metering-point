@@ -166,5 +166,21 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             return MeteringConfiguration;
         }
         #pragma warning restore
+
+        public BusinessRulesValidationResult CanBeChanged()
+        {
+            var errors = new List<ValidationError>();
+            if (ConnectionState.PhysicalState == PhysicalState.ClosedDown)
+            {
+                errors.Add(new ClosedDownMeteringPointCannotBeChangedError());
+            }
+
+            return new BusinessRulesValidationResult(errors);
+        }
+
+        public void CloseDown()
+        {
+            ConnectionState = ConnectionState.ClosedDown();
+        }
     }
 }
