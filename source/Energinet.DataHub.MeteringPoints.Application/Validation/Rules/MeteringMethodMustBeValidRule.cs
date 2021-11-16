@@ -32,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 RuleFor(createMeteringPoint => createMeteringPoint.MeteringMethod)
                     .Must(value => EnumerationType.GetAll<MeteringMethod>().Select(item => item.Name)
                         .Contains(value, StringComparer.OrdinalIgnoreCase))
-                    .WithState(request => new InvalidMeteringMethodRuleError(request.MeteringMethod));
+                    .WithState(request => new InvalidMeteringMethodRuleError(request.MeteringMethod!));
             });
         }
     }

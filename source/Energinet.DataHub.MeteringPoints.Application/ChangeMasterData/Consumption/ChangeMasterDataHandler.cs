@@ -19,8 +19,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.Addresses;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.Policies;
@@ -54,53 +52,28 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 });
             }
 
-            var details = CreateChangeDetailsFrom(request);
-            var changeHandler =
-                new ChangeMasterDataFacade(targetMeteringPoint, details);
-
-            var checkResult = await CheckIfMasterDataCanBeChangedAsync(changeHandler, details).ConfigureAwait(false);
-            if (checkResult.Success == false)
+            var valueTransformer = new MasterDataValueTransformer(request, targetMeteringPoint);
+            if (valueTransformer.HasError)
             {
-                return new BusinessProcessResult(request.TransactionId, checkResult.Errors);
+                return new BusinessProcessResult(request.TransactionId, valueTransformer.Errors);
             }
 
-            changeHandler.Change();
+            var updatedValues = valueTransformer.UpdatedValues();
+
+            var policyCheckResult = await CheckPoliciesAsync(updatedValues).ConfigureAwait(false);
+            if (policyCheckResult.Success == false)
+            {
+                return new BusinessProcessResult(request.TransactionId, policyCheckResult.Errors);
+            }
+
+            var masterDataUpdater = new MasterDataValueUpdater(updatedValues, targetMeteringPoint);
+            if (masterDataUpdater.CanUpdate != true)
+            {
+                return new BusinessProcessResult(request.TransactionId, masterDataUpdater.Errors);
+            }
+
+            masterDataUpdater.Update();
             return BusinessProcessResult.Ok(request.TransactionId);
-        }
-
-        private static MasterDataDetails CreateChangeDetailsFrom(ChangeMasterDataRequest request)
-        {
-            if (request == null) throw new ArgumentNullException(nameof(request));
-            return new MasterDataDetails(EffectiveDate.Create(request.EffectiveDate))
-                with
-                {
-                    Address = CreateNewAddressFrom(request),
-                    MeterId = request.MeterId is null ? null : request.MeterId.Length == 0 ? MeterId.Empty() : MeterId.Create(request.MeterId),
-                    MeteringMethod = request.MeteringMethod.Length == 0 ? null : EnumerationType.FromName<MeteringMethod>(request.MeteringMethod),
-                };
-        }
-
-        private static Domain.Addresses.Address? CreateNewAddressFrom(ChangeMasterDataRequest request)
-        {
-            if (request == null) throw new ArgumentNullException(nameof(request));
-            if (request.Address is null)
-            {
-                return null;
-            }
-
-            return Domain.Addresses.Address.Create(
-                request.Address.StreetName,
-                request.Address.StreetCode,
-                request.Address.BuildingNumber,
-                request.Address.City,
-                request.Address.CitySubDivision,
-                request.Address.PostCode,
-                string.IsNullOrEmpty(request.Address.CountryCode) ? null : EnumerationType.FromName<CountryCode>(request.Address.CountryCode),
-                request.Address.Floor,
-                request.Address.Room,
-                request.Address.MunicipalityCode,
-                request.Address.IsActual.GetValueOrDefault(),
-                request.Address.GeoInfoReference);
         }
 
         private async Task<ConsumptionMeteringPoint?> FetchTargetMeteringPointAsync(ChangeMasterDataRequest request)
@@ -110,14 +83,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 .ConfigureAwait(false) as ConsumptionMeteringPoint;
         }
 
-        private Task<BusinessRulesValidationResult> CheckIfMasterDataCanBeChangedAsync(ChangeMasterDataFacade handler, MasterDataDetails details)
+        private Task<BusinessRulesValidationResult> CheckPoliciesAsync(MasterDataDetails masterDataDetails)
         {
-            if (handler == null) throw new ArgumentNullException(nameof(handler));
-            if (details == null) throw new ArgumentNullException(nameof(details));
+            if (masterDataDetails == null) throw new ArgumentNullException(nameof(masterDataDetails));
             var validationResults = new List<BusinessRulesValidationResult>()
             {
-                handler.CanChange(),
-                new EffectiveDatePolicy(_settings.NumberOfDaysEffectiveDateIsAllowedToBeforeToday).Check(_systemDateTimeProvider.Now(), details.EffectiveDate),
+                new EffectiveDatePolicy(_settings.NumberOfDaysEffectiveDateIsAllowedToBeforeToday).Check(_systemDateTimeProvider.Now(), masterDataDetails.EffectiveDate),
             };
 
             var validationErrors = validationResults.SelectMany(results => results.Errors).ToList();

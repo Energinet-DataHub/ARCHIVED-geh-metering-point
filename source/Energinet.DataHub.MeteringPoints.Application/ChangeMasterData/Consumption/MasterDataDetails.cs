@@ -12,15 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
 {
     public record MasterDataDetails(
         EffectiveDate EffectiveDate,
-        Address? Address = null,
-        MeterId? MeterId = null,
-        MeteringMethod? MeteringMethod = null);
+        Domain.Addresses.Address? Address = null,
+        MeteringConfiguration? MeteringConfiguration = null);
 }
