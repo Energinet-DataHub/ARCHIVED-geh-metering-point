@@ -18,11 +18,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class ProductTypeMandatoryValidationError : ValidationError
     {
-        public ProductTypeMandatoryValidationError(string gsrnNumber)
+        public ProductTypeMandatoryValidationError()
         {
-            GsrnNumber = gsrnNumber;
         }
-
-        public string GsrnNumber { get; }
     }
 }

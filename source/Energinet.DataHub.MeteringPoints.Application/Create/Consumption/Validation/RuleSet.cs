@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
@@ -23,6 +24,31 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Valida
     {
         public RuleSet()
         {
+            RuleFor(request => request.EffectiveDate).SetValidator(new EffectiveDateRule());
+            RuleFor(request => request.CountryCode)
+                .NotEmpty()
+                .SetValidator(new CountryCodeRule());
+            RuleFor(request => request.AssetType)
+                .SetValidator(new AssetTypeRule()!)
+                .Unless(request => string.IsNullOrWhiteSpace(request.AssetType));
+            RuleFor(createMeteringPoint => createMeteringPoint.PowerPlant)
+                .SetValidator(new PowerPlantMustBeValidRule()!)
+                .Unless(request => string.IsNullOrWhiteSpace(request.PowerPlant));
+            RuleFor(request => request.PhysicalConnectionCapacity)
+                .SetValidator(new CapacityRule()!)
+                .Unless(request => string.IsNullOrWhiteSpace(request.PhysicalConnectionCapacity));
+            RuleFor(request => request.MeterNumber)
+                .SetValidator(new MeterNumberMustBeValidRule()!)
+                .Unless(request => string.IsNullOrEmpty(request.MeterNumber));
+            RuleFor(request => request.MeteringMethod)
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty()
+                .WithState(value => new MeteringMethodIsMandatoryValidationError())
+                .SetValidator(new MeteringMethodMustBeValidRule());
+            RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberValidator());
+            RuleFor(request => request.ConnectionType).SetValidator(new ConnectionTypeRule())
+                .Unless(request => string.IsNullOrWhiteSpace(request.ConnectionType));
+
             When(request => !string.IsNullOrEmpty(request.ScheduledMeterReadingDate), () =>
             {
                 RuleFor(request => request.ScheduledMeterReadingDate)
@@ -30,21 +56,22 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Valida
                     .WithState(value => new InvalidScheduledMeterReadingDateRuleError());
             });
             RuleFor(request => request.NetSettlementGroup)
-                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithState(createMeteringPoint => new NetSettlementGroupMandatoryValidationError());
             RuleFor(request => request.MeterReadingOccurrence)
                 .NotEmpty()
                 .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError());
             RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError());
-            RuleFor(createMeteringPoint => createMeteringPoint.MeteringMethod)
-                .NotEmpty()
-                .WithState(createMeteringPoint => new MeteringMethodIsMandatoryValidationError());
+                .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError())
+                .SetValidator(new SettlementMethodMustBeValidRule()!);
             RuleFor(createMeteringPoint => createMeteringPoint.DisconnectionType)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .WithState(createMeteringPoint => new DisconnectionTypeMandatoryValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.DisconnectionType));
+                .WithState(createMeteringPoint =>
+                    new DisconnectionTypeMandatoryValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.DisconnectionType))
+                .SetValidator(new DisconnectionTypeRule());
         }
     }
 }
