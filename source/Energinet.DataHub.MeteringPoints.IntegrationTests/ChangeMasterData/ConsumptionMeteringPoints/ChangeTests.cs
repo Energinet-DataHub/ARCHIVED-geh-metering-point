@@ -15,6 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using NodaTime.Text;
@@ -84,6 +85,17 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
                 }).ConfigureAwait(false);
 
             AssertValidationError("E17", expectError);
+        }
+
+        [Fact]
+        public async Task Grid_operator_is_the_owner_of_the_metering_point()
+        {
+            SetGridOperatorAsAuthenticatedUser("This_is_not_the_owner_of_this_metering_point");
+            await CreateMeteringPointAsync().ConfigureAwait(false);
+
+            await InvokeBusinessProcessAsync(TestUtils.CreateRequest()).ConfigureAwait(false);
+
+            AssertValidationError("E10");
         }
 
         private Task<BusinessProcessResult> CreateMeteringPointAsync()
