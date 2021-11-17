@@ -12,22 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Extensions;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class CapacityRule : AbstractValidator<MasterDataDocument>
+    public class CapacityRule : AbstractValidator<string>
     {
         public CapacityRule()
         {
-            When(request => string.IsNullOrWhiteSpace(request.PhysicalConnectionCapacity) == false, () =>
-            {
-                RuleFor(request => request.PhysicalConnectionCapacity)
-                    .CheckRules(value => Capacity.CheckRules(value!));
-            });
+            RuleFor(value => value)
+                .CheckRules(Capacity.CheckRules);
         }
     }
 }

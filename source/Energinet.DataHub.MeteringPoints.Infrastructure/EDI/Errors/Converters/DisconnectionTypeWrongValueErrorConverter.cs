@@ -23,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D02", $"Disconnection type {validationError.DisconnectionType} for metering point {validationError.GsrnNumber} has wrong value (outside domain)");
+            return new("D02", $"Disconnection type {validationError.DisconnectionType} has wrong value (outside domain)");
         }
     }
 }

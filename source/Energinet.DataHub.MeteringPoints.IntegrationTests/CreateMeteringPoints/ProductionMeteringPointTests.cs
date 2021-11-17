@@ -103,6 +103,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("D02", DocumentType.CreateMeteringPointRejected);
         }
 
+        [Fact]
+        public async Task Should_reject_when_net_settlement_group_is_invalid()
+        {
+            var request = CreateCommand()
+                with
+                {
+                    NetSettlementGroup = "Invalid_netsettlement_group_value",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
+        }
+
         private static CreateProductionMeteringPoint CreateCommand()
         {
             return Scenarios.CreateProductionMeteringPointCommand();
