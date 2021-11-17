@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
@@ -29,29 +30,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
     [UnitTest]
     public class CreateMeteringPointRuleSetTests
     {
-        [Fact]
-        public void Validate_WhenGsrnNumberIsEmpty_IsFailure()
-        {
-            var businessRequest = CreateRequest();
-
-            var errors = GetValidationErrors(businessRequest);
-
-            Assert.Contains(errors, error => error is GsrnNumberMustBeValidValidationError);
-        }
-
-        [Fact]
-        public void Validate_WhenGsrnNumberIsNotFormattedCorrectly_IsFailure()
-        {
-            var businessRequest = CreateRequest() with
-            {
-                GsrnNumber = "Not_Valid_Gsrn_Number",
-            };
-
-            var errors = GetValidationErrors(businessRequest);
-
-            Assert.Contains(errors, error => error is GsrnNumberMustBeValidValidationError);
-        }
-
         [Theory]
         [InlineData("***", typeof(MeteringGridAreaMandatoryValidationError), false)]
         [InlineData("", typeof(MeteringGridAreaMandatoryValidationError), true)]
@@ -60,27 +38,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         {
             var businessRequest = CreateRequest() with
             {
+                ProcessType = BusinessProcessType.CreateMeteringPoint.Name,
                 GsrnNumber = SampleData.GsrnNumber,
                 MeteringGridArea = meteringGridArea,
-            };
-
-            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
-        }
-
-        [Theory]
-        [InlineData("", typeof(EffectiveDateRequiredValidationError), true)]
-        [InlineData("2021-11-12T22:00:00Z", typeof(DateFormatMustBeUTCRuleError), false)]
-        [InlineData("12-12-2021T22:00:00Z", typeof(DateFormatMustBeUTCRuleError), true)]
-        [InlineData("12-12-2021T22:00:00", typeof(DateFormatMustBeUTCRuleError), true)]
-        [InlineData("YYYY-12-12T22:00:00Z", typeof(DateFormatMustBeUTCRuleError), true)]
-        [InlineData("2021-12-12T22:00:00.000Z", typeof(DateFormatMustBeUTCRuleError), false)]
-        [InlineData("2021-12-12T22:00:00:1234Z", typeof(DateFormatMustBeUTCRuleError), true)]
-        public void Validate_EffectiveDateMandatoryAndFormat(string occurenceDate, System.Type validationError, bool expectedError)
-        {
-            var businessRequest = CreateRequest() with
-            {
-                GsrnNumber = SampleData.GsrnNumber,
-                EffectiveDate = occurenceDate,
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
@@ -96,58 +56,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         {
             var businessRequest = CreateRequest() with
             {
+                ProcessType = BusinessProcessType.CreateMeteringPoint.Name,
                 GsrnNumber = SampleData.GsrnNumber,
                 TypeOfMeteringPoint = typeOfMeteringPoint,
-            };
-
-            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
-        }
-
-        [Theory]
-        [InlineData(nameof(MeteringPointType.Consumption), nameof(ProductType.EnergyActive), typeof(ProductTypeMandatoryValidationError), false)]
-        [InlineData(nameof(MeteringPointType.Consumption), "", typeof(ProductTypeMandatoryValidationError), true)]
-        [InlineData(nameof(MeteringPointType.Consumption), "InvalidProductType", typeof(ProductTypeInvalidValueValidationError), true)]
-        [InlineData(nameof(MeteringPointType.Analysis), nameof(ProductType.PowerReactive), typeof(ProductTypeWrongDefaultValueValidationError), false)]
-        [InlineData(nameof(MeteringPointType.Consumption), nameof(ProductType.PowerReactive), typeof(ProductTypeWrongDefaultValueValidationError), true)]
-        public void Validate_ProductType(string meteringPointType, string productType, System.Type validationError, bool expectedError)
-        {
-            var businessRequest = CreateRequest() with
-            {
-                ProductType = productType,
-                TypeOfMeteringPoint = meteringPointType,
-            };
-
-            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
-        }
-
-        [Theory]
-        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.KWh), typeof(MeasureUnitTypeMandatoryValidationError), false)]
-        [InlineData(nameof(MeteringPointType.Consumption), "", typeof(MeasureUnitTypeMandatoryValidationError), true)]
-        [InlineData(nameof(MeteringPointType.Consumption), "InvalidMeasureUnitType", typeof(MeasureUnitTypeInvalidValueValidationError), true)]
-        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), nameof(MeasurementUnitType.KVArh), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
-        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), nameof(MeasurementUnitType.KW), typeof(MeasureUnitTypeInvalidValueValidationError), true)]
-        [InlineData(nameof(MeteringPointType.OtherConsumption), nameof(MeasurementUnitType.MWh), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
-        [InlineData(nameof(MeteringPointType.OtherConsumption), nameof(MeasurementUnitType.KWh), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
-        [InlineData(nameof(MeteringPointType.OtherConsumption), nameof(MeasurementUnitType.MVAr), typeof(MeasureUnitTypeInvalidValueValidationError), true)]
-        [InlineData(nameof(MeteringPointType.OtherProduction), nameof(MeasurementUnitType.MWh), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
-        [InlineData(nameof(MeteringPointType.OtherProduction), nameof(MeasurementUnitType.KWh), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
-        [InlineData(nameof(MeteringPointType.OtherProduction), nameof(MeasurementUnitType.MVAr), typeof(MeasureUnitTypeInvalidValueValidationError), true)]
-        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.KWh), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
-        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.KVArh), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
-        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.KW), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
-        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.MW), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
-        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.MWh), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
-        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.Tonne), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
-        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.MVAr), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
-        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.DanishTariffCode), typeof(MeasureUnitTypeInvalidValueValidationError), false)]
-        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.Ampere), typeof(MeasureUnitTypeInvalidValueValidationError), true)]
-        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.STK), typeof(MeasureUnitTypeInvalidValueValidationError), true)]
-        public void Validate_MeasureUnitType(string meteringPointType, string measureUnitType, System.Type validationError, bool expectedError)
-        {
-            var businessRequest = CreateRequest() with
-            {
-                MeasureUnitType = measureUnitType,
-                TypeOfMeteringPoint = meteringPointType,
             };
 
             ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
@@ -168,6 +79,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         {
             var businessRequest = CreateRequest() with
             {
+                ProcessType = BusinessProcessType.CreateMeteringPoint.Name,
                 MeterReadingOccurrence = meterReadingOccurence,
                 TypeOfMeteringPoint = meteringPointType,
             };
@@ -183,6 +95,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         {
             var businessRequest = CreateRequest() with
             {
+                ProcessType = BusinessProcessType.CreateMeteringPoint.Name,
                 GsrnNumber = SampleData.GsrnNumber,
                 TypeOfMeteringPoint = meteringPointType,
                 FromGrid = gridArea,
@@ -200,6 +113,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         {
             var businessRequest = CreateRequest() with
             {
+                ProcessType = BusinessProcessType.CreateMeteringPoint.Name,
                 GsrnNumber = SampleData.GsrnNumber,
                 TypeOfMeteringPoint = meteringPointType,
                 ToGrid = gridArea,

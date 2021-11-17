@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using Google.Protobuf;
@@ -26,7 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
             if (obj == null) throw new ArgumentNullException(nameof(obj));
             return new IntegrationEventContracts.MeteringPointConnected
             {
-                EffectiveDate = obj.EffectiveDate,
+                EffectiveDate = obj.EffectiveDate.ToTimestamp(),
                 GsrnNumber = obj.GSRNNumber,
                 MeteringpointId = obj.MeteringPointId.ToString(),
             };

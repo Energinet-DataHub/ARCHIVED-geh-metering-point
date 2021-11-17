@@ -38,7 +38,7 @@ message Address {
 message MasterDataDocument {
   string gsrnNumber = 1;
   string typeOfMeteringPoint = 2;
-  string subTypeOfMeteringPoint = 3;
+  google.protobuf.StringValue subTypeOfMeteringPoint = 3;
   string meterReadingOccurrence = 4;
   int32 maximumCurrent = 5;
   int32 maximumPower = 6;
@@ -77,16 +77,10 @@ message CreateDefaultChargeLinks {
     string correlationId = 2;
 }
 
-message CreateDefaultChargeLinksMessages {
-    string gsrnNumber = 1;
-    string correlationId = 2;
-}
-
 message MeteringPointEnvelope {
   oneof MeteringPointMessages {
     MasterDataDocument masterDataDocument = 1;
     CreateDefaultChargeLinks createDefaultChargeLinks = 2;
-    CreateDefaultChargeLinksMessages createDefaultChargeLinksMessages = 3;   
-    SetEnergySupplierInfo setEnergySupplierInfo = 4;
+    SetEnergySupplierInfo setEnergySupplierInfo = 3;
   }
 }

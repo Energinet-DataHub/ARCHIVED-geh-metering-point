@@ -16,7 +16,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
-using Energinet.DataHub.MeteringPoints.Application.Integrations.ChargeLinks.Messages;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Integrations.ChargeLinks.Create
@@ -31,16 +30,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Integrations.ChargeLinks.
             _commandScheduler = commandScheduler;
         }
 
-        public async Task Handle(CreateDefaultChargeLinksSucceeded notification, CancellationToken cancellationToken)
+        public Task Handle(CreateDefaultChargeLinksSucceeded notification, CancellationToken cancellationToken)
         {
             // TODO: Handle process state
             if (notification == null) throw new ArgumentNullException(nameof(notification));
 
-            if (notification.DidCreateChargeLinks)
-            {
-                var command = new CreateDefaultChargeLinksMessages(notification.GsrnNumber, notification.CorrelationId);
-                await _commandScheduler.EnqueueAsync(command).ConfigureAwait(false);
-            }
+            return Task.CompletedTask;
         }
     }
 }

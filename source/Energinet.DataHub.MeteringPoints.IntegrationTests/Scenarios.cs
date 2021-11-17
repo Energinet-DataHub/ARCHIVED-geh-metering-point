@@ -18,8 +18,9 @@ using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Create.Exchange;
 using Energinet.DataHub.MeteringPoints.Application.Create.Production;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
+using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests
@@ -124,6 +125,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 SampleData.StreetCode,
                 SampleData.FloorIdentification,
                 SampleData.RoomIdentification,
+                SampleData.IsActualAddress,
                 SampleData.GsrnNumber,
                 MeteringMethod.Physical.Name,
                 SampleData.ReadingOccurrence,
@@ -136,7 +138,51 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 SampleData.MeteringGridArea,
                 SampleData.MeteringGridArea,
                 Guid.NewGuid().ToString(),
-                ConnectionType.Installation.Name);
+                ConnectionType.Installation.Name,
+                SampleData.GeoInfoReference);
+        }
+
+        internal static MasterDataDocument CreateDocument()
+        {
+            return new(
+                BusinessProcessType.CreateMeteringPoint.Name,
+                SampleData.StreetName,
+                SampleData.BuildingNumber,
+                SampleData.PostCode,
+                SampleData.CityName,
+                SampleData.CitySubDivisionName,
+                SampleData.MunicipalityCode,
+                SampleData.CountryCode,
+                SampleData.StreetCode,
+                SampleData.FloorIdentification,
+                SampleData.RoomIdentification,
+                SampleData.IsActualAddress,
+                SampleData.GsrnNumber,
+                SampleData.TypeOfMeteringPoint,
+                SampleData.SubTypeOfMeteringPoint,
+                SampleData.ReadingOccurrence,
+                0,
+                0,
+                SampleData.MeteringGridArea,
+                SampleData.PowerPlantGsrnNumber,
+                string.Empty,
+                SampleData.SettlementMethod,
+                SampleData.DisconnectionType,
+                SampleData.EffectiveDate,
+                SampleData.MeterNumber,
+                SampleData.Transaction,
+                SampleData.PhysicalState,
+                SampleData.NetSettlementGroup,
+                SampleData.ConnectionType,
+                SampleData.AssetType,
+                "123",
+                ToGrid: "456",
+                ParentRelatedMeteringPoint: null,
+                SampleData.ProductType,
+                null,
+                SampleData.GeoInfoReference,
+                SampleData.MeasurementUnitType,
+                SampleData.ScheduledMeterReadingDate);
         }
     }
 }

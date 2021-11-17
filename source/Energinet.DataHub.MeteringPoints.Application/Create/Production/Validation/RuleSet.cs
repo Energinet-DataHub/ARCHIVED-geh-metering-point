@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Create.Production.Validation
@@ -21,22 +24,52 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Production.Validat
     {
         public RuleSet()
         {
+            RuleFor(request => request.EffectiveDate).SetValidator(new EffectiveDateRule());
+            RuleFor(request => request.CountryCode)
+                .NotEmpty()
+                .SetValidator(new CountryCodeRule());
+            RuleFor(request => request.AssetType)
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty()
+                .WithState(request => new AssetTypeIsRequiredRuleError())
+                .SetValidator(new AssetTypeRule());
+            RuleFor(request => request.PhysicalConnectionCapacity)
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty()
+                .WithState(request => new CapacityIsRequiredRuleError())
+                .SetValidator(new CapacityRule()!);
+            RuleFor(request => request.MeterNumber)
+                .SetValidator(new MeterNumberMustBeValidRule()!)
+                .Unless(request => string.IsNullOrEmpty(request.MeterNumber));
+            RuleFor(request => request.MeteringMethod)
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty()
+                .WithState(value => new MeteringMethodIsMandatoryValidationError())
+                .SetValidator(new MeteringMethodMustBeValidRule());
+            RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberValidator());
+            RuleFor(request => request.DisconnectionType).SetValidator(new DisconnectionTypeRule())
+                .Unless(request => string.IsNullOrWhiteSpace(request.DisconnectionType));
+            RuleFor(request => request.ConnectionType)
+                .SetValidator(new ConnectionTypeRule())
+                .Unless(request => string.IsNullOrWhiteSpace(request.ConnectionType));
             RuleFor(request => request.NetSettlementGroup)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .WithState(createMeteringPoint => new NetSettlementGroupMandatoryValidationError());
+                .WithState(createMeteringPoint => new NetSettlementGroupMandatoryValidationError())
+                .SetValidator(new NetSettlementGroupRule()!);
+
             RuleFor(request => request.MeterReadingOccurrence)
                 .NotEmpty()
                 .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError());
-            RuleFor(createMeteringPoint => createMeteringPoint.MeteringMethod)
-                .NotEmpty()
-                .WithState(createMeteringPoint => new MeteringMethodIsMandatoryValidationError());
             RuleFor(createMeteringPoint => createMeteringPoint.DisconnectionType)
                 .NotEmpty()
                 .WithState(createMeteringPoint => new DisconnectionTypeMandatoryValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.DisconnectionType));
             RuleFor(createMeteringPoint => createMeteringPoint.PowerPlant)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .WithState(createMeteringPoint => new PowerPlantValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.PowerPlant));
+                .WithState(createMeteringPoint =>
+                    new PowerPlantValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.PowerPlant))
+                .SetValidator(new PowerPlantMustBeValidRule()!);
         }
     }
 }

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
@@ -22,49 +23,17 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class ProductTypeRule : AbstractValidator<MasterDataDocument>
+    public class ProductTypeRule : AbstractValidator<string>
     {
         public ProductTypeRule()
         {
-            RuleFor(request => request.ProductType)
+            RuleFor(value => value)
                 .NotEmpty()
-                .WithState(createMeteringPoint => new ProductTypeMandatoryValidationError(createMeteringPoint.GsrnNumber));
+                .WithState(createMeteringPoint => new ProductTypeMandatoryValidationError());
 
-            RuleFor(request => request.ProductType)
-                .Must(productType => AllowedProductTypeValues().Contains(productType))
-                .WithState(createMeteringPoint => new ProductTypeInvalidValueValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.ProductType));
-
-            When(IsMeteringPointTypeWithDefaultProductType, () =>
-            {
-                RuleFor(request => request.ProductType)
-                    .Must(productType => productType == ProductType.EnergyActive.Name)
-                    .WithState(createMeteringPoint => new ProductTypeWrongDefaultValueValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.ProductType));
-            });
-
-            When(createMeteringPoint => createMeteringPoint.TypeOfMeteringPoint == MeteringPointType.ExchangeReactiveEnergy.Name, () =>
-            {
-                RuleFor(request => request.ProductType)
-                    .Must(productType => productType == ProductType.EnergyReactive.Name)
-                    .WithState(createMeteringPoint => new ProductTypeWrongDefaultValueValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.ProductType));
-            });
-        }
-
-        private static bool IsMeteringPointTypeWithDefaultProductType(MasterDataDocument masterDataDocument)
-        {
-            var includedMeteringPointTypes = new HashSet<string>
-            {
-                MeteringPointType.Analysis.Name,
-                MeteringPointType.VEProduction.Name,
-                MeteringPointType.ExchangeReactiveEnergy.Name,
-                MeteringPointType.InternalUse.Name,
-            };
-
-            return !includedMeteringPointTypes.Contains(masterDataDocument.TypeOfMeteringPoint);
-        }
-
-        private static HashSet<string> AllowedProductTypeValues()
-        {
-            return EnumerationType.GetAll<ProductType>().Select(x => x.Name).ToHashSet();
+            RuleFor(value => value)
+                .Must(productType => EnumerationType.GetAll<ProductType>().Select(item => item.Name).Contains(productType))
+                .WithState(value => new ProductTypeInvalidValueValidationError(value));
         }
     }
 }

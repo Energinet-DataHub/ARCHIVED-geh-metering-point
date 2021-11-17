@@ -18,13 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class DisconnectionTypeWrongValueValidationError : ValidationError
     {
-        public DisconnectionTypeWrongValueValidationError(string gsrnNumber, string disconnectionType)
+        public DisconnectionTypeWrongValueValidationError(string disconnectionType)
         {
-            GsrnNumber = gsrnNumber;
             DisconnectionType = disconnectionType;
         }
-
-        public string GsrnNumber { get; }
 
         public string DisconnectionType { get; }
     }
