@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections;
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+using System.Threading;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDispatchers
 {
-    public record MeteringConfigurationChangedIntegrationEvent(
-        string MeteringPointId,
-        string GsrnNumber,
-        string Method,
-        string Meter,
-        string EffectiveDate) :
-        IIntegrationEvent, IOutboundMessage, IRequest;
+    public class NullMeteringConfigrationChangedDispatcher : IRequestHandler<MeteringConfigurationChangedIntegrationEvent>
+    {
+        public Task<Unit> Handle(MeteringConfigurationChangedIntegrationEvent request, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(Unit.Value);
+        }
+    }
 }
