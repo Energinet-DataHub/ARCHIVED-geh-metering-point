@@ -29,11 +29,18 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
             _commandScheduler = commandScheduler ?? throw new ArgumentNullException(nameof(commandScheduler));
         }
 
-        public Task Handle(EnergySupplierChanged notification, CancellationToken cancellationToken)
+        public async Task Handle(EnergySupplierChanged notification, CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
-            var command = new SetEnergySupplierInfo(notification.GsrnNumber, notification.StartOfSupply);
-            return _commandScheduler.EnqueueAsync(command);
+
+            var setInfoCommand = new SetEnergySupplierInfo(notification.GsrnNumber, notification.StartOfSupply);
+            await _commandScheduler.EnqueueAsync(setInfoCommand).ConfigureAwait(false);
+
+            var addSupplierCommand = new AddEnergySupplier(
+                notification.MeteringPointId,
+                notification.StartOfSupply,
+                notification.GlnNumber);
+            await _commandScheduler.EnqueueAsync(addSupplierCommand).ConfigureAwait(false);
         }
     }
 }

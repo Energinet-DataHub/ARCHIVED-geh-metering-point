@@ -12,11 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common.Address
+using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+using MediatR;
+using NodaTime;
+
+namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
-    public record Status(
-        string Value,
-        string DateTime,
-        string Remark,
-        string Reason);
+    public record FutureEnergySupplierChangeRegistered(
+        string AccountingPointId,
+        string GsrnNumber,
+        string EnergySupplierGln,
+        Instant EffectiveDate) : INotification, IInboundMessage;
 }
