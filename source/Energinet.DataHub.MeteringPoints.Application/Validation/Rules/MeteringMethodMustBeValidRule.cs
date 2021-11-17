@@ -14,7 +14,6 @@
 
 using System;
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -22,17 +21,14 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class MeteringMethodMustBeValidRule : AbstractValidator<MasterDataDocument>
+    public class MeteringMethodMustBeValidRule : AbstractValidator<string>
     {
         public MeteringMethodMustBeValidRule()
         {
-            When(request => !string.IsNullOrWhiteSpace(request.MeteringMethod), () =>
-            {
-                RuleFor(createMeteringPoint => createMeteringPoint.MeteringMethod)
-                    .Must(value => EnumerationType.GetAll<MeteringMethod>().Select(item => item.Name)
-                        .Contains(value, StringComparer.OrdinalIgnoreCase))
-                    .WithState(request => new InvalidMeteringMethodRuleError(request.MeteringMethod));
-            });
+            RuleFor(value => value)
+                .Must(value => EnumerationType.GetAll<MeteringMethod>().Select(item => item.Name)
+                    .Contains(value, StringComparer.OrdinalIgnoreCase))
+                .WithState(value => new InvalidMeteringMethodRuleError(value));
         }
     }
 }

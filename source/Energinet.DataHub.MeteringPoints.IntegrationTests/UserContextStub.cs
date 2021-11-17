@@ -12,18 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
-    public class NetSettlementGroupInvalidValueErrorConverter : ErrorConverter<NetSettlementGroupInvalidValueValidationError>
+    public class UserContextStub : IUserContext
     {
-        protected override ErrorMessage Convert(NetSettlementGroupInvalidValueValidationError validationError)
-        {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+        public UserIdentity? CurrentUser { get; set; }
 
-            return new ErrorMessage("D02", $"Net settlement group has wrong value (outside domain)");
+        public string Key { get; } = string.Empty;
+
+        public void SetCurrentUser(UserIdentity userIdentity)
+        {
+            CurrentUser = userIdentity;
         }
     }
 }

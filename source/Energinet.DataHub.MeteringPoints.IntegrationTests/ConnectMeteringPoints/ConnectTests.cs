@@ -142,6 +142,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
         {
         }
 
+        [Fact]
+        public async Task Effective_date_is_required()
+        {
+            var createMeteringPointRequest = CreateMeteringPointRequest();
+            var connectMeteringPointRequest = CreateConnectMeteringPointRequest()
+                with
+                {
+                    EffectiveDate = string.Empty,
+                };
+
+            await SendCommandAsync(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConnectMeteringPointRejected);
+        }
+
         private static MasterDataDocument CreateMeteringPointRequest()
         {
             return new(

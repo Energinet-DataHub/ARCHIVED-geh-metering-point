@@ -12,24 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Authorization;
+using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Authorization
 {
-    public class TestBusinessRequest : IBusinessRequest
+    public class NullAuthorizer<TRequest> : IAuthorizer<TRequest>
+        where TRequest : IBusinessRequest
     {
-        public TestBusinessRequest(string transactionId, string effectiveDate, string gsrnNumber)
+        public Task<AuthorizationResult> AuthorizeAsync(TRequest request)
         {
-            TransactionId = transactionId;
-            EffectiveDate = effectiveDate;
-            GsrnNumber = gsrnNumber;
+            return Task.FromResult(AuthorizationResult.Ok());
         }
-
-        public string TransactionId { get; }
-
-        public string EffectiveDate { get; }
-
-        public string GsrnNumber { get; }
     }
 }

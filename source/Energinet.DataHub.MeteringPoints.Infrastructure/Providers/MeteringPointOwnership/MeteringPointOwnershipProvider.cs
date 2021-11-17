@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Providers.MeteringPointOwnership
 {
-    public class NetSettlementGroupInvalidValueErrorConverter : ErrorConverter<NetSettlementGroupInvalidValueValidationError>
+    public class MeteringPointOwnershipProvider : IMeteringPointOwnershipProvider
     {
-        protected override ErrorMessage Convert(NetSettlementGroupInvalidValueValidationError validationError)
+        public Task<Owner> GetOwnerAsync(string gsrnNumber)
         {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-
-            return new ErrorMessage("D02", $"Net settlement group has wrong value (outside domain)");
+            //TODO: Currently grid area does not hold any details about the owner. Thus, this method cannot be completed. We just return a fake GLN number
+            return Task.FromResult(new Owner("8200000001409"));
         }
     }
 }

@@ -12,19 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
+namespace Energinet.DataHub.MeteringPoints.Application.Authorization
 {
-    public class TestBusinessRequestHandler : IBusinessRequestHandler<TestBusinessRequest>
+    /// <summary>
+    /// Service for handling business process specific authorization
+    /// </summary>
+    public interface IAuthorizer<in TBusinessRequest>
+        where TBusinessRequest : IBusinessRequest
     {
-        public Task<BusinessProcessResult> Handle(TestBusinessRequest request, CancellationToken cancellationToken)
-        {
-            if (request == null) throw new ArgumentNullException(nameof(request));
-            return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
-        }
+        /// <summary>
+        /// Invoke authorization process
+        /// </summary>
+        /// <returns><see cref="AuthorizationResult"/></returns>
+        Task<AuthorizationResult> AuthorizeAsync(TBusinessRequest request);
     }
 }

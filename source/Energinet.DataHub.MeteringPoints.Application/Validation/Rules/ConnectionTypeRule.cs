@@ -14,26 +14,22 @@
 
 using System;
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class ConnectionTypeRule : AbstractValidator<MasterDataDocument>
+    public class ConnectionTypeRule : AbstractValidator<string?>
     {
         public ConnectionTypeRule()
         {
-            When(request => !string.IsNullOrWhiteSpace(request.ConnectionType), () =>
-            {
-                RuleFor(request => request.ConnectionType)
-                    .Must(value => EnumerationType
-                        .GetAll<ConnectionType>()
-                        .Select(item => item.Name)
-                        .Contains(value, StringComparer.OrdinalIgnoreCase))
-                    .WithState(request => new InvalidConnectionTypeRuleError(request.ConnectionType !));
-            });
+            RuleFor(connectionType => connectionType)
+                .Must(value => EnumerationType
+                    .GetAll<ConnectionType>()
+                    .Select(item => item.Name)
+                    .Contains(value, StringComparer.OrdinalIgnoreCase))
+                .WithState(connectionType => new InvalidConnectionTypeRuleError(connectionType !));
         }
     }
 }

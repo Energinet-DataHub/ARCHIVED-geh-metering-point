@@ -13,17 +13,17 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperatorPolicies;
+using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Authorization
 {
-    public class NetSettlementGroupInvalidValueErrorConverter : ErrorConverter<NetSettlementGroupInvalidValueValidationError>
+    public class GridOperatorIsNotOwnerOfMeteringPointErrorConverter : ErrorConverter<GridOperatorIsNotOwnerOfMeteringPoint>
     {
-        protected override ErrorMessage Convert(NetSettlementGroupInvalidValueValidationError validationError)
+        protected override ErrorMessage Convert(GridOperatorIsNotOwnerOfMeteringPoint validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-
-            return new ErrorMessage("D02", $"Net settlement group has wrong value (outside domain)");
+            return new ErrorMessage("E10", "The specified metering point is owned by another grid operator.");
         }
     }
 }

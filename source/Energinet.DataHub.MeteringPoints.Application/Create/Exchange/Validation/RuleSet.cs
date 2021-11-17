@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using FluentValidation;
 
@@ -21,12 +22,22 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange.Validatio
     {
         public RuleSet()
         {
-                RuleFor(request => request.MeterReadingOccurrence)
+            RuleFor(request => request.EffectiveDate).SetValidator(new EffectiveDateRule());
+            RuleFor(request => request.CountryCode)
+                .NotEmpty()
+                .SetValidator(new CountryCodeRule());
+            RuleFor(request => request.MeterNumber)
+                .SetValidator(new MeterNumberMustBeValidRule()!)
+                .Unless(request => string.IsNullOrEmpty(request.MeterNumber));
+            RuleFor(request => request.MeteringMethod)
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty()
+                .WithState(value => new MeteringMethodIsMandatoryValidationError())
+                .SetValidator(new MeteringMethodMustBeValidRule());
+            RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberValidator());
+            RuleFor(request => request.MeterReadingOccurrence)
                     .NotEmpty()
                     .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError());
-                RuleFor(createMeteringPoint => createMeteringPoint.MeteringMethod)
-                    .NotEmpty()
-                    .WithState(createMeteringPoint => new MeteringMethodIsMandatoryValidationError());
         }
     }
 }

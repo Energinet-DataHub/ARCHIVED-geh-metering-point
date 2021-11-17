@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperatorPolicies
 {
-    public class NetSettlementGroupInvalidValueErrorConverter : ErrorConverter<NetSettlementGroupInvalidValueValidationError>
+    public class GridOperatorIsNotOwnerOfMeteringPoint : ValidationError
     {
-        protected override ErrorMessage Convert(NetSettlementGroupInvalidValueValidationError validationError)
+        public GridOperatorIsNotOwnerOfMeteringPoint(string gsrnNumber)
         {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-
-            return new ErrorMessage("D02", $"Net settlement group has wrong value (outside domain)");
+            GsrnNumber = gsrnNumber;
         }
+
+        public string GsrnNumber { get; }
     }
 }
