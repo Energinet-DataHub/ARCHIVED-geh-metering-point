@@ -13,6 +13,9 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Xml;
 using System.Xml.Linq;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
@@ -21,104 +24,102 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCha
 {
     public static class AccountingPointCharacteristicsXmlSerializer
     {
-        public static string Serialize(AccountingPointCharacteristicsMessage message, XNamespace xmlNamespace)
+        public static string Serialize(AccountingPointCharacteristicsMessage message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
 
+            XNamespace xmlns = XNamespace.Get("urn:ediel.org:structure:accountingpointcharacteristics:0:1");
+            XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
+            XNamespace schemaLocation = XNamespace.Get("urn:ediel.org:structure:accountingpointcharacteristics:0:1 urn-ediel-org-structure-accountingpointcharacteristics-0-1.xsd");
+
             var document = new XDocument(
                 new XElement(
-                    xmlNamespace + "AccountingPointcharacteristics_MarketDocument",
-                    new XAttribute(XNamespace.Xmlns + "cim", xmlNamespace),
-                    new XElement(xmlNamespace + "mRID", Guid.NewGuid().ToString()),
-                    new XElement(xmlNamespace + "type", message.Type),
-                    new XElement(xmlNamespace + "process.processType", message.ProcessType),
-                    new XElement(xmlNamespace + "businessSector.type", message.BusinessSectorType),
-                    new XElement(xmlNamespace + "sender_MarketParticipant.mRID", new XAttribute("codingScheme", message.Sender.CodingScheme), message.Sender.Id),
-                    new XElement(xmlNamespace + "sender_MarketParticipant.marketRole.type", message.Sender.Role),
-                    new XElement(xmlNamespace + "receiver_MarketParticipant.mRID", new XAttribute("codingScheme", message.Receiver.CodingScheme), message.Receiver.Id),
-                    new XElement(xmlNamespace + "receiver_MarketParticipant.marketRole.type", message.Receiver.Role),
-                    new XElement(xmlNamespace + "createdDateTime", message.CreatedDateTime),
+                    xmlns + "AccountingPointcharacteristics_MarketDocument",
+                    new XAttribute(XNamespace.Xmlns + "xsi", xsi),
+                    new XAttribute(XNamespace.Xmlns + "cim", xmlns),
+                    new XAttribute(xsi + "schemaLocation", schemaLocation),
+                    new XElement(xmlns + "mRID", message.Id),
+                    new XElement(xmlns + "type", message.Type),
+                    new XElement(xmlns + "process.processType", message.ProcessType),
+                    new XElement(xmlns + "businessSector.type", message.BusinessSectorType),
+                    new XElement(xmlns + "sender_MarketParticipant.mRID", new XAttribute("codingScheme", message.Sender.CodingScheme), message.Sender.Id),
+                    new XElement(xmlns + "sender_MarketParticipant.marketRole.type", message.Sender.Role),
+                    new XElement(xmlns + "receiver_MarketParticipant.mRID", new XAttribute("codingScheme", message.Receiver.CodingScheme), message.Receiver.Id),
+                    new XElement(xmlns + "receiver_MarketParticipant.marketRole.type", message.Receiver.Role),
+                    new XElement(xmlns + "createdDateTime", message.CreatedDateTime),
                     new XElement(
-                        xmlNamespace + "MktActivityRecord",
-                        new XElement(xmlNamespace + "mRID", message.MarketActivityRecord.Id),
-                        new XElement(xmlNamespace + "businessProcessReference_MktActivityRecord.mRID", message.MarketActivityRecord.BusinessProcessReference),
-                        new XElement(xmlNamespace + "originalTransactionIDReference_MktActivityRecord.mRID", message.MarketActivityRecord.OriginalTransaction),
-                        new XElement(xmlNamespace + "validityStart_DateAndOrTime.dateTime", message.MarketActivityRecord.ValidityStartDateAndOrTime),
+                        xmlns + "MktActivityRecord",
+                        new XElement(xmlns + "mRID", message.MarketActivityRecord.Id),
+                        new XElement(xmlns + "originalTransactionIDReference_MktActivityRecord.mRID", message.MarketActivityRecord.OriginalTransaction),
+                        new XElement(xmlns + "validityStart_DateAndOrTime.dateTime", message.MarketActivityRecord.ValidityStartDateAndOrTime),
                         new XElement(
-                            xmlNamespace + "MarketEvaluationPoint",
-                            new XElement(xmlNamespace + "mRID", new XAttribute("codingScheme", message.MarketActivityRecord.MarketEvaluationPoint.Id.CodingScheme), message.MarketActivityRecord.MarketEvaluationPoint.Id.Id),
-                            MarketParticipantElement(xmlNamespace, "meteringGridArea_Domain.mRID", message.MarketActivityRecord.MarketEvaluationPoint.MeteringPointResponsibleMarketRoleParticipant),
-                            new XElement(xmlNamespace + "type", message.MarketActivityRecord.MarketEvaluationPoint.Type),
-                            new XElement(xmlNamespace + "settlementMethod", message.MarketActivityRecord.MarketEvaluationPoint.SettlementMethod),
-                            new XElement(xmlNamespace + "meteringMethod", message.MarketActivityRecord.MarketEvaluationPoint.MeteringMethod),
-                            new XElement(xmlNamespace + "connectionState", message.MarketActivityRecord.MarketEvaluationPoint.ConnectionState),
-                            new XElement(xmlNamespace + "readCycle", message.MarketActivityRecord.MarketEvaluationPoint.ReadCycle),
-                            new XElement(xmlNamespace + "netSettlementGroup", message.MarketActivityRecord.MarketEvaluationPoint.NetSettlementGroup),
-                            new XElement(xmlNamespace + "nextReadingDate", message.MarketActivityRecord.MarketEvaluationPoint.NextReadingDate),
-                            MridElement(xmlNamespace, "meteringGridArea_Domain.mRID", message.MarketActivityRecord.MarketEvaluationPoint.MeteringGridAreaDomainId),
-                            MridElement(xmlNamespace, "inMeteringGridArea_Domain.mRID", message.MarketActivityRecord.MarketEvaluationPoint.InMeteringGridAreaDomainId),
-                            MridElement(xmlNamespace, "outMeteringGridArea_Domain.mRID", message.MarketActivityRecord.MarketEvaluationPoint.OutMeteringGridAreaDomainId),
-                            MridElement(xmlNamespace, "Linked_MarketEvaluationPoint.mRID", message.MarketActivityRecord.MarketEvaluationPoint.LinkedMarketEvaluationPoint),
-                            UnitElement(xmlNamespace, "physicalConnectionCapacity", message.MarketActivityRecord.MarketEvaluationPoint.PhysicalConnectionCapacity),
-                            new XElement(xmlNamespace + "mPConnectionType", message.MarketActivityRecord.MarketEvaluationPoint.ConnectionType),
-                            new XElement(xmlNamespace + "disconnectionMethod", message.MarketActivityRecord.MarketEvaluationPoint.DisconnectionMethod),
-                            new XElement(xmlNamespace + "asset_MktPSRType.psrType", message.MarketActivityRecord.MarketEvaluationPoint.AssetMarketPSRTypePsrType),
-                            new XElement(xmlNamespace + "productionObligation", message.MarketActivityRecord.MarketEvaluationPoint.ProductionObligation),
+                            xmlns + "MarketEvaluationPoint",
+                            new XElement(xmlns + "mRID", new XAttribute("codingScheme", message.MarketActivityRecord.MarketEvaluationPoint.Id.CodingScheme), message.MarketActivityRecord.MarketEvaluationPoint.Id.Id),
+                            MarketParticipantElement(xmlns, "meteringPointResponsible_MarketParticipant.mRID", message.MarketActivityRecord.MarketEvaluationPoint.MeteringPointResponsibleMarketRoleParticipant),
+                            new XElement(xmlns + "type", message.MarketActivityRecord.MarketEvaluationPoint.Type),
+                            new XElement(xmlns + "settlementMethod", message.MarketActivityRecord.MarketEvaluationPoint.SettlementMethod),
+                            new XElement(xmlns + "meteringMethod", message.MarketActivityRecord.MarketEvaluationPoint.MeteringMethod),
+                            new XElement(xmlns + "connectionState", message.MarketActivityRecord.MarketEvaluationPoint.ConnectionState),
+                            new XElement(xmlns + "readCycle", message.MarketActivityRecord.MarketEvaluationPoint.ReadCycle),
+                            new XElement(xmlns + "netSettlementGroup", message.MarketActivityRecord.MarketEvaluationPoint.NetSettlementGroup),
+                            new XElement(xmlns + "nextReadingDate", message.MarketActivityRecord.MarketEvaluationPoint.NextReadingDate),
+                            MridElement(xmlns, "meteringGridArea_Domain.mRID", message.MarketActivityRecord.MarketEvaluationPoint.MeteringGridAreaDomainId),
+                            MridElement(xmlns, "inMeteringGridArea_Domain.mRID", message.MarketActivityRecord.MarketEvaluationPoint.InMeteringGridAreaDomainId),
+                            MridElement(xmlns, "outMeteringGridArea_Domain.mRID", message.MarketActivityRecord.MarketEvaluationPoint.OutMeteringGridAreaDomainId),
+                            new XElement(xmlns + "linked_MarketEvaluationPoint.mRID", message.MarketActivityRecord.MarketEvaluationPoint.LinkedMarketEvaluationPoint),
+                            UnitElement(xmlns, "physicalConnectionCapacity", message.MarketActivityRecord.MarketEvaluationPoint.PhysicalConnectionCapacity),
+                            new XElement(xmlns + "mPConnectionType", message.MarketActivityRecord.MarketEvaluationPoint.ConnectionType),
+                            new XElement(xmlns + "disconnectionMethod", message.MarketActivityRecord.MarketEvaluationPoint.DisconnectionMethod),
+                            new XElement(xmlns + "asset_MktPSRType.psrType", message.MarketActivityRecord.MarketEvaluationPoint.AssetMarketPSRTypePsrType),
+                            new XElement(xmlns + "productionObligation", message.MarketActivityRecord.MarketEvaluationPoint.ProductionObligation),
+                            UnitElement(xmlns, "contractedConnectionCapacity", message.MarketActivityRecord.MarketEvaluationPoint.ContractedConnectionCapacity),
+                            UnitElement(xmlns, "ratedCurrent", message.MarketActivityRecord.MarketEvaluationPoint.RatedCurrent),
+                            new XElement(xmlns + "meter.mRID", message.MarketActivityRecord.MarketEvaluationPoint.MeterId),
+                            MarketParticipantElement(xmlns, "energySupplier_MarketParticipant.mRID", message.MarketActivityRecord.MarketEvaluationPoint.EnergySupplierMarketParticipantId),
+                            new XElement(xmlns + "supplyStart_DateAndOrTime.dateTime", message.MarketActivityRecord.MarketEvaluationPoint.SupplyStartDateAndOrTimeDateTime),
                             new XElement(
-                                xmlNamespace + "Series",
-                                new XElement(xmlNamespace + "mRID", message.MarketActivityRecord.MarketEvaluationPoint.Series.Id),
-                                new XElement(xmlNamespace + "estimatedAnnualVolume_Quantity.quantity", message.MarketActivityRecord.MarketEvaluationPoint.Series.EstimatedAnnualVolumeQuantity),
-                                new XElement(xmlNamespace + "quantity_Measure_Unit.name", message.MarketActivityRecord.MarketEvaluationPoint.Series.QuantityMeasureUnit)),
-                            UnitElement(xmlNamespace, "contractedConnectionCapacity", message.MarketActivityRecord.MarketEvaluationPoint.ContractedConnectionCapacity),
-                            UnitElement(xmlNamespace, "ratedCurrentConnectionCapacity", message.MarketActivityRecord.MarketEvaluationPoint.RatedCurrent),
-                            new XElement(xmlNamespace + "meter.mRID", message.MarketActivityRecord.MarketEvaluationPoint.MeterId),
-                            MarketParticipantElement(xmlNamespace, "meteringGridArea_Domain.mRID", message.MarketActivityRecord.MarketEvaluationPoint.EnergySupplierMarketParticipantId),
-                            new XElement(xmlNamespace + "supplyStart_DateAndOrTime.dateTime", message.MarketActivityRecord.MarketEvaluationPoint.SupplyStartDateAndOrTimeDateTime),
-                            new XElement(xmlNamespace + "description", message.MarketActivityRecord.MarketEvaluationPoint.Description),
+                                xmlns + "Series",
+                                new XElement(xmlns + "product", message.MarketActivityRecord.MarketEvaluationPoint.Series.Product),
+                                new XElement(xmlns + "quantity_Measure_Unit.name", message.MarketActivityRecord.MarketEvaluationPoint.Series.QuantityMeasureUnit)),
+                            new XElement(xmlns + "description", message.MarketActivityRecord.MarketEvaluationPoint.Description),
+                            new XElement(xmlns + "usagePointLocation.geoInfoReference", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationGeoInfoReference),
                             new XElement(
-                                xmlNamespace + "usagePointLocation.mainAddress",
+                                xmlns + "usagePointLocation.mainAddress",
                                 new XElement(
-                                    xmlNamespace + "streetDetail",
-                                    new XElement(xmlNamespace + "number", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.StreetDetail.Number),
-                                    new XElement(xmlNamespace + "name", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.StreetDetail.Name),
-                                    new XElement(xmlNamespace + "type", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.StreetDetail.Type),
-                                    new XElement(xmlNamespace + "code", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.StreetDetail.Code),
-                                    new XElement(xmlNamespace + "buildingName", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.StreetDetail.BuildingName),
-                                    new XElement(xmlNamespace + "suiteNumber", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.StreetDetail.SuiteNumber),
-                                    new XElement(xmlNamespace + "floorIdentification", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.StreetDetail.FloorIdentification)),
+                                    xmlns + "streetDetail",
+                                    new XElement(xmlns + "code", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.StreetDetail.Code),
+                                    new XElement(xmlns + "name", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.StreetDetail.Name),
+                                    new XElement(xmlns + "number", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.StreetDetail.Number),
+                                    new XElement(xmlns + "floorIdentification", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.StreetDetail.FloorIdentification),
+                                    new XElement(xmlns + "suiteNumber", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.StreetDetail.SuiteNumber)),
                                 new XElement(
-                                    xmlNamespace + "townDetail",
-                                    new XElement(xmlNamespace + "code", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.TownDetail.Code),
-                                    new XElement(xmlNamespace + "section", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.TownDetail.Section),
-                                    new XElement(xmlNamespace + "name", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.TownDetail.Name),
-                                    new XElement(xmlNamespace + "stateOrProvince", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.TownDetail.StateOrProvince),
-                                    new XElement(xmlNamespace + "country", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.TownDetail.Country)),
-                                new XElement(
-                                    xmlNamespace + "status",
-                                    new XElement(xmlNamespace + "code", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.TownDetail.Code),
-                                    new XElement(xmlNamespace + "section", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.TownDetail.Section),
-                                    new XElement(xmlNamespace + "name", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.TownDetail.Name),
-                                    new XElement(xmlNamespace + "stateOrProvince", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.TownDetail.StateOrProvince)),
-                                new XElement(xmlNamespace + "postalCode", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.TownDetail.Code),
-                                new XElement(xmlNamespace + "poBox", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.TownDetail.Code),
-                                new XElement(xmlNamespace + "code", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.TownDetail.Code)),
-                            new XElement(xmlNamespace + "usagePointLocation.actualAddressIndicator", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationActualAddressIndicator),
-                            new XElement(xmlNamespace + "usagePointLocation.geoInfoReference", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationGeoInfoReference),
-                            MridElement(xmlNamespace, "parent_MarketEvaluationPoint.mRID", message.MarketActivityRecord.MarketEvaluationPoint.ParentMarketEvaluationPointId.Mrid),
-                            new XElement(xmlNamespace + "parent_MarketEvaluationPoint.description", message.MarketActivityRecord.MarketEvaluationPoint.ParentMarketEvaluationPointId.Description),
-                            MridElement(xmlNamespace, "Child_MarketEvaluationPoint.mRID", message.MarketActivityRecord.MarketEvaluationPoint.ChildMarketEvaluationPoint)))));
-
+                                    xmlns + "townDetail",
+                                    new XElement(xmlns + "code", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.TownDetail.Code),
+                                    new XElement(xmlns + "name", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.TownDetail.Name),
+                                    new XElement(xmlns + "section", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.TownDetail.Section),
+                                    new XElement(xmlns + "country", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.TownDetail.Country)),
+                                new XElement(xmlns + "postalCode", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationMainAddress.PostalCode)),
+                            new XElement(xmlns + "usagePointLocation.actualAddressIndicator", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationActualAddressIndicator),
+                            new XElement(
+                                xmlns + "Parent_MarketEvaluationPoint",
+                                new XElement(xmlns + "mRID", message.MarketActivityRecord.MarketEvaluationPoint.ParentMarketEvaluationPoint.Id)),
+                            new XElement(
+                                xmlns + "Child_MarketEvaluationPoint",
+                                new XElement(xmlns + "mRID", message.MarketActivityRecord.MarketEvaluationPoint.ChildMarketEvaluationPoint.Id),
+                                new XElement(xmlns + "description", message.MarketActivityRecord.MarketEvaluationPoint.ChildMarketEvaluationPoint.Description))))));
             return Serialize(document);
         }
 
-        private static XElement MridElement(XNamespace xmlNamespace, string name, Mrid mrid)
+        private static List<XElement> MridElement(XNamespace xmlNamespace, string name, Mrid? mrid)
         {
-            return new XElement(xmlNamespace + name, new XAttribute("codingScheme", mrid.CodingScheme), mrid.Id);
+            return mrid == null
+                ? new List<XElement>() // Optional for some
+                : new List<XElement> { new(xmlNamespace + name, new XAttribute("codingScheme", mrid.CodingScheme), mrid.Id) };
         }
 
         private static XElement UnitElement(XNamespace xmlNamespace, string name, UnitValue unitValue)
         {
-            return new XElement(xmlNamespace + name, new XAttribute("codingScheme", unitValue.Unit), unitValue.Value);
+            return new XElement(xmlNamespace + name, new XAttribute("unit", unitValue.Unit), unitValue.Value);
         }
 
         private static XElement MarketParticipantElement(XNamespace xmlNamespace, string name, MarketParticipant marketParticipant)

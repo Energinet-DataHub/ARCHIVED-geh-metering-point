@@ -77,10 +77,31 @@ message CreateDefaultChargeLinks {
     string correlationId = 2;
 }
 
+message CreateDefaultChargeLinksMessages {
+    string gsrnNumber = 1;
+    string correlationId = 2;
+}
+
+message AddEnergySupplier {
+  string id = 1;
+  string metering_point_id = 2;
+  google.protobuf.Timestamp effective_date = 3; // Date which the change of supplier goes into effect.
+  string energy_supplier_gln = 4;
+}
+
+message SendAccountingPointCharacteristicsMessage {
+  string id = 1;
+  string metering_point_id = 2;
+  string transation_id = 3;
+  string reason = 4;
+}
+
 message MeteringPointEnvelope {
   oneof MeteringPointMessages {
     MasterDataDocument masterDataDocument = 1;
     CreateDefaultChargeLinks createDefaultChargeLinks = 2;
-    SetEnergySupplierInfo setEnergySupplierInfo = 3;
+    SetEnergySupplierInfo setEnergySupplierInfo = 4;
+    SendAccountingPointCharacteristicsMessage sendAccountingPointCharacteristicsMessage = 5;
+    AddEnergySupplier addEnergySupplier = 6;
   }
 }

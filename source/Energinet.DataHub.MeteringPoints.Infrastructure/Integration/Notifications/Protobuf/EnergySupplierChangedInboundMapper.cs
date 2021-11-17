@@ -26,10 +26,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notificati
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 
-            return new EnergySupplierChanged()
+            return new EnergySupplierChanged
             {
+                MeteringPointId = obj.AccountingpointId,
                 GsrnNumber = obj.GsrnNumber,
                 StartOfSupply = obj.EffectiveDate.ToInstant(),
+                GlnNumber = obj.EnergySupplierGln,
             };
         }
     }

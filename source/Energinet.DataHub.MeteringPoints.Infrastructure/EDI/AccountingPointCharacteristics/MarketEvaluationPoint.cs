@@ -29,9 +29,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCha
         string NetSettlementGroup,
         string NextReadingDate,
         Mrid MeteringGridAreaDomainId,
-        Mrid InMeteringGridAreaDomainId,
-        Mrid OutMeteringGridAreaDomainId,
-        Mrid LinkedMarketEvaluationPoint,
+        Mrid? InMeteringGridAreaDomainId,
+        Mrid? OutMeteringGridAreaDomainId,
+        string LinkedMarketEvaluationPoint,
         UnitValue PhysicalConnectionCapacity,
         string ConnectionType,
         string DisconnectionMethod,
@@ -47,6 +47,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCha
         MainAddress UsagePointLocationMainAddress,
         bool UsagePointLocationActualAddressIndicator,
         string UsagePointLocationGeoInfoReference,
-        ParentMarketEvaluationPoint ParentMarketEvaluationPointId,
+        ParentMarketEvaluationPoint ParentMarketEvaluationPoint,
         ChildMarketEvaluationPoint ChildMarketEvaluationPoint);
 }

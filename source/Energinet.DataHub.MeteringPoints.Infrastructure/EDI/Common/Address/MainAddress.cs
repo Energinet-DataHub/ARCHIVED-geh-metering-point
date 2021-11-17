@@ -17,8 +17,5 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common.Address
     public record MainAddress(
         StreetDetail StreetDetail,
         TownDetail TownDetail,
-        Status Status,
-        string PostalCode,
-        string PoBox,
-        string Language);
+        string PostalCode);
 }

@@ -16,30 +16,33 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
+using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
+using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
-    public class SetEnergySupplierInfoHandler : ICommandHandler<SetEnergySupplierInfo>
+    public class AddEnergySupplierHandler : ICommandHandler<AddEnergySupplier>
     {
-        private readonly IMarketMeteringPointRepository _marketMeteringPointRepository;
+        private readonly IEnergySupplierRepository _energySupplierRepository;
 
-        public SetEnergySupplierInfoHandler(IMarketMeteringPointRepository meteringPointRepository)
+        public AddEnergySupplierHandler(
+            IEnergySupplierRepository energySupplierRepository)
         {
-            _marketMeteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
+            _energySupplierRepository = energySupplierRepository ?? throw new ArgumentNullException(nameof(energySupplierRepository));
         }
 
-        public async Task<Unit> Handle(SetEnergySupplierInfo request, CancellationToken cancellationToken)
+        public Task<Unit> Handle(AddEnergySupplier request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var meteringPoint =
-                await _marketMeteringPointRepository.GetByGSRNAsync(GsrnNumber.Create(request.MeteringPointGsrn)).ConfigureAwait(false);
+            _energySupplierRepository.Add(EnergySupplier.Create(
+                new MeteringPointId(Guid.Parse(request.MeteringPointId)),
+                request.StartOfSupply,
+                GlnNumber.Create(request.EnergySupplierGlnNumber)));
 
-            meteringPoint.SetEnergySupplierDetails(EnergySupplierDetails.Create(request.StartOfSupply));
-            return Unit.Value;
+            return Task.FromResult(Unit.Value);
         }
     }
 }
