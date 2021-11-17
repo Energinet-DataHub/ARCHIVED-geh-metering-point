@@ -194,6 +194,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
         {
             return new CreateSpecialMeteringPoint
             {
+                MeteringPointType = document.TypeOfMeteringPoint,
                 BuildingNumber = document.BuildingNumber,
                 CityName = document.CityName,
                 CountryCode = document.CountryCode,

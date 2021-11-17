@@ -121,7 +121,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
                 meteringPointDetails.GsrnNumber,
                 meteringPointDetails.Address,
                 meteringPointDetails.MeteringMethod,
-                MeteringPointType.Exchange,
+                meteringPointDetails.MeteringPointType,
                 meteringPointDetails.GridAreaLinkId,
                 meteringPointDetails.LocationDescription,
                 meteringPointDetails.MeterNumber,
