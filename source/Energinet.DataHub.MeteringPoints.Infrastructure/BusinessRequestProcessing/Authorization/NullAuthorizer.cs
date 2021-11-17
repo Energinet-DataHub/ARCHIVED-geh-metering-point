@@ -12,21 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Authorization;
+using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Application.Create;
-using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Authorization.AuthorizationHandlers
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Authorization
 {
-    public class ExampleAuthorizationHandler : IAuthorizationHandler<MasterDataDocument, BusinessProcessResult>
+    public class NullAuthorizer<TRequest> : IAuthorizer<TRequest>
+        where TRequest : IBusinessRequest
     {
-        public AuthorizationResult Authorize(MasterDataDocument command)
+        public Task<AuthorizationResult> AuthorizeAsync(TRequest request)
         {
-            // if (!IsValidFormat(command.OccurenceDate))
-            // {
-            //     return AuthorizationResult.Error(nameof(command.OccurenceDate), GetType());
-            // }
-            return AuthorizationResult.Ok();
+            return Task.FromResult(AuthorizationResult.Ok());
         }
     }
 }
