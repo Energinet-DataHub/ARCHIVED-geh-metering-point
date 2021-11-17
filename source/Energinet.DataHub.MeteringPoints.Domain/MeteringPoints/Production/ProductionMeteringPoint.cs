@@ -18,7 +18,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules.Connect;
@@ -32,7 +31,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
     public class ProductionMeteringPoint : MarketMeteringPoint
     {
         private NetSettlementGroup _netSettlementGroup;
-        private AssetType? _assetType;
         private bool _productionObligation;
 
         private ProductionMeteringPoint(
@@ -69,11 +67,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 capacity,
                 connectionType,
                 disconnectionType,
-                netSettlementGroup)
+                netSettlementGroup,
+                assetType)
         {
             _netSettlementGroup = netSettlementGroup;
             _productionObligation = productionObligation;
-            _assetType = assetType;
             _productType = ProductType.EnergyActive;
             ProductionObligation = false;
             ConnectionState = ConnectionState.New();

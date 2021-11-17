@@ -47,7 +47,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             Capacity? capacity,
             ConnectionType? connectionType,
             DisconnectionType disconnectionType,
-            NetSettlementGroup netSettlementGroup)
+            NetSettlementGroup netSettlementGroup,
+            AssetType? assetType)
             : base(
                 id,
                 gsrnNumber,
@@ -61,7 +62,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
                 meterReadingOccurrence,
                 powerLimit,
                 effectiveDate,
-                capacity)
+                capacity,
+                assetType)
         {
             ConnectionType = connectionType;
             DisconnectionType = disconnectionType;
