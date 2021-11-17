@@ -99,6 +99,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public BusinessRulesValidationResult CanChangeAddress(Address address)
         {
+            var canBeChangedCheck = CanBeChanged();
+            if (canBeChangedCheck.Success == false)
+            {
+                return canBeChangedCheck;
+            }
+
             var rules = new List<IBusinessRule>()
             {
                 new StreetNameIsRequiredRule(GsrnNumber, address),
