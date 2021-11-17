@@ -13,15 +13,12 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers.Queries;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
-using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
