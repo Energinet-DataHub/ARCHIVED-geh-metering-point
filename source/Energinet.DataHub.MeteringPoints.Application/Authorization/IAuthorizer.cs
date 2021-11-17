@@ -12,17 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Application.Authorization
 {
-    public class InvalidLocationDescriptionRuleError : ValidationError
+    /// <summary>
+    /// Service for handling business process specific authorization
+    /// </summary>
+    public interface IAuthorizer<in TBusinessRequest>
+        where TBusinessRequest : IBusinessRequest
     {
-        public InvalidLocationDescriptionRuleError(string locationDescription)
-        {
-            LocationDescription = locationDescription;
-        }
-
-        public string LocationDescription { get; }
+        /// <summary>
+        /// Invoke authorization process
+        /// </summary>
+        /// <returns><see cref="AuthorizationResult"/></returns>
+        Task<AuthorizationResult> AuthorizeAsync(TBusinessRequest request);
     }
 }

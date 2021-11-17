@@ -12,24 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
+using Energinet.DataHub.MeteringPoints.Domain.Policies;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.ChangeMasterData
 {
-    public class TestBusinessRequest : IBusinessRequest
+    public class EffectiveDateIsNotAllowedErrorConverter : ErrorConverter<EffectiveDateIsNotWithinAllowedTimePeriod>
     {
-        public TestBusinessRequest(string transactionId, string effectiveDate, string gsrnNumber)
+        protected override ErrorMessage Convert(EffectiveDateIsNotWithinAllowedTimePeriod validationError)
         {
-            TransactionId = transactionId;
-            EffectiveDate = effectiveDate;
-            GsrnNumber = gsrnNumber;
+            return new ErrorMessage("E17", "Effectuation date incorrect: The information is not received within the correct time period (either too soon or too late).");
         }
-
-        public string TransactionId { get; }
-
-        public string EffectiveDate { get; }
-
-        public string GsrnNumber { get; }
     }
 }

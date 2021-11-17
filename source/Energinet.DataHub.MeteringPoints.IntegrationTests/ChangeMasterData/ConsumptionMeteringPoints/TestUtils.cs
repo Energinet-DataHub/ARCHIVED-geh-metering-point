@@ -12,21 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Application.Create;
-using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Authorization.AuthorizationHandlers
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.ConsumptionMeteringPoints
 {
-    public class ExampleAuthorizationHandler : IAuthorizationHandler<MasterDataDocument, BusinessProcessResult>
+    public static class TestUtils
     {
-        public AuthorizationResult Authorize(MasterDataDocument command)
+        internal static ChangeMasterDataRequest CreateRequest()
         {
-            // if (!IsValidFormat(command.OccurenceDate))
-            // {
-            //     return AuthorizationResult.Error(nameof(command.OccurenceDate), GetType());
-            // }
-            return AuthorizationResult.Ok();
+            return new ChangeMasterDataRequest()
+                with
+                {
+                    EffectiveDate = SampleData.EffectiveDate,
+                    TransactionId = SampleData.Transaction,
+                    GsrnNumber = SampleData.GsrnNumber,
+                    Address = Scenarios.CreateAddress(),
+                };
         }
     }
 }

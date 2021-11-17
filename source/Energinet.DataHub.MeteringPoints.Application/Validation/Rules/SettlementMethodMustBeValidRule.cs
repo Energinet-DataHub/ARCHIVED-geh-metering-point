@@ -14,16 +14,14 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class SettlementMethodMustBeValidRule : AbstractValidator<MasterDataDocument>
+    public class SettlementMethodMustBeValidRule : AbstractValidator<string>
     {
         private readonly HashSet<string> _allowedDomainValues =
             EnumerationType.GetAll<SettlementMethod>()
@@ -32,17 +30,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 
         public SettlementMethodMustBeValidRule()
         {
-            When(
-                createMeteringPoint => !string.IsNullOrWhiteSpace(createMeteringPoint.SettlementMethod),
-                () =>
-                {
-                    RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
-                        .Must(settlementMethod =>
-                            _allowedDomainValues.Contains(settlementMethod!))
-                        .WithState(createMeteringPoint =>
-                            new SettlementMethodMissingRequiredDomainValuesValidationError(createMeteringPoint
-                                .SettlementMethod!));
-                });
+            RuleFor(inputValue => inputValue)
+                .Must(settlementMethod =>
+                    _allowedDomainValues.Contains(settlementMethod!))
+                .WithState(value =>
+                    new SettlementMethodMissingRequiredDomainValuesValidationError(value!));
         }
     }
 }

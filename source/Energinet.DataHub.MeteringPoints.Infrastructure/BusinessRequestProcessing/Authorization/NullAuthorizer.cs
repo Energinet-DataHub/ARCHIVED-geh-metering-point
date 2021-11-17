@@ -12,22 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Authorization;
+using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Authorization
 {
-    public class LocationDescriptionLengthRule : IBusinessRule
+    public class NullAuthorizer<TRequest> : IAuthorizer<TRequest>
+        where TRequest : IBusinessRequest
     {
-        private const int MaxLength = 60;
-
-        public LocationDescriptionLengthRule(string? locationDescription)
+        public Task<AuthorizationResult> AuthorizeAsync(TRequest request)
         {
-            IsBroken = locationDescription?.Length > MaxLength;
-            ValidationError = new InvalidLocationDescriptionRuleError(locationDescription ?? string.Empty);
+            return Task.FromResult(AuthorizationResult.Ok());
         }
-
-        public bool IsBroken { get; }
-
-        public ValidationError ValidationError { get; }
     }
 }

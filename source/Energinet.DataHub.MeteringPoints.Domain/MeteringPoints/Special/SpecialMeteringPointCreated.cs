@@ -37,7 +37,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
             string? streetCode,
             string? streetName,
             string? citySubDivision,
-            string? locationDescription,
             string? meterNumber,
             int maximumCurrent,
             int maximumPower,
@@ -64,7 +63,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
             StreetCode = streetCode;
             StreetName = streetName;
             CitySubDivision = citySubDivision;
-            LocationDescription = locationDescription;
             MeterNumber = meterNumber;
             MaximumCurrent = maximumCurrent;
             MaximumPower = maximumPower;

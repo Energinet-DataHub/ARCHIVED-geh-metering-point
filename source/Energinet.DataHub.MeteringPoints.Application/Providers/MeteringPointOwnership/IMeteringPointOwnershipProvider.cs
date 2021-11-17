@@ -12,17 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.Authorization
+using System.Threading.Tasks;
+
+namespace Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership
 {
     /// <summary>
-    /// Validator interface
+    /// Provides details about the owner (grid operator) of a particular metering point
     /// </summary>
-    public interface IAuthorizationHandler<in TCommand, out TResponse>
+    public interface IMeteringPointOwnershipProvider
     {
         /// <summary>
-        /// Perform validation
+        /// Returns owner details
         /// </summary>
-        /// <returns>A <see cref="AuthorizationResult"/> representing the result of the asynchronous operation.</returns>
-        AuthorizationResult Authorize(TCommand command);
+        /// <param name="gsrnNumber"></param>
+        /// <returns><see cref="Owner"/></returns>
+        Task<Owner> GetOwnerAsync(string gsrnNumber);
     }
 }

@@ -158,6 +158,258 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("D02", DocumentType.CreateMeteringPointRejected);
         }
 
+        [Fact]
+        public async Task Should_reject_when_metering_method_is_invalid()
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    MeteringMethod = "Invalid_value",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
+        }
+
+        [Fact]
+        public async Task Should_reject_if_connection_type_is_unknown()
+        {
+            var invalidConnectionType = "invalid_value";
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    ConnectionType = invalidConnectionType,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_disconnection_type_is_invalid()
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    TypeOfMeteringPoint = nameof(MeteringPointType.Production),
+                    DisconnectionType = "invalid_dc_type",
+                    PhysicalConnectionCapacity = "1",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_settlement_method_is_invalid()
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    SettlementMethod = "Invalid_Method_Name",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D15");
+        }
+
+        [Fact]
+        public async Task Reject_when_product_is_invalid()
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    ProductType = "Invalid_Method_Name",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
+        }
+
+        [Fact]
+        public async Task Should_reject_if_capacity_is_invalid()
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.One.Name,
+                    PhysicalConnectionCapacity = "123.3333670",
+                    MeteringMethod = MeteringMethod.Calculated.Name,
+                    MeterNumber = null,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_location_description_is_invalid()
+        {
+            var invalidLocationDescription = "1234567890123456789012345678901234567890123456789012345678901234567890";
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    LocationDescription = invalidLocationDescription,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
+        [Fact]
+        public async Task Should_reject_if_asset_type_value_is_invalid()
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    AssetType = "invalid_value",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D59");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_country_code_is_not_dk()
+        {
+            var invalidCountryCode = "SE";
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    CountryCode = invalidCountryCode,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
+        [Fact]
+        public async Task Effective_date_is_required()
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    EffectiveDate = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_maximum_power_is_invalid()
+        {
+            var invalidPowerLimit = 12345567;
+            var document = Scenarios.CreateDocument()
+                with
+                {
+                    MaximumPower = invalidPowerLimit,
+                };
+
+            await SendCommandAsync(document).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("invalid_value")]
+        public async Task Should_reject_when_measurement_unit_is_missing_or_is_invalid(string measurementUnitType)
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    MeasureUnitType = measurementUnitType,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_geo_info_reference_is_invalid()
+        {
+            var invalidGeoInfoReference = "xxxxxxx";
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    GeoInfoReference = invalidGeoInfoReference,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_reading_occurence_is_not_a_valid_value()
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    MeterReadingOccurrence = "Not_valid_Reading_occurence_value",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_measurement_unit_is_missing()
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    MeasureUnitType = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_geo_info_reference_is_specified_and_official_address_is_empty()
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    GeoInfoReference = SampleData.GeoInfoReference,
+                    IsActualAddress = null,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D63");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_maximum_current_is_invalid()
+        {
+            var invalidCurrent = 12345567;
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    MaximumCurrent = invalidCurrent,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
         private static CreateConsumptionMeteringPoint CreateCommand()
         {
             return Scenarios.CreateConsumptionMeteringPointCommand();

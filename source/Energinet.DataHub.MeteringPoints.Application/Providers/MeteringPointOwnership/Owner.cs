@@ -12,18 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
-
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
+namespace Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership
 {
-    public class TestBusinessProcessCommandFactory : IBusinessProcessCommandFactory
-    {
-        public IBusinessRequest? CreateFrom(MasterDataDocument document)
-        {
-            if (document == null) throw new ArgumentNullException(nameof(document));
-            return new TestBusinessRequest(document.TransactionId, "TestDate", "TestGsrn");
-        }
-    }
+    public record Owner(string GlnNumber);
 }

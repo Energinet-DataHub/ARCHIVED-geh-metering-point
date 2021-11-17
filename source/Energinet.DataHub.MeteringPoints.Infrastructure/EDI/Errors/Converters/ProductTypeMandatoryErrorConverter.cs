@@ -23,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new ErrorMessage("D02", $"Product is missing for metering point {validationError.GsrnNumber}");
+            return new ErrorMessage("D02", $"Product type is missing");
         }
     }
 }

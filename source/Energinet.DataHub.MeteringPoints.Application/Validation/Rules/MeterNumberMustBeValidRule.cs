@@ -12,30 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
-using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
+using Energinet.DataHub.MeteringPoints.Application.Validation.Extensions;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class MeterNumberMustBeValidRule : AbstractValidator<MasterDataDocument>
+    public class MeterNumberMustBeValidRule : AbstractValidator<string>
     {
-        private BusinessRulesValidationResult? _result;
-
         public MeterNumberMustBeValidRule()
         {
-            When(request => !string.IsNullOrWhiteSpace(request.MeterNumber), () =>
-            {
-                RuleFor(request => request.MeterNumber)
-                    .Must(meterId =>
-                    {
-                        _result = MeterId.CheckRules(meterId!);
-                        return _result.Success;
-                    })
-                    .WithState(request => _result!.Errors.First());
-            });
+            RuleFor(value => value)
+                .CheckRules(MeterId.CheckRules);
         }
     }
 }

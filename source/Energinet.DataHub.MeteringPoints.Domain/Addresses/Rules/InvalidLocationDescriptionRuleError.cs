@@ -12,19 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments
+namespace Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules
 {
-    public class TestBusinessRequestHandler : IBusinessRequestHandler<TestBusinessRequest>
+    public class InvalidLocationDescriptionRuleError : ValidationError
     {
-        public Task<BusinessProcessResult> Handle(TestBusinessRequest request, CancellationToken cancellationToken)
+        public InvalidLocationDescriptionRuleError(string locationDescription)
         {
-            if (request == null) throw new ArgumentNullException(nameof(request));
-            return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
+            LocationDescription = locationDescription;
         }
+
+        public string LocationDescription { get; }
     }
 }

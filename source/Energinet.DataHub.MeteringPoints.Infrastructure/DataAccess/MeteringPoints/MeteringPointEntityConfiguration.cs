@@ -69,6 +69,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 y.Property(x => x.MunicipalityCode).HasColumnName("MunicipalityCode");
                 y.Property(x => x.IsActual).HasColumnName("IsActualAddress");
                 y.Property(x => x.GeoInfoReference).HasColumnName("GeoInfoReference");
+                y.Property(x => x.LocationDescription).HasColumnName("LocationDescription");
             });
 
             builder.OwnsOne<ConnectionState>("ConnectionState", config =>
@@ -103,10 +104,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             builder.Property<GsrnNumber>("_powerPlantGsrnNumber")
                 .HasColumnName("PowerPlant")
                 .HasConversion(toDbValue => toDbValue.Value, fromDbValue => GsrnNumber.Create(fromDbValue));
-
-            builder.Property<LocationDescription>("_locationDescription")
-                .HasColumnName("LocationDescription")
-                .HasConversion(toDbValue => toDbValue.Value, fromDbValue => LocationDescription.Create(fromDbValue));
 
             builder.Property<ProductType>("_productType")
                 .HasColumnName("ProductType")

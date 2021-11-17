@@ -17,6 +17,8 @@
     "ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER": "*/10 * * * * *",
     "MESSAGEHUB_QUEUE_CONNECTION_STRING": "<MessageHub Service Bus connection string>",
     "MESSAGEHUB_STORAGE_CONNECTION_STRING": "<MessageHub Storage Account connection string>",
-    "MESSAGEHUB_STORAGE_CONTAINER_NAME": "<MessageHub Storage Account container name>"
+    "MESSAGEHUB_STORAGE_CONTAINER_NAME": "<MessageHub Storage Account container name>",
+    "MESSAGEHUB_DATA_AVAILABLE_QUEUE": "<MessageHub Data Available Queue name>",
+    "MESSAGEHUB_DOMAIN_REPLY_QUEUE": "<MessageHub Domain Reply Queue name>"
   }
 }

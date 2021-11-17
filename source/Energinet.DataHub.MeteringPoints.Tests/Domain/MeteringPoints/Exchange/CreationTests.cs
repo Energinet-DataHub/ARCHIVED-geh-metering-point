@@ -35,7 +35,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
             var meteringPointGsrn = GsrnNumber.Create(SampleData.GsrnNumber);
             var meteringMethod = MeteringMethod.Virtual;
             var areadLinkId = new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId));
-            var locationDescription = LocationDescription.Create(string.Empty);
             var readingOccurrence = ReadingOccurrence.Hourly;
             var powerLimit = PowerLimit.Create(0, 0);
             var effectiveDate = EffectiveDate.Create(SampleData.EffectiveDate);
@@ -59,7 +58,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
                     Id = meteringPointId,
                     Address = address,
                     GridAreaLinkId = areadLinkId,
-                    LocationDescription = locationDescription,
                     PowerLimit = powerLimit,
                     MeterNumber = null,
                     MeteringMethod = meteringMethod,
@@ -82,7 +80,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
             Assert.Equal(meteringPointGsrn.Value, createdEvent.GsrnNumber);
             Assert.Equal(meteringMethod.Name, createdEvent.MeteringPointSubType);
             Assert.Equal(areadLinkId.Value, createdEvent.GridAreaLinkId);
-            Assert.Equal(locationDescription.Value, createdEvent.LocationDescription);
+            Assert.Equal(address.LocationDescription, createdEvent.LocationDescription);
             Assert.Equal(readingOccurrence.Name, createdEvent.ReadingOccurrence);
             Assert.Equal(powerLimit.Ampere, createdEvent.MaximumCurrent);
             Assert.Equal(powerLimit.Kwh, createdEvent.MaximumPower);
