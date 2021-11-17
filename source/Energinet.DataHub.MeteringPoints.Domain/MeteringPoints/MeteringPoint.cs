@@ -121,6 +121,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public void ChangeAddress(Address newAddress)
         {
             if (newAddress == null) throw new ArgumentNullException(nameof(newAddress));
+            ThrowIfClosedDown();
             var checkResult = CanChangeAddress(newAddress);
             if (checkResult.Success == false)
             {
@@ -151,6 +152,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             if (effectiveDate == null) throw new ArgumentNullException(nameof(effectiveDate));
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
+            ThrowIfClosedDown();
+
             if (MeteringConfiguration.Equals(configuration))
             {
                 return;
@@ -166,7 +169,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 effectiveDate.ToString()));
         }
 
-        #pragma warning disable CA1024
+#pragma warning disable CA1024
         public MeteringConfiguration GetMeteringConfiguration()
         {
             return MeteringConfiguration;
@@ -187,6 +190,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public void CloseDown()
         {
             ConnectionState = ConnectionState.ClosedDown();
+        }
+
+        private void ThrowIfClosedDown()
+        {
+            var checkResult = CanBeChanged();
+            if (checkResult.Success == false)
+            {
+                throw new MeteringPointClosedForChangesException(checkResult.Errors);
+            }
         }
     }
 }
