@@ -23,9 +23,9 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common.Address;
+using Energinet.DataHub.MeteringPoints.Tests.Tooling;
 using FluentAssertions;
 using NodaTime.Extensions;
-using Xunit;
 using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.EDI.AccountingPointCharacteristics
@@ -33,7 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.AccountingPointCharacterist
     [UnitTest]
     public class AccountingPointCharacteristicsSerializerTests
     {
-        [Fact]
+        [RunnableInDebugOnly]
         public void Output_should_match_example_document()
         {
             var expected = GetExpectedDocument("AccountingPointCharacteristics.xml");
@@ -116,7 +116,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.AccountingPointCharacterist
             serialized.Should().Be(expected);
         }
 
-        [Fact(Skip = "Inteded for manually runs only.")]
+        [RunnableInDebugOnly]
         public void Generated_message_from_factory_should_match_example_document()
         {
             var expected = GetExpectedDocument("AccountingPointCharacteristics.xml");
