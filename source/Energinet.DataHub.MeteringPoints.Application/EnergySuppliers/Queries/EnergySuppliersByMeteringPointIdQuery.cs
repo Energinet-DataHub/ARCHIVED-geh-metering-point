@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappings
+using System.Collections.Generic;
+using MediatR;
+
+namespace Energinet.DataHub.MeteringPoints.Application.EnergySuppliers.Queries
 {
-    public class CreateGridAreaXmlMappingConfiguration : XmlMappingConfigurationBase
+    public class EnergySuppliersByMeteringPointIdQuery : IRequest<IEnumerable<EnergySupplierDto>>
     {
-        public CreateGridAreaXmlMappingConfiguration()
+        public EnergySuppliersByMeteringPointIdQuery(string meteringPointId)
         {
-            CreateMapping<Application.GridAreas.Create.CreateGridArea>("MktActivityRecord", mapper => mapper
-                .AddProperty(x => x.Code, "TODO")
-                .AddProperty(x => x.Name, "TODO")
-                .AddProperty(x => x.PriceAreaCode, "TODO")
-                .AddProperty(x => x.TransactionId, "mRID"));
+            MeteringPointId = meteringPointId;
         }
+
+        public string MeteringPointId { get; }
     }
 }

@@ -27,13 +27,19 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
     public class ConnectMeteringPointHandler : IBusinessRequestHandler<ConnectMeteringPoint>
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
+        private readonly MeteringPointPipelineContext _pipelineContext;
 
-        public ConnectMeteringPointHandler(IMeteringPointRepository meteringPointRepository)
+        public ConnectMeteringPointHandler(
+            IMeteringPointRepository meteringPointRepository,
+            MeteringPointPipelineContext pipelineContext)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
+            _pipelineContext = pipelineContext;
         }
 
-        public async Task<BusinessProcessResult> Handle(ConnectMeteringPoint request, CancellationToken cancellationToken)
+        public async Task<BusinessProcessResult> Handle(
+            ConnectMeteringPoint request,
+            CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -56,6 +62,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
 
             meteringPoint?.Connect(ConnectionDetails.Create(request.EffectiveDate.ToInstant()));
 
+            _pipelineContext.MeteringPointId = meteringPoint?.Id.Value.ToString()!;
+
             return BusinessProcessResult.Ok(request.TransactionId);
         }
 
@@ -69,7 +77,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
             return new BusinessProcessResult(request.TransactionId, validationRules);
         }
 
-        private static BusinessProcessResult CheckBusinessRules(ConnectMeteringPoint request, ConnectionDetails connectionDetails, MeteringPoint meteringPoint)
+        private static BusinessProcessResult CheckBusinessRules(
+            ConnectMeteringPoint request,
+            ConnectionDetails connectionDetails,
+            MeteringPoint meteringPoint)
         {
             var validationResult = meteringPoint.ConnectAcceptable(connectionDetails);
 

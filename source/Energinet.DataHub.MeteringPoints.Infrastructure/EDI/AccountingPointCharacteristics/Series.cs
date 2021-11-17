@@ -15,7 +15,6 @@
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics
 {
     public record Series(
-        string Id,
-        string EstimatedAnnualVolumeQuantity,
+        string Product,
         string QuantityMeasureUnit);
 }
