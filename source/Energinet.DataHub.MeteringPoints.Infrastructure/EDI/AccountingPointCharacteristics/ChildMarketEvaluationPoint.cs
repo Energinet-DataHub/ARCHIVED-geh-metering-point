@@ -16,5 +16,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics
 {
-    public record ChildMarketEvaluationPoint(string Id, string CodingScheme) : Mrid(Id, CodingScheme);
+    public record ChildMarketEvaluationPoint(
+        string Id,
+        string Description);
 }

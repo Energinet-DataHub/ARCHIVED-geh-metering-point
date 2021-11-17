@@ -16,9 +16,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCha
 {
     public record MarketActivityRecord(
         string Id,
-        string BusinessProcessReference,
         string ValidityStartDateAndOrTime,
-        string SnapshotDateAndOrTime,
         string OriginalTransaction,
         MarketEvaluationPoint MarketEvaluationPoint);
 }
