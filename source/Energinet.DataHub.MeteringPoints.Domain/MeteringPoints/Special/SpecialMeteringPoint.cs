@@ -18,7 +18,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -110,7 +109,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
         {
             if (!CanCreate(meteringPointDetails).Success)
             {
-                throw new ConsumptionMeteringPointException($"Cannot create consumption metering point due to violation of one or more business rules.");
+                throw new SpecialMeteringPointException($"Cannot create {meteringPointDetails.MeteringPointType.Name} metering point due to violation of one or more business rules.");
             }
 
             return new SpecialMeteringPoint(
