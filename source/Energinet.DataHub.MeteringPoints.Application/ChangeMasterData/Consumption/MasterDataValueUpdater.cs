@@ -41,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
         {
             if (CanUpdate == false)
             {
-                return;
+                throw new MasterDataChangeException(_errors);
             }
 
             if (_masterDataDetails.Address is not null)
