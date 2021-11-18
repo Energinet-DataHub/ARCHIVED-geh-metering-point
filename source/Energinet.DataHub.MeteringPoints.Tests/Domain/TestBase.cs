@@ -77,7 +77,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 EffectiveDate.Create(SampleData.EffectiveDate),
                 GsrnNumber.Create(SampleData.PowerPlant),
                 Capacity.Create(SampleData.Capacity),
-                AssetType.GasTurbine);
+                AssetType.GasTurbine,
+                null);
         }
 
         protected static ProductionMeteringPointDetails CreateProductionDetails()

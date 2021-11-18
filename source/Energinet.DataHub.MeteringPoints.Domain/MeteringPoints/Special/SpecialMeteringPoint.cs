@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
@@ -27,19 +28,20 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
     public class SpecialMeteringPoint : MeteringPoint
     {
         public SpecialMeteringPoint(
-            [NotNull]MeteringPointId id,
+            [NotNull] MeteringPointId id,
             GsrnNumber gsrnNumber,
-            [NotNull]Address address,
-            [NotNull]MeteringMethod meteringMethod,
+            [NotNull] Address address,
+            [NotNull] MeteringMethod meteringMethod,
             MeteringPointType meteringPointType,
-            [NotNull]GridAreaLinkId gridAreaLinkId,
+            [NotNull] GridAreaLinkId gridAreaLinkId,
             MeterId? meterNumber,
-            [NotNull]ReadingOccurrence meterReadingOccurrence,
-            [NotNull]PowerLimit powerLimit,
-            [NotNull]EffectiveDate effectiveDate,
+            [NotNull] ReadingOccurrence meterReadingOccurrence,
+            [NotNull] PowerLimit powerLimit,
+            [NotNull] EffectiveDate effectiveDate,
             GsrnNumber? powerPlantGsrnNumber,
             Capacity? capacity,
-            AssetType? assetType)
+            AssetType? assetType,
+            GsrnNumber? parentRelatedMeteringPoint)
             : base(
                 id,
                 gsrnNumber,
@@ -83,7 +85,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
                 powerPlantGsrnNumber?.Value,
                 capacity?.Kw,
                 assetType?.Name,
-                _unitType.Name);
+                _unitType.Name,
+                parentRelatedMeteringPoint?.Value);
 
             AddDomainEvent(@event);
         }
@@ -99,17 +102,22 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
             var rules = new List<IBusinessRule>
             {
                 new StreetNameIsRequiredRule(meteringPointDetails.GsrnNumber, meteringPointDetails.Address),
-                new MeterReadingOccurrenceConditionalRule(meteringPointDetails.ReadingOccurrence, meteringPointDetails.MeteringPointType),
+                new MeterReadingOccurrenceConditionalRule(
+                    meteringPointDetails.ReadingOccurrence,
+                    meteringPointDetails.MeteringPointType),
             };
 
-            return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
+            return new BusinessRulesValidationResult(
+                generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError)
+                    .ToList()));
         }
 
         public static SpecialMeteringPoint Create(SpecialMeteringPointDetails meteringPointDetails)
         {
             if (!CanCreate(meteringPointDetails).Success)
             {
-                throw new SpecialMeteringPointException($"Cannot create {meteringPointDetails.MeteringPointType.Name} metering point due to violation of one or more business rules.");
+                throw new SpecialMeteringPointException(
+                    $"Cannot create {meteringPointDetails.MeteringPointType.Name} metering point due to violation of one or more business rules.");
             }
 
             return new SpecialMeteringPoint(
@@ -125,7 +133,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
                 meteringPointDetails.EffectiveDate,
                 meteringPointDetails.PowerPlantGsrnNumber,
                 meteringPointDetails.Capacity,
-                meteringPointDetails.AssetType);
+                meteringPointDetails.AssetType,
+                meteringPointDetails.ParentRelatedMeteringPoint);
         }
 
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
@@ -140,7 +149,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
 
         private static MeasurementUnitType GetUnitType(EnumerationType meteringPointType)
         {
-            return meteringPointType == MeteringPointType.ExchangeReactiveEnergy ? MeasurementUnitType.KVArh : MeasurementUnitType.KWh;
+            return meteringPointType == MeteringPointType.ExchangeReactiveEnergy
+                ? MeasurementUnitType.KVArh
+                : MeasurementUnitType.KWh;
         }
     }
 }

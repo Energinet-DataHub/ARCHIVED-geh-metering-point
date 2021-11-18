@@ -31,6 +31,48 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
+        public async Task Should_reject_if_parent_metering_point_is_not_in_same_grid_area()
+        {
+            var consumptionCommand = Scenarios.CreateConsumptionMeteringPointCommand()
+                with
+                {
+                    GsrnNumber = SampleData.SecondGsrnNumber,
+                    MeteringGridArea = SampleData.SecondMeteringGridArea,
+                };
+            await SendCommandAsync(consumptionCommand).ConfigureAwait(false);
+
+            var specialCommand = CreateCommand()
+                with
+                {
+                    ParentRelatedMeteringPoint = SampleData.SecondGsrnNumber,
+                };
+            await SendCommandAsync(specialCommand).ConfigureAwait(false);
+
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointAccepted);
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointRejected);
+        }
+
+        [Fact]
+        public async Task Should_accept_if_parent_metering_point_is_in_same_grid_area()
+        {
+            var consumptionCommand = Scenarios.CreateConsumptionMeteringPointCommand()
+                with
+                {
+                    GsrnNumber = SampleData.SecondGsrnNumber,
+                };
+            await SendCommandAsync(consumptionCommand).ConfigureAwait(false);
+
+            var specialCommand = CreateCommand()
+                with
+                {
+                    ParentRelatedMeteringPoint = SampleData.SecondGsrnNumber,
+                };
+            await SendCommandAsync(specialCommand).ConfigureAwait(false);
+
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointAccepted, 2);
+        }
+
+        [Fact]
         public async Task Should_reject_if_meter_reading_occurrence_is_not_quarterly_or_hourly()
         {
             var invalidReadingOccurrence = ReadingOccurrence.Yearly.Name;

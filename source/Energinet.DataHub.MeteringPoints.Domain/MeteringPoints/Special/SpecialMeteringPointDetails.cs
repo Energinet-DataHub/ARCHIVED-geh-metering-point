@@ -30,7 +30,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
         EffectiveDate EffectiveDate,
         GsrnNumber? PowerPlantGsrnNumber,
         Capacity? Capacity,
-        AssetType? AssetType) : MeteringPointDetails(
+        AssetType? AssetType,
+        GsrnNumber? ParentRelatedMeteringPoint) : MeteringPointDetails(
         Id,
         GsrnNumber,
         Address,

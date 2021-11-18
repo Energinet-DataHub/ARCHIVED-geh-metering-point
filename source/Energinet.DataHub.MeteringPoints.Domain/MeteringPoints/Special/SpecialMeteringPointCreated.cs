@@ -45,7 +45,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
             string? powerPlantGsrnNumber,
             double? capacity,
             string? assetType,
-            string unitType)
+            string unitType,
+            string? parentRelatedMeteringPoint)
         {
             MeteringPointId = meteringPointId;
             GsrnNumber = gsrnNumber;
@@ -72,6 +73,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
             Capacity = capacity;
             AssetType = assetType;
             UnitType = unitType;
+            ParentRelatedMeteringPoint = parentRelatedMeteringPoint;
         }
 
         public Guid MeteringPointId { get; }
@@ -125,5 +127,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
         public string? AssetType { get; }
 
         public string UnitType { get; }
+
+        public string? ParentRelatedMeteringPoint { get; }
     }
 }

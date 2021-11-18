@@ -21,6 +21,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
     {
         public static string GsrnNumber => "571234567891234568";
 
+        public static string SecondGsrnNumber => "570851247381952311";
+
         public static string TypeOfMeteringPoint => nameof(MeteringPointType.Consumption);
 
         public static string Transaction => Guid.NewGuid().ToString();
@@ -44,6 +46,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         public static string MeasurementUnitType => Domain.MeteringPoints.MeasurementUnitType.KWh.Name;
 
         public static string MeteringGridArea => "870";
+
+        public static string SecondMeteringGridArea => "872";
 
         public static string StreetName => "Test Road 1";
 

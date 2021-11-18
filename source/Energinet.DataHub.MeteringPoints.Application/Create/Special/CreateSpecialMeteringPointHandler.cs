@@ -24,6 +24,7 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using MediatR;
@@ -36,17 +37,20 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Special
         private readonly IGridAreaRepository _gridAreaRepository;
         private readonly IMediator _mediator;
         private readonly IBusinessProcessValidationContext _validationContext;
+        private readonly IMarketMeteringPointRepository _marketMeteringPointRepository;
 
         public CreateSpecialMeteringPointHandler(
             IMeteringPointRepository meteringPointRepository,
             IGridAreaRepository gridAreaRepository,
             IMediator mediator,
-            IBusinessProcessValidationContext validationContext)
+            IBusinessProcessValidationContext validationContext,
+            IMarketMeteringPointRepository marketMeteringPointRepository)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _gridAreaRepository = gridAreaRepository;
             _mediator = mediator;
             _validationContext = validationContext ?? throw new ArgumentNullException(nameof(validationContext));
+            _marketMeteringPointRepository = marketMeteringPointRepository;
         }
 
         public async Task<BusinessProcessResult> Handle(CreateSpecialMeteringPoint request, CancellationToken cancellationToken)
@@ -71,6 +75,22 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Special
             if (!gridAreaValidationResult.Success)
             {
                 return new BusinessProcessResult(request.TransactionId, gridAreaValidationResult.ValidationErrors);
+            }
+
+            if (request.ParentRelatedMeteringPoint is not null)
+            {
+                var parent = await _marketMeteringPointRepository.
+                    GetByGSRNAsync(GsrnNumber.Create(request.ParentRelatedMeteringPoint))
+                    .ConfigureAwait(false);
+
+                var parentIsInSameGridAreaQuery = new GridAreaContainsMeteringPointIdsQuery(
+                    gridArea!.Id.Value.ToString(),
+                    parent!.Id.Value.ToString());
+
+                var parentIsInSameGridArea = await _mediator
+                    .Send(parentIsInSameGridAreaQuery, cancellationToken)
+                    .ConfigureAwait(false);
+                if (!parentIsInSameGridArea) throw new SpecialMeteringPointException("Parent Metering Point is not in the same grid area");
             }
 
             var meteringPointDetails = CreateDetails(request, gridArea?.DefaultLink.Id!);
@@ -113,7 +133,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Special
                 EffectiveDate.Create(request.EffectiveDate),
                 !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null!,
                 !string.IsNullOrWhiteSpace(request.PhysicalConnectionCapacity) ? Capacity.Create(request.PhysicalConnectionCapacity) : null!,
-                !string.IsNullOrEmpty(request.AssetType) ? EnumerationType.FromName<AssetType>(request.AssetType) : null!);
+                !string.IsNullOrEmpty(request.AssetType) ? EnumerationType.FromName<AssetType>(request.AssetType) : null!,
+                !string.IsNullOrEmpty(request.ParentRelatedMeteringPoint) ? GsrnNumber.Create(request.ParentRelatedMeteringPoint) : null!);
         }
 
         private static Domain.Addresses.Address CreateAddress(CreateSpecialMeteringPoint request)
