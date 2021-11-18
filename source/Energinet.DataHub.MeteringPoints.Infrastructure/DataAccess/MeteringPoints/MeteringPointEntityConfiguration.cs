@@ -84,11 +84,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     .HasColumnName("ConnectionState_EffectiveDate");
             });
 
-            // builder.Property<MeteringMethod>("_meteringMethod")
-            //     .HasColumnName("MeteringPointSubType")
-            //     .HasConversion(
-            //         toDbValue => toDbValue.Name,
-            //         fromDbValue => EnumerationType.FromName<MeteringMethod>(fromDbValue));
             builder.Property<MeteringPointType>("_meteringPointType")
                 .HasColumnName("TypeOfMeteringPoint")
                 .HasConversion(
@@ -117,9 +112,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<MeasurementUnitType>(fromDbValue));
 
-            // builder.Property<MeterId>("_meterNumber")
-            //     .HasColumnName("MeterNumber")
-            //     .HasConversion(toDbValue => toDbValue.Value, fromDbValue => MeterId.Create(fromDbValue));
             builder.Property<ReadingOccurrence>("_meterReadingOccurrence")
                 .HasColumnName("MeterReadingOccurrence")
                 .HasConversion(
