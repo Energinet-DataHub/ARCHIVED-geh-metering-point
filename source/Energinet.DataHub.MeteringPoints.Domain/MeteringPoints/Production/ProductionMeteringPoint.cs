@@ -32,7 +32,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
     public class ProductionMeteringPoint : MarketMeteringPoint
     {
         private NetSettlementGroup _netSettlementGroup;
-        private AssetType? _assetType;
         private bool _productionObligation;
 
         private ProductionMeteringPoint(
@@ -67,11 +66,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 connectionType,
                 disconnectionType,
                 netSettlementGroup,
+                assetType,
                 meteringConfiguration)
         {
             _netSettlementGroup = netSettlementGroup;
             _productionObligation = productionObligation;
-            _assetType = assetType;
             _productType = ProductType.EnergyActive;
             ProductionObligation = false;
             ConnectionState = ConnectionState.New();

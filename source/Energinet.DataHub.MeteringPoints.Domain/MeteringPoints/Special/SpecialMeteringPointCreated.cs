@@ -16,18 +16,17 @@ using System;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
 {
-    public class ExchangeMeteringPointCreated : DomainEventBase
+    public class SpecialMeteringPointCreated : DomainEventBase
     {
-        public ExchangeMeteringPointCreated(
+        public SpecialMeteringPointCreated(
             Guid meteringPointId,
             string gsrnNumber,
             Guid gridAreaId,
             string meteringPointSubType,
             string productType,
             string readingOccurrence,
-            string unitType,
             string? city,
             string? floor,
             string? room,
@@ -38,14 +37,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
             string? streetCode,
             string? streetName,
             string? citySubDivision,
-            string? locationDescription,
             string? meterNumber,
             int maximumCurrent,
             int maximumPower,
             Instant effectiveDate,
             string physicalState,
-            Guid fromGrid,
-            Guid toGrid)
+            string? powerPlantGsrnNumber,
+            double? capacity,
+            string? assetType,
+            string unitType)
         {
             MeteringPointId = meteringPointId;
             GsrnNumber = gsrnNumber;
@@ -53,7 +53,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
             MeteringPointSubType = meteringPointSubType;
             ProductType = productType;
             ReadingOccurrence = readingOccurrence;
-            UnitType = unitType;
             City = city;
             Floor = floor;
             Room = room;
@@ -64,14 +63,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
             StreetCode = streetCode;
             StreetName = streetName;
             CitySubDivision = citySubDivision;
-            LocationDescription = locationDescription;
             MeterNumber = meterNumber;
             MaximumCurrent = maximumCurrent;
             MaximumPower = maximumPower;
             EffectiveDate = effectiveDate;
             PhysicalState = physicalState;
-            FromGrid = fromGrid;
-            ToGrid = toGrid;
+            PowerPlantGsrnNumber = powerPlantGsrnNumber;
+            Capacity = capacity;
+            AssetType = assetType;
+            UnitType = unitType;
         }
 
         public Guid MeteringPointId { get; }
@@ -85,8 +85,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
         public string ProductType { get; }
 
         public string ReadingOccurrence { get; }
-
-        public string UnitType { get; }
 
         public string? City { get; }
 
@@ -120,8 +118,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
 
         public string PhysicalState { get; }
 
-        public Guid FromGrid { get; }
+        public string? PowerPlantGsrnNumber { get; }
 
-        public Guid ToGrid { get; }
+        public double? Capacity { get; }
+
+        public string? AssetType { get; }
+
+        public string UnitType { get; }
     }
 }

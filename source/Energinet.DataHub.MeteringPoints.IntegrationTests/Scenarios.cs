@@ -18,6 +18,7 @@ using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Create.Exchange;
 using Energinet.DataHub.MeteringPoints.Application.Create.Production;
+using Energinet.DataHub.MeteringPoints.Application.Create.Special;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
@@ -140,6 +141,37 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 Guid.NewGuid().ToString(),
                 ConnectionType.Installation.Name,
                 SampleData.GeoInfoReference);
+        }
+
+        internal static CreateSpecialMeteringPoint CreateSpecialMeteringPointCommand()
+        {
+            return new CreateSpecialMeteringPoint(
+                nameof(MeteringPointType.VEProduction),
+                SampleData.StreetName,
+                SampleData.BuildingNumber,
+                SampleData.PostCode,
+                SampleData.CityName,
+                SampleData.CitySubDivisionName,
+                SampleData.MunicipalityCode,
+                SampleData.CountryCode,
+                SampleData.StreetCode,
+                SampleData.FloorIdentification,
+                SampleData.RoomIdentification,
+                SampleData.IsActualAddress,
+                SampleData.GsrnNumber,
+                MeteringMethod.Physical.Name,
+                SampleData.ReadingOccurrence,
+                0,
+                0,
+                SampleData.MeteringGridArea,
+                string.Empty,
+                SampleData.EffectiveDate,
+                SampleData.MeterNumber,
+                Guid.NewGuid().ToString(),
+                "0",
+                SampleData.GeoInfoReference,
+                SampleData.PowerPlantGsrnNumber,
+                SampleData.AssetType);
         }
 
         internal static MasterDataDocument CreateDocument()

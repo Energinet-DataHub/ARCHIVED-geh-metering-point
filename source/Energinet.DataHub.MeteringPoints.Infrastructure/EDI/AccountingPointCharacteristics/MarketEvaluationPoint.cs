@@ -26,7 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCha
         string MeteringMethod,
         string ConnectionState,
         string ReadCycle,
-        string NetSettlementGroup,
+        string? NetSettlementGroup,
         string NextReadingDate,
         Mrid MeteringGridAreaDomainId,
         Mrid? InMeteringGridAreaDomainId,

@@ -109,10 +109,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.AccountingPointCharacterist
 
             var serialized = AccountingPointCharacteristicsXmlSerializer.Serialize(message);
 
-#if DEBUG
-            DebugOutput(serialized);
-#endif
-
+            // DebugOutput(serialized);
             serialized.Should().Be(expected);
         }
 
@@ -153,11 +150,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.AccountingPointCharacterist
                 true,
                 Guid.Parse("f26f8678-6cd3-4e12-b70e-cf96290ada94"),
                 1300,
-                "E02",
-                "6",
                 "D09",
+                "E02",
                 "031",
                 "151",
+                "6",
+                DateTimeOffset.Parse("2019-02-12T00:00:00Z", CultureInfo.InvariantCulture).Date,
                 "D01",
                 "D01",
                 false);
@@ -175,10 +173,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.AccountingPointCharacterist
 
             var serialized = AccountingPointCharacteristicsXmlSerializer.Serialize(message);
 
-#if DEBUG
-            DebugOutput(serialized);
-#endif
-
+            // DebugOutput(serialized);
             serialized.Should().Be(expected);
         }
 
