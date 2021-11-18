@@ -69,15 +69,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 MeteringPointType.VEProduction,
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 address,
-                MeteringMethod.Virtual,
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
-                string.IsNullOrWhiteSpace(SampleData.MeterNumber) ? null : MeterId.Create(SampleData.MeterNumber),
                 ReadingOccurrence.Hourly,
                 PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
                 EffectiveDate.Create(SampleData.EffectiveDate),
                 GsrnNumber.Create(SampleData.PowerPlant),
                 Capacity.Create(SampleData.Capacity),
-                AssetType.GasTurbine);
+                AssetType.GasTurbine,
+                MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()));
         }
 
         protected static ProductionMeteringPointDetails CreateProductionDetails()

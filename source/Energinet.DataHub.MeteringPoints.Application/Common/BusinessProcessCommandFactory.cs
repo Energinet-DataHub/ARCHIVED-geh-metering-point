@@ -206,7 +206,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
                 LocationDescription = document.LocationDescription,
                 MaximumCurrent = document.MaximumCurrent,
                 MaximumPower = document.MaximumPower,
-                MeteringMethod = document.MeteringMethod,
+                MeteringMethod = document.MeteringMethod ?? string.Empty,
                 MeterNumber = document.MeterNumber,
                 MunicipalityCode = document.MunicipalityCode,
                 PostCode = document.PostCode,
