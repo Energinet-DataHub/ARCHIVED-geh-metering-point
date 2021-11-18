@@ -29,6 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         protected MeteringPointType _meteringPointType;
         protected ProductType _productType;
         protected MeasurementUnitType _unitType;
+        protected AssetType? _assetType;
 #pragma warning restore
         private GridAreaLinkId _gridAreaLinkId;
         private MeteringMethod _meteringMethod;
@@ -57,7 +58,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit powerLimit,
             EffectiveDate effectiveDate,
-            Capacity? capacity)
+            Capacity? capacity,
+            AssetType? assetType)
         {
             Id = id;
             GsrnNumber = gsrnNumber;
@@ -72,6 +74,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _powerLimit = powerLimit;
             _effectiveDate = effectiveDate;
             _capacity = capacity;
+            _assetType = assetType;
         }
 
         public MeteringPointId Id { get; }

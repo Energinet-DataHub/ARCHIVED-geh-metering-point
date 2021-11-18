@@ -14,20 +14,17 @@
 
 using System;
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Categories;
 
-namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Production
+namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Special
 {
     [UnitTest]
     public class CreationTests : TestBase
@@ -37,16 +34,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Productio
         {
             var meteringPointId = MeteringPointId.New();
             var meteringPointGsrn = GsrnNumber.Create(SampleData.GsrnNumber);
-            var isOfficielAddress = SampleData.IsActualAddress;
+            var isActualAddress = SampleData.IsActualAddress;
             var meteringMethod = MeteringMethod.Virtual;
-            var gridAreadLinkId = new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId));
-            var powerPlanGsrn = GsrnNumber.Create(SampleData.PowerPlant);
-            var netSettlementGroup = NetSettlementGroup.Zero;
+            var gridAreaLinkId = new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId));
+            var powerPlantGsrn = GsrnNumber.Create(SampleData.PowerPlant);
             var measurementUnitType = MeasurementUnitType.KWh;
             var readingOccurrence = ReadingOccurrence.Hourly;
             var powerLimit = PowerLimit.Create(0, 0);
             var effectiveDate = EffectiveDate.Create(SampleData.EffectiveDate);
-            var disconnectionType = DisconnectionType.Manual;
             var assetType = AssetType.GasTurbine;
             var address = Address.Create(
                 streetName: "Test Street",
@@ -59,29 +54,25 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Productio
                 floor: string.Empty,
                 room: string.Empty,
                 municipalityCode: null,
-                isActual: true,
-                geoInfoReference: Guid.NewGuid(),
-                locationDescription: string.Empty);
+                isActual: isActualAddress,
+                geoInfoReference: Guid.NewGuid());
             var capacity = Capacity.Create(SampleData.Capacity);
 
-            var productionMeteringPointDetails = CreateProductionDetails()
+            var specialMeteringPointDetails = CreateSpecialDetails()
                 with
                 {
                     Id = meteringPointId,
                     Address = address,
-                    GridAreaLinkId = gridAreadLinkId,
+                    GridAreaLinkId = gridAreaLinkId,
                     PowerLimit = powerLimit,
-                    DisconnectionType = disconnectionType,
-                    ConnectionType = null,
                     Capacity = capacity,
-                    NetSettlementGroup = netSettlementGroup,
                     MeterNumber = null,
                     MeteringMethod = meteringMethod,
                 };
 
-            var meteringPoint = ProductionMeteringPoint.Create(productionMeteringPointDetails);
+            var meteringPoint = SpecialMeteringPoint.Create(specialMeteringPointDetails);
 
-            var createdEvent = meteringPoint.DomainEvents.First(e => e is ProductionMeteringPointCreated) as ProductionMeteringPointCreated;
+            var createdEvent = meteringPoint.DomainEvents.First(e => e is SpecialMeteringPointCreated) as SpecialMeteringPointCreated;
             Assert.Equal(address.City, createdEvent!.City);
             Assert.Equal(address.Floor, createdEvent.Floor);
             Assert.Equal(address.Room, createdEvent.Room);
@@ -92,70 +83,34 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Productio
             Assert.Equal(address.StreetCode, createdEvent.StreetCode);
             Assert.Equal(address.StreetName, createdEvent.StreetName);
             Assert.Equal(address.CitySubDivision, createdEvent.CitySubDivision);
-            Assert.Equal(address.IsActual, createdEvent.IsOfficialAddress);
-            Assert.Equal(address.GeoInfoReference, createdEvent.GeoInfoReference);
-            Assert.Equal(address.LocationDescription, createdEvent.LocationDescription);
             Assert.Equal(meteringPointId.Value, createdEvent.MeteringPointId);
             Assert.Equal(meteringPointGsrn.Value, createdEvent.GsrnNumber);
-            Assert.Equal(isOfficielAddress, createdEvent.IsOfficialAddress);
             Assert.Equal(meteringMethod.Name, createdEvent.MeteringPointSubType);
-            Assert.Equal(gridAreadLinkId.Value, createdEvent.GridAreaLinkId);
-            Assert.Equal(productionMeteringPointDetails.NetSettlementGroup.Name, createdEvent.NetSettlementGroup);
-            Assert.Equal(powerPlanGsrn.Value, createdEvent.PowerPlantGsrnNumber);
-            Assert.Equal(address.LocationDescription, createdEvent.LocationDescription);
+            Assert.Equal(gridAreaLinkId.Value, createdEvent.GridAreaLinkId);
+            Assert.Equal(powerPlantGsrn.Value, createdEvent.PowerPlantGsrnNumber);
             Assert.Equal(measurementUnitType.Name, createdEvent.UnitType);
             Assert.Equal(readingOccurrence.Name, createdEvent.ReadingOccurrence);
             Assert.Equal(powerLimit.Ampere, createdEvent.MaximumCurrent);
             Assert.Equal(powerLimit.Kwh, createdEvent.MaximumPower);
             Assert.Equal(effectiveDate.DateInUtc, createdEvent.EffectiveDate);
-            Assert.Equal(disconnectionType.Name, createdEvent.DisconnectionType);
             Assert.Equal(assetType.Name, createdEvent.AssetType);
             Assert.Equal(capacity.Kw, createdEvent.Capacity);
-            Assert.False(createdEvent.ProductionObligation);
         }
 
         [Fact]
         public void Product_type_should_as_default_be_active_energy()
         {
-            var details = CreateProductionDetails()
+            var details = CreateSpecialDetails()
             with
             {
                 MeteringMethod = MeteringMethod.Virtual,
                 MeterNumber = null,
             };
 
-            var meteringPoint = ProductionMeteringPoint.Create(details);
+            var meteringPoint = SpecialMeteringPoint.Create(details);
 
-            var createdEvent = meteringPoint.DomainEvents.First(e => e is ProductionMeteringPointCreated) as ProductionMeteringPointCreated;
+            var createdEvent = meteringPoint.DomainEvents.First(e => e is SpecialMeteringPointCreated) as SpecialMeteringPointCreated;
             Assert.Equal(ProductType.EnergyActive.Name, createdEvent!.ProductType);
-        }
-
-        [Fact]
-        public void Asset_type_is_required()
-        {
-            var details = CreateProductionDetails()
-                with
-                {
-                   AssetType = null!,
-                };
-
-            var checkResult = CheckCreationRules(details);
-
-            AssertContainsValidationError<AssetTypeIsRequiredRuleError>(checkResult);
-        }
-
-        [Fact]
-        public void Powerplant_is_required()
-        {
-            var details = CreateProductionDetails()
-                with
-                {
-                    PowerPlantGsrnNumber = null!,
-                };
-
-            var checkResult = CheckCreationRules(details);
-
-            AssertContainsValidationError<PowerPlantRequirementRuleError>(checkResult);
         }
 
         [Fact]
@@ -163,25 +118,56 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Productio
         {
             var address = CreateAddress();
 
-            var meteringPointDetails = CreateProductionDetails()
+            var meteringPointDetails = CreateSpecialDetails()
                 with
                 {
                     Address = address,
-                    NetSettlementGroup = NetSettlementGroup.Six,
                     MeteringMethod = MeteringMethod.Virtual,
                     MeterNumber = null,
                 };
 
-            var meteringPoint = ProductionMeteringPoint.Create(meteringPointDetails);
+            var meteringPoint = SpecialMeteringPoint.Create(meteringPointDetails);
 
-            var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is ProductionMeteringPointCreated) as ProductionMeteringPointCreated;
+            var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is SpecialMeteringPointCreated) as SpecialMeteringPointCreated;
 
             Assert.Equal(ProductType.EnergyActive.Name, createdEvent!.ProductType);
         }
 
-        private static BusinessRulesValidationResult CheckCreationRules(ProductionMeteringPointDetails meteringPointDetails)
+        [Fact]
+        public void Power_plant_should_not_be_required()
         {
-            return ProductionMeteringPoint.CanCreate(meteringPointDetails);
+            var meteringPointDetails = CreateSpecialDetails()
+                with
+                {
+                    PowerPlantGsrnNumber = null,
+                };
+
+            var checkResult = CheckCreationRules(meteringPointDetails);
+
+            AssertDoesNotContainValidationError<PowerPlantRequirementRuleError>(checkResult);
+        }
+
+        [Theory]
+        [InlineData(nameof(ReadingOccurrence.Quarterly), false)]
+        [InlineData(nameof(ReadingOccurrence.Hourly), false)]
+        [InlineData(nameof(ReadingOccurrence.Monthly), false)]
+        [InlineData(nameof(ReadingOccurrence.Yearly), true)]
+        public void Meter_reading_occurrence_must_be_quarterly_hourly_or_monthly(string readingOccurrence, bool expectError)
+        {
+            var details = CreateSpecialDetails()
+                with
+                {
+                    ReadingOccurrence = EnumerationType.FromName<ReadingOccurrence>(readingOccurrence),
+                };
+
+            var checkResult = CheckCreationRules(details);
+
+            AssertError<InvalidMeterReadingOccurrenceRuleError>(checkResult, expectError);
+        }
+
+        private static BusinessRulesValidationResult CheckCreationRules(SpecialMeteringPointDetails meteringPointDetails)
+        {
+            return SpecialMeteringPoint.CanCreate(meteringPointDetails);
         }
     }
 }

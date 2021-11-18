@@ -141,7 +141,21 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.Property<Capacity>("_capacity")
                 .HasColumnName("Capacity")
-                .HasConversion<double?>(toDbValue => toDbValue == null ? null : toDbValue.Kw!, fromDbValue => fromDbValue.HasValue ? Capacity.Create(fromDbValue.Value) : null!);
+                .HasConversion<double?>(
+                    toDbValue => toDbValue == null
+                    ? null
+                    : toDbValue.Kw!,
+                    convertFromProviderExpression: fromDbValue => fromDbValue.HasValue
+                        ? Capacity.Create(fromDbValue.Value)
+                        : null!);
+
+            builder.Property<AssetType>("_assetType")
+                .HasColumnName("AssetType")
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => !string.IsNullOrEmpty(fromDbValue)
+                        ? EnumerationType.FromName<AssetType>(fromDbValue)
+                        : null!);
         }
     }
 
@@ -172,6 +186,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<DisconnectionType>(fromDbValue));
+
+            builder.Property<NetSettlementGroup>("_netSettlementGroup")
+                .HasColumnName("NetSettlementGroup")
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<NetSettlementGroup>(fromDbValue));
         }
     }
 
@@ -186,23 +206,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.ToTable("ConsumptionMeteringPoints", "dbo");
 
-            builder.Property<AssetType>("_assetType")
-                .HasColumnName("AssetType")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<AssetType>(fromDbValue));
-
             builder.Property<SettlementMethod>("_settlementMethod")
                 .HasColumnName("SettlementMethod")
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<SettlementMethod>(fromDbValue));
-
-            builder.Property<NetSettlementGroup>("_netSettlementGroup")
-                .HasColumnName("NetSettlementGroup")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<NetSettlementGroup>(fromDbValue));
 
             builder.Property<ScheduledMeterReadingDate>("_scheduledMeterReadingDate")
                 .HasColumnName("ScheduledMeterReadingDate")
@@ -225,21 +233,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.Property("_productionObligation")
                 .HasColumnName("ProductionObligation");
-            builder.Property<NetSettlementGroup>("_netSettlementGroup")
-                .HasColumnName("NetSettlementGroup")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<NetSettlementGroup>(fromDbValue));
-            builder.Property<DisconnectionType>("_disconnectionType")
-                .HasColumnName("DisconnectionType")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<DisconnectionType>(fromDbValue));
-            builder.Property<ConnectionType>("_connectionType")
-                .HasColumnName("ConnectionType")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<ConnectionType>(fromDbValue));
         }
     }
 
