@@ -158,7 +158,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 effectiveDate.ToString()));
         }
 
-        #pragma warning disable CA1024
+        #pragma warning disable CA1024 // Use properties where appropriate
         public MeteringConfiguration GetMeteringConfiguration()
         {
             return MeteringConfiguration;
