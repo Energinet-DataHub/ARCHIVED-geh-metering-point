@@ -12,21 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
+using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events
 {
-    public class MeteringMethodDoesNotMatchNetSettlementGroupRuleError : ValidationError
+    public class MeteringConfigurationChanged : DomainEventBase
     {
-        public MeteringMethodDoesNotMatchNetSettlementGroupRuleError(NetSettlementGroup netSettlementGroup, MeteringMethod meteringMethod)
+        public MeteringConfigurationChanged(string meteringPointId, string gsrnNumber, string meterId, string meteringMethod, string effectiveDate)
         {
-            NetSettlementGroup = netSettlementGroup;
+            MeteringPointId = meteringPointId;
+            GsrnNumber = gsrnNumber;
+            MeterId = meterId;
             MeteringMethod = meteringMethod;
+            EffectiveDate = effectiveDate;
         }
 
-        public NetSettlementGroup NetSettlementGroup { get; }
+        public string MeteringPointId { get; }
 
-        public MeteringMethod MeteringMethod { get; }
+        public string GsrnNumber { get; }
+
+        public string MeterId { get; }
+
+        public string EffectiveDate { get; }
+
+        public string MeteringMethod { get; }
     }
 }

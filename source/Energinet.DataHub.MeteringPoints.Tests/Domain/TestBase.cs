@@ -16,6 +16,7 @@ using System;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange;
@@ -48,16 +49,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 address,
-                MeteringMethod.Virtual,
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
                 GsrnNumber.Create(SampleData.PowerPlant),
-                null,
                 ReadingOccurrence.Hourly,
                 PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
                 EffectiveDate.Create(SampleData.EffectiveDate),
                 NetSettlementGroup.One,
                 DisconnectionType.Manual,
-                ConnectionType.Installation);
+                ConnectionType.Installation,
+                MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()));
         }
 
         protected static SpecialMeteringPointDetails CreateSpecialDetails()
@@ -69,15 +69,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 MeteringPointType.VEProduction,
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 address,
-                MeteringMethod.Virtual,
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
-                string.IsNullOrWhiteSpace(SampleData.MeterNumber) ? null : MeterId.Create(SampleData.MeterNumber),
                 ReadingOccurrence.Hourly,
                 PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
                 EffectiveDate.Create(SampleData.EffectiveDate),
                 GsrnNumber.Create(SampleData.PowerPlant),
                 Capacity.Create(SampleData.Capacity),
                 AssetType.GasTurbine,
+                MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                 null);
         }
 
@@ -89,10 +88,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 address,
-                MeteringMethod.Physical,
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
                 GsrnNumber.Create(SampleData.PowerPlant),
-                string.IsNullOrWhiteSpace(SampleData.MeterNumber) ? null : MeterId.Create(SampleData.MeterNumber),
                 ReadingOccurrence.Hourly,
                 PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
                 EffectiveDate.Create(SampleData.EffectiveDate),
@@ -100,7 +97,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 DisconnectionType.Manual,
                 ConnectionType.Installation,
                 AssetType.GasTurbine,
-                Capacity.Create(SampleData.Capacity));
+                Capacity.Create(SampleData.Capacity),
+                MeteringConfiguration.Create(MeteringMethod.Physical, MeterId.Create(SampleData.MeterNumber)));
         }
 
         protected static ExchangeMeteringPointDetails CreateExchangeDetails()
@@ -111,14 +109,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 address,
-                MeteringMethod.Physical,
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
-                string.IsNullOrWhiteSpace(SampleData.MeterNumber) ? null : MeterId.Create(SampleData.MeterNumber),
                 ReadingOccurrence.Hourly,
                 PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
                 EffectiveDate.Create(SampleData.EffectiveDate),
                 GridAreaLinkId.New(),
-                GridAreaLinkId.New());
+                GridAreaLinkId.New(),
+                MeteringConfiguration.Create(MeteringMethod.Physical, MeterId.Create(SampleData.MeterNumber)));
         }
 
         protected static Address CreateAddress()

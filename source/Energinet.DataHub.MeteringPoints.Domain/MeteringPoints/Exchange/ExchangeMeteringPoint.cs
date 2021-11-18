@@ -18,6 +18,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
@@ -34,30 +35,28 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
             [NotNull]MeteringPointId id,
             GsrnNumber gsrnNumber,
             [NotNull]Address address,
-            [NotNull]MeteringMethod meteringMethod,
             MeteringPointType meteringPointType,
             [NotNull]GridAreaLinkId gridAreaLinkId,
-            MeterId? meterNumber,
             [NotNull]ReadingOccurrence meterReadingOccurrence,
             [NotNull]PowerLimit powerLimit,
             [NotNull]EffectiveDate effectiveDate,
             [NotNull]GridAreaLinkId toGrid,
-            [NotNull]GridAreaLinkId fromGrid)
+            [NotNull]GridAreaLinkId fromGrid,
+            MeteringConfiguration meteringConfiguration)
             : base(
                 id,
                 gsrnNumber,
                 address,
-                meteringMethod,
                 meteringPointType,
                 gridAreaLinkId,
                 powerPlantGsrnNumber: null,
                 MeasurementUnitType.KWh,
-                meterNumber,
                 meterReadingOccurrence,
                 powerLimit,
                 effectiveDate,
                 capacity: null,
-                assetType: null)
+                assetType: null,
+                meteringConfiguration)
         {
             _toGrid = toGrid;
             _fromGrid = fromGrid;
@@ -67,7 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
                 id.Value,
                 GsrnNumber.Value,
                 gridAreaLinkId.Value,
-                meteringMethod.Name,
+                MeteringConfiguration.Method.Name,
                 _productType.Name,
                 meterReadingOccurrence.Name,
                 _unitType.Name,
@@ -82,7 +81,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
                 address.StreetName,
                 address.CitySubDivision,
                 address.LocationDescription,
-                meterNumber?.Value,
+                MeteringConfiguration.Meter?.Value,
                 powerLimit.Ampere,
                 powerLimit.Kwh,
                 effectiveDate.DateInUtc,
@@ -122,15 +121,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
                 meteringPointDetails.Id,
                 meteringPointDetails.GsrnNumber,
                 meteringPointDetails.Address,
-                meteringPointDetails.MeteringMethod,
                 MeteringPointType.Exchange,
                 meteringPointDetails.GridAreaLinkId,
-                meteringPointDetails.MeterNumber,
                 meteringPointDetails.ReadingOccurrence,
                 meteringPointDetails.PowerLimit,
                 meteringPointDetails.EffectiveDate,
                 meteringPointDetails.ToGridLinkId,
-                meteringPointDetails.FromGridLinkId);
+                meteringPointDetails.FromGridLinkId,
+                meteringPointDetails.MeteringConfiguration);
         }
 
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)

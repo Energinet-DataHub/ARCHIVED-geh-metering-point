@@ -12,11 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using System.Threading;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDispatchers
 {
-    public class MeterIdIsNotAllowedRuleError : ValidationError
+    public class NullMeteringConfigrationChangedDispatcher : IRequestHandler<MeteringConfigurationChangedIntegrationEvent>
     {
+        public Task<Unit> Handle(MeteringConfigurationChangedIntegrationEvent request, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(Unit.Value);
+        }
     }
 }

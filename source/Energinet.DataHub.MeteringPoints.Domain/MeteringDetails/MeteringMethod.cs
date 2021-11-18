@@ -14,9 +14,17 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringDetails
 {
-    public class MeterIdIsRequiredRuleError : ValidationError
+    public class MeteringMethod : EnumerationType
     {
+        public static readonly MeteringMethod Physical = new MeteringMethod(0, nameof(Physical));
+        public static readonly MeteringMethod Virtual = new MeteringMethod(1, nameof(Virtual));
+        public static readonly MeteringMethod Calculated = new MeteringMethod(2, nameof(Calculated));
+
+        private MeteringMethod(int id, string name)
+            : base(id, name)
+        {
+        }
     }
 }

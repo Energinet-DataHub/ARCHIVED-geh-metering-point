@@ -16,9 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -28,35 +28,33 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
     public class SpecialMeteringPoint : MeteringPoint
     {
         public SpecialMeteringPoint(
-            [NotNull] MeteringPointId id,
+            [NotNull]MeteringPointId id,
             GsrnNumber gsrnNumber,
-            [NotNull] Address address,
-            [NotNull] MeteringMethod meteringMethod,
+            [NotNull]Address address,
             MeteringPointType meteringPointType,
-            [NotNull] GridAreaLinkId gridAreaLinkId,
-            MeterId? meterNumber,
-            [NotNull] ReadingOccurrence meterReadingOccurrence,
-            [NotNull] PowerLimit powerLimit,
-            [NotNull] EffectiveDate effectiveDate,
+            [NotNull]GridAreaLinkId gridAreaLinkId,
+            [NotNull]ReadingOccurrence meterReadingOccurrence,
+            [NotNull]PowerLimit powerLimit,
+            [NotNull]EffectiveDate effectiveDate,
             GsrnNumber? powerPlantGsrnNumber,
             Capacity? capacity,
             AssetType? assetType,
+            MeteringConfiguration meteringConfiguration,
             GsrnNumber? parentRelatedMeteringPoint)
             : base(
                 id,
                 gsrnNumber,
                 address,
-                meteringMethod,
                 meteringPointType,
                 gridAreaLinkId,
                 powerPlantGsrnNumber,
                 GetUnitType(meteringPointType),
-                meterNumber,
                 meterReadingOccurrence,
                 powerLimit,
                 effectiveDate,
                 capacity,
-                assetType)
+                assetType,
+                meteringConfiguration)
         {
             _productType = ProductType.EnergyActive;
 
@@ -64,7 +62,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
                 id.Value,
                 GsrnNumber.Value,
                 gridAreaLinkId.Value,
-                meteringMethod.Name,
+                MeteringConfiguration.Method.Name,
                 _productType.Name,
                 meterReadingOccurrence.Name,
                 address.City,
@@ -77,7 +75,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
                 address.StreetCode,
                 address.StreetName,
                 address.CitySubDivision,
-                meterNumber?.Value,
+                MeteringConfiguration.Meter?.Value,
                 powerLimit.Ampere,
                 powerLimit.Kwh,
                 effectiveDate.DateInUtc,
@@ -124,16 +122,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
                 meteringPointDetails.Id,
                 meteringPointDetails.GsrnNumber,
                 meteringPointDetails.Address,
-                meteringPointDetails.MeteringMethod,
                 meteringPointDetails.MeteringPointType,
                 meteringPointDetails.GridAreaLinkId,
-                meteringPointDetails.MeterNumber,
                 meteringPointDetails.ReadingOccurrence,
                 meteringPointDetails.PowerLimit,
                 meteringPointDetails.EffectiveDate,
                 meteringPointDetails.PowerPlantGsrnNumber,
                 meteringPointDetails.Capacity,
                 meteringPointDetails.AssetType,
+                meteringPointDetails.MeteringConfiguration,
                 meteringPointDetails.ParentRelatedMeteringPoint);
         }
 

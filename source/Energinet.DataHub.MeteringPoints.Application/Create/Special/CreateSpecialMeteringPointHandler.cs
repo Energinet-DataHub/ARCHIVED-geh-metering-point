@@ -23,6 +23,7 @@ using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special;
@@ -125,16 +126,26 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Special
                 EnumerationType.FromName<MeteringPointType>(request.MeteringPointType),
                 GsrnNumber.Create(request.GsrnNumber),
                 CreateAddress(request),
-                EnumerationType.FromName<MeteringMethod>(request.MeteringMethod),
                 gridAreaLinkId,
-                string.IsNullOrWhiteSpace(request.MeterNumber) ? null : MeterId.Create(request.MeterNumber),
                 EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
                 PowerLimit.Create(request.MaximumPower, request.MaximumCurrent),
                 EffectiveDate.Create(request.EffectiveDate),
                 !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null!,
                 !string.IsNullOrWhiteSpace(request.PhysicalConnectionCapacity) ? Capacity.Create(request.PhysicalConnectionCapacity) : null!,
                 !string.IsNullOrEmpty(request.AssetType) ? EnumerationType.FromName<AssetType>(request.AssetType) : null!,
+                CreateMeteringConfiguration(request.MeteringMethod, request.MeterNumber ?? string.Empty),
                 !string.IsNullOrEmpty(request.ParentRelatedMeteringPoint) ? GsrnNumber.Create(request.ParentRelatedMeteringPoint) : null!);
+        }
+
+        private static MeteringConfiguration CreateMeteringConfiguration(string method, string? meter)
+        {
+            var meteringMethod = EnumerationType.FromName<MeteringMethod>(method);
+            if (meteringMethod != MeteringMethod.Physical)
+            {
+                return MeteringConfiguration.Create(meteringMethod, MeterId.Empty());
+            }
+
+            return MeteringConfiguration.Create(meteringMethod, MeterId.Create(meter!));
         }
 
         private static Domain.Addresses.Address CreateAddress(CreateSpecialMeteringPoint request)

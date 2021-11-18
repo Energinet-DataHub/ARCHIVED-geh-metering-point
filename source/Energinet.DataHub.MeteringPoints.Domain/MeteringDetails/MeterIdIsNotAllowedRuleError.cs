@@ -12,24 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringDetails
 {
-    public class MeterIdLengthRule : IBusinessRule
+    public class MeterIdIsNotAllowedRuleError : ValidationError
     {
-        private const int MaxLength = 15;
-
-        public MeterIdLengthRule(string meterId)
-        {
-            if (meterId == null) throw new ArgumentNullException(nameof(meterId));
-            IsBroken = meterId.Length > MaxLength;
-            ValidationError = new InvalidMeterIdRuleError(meterId, MaxLength);
-        }
-
-        public bool IsBroken { get; }
-
-        public ValidationError ValidationError { get; }
     }
 }

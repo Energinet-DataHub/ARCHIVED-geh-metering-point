@@ -19,7 +19,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.Policies;
@@ -53,67 +52,28 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 });
             }
 
-            var validationResult = await ValidateAsync(request, targetMeteringPoint).ConfigureAwait(false);
-            if (!validationResult.Success)
+            var valueTransformer = new MasterDataValueTransformer(request, targetMeteringPoint);
+            if (valueTransformer.HasError)
             {
-                return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
+                return new BusinessProcessResult(request.TransactionId, valueTransformer.Errors);
             }
 
-            return await ChangeMasterDataAsync(request, targetMeteringPoint).ConfigureAwait(false);
-        }
+            var updatedValues = valueTransformer.UpdatedValues();
 
-        private static MasterDataDetails CreateChangeDetails(ChangeMasterDataRequest request, ConsumptionMeteringPoint targetMeteringPoint)
-        {
-            if (request == null) throw new ArgumentNullException(nameof(request));
-            return new MasterDataDetails(EffectiveDate.Create(request.EffectiveDate))
-                with
-                {
-                    Address = CreateNewAddressFrom(request, targetMeteringPoint),
-                };
-        }
-
-        private static Task<BusinessProcessResult> ChangeMasterDataAsync(ChangeMasterDataRequest request, ConsumptionMeteringPoint targetMeteringPoint)
-        {
-            targetMeteringPoint.Change(CreateChangeDetails(request, targetMeteringPoint));
-            return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
-        }
-
-        private static Domain.Addresses.Address? CreateNewAddressFrom(ChangeMasterDataRequest request, ConsumptionMeteringPoint targetMeteringPoint)
-        {
-            if (request == null) throw new ArgumentNullException(nameof(request));
-            if (request.Address is null)
+            var policyCheckResult = await CheckPoliciesAsync(updatedValues).ConfigureAwait(false);
+            if (policyCheckResult.Success == false)
             {
-                return null;
+                return new BusinessProcessResult(request.TransactionId, policyCheckResult.Errors);
             }
 
-            return targetMeteringPoint.Address.MergeFrom(Domain.Addresses.Address.Create(
-                request.Address.StreetName,
-                request.Address.StreetCode,
-                request.Address.BuildingNumber,
-                request.Address.City,
-                request.Address.CitySubDivision,
-                request.Address.PostCode,
-                string.IsNullOrEmpty(request.Address.CountryCode) ? null : EnumerationType.FromName<CountryCode>(request.Address.CountryCode),
-                request.Address.Floor,
-                request.Address.Room,
-                request.Address.MunicipalityCode,
-                request.Address.IsActual.GetValueOrDefault(),
-                request.Address.GeoInfoReference,
-                request.Address.LocationDescription));
-        }
-
-        private Task<BusinessRulesValidationResult> ValidateAsync(ChangeMasterDataRequest request, ConsumptionMeteringPoint targetMeteringPoint)
-        {
-            var details = CreateChangeDetails(request, targetMeteringPoint);
-            var validationResults = new List<BusinessRulesValidationResult>()
+            var masterDataUpdater = new MasterDataValueUpdater(updatedValues, targetMeteringPoint);
+            if (masterDataUpdater.CanUpdate != true)
             {
-                targetMeteringPoint.CanChange(details),
-                new EffectiveDatePolicy(_settings.NumberOfDaysEffectiveDateIsAllowedToBeforeToday).Check(_systemDateTimeProvider.Now(), details.EffectiveDate),
-            };
+                return new BusinessProcessResult(request.TransactionId, masterDataUpdater.Errors);
+            }
 
-            var validationErrors = validationResults.SelectMany(results => results.Errors);
-
-            return Task.FromResult(new BusinessRulesValidationResult(validationErrors));
+            masterDataUpdater.Update();
+            return BusinessProcessResult.Ok(request.TransactionId);
         }
 
         private async Task<ConsumptionMeteringPoint?> FetchTargetMeteringPointAsync(ChangeMasterDataRequest request)
@@ -121,6 +81,18 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
             return await _meteringPointRepository
                 .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
                 .ConfigureAwait(false) as ConsumptionMeteringPoint;
+        }
+
+        private Task<BusinessRulesValidationResult> CheckPoliciesAsync(MasterDataDetails masterDataDetails)
+        {
+            if (masterDataDetails == null) throw new ArgumentNullException(nameof(masterDataDetails));
+            var validationResults = new List<BusinessRulesValidationResult>()
+            {
+                new EffectiveDatePolicy(_settings.NumberOfDaysEffectiveDateIsAllowedToBeforeToday).Check(_systemDateTimeProvider.Now(), masterDataDetails.EffectiveDate),
+            };
+
+            var validationErrors = validationResults.SelectMany(results => results.Errors).ToList();
+            return Task.FromResult<BusinessRulesValidationResult>(new BusinessRulesValidationResult(validationErrors));
         }
     }
 }

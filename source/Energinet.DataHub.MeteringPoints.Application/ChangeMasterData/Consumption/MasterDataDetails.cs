@@ -12,19 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
 {
-    public class MeteringMethod : EnumerationType
-    {
-        public static readonly MeteringMethod Physical = new MeteringMethod(0, nameof(Physical));
-        public static readonly MeteringMethod Virtual = new MeteringMethod(1, nameof(Virtual));
-        public static readonly MeteringMethod Calculated = new MeteringMethod(2, nameof(Calculated));
-
-        private MeteringMethod(int id, string name)
-            : base(id, name)
-        {
-        }
-    }
+    public record MasterDataDetails(
+        EffectiveDate EffectiveDate,
+        Domain.Addresses.Address? Address = null,
+        MeteringConfiguration? MeteringConfiguration = null);
 }

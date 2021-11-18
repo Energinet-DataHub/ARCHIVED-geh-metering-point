@@ -29,6 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
                     TransactionId = SampleData.Transaction,
                     GsrnNumber = SampleData.GsrnNumber,
                     Address = Scenarios.CreateAddress(),
+                    SettlementMethod = SampleData.SettlementMethod,
                 };
         }
     }
