@@ -18,6 +18,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
@@ -36,11 +37,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            MeteringMethod meteringMethod,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
-            MeterId? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit powerLimit,
             EffectiveDate effectiveDate,
@@ -50,17 +49,16 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             ConnectionType? connectionType,
             AssetType? assetType,
             ScheduledMeterReadingDate? scheduledMeterReadingDate,
-            Capacity? capacity)
+            Capacity? capacity,
+            MeteringConfiguration meteringConfiguration)
             : base(
                 id,
                 gsrnNumber,
                 address,
-                meteringMethod,
                 meteringPointType,
                 gridAreaLinkId,
                 powerPlantGsrnNumber,
                 MeasurementUnitType.KWh,
-                meterNumber,
                 meterReadingOccurrence,
                 powerLimit,
                 effectiveDate,
@@ -68,7 +66,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 connectionType,
                 disconnectionType,
                 netSettlementGroup,
-                assetType)
+                assetType,
+                meteringConfiguration)
         {
             _settlementMethod = settlementMethod;
             _productType = ProductType.EnergyActive;
@@ -79,7 +78,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 id.Value,
                 GsrnNumber.Value,
                 gridAreaLinkId.Value,
-                meteringMethod.Name,
+                MeteringConfiguration.Method.Name,
                 _productType.Name,
                 meterReadingOccurrence.Name,
                 _unitType.Name,
@@ -99,7 +98,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 address.GeoInfoReference,
                 powerPlantGsrnNumber?.Value,
                 address.LocationDescription,
-                meterNumber?.Value,
+                MeteringConfiguration.Meter?.Value,
                 powerLimit.Ampere,
                 powerLimit.Kwh,
                 effectiveDate.DateInUtc,
@@ -144,11 +143,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointDetails.Id,
                 meteringPointDetails.GsrnNumber,
                 meteringPointDetails.Address,
-                meteringPointDetails.MeteringMethod,
                 MeteringPointType.Consumption,
                 meteringPointDetails.GridAreaLinkId,
                 meteringPointDetails.PowerPlantGsrnNumber,
-                meteringPointDetails.MeterNumber,
                 meteringPointDetails.ReadingOccurrence,
                 meteringPointDetails.PowerLimit,
                 meteringPointDetails.EffectiveDate,
@@ -158,7 +155,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointDetails.ConnectionType,
                 meteringPointDetails.AssetType,
                 meteringPointDetails.ScheduledMeterReadingDate,
-                meteringPointDetails.Capacity);
+                meteringPointDetails.Capacity,
+                meteringPointDetails.MeteringConfiguration);
         }
 
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
@@ -182,35 +180,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 
             ConnectionState = ConnectionState.Connected(connectionDetails.EffectiveDate);
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
-        }
-
-        public BusinessRulesValidationResult CanChange(MasterDataDetails details)
-        {
-            if (details == null) throw new ArgumentNullException(nameof(details));
-
-            var validationErrors = new List<ValidationError>();
-            if (details.Address is not null)
-            {
-                validationErrors.AddRange(CanChangeAddress(details.Address).Errors);
-            }
-
-            return new BusinessRulesValidationResult(validationErrors);
-        }
-
-        public void Change(MasterDataDetails details)
-        {
-            if (details == null) throw new ArgumentNullException(nameof(details));
-
-            var checkResult = CanChange(details);
-            if (checkResult.Success == false)
-            {
-                throw new MasterDataChangeException(checkResult.Errors.ToList());
-            }
-
-            if (details.Address is not null)
-            {
-                ChangeAddress(details.Address);
-            }
         }
     }
 }

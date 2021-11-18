@@ -15,11 +15,14 @@
 using System;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Categories;
 
@@ -32,17 +35,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         public void Should_return_error_when_street_name_is_blank()
         {
             var meteringPoint = CreateMeteringPoint();
-            var details = CreateDetails()
-                with
-                {
-                    Address = Address.Create(
-                        city: SampleData.CityName,
-                        streetName: string.Empty,
-                        countryCode: CountryCode.DK,
-                        postCode: SampleData.PostCode),
-                };
 
-            var result = meteringPoint.CanChange(details);
+            var result = meteringPoint.CanChangeAddress(Address.Create(
+                city: SampleData.CityName,
+                streetName: string.Empty,
+                countryCode: CountryCode.DK,
+                postCode: SampleData.PostCode));
 
             AssertError<StreetNameIsRequiredRuleError>(result, true);
         }
@@ -51,25 +49,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         public void Should_throw_if_any_business_rule_are_violated()
         {
             var meteringPoint = CreateMeteringPoint();
-            var details = CreateDetails()
-                with
-                {
-                    Address = Address.Create(city: SampleData.CityName, streetName: string.Empty, countryCode: CountryCode.DK, postCode: SampleData.PostCode),
-                };
 
-            Assert.Throws<MasterDataChangeException>(() => meteringPoint.Change(details));
+            Assert.Throws<MasterDataChangeException>(() => meteringPoint.ChangeAddress(Address.Create(city: SampleData.CityName, streetName: string.Empty, countryCode: CountryCode.DK, postCode: SampleData.PostCode)));
         }
 
         [Fact]
         public void Should_return_error_when_post_code_is_blank()
         {
             var meteringPoint = CreateMeteringPoint();
-            var details = CreateDetails()
-                with
-                {
-                    Address = Address.Create(city: SampleData.CityName, streetName: SampleData.StreetName, countryCode: CountryCode.DK, postCode: string.Empty),
-                };
-            var result = meteringPoint.CanChange(details);
+
+            var result = meteringPoint.CanChangeAddress(Address.Create(city: SampleData.CityName, streetName: SampleData.StreetName, countryCode: CountryCode.DK, postCode: string.Empty));
 
             AssertError<PostCodeIsRequiredRuleError>(result, true);
         }
@@ -78,13 +67,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         public void Should_return_error_when_city_is_blank()
         {
             var meteringPoint = CreateMeteringPoint();
-            var details = CreateDetails()
-                with
-                {
-                    Address = Address.Create(city: null, streetName: SampleData.StreetName, countryCode: CountryCode.DK, postCode: SampleData.PostCode),
-                };
 
-            var result = meteringPoint.CanChange(details);
+            var result = meteringPoint.CanChangeAddress(Address.Create(city: null, streetName: SampleData.StreetName, countryCode: CountryCode.DK, postCode: SampleData.PostCode));
 
             AssertError<CityIsRequiredRuleError>(result, true);
         }
@@ -93,40 +77,58 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         public void Should_change_address()
         {
             var meteringPoint = CreateMeteringPoint();
-            var details = CreateDetails()
-                with
-                {
-                    Address = Address.Create(
-                        streetName: "New Street Name",
-                        postCode: "6000",
-                        city: "New City Name",
-                        streetCode: "0500",
-                        buildingNumber: "4",
-                        citySubDivision: "New",
-                        countryCode: CountryCode.DK,
-                        floor: "9",
-                        room: "9",
-                        municipalityCode: 999,
-                        isActual: true,
-                        geoInfoReference: Guid.NewGuid()),
-                };
+            var address = Address.Create(
+                streetName: "New Street Name",
+                postCode: "6000",
+                city: "New City Name",
+                streetCode: "0500",
+                buildingNumber: "4",
+                citySubDivision: "New",
+                countryCode: CountryCode.DK,
+                floor: "9",
+                room: "9",
+                municipalityCode: 999,
+                isActual: true,
+                geoInfoReference: Guid.NewGuid());
 
-            meteringPoint.Change(details);
+            meteringPoint.ChangeAddress(address);
 
             var changeEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is AddressChanged) as AddressChanged;
             Assert.NotNull(changeEvent);
-            Assert.Equal(details.Address?.City, changeEvent?.City);
-            Assert.Equal(details.Address?.Floor, changeEvent?.Floor);
-            Assert.Equal(details.Address?.Room, changeEvent?.Room);
-            Assert.Equal(details.Address?.BuildingNumber, changeEvent?.BuildingNumber);
-            Assert.Equal(details.Address?.CountryCode?.Name, changeEvent?.CountryCode);
-            Assert.Equal(details.Address?.PostCode, changeEvent?.PostCode);
-            Assert.Equal(details.Address?.StreetCode, changeEvent?.StreetCode);
-            Assert.Equal(details.Address?.StreetName, changeEvent?.StreetName);
-            Assert.Equal(details.Address?.CitySubDivision, changeEvent?.CitySubDivision);
-            Assert.Equal(details.Address?.IsActual, changeEvent?.IsActual);
-            Assert.Equal(details.Address?.MunicipalityCode, changeEvent?.MunicipalityCode);
-            Assert.Equal(details.Address?.GeoInfoReference, changeEvent?.GeoInfoReference);
+            Assert.Equal(address.City, changeEvent?.City);
+            Assert.Equal(address.Floor, changeEvent?.Floor);
+            Assert.Equal(address.Room, changeEvent?.Room);
+            Assert.Equal(address.BuildingNumber, changeEvent?.BuildingNumber);
+            Assert.Equal(address.CountryCode?.Name, changeEvent?.CountryCode);
+            Assert.Equal(address.PostCode, changeEvent?.PostCode);
+            Assert.Equal(address.StreetCode, changeEvent?.StreetCode);
+            Assert.Equal(address.StreetName, changeEvent?.StreetName);
+            Assert.Equal(address.CitySubDivision, changeEvent?.CitySubDivision);
+            Assert.Equal(address.IsActual, changeEvent?.IsActual);
+            Assert.Equal(address.MunicipalityCode, changeEvent?.MunicipalityCode);
+            Assert.Equal(address.GeoInfoReference, changeEvent?.GeoInfoReference);
+        }
+
+        [Fact]
+        public void Metering_configuration_is_changed()
+        {
+            var meteringPoint = CreatePhysical();
+            var effectiveDate = EffectiveDate.Create(SampleData.EffectiveDate);
+            var configuration =
+                MeteringConfiguration.Create(meteringPoint.MeteringConfiguration.Method, MeterId.Create("NewId"));
+
+            meteringPoint.ChangeMeteringConfiguration(configuration, effectiveDate);
+
+            var expectedEvent = FindDomainEvent<MeteringConfigurationChanged>(meteringPoint);
+            Assert.Equal(configuration.Meter.Value, expectedEvent?.MeterId);
+            Assert.Equal(configuration.Method.Name, expectedEvent?.MeteringMethod);
+            Assert.Equal(effectiveDate.ToString(), expectedEvent?.EffectiveDate);
+        }
+
+        private static TDomainEvent? FindDomainEvent<TDomainEvent>(Entity domainEntity)
+            where TDomainEvent : DomainEventBase
+        {
+            return domainEntity.DomainEvents.FirstOrDefault(e => e is TDomainEvent) as TDomainEvent;
         }
 
         private static ConsumptionMeteringPoint CreateMeteringPoint()
@@ -134,11 +136,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             return ConsumptionMeteringPoint.Create(CreateConsumptionDetails());
         }
 
-        private static MasterDataDetails CreateDetails()
+        private static ConsumptionMeteringPoint CreatePhysical()
         {
-            return new MasterDataDetails(
-                EffectiveDate: EffectiveDate.Create(SampleData.EffectiveDate),
-                Address: Address.Create(city: null, streetName: SampleData.StreetName, countryCode: CountryCode.DK, postCode: SampleData.PostCode));
+            var details = CreateConsumptionDetails()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.Zero,
+                    ConnectionType = null,
+                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Physical, MeterId.Create("1")),
+                };
+            return ConsumptionMeteringPoint.Create(details);
         }
     }
 }

@@ -14,8 +14,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
@@ -32,12 +34,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         protected AssetType? _assetType;
 #pragma warning restore
         private GridAreaLinkId _gridAreaLinkId;
-        private MeteringMethod _meteringMethod;
         private ReadingOccurrence _meterReadingOccurrence;
         private PowerLimit _powerLimit;
         private GsrnNumber? _powerPlantGsrnNumber;
         private EffectiveDate _effectiveDate;
-        private MeterId? _meterNumber;
         private Capacity? _capacity;
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
@@ -49,32 +49,30 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            MeteringMethod meteringMethod,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
             MeasurementUnitType unitType,
-            MeterId? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit powerLimit,
             EffectiveDate effectiveDate,
             Capacity? capacity,
-            AssetType? assetType)
+            AssetType? assetType,
+            MeteringConfiguration meteringConfiguration)
         {
             Id = id;
             GsrnNumber = gsrnNumber;
             Address = address;
-            _meteringMethod = meteringMethod;
             _meteringPointType = meteringPointType;
             _gridAreaLinkId = gridAreaLinkId;
             _powerPlantGsrnNumber = powerPlantGsrnNumber;
             _unitType = unitType;
-            _meterNumber = meterNumber;
             _meterReadingOccurrence = meterReadingOccurrence;
             _powerLimit = powerLimit;
             _effectiveDate = effectiveDate;
             _capacity = capacity;
             _assetType = assetType;
+            MeteringConfiguration = meteringConfiguration;
         }
 
         public MeteringPointId Id { get; }
@@ -83,6 +81,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public Address Address { get; private set; }
 
+        internal MeteringConfiguration MeteringConfiguration { get; private set; }
+
         protected ConnectionState ConnectionState { get; set; } = ConnectionState.New();
 
         public static BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
@@ -90,7 +90,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
             var rules = new List<IBusinessRule>()
             {
-                new MeterIdRequirementRule(meteringPointDetails.MeterNumber, meteringPointDetails.MeteringMethod),
             };
 
             return new BusinessRulesValidationResult(rules);
@@ -114,6 +113,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public void ChangeAddress(Address newAddress)
         {
             if (newAddress == null) throw new ArgumentNullException(nameof(newAddress));
+            var checkResult = CanChangeAddress(newAddress);
+            if (checkResult.Success == false)
+            {
+                throw new MasterDataChangeException(checkResult.Errors.ToList());
+            }
+
             if (newAddress.Equals(Address) == false)
             {
                 Address = newAddress;
@@ -132,5 +137,32 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                     Address.GeoInfoReference.GetValueOrDefault()));
             }
         }
+
+        public void ChangeMeteringConfiguration(MeteringConfiguration configuration, EffectiveDate effectiveDate)
+        {
+            if (effectiveDate == null) throw new ArgumentNullException(nameof(effectiveDate));
+            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+
+            if (MeteringConfiguration.Equals(configuration))
+            {
+                return;
+            }
+
+            MeteringConfiguration = configuration;
+
+            AddDomainEvent(new MeteringConfigurationChanged(
+                Id.Value.ToString(),
+                GsrnNumber.Value,
+                MeteringConfiguration.Meter.Value,
+                MeteringConfiguration.Method.Name,
+                effectiveDate.ToString()));
+        }
+
+        #pragma warning disable CA1024 // Use properties where appropriate
+        public MeteringConfiguration GetMeteringConfiguration()
+        {
+            return MeteringConfiguration;
+        }
+        #pragma warning restore
     }
 }

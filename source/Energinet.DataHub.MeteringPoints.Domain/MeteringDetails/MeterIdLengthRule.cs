@@ -13,19 +13,24 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringDetails
 {
-    public class MeterNumberMandatoryErrorConverter : ErrorConverter<MeterIdIsRequiredRuleError>
+    public class MeterIdLengthRule : IBusinessRule
     {
-        protected override ErrorMessage Convert(MeterIdIsRequiredRuleError validationError)
-        {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+        private const int MaxLength = 15;
 
-            return new("D31", $"Meter number is mandatory for sub type physical.");
+        public MeterIdLengthRule(string meterId)
+        {
+            if (meterId == null) throw new ArgumentNullException(nameof(meterId));
+            IsBroken = meterId.Length > MaxLength;
+            ValidationError = new InvalidMeterIdRuleError(meterId, MaxLength);
         }
+
+        public bool IsBroken { get; }
+
+        public ValidationError ValidationError { get; }
     }
 }
