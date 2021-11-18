@@ -34,8 +34,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special.Rules
 
         private static bool ValidateRule(ReadingOccurrence readingOccurrence, MeteringPointType meteringPointType)
         {
-            var t = meteringPointType.Name;
-
             return meteringPointType.Name switch
             {
                 nameof(MeteringPointType.VEProduction) => readingOccurrence == ReadingOccurrence.Hourly || readingOccurrence == ReadingOccurrence.Quarterly || readingOccurrence == ReadingOccurrence.Monthly,
