@@ -15,6 +15,7 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange;
@@ -83,12 +84,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     .HasColumnName("ConnectionState_EffectiveDate");
             });
 
-            builder.Property<MeteringMethod>("_meteringMethod")
-                .HasColumnName("MeteringPointSubType")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<MeteringMethod>(fromDbValue));
-
             builder.Property<MeteringPointType>("_meteringPointType")
                 .HasColumnName("TypeOfMeteringPoint")
                 .HasConversion(
@@ -117,15 +112,23 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<MeasurementUnitType>(fromDbValue));
 
-            builder.Property<MeterId>("_meterNumber")
-                .HasColumnName("MeterNumber")
-                .HasConversion(toDbValue => toDbValue.Value, fromDbValue => MeterId.Create(fromDbValue));
-
             builder.Property<ReadingOccurrence>("_meterReadingOccurrence")
                 .HasColumnName("MeterReadingOccurrence")
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<ReadingOccurrence>(fromDbValue));
+
+            builder.OwnsOne<MeteringConfiguration>("MeteringConfiguration", mapper =>
+            {
+                mapper.Property(x => x.Meter)
+                    .HasColumnName("MeterNumber")
+                    .HasConversion(toDbValue => toDbValue.Value, fromDbValue => MeterId.Create(fromDbValue));
+                mapper.Property(x => x.Method)
+                    .HasColumnName("MeteringPointSubType")
+                    .HasConversion(
+                        toDbValue => toDbValue.Name,
+                        fromDbValue => EnumerationType.FromName<MeteringMethod>(fromDbValue));
+            });
 
             builder.OwnsOne<PowerLimit>("_powerLimit", mapper =>
             {

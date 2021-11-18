@@ -58,7 +58,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
                     document.RoomIdentification,
                     string.IsNullOrWhiteSpace(document.MunicipalityCode) ? null : int.Parse(document.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()),
                     document.IsActualAddress,
-                    document.GeoInfoReference == null ? null : Guid.Parse(document.GeoInfoReference)));
+                    document.GeoInfoReference == null ? null : Guid.Parse(document.GeoInfoReference)),
+                MeteringMethod: document.MeteringMethod,
+                MeterId: document.MeterNumber);
         }
 
         private static IBusinessRequest? CreateConnectMeteringPointCommand(MasterDataDocument document)
@@ -104,7 +106,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
                 LocationDescription = document.LocationDescription,
                 MaximumCurrent = document.MaximumCurrent,
                 MaximumPower = document.MaximumPower,
-                MeteringMethod = document.MeteringMethod,
+                MeteringMethod = document.MeteringMethod ?? string.Empty,
                 MeterNumber = document.MeterNumber,
                 MunicipalityCode = document.MunicipalityCode,
                 PostCode = document.PostCode,
@@ -141,7 +143,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
                 LocationDescription = document.LocationDescription,
                 MaximumCurrent = document.MaximumCurrent,
                 MaximumPower = document.MaximumPower,
-                MeteringMethod = document.MeteringMethod,
+                MeteringMethod = document.MeteringMethod ?? string.Empty,
                 MeterNumber = document.MeterNumber,
                 MunicipalityCode = document.MunicipalityCode,
                 PostCode = document.PostCode,
@@ -173,7 +175,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
                 LocationDescription = document.LocationDescription,
                 MaximumCurrent = document.MaximumCurrent,
                 MaximumPower = document.MaximumPower,
-                MeteringMethod = document.MeteringMethod,
+                MeteringMethod = document.MeteringMethod ?? string.Empty,
                 MeterNumber = document.MeterNumber,
                 MunicipalityCode = document.MunicipalityCode,
                 PostCode = document.PostCode,
@@ -204,7 +206,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
                 LocationDescription = document.LocationDescription,
                 MaximumCurrent = document.MaximumCurrent,
                 MaximumPower = document.MaximumPower,
-                MeteringMethod = document.MeteringMethod,
+                MeteringMethod = document.MeteringMethod ?? string.Empty,
                 MeterNumber = document.MeterNumber,
                 MunicipalityCode = document.MunicipalityCode,
                 PostCode = document.PostCode,

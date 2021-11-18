@@ -12,29 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class MeterIdRequirementRule : IBusinessRule
+    public class SettlementMethodValidator : AbstractValidator<string>
     {
-        public MeterIdRequirementRule(MeterId? meterId, MeteringMethod meteringMethod)
+        public SettlementMethodValidator()
         {
-            if (meteringMethod == MeteringMethod.Physical && meterId == null)
-            {
-                IsBroken = true;
-                ValidationError = new MeterIdIsRequiredRuleError();
-            }
-            else if (meteringMethod != MeteringMethod.Physical && meterId! != null!)
-            {
-                IsBroken = true;
-                ValidationError = new MeterIdIsNotAllowedRuleError();
-            }
+            RuleFor(value => value)
+                .Must(value => EnumerationType
+                    .GetAll<SettlementMethod>()
+                    .Select(item => item.Name)
+                    .Contains(value))
+                .WithState(value =>
+                    new SettlementMethodMissingRequiredDomainValuesValidationError(value));
         }
-
-        public bool IsBroken { get; }
-
-        public ValidationError ValidationError { get; } = new MeterIdIsRequiredRuleError();
     }
 }

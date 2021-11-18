@@ -14,6 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
 {
@@ -21,21 +22,19 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
         MeteringPointId Id,
         GsrnNumber GsrnNumber,
         Address Address,
-        MeteringMethod MeteringMethod,
         GridAreaLinkId GridAreaLinkId,
-        MeterId? MeterNumber,
         ReadingOccurrence ReadingOccurrence,
         PowerLimit PowerLimit,
         EffectiveDate EffectiveDate,
         GridAreaLinkId FromGridLinkId,
-        GridAreaLinkId ToGridLinkId) : MeteringPointDetails(
+        GridAreaLinkId ToGridLinkId,
+        MeteringConfiguration MeteringConfiguration) : MeteringPointDetails(
         Id,
         GsrnNumber,
         Address,
-        MeteringMethod,
         GridAreaLinkId,
-        MeterNumber,
         ReadingOccurrence,
         PowerLimit,
-        EffectiveDate);
+        EffectiveDate,
+        MeteringConfiguration);
 }

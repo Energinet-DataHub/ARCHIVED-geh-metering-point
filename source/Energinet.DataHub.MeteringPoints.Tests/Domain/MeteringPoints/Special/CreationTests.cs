@@ -16,6 +16,7 @@ using System;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production.Rules;
@@ -35,7 +36,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Special
             var meteringPointId = MeteringPointId.New();
             var meteringPointGsrn = GsrnNumber.Create(SampleData.GsrnNumber);
             var isActualAddress = SampleData.IsActualAddress;
-            var meteringMethod = MeteringMethod.Virtual;
             var gridAreaLinkId = new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId));
             var powerPlantGsrn = GsrnNumber.Create(SampleData.PowerPlant);
             var measurementUnitType = MeasurementUnitType.KWh;
@@ -43,6 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Special
             var powerLimit = PowerLimit.Create(0, 0);
             var effectiveDate = EffectiveDate.Create(SampleData.EffectiveDate);
             var assetType = AssetType.GasTurbine;
+            var meteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty());
             var address = Address.Create(
                 streetName: "Test Street",
                 streetCode: "1000",
@@ -66,8 +67,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Special
                     GridAreaLinkId = gridAreaLinkId,
                     PowerLimit = powerLimit,
                     Capacity = capacity,
-                    MeterNumber = null,
-                    MeteringMethod = meteringMethod,
+                    MeteringConfiguration = meteringConfiguration,
                 };
 
             var meteringPoint = SpecialMeteringPoint.Create(specialMeteringPointDetails);
@@ -85,7 +85,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Special
             Assert.Equal(address.CitySubDivision, createdEvent.CitySubDivision);
             Assert.Equal(meteringPointId.Value, createdEvent.MeteringPointId);
             Assert.Equal(meteringPointGsrn.Value, createdEvent.GsrnNumber);
-            Assert.Equal(meteringMethod.Name, createdEvent.MeteringPointSubType);
+            Assert.Equal(meteringConfiguration.Method.Name, createdEvent.MeteringPointSubType);
             Assert.Equal(gridAreaLinkId.Value, createdEvent.GridAreaLinkId);
             Assert.Equal(powerPlantGsrn.Value, createdEvent.PowerPlantGsrnNumber);
             Assert.Equal(measurementUnitType.Name, createdEvent.UnitType);
@@ -103,8 +103,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Special
             var details = CreateSpecialDetails()
             with
             {
-                MeteringMethod = MeteringMethod.Virtual,
-                MeterNumber = null,
+                MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
             };
 
             var meteringPoint = SpecialMeteringPoint.Create(details);
@@ -122,8 +121,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Special
                 with
                 {
                     Address = address,
-                    MeteringMethod = MeteringMethod.Virtual,
-                    MeterNumber = null,
+                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                 };
 
             var meteringPoint = SpecialMeteringPoint.Create(meteringPointDetails);

@@ -38,7 +38,7 @@ message Address {
 message MasterDataDocument {
   string gsrnNumber = 1;
   string typeOfMeteringPoint = 2;
-  string subTypeOfMeteringPoint = 3;
+  google.protobuf.StringValue subTypeOfMeteringPoint = 3;
   string meterReadingOccurrence = 4;
   int32 maximumCurrent = 5;
   int32 maximumPower = 6;
