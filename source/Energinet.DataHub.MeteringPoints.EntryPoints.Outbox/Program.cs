@@ -16,8 +16,7 @@ using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
-using Energinet.DataHub.Charges.Libraries.DefaultChargeLinkMessages;
-using Energinet.DataHub.Charges.Libraries.Factories;
+using Energinet.DataHub.Charges.Libraries.Providers;
 using Energinet.DataHub.MessageHub.Client;
 using Energinet.DataHub.MessageHub.Client.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Application.Integrations;
@@ -102,17 +101,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                 Lifestyle.Singleton);
 
             // SB for communicating with Charges
-            container.Register<DefaultChargeLinkClient>(
+            container.Register(
                 () => new DefaultChargeLinkClient(
-                    container.GetInstance<ServiceBusClient>(),
-                    new ServiceBusRequestSenderFactory(),
-                    Environment.GetEnvironmentVariable("CHARGES_DEFAULT_LINK_RESPONSE_QUEUE") ?? throw new InvalidOperationException()),
-                Lifestyle.Singleton);
-            container.Register<DefaultChargeLinkMessagesRequestClient>(
-                () => new DefaultChargeLinkMessagesRequestClient(
-                    container.GetInstance<ServiceBusClient>(),
-                    new ServiceBusRequestSenderFactory(),
-                    Environment.GetEnvironmentVariable("CHARGES_DEFAULT_MESSAGES_RESPONSE_QUEUE") ?? throw new InvalidOperationException()),
+                    new DefaultChargeLinkClientServiceBusRequestSenderProvider(
+                        container.GetInstance<ServiceBusClient>(),
+                        Environment.GetEnvironmentVariable("CHARGES_DEFAULT_LINK_RESPONSE_QUEUE") ?? throw new InvalidOperationException())),
                 Lifestyle.Singleton);
 
             container.Register(
@@ -171,7 +164,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             var messageHubStorageContainerName = Environment.GetEnvironmentVariable("MESSAGEHUB_STORAGE_CONTAINER_NAME") ?? throw new InvalidOperationException("MessageHub storage container name not found.");
             var messageHubServiceBusConnectionString = Environment.GetEnvironmentVariable("MESSAGEHUB_QUEUE_CONNECTION_STRING") ?? throw new InvalidOperationException("MessageHub queue connection string not found.");
 
-            container.AddMessageHubCommunication(messageHubServiceBusConnectionString, new MessageHubConfig("sbq-dataavailable", "sbq-meteringpoints-reply"), messageHubStorageConnectionString, new StorageConfig(messageHubStorageContainerName));
+            container.AddMessageHubCommunication(
+                messageHubServiceBusConnectionString,
+                new MessageHubConfig(
+    Environment.GetEnvironmentVariable("MESSAGEHUB_DATA_AVAILABLE_QUEUE") ?? throw new InvalidOperationException("MessageHub data available queue not found."),
+    Environment.GetEnvironmentVariable("MESSAGEHUB_DOMAIN_REPLY_QUEUE") ?? throw new InvalidOperationException("MessageHub domain reply queue not found.")),
+                messageHubStorageConnectionString,
+                new StorageConfig(messageHubStorageContainerName));
 
             // Setup pipeline behaviors
             container.BuildMediator(

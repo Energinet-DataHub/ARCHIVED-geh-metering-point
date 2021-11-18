@@ -13,26 +13,19 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Data;
-using Energinet.DataHub.MeteringPoints.Application.Create;
-using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class DisconnectionTypeRule : AbstractValidator<MasterDataDocument>
+    public class DisconnectionTypeRule : AbstractValidator<string>
     {
         public DisconnectionTypeRule()
         {
-            When(createMeteringPoint => !string.IsNullOrWhiteSpace(createMeteringPoint.DisconnectionType), () =>
-            {
-                RuleFor(createMeteringPoint => createMeteringPoint.DisconnectionType)
-                    .Must(IsAllowedDisconnectionType)
-                    .WithState(createMeteringPoint => new DisconnectionTypeWrongValueValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.DisconnectionType));
-            });
+            RuleFor(inputValue => inputValue)
+                .Must(IsAllowedDisconnectionType)
+                .WithState(inputValue => new DisconnectionTypeWrongValueValidationError(inputValue));
         }
 
         private static bool IsAllowedDisconnectionType(string disconnectionType)

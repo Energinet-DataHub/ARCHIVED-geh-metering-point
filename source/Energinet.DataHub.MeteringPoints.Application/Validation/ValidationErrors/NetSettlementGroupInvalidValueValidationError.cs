@@ -18,14 +18,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class NetSettlementGroupInvalidValueValidationError : ValidationError
     {
-        public NetSettlementGroupInvalidValueValidationError(string netNetSettlementGroup, string gsrnNumber)
+        public NetSettlementGroupInvalidValueValidationError()
         {
-            NetSettlementGroup = netNetSettlementGroup;
-            GsrnNumber = gsrnNumber;
         }
-
-        public string NetSettlementGroup { get; }
-
-        public string GsrnNumber { get; }
     }
 }

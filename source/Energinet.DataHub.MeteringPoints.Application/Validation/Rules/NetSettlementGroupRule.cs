@@ -14,7 +14,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -22,16 +21,13 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class NetSettlementGroupRule : AbstractValidator<MasterDataDocument>
+    public class NetSettlementGroupRule : AbstractValidator<string>
     {
         public NetSettlementGroupRule()
         {
-            When(request => !string.IsNullOrWhiteSpace(request.NetSettlementGroup), () =>
-            {
-                RuleFor(request => request.NetSettlementGroup)
-                    .Must(value => AllowedNetSettlementGroupValues().Contains(value!))
-                    .WithState(createMeteringPoint => new NetSettlementGroupInvalidValueValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.TypeOfMeteringPoint));
-            });
+            RuleFor(value => value)
+                .Must(value => AllowedNetSettlementGroupValues().Contains(value!))
+                .WithState(createMeteringPoint => new NetSettlementGroupInvalidValueValidationError());
         }
 
         private static HashSet<string> AllowedNetSettlementGroupValues()

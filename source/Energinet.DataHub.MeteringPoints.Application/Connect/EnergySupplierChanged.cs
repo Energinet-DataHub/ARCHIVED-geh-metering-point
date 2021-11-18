@@ -20,8 +20,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
     public class EnergySupplierChanged : INotification, IInboundMessage
     {
+        public string MeteringPointId { get; set; } = string.Empty;
+
         public string GsrnNumber { get; set; } = string.Empty;
 
         public Instant StartOfSupply { get; set; }
+
+        public string GlnNumber { get; set; } = string.Empty;
     }
 }

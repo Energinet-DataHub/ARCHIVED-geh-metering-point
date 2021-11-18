@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System.Collections;
+using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData
 {
@@ -21,5 +23,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         string GsrnNumber,
         string Method,
         string Meter,
-        string EffectiveDate) : IIntegrationEvent;
+        string EffectiveDate) :
+        IIntegrationEvent, IOutboundMessage, IRequest;
 }

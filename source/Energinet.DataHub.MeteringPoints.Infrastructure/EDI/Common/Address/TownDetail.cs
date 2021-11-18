@@ -18,6 +18,5 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common.Address
         string Code,
         string Section,
         string Name,
-        string StateOrProvince,
         string Country);
 }

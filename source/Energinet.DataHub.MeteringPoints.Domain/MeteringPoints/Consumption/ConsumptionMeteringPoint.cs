@@ -31,7 +31,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
     public class ConsumptionMeteringPoint : MarketMeteringPoint
     {
         private SettlementMethod _settlementMethod;
-        private AssetType? _assetType;
         private ScheduledMeterReadingDate? _scheduledMeterReadingDate;
 
         private ConsumptionMeteringPoint(
@@ -41,7 +40,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
-            LocationDescription? locationDescription,
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit powerLimit,
             EffectiveDate effectiveDate,
@@ -60,7 +58,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointType,
                 gridAreaLinkId,
                 powerPlantGsrnNumber,
-                locationDescription,
                 MeasurementUnitType.KWh,
                 meterReadingOccurrence,
                 powerLimit,
@@ -69,10 +66,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 connectionType,
                 disconnectionType,
                 netSettlementGroup,
+                assetType,
                 meteringConfiguration)
         {
             _settlementMethod = settlementMethod;
-            _assetType = assetType;
             _productType = ProductType.EnergyActive;
             ConnectionState = ConnectionState.New();
             _scheduledMeterReadingDate = scheduledMeterReadingDate;
@@ -100,7 +97,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 address.IsActual.GetValueOrDefault(),
                 address.GeoInfoReference,
                 powerPlantGsrnNumber?.Value,
-                locationDescription?.Value,
+                address.LocationDescription,
                 MeteringConfiguration.Meter?.Value,
                 powerLimit.Ampere,
                 powerLimit.Kwh,
@@ -149,7 +146,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 MeteringPointType.Consumption,
                 meteringPointDetails.GridAreaLinkId,
                 meteringPointDetails.PowerPlantGsrnNumber,
-                meteringPointDetails.LocationDescription,
                 meteringPointDetails.ReadingOccurrence,
                 meteringPointDetails.PowerLimit,
                 meteringPointDetails.EffectiveDate,

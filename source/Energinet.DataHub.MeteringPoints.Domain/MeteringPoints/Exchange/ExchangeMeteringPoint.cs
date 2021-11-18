@@ -20,6 +20,7 @@ using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -36,7 +37,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
             [NotNull]Address address,
             MeteringPointType meteringPointType,
             [NotNull]GridAreaLinkId gridAreaLinkId,
-            LocationDescription? locationDescription,
             [NotNull]ReadingOccurrence meterReadingOccurrence,
             [NotNull]PowerLimit powerLimit,
             [NotNull]EffectiveDate effectiveDate,
@@ -50,12 +50,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
                 meteringPointType,
                 gridAreaLinkId,
                 powerPlantGsrnNumber: null,
-                locationDescription,
                 MeasurementUnitType.KWh,
                 meterReadingOccurrence,
                 powerLimit,
                 effectiveDate,
                 capacity: null,
+                assetType: null,
                 meteringConfiguration)
         {
             _toGrid = toGrid;
@@ -69,6 +69,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
                 MeteringConfiguration.Method.Name,
                 _productType.Name,
                 meterReadingOccurrence.Name,
+                _unitType.Name,
                 address.City,
                 address.Floor,
                 address.Room,
@@ -79,7 +80,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
                 address.StreetCode,
                 address.StreetName,
                 address.CitySubDivision,
-                locationDescription?.Value,
+                address.LocationDescription,
                 MeteringConfiguration.Meter?.Value,
                 powerLimit.Ampere,
                 powerLimit.Kwh,
@@ -103,6 +104,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
             {
                 new StreetNameIsRequiredRule(meteringPointDetails.GsrnNumber, meteringPointDetails.Address),
                 new MeterReadingOccurrenceRule(meteringPointDetails.ReadingOccurrence),
+                new GeoInfoReferenceRequirementRule(meteringPointDetails.Address),
             };
 
             return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
@@ -112,7 +114,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
         {
             if (!CanCreate(meteringPointDetails).Success)
             {
-                throw new ConsumptionMeteringPointException($"Cannot create consumption metering point due to violation of one or more business rules.");
+                throw new ConsumptionMeteringPointException($"Cannot create exchange metering point due to violation of one or more business rules.");
             }
 
             return new ExchangeMeteringPoint(
@@ -121,7 +123,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
                 meteringPointDetails.Address,
                 MeteringPointType.Exchange,
                 meteringPointDetails.GridAreaLinkId,
-                meteringPointDetails.LocationDescription,
                 meteringPointDetails.ReadingOccurrence,
                 meteringPointDetails.PowerLimit,
                 meteringPointDetails.EffectiveDate,

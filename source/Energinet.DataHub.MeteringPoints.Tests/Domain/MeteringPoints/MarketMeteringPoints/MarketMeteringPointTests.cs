@@ -105,7 +105,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 EnumerationType.FromName<MeteringPointType>(SampleData.TypeName),
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
                 GsrnNumber.Create(SampleData.PowerPlant),
-                LocationDescription.Create(SampleData.LocationDescription),
                 MeasurementUnitType.KWh,
                 ReadingOccurrence.Hourly,
                 PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
@@ -114,6 +113,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 ConnectionType.Installation,
                 DisconnectionType.Remote,
                 NetSettlementGroup.Six,
+                AssetType.HydroelectricPower,
                 MeteringConfiguration.Create(EnumerationType.FromName<MeteringMethod>(SampleData.SubTypeName), MeterId.Create(SampleData.MeterNumber)));
         }
     }

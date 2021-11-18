@@ -18,7 +18,6 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Application.Create.Exchange;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
@@ -123,7 +122,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
                 CreateAddress(request),
                 gridAreaLinkId,
                 !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null !,
-                LocationDescription.Create(request.LocationDescription!),
                 EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
                 PowerLimit.Create(request.MaximumPower, request.MaximumCurrent),
                 EffectiveDate.Create(request.EffectiveDate),
@@ -165,7 +163,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
                 room: request.RoomIdentification,
                 municipalityCode: string.IsNullOrWhiteSpace(request.MunicipalityCode) ? default : int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()),
                 isActual: request.IsActualAddress.GetValueOrDefault(),
-                geoInfoReference: string.IsNullOrWhiteSpace(request.GeoInfoReference) ? default : Guid.Parse(request.GeoInfoReference));
+                geoInfoReference: string.IsNullOrWhiteSpace(request.GeoInfoReference) ? default : Guid.Parse(request.GeoInfoReference),
+                locationDescription: request.LocationDescription);
         }
 
         private static BusinessRulesValidationResult ValidateAddress(CreateConsumptionMeteringPoint request)
@@ -181,7 +180,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
                 countryCode: EnumerationType.FromName<CountryCode>(request.CountryCode),
                 floor: request.FloorIdentification,
                 room: request.RoomIdentification,
-                municipalityCode: municipalityCode);
+                municipalityCode: municipalityCode,
+                locationDescription: request.LocationDescription);
         }
 
         private Task<GridArea?> GetGridAreaAsync(CreateConsumptionMeteringPoint request)
