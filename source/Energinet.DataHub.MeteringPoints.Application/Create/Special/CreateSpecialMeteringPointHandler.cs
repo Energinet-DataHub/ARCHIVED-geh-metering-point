@@ -27,6 +27,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using MediatR;
 
@@ -78,20 +79,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Special
                 return new BusinessProcessResult(request.TransactionId, gridAreaValidationResult.ValidationErrors);
             }
 
-            if (request.ParentRelatedMeteringPoint is not null)
+            var parentValidationResult = await ValidateParentAsync(request, gridArea, cancellationToken).ConfigureAwait(false);
+            if (!parentValidationResult.Success)
             {
-                var parent = await _marketMeteringPointRepository.
-                    GetByGSRNAsync(GsrnNumber.Create(request.ParentRelatedMeteringPoint))
-                    .ConfigureAwait(false);
-
-                var parentIsInSameGridAreaQuery = new GridAreaContainsMeteringPointIdsQuery(
-                    gridArea!.Id.Value.ToString(),
-                    parent!.Id.Value.ToString());
-
-                var parentIsInSameGridArea = await _mediator
-                    .Send(parentIsInSameGridAreaQuery, cancellationToken)
-                    .ConfigureAwait(false);
-                if (!parentIsInSameGridArea) throw new SpecialMeteringPointException("Parent Metering Point is not in the same grid area");
+                return parentValidationResult;
             }
 
             var meteringPointDetails = CreateDetails(request, gridArea?.DefaultLink.Id!);
@@ -187,6 +178,33 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Special
             var gridArea = await _gridAreaRepository.GetByCodeAsync(request.MeteringGridArea).ConfigureAwait(false);
 
             return gridArea;
+        }
+
+        private async Task<BusinessProcessResult> ValidateParentAsync(
+            CreateSpecialMeteringPoint request,
+            GridArea? gridArea,
+            CancellationToken cancellationToken)
+        {
+            if (request.ParentRelatedMeteringPoint is null)
+            {
+                return BusinessProcessResult.Ok(request.TransactionId);
+            }
+
+            var parent = await _marketMeteringPointRepository
+                .GetByGSRNAsync(GsrnNumber.Create(request.ParentRelatedMeteringPoint))
+                .ConfigureAwait(false);
+
+            var parentIsInSameGridAreaQuery = new GridAreaContainsMeteringPointIdsQuery(
+                gridArea!.Id.Value.ToString(),
+                parent.Id.Value.ToString());
+
+            var parentIsInSameGridArea = await _mediator
+                .Send(parentIsInSameGridAreaQuery, cancellationToken)
+                .ConfigureAwait(false);
+
+            var validationRules = new List<IBusinessRule> { new GridAreaMustBeTheSameForParentRule(parentIsInSameGridArea) };
+
+            return new BusinessProcessResult(request.TransactionId, validationRules);
         }
 
         private async Task<BusinessProcessResult> ValidateAsync(ICreateMeteringPointRequest request, CancellationToken cancellationToken)
