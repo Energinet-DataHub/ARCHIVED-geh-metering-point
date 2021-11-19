@@ -26,6 +26,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
         /// </summary>
         /// <param name="gsrnNumber"></param>
         /// <returns><see cref="MarketMeteringPoint"/></returns>
-        Task<MarketMeteringPoint> GetByGSRNAsync(GsrnNumber gsrnNumber);
+        Task<MarketMeteringPoint?> GetByGSRNAsync(GsrnNumber gsrnNumber);
     }
 }

@@ -16,7 +16,7 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special.Rules
 {
-    public class GridAreaMustBeTheSameForParentRuleError : ValidationError
+    public class ParentMustBeMarketMeteringPointConditionalRuleError : ValidationError
     {
     }
 }

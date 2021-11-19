@@ -12,11 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special.Rules
 {
-    public class GridAreaMustBeTheSameForParentRuleError : ValidationError
+    public class ParentMustBeMarketMeteringPointConditionalRule : IBusinessRule
     {
+        public ParentMustBeMarketMeteringPointConditionalRule(MarketMeteringPoint? parent)
+        {
+            IsBroken = parent == null;
+            ValidationError = new ParentMustBeMarketMeteringPointConditionalRuleError();
+        }
+
+        public bool IsBroken { get; }
+
+        public ValidationError ValidationError { get; }
     }
 }

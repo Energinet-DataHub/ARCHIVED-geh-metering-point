@@ -79,13 +79,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Special
                 return new BusinessProcessResult(request.TransactionId, gridAreaValidationResult.ValidationErrors);
             }
 
-            var parentValidationResult = await ValidateParentAsync(request, gridArea, cancellationToken).ConfigureAwait(false);
+            var parentValidationResult = await ValidateParentAsync(request, gridArea!, cancellationToken).ConfigureAwait(false);
             if (!parentValidationResult.Success)
             {
                 return parentValidationResult;
             }
 
-            var meteringPointDetails = CreateDetails(request, gridArea?.DefaultLink.Id!);
+            var meteringPointDetails = CreateDetails(request, gridArea!.DefaultLink.Id);
             var rulesCheckResult = CheckBusinessRules(request, meteringPointDetails);
             if (!rulesCheckResult.Success)
             {
@@ -182,7 +182,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Special
 
         private async Task<BusinessProcessResult> ValidateParentAsync(
             CreateSpecialMeteringPoint request,
-            GridArea? gridArea,
+            GridArea gridArea,
             CancellationToken cancellationToken)
         {
             if (request.ParentRelatedMeteringPoint is null)
@@ -193,16 +193,21 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Special
             var parent = await _marketMeteringPointRepository
                 .GetByGSRNAsync(GsrnNumber.Create(request.ParentRelatedMeteringPoint))
                 .ConfigureAwait(false);
+            var parentId = parent != null
+                ? new[] { parent.Id.Value.ToString() }
+                : Array.Empty<string>();
 
-            var parentIsInSameGridAreaQuery = new GridAreaContainsMeteringPointIdsQuery(
-                gridArea!.Id.Value.ToString(),
-                parent.Id.Value.ToString());
+            var parentIsInSameGridAreaQuery = new GridAreaContainsMeteringPointIdsQuery(gridArea.Id.Value.ToString(), parentId);
 
             var parentIsInSameGridArea = await _mediator
                 .Send(parentIsInSameGridAreaQuery, cancellationToken)
                 .ConfigureAwait(false);
 
-            var validationRules = new List<IBusinessRule> { new GridAreaMustBeTheSameForParentRule(parentIsInSameGridArea) };
+            var validationRules = new List<IBusinessRule>
+            {
+                new ParentMustBeMarketMeteringPointConditionalRule(parent),
+                new GridAreaMustBeTheSameForParentRule(parentIsInSameGridArea),
+            };
 
             return new BusinessProcessResult(request.TransactionId, validationRules);
         }

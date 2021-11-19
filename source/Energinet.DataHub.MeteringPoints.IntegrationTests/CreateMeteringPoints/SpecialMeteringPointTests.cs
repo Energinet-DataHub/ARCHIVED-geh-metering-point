@@ -31,6 +31,27 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
+        public async Task Should_reject_if_parent_metering_point_is_not_a_market_metering_point()
+        {
+            var consumptionCommand = Scenarios.CreateExchangeMeteringPointCommand()
+                with
+                {
+                    GsrnNumber = SampleData.SecondGsrnNumber,
+                };
+            await SendCommandAsync(consumptionCommand).ConfigureAwait(false);
+
+            var specialCommand = CreateCommand()
+                with
+                {
+                    ParentRelatedMeteringPoint = SampleData.SecondGsrnNumber,
+                };
+            await SendCommandAsync(specialCommand).ConfigureAwait(false);
+
+            // TODO: Change foo to appropriate error code
+            AssertValidationError("Foo", DocumentType.CreateMeteringPointRejected);
+        }
+
+        [Fact]
         public async Task Should_reject_if_parent_metering_point_is_not_in_same_grid_area()
         {
             var consumptionCommand = Scenarios.CreateConsumptionMeteringPointCommand()

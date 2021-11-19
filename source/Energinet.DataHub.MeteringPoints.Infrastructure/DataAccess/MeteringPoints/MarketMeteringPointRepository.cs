@@ -29,11 +29,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Task<MarketMeteringPoint> GetByGSRNAsync(GsrnNumber gsrnNumber)
+        public async Task<MarketMeteringPoint?> GetByGSRNAsync(GsrnNumber gsrnNumber)
         {
             if (gsrnNumber == null) throw new ArgumentNullException(nameof(gsrnNumber));
-            return _context.Set<MarketMeteringPoint>()
-                .SingleOrDefaultAsync(meteringPoint => meteringPoint.GsrnNumber.Equals(gsrnNumber));
+            return await _context.Set<MarketMeteringPoint>()
+                .SingleOrDefaultAsync(meteringPoint => meteringPoint.GsrnNumber.Equals(gsrnNumber))
+                .ConfigureAwait(false);
         }
     }
 }

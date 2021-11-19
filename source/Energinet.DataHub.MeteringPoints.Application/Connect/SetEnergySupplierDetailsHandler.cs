@@ -41,10 +41,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var meteringPoint =
-                await _marketMeteringPointRepository.GetByGSRNAsync(GsrnNumber.Create(request.MeteringPointGsrn)).ConfigureAwait(false);
+            var meteringPoint = await _marketMeteringPointRepository
+                .GetByGSRNAsync(GsrnNumber.Create(request.MeteringPointGsrn))
+                .ConfigureAwait(false);
 
-            meteringPoint.SetEnergySupplierDetails(EnergySupplierDetails.Create(request.StartOfSupply));
+            meteringPoint?.SetEnergySupplierDetails(EnergySupplierDetails.Create(request.StartOfSupply));
             return Unit.Value;
         }
     }
