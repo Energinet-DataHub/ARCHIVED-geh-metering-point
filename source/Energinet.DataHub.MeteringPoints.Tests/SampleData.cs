@@ -89,6 +89,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public static string Capacity => "1.2";
 
+        public static string GlnNumber => "3963865549824";
+
         private static string EffectiveDateNow()
         {
             var currentDate = SystemClock.Instance.GetCurrentInstant().InUtc();

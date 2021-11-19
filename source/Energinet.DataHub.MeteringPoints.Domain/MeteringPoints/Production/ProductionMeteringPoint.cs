@@ -32,7 +32,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
     public class ProductionMeteringPoint : MarketMeteringPoint
     {
         private NetSettlementGroup _netSettlementGroup;
-        private AssetType? _assetType;
         private bool _productionObligation;
 
         private ProductionMeteringPoint(
@@ -42,7 +41,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             GsrnNumber powerPlantGsrnNumber,
-            LocationDescription? locationDescription,
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit? powerLimit,
             EffectiveDate effectiveDate,
@@ -60,7 +58,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 meteringPointType,
                 gridAreaLinkId,
                 powerPlantGsrnNumber,
-                locationDescription,
                 MeasurementUnitType.KWh,
                 meterReadingOccurrence,
                 powerLimit,
@@ -69,11 +66,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 connectionType,
                 disconnectionType,
                 netSettlementGroup,
+                assetType,
                 meteringConfiguration)
         {
             _netSettlementGroup = netSettlementGroup;
             _productionObligation = productionObligation;
-            _assetType = assetType;
             _productType = ProductType.EnergyActive;
             ProductionObligation = false;
             ConnectionState = ConnectionState.New();
@@ -100,8 +97,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 address.IsActual.GetValueOrDefault(),
                 address.GeoInfoReference,
                 powerPlantGsrnNumber.Value,
-                locationDescription.Value,
                 MeteringConfiguration.Meter?.Value,
+                address.LocationDescription,
                 powerLimit.Ampere,
                 powerLimit.Kwh,
                 effectiveDate.DateInUtc,
@@ -171,7 +168,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 MeteringPointType.Production,
                 meteringPointDetails.GridAreaLinkId,
                 meteringPointDetails.PowerPlantGsrnNumber,
-                meteringPointDetails.LocationDescription,
                 meteringPointDetails.ReadingOccurrence,
                 meteringPointDetails.PowerLimit,
                 meteringPointDetails.EffectiveDate,

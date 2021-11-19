@@ -58,11 +58,15 @@ limitations under the License.
     <None Remove="EDI\CreateMeteringPoint\CreateMeteringPointCimXml.xml" />
     <EmbeddedResource Include="EDI\ConnectMeteringPoint\ConnectMeteringPointCimXml.xml" />
     <EmbeddedResource Include="EDI\CreateMeteringPoint\CreateMeteringPointCimXml.xml" />
+    <None Remove="EDI\AccountingPointCharacteristics\AccountingPointCharacteristics.xml" />
+    <EmbeddedResource Include="EDI\AccountingPointCharacteristics\AccountingPointCharacteristics.xml" />
+    <None Remove="EDI\AccountingPointCharacteristics\AccountingPointCharacteristicsSerializerTestOutput.xml" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="LocalMessageHub\Mocks\DataAvailableNotificationSenderMock.cs" />
     <Compile Remove="LocalMessageHub\Mocks\DataBundleResponseSenderMock.cs" />
+    <Compile Remove="Domain\EnergySuppliers\EnergySuppliersTests.cs" />
   </ItemGroup>
 
 </Project>

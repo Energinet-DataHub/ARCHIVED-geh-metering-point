@@ -28,5 +28,6 @@ namespace Energinet.DataHub.MeteringPoints.Application
         string? Room = null,
         int? MunicipalityCode = null,
         bool? IsActual = null,
-        Guid? GeoInfoReference = null);
+        Guid? GeoInfoReference = null,
+        string? LocationDescription = null);
 }

@@ -106,7 +106,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange
                 GsrnNumber.Create(request.GsrnNumber),
                 CreateAddress(request),
                 gridAreaLinkId,
-                LocationDescription.Create(request.LocationDescription!),
                 EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
                 PowerLimit.Create(request.MaximumPower, request.MaximumCurrent),
                 EffectiveDate.Create(request.EffectiveDate),
@@ -139,8 +138,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange
                 floor: request.FloorIdentification,
                 room: request.RoomIdentification,
                 municipalityCode: string.IsNullOrWhiteSpace(request.MunicipalityCode) ? default : int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()),
-                isActual: false,
-                geoInfoReference: null);
+                isActual: request.IsActualAddress.GetValueOrDefault(),
+                geoInfoReference: string.IsNullOrWhiteSpace(request.GeoInfoReference) ? default : Guid.Parse(request.GeoInfoReference),
+                locationDescription: request.LocationDescription);
         }
 
         private static BusinessRulesValidationResult ValidateAddress(CreateExchangeMeteringPoint request)
@@ -156,7 +156,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange
                 countryCode: EnumerationType.FromName<CountryCode>(request.CountryCode),
                 floor: request.FloorIdentification,
                 room: request.RoomIdentification,
-                municipalityCode: municipalityCode);
+                municipalityCode: municipalityCode,
+                locationDescription: request.LocationDescription);
         }
 
         private async Task<(GridArea? GridArea, GridArea? ToGridArea, GridArea? FromGridArea)> GetGridAreasAsync(CreateExchangeMeteringPoint request)

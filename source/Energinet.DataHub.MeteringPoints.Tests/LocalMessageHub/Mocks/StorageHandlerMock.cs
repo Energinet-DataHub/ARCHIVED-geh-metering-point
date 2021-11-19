@@ -15,21 +15,22 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Energinet.DataHub.MessageHub.Client.Model;
 using Energinet.DataHub.MessageHub.Client.Storage;
+using Energinet.DataHub.MessageHub.Model.Model;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
 {
     public class StorageHandlerMock : IStorageHandler
     {
+        public static Task<Stream> GetStreamFromStorageAsync(Uri contentPath)
+        {
+            if (contentPath == null) throw new ArgumentNullException(nameof(contentPath));
+            return Task.FromResult((Stream)new MemoryStream());
+        }
+
         public Task<Uri> AddStreamToStorageAsync(Stream stream, DataBundleRequestDto requestDto)
         {
             return Task.FromResult(new Uri("https://someUri"));
-        }
-
-        public Task<Stream> GetStreamFromStorageAsync(Uri contentPath)
-        {
-            return Task.FromResult((Stream)new MemoryStream());
         }
     }
 }

@@ -39,7 +39,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
-            LocationDescription? locationDescription,
             MeasurementUnitType unitType,
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit powerLimit,
@@ -48,6 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             ConnectionType? connectionType,
             DisconnectionType disconnectionType,
             NetSettlementGroup netSettlementGroup,
+            AssetType? assetType,
             MeteringConfiguration meteringConfiguration)
             : base(
                 id,
@@ -56,12 +56,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
                 meteringPointType,
                 gridAreaLinkId,
                 powerPlantGsrnNumber,
-                locationDescription,
                 unitType,
                 meterReadingOccurrence,
                 powerLimit,
                 effectiveDate,
                 capacity,
+                assetType,
                 meteringConfiguration)
         {
             ConnectionType = connectionType;
@@ -119,7 +119,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
         public void SetEnergySupplierDetails(EnergySupplierDetails energySupplierDetails)
         {
             if (energySupplierDetails == null) throw new ArgumentNullException(nameof(energySupplierDetails));
-            if (EnergySupplierDetails! == energySupplierDetails) return;
+            if (EnergySupplierDetails?.StartOfSupply != null) return;
+
             EnergySupplierDetails = energySupplierDetails;
             AddDomainEvent(new EnergySupplierDetailsChanged(Id.Value, EnergySupplierDetails.StartOfSupply));
         }

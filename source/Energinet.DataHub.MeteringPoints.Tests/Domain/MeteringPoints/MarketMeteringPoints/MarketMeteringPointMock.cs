@@ -30,7 +30,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
-            LocationDescription? locationDescription,
             MeasurementUnitType unitType,
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit powerLimit,
@@ -39,6 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             ConnectionType? connectionType,
             DisconnectionType disconnectionType,
             NetSettlementGroup netSettlementGroup,
+            AssetType? assetType,
             MeteringConfiguration meteringConfiguration)
             : base(
                 id,
@@ -47,7 +47,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 meteringPointType,
                 gridAreaLinkId,
                 powerPlantGsrnNumber,
-                locationDescription,
                 unitType,
                 meterReadingOccurrence,
                 powerLimit,
@@ -56,6 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 connectionType,
                 disconnectionType,
                 netSettlementGroup,
+                assetType,
                 meteringConfiguration)
         {
         }

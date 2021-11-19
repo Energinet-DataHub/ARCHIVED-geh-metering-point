@@ -31,12 +31,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         protected MeteringPointType _meteringPointType;
         protected ProductType _productType;
         protected MeasurementUnitType _unitType;
+        protected AssetType? _assetType;
 #pragma warning restore
         private GridAreaLinkId _gridAreaLinkId;
         private ReadingOccurrence _meterReadingOccurrence;
         private PowerLimit _powerLimit;
         private GsrnNumber? _powerPlantGsrnNumber;
-        private LocationDescription? _locationDescription;
         private EffectiveDate _effectiveDate;
         private Capacity? _capacity;
 
@@ -52,12 +52,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
-            LocationDescription? locationDescription,
             MeasurementUnitType unitType,
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit powerLimit,
             EffectiveDate effectiveDate,
             Capacity? capacity,
+            AssetType? assetType,
             MeteringConfiguration meteringConfiguration)
         {
             Id = id;
@@ -66,13 +66,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _meteringPointType = meteringPointType;
             _gridAreaLinkId = gridAreaLinkId;
             _powerPlantGsrnNumber = powerPlantGsrnNumber;
-            _locationDescription = locationDescription;
             _unitType = unitType;
             _meterReadingOccurrence = meterReadingOccurrence;
             _powerLimit = powerLimit;
             _effectiveDate = effectiveDate;
             _capacity = capacity;
-
+            _assetType = assetType;
             MeteringConfiguration = meteringConfiguration;
         }
 
@@ -91,7 +90,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
             var rules = new List<IBusinessRule>()
             {
-                //new MeterIdRequirementRule(meteringPointDetails.MeterNumber, meteringPointDetails.MeteringMethod),
             };
 
             return new BusinessRulesValidationResult(rules);
@@ -169,7 +167,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 effectiveDate.ToString()));
         }
 
-#pragma warning disable CA1024
+        #pragma warning disable CA1024 // Use properties where appropriate
         public MeteringConfiguration GetMeteringConfiguration()
         {
             return MeteringConfiguration;

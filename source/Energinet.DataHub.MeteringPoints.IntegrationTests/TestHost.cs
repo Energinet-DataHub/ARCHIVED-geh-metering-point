@@ -18,6 +18,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Authorization;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
@@ -29,10 +30,12 @@ using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Create.Exchange;
 using Energinet.DataHub.MeteringPoints.Application.Create.Production;
+using Energinet.DataHub.MeteringPoints.Application.Create.Special;
+using Energinet.DataHub.MeteringPoints.Application.EDI;
+using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
-using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
@@ -45,6 +48,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.
 using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bundling;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
@@ -61,9 +65,9 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Providers.MeteringPointOwnership;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity;
-using Energinet.DataHub.MeteringPoints.IntegrationTests.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
@@ -125,6 +129,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             _container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
             _container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
+            _container.Register<IEnergySupplierRepository, EnergySupplierRepository>(Lifestyle.Scoped);
             _container.Register<IGridAreaRepository, GridAreaRepository>(Lifestyle.Scoped);
             _container.Register<IMarketMeteringPointRepository, MarketMeteringPointRepository>(Lifestyle.Scoped);
             _container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
@@ -136,6 +141,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register(typeof(IBusinessProcessResultHandler<CreateConsumptionMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateConsumptionMeteringPoint>), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<CreateProductionMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateProductionMeteringPoint>), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<CreateExchangeMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateExchangeMeteringPoint>), Lifestyle.Scoped);
+            _container.Register(typeof(IBusinessProcessResultHandler<CreateSpecialMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateSpecialMeteringPoint>), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<ConnectMeteringPoint>), typeof(ConnectMeteringPointResultHandler), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<CreateGridArea>), typeof(CreateGridAreaNullResultHandler), Lifestyle.Singleton);
             _container.Register<IValidator<MasterDataDocument>, ValidationRuleSet>(Lifestyle.Scoped);
@@ -145,19 +151,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IValidator<ChangeMasterDataRequest>, ChangeMasterDataRequestValidator>(Lifestyle.Scoped);
             _container.Register<IValidator<CreateProductionMeteringPoint>, Application.Create.Production.Validation.RuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<CreateExchangeMeteringPoint>, Application.Create.Exchange.Validation.RuleSet>(Lifestyle.Scoped);
+            _container.Register<IValidator<CreateSpecialMeteringPoint>, Application.Create.Special.Validation.RuleSet>(Lifestyle.Scoped);
             _container.Register<IDomainEventsAccessor, DomainEventsAccessor>();
             _container.Register<IDomainEventsDispatcher, DomainEventsDispatcher>();
             _container.Register<IDomainEventPublisher, DomainEventPublisher>();
             _container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Singleton);
             _container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
             _container.Register<IUserContext>(() => new UserContextStub { CurrentUser = new UserIdentity(Guid.NewGuid().ToString(), "8200000001409"), }, Lifestyle.Scoped);
+            _container.Register<MeteringPointPipelineContext>(Lifestyle.Scoped);
 
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
             _container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
+            Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
 
             _container.Register<IBusinessProcessValidationContext, BusinessProcessValidationContext>(Lifestyle.Scoped);
             _container.Register<IBusinessProcessCommandFactory, BusinessProcessCommandFactory>(Lifestyle.Singleton);
-            _container.Register(typeof(IBusinessProcessResultHandler<TestBusinessRequest>), typeof(TestBusinessRequestResultHandler), Lifestyle.Scoped);
 
             // TODO: remove this when infrastructure and application has been split into more assemblies.
             _container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageSerializer>(Lifestyle.Singleton);
@@ -165,6 +173,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             _container.Register<IActorMessageFactory, ActorMessageFactory>(Lifestyle.Scoped);
             _container.Register<IMessageHubDispatcher, MessageHubDispatcher>(Lifestyle.Scoped);
+            _container.Register<IBusinessDocumentFactory, BusinessDocumentFactory>(Lifestyle.Scoped);
 
             _container.Register<ChangeMasterDataSettings>(() => new ChangeMasterDataSettings(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1));
 
@@ -174,6 +183,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IAuthorizer<CreateConsumptionMeteringPoint>, NullAuthorizer<CreateConsumptionMeteringPoint>>();
             _container.Register<IAuthorizer<CreateProductionMeteringPoint>, NullAuthorizer<CreateProductionMeteringPoint>>();
             _container.Register<IAuthorizer<CreateExchangeMeteringPoint>, NullAuthorizer<CreateExchangeMeteringPoint>>();
+            _container.Register<IAuthorizer<CreateSpecialMeteringPoint>, NullAuthorizer<CreateSpecialMeteringPoint>>();
             _container.Register<IAuthorizer<CreateGridArea>, NullAuthorizer<CreateGridArea>>();
             _container.Register<IAuthorizer<ConnectMeteringPoint>, NullAuthorizer<ConnectMeteringPoint>>();
             _container.AddValidationErrorConversion(
@@ -241,14 +251,38 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 .Select(message => jsonSerializer.Deserialize<TMessage>(message.Data));
         }
 
-        protected void AssertOutboxMessage<TMessage>(Func<TMessage, bool> funcAssert)
+        protected async Task AssertAndRunInternalCommandAsync<TCommand>()
+            where TCommand : ICommand
+        {
+            var meteringPointContext = GetService<MeteringPointContext>();
+            var commands = meteringPointContext
+                .QueuedInternalCommands
+                .Where(c => c.ProcessedDate == null && c.Type == typeof(TCommand).FullName)
+                .ToList();
+
+            var messageExtractor = GetService<MessageExtractor>();
+
+            foreach (var command in commands)
+            {
+                var message = await messageExtractor.ExtractAsync(command.Data).ConfigureAwait(false);
+
+                // var meteringPointEnvelope = MeteringPointEnvelope.Parser.ParseFrom(command.Data);
+                //     meteringPointEnvelope.SendAccountingPointCharacteristicsMessage.
+                await SendCommandAsync(message).ConfigureAwait(false);
+            }
+        }
+
+        protected void AssertOutboxMessage<TMessage>(Func<TMessage, bool> funcAssert, int count = 1)
         {
             if (funcAssert == null) throw new ArgumentNullException(nameof(funcAssert));
 
-            var message = GetOutboxMessages<TMessage>().SingleOrDefault(funcAssert.Invoke);
+            var messages = GetOutboxMessages<TMessage>()
+                .Where(funcAssert.Invoke)
+                .ToList();
 
-            message.Should().NotBeNull();
-            message.Should().BeOfType<TMessage>();
+            messages.Should().NotBeNull();
+            messages.Should().AllBeOfType<TMessage>();
+            messages.Should().HaveCount(count);
         }
 
         protected void AssertOutboxMessage<TMessage>()
@@ -378,6 +412,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         {
             var cleanupStatement = new StringBuilder();
 
+            cleanupStatement.AppendLine($"DELETE FROM EnergySuppliers");
             cleanupStatement.AppendLine($"DELETE FROM ConsumptionMeteringPoints");
             cleanupStatement.AppendLine($"DELETE FROM ProductionMeteringPoints");
             cleanupStatement.AppendLine($"DELETE FROM ExchangeMeteringPoints");

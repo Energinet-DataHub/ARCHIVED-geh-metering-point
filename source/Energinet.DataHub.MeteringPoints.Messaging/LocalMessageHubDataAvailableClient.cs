@@ -13,7 +13,8 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MessageHub.Client.Model;
+using Energinet.DataHub.MessageHub.Model.Model;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 
@@ -23,16 +24,19 @@ namespace Energinet.DataHub.MeteringPoints.Messaging
     {
         private readonly IOutboxDispatcher<DataAvailableNotification> _dataAvailableOutboxDispatcher;
         private readonly MessageHubMessageFactory _messageHubMessageFactory;
+        private readonly ICorrelationContext _correlationContext;
         private readonly IMessageHubMessageRepository _messageHubMessageRepository;
 
         public LocalMessageHubDataAvailableClient(
             IMessageHubMessageRepository messageHubMessageRepository,
             IOutboxDispatcher<DataAvailableNotification> dataAvailableOutboxDispatcher,
-            MessageHubMessageFactory messageHubMessageFactory)
+            MessageHubMessageFactory messageHubMessageFactory,
+            ICorrelationContext correlationContext)
         {
             _messageHubMessageRepository = messageHubMessageRepository;
             _dataAvailableOutboxDispatcher = dataAvailableOutboxDispatcher;
             _messageHubMessageFactory = messageHubMessageFactory;
+            _correlationContext = correlationContext;
         }
 
         public void DataAvailable(MessageHubEnvelope messageHubEnvelope)
@@ -41,6 +45,10 @@ namespace Energinet.DataHub.MeteringPoints.Messaging
             {
                 throw new ArgumentNullException(nameof(messageHubEnvelope));
             }
+
+            var traceContext = TraceContext.Parse(messageHubEnvelope.Correlation);
+            _correlationContext.SetId(traceContext.TraceId);
+            _correlationContext.SetParentId(traceContext.ParentId);
 
             var messageMetadata = _messageHubMessageFactory.Create(messageHubEnvelope.Correlation, messageHubEnvelope.Content, messageHubEnvelope.MessageType, messageHubEnvelope.Recipient, messageHubEnvelope.GsrnNumber);
             _messageHubMessageRepository.AddMessageMetadata(messageMetadata);
