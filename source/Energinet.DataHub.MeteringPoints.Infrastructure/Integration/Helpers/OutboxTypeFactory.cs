@@ -22,6 +22,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEve
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Exchange;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.MessageDequeued;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Production;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Special;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
@@ -35,6 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
             { typeof(ProductionMeteringPointCreatedIntegrationEvent).FullName!, typeof(ProductionMeteringPointCreatedIntegrationEvent) },
             { typeof(ExchangeMeteringPointCreatedIntegrationEvent).FullName!, typeof(ExchangeMeteringPointCreatedIntegrationEvent) },
             { typeof(MeteringPointConnectedIntegrationEvent).FullName!, typeof(MeteringPointConnectedIntegrationEvent) },
+            { typeof(SpecialMeteringPointCreatedIntegrationEvent).FullName!, typeof(SpecialMeteringPointCreatedIntegrationEvent) },
             { typeof(MessageHubEnvelope).FullName!, typeof(MessageHubEnvelope) },
             { typeof(MeteringPointMessageDequeuedIntegrationEvent).FullName!, typeof(MeteringPointMessageDequeuedIntegrationEvent) },
             { typeof(DataBundleResponse).FullName!, typeof(DataBundleResponse) },

@@ -31,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
             [NotNull]MeteringPointId id,
             GsrnNumber gsrnNumber,
             [NotNull]Address address,
-            MeteringPointType meteringPointType,
+            [NotNull]MeteringPointType meteringPointType,
             [NotNull]GridAreaLinkId gridAreaLinkId,
             [NotNull]ReadingOccurrence meterReadingOccurrence,
             [NotNull]PowerLimit powerLimit,

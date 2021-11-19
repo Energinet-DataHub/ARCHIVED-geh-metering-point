@@ -12,10 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Create.Special;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Special;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
 using Xunit.Categories;
@@ -61,6 +63,17 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(specialCommand).ConfigureAwait(false);
 
             AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointAccepted, 2);
+        }
+
+        [Fact]
+        public async Task Should_not_generate_integration_event_message_if_parentId_is_null()
+        {
+            var specialCommand = CreateCommand()
+                with { ParentRelatedMeteringPoint = null };
+            await SendCommandAsync(specialCommand).ConfigureAwait(false);
+
+            var message = GetOutboxMessages<SpecialMeteringPointCreatedIntegrationEvent>();
+            Assert.Empty(message);
         }
 
         [Fact]
