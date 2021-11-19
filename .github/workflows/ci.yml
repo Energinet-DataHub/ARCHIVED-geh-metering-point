@@ -101,7 +101,7 @@ jobs:
       internalcommanddispatcher_ci,
       database_migration_ci
     ]
-    uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@1.13.0
+    uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@2.1.0
     with:
       CALLER_REPOSITORY_PATH: Energinet-DataHub/geh-metering-point
     secrets:
