@@ -93,6 +93,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointAccepted);
             AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointRejected);
+            var message = GetOutboxMessages<SpecialMeteringPointCreatedIntegrationEvent>();
+            Assert.Empty(message);
         }
 
         [Fact]
@@ -107,6 +109,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(specialCommand).ConfigureAwait(false);
 
             AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointAccepted, 2);
+            AssertOutboxMessage<SpecialMeteringPointCreatedIntegrationEvent>();
         }
 
         [Fact]
