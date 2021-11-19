@@ -23,6 +23,7 @@ using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -104,18 +105,27 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange
                 MeteringPointId.New(),
                 GsrnNumber.Create(request.GsrnNumber),
                 CreateAddress(request),
-                EnumerationType.FromName<MeteringMethod>(request.MeteringMethod),
                 gridAreaLinkId,
-                LocationDescription.Create(request.LocationDescription!),
-                string.IsNullOrWhiteSpace(request.MeterNumber) ? null : MeterId.Create(request.MeterNumber),
                 EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
                 PowerLimit.Create(request.MaximumPower, request.MaximumCurrent),
                 EffectiveDate.Create(request.EffectiveDate),
                 toGrid,
-                fromGrid);
+                fromGrid,
+                CreateMeteringConfiguration(request.MeteringMethod, request.MeterNumber ?? string.Empty));
         }
 
-        private static Address CreateAddress(CreateExchangeMeteringPoint request)
+        private static MeteringConfiguration CreateMeteringConfiguration(string method, string? meter)
+        {
+            var meteringMethod = EnumerationType.FromName<MeteringMethod>(method);
+            if (meteringMethod != MeteringMethod.Physical)
+            {
+                return MeteringConfiguration.Create(meteringMethod, MeterId.Empty());
+            }
+
+            return MeteringConfiguration.Create(meteringMethod, MeterId.Create(meter!));
+        }
+
+        private static Domain.Addresses.Address CreateAddress(CreateExchangeMeteringPoint request)
         {
             return Domain.Addresses.Address.Create(
                 streetName: request.StreetName,
@@ -128,8 +138,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange
                 floor: request.FloorIdentification,
                 room: request.RoomIdentification,
                 municipalityCode: string.IsNullOrWhiteSpace(request.MunicipalityCode) ? default : int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()),
-                isActual: false,
-                geoInfoReference: null);
+                isActual: request.IsActualAddress.GetValueOrDefault(),
+                geoInfoReference: string.IsNullOrWhiteSpace(request.GeoInfoReference) ? default : Guid.Parse(request.GeoInfoReference),
+                locationDescription: request.LocationDescription);
         }
 
         private static BusinessRulesValidationResult ValidateAddress(CreateExchangeMeteringPoint request)
@@ -145,7 +156,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange
                 countryCode: EnumerationType.FromName<CountryCode>(request.CountryCode),
                 floor: request.FloorIdentification,
                 room: request.RoomIdentification,
-                municipalityCode: municipalityCode);
+                municipalityCode: municipalityCode,
+                locationDescription: request.LocationDescription);
         }
 
         private async Task<(GridArea? GridArea, GridArea? ToGridArea, GridArea? FromGridArea)> GetGridAreasAsync(CreateExchangeMeteringPoint request)

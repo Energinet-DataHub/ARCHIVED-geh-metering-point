@@ -16,11 +16,13 @@ using System;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 
@@ -41,23 +43,40 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
 
             return new ConsumptionMeteringPointDetails(
                 SettlementMethod.Flex,
-                ScheduledMeterReadingDate.Create(SampleData.ScheduledMeterReadingDate),
+                null,
                 AssetType.GasTurbine,
                 Capacity.Create(SampleData.Capacity),
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 address,
-                MeteringMethod.Physical,
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
                 GsrnNumber.Create(SampleData.PowerPlant),
-                LocationDescription.Create(SampleData.LocationDescription),
-                string.IsNullOrWhiteSpace(SampleData.MeterNumber) ? null : MeterId.Create(SampleData.MeterNumber),
                 ReadingOccurrence.Hourly,
                 PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
                 EffectiveDate.Create(SampleData.EffectiveDate),
-                NetSettlementGroup.Six,
+                NetSettlementGroup.One,
                 DisconnectionType.Manual,
-                ConnectionType.Installation);
+                ConnectionType.Installation,
+                MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()));
+        }
+
+        protected static SpecialMeteringPointDetails CreateSpecialDetails()
+        {
+            var address = CreateAddress();
+
+            return new SpecialMeteringPointDetails(
+                MeteringPointId.New(),
+                MeteringPointType.VEProduction,
+                GsrnNumber.Create(SampleData.GsrnNumber),
+                address,
+                new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
+                ReadingOccurrence.Hourly,
+                PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
+                EffectiveDate.Create(SampleData.EffectiveDate),
+                GsrnNumber.Create(SampleData.PowerPlant),
+                Capacity.Create(SampleData.Capacity),
+                AssetType.GasTurbine,
+                MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()));
         }
 
         protected static ProductionMeteringPointDetails CreateProductionDetails()
@@ -68,11 +87,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 address,
-                MeteringMethod.Physical,
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
                 GsrnNumber.Create(SampleData.PowerPlant),
-                LocationDescription.Create(SampleData.LocationDescription),
-                string.IsNullOrWhiteSpace(SampleData.MeterNumber) ? null : MeterId.Create(SampleData.MeterNumber),
                 ReadingOccurrence.Hourly,
                 PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
                 EffectiveDate.Create(SampleData.EffectiveDate),
@@ -80,7 +96,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 DisconnectionType.Manual,
                 ConnectionType.Installation,
                 AssetType.GasTurbine,
-                Capacity.Create(SampleData.Capacity));
+                Capacity.Create(SampleData.Capacity),
+                MeteringConfiguration.Create(MeteringMethod.Physical, MeterId.Create(SampleData.MeterNumber)));
         }
 
         protected static ExchangeMeteringPointDetails CreateExchangeDetails()
@@ -91,15 +108,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 address,
-                MeteringMethod.Physical,
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
-                LocationDescription.Create(SampleData.LocationDescription),
-                string.IsNullOrWhiteSpace(SampleData.MeterNumber) ? null : MeterId.Create(SampleData.MeterNumber),
                 ReadingOccurrence.Hourly,
                 PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
                 EffectiveDate.Create(SampleData.EffectiveDate),
                 GridAreaLinkId.New(),
-                GridAreaLinkId.New());
+                GridAreaLinkId.New(),
+                MeteringConfiguration.Create(MeteringMethod.Physical, MeterId.Create(SampleData.MeterNumber)));
         }
 
         protected static Address CreateAddress()
@@ -117,6 +132,18 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 default,
                 isActual: true,
                 geoInfoReference: Guid.NewGuid());
+        }
+
+        protected static void AssertContainsValidationError<TValidationError>(BusinessRulesValidationResult result)
+        {
+            if (result == null) throw new ArgumentNullException(nameof(result));
+            Assert.Contains(result.Errors, error => error is TValidationError);
+        }
+
+        protected static void AssertDoesNotContainValidationError<TValidationError>(BusinessRulesValidationResult result)
+        {
+            if (result == null) throw new ArgumentNullException(nameof(result));
+            Assert.DoesNotContain(result.Errors, error => error is TValidationError);
         }
     }
 }

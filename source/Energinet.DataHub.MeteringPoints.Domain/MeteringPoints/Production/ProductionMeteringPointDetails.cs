@@ -14,6 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
@@ -22,11 +23,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
         MeteringPointId Id,
         GsrnNumber GsrnNumber,
         Address Address,
-        MeteringMethod MeteringMethod,
         GridAreaLinkId GridAreaLinkId,
         GsrnNumber PowerPlantGsrnNumber,
-        LocationDescription? LocationDescription,
-        MeterId? MeterNumber,
         ReadingOccurrence ReadingOccurrence,
         PowerLimit PowerLimit,
         EffectiveDate EffectiveDate,
@@ -34,15 +32,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
         DisconnectionType DisconnectionType,
         ConnectionType? ConnectionType,
         AssetType AssetType,
-        Capacity Capacity) : MeteringPointDetails(
+        Capacity Capacity,
+        MeteringConfiguration MeteringConfiguration) : MeteringPointDetails(
         Id,
         GsrnNumber,
         Address,
-        MeteringMethod,
         GridAreaLinkId,
-        LocationDescription,
-        MeterNumber,
         ReadingOccurrence,
         PowerLimit,
-        EffectiveDate);
+        EffectiveDate,
+        MeteringConfiguration);
 }

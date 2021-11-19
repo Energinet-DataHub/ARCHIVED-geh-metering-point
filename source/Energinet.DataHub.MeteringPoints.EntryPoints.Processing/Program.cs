@@ -14,6 +14,9 @@
 
 using System;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
+using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
@@ -22,8 +25,13 @@ using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Create.Exchange;
 using Energinet.DataHub.MeteringPoints.Application.Create.Production;
+using Energinet.DataHub.MeteringPoints.Application.Create.Special;
+using Energinet.DataHub.MeteringPoints.Application.EDI;
+using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
+using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
+using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
@@ -33,26 +41,29 @@ using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
+using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Authorization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
 using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bundling;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notifications;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Providers.MeteringPointOwnership;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
@@ -122,6 +133,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IntegrationEventReceiver>(Lifestyle.Scoped);
             container.Register<ChargesResponseReceiver>(Lifestyle.Scoped);
             container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
+            container.Register<IEnergySupplierRepository, EnergySupplierRepository>(Lifestyle.Scoped);
             container.Register<IMarketMeteringPointRepository, MarketMeteringPointRepository>(Lifestyle.Scoped);
             container.Register<IGridAreaRepository, GridAreaRepository>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
@@ -135,12 +147,16 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IValidator<CreateConsumptionMeteringPoint>, Application.Create.Consumption.Validation.RuleSet>(Lifestyle.Scoped);
             container.Register<IValidator<CreateProductionMeteringPoint>, Application.Create.Production.Validation.RuleSet>(Lifestyle.Scoped);
             container.Register<IValidator<CreateExchangeMeteringPoint>, Application.Create.Exchange.Validation.RuleSet>(Lifestyle.Scoped);
+            container.Register<IValidator<CreateSpecialMeteringPoint>, Application.Create.Special.Validation.RuleSet>(Lifestyle.Scoped);
             container.Register<IValidator<MasterDataDocument>, ValidationRuleSet>(Lifestyle.Scoped);
             container.Register<IValidator<ConnectMeteringPoint>, ConnectMeteringPointRuleSet>(Lifestyle.Scoped);
+            container.Register<IValidator<ChangeMasterDataRequest>, NullValidationSet<ChangeMasterDataRequest>>(Lifestyle.Scoped);
+            container.Register(typeof(IBusinessProcessResultHandler<ChangeMasterDataRequest>), typeof(ChangeMasterDataResultHandler), Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<CreateConsumptionMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateConsumptionMeteringPoint>), Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<CreateProductionMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateProductionMeteringPoint>), Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<CreateExchangeMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateExchangeMeteringPoint>), Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<ConnectMeteringPoint>), typeof(ConnectMeteringPointResultHandler), Lifestyle.Scoped);
+            container.Register(typeof(IBusinessProcessResultHandler<CreateSpecialMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateSpecialMeteringPoint>), Lifestyle.Scoped);
             container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
             container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Scoped);
             container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
@@ -152,6 +168,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IProtobufMessageFactory, ProtobufMessageFactory>(Lifestyle.Singleton);
             container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
             container.Register<INotificationReceiver, NotificationReceiver>(Lifestyle.Scoped);
+            container.Register<IBusinessDocumentFactory, BusinessDocumentFactory>(Lifestyle.Scoped);
+            container.Register<MeteringPointPipelineContext>(Lifestyle.Scoped);
 
             container.Register<IBusinessProcessValidationContext, BusinessProcessValidationContext>(Lifestyle.Scoped);
             container.Register<IBusinessProcessCommandFactory, BusinessProcessCommandFactory>(Lifestyle.Singleton);
@@ -162,6 +180,12 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             container.Register<IActorMessageFactory, ActorMessageFactory>(Lifestyle.Scoped);
             container.Register<IMessageHubDispatcher, MessageHubDispatcher>(Lifestyle.Scoped);
+
+            container.Register<ChangeMasterDataSettings>(() => new ChangeMasterDataSettings(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1));
+
+            container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
+
+            container.AddBusinessProcessAuthorizers();
 
             container.AddValidationErrorConversion(
                 validateRegistrations: false,
@@ -179,8 +203,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 new[]
                 {
                     typeof(UnitOfWorkBehavior<,>),
-                    typeof(AuthorizationBehavior<,>),
                     typeof(InputValidationBehavior<,>),
+                    typeof(AuthorizationBehavior<,>),
                     typeof(DomainEventsDispatcherBehaviour<,>),
                     typeof(InternalCommandHandlingBehaviour<,>),
                     typeof(BusinessProcessResultBehavior<,>),

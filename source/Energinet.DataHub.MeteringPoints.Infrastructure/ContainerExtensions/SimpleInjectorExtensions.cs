@@ -15,8 +15,6 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using Energinet.DataHub.MeteringPoints.Application.Authorization;
-using Energinet.DataHub.MeteringPoints.Application.Authorization.AuthorizationHandlers;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using SimpleInjector;
@@ -25,14 +23,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions
 {
     public static class SimpleInjectorExtensions
     {
-        public static void AddAuthorization(this Container container)
-        {
-            if (container == null) throw new ArgumentNullException(nameof(container));
-
-            container.Register(typeof(IAuthorizationHandler<,>), typeof(InputAuthorizationHandler<,>));
-            container.Collection.Register(typeof(IAuthorizationHandler<,>), new[] { typeof(ExampleAuthorizationHandler), });
-        }
-
         public static void AddValidationErrorConversion(this Container container, bool validateRegistrations, params Assembly[] assemblies)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));

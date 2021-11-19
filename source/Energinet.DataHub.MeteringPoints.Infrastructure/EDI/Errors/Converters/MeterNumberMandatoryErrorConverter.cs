@@ -14,6 +14,7 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
@@ -24,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D02", $"Meter number is mandatory for sub type physical.");
+            return new("D31", $"Meter number is mandatory for sub type physical.");
         }
     }
 }

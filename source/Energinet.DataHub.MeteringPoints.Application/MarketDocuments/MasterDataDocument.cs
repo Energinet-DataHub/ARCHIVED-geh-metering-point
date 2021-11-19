@@ -32,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
             bool? IsActualAddress = null,
             string GsrnNumber = "",
             string TypeOfMeteringPoint = "",
-            string MeteringMethod = "",
+            string? MeteringMethod = null,
             string MeterReadingOccurrence = "",
             int MaximumCurrent = 0,
             int MaximumPower = 0,

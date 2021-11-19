@@ -14,6 +14,7 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
@@ -111,8 +112,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 with
                 {
                     Address = address,
-                    MeteringMethod = MeteringMethod.Virtual,
-                    MeterNumber = null,
+                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                 };
 
             var checkResult = CheckCreationRules(meteringPointDetails);
@@ -140,8 +140,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 with
                 {
                     Address = address,
-                    MeteringMethod = MeteringMethod.Virtual,
-                    MeterNumber = null,
+                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                 };
 
             var checkResult = ProductionMeteringPoint.CanCreate(meteringPointDetails);
@@ -166,11 +165,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
         [InlineData("NinetyNine", "Physical", false)]
         public void Metering_method_must_be_virtual_or_calculated_when_net_settlement_group_is_not_0_or_99(string netSettlementGroup, string meteringMethod, bool expectError)
         {
+            var method = EnumerationType.FromName<MeteringMethod>(meteringMethod);
+            var meter = method == MeteringMethod.Physical ? MeterId.Create("Fake") : MeterId.Empty();
             var details = CreateConsumptionDetails()
                 with
                 {
                     NetSettlementGroup = EnumerationType.FromName<NetSettlementGroup>(netSettlementGroup),
-                    MeteringMethod = EnumerationType.FromName<MeteringMethod>(meteringMethod),
+                    MeteringConfiguration = MeteringConfiguration.Create(method, meter),
                 };
 
             var result = MarketMeteringPoint.CanCreate(details);
@@ -181,16 +182,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
         private static BusinessRulesValidationResult CheckCreationRules(ProductionMeteringPointDetails meteringPointDetails)
         {
             return ProductionMeteringPoint.CanCreate(meteringPointDetails);
-        }
-
-        private static void AssertContainsValidationError<TValidationError>(BusinessRulesValidationResult result)
-        {
-            Assert.Contains(result.Errors, error => error is TValidationError);
-        }
-
-        private static void AssertDoesNotContainValidationError<TValidationError>(BusinessRulesValidationResult result)
-        {
-            Assert.DoesNotContain(result.Errors, error => error is TValidationError);
         }
     }
 }

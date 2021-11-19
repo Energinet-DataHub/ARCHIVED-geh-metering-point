@@ -44,7 +44,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub.Functions
         }
 
         [Function("RequestBundleQueueSubscriber")]
-        public async Task RunAsync([ServiceBusTrigger("sbq-meteringpoints", Connection = "MESSAGEHUB_QUEUE_CONNECTION_STRING", IsSessionsEnabled = true)] byte[] data)
+        public async Task RunAsync([ServiceBusTrigger("%REQEUST_BUNDLE_QUEUE_SUBSCRIBER_QUEUE%", Connection = "MESSAGEHUB_QUEUE_CONNECTION_STRING", IsSessionsEnabled = true)] byte[] data)
         {
             await _localMessageHubClient.CreateBundleAsync(data, _sessionContext.Id).ConfigureAwait(false);
             await _unitOfWork.CommitAsync().ConfigureAwait(false);

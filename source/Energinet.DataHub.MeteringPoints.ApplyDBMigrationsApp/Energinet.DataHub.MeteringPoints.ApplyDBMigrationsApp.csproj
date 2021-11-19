@@ -49,6 +49,9 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Model\202110211630 Change FromGrid and ToGrid datatypes.sql" />
     <EmbeddedResource Include="Scripts\Model\202110251200 Add GsrnNumber column to MessageHubMessages table.sql" />
     <EmbeddedResource Include="Scripts\Model\202110251315 Add FullFlexFromDate column.sql" />
+    <EmbeddedResource Include="Scripts\Model\202111091330 Move NetSettlementGroup.sql" />
+    <EmbeddedResource Include="Scripts\Model\202111091345 Remove connection types from production.sql" />
+    <EmbeddedResource Include="Scripts\Model\202111091346 Move asset type.sql" />
     <EmbeddedResource Include="Scripts\Seed\202109232130 Create Grid Area seed data.sql" />
     <EmbeddedResource Include="Scripts\Test\202109232129 Clean database.sql" />
     <EmbeddedResource Include="Scripts\Test\202109232130 Create Grid Area test data.sql" />
@@ -57,6 +60,8 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Model\202109270930 Add MessageHubMessages table.sql" />
     <EmbeddedResource Include="Scripts\Model\202110080920 Alter Correlation in QueuedInternalCommands.sql" />
     <EmbeddedResource Include="Scripts\Test\202110281315 Create Metering Point test data.sql" />
+    <None Remove="Scripts\Model\202111041429 Add energy supplier table.sql" />
+    <EmbeddedResource Include="Scripts\Model\202111041429 Add energy supplier table.sql" />
   </ItemGroup>
 
 </Project>

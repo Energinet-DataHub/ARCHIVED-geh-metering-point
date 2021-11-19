@@ -17,9 +17,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common.Address
     public record StreetDetail(
         string Number,
         string Name,
-        string Type,
         string Code,
-        string BuildingName,
         string SuiteNumber,
         string FloorIdentification);
 }

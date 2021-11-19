@@ -14,6 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -26,38 +27,36 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            MeteringMethod meteringMethod,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
-            LocationDescription? locationDescription,
             MeasurementUnitType unitType,
-            MeterId meterNumber,
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit powerLimit,
             EffectiveDate effectiveDate,
             Capacity? capacity,
             ConnectionType? connectionType,
             DisconnectionType disconnectionType,
-            NetSettlementGroup netSettlementGroup)
+            NetSettlementGroup netSettlementGroup,
+            AssetType? assetType,
+            MeteringConfiguration meteringConfiguration)
             : base(
                 id,
                 gsrnNumber,
                 address,
-                meteringMethod,
                 meteringPointType,
                 gridAreaLinkId,
                 powerPlantGsrnNumber,
-                locationDescription,
                 unitType,
-                meterNumber,
                 meterReadingOccurrence,
                 powerLimit,
                 effectiveDate,
                 capacity,
                 connectionType,
                 disconnectionType,
-                netSettlementGroup)
+                netSettlementGroup,
+                assetType,
+                meteringConfiguration)
         {
         }
 

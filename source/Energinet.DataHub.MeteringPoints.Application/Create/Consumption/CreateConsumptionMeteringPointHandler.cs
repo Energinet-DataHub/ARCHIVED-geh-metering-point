@@ -23,6 +23,7 @@ using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
@@ -74,6 +75,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
                 return new BusinessProcessResult(request.TransactionId, gridAreaValidationResult.ValidationErrors);
             }
 
+            var meteringConfigurationResult =
+                ValidateMeteringConfiguration(request.MeteringMethod, request.MeterNumber!);
+            if (meteringConfigurationResult.Success == false)
+            {
+                return new BusinessProcessResult(request.TransactionId, meteringConfigurationResult.Errors);
+            }
+
             var meteringPointDetails = CreateDetails(request, gridArea?.DefaultLink.Id!);
             var rulesCheckResult = CheckBusinessRules(request, meteringPointDetails);
             if (!rulesCheckResult.Success)
@@ -112,17 +120,33 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
                 MeteringPointId.New(),
                 GsrnNumber.Create(request.GsrnNumber),
                 CreateAddress(request),
-                EnumerationType.FromName<MeteringMethod>(request.MeteringMethod),
                 gridAreaLinkId,
                 !string.IsNullOrEmpty(request.PowerPlant) ? GsrnNumber.Create(request.PowerPlant) : null !,
-                LocationDescription.Create(request.LocationDescription!),
-                string.IsNullOrWhiteSpace(request.MeterNumber) ? null : MeterId.Create(request.MeterNumber),
                 EnumerationType.FromName<ReadingOccurrence>(request.MeterReadingOccurrence),
                 PowerLimit.Create(request.MaximumPower, request.MaximumCurrent),
                 EffectiveDate.Create(request.EffectiveDate),
                 EnumerationType.FromName<NetSettlementGroup>(request.NetSettlementGroup!),
                 EnumerationType.FromName<DisconnectionType>(request.DisconnectionType),
-                !string.IsNullOrWhiteSpace(request.ConnectionType) ? EnumerationType.FromName<ConnectionType>(request.ConnectionType!) : null);
+                !string.IsNullOrWhiteSpace(request.ConnectionType) ? EnumerationType.FromName<ConnectionType>(request.ConnectionType!) : null,
+                CreateMeteringConfiguration(request.MeteringMethod, request.MeterNumber ?? string.Empty));
+        }
+
+        private static MeteringConfiguration CreateMeteringConfiguration(string method, string? meter)
+        {
+            var meteringMethod = EnumerationType.FromName<MeteringMethod>(method);
+            if (meteringMethod != MeteringMethod.Physical)
+            {
+                return MeteringConfiguration.Create(meteringMethod, MeterId.Empty());
+            }
+
+            return MeteringConfiguration.Create(meteringMethod, MeterId.Create(meter!));
+        }
+
+        private static BusinessRulesValidationResult ValidateMeteringConfiguration(string method, string meter)
+        {
+            return MeteringConfiguration.CheckRules(
+                EnumerationType.FromName<MeteringMethod>(method),
+                string.IsNullOrWhiteSpace(meter) ? MeterId.Empty() : MeterId.Create(meter));
         }
 
         private static Domain.Addresses.Address CreateAddress(CreateConsumptionMeteringPoint request)
@@ -139,7 +163,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
                 room: request.RoomIdentification,
                 municipalityCode: string.IsNullOrWhiteSpace(request.MunicipalityCode) ? default : int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()),
                 isActual: request.IsActualAddress.GetValueOrDefault(),
-                geoInfoReference: string.IsNullOrWhiteSpace(request.GeoInfoReference) ? default : Guid.Parse(request.GeoInfoReference));
+                geoInfoReference: string.IsNullOrWhiteSpace(request.GeoInfoReference) ? default : Guid.Parse(request.GeoInfoReference),
+                locationDescription: request.LocationDescription);
         }
 
         private static BusinessRulesValidationResult ValidateAddress(CreateConsumptionMeteringPoint request)
@@ -155,7 +180,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
                 countryCode: EnumerationType.FromName<CountryCode>(request.CountryCode),
                 floor: request.FloorIdentification,
                 room: request.RoomIdentification,
-                municipalityCode: municipalityCode);
+                municipalityCode: municipalityCode,
+                locationDescription: request.LocationDescription);
         }
 
         private Task<GridArea?> GetGridAreaAsync(CreateConsumptionMeteringPoint request)

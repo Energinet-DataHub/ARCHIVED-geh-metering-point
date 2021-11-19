@@ -66,6 +66,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
             return new BusinessProcessResult(transactionId, false);
         }
 
+        public static BusinessProcessResult Fail(string transactionId, IReadOnlyList<ValidationError> errors)
+        {
+            return new BusinessProcessResult(transactionId, errors);
+        }
+
         private void SetValidationErrors(IEnumerable<IBusinessRule> rules)
         {
             ValidationErrors = rules

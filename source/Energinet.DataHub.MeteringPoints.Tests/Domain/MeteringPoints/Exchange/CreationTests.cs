@@ -16,6 +16,7 @@ using System;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
@@ -31,11 +32,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
         [Fact]
         public void Should_succeed()
         {
+            var meteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty());
             var meteringPointId = MeteringPointId.New();
             var meteringPointGsrn = GsrnNumber.Create(SampleData.GsrnNumber);
             var meteringMethod = MeteringMethod.Virtual;
             var areadLinkId = new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId));
-            var locationDescription = LocationDescription.Create(string.Empty);
             var readingOccurrence = ReadingOccurrence.Hourly;
             var powerLimit = PowerLimit.Create(0, 0);
             var effectiveDate = EffectiveDate.Create(SampleData.EffectiveDate);
@@ -51,7 +52,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
                 room: string.Empty,
                 municipalityCode: null,
                 isActual: false,
-                geoInfoReference: null);
+                geoInfoReference: SampleData.GeoInfoReference);
 
             var exchangeMeteringPointDetails = CreateExchangeDetails()
                 with
@@ -59,10 +60,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
                     Id = meteringPointId,
                     Address = address,
                     GridAreaLinkId = areadLinkId,
-                    LocationDescription = locationDescription,
                     PowerLimit = powerLimit,
-                    MeterNumber = null,
-                    MeteringMethod = meteringMethod,
+                    MeteringConfiguration = meteringConfiguration,
                 };
 
             var meteringPoint = ExchangeMeteringPoint.Create(exchangeMeteringPointDetails);
@@ -80,9 +79,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
             Assert.Equal(address.CitySubDivision, createdEvent.CitySubDivision);
             Assert.Equal(meteringPointId.Value, createdEvent.MeteringPointId);
             Assert.Equal(meteringPointGsrn.Value, createdEvent.GsrnNumber);
-            Assert.Equal(meteringMethod.Name, createdEvent.MeteringPointSubType);
+            Assert.Equal(meteringConfiguration.Method.Name, createdEvent.MeteringPointSubType);
             Assert.Equal(areadLinkId.Value, createdEvent.GridAreaLinkId);
-            Assert.Equal(locationDescription.Value, createdEvent.LocationDescription);
+            Assert.Equal(address.LocationDescription, createdEvent.LocationDescription);
             Assert.Equal(readingOccurrence.Name, createdEvent.ReadingOccurrence);
             Assert.Equal(powerLimit.Ampere, createdEvent.MaximumCurrent);
             Assert.Equal(powerLimit.Kwh, createdEvent.MaximumPower);
@@ -92,12 +91,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
         [Fact]
         public void Product_type_should_as_default_be_active_energy()
         {
-            var details = CreateExchangeDetails()
-            with
-            {
-                MeteringMethod = MeteringMethod.Virtual,
-                MeterNumber = null,
-            };
+            var details = CreateExchangeDetails();
 
             var meteringPoint = ExchangeMeteringPoint.Create(details);
 
@@ -141,8 +135,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
                 with
                 {
                     Address = address,
-                    MeteringMethod = MeteringMethod.Virtual,
-                    MeterNumber = null,
+                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                 };
 
             var meteringPoint = ExchangeMeteringPoint.Create(meteringPointDetails);
@@ -155,16 +148,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
         private static BusinessRulesValidationResult CheckCreationRules(ExchangeMeteringPointDetails meteringPointDetails)
         {
             return ExchangeMeteringPoint.CanCreate(meteringPointDetails);
-        }
-
-        private static void AssertContainsValidationError<TValidationError>(BusinessRulesValidationResult result)
-        {
-            Assert.Contains(result.Errors, error => error is TValidationError);
-        }
-
-        private static void AssertDoesNotContainValidationError<TValidationError>(BusinessRulesValidationResult result)
-        {
-            Assert.DoesNotContain(result.Errors, error => error is TValidationError);
         }
     }
 }

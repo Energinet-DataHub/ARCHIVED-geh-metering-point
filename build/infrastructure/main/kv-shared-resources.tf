@@ -70,3 +70,28 @@ data "azurerm_key_vault_secret" "sql_data_name" {
   name         = "sql-data-name"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
+
+data "azurerm_key_vault_secret" "sbq_data_available_name" {
+  name         = "sbq-data-available-name"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "sbq_metering_points_name" {
+  name         = "sbq-metering-points-name"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "sbq_metering_points_reply_name" {
+  name         = "sbq-metering-points-reply-name"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "sbq_metering_points_dequeue_name" {
+  name         = "sbq-metering-points-dequeue-name"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "sbq_create_link_reply_name" {
+  name         = "sbq-create-link-reply-name"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests
@@ -78,5 +79,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         public static string PhysicalState => Domain.MeteringPoints.PhysicalState.New.Name;
 
         public static string ScheduledMeterReadingDate => string.Empty;
+
+        public static string GlnNumber => "3963865549824";
     }
 }

@@ -12,15 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Domain.Addresses;
-using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -93,7 +90,27 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             Assert.Throws<MeteringPointConnectException>(() => meteringPoint.Connect(connectionDetails));
         }
 
-        private static void SetStartOfSupplyAheadOfEffectiveDate(ConsumptionMeteringPoint meteringPoint, Instant effectiveDate)
+        private static ConsumptionMeteringPoint CreateConsumptionMeteringPoint()
+        {
+            var details = CreateConsumptionDetails()
+                with
+                {
+                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
+                };
+            return ConsumptionMeteringPoint.Create(details);
+        }
+
+        private static ProductionMeteringPoint CreateProductionMeteringPoint()
+        {
+            var details = CreateProductionDetails()
+                with
+                {
+                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
+                };
+            return ProductionMeteringPoint.Create(details);
+        }
+
+        private static void SetStartOfSupplyAheadOfEffectiveDate(MarketMeteringPoint meteringPoint, Instant effectiveDate)
         {
             var startOfSupply = effectiveDate.Plus(Duration.FromDays(1));
             var energySupplierDetails = EnergySupplierDetails.Create(startOfSupply);
@@ -105,28 +122,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             var startOfSupply = effectiveDate.Minus(Duration.FromDays(1));
             var energySupplierDetails = EnergySupplierDetails.Create(startOfSupply);
             meteringPoint.SetEnergySupplierDetails(energySupplierDetails);
-        }
-
-        private static ConsumptionMeteringPoint CreateConsumptionMeteringPoint()
-        {
-            var details = CreateConsumptionDetails()
-                with
-                {
-                    MeteringMethod = MeteringMethod.Virtual,
-                    MeterNumber = null,
-                };
-            return ConsumptionMeteringPoint.Create(details);
-        }
-
-        private static ProductionMeteringPoint CreateProductionMeteringPoint()
-        {
-            var details = CreateProductionDetails()
-                with
-                {
-                    MeteringMethod = MeteringMethod.Virtual,
-                    MeterNumber = null,
-                };
-            return ProductionMeteringPoint.Create(details);
         }
 
         private ConnectionDetails ConnectNow()

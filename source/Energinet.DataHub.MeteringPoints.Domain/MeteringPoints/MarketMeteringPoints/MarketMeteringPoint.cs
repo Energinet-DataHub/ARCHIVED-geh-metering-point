@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
@@ -35,35 +36,33 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            MeteringMethod meteringMethod,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
-            LocationDescription? locationDescription,
             MeasurementUnitType unitType,
-            MeterId? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit powerLimit,
             EffectiveDate effectiveDate,
             Capacity? capacity,
             ConnectionType? connectionType,
             DisconnectionType disconnectionType,
-            NetSettlementGroup netSettlementGroup)
+            NetSettlementGroup netSettlementGroup,
+            AssetType? assetType,
+            MeteringConfiguration meteringConfiguration)
             : base(
                 id,
                 gsrnNumber,
                 address,
-                meteringMethod,
                 meteringPointType,
                 gridAreaLinkId,
                 powerPlantGsrnNumber,
-                locationDescription,
                 unitType,
-                meterNumber,
                 meterReadingOccurrence,
                 powerLimit,
                 effectiveDate,
-                capacity)
+                capacity,
+                assetType,
+                meteringConfiguration)
         {
             ConnectionType = connectionType;
             DisconnectionType = disconnectionType;
@@ -90,7 +89,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
                 new MeterReadingOccurrenceRule(meteringPointDetails.ReadingOccurrence),
                 new GeoInfoReferenceRequirementRule(meteringPointDetails.Address),
                 new ConnectionTypeRequirementRule(meteringPointDetails.NetSettlementGroup, meteringPointDetails.ConnectionType),
-                new MeteringMethodRule(meteringPointDetails.NetSettlementGroup, meteringPointDetails.MeteringMethod),
+                new MeteringMethodRule(meteringPointDetails.NetSettlementGroup, meteringPointDetails.MeteringConfiguration.Method),
                 new PostCodeIsRequiredRule(meteringPointDetails.Address),
                 new CityIsRequiredRule(meteringPointDetails.Address),
                 new StreetNameIsRequiredRule(meteringPointDetails.GsrnNumber, meteringPointDetails.Address),
@@ -108,7 +107,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
                 new MeterReadingOccurrenceRule(meteringPointDetails.ReadingOccurrence),
                 new GeoInfoReferenceRequirementRule(meteringPointDetails.Address),
                 new ConnectionTypeRequirementRule(meteringPointDetails.NetSettlementGroup, meteringPointDetails.ConnectionType),
-                new MeteringMethodRule(meteringPointDetails.NetSettlementGroup, meteringPointDetails.MeteringMethod),
+                new MeteringMethodRule(meteringPointDetails.NetSettlementGroup, meteringPointDetails.MeteringConfiguration.Method),
                 new PostCodeIsRequiredRule(meteringPointDetails.Address),
                 new CityIsRequiredRule(meteringPointDetails.Address),
                 new StreetNameIsRequiredRule(meteringPointDetails.GsrnNumber, meteringPointDetails.Address),
@@ -120,7 +119,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
         public void SetEnergySupplierDetails(EnergySupplierDetails energySupplierDetails)
         {
             if (energySupplierDetails == null) throw new ArgumentNullException(nameof(energySupplierDetails));
-            if (EnergySupplierDetails! == energySupplierDetails) return;
+            if (EnergySupplierDetails?.StartOfSupply != null) return;
+
             EnergySupplierDetails = energySupplierDetails;
             AddDomainEvent(new EnergySupplierDetailsChanged(Id.Value, EnergySupplierDetails.StartOfSupply));
         }

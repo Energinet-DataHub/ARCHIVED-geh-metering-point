@@ -16,6 +16,7 @@ using System;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
@@ -31,6 +32,37 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
     [UnitTest]
     public class CreationTests : TestBase
     {
+        [Theory]
+        [InlineData("Zero", "Physical", false)]
+        [InlineData("One", "Physical", true)]
+        [InlineData("One", "Virtual", false)]
+        [InlineData("One", "Calculated", false)]
+        [InlineData("Two", "Physical", true)]
+        [InlineData("Two", "Virtual", false)]
+        [InlineData("Two", "Calculated", false)]
+        [InlineData("Three", "Physical", true)]
+        [InlineData("Three", "Virtual", false)]
+        [InlineData("Three", "Calculated", false)]
+        [InlineData("Six", "Physical", true)]
+        [InlineData("Six", "Virtual", false)]
+        [InlineData("Six", "Calculated", false)]
+        [InlineData("NinetyNine", "Physical", false)]
+        public void Metering_method_must_be_virtual_or_calculated_when_net_settlement_group_is_not_0_or_99(string netSettlementGroup, string meteringMethod, bool expectError)
+        {
+            var method = EnumerationType.FromName<MeteringMethod>(meteringMethod);
+            var meter = method == MeteringMethod.Physical ? MeterId.Create("Fake") : MeterId.Empty();
+            var details = CreateConsumptionDetails()
+                with
+                {
+                    NetSettlementGroup = EnumerationType.FromName<NetSettlementGroup>(netSettlementGroup),
+                    MeteringConfiguration = MeteringConfiguration.Create(method, meter),
+                };
+
+            var result = ConsumptionMeteringPoint.CanCreate(details);
+
+            AssertError<MeteringMethodDoesNotMatchNetSettlementGroupRuleError>(result, expectError);
+        }
+
         [Fact]
         public void Should_succeed()
         {
@@ -41,7 +73,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             var gridAreaLinkId = new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId));
             var powerPlantGsrn = GsrnNumber.Create(SampleData.PowerPlant);
             var netSettlementGroup = NetSettlementGroup.Zero;
-            var locationDescription = LocationDescription.Create(string.Empty);
             var measurementUnitType = MeasurementUnitType.KWh;
             var readingOccurrence = ReadingOccurrence.Hourly;
             var powerLimit = PowerLimit.Create(0, 0);
@@ -71,15 +102,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                     Id = meteringPointId,
                     Address = address,
                     GridAreaLinkId = gridAreaLinkId,
-                    LocationDescription = locationDescription,
                     PowerLimit = powerLimit,
                     DisconnectionType = disconnectionType,
                     ConnectionType = null,
                     ScheduledMeterReadingDate = null,
                     Capacity = capacity,
                     NetSettlementGroup = netSettlementGroup,
-                    MeterNumber = null,
-                    MeteringMethod = meteringMethod,
                 };
 
             var meteringPoint = ConsumptionMeteringPoint.Create(consumptionMeteringPointDetails);
@@ -103,7 +131,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(gridAreaLinkId.Value, createdEvent.GridAreaLinkId);
             Assert.Equal(consumptionMeteringPointDetails.NetSettlementGroup.Name, createdEvent.NetSettlementGroup);
             Assert.Equal(powerPlantGsrn.Value, createdEvent.PowerPlantGsrnNumber);
-            Assert.Equal(locationDescription.Value, createdEvent.LocationDescription);
+            Assert.Equal(address.LocationDescription, createdEvent.LocationDescription);
             Assert.Equal(measurementUnitType.Name, createdEvent.UnitType);
             Assert.Equal(readingOccurrence.Name, createdEvent.ReadingOccurrence);
             Assert.Equal(powerLimit.Ampere, createdEvent.MaximumCurrent);
@@ -151,8 +179,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             var details = CreateConsumptionDetails()
             with
             {
-                MeteringMethod = MeteringMethod.Virtual,
-                MeterNumber = null,
+                MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
+                ScheduledMeterReadingDate = null,
             };
 
             var meteringPoint = ConsumptionMeteringPoint.Create(details);
@@ -169,8 +197,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 {
                     PowerPlantGsrnNumber = null,
                     NetSettlementGroup = NetSettlementGroup.Six,
-                    MeteringMethod = MeteringMethod.Virtual,
-                    MeterNumber = null,
+                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                 };
 
             var checkResult = CheckCreationRules(meteringPointDetails);
@@ -260,8 +287,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 {
                     Address = address,
                     NetSettlementGroup = NetSettlementGroup.Six,
-                    MeteringMethod = MeteringMethod.Virtual,
-                    MeterNumber = null,
+                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
+                    ScheduledMeterReadingDate = ScheduledMeterReadingDate.Create("0101"),
                 };
 
             var meteringPoint = ConsumptionMeteringPoint.Create(meteringPointDetails);
@@ -322,16 +349,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         private static BusinessRulesValidationResult CheckCreationRules(ConsumptionMeteringPointDetails meteringPointDetails)
         {
             return ConsumptionMeteringPoint.CanCreate(meteringPointDetails);
-        }
-
-        private static void AssertContainsValidationError<TValidationError>(BusinessRulesValidationResult result)
-        {
-            Assert.Contains(result.Errors, error => error is TValidationError);
-        }
-
-        private static void AssertDoesNotContainValidationError<TValidationError>(BusinessRulesValidationResult result)
-        {
-            Assert.DoesNotContain(result.Errors, error => error is TValidationError);
         }
     }
 }

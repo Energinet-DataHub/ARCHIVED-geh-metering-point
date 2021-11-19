@@ -18,6 +18,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules.Connect;
@@ -31,19 +32,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
     public class ProductionMeteringPoint : MarketMeteringPoint
     {
         private NetSettlementGroup _netSettlementGroup;
-        private AssetType? _assetType;
         private bool _productionObligation;
 
         private ProductionMeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             Address address,
-            MeteringMethod meteringMethod,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             GsrnNumber powerPlantGsrnNumber,
-            LocationDescription? locationDescription,
-            MeterId? meterNumber,
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit? powerLimit,
             EffectiveDate effectiveDate,
@@ -52,29 +49,28 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
             DisconnectionType disconnectionType,
             ConnectionType? connectionType,
             AssetType assetType,
-            Capacity capacity)
+            Capacity capacity,
+            MeteringConfiguration meteringConfiguration)
             : base(
                 id,
                 gsrnNumber,
                 address,
-                meteringMethod,
                 meteringPointType,
                 gridAreaLinkId,
                 powerPlantGsrnNumber,
-                locationDescription,
                 MeasurementUnitType.KWh,
-                meterNumber,
                 meterReadingOccurrence,
                 powerLimit,
                 effectiveDate,
                 capacity,
                 connectionType,
                 disconnectionType,
-                netSettlementGroup)
+                netSettlementGroup,
+                assetType,
+                meteringConfiguration)
         {
             _netSettlementGroup = netSettlementGroup;
             _productionObligation = productionObligation;
-            _assetType = assetType;
             _productType = ProductType.EnergyActive;
             ProductionObligation = false;
             ConnectionState = ConnectionState.New();
@@ -83,7 +79,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 id.Value,
                 GsrnNumber.Value,
                 gridAreaLinkId.Value,
-                meteringMethod.Name,
+                 MeteringConfiguration.Method.Name,
                 _productType.Name,
                 meterReadingOccurrence.Name,
                 _unitType.Name,
@@ -98,11 +94,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 address.StreetCode,
                 address.StreetName,
                 address.CitySubDivision,
-                address.IsActual,
+                address.IsActual.GetValueOrDefault(),
                 address.GeoInfoReference,
                 powerPlantGsrnNumber.Value,
-                locationDescription.Value,
-                meterNumber?.Value,
+                MeteringConfiguration.Meter?.Value,
+                address.LocationDescription,
                 powerLimit.Ampere,
                 powerLimit.Kwh,
                 effectiveDate.DateInUtc,
@@ -169,12 +165,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 meteringPointDetails.Id,
                 meteringPointDetails.GsrnNumber,
                 meteringPointDetails.Address,
-                meteringPointDetails.MeteringMethod,
                 MeteringPointType.Production,
                 meteringPointDetails.GridAreaLinkId,
                 meteringPointDetails.PowerPlantGsrnNumber,
-                meteringPointDetails.LocationDescription,
-                meteringPointDetails.MeterNumber,
                 meteringPointDetails.ReadingOccurrence,
                 meteringPointDetails.PowerLimit,
                 meteringPointDetails.EffectiveDate,
@@ -183,7 +176,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 meteringPointDetails.DisconnectionType,
                 meteringPointDetails.ConnectionType,
                 meteringPointDetails.AssetType,
-                meteringPointDetails.Capacity);
+                meteringPointDetails.Capacity,
+                meteringPointDetails.MeteringConfiguration);
         }
     }
 }
