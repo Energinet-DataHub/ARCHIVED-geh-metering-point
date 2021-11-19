@@ -23,8 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            // TODO: Change foo to appropriate error code
-            return new ErrorMessage("Foo", "A Dx metering point (minus D20) can only be linked to either a production or consumption parent metering point");
+            return new ErrorMessage("D18", "Only a metering point in group 3 and 4 can be a child of 17 and 18 metering point.");
         }
     }
 }

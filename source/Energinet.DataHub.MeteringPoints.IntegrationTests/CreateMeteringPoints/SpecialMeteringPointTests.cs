@@ -41,8 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
                 with { ParentRelatedMeteringPoint = SampleData.SecondGsrnNumber };
             await SendCommandAsync(specialCommand).ConfigureAwait(false);
 
-            // TODO: Change foo to appropriate error code
-            AssertValidationError("Foo", DocumentType.CreateMeteringPointRejected);
+            AssertValidationError("D18", DocumentType.CreateMeteringPointRejected);
         }
 
         [Fact]
