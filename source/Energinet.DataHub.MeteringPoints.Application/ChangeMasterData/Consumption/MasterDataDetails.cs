@@ -14,11 +14,13 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
 {
     public record MasterDataDetails(
         EffectiveDate EffectiveDate,
         Domain.Addresses.Address? Address = null,
-        MeteringConfiguration? MeteringConfiguration = null);
+        MeteringConfiguration? MeteringConfiguration = null,
+        IChange<ConnectionType>? ConnectionType = null);
 }

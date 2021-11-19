@@ -124,5 +124,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             EnergySupplierDetails = energySupplierDetails;
             AddDomainEvent(new EnergySupplierDetailsChanged(Id.Value, EnergySupplierDetails.StartOfSupply));
         }
+
+        public BusinessRulesValidationResult CanChangeConnectionType(ConnectionType? connectionType)
+        {
+            var rules = new List<IBusinessRule>()
+            {
+                new ConnectionTypeRequirementRule(NetSettlementGroup, connectionType),
+            };
+
+            return new BusinessRulesValidationResult(rules);
+        }
     }
 }

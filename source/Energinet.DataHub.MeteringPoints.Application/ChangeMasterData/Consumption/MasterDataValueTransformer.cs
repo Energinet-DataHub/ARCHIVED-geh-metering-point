@@ -18,10 +18,12 @@ using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
 {
+    #pragma warning disable
     public class MasterDataValueTransformer
     {
         private readonly ChangeMasterDataRequest _request;
@@ -47,7 +49,23 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
             return new MasterDataDetails(
                 EffectiveDate: TryCreateEffectiveDate(),
                 Address: TryCreateAddress(),
-                MeteringConfiguration: TryCreateMeteringConfiguration());
+                MeteringConfiguration: TryCreateMeteringConfiguration(),
+                ConnectionType: TryCreateConnectionType());
+        }
+
+        private IChange<ConnectionType> TryCreateConnectionType()
+        {
+            if (_request.ConnectionType is null)
+            {
+                return null;
+            }
+
+            if (_request.ConnectionType.Length == 0)
+            {
+                return new RemoveValue<ConnectionType>();
+            }
+
+            return new ChangeValue<ConnectionType>(EnumerationType.FromName<ConnectionType>(_request.ConnectionType));
         }
 
         private MeteringConfiguration? TryCreateMeteringConfiguration()
@@ -98,5 +116,29 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
         {
             return EffectiveDate.Create(_request.EffectiveDate);
         }
+    }
+
+    public class RemoveValue<T> : IChange<T>
+    {
+        public RemoveValue()
+        {
+        }
+
+        public T? Value { get; }
+    }
+
+    public class ChangeValue<T> : IChange<T>
+    {
+        public T? Value { get; }
+
+        public ChangeValue(T value)
+        {
+            Value = value;
+        }
+    }
+
+    public interface IChange<out T>
+    {
+        T? Value { get; }
     }
 }

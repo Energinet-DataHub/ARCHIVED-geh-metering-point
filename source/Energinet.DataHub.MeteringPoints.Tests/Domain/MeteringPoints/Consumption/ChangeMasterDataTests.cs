@@ -154,6 +154,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(effectiveDate.ToString(), expectedEvent?.EffectiveDate);
         }
 
+        [Fact]
+        public void Connection_type_is_not_applicable_for_net_settlement_group_0()
+        {
+            var meteringPoint = CreatePhysicalInNetSettlementGroup0();
+
+            var result = meteringPoint.CanChangeConnectionType(ConnectionType.Direct);
+
+            AssertError<ConnectionTypeIsNotAllowedRuleError>(result, true);
+        }
+
         private static TDomainEvent? FindDomainEvent<TDomainEvent>(Entity domainEntity)
             where TDomainEvent : DomainEventBase
         {
@@ -166,6 +176,18 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         }
 
         private static ConsumptionMeteringPoint CreatePhysical()
+        {
+            var details = CreateConsumptionDetails()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.Zero,
+                    ConnectionType = null,
+                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Physical, MeterId.Create("1")),
+                };
+            return ConsumptionMeteringPoint.Create(details);
+        }
+
+        private static ConsumptionMeteringPoint CreatePhysicalInNetSettlementGroup0()
         {
             var details = CreateConsumptionDetails()
                 with
