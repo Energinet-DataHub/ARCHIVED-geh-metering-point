@@ -15,9 +15,6 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - dstenroejl/functionapp-tests
   pull_request:
     branches:
       - main
