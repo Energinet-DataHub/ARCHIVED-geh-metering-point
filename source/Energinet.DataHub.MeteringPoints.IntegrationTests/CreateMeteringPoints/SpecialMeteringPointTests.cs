@@ -34,21 +34,33 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         public async Task Should_reject_if_parent_metering_point_is_not_a_market_metering_point()
         {
             var consumptionCommand = Scenarios.CreateExchangeMeteringPointCommand()
-                with
-                {
-                    GsrnNumber = SampleData.SecondGsrnNumber,
-                };
+                with { GsrnNumber = SampleData.SecondGsrnNumber };
+            await SendCommandAsync(consumptionCommand).ConfigureAwait(false);
+
+            var specialCommand = CreateCommand()
+                with { ParentRelatedMeteringPoint = SampleData.SecondGsrnNumber };
+            await SendCommandAsync(specialCommand).ConfigureAwait(false);
+
+            // TODO: Change foo to appropriate error code
+            AssertValidationError("Foo", DocumentType.CreateMeteringPointRejected);
+        }
+
+        [Fact]
+        public async Task Should_accept_if_parent_metering_point_is_not_a_market_metering_point_when_type_is_ExchangeReactiveEnergy()
+        {
+            var consumptionCommand = Scenarios.CreateExchangeMeteringPointCommand()
+                with { GsrnNumber = SampleData.SecondGsrnNumber };
             await SendCommandAsync(consumptionCommand).ConfigureAwait(false);
 
             var specialCommand = CreateCommand()
                 with
                 {
                     ParentRelatedMeteringPoint = SampleData.SecondGsrnNumber,
+                    MeteringPointType = nameof(MeteringPointType.ExchangeReactiveEnergy),
                 };
             await SendCommandAsync(specialCommand).ConfigureAwait(false);
 
-            // TODO: Change foo to appropriate error code
-            AssertValidationError("Foo", DocumentType.CreateMeteringPointRejected);
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointAccepted, 2);
         }
 
         [Fact]
@@ -63,10 +75,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(consumptionCommand).ConfigureAwait(false);
 
             var specialCommand = CreateCommand()
-                with
-                {
-                    ParentRelatedMeteringPoint = SampleData.SecondGsrnNumber,
-                };
+                with { ParentRelatedMeteringPoint = SampleData.SecondGsrnNumber };
             await SendCommandAsync(specialCommand).ConfigureAwait(false);
 
             AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointAccepted);
@@ -77,17 +86,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         public async Task Should_accept_if_parent_metering_point_is_in_same_grid_area()
         {
             var consumptionCommand = Scenarios.CreateConsumptionMeteringPointCommand()
-                with
-                {
-                    GsrnNumber = SampleData.SecondGsrnNumber,
-                };
+                with { GsrnNumber = SampleData.SecondGsrnNumber };
             await SendCommandAsync(consumptionCommand).ConfigureAwait(false);
 
             var specialCommand = CreateCommand()
-                with
-                {
-                    ParentRelatedMeteringPoint = SampleData.SecondGsrnNumber,
-                };
+                with { ParentRelatedMeteringPoint = SampleData.SecondGsrnNumber };
             await SendCommandAsync(specialCommand).ConfigureAwait(false);
 
             AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointAccepted, 2);
@@ -98,10 +101,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         {
             var invalidReadingOccurrence = ReadingOccurrence.Yearly.Name;
             var request = CreateCommand()
-                with
-                {
-                    MeterReadingOccurrence = invalidReadingOccurrence,
-                };
+                with { MeterReadingOccurrence = invalidReadingOccurrence };
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
@@ -113,10 +113,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         {
             var invalidReadingOccurrence = ReadingOccurrence.Yearly.Name;
             var request = CreateCommand()
-                with
-                {
-                    MeterReadingOccurrence = invalidReadingOccurrence,
-                };
+                with { MeterReadingOccurrence = invalidReadingOccurrence, };
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
