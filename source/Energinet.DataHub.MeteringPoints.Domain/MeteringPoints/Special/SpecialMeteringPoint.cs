@@ -84,7 +84,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
                 capacity?.Kw,
                 assetType?.Name,
                 _unitType.Name,
-                parentRelatedMeteringPoint?.Value);
+                parentRelatedMeteringPoint?.Value,
+                meteringPointType.Name);
 
             AddDomainEvent(@event);
         }
