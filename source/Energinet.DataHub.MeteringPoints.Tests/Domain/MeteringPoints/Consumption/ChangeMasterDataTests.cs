@@ -164,6 +164,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             AssertError<ConnectionTypeIsNotAllowedRuleError>(result, true);
         }
 
+        [Fact]
+        public void Connection_type_is_installation_for_net_settlement_group_6()
+        {
+            var meteringPoint = CreateInNetSettlementGroup6();
+
+            var result = meteringPoint.CanChangeConnectionType(ConnectionType.Direct);
+
+            AssertError<ConnectionTypeDoesNotMatchNetSettlementGroupRuleError>(result, true);
+        }
+
         private static TDomainEvent? FindDomainEvent<TDomainEvent>(Entity domainEntity)
             where TDomainEvent : DomainEventBase
         {
@@ -195,6 +205,19 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                     NetSettlementGroup = NetSettlementGroup.Zero,
                     ConnectionType = null,
                     MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Physical, MeterId.Create("1")),
+                };
+            return ConsumptionMeteringPoint.Create(details);
+        }
+
+        private static ConsumptionMeteringPoint CreateInNetSettlementGroup6()
+        {
+            var details = CreateConsumptionDetails()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.Six,
+                    ConnectionType = ConnectionType.Installation,
+                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
+                    ScheduledMeterReadingDate = ScheduledMeterReadingDate.Create("0101"),
                 };
             return ConsumptionMeteringPoint.Create(details);
         }
