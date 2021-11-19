@@ -19,9 +19,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special.Rules
 {
     public class ParentMustBeMarketMeteringPointConditionalRule : IBusinessRule
     {
-        public ParentMustBeMarketMeteringPointConditionalRule(MarketMeteringPoint? parent)
+        public ParentMustBeMarketMeteringPointConditionalRule(
+            MarketMeteringPoint? parent,
+            string meteringPointType)
         {
-            IsBroken = parent == null;
+            IsBroken = parent == null && meteringPointType != MeteringPointType.ExchangeReactiveEnergy.Name;
             ValidationError = new ParentMustBeMarketMeteringPointConditionalRuleError();
         }
 

@@ -205,7 +205,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Special
 
             var validationRules = new List<IBusinessRule>
             {
-                new ParentMustBeMarketMeteringPointConditionalRule(parent),
+                new ParentMustBeMarketMeteringPointConditionalRule(parent, request.MeteringPointType),
                 new GridAreaMustBeTheSameForParentRule(parentIsInSameGridArea),
             };
 
