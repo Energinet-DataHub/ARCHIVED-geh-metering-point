@@ -214,11 +214,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
                 }).ConfigureAwait(false);
 
             AssertConfirmMessage(DocumentType.ChangeMasterDataAccepted);
+            await AssertConnectionTypeIsAsync(ConnectionType.Direct).ConfigureAwait(false);
+        }
 
-            var sql =
+        private async Task AssertConnectionTypeIsAsync(ConnectionType connectionType)
+        {
+            var assertStatement =
                 $"SELECT COUNT(*) FROM dbo.MeteringPoints mp " +
                 $"JOIN dbo.MarketMeteringPoints mk ON mp.Id = mk.Id " +
-                $" WHERE mk.ConnectionType = '{ConnectionType.Direct.Name}' AND mp.GsrnNumber = '{SampleData.GsrnNumber}'";
+                $" WHERE mk.ConnectionType = '{connectionType.Name}' AND mp.GsrnNumber = '{SampleData.GsrnNumber}'";
+
             var connectionFactory = GetService<IDbConnectionFactory>();
             var connection = connectionFactory.GetOpenConnection();
             if (connection.State == ConnectionState.Closed)
@@ -226,7 +231,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
                 connection.Open();
             }
 
-            var result = await connection.ExecuteScalarAsync<int>(sql).ConfigureAwait(false);
+            var result = await connection.ExecuteScalarAsync<int>(assertStatement).ConfigureAwait(false);
             Assert.Equal(1, result);
         }
 
