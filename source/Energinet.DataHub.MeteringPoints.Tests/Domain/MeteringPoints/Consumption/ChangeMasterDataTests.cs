@@ -251,7 +251,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                     NetSettlementGroup = NetSettlementGroup.One,
                     ConnectionType = ConnectionType.Installation,
                     MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
-                    //ScheduledMeterReadingDate = ScheduledMeterReadingDate.Create("0101"),
                 };
             return ConsumptionMeteringPoint.Create(details);
         }
