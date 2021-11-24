@@ -52,6 +52,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 });
             }
 
+            var preCheckResult = targetMeteringPoint.CanBeChanged();
+            if (preCheckResult.Success == false)
+            {
+                return new BusinessProcessResult(request.TransactionId, preCheckResult.Errors);
+            }
+
             var valueTransformer = new MasterDataValueTransformer(request, targetMeteringPoint);
             if (valueTransformer.HasError)
             {
