@@ -138,6 +138,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
 
         public void SetConnectionType(ConnectionType connectionType)
         {
+            ThrowIfClosedDown();
             var checkResult = CanChangeConnectionType(connectionType);
             if (checkResult.Success == false)
             {
