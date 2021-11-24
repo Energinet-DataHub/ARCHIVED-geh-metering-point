@@ -15,8 +15,8 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
-using Energinet.DataHub.Charges.Libraries.Models;
+using Energinet.DataHub.Charges.Clients.DefaultChargeLink;
+using Energinet.DataHub.Charges.Clients.Models;
 using Energinet.DataHub.MeteringPoints.Application.Integrations.ChargeLinks.Create;
 using MediatR;
 
@@ -24,9 +24,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDi
 {
     public class RequestDefaultChargeLinksDispatcher : IRequestHandler<RequestDefaultChargeLinks>
     {
-        private readonly DefaultChargeLinkClient _defaultChargeLinkRequestClient;
+        private readonly IDefaultChargeLinkClient _defaultChargeLinkRequestClient;
 
-        public RequestDefaultChargeLinksDispatcher(DefaultChargeLinkClient defaultChargeLinkRequestClient)
+        public RequestDefaultChargeLinksDispatcher(IDefaultChargeLinkClient defaultChargeLinkRequestClient)
         {
             _defaultChargeLinkRequestClient = defaultChargeLinkRequestClient;
         }
@@ -36,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDi
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             await _defaultChargeLinkRequestClient.CreateDefaultChargeLinksRequestAsync(
-                new CreateDefaultChargeLinksDto(request.GsrnNumber), request.CorrelationId).ConfigureAwait(false);
+                new RequestDefaultChargeLinksForMeteringPointDto(request.GsrnNumber), request.CorrelationId).ConfigureAwait(false);
             return Unit.Value;
         }
     }
