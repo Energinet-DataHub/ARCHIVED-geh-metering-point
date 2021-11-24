@@ -126,7 +126,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             AddDomainEvent(new EnergySupplierDetailsChanged(Id.Value, EnergySupplierDetails.StartOfSupply));
         }
 
-        public BusinessRulesValidationResult CanChangeConnectionType(ConnectionType? connectionType)
+        public BusinessRulesValidationResult CanChangeConnectionType(ConnectionType connectionType)
         {
             var rules = new List<IBusinessRule>()
             {

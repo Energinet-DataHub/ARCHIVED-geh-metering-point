@@ -22,5 +22,5 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
         EffectiveDate EffectiveDate,
         Domain.Addresses.Address? Address = null,
         MeteringConfiguration? MeteringConfiguration = null,
-        IChange<ConnectionType>? ConnectionType = null);
+        ConnectionType? ConnectionType = null);
 }

@@ -53,7 +53,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 ConnectionType: TryCreateConnectionType());
         }
 
-        private IChange<ConnectionType> TryCreateConnectionType()
+        private ConnectionType? TryCreateConnectionType()
         {
             if (_request.ConnectionType is null)
             {
@@ -62,10 +62,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
 
             if (_request.ConnectionType.Length == 0)
             {
-                return new RemoveValue<ConnectionType>();
+                return null;
             }
 
-            return new ChangeValue<ConnectionType>(EnumerationType.FromName<ConnectionType>(_request.ConnectionType));
+            return EnumerationType.FromName<ConnectionType>(_request.ConnectionType);
         }
 
         private MeteringConfiguration? TryCreateMeteringConfiguration()
@@ -116,29 +116,5 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
         {
             return EffectiveDate.Create(_request.EffectiveDate);
         }
-    }
-
-    public class RemoveValue<T> : IChange<T>
-    {
-        public RemoveValue()
-        {
-        }
-
-        public T? Value { get; }
-    }
-
-    public class ChangeValue<T> : IChange<T>
-    {
-        public T? Value { get; }
-
-        public ChangeValue(T value)
-        {
-            Value = value;
-        }
-    }
-
-    public interface IChange<out T>
-    {
-        T? Value { get; }
     }
 }

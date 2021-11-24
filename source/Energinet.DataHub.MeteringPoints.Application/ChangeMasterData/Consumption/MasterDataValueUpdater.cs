@@ -65,10 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 return;
             }
 
-            if (_masterDataDetails.ConnectionType is RemoveValue<ConnectionType> or ChangeValue<ConnectionType>)
-            {
-                _targetMeteringPoint.SetConnectionType(_masterDataDetails.ConnectionType.Value!);
-            }
+            _targetMeteringPoint.SetConnectionType(_masterDataDetails.ConnectionType);
         }
 
         private void CheckIfValuesAreApplicable()
@@ -80,7 +77,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
 
             if (_masterDataDetails.ConnectionType is not null)
             {
-                _errors.AddRange(_targetMeteringPoint.CanChangeConnectionType(_masterDataDetails.ConnectionType.Value).Errors);
+                _errors.AddRange(_targetMeteringPoint.CanChangeConnectionType(_masterDataDetails.ConnectionType).Errors);
             }
         }
     }
