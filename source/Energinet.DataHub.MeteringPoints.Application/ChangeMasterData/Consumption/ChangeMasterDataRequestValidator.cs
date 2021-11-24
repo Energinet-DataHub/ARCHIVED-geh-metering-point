@@ -31,6 +31,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
             RuleFor(request => request.SettlementMethod)
                 .SetValidator(new SettlementMethodValidator())
                 .Unless(request => string.IsNullOrEmpty(request.SettlementMethod));
+            RuleFor(request => request.TransactionId)
+                .SetValidator(new TransactionIdentificationRule());
         }
     }
 }
