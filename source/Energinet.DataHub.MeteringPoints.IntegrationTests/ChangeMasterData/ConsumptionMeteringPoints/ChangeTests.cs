@@ -15,6 +15,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
@@ -22,10 +23,12 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
+using ConnectionState = System.Data.ConnectionState;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.ConsumptionMeteringPoints
 {
@@ -169,7 +172,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
         [Fact]
         public async Task Can_not_set_connection_type_when_net_settlement_group_is_0()
         {
-            await CreatePhysicalConsumptionMeteringPointInNetSettlementGroup(NetSettlementGroup.Zero).ConfigureAwait(false);
+            await CreateConsumptionMeteringPointInNetSettlementGroup(NetSettlementGroup.Zero).ConfigureAwait(false);
 
             var request = TestUtils.CreateRequest()
                 with
@@ -199,6 +202,34 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
             AssertValidationError("D55");
         }
 
+        [Fact]
+        public async Task Connection_type_is_changed()
+        {
+            await CreateConsumptionMeteringPointInNetSettlementGroup(NetSettlementGroup.Two).ConfigureAwait(false);
+
+            await InvokeBusinessProcessAsync(CreateChangeRequest()
+                with
+                {
+                    ConnectionType = ConnectionType.Direct.Name,
+                }).ConfigureAwait(false);
+
+            AssertConfirmMessage(DocumentType.ChangeMasterDataAccepted);
+
+            var sql =
+                $"SELECT COUNT(*) FROM dbo.MeteringPoints mp " +
+                $"JOIN dbo.MarketMeteringPoints mk ON mp.Id = mk.Id " +
+                $" WHERE mk.ConnectionType = '{ConnectionType.Direct.Name}' AND mp.GsrnNumber = '{SampleData.GsrnNumber}'";
+            var connectionFactory = GetService<IDbConnectionFactory>();
+            var connection = connectionFactory.GetOpenConnection();
+            if (connection.State == ConnectionState.Closed)
+            {
+                connection.Open();
+            }
+
+            var result = await connection.ExecuteScalarAsync<int>(sql).ConfigureAwait(false);
+            Assert.Equal(1, result);
+        }
+
         private async Task MarkAsClosedDown()
         {
             var context = GetService<MeteringPointContext>();
@@ -226,16 +257,15 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
             await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
         }
 
-        private async Task CreatePhysicalConsumptionMeteringPointInNetSettlementGroup(NetSettlementGroup netSettlementGroup)
+        private async Task CreateConsumptionMeteringPointInNetSettlementGroup(NetSettlementGroup netSettlementGroup)
         {
             var request = Scenarios.CreateConsumptionMeteringPointCommand()
                 with
                 {
                     EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
-                    MeteringMethod = MeteringMethod.Physical.Name,
-                    MeterNumber = "1",
+                    MeteringMethod = MeteringMethod.Virtual.Name,
                     NetSettlementGroup = netSettlementGroup.Name,
-                    ConnectionType = null,
+                    ConnectionType = ConnectionType.Installation.Name,
                     ScheduledMeterReadingDate = null,
                 };
             await InvokeBusinessProcessAsync(request).ConfigureAwait(false);

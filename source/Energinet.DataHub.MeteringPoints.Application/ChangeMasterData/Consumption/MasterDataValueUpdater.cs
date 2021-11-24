@@ -67,7 +67,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
 
             if (_masterDataDetails.ConnectionType is RemoveValue<ConnectionType> or ChangeValue<ConnectionType>)
             {
-                _targetMeteringPoint.CanChangeConnectionType(_masterDataDetails.ConnectionType.Value);
+                _targetMeteringPoint.SetConnectionType(_masterDataDetails.ConnectionType.Value!);
             }
         }
 

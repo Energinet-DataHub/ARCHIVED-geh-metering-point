@@ -20,6 +20,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -174,6 +175,26 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             AssertError<ConnectionTypeDoesNotMatchNetSettlementGroupRuleError>(result, true);
         }
 
+        [Fact]
+        public void Connection_type_is_changed()
+        {
+            var meteringPoint = CreateInNetSettlementGroup1();
+
+            meteringPoint.SetConnectionType(ConnectionType.Direct);
+
+            var domainEvent = FindDomainEvent<ConnectionTypeChanged>(meteringPoint);
+
+            Assert.Equal(ConnectionType.Direct.Name, domainEvent!.ConnectionType);
+        }
+
+        [Fact]
+        public void Connection_type_cannot_be_changed()
+        {
+            var meteringPoint = CreateInNetSettlementGroup6();
+
+            Assert.Throws<MasterDataChangeException>(() => meteringPoint.SetConnectionType(ConnectionType.Direct));
+        }
+
         private static TDomainEvent? FindDomainEvent<TDomainEvent>(Entity domainEntity)
             where TDomainEvent : DomainEventBase
         {
@@ -218,6 +239,19 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                     ConnectionType = ConnectionType.Installation,
                     MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                     ScheduledMeterReadingDate = ScheduledMeterReadingDate.Create("0101"),
+                };
+            return ConsumptionMeteringPoint.Create(details);
+        }
+
+        private static ConsumptionMeteringPoint CreateInNetSettlementGroup1()
+        {
+            var details = CreateConsumptionDetails()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.One,
+                    ConnectionType = ConnectionType.Installation,
+                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
+                    //ScheduledMeterReadingDate = ScheduledMeterReadingDate.Create("0101"),
                 };
             return ConsumptionMeteringPoint.Create(details);
         }

@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
@@ -72,7 +73,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
 
         protected EnergySupplierDetails? EnergySupplierDetails { get; private set; }
 
-        protected ConnectionType? ConnectionType { get; }
+        protected ConnectionType? ConnectionType { get; private set; }
 
         protected DisconnectionType DisconnectionType { get; }
 
@@ -133,6 +134,18 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             };
 
             return new BusinessRulesValidationResult(rules);
+        }
+
+        public void SetConnectionType(ConnectionType connectionType)
+        {
+            var checkResult = CanChangeConnectionType(connectionType);
+            if (checkResult.Success == false)
+            {
+                throw new MasterDataChangeException(checkResult.Errors);
+            }
+
+            ConnectionType = connectionType;
+            AddDomainEvent(new ConnectionTypeChanged(Id.Value, ConnectionType.Name));
         }
     }
 }
