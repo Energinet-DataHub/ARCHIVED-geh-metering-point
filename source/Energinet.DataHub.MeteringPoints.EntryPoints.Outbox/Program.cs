@@ -166,13 +166,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                 messageHubStorageConnectionString,
                 new StorageConfig(messageHubStorageContainerName));
 
-            // SB for communicating with Charges
-            container.RegisterSingleton<IServiceBusRequestSenderProvider>(() =>
-                new ServiceBusRequestSenderProvider(
-                    container.GetInstance<ServiceBusClient>(),
-                    new ServiceBusRequestSenderConfiguration(Environment.GetEnvironmentVariable("CHARGES_DEFAULT_LINK_RESPONSE_QUEUE") ?? throw new InvalidOperationException())));
-
-            container.Register<IDefaultChargeLinkClient, DefaultChargeLinkClient>(Lifestyle.Scoped);
+            container.AddDefaultChargeLinkClient(
+                container.GetInstance<ServiceBusClient>,
+                new ServiceBusRequestSenderConfiguration(Environment.GetEnvironmentVariable("CHARGES_DEFAULT_LINK_RESPONSE_QUEUE") ?? throw new InvalidOperationException()));
 
             // Setup pipeline behaviors
             container.BuildMediator(
