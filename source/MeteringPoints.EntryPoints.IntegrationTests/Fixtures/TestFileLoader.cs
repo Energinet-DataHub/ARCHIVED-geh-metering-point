@@ -12,28 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Xunit;
+using System.IO;
+using System.Reflection;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
 {
-    public class DatabaseFixture : IAsyncLifetime
+    public class TestFileLoader
     {
-        public DatabaseFixture()
+        public TestFileLoader()
         {
-            DatabaseManager = new MeteringPointDatabaseManager();
+            var assemblyLocation = Assembly.GetExecutingAssembly().Location;
+            AssemblyDirectoryPath = Path.GetDirectoryName(assemblyLocation)!;
         }
 
-        public MeteringPointDatabaseManager DatabaseManager { get; }
+        public string AssemblyDirectoryPath { get; }
 
-        public Task InitializeAsync()
+        public string ReadFile(string relativeFilePath)
         {
-            return DatabaseManager.CreateDatabaseAsync();
-        }
-
-        public Task DisposeAsync()
-        {
-            return DatabaseManager.DeleteDatabaseAsync();
+            var filePath = Path.Combine(AssemblyDirectoryPath, relativeFilePath);
+            return File.ReadAllText(filePath);
         }
     }
 }
