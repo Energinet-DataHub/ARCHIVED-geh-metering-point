@@ -12,28 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
 using Xunit;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
 {
-    public class DatabaseFixture : IAsyncLifetime
+    /// <summary>
+    /// A xUnit collection fixture for ensuring tests don't run in parallel.
+    ///
+    /// xUnit documentation of collection fixtures:
+    ///  * https://xunit.net/docs/shared-context#collection-fixture
+    /// </summary>
+    [CollectionDefinition(nameof(IngestionFunctionAppCollectionFixture))]
+    public class IngestionFunctionAppCollectionFixture : ICollectionFixture<IngestionFunctionAppFixture>
     {
-        public DatabaseFixture()
-        {
-            DatabaseManager = new MeteringPointDatabaseManager();
-        }
-
-        public MeteringPointDatabaseManager DatabaseManager { get; }
-
-        public Task InitializeAsync()
-        {
-            return DatabaseManager.CreateDatabaseAsync();
-        }
-
-        public Task DisposeAsync()
-        {
-            return DatabaseManager.DeleteDatabaseAsync();
-        }
     }
 }

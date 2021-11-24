@@ -12,28 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
 using Xunit;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
-{
-    public class DatabaseFixture : IAsyncLifetime
-    {
-        public DatabaseFixture()
-        {
-            DatabaseManager = new MeteringPointDatabaseManager();
-        }
-
-        public MeteringPointDatabaseManager DatabaseManager { get; }
-
-        public Task InitializeAsync()
-        {
-            return DatabaseManager.CreateDatabaseAsync();
-        }
-
-        public Task DisposeAsync()
-        {
-            return DatabaseManager.DeleteDatabaseAsync();
-        }
-    }
-}
+// xUnit documentation:
+//  * https://xunit.net/docs/running-tests-in-parallel.html
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
