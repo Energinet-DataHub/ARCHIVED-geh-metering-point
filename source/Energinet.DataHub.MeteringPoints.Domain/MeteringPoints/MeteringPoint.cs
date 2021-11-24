@@ -97,6 +97,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public BusinessRulesValidationResult CanChangeAddress(Address address)
         {
+            var canBeChangedCheck = CanBeChanged();
+            if (canBeChangedCheck.Success == false)
+            {
+                return canBeChangedCheck;
+            }
+
             var rules = new List<IBusinessRule>()
             {
                 new StreetNameIsRequiredRule(GsrnNumber, address),
@@ -113,6 +119,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public void ChangeAddress(Address newAddress)
         {
             if (newAddress == null) throw new ArgumentNullException(nameof(newAddress));
+            ThrowIfClosedDown();
             var checkResult = CanChangeAddress(newAddress);
             if (checkResult.Success == false)
             {
@@ -143,6 +150,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             if (effectiveDate == null) throw new ArgumentNullException(nameof(effectiveDate));
             if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
+            ThrowIfClosedDown();
+
             if (MeteringConfiguration.Equals(configuration))
             {
                 return;
@@ -164,5 +173,30 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             return MeteringConfiguration;
         }
         #pragma warning restore
+
+        public BusinessRulesValidationResult CanBeChanged()
+        {
+            var errors = new List<ValidationError>();
+            if (ConnectionState.PhysicalState == PhysicalState.ClosedDown)
+            {
+                errors.Add(new ClosedDownMeteringPointCannotBeChangedError());
+            }
+
+            return new BusinessRulesValidationResult(errors);
+        }
+
+        public void CloseDown()
+        {
+            ConnectionState = ConnectionState.ClosedDown();
+        }
+
+        private void ThrowIfClosedDown()
+        {
+            var checkResult = CanBeChanged();
+            if (checkResult.Success == false)
+            {
+                throw new MeteringPointClosedForChangesException(checkResult.Errors);
+            }
+        }
     }
 }

@@ -39,5 +39,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             return new ConnectionState(PhysicalState.New, null);
         }
+
+        public static ConnectionState ClosedDown()
+        {
+            return new ConnectionState(PhysicalState.ClosedDown, null);
+        }
     }
 }
