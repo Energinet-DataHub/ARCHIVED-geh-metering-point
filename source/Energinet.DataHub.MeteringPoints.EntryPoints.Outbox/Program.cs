@@ -15,8 +15,10 @@
 using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
-using Energinet.DataHub.Charges.Libraries.Providers;
+using Energinet.DataHub.Charges.Clients.DefaultChargeLink;
+using Energinet.DataHub.Charges.Clients.Models;
+using Energinet.DataHub.Charges.Clients.Providers;
+using Energinet.DataHub.Charges.Clients.SimpleInjector;
 using Energinet.DataHub.MessageHub.Client;
 using Energinet.DataHub.MessageHub.Client.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Application.Integrations;
@@ -100,14 +102,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                 () => new ServiceBusClient(connectionString),
                 Lifestyle.Singleton);
 
-            // SB for communicating with Charges
-            container.Register(
-                () => new DefaultChargeLinkClient(
-                    new DefaultChargeLinkClientServiceBusRequestSenderProvider(
-                        container.GetInstance<ServiceBusClient>(),
-                        Environment.GetEnvironmentVariable("CHARGES_DEFAULT_LINK_RESPONSE_QUEUE") ?? throw new InvalidOperationException())),
-                Lifestyle.Singleton);
-
             container.Register(
                 () => new MeteringPointCreatedTopic(
                     Environment.GetEnvironmentVariable("METERING_POINT_CREATED_TOPIC") ??
@@ -171,6 +165,14 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
     Environment.GetEnvironmentVariable("MESSAGEHUB_DOMAIN_REPLY_QUEUE") ?? throw new InvalidOperationException("MessageHub domain reply queue not found.")),
                 messageHubStorageConnectionString,
                 new StorageConfig(messageHubStorageContainerName));
+
+            // SB for communicating with Charges
+            container.RegisterSingleton<IServiceBusRequestSenderProvider>(() =>
+                new ServiceBusRequestSenderProvider(
+                    container.GetInstance<ServiceBusClient>(),
+                    new ServiceBusRequestSenderConfiguration(Environment.GetEnvironmentVariable("CHARGES_DEFAULT_LINK_RESPONSE_QUEUE") ?? throw new InvalidOperationException())));
+
+            container.Register<IDefaultChargeLinkClient, DefaultChargeLinkClient>(Lifestyle.Scoped);
 
             // Setup pipeline behaviors
             container.BuildMediator(
