@@ -172,7 +172,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
         [Fact]
         public async Task Can_not_set_connection_type_when_net_settlement_group_is_0()
         {
-            await CreateConsumptionMeteringPointInNetSettlementGroup(NetSettlementGroup.Zero).ConfigureAwait(false);
+            await CreateConsumptionMeteringPointInNetSettlementGroupZero().ConfigureAwait(false);
 
             var request = TestUtils.CreateRequest()
                 with
@@ -266,6 +266,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
                     MeteringMethod = MeteringMethod.Virtual.Name,
                     NetSettlementGroup = netSettlementGroup.Name,
                     ConnectionType = ConnectionType.Installation.Name,
+                    ScheduledMeterReadingDate = null,
+                };
+            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+        }
+
+        private async Task CreateConsumptionMeteringPointInNetSettlementGroupZero()
+        {
+            var request = Scenarios.CreateConsumptionMeteringPointCommand()
+                with
+                {
+                    EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
+                    MeteringMethod = MeteringMethod.Virtual.Name,
+                    NetSettlementGroup = NetSettlementGroup.Zero.Name,
+                    ConnectionType = null,
                     ScheduledMeterReadingDate = null,
                 };
             await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
