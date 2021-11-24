@@ -32,6 +32,35 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
     public class ChangeMasterDataTests : TestBase
     {
         [Fact]
+        public void Cannot_change_metering_configuration_when_metering_point_is_Closed_down()
+        {
+            var meteringPoint = CreateMeteringPoint();
+            meteringPoint.CloseDown();
+
+            Assert.Throws<MeteringPointClosedForChangesException>(() => meteringPoint.ChangeMeteringConfiguration(MeteringConfiguration.Create(MeteringMethod.Calculated, MeterId.Empty()), EffectiveDate.Create(SampleData.EffectiveDate)));
+        }
+
+        [Fact]
+        public void Cannot_change_address_when_metering_point_is_closed_down()
+        {
+            var meteringPoint = CreateMeteringPoint();
+            meteringPoint.CloseDown();
+
+            Assert.Throws<MeteringPointClosedForChangesException>(() => meteringPoint.ChangeAddress(CreateAddress()));
+        }
+
+        [Fact]
+        public void Can_not_change_when_metering_point_is_closed_down()
+        {
+            var meteringPoint = CreateMeteringPoint();
+            meteringPoint.CloseDown();
+
+            var result = meteringPoint.CanBeChanged();
+
+            AssertError<ClosedDownMeteringPointCannotBeChangedError>(result, true);
+        }
+
+        [Fact]
         public void Should_return_error_when_street_name_is_blank()
         {
             var meteringPoint = CreateMeteringPoint();

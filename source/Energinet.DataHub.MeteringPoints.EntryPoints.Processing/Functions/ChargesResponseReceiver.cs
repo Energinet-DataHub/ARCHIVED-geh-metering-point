@@ -14,8 +14,8 @@
 
 using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.Charges.Libraries.DefaultChargeLink;
-using Energinet.DataHub.Charges.Libraries.Models;
+using Energinet.DataHub.Charges.Clients.DefaultChargeLink;
+using Energinet.DataHub.Charges.Clients.Models;
 using Energinet.DataHub.MeteringPoints.Application.Integrations.ChargeLinks.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using MediatR;
@@ -52,14 +52,14 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
             await Task.CompletedTask.ConfigureAwait(false);
         }
 
-        private async Task HandleFailureAsync(CreateDefaultChargeLinksFailedDto createDefaultChargeLinksFailed)
+        private async Task HandleFailureAsync(DefaultChargeLinksCreationFailedStatusDto createDefaultChargeLinksFailed)
         {
             // TODO: Implement error handling
             _logger.LogInformation($"Add default Charge Links has failed.");
             await Task.CompletedTask.ConfigureAwait(false);
         }
 
-        private async Task HandleSuccessAsync(CreateDefaultChargeLinksSucceededDto createDefaultChargeLinksSucceeded)
+        private async Task HandleSuccessAsync(DefaultChargeLinksCreatedSuccessfullyDto createDefaultChargeLinksSucceeded)
         {
             _logger.LogInformation($"Add default Charge Link request was successful.");
             CreateDefaultChargeLinksSucceeded notification = new(createDefaultChargeLinksSucceeded.MeteringPointId, createDefaultChargeLinksSucceeded.DidCreateChargeLinks, _correlationContext.Id);

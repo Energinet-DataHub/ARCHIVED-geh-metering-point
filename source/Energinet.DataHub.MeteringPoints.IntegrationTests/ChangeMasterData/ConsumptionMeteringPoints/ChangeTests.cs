@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using NodaTime.Text;
 using Xunit;
@@ -128,6 +131,30 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
             await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
 
             AssertValidationError("D31");
+        }
+
+        [Fact]
+        public async Task Can_not_change_when_metering_point_is_closed_down()
+        {
+            await CreatePhysicalConsumptionMeteringPoint().ConfigureAwait(false);
+            await MarkAsClosedDown().ConfigureAwait(false);
+
+            var request = TestUtils.CreateRequest()
+                with
+                {
+                    MeterId = "1",
+                };
+            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D16");
+        }
+
+        private async Task MarkAsClosedDown()
+        {
+            var context = GetService<MeteringPointContext>();
+            var meteringPoint = context.MeteringPoints.First(meteringPoint => meteringPoint.GsrnNumber.Equals(GsrnNumber.Create(SampleData.GsrnNumber)));
+            meteringPoint?.CloseDown();
+            await context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         private Task<BusinessProcessResult> CreateMeteringPointAsync()
