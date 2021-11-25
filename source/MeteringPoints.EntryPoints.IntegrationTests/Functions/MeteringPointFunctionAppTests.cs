@@ -18,10 +18,12 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using Energinet.DataHub.Core.TestCommon;
+using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Extensions;
 using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures;
 using FluentAssertions;
 using Xunit;
@@ -63,7 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
             // Arrange
             var xml = TestFileLoader.ReadFile("TestFiles/Cim/CreateMeteringPoint.xml")
                 .Replace("{{transactionId}}", "1", StringComparison.OrdinalIgnoreCase)
-                .Replace("{{gsrn}}", "571234567891234567", StringComparison.OrdinalIgnoreCase);
+                .Replace("{{gsrn}}", "571313140733089609", StringComparison.OrdinalIgnoreCase);
             using var request = new HttpRequestMessage(HttpMethod.Post, "api/MeteringPoint");
             request.Content = new StringContent(xml, Encoding.UTF8, "application/xml");
 
@@ -91,7 +93,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
             outboxResponse.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
             using var isMessageReceivedEvent = await Fixture.MessageHubListenerMock
-                .WhenAny()
+                .WhenMessageType("CreateMeteringPointAccepted")
                 .VerifyOnceAsync().ConfigureAwait(false);
 
             var isMessageReceived = isMessageReceivedEvent.Wait(TimeSpan.FromSeconds(5));
