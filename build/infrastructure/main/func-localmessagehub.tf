@@ -38,7 +38,7 @@ module "func_localmessagehub" {
     METERINGPOINT_QUEUE_TOPIC_NAME        = module.sbq_meteringpoint.name
     MESSAGEHUB_DATA_AVAILABLE_QUEUE       = data.azurerm_key_vault_secret.sbq_data_available_name.value
     MESSAGEHUB_DOMAIN_REPLY_QUEUE         = data.azurerm_key_vault_secret.sbq_metering_points_reply_name.value
-    REQEUST_BUNDLE_QUEUE_SUBSCRIBER_QUEUE = data.azurerm_key_vault_secret.sbq_metering_points_name.value
+    REQUEST_BUNDLE_QUEUE_SUBSCRIBER_QUEUE = data.azurerm_key_vault_secret.sbq_metering_points_name.value
     BUNDLE_DEQUEUED_SUBSCRIBER_QUEUE      = data.azurerm_key_vault_secret.sbq_metering_points_dequeue_name.value
   }
 
