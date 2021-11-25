@@ -24,7 +24,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling.WebApi
         {
             if (databaseFixture == null) throw new ArgumentNullException(nameof(databaseFixture));
 
-            Environment.SetEnvironmentVariable("CONNECTIONSTRINGS:METERINGPOINT_DB_CONNECTION_STRING", databaseFixture.GetConnectionString());
+            databaseFixture.DatabaseManager.UpgradeDatabase();
+            Environment.SetEnvironmentVariable("CONNECTIONSTRINGS:METERINGPOINT_DB_CONNECTION_STRING", databaseFixture.DatabaseManager.ConnectionString);
         }
     }
 }

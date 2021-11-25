@@ -1,57 +1,49 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
-# Copyright 2020 Energinet DataHub A/S
-#
-# Licensed under the Apache License, Version 2.0 (the "License2");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion", "Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion\Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.csproj", "{60445A7E-EB19-4AA2-88BD-663D89F8BC4E}"
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31829.152
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion", "Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion\Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.csproj", "{60445A7E-EB19-4AA2-88BD-663D89F8BC4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.Application", "Energinet.DataHub.MeteringPoints.Application\Energinet.DataHub.MeteringPoints.Application.csproj", "{84D753D3-9EB9-4271-A59B-EDF02762BDEE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.MeteringPoints.Application", "Energinet.DataHub.MeteringPoints.Application\Energinet.DataHub.MeteringPoints.Application.csproj", "{84D753D3-9EB9-4271-A59B-EDF02762BDEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.Domain", "Energinet.DataHub.MeteringPoints.Domain\Energinet.DataHub.MeteringPoints.Domain.csproj", "{D7233786-C557-4A8F-AEAC-C2CB64053F43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.MeteringPoints.Domain", "Energinet.DataHub.MeteringPoints.Domain\Energinet.DataHub.MeteringPoints.Domain.csproj", "{D7233786-C557-4A8F-AEAC-C2CB64053F43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.Infrastructure", "Energinet.DataHub.MeteringPoints.Infrastructure\Energinet.DataHub.MeteringPoints.Infrastructure.csproj", "{6525F5BF-B10A-434B-A5F5-DA72C2FF1AB1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.MeteringPoints.Infrastructure", "Energinet.DataHub.MeteringPoints.Infrastructure\Energinet.DataHub.MeteringPoints.Infrastructure.csproj", "{6525F5BF-B10A-434B-A5F5-DA72C2FF1AB1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{251113C8-9673-45D2-AFA6-2D53AF6E8756}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.IntegrationTests", "Energinet.DataHub.MeteringPoints.IntegrationTests\Energinet.DataHub.MeteringPoints.IntegrationTests.csproj", "{9E85728F-B8F0-49EE-AAC6-922AD394CFBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.MeteringPoints.IntegrationTests", "Energinet.DataHub.MeteringPoints.IntegrationTests\Energinet.DataHub.MeteringPoints.IntegrationTests.csproj", "{9E85728F-B8F0-49EE-AAC6-922AD394CFBA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.Tests", "Energinet.DataHub.MeteringPoints.Tests\Energinet.DataHub.MeteringPoints.Tests.csproj", "{18ED8314-929C-4466-980D-92546BF30E70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.MeteringPoints.Tests", "Energinet.DataHub.MeteringPoints.Tests\Energinet.DataHub.MeteringPoints.Tests.csproj", "{18ED8314-929C-4466-980D-92546BF30E70}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.EntryPoints.Processing", "Energinet.DataHub.MeteringPoints.EntryPoints.Processing\Energinet.DataHub.MeteringPoints.EntryPoints.Processing.csproj", "{FC5B53CC-AFFD-4B5E-9CF5-4E23510A5791}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.MeteringPoints.EntryPoints.Processing", "Energinet.DataHub.MeteringPoints.EntryPoints.Processing\Energinet.DataHub.MeteringPoints.EntryPoints.Processing.csproj", "{FC5B53CC-AFFD-4B5E-9CF5-4E23510A5791}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.EntryPoints.Outbox", "Energinet.DataHub.MeteringPoints.EntryPoints.Outbox\Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.csproj", "{5FF039DF-D923-4C6D-84CB-AA615B62532E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.MeteringPoints.EntryPoints.Outbox", "Energinet.DataHub.MeteringPoints.EntryPoints.Outbox\Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.csproj", "{5FF039DF-D923-4C6D-84CB-AA615B62532E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EntryPoints", "EntryPoints", "{698CCD74-174C-493E-BDC4-69A0E3EA3F82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.EntryPoints.Common", "Energinet.DataHub.MeteringPoints.EntryPoints.Common\Energinet.DataHub.MeteringPoints.EntryPoints.Common.csproj", "{4C501166-76F4-4A6F-A4DF-07CC4B41BE2E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.MeteringPoints.EntryPoints.Common", "Energinet.DataHub.MeteringPoints.EntryPoints.Common\Energinet.DataHub.MeteringPoints.EntryPoints.Common.csproj", "{4C501166-76F4-4A6F-A4DF-07CC4B41BE2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp", "Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp\Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.csproj", "{9028F8A2-D06C-42AC-9085-EC51061D57AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp", "Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp\Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.csproj", "{9028F8A2-D06C-42AC-9085-EC51061D57AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.Benchmarks", "Energinet.DataHub.MeteringPoints.Benchmarks\Energinet.DataHub.MeteringPoints.Benchmarks.csproj", "{59EA4350-50A9-4091-A7DB-281E9498A286}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.MeteringPoints.Benchmarks", "Energinet.DataHub.MeteringPoints.Benchmarks\Energinet.DataHub.MeteringPoints.Benchmarks.csproj", "{59EA4350-50A9-4091-A7DB-281E9498A286}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher", "Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher\Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher.csproj", "{00AD3FF1-2571-4D5C-9BFC-1BC927AE7911}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher", "Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher\Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher.csproj", "{00AD3FF1-2571-4D5C-9BFC-1BC927AE7911}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub", "Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub\Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub.csproj", "{C4CCE071-5E60-4558-B6C0-937A0F97A15D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub", "Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub\Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub.csproj", "{C4CCE071-5E60-4558-B6C0-937A0F97A15D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.EntryPoints.WebApi", "Energinet.DataHub.MeteringPoints.EntryPoints.WebApi\Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.csproj", "{1E8BC6B4-C2D2-4343-8C9A-474452FB0BC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.MeteringPoints.EntryPoints.WebApi", "Energinet.DataHub.MeteringPoints.EntryPoints.WebApi\Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.csproj", "{1E8BC6B4-C2D2-4343-8C9A-474452FB0BC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.Messaging", "Energinet.DataHub.MeteringPoints.Messaging\Energinet.DataHub.MeteringPoints.Messaging.csproj", "{4F54002A-F205-4343-B9D3-4030A0574274}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.MeteringPoints.Messaging", "Energinet.DataHub.MeteringPoints.Messaging\Energinet.DataHub.MeteringPoints.Messaging.csproj", "{4F54002A-F205-4343-B9D3-4030A0574274}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.Client", "Energinet.DataHub.MeteringPoints.Client\Energinet.DataHub.MeteringPoints.Client.csproj", "{39302585-1B26-4101-AFBA-AD9D83E40DCD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.MeteringPoints.Client", "Energinet.DataHub.MeteringPoints.Client\Energinet.DataHub.MeteringPoints.Client.csproj", "{39302585-1B26-4101-AFBA-AD9D83E40DCD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{6ADA8295-FA91-4DBC-96C6-B1028AED6032}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.Client.Abstractions", "Energinet.DataHub.MeteringPoints.Client.Abstractions\Energinet.DataHub.MeteringPoints.Client.Abstractions.csproj", "{C83F8BF9-8CFE-4743-BBDC-4CD7D20614F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.MeteringPoints.Client.Abstractions", "Energinet.DataHub.MeteringPoints.Client.Abstractions\Energinet.DataHub.MeteringPoints.Client.Abstractions.csproj", "{C83F8BF9-8CFE-4743-BBDC-4CD7D20614F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeteringPoints.EntryPoints.IntegrationTests", "MeteringPoints.EntryPoints.IntegrationTests\MeteringPoints.EntryPoints.IntegrationTests.csproj", "{9949E60E-7592-4994-8823-D392949D8D63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -127,19 +119,30 @@ Global
 		{C83F8BF9-8CFE-4743-BBDC-4CD7D20614F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C83F8BF9-8CFE-4743-BBDC-4CD7D20614F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C83F8BF9-8CFE-4743-BBDC-4CD7D20614F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9949E60E-7592-4994-8823-D392949D8D63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9949E60E-7592-4994-8823-D392949D8D63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9949E60E-7592-4994-8823-D392949D8D63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9949E60E-7592-4994-8823-D392949D8D63}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{60445A7E-EB19-4AA2-88BD-663D89F8BC4E} = {698CCD74-174C-493E-BDC4-69A0E3EA3F82}
 		{9E85728F-B8F0-49EE-AAC6-922AD394CFBA} = {251113C8-9673-45D2-AFA6-2D53AF6E8756}
 		{18ED8314-929C-4466-980D-92546BF30E70} = {251113C8-9673-45D2-AFA6-2D53AF6E8756}
-		{60445A7E-EB19-4AA2-88BD-663D89F8BC4E} = {698CCD74-174C-493E-BDC4-69A0E3EA3F82}
-		{5FF039DF-D923-4C6D-84CB-AA615B62532E} = {698CCD74-174C-493E-BDC4-69A0E3EA3F82}
 		{FC5B53CC-AFFD-4B5E-9CF5-4E23510A5791} = {698CCD74-174C-493E-BDC4-69A0E3EA3F82}
+		{5FF039DF-D923-4C6D-84CB-AA615B62532E} = {698CCD74-174C-493E-BDC4-69A0E3EA3F82}
 		{4C501166-76F4-4A6F-A4DF-07CC4B41BE2E} = {698CCD74-174C-493E-BDC4-69A0E3EA3F82}
 		{59EA4350-50A9-4091-A7DB-281E9498A286} = {251113C8-9673-45D2-AFA6-2D53AF6E8756}
 		{00AD3FF1-2571-4D5C-9BFC-1BC927AE7911} = {698CCD74-174C-493E-BDC4-69A0E3EA3F82}
-		{1E8BC6B4-C2D2-4343-8C9A-474452FB0BC2} = {698CCD74-174C-493E-BDC4-69A0E3EA3F82}
 		{C4CCE071-5E60-4558-B6C0-937A0F97A15D} = {698CCD74-174C-493E-BDC4-69A0E3EA3F82}
+		{1E8BC6B4-C2D2-4343-8C9A-474452FB0BC2} = {698CCD74-174C-493E-BDC4-69A0E3EA3F82}
 		{39302585-1B26-4101-AFBA-AD9D83E40DCD} = {6ADA8295-FA91-4DBC-96C6-B1028AED6032}
 		{C83F8BF9-8CFE-4743-BBDC-4CD7D20614F4} = {6ADA8295-FA91-4DBC-96C6-B1028AED6032}
+		{9949E60E-7592-4994-8823-D392949D8D63} = {251113C8-9673-45D2-AFA6-2D53AF6E8756}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0A38FA8A-EE54-4B3C-8EAD-26B2FD4A82A7}
 	EndGlobalSection
 EndGlobal

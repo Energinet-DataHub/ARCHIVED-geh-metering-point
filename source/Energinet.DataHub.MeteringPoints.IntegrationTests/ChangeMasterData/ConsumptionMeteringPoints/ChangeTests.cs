@@ -56,6 +56,18 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
         }
 
         [Fact]
+        public async Task Transaction_id_is_required()
+        {
+            await InvokeBusinessProcessAsync(TestUtils.CreateRequest()
+                with
+                {
+                    TransactionId = string.Empty,
+                }).ConfigureAwait(false);
+
+            AssertValidationError("E10");
+        }
+
+        [Fact]
         public async Task Metering_point_must_exist()
         {
             await InvokeBusinessProcessAsync(TestUtils.CreateRequest()).ConfigureAwait(false);
