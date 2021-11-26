@@ -32,13 +32,15 @@ limitations under the License.
     <cim:MarketEvaluationPoint>
       <cim:mRID codingScheme="NBA">{{gsrn}}</cim:mRID>
       <cim:meteringPointResponsible_MarketParticipant.mRID codingScheme="NDE">a</cim:meteringPointResponsible_MarketParticipant.mRID>
-      <cim:type>E20</cim:type>
+      <cim:type>E17</cim:type>
       <cim:settlementMethod>E02</cim:settlementMethod>
       <cim:meteringMethod>D02</cim:meteringMethod>
       <cim:connectionState>D03</cim:connectionState>
       <cim:readCycle>PT1H</cim:readCycle>
+      <cim:netSettlementGroup>6</cim:netSettlementGroup>
       <cim:nextReadingDate>0101</cim:nextReadingDate>
       <cim:meteringGridArea_Domain.mRID codingScheme="NIE">870</cim:meteringGridArea_Domain.mRID>
+      <cim:linked_MarketEvaluationPoint.mRID codingScheme="NAZ">575774240560385464</cim:linked_MarketEvaluationPoint.mRID>
       <cim:physicalConnectionCapacity unit="MAW">1000</cim:physicalConnectionCapacity>
       <cim:mPConnectionType>D02</cim:mPConnectionType>
       <cim:disconnectionMethod>D01</cim:disconnectionMethod>
@@ -88,8 +90,6 @@ limitations under the License.
       <cim:Child_MarketEvaluationPoint>
         <cim:mRID codingScheme="NCS">a</cim:mRID>
       </cim:Child_MarketEvaluationPoint>
-      <cim:inMeteringGridArea_Domain.mRID>871</cim:inMeteringGridArea_Domain.mRID>
-      <cim:outMeteringGridArea_Domain.mRID>872</cim:outMeteringGridArea_Domain.mRID>
     </cim:MarketEvaluationPoint>
   </cim:MktActivityRecord>
 </cim:AccountingPointcharacteristics_MarketDocument>
