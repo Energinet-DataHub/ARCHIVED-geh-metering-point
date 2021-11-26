@@ -81,7 +81,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
             var queueSubscriberExecuted = await Awaiter
                 .TryWaitUntilConditionAsync(
                     () => Fixture.ProcessingHostManager.CheckIfFunctionWasExecuted("Functions.QueueSubscriber"),
-                    TimeSpan.FromSeconds(5))
+                    TimeSpan.FromSeconds(10))
                 .ConfigureAwait(false);
 
             queueSubscriberExecuted.Should().BeTrue();
@@ -96,7 +96,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
                 .WhenMessageType("CreateMeteringPointAccepted")
                 .VerifyOnceAsync().ConfigureAwait(false);
 
-            var isMessageReceived = isMessageReceivedEvent.Wait(TimeSpan.FromSeconds(5));
+            var isMessageReceived = isMessageReceivedEvent.Wait(TimeSpan.FromSeconds(10));
             isMessageReceived.Should().BeTrue();
         }
     }
