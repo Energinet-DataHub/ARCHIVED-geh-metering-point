@@ -79,7 +79,6 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Install SQL LocalDB 2019
-        if: ${{ inputs.USE_SQLLOCALDB_2019 == true }}
         shell: pwsh
         run: |
           Write-Host "Downloading..."
