@@ -14,9 +14,10 @@
 
 namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums
 {
-    public enum MPConnectionTypeCode
+    public enum SettlementMethod
     {
-        D01 = 0, // Direct
-        D02 = 1, // Installation
+        D01 = 0, // Flex
+        E01 = 1, // Profiled
+        E02 = 2, // NonProfiled
     }
 }

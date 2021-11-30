@@ -14,10 +14,11 @@
 
 namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums
 {
-    public enum MeteringPointSubTypeCode
+    public enum ConnectionState
     {
-        D01 = 0, // MeteringMethod.Physical,
-        D02 = 1, // MeteringMethod.Virtual,
-        D03 = 2, // MeteringMethod.Calculated,
+        D02 = 3, // ClosedDown,
+        D03 = 0, // New,
+        E22 = 1, // Connected,
+        E23 = 2, // Disconnected,
     }
 }

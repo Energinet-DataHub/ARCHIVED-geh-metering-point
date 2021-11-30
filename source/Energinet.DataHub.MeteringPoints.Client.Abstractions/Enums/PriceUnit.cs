@@ -14,11 +14,17 @@
 
 namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums
 {
-    public enum PhysicalStatusCode
+    public enum PriceUnit
     {
-        D02 = 3, // ClosedDown,
-        D03 = 0, // New,
-        E22 = 1, // Connected,
-        E23 = 2, // Disconnected,
+        K3 = 1, // KVArh,
+        KWH = 2, // KWh,
+        KWT = 3, // KW,
+        MAW = 4, // MW,
+        MWH = 5, // MWh,
+        TNE = 6, // Tonne,
+        Z03 = 7, // MVAr,
+        AMP = 0, // Ampere,
+        H87 = 9, // STK,
+        Z14 = 8, // DanishTariffCode,
     }
 }

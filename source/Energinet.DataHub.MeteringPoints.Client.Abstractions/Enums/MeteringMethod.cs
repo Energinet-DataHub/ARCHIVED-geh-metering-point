@@ -14,23 +14,10 @@
 
 namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums
 {
-    public enum AssetTypeCode
+    public enum MeteringMethod
     {
-        D01 = 0, // SteamTurbineWithBackPressureMode
-        D02 = 1, // GasTurbine
-        D03 = 2, // CombinedCycle
-        D04 = 3, // CombustionEngineGas
-        D05 = 4, // SteamTurbineWithCondensation
-        D06 = 5, // Boiler
-        D07 = 6, // StirlingEngine
-        D10 = 7, // FuelCells
-        D11 = 8, // PhotovoltaicCells
-        D12 = 9, // WindTurbines
-        D13 = 10, // HydroelectricPower
-        D14 = 11, // WavePower
-        D17 = 12, // DispatchableWindTurbines
-        D19 = 13, // DieselCombustionEngine
-        D20 = 14, // BioCombustionEngine
-        D99 = 100, // UnknownTechnology
+        D01 = 0, // MeteringMethod.Physical,
+        D02 = 1, // MeteringMethod.Virtual,
+        D03 = 2, // MeteringMethod.Calculated,
     }
 }

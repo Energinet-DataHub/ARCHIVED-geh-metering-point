@@ -17,7 +17,7 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Queries
 {
-    public class MeteringPointByGsrnQuery : IRequest<MeteringPointDto?>
+    public class MeteringPointByGsrnQuery : IRequest<MeteringPointCimDto?>
     {
         public MeteringPointByGsrnQuery(string gsrnNumber)
         {

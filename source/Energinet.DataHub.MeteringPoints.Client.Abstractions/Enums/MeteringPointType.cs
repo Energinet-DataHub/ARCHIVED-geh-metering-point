@@ -14,7 +14,7 @@
 
 namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums
 {
-    public enum MeteringPointTypeCode
+    public enum MeteringPointType
     {
         D01 = 5, // VEProduction),
         D02 = 4, // Analysis),
