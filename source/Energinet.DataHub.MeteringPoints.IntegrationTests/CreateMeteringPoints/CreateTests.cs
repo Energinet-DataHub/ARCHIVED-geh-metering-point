@@ -19,8 +19,6 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Production;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
 using Xunit.Categories;
@@ -31,13 +29,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
     public class CreateTests
         : TestHost
     {
-        private readonly IMeteringPointRepository _meteringPointRepository;
-
         public CreateTests(DatabaseFixture databaseFixture)
-            : base(databaseFixture)
-        {
-            _meteringPointRepository = GetService<IMeteringPointRepository>();
-        }
+            : base(databaseFixture) { }
 
         [Fact]
         public async Task Should_reject_when_grid_area_doesnt_exist()
