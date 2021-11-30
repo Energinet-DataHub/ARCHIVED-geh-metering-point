@@ -56,6 +56,11 @@ jobs:
       contents: read
 
     steps:
+      - name: Check each NuGet package version does not exists (not looking at prereleases)
+        uses: Energinet-DataHub/.github/.github/actions/nuget-assert-release-version@xtban/package-actions
+        with:
+          NUPKG_RECURSE_PATH: 'source'
+
       - name: Checkout repository
         uses: actions/checkout@master
 
@@ -111,11 +116,6 @@ jobs:
         run: dotnet pack ${{ env.PROJECT_PATH }} --configuration ${{ env.BUILD_CONFIGURATION }} --include-symbols -p:SymbolPackageFormat=snupkg -p:RepositoryCommit=${{ github.sha }} ${{ steps.get_version_suffix.outputs.version_suffix_property }}
         env:
           PROJECT_PATH: 'source/Energinet.DataHub.MeteringPoints.Client.Abstractions/Energinet.DataHub.MeteringPoints.Client.Abstractions.csproj'
-
-      - name: Check each NuGet package version does not exists (not looking at prereleases)
-        uses: Energinet-DataHub/.github/.github/actions/nuget-assert-release-version@xtban/package-actions
-        with:
-          NUPKG_RECURSE_PATH: 'source'
 
       - name: Push to NuGet.org
         if: ${{ env.PUSH_PACKAGES == 'true' }}
