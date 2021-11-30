@@ -85,8 +85,11 @@ jobs:
         run: dotnet build ${{ env.SOLUTION_FILE_PATH }} --no-restore --configuration ${{ env.BUILD_CONFIGURATION }}
 
       - name: Run tests
-        run: dotnet test ${{ env.SOLUTION_FILE_PATH }} --no-build --configuration ${{ env.BUILD_CONFIGURATION }} --verbosity normal
-
+        run: |
+          az login --service-principal --username "${{ secrets.AZURE_SPN_ID }}" --password "${{ secrets.AZURE_SPN_SECRET }}" --tenant "${{ secrets.AZURE_TENANT_ID }}"
+          az account set --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+          dotnet test ${{ env.SOLUTION_FILE_PATH }} --no-build --configuration ${{ env.BUILD_CONFIGURATION }} --verbosity normal
+      
       - name: Get version suffix property value
         uses: Energinet-DataHub/.github/.github/actions/get-version-suffix@xtban/package-actions
         id: get_version_suffix
