@@ -14,7 +14,7 @@
 
 using System;
 
-namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
+namespace Energinet.DataHub.MeteringPoints.Application.Queries
 {
     public record MeteringPointDto(
         Guid MeteringPointId,
@@ -23,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
         string PostCode,
         string CityName,
         string CountryCode,
-        string ConnectionState,
+        string PhysicalState,
         string MeteringPointSubType,
         string ReadingOccurrence,
         string MeteringPointType,

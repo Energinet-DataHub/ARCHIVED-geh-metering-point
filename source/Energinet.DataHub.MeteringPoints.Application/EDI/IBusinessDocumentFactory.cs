@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
-using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
+using Energinet.DataHub.MeteringPoints.Application.Queries;
 
 namespace Energinet.DataHub.MeteringPoints.Application.EDI
 {

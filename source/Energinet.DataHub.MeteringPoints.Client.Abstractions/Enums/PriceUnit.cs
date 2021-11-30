@@ -12,18 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
-using MediatR;
-
-namespace Energinet.DataHub.MeteringPoints.Application.Queries
+namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums
 {
-    public class MeteringPointByGsrnQuery : IRequest<MeteringPointCimDto?>
+    public enum PriceUnit
     {
-        public MeteringPointByGsrnQuery(string gsrnNumber)
-        {
-            GsrnNumber = gsrnNumber;
-        }
-
-        public string GsrnNumber { get; }
+        K3 = 1, // KVArh,
+        KWH = 2, // KWh,
+        KWT = 3, // KW,
+        MAW = 4, // MW,
+        MWH = 5, // MWh,
+        TNE = 6, // Tonne,
+        Z03 = 7, // MVAr,
+        AMP = 0, // Ampere,
+        H87 = 9, // STK,
+        Z14 = 8, // DanishTariffCode,
     }
 }

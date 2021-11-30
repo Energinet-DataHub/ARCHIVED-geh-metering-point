@@ -12,18 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
-using MediatR;
-
-namespace Energinet.DataHub.MeteringPoints.Application.Queries
+namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums
 {
-    public class MeteringPointByGsrnQuery : IRequest<MeteringPointCimDto?>
+    public enum NetSettlementGroup
     {
-        public MeteringPointByGsrnQuery(string gsrnNumber)
-        {
-            GsrnNumber = gsrnNumber;
-        }
-
-        public string GsrnNumber { get; }
+        Zero = 0,
+        One = 1,
+        Two = 2,
+        Three = 3,
+        Six = 6,
+        NinetyNine = 99,
     }
 }
