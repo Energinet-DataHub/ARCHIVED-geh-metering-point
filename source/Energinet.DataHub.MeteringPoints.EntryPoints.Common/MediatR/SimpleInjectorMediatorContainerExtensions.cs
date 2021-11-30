@@ -42,6 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR
             // Add built-in pipeline behaviors
             var builtInBehaviors = new[]
             {
+                typeof(RequestHandlerTelemetryBehavior<,>),
                 typeof(RequestExceptionProcessorBehavior<,>),
                 typeof(RequestExceptionActionProcessorBehavior<,>),
                 typeof(RequestPreProcessorBehavior<,>),
@@ -66,12 +67,15 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR
             container.Register(typeof(IRequestHandler<,>), assemblies);
 
             RegisterHandlers(container, typeof(INotificationHandler<>), assemblies);
+            container.RegisterDecorator(typeof(INotificationHandler<>), typeof(NotificationHandlerTelemetryDecorator<>));
+
             RegisterHandlers(container, typeof(IRequestExceptionAction<,>), assemblies);
             RegisterHandlers(container, typeof(IRequestExceptionHandler<,,>), assemblies);
 
             // Add built-in pipeline behaviors
             var builtInBehaviors = new[]
             {
+                typeof(RequestHandlerTelemetryBehavior<,>),
                 typeof(RequestExceptionProcessorBehavior<,>),
                 typeof(RequestExceptionActionProcessorBehavior<,>),
                 typeof(RequestPreProcessorBehavior<,>),
@@ -79,7 +83,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR
             };
 
             // Register built both-in and custom pipeline
-            container.Collection.Register(typeof(IPipelineBehavior<,>), pipelineBehaviors.Union(builtInBehaviors));
+            container.Collection.Register(typeof(IPipelineBehavior<,>), builtInBehaviors.Union(pipelineBehaviors));
 
             container.Collection.Register(typeof(IRequestPreProcessor<>), new[] { typeof(EmptyRequestPreProcessor<>) });
             container.Collection.Register(typeof(IRequestPostProcessor<,>), new[] { typeof(EmptyRequestPostProcessor<,>) });
