@@ -1,0 +1,60 @@
+# Copyright 2020 Energinet DataHub A/S
+#
+# Licensed under the Apache License, Version 2.0 (the "License2");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Publish Metering Point Client bundle
+
+on:
+  # Build, test, pack and publish release packages
+  # Only executed if Client or Client.Abstraction or this file itself has changed; not if solution file, documentation or tests has changed
+  push:
+    branches:
+      - main
+    paths:
+      - source/Energinet.DataHub.MeteringPoints.Client/**
+      - source/Energinet.DataHub.MeteringPoints.Client.Abstractions/**
+      - .github/workflows/client-publish.yml
+  # Build, test, pack
+  # Executed if Client or Client.Abstraction folder or this file itself has changed; including if documentation or tests has changed
+  pull_request:
+    branches:
+      - main
+    paths:
+      - source/Energinet.DataHub.MeteringPoints.Client/**
+      - source/Energinet.DataHub.MeteringPoints.Client.Abstractions/**
+      - .github/workflows/client-publish.yml
+      - docs/metering-point-client/**
+      - source/Energinet.DataHub.MeteringPoints.IntegrationTests/Client/**
+  # Build, test, pack and publish prerelease packages
+  # Executed if manually triggered
+  workflow_dispatch: {}
+
+env:
+  SOLUTION_FILE_PATH: source/Energinet.DataHub.MeteringPoints.sln
+  BUILD_CONFIGURATION: Release
+  # Conditions
+  PUSH_PACKAGES: ${{ github.event_name != 'pull_request' }}
+  # Tool versions
+  DOTNET_VERSION: '5.0.202'
+
+jobs:
+  build_and_publish:
+    runs-on: ubuntu-latest
+    name: Publish bundle to NuGet.org
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@master
