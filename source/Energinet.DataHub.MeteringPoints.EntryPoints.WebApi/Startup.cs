@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Text.Json.Serialization;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
@@ -53,6 +54,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using SimpleInjector;
+using JsonSerializer = Energinet.DataHub.MeteringPoints.Infrastructure.Serialization.JsonSerializer;
 using MasterDataDocument = Energinet.DataHub.MeteringPoints.Application.MarketDocuments.MasterDataDocument;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
@@ -76,7 +78,12 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Energinet.DataHub.MeteringPoints.EntryPoints.WebApi", Version = "v1" });
+                config.SupportNonNullableReferenceTypes();
+                config.SwaggerDoc("v1", new OpenApiInfo
+                    {
+                        Title = "Energinet.DataHub.MeteringPoints.EntryPoints.WebApi",
+                        Version = "v1",
+                    });
             });
 
             var connectionString = Configuration.GetConnectionString("METERINGPOINT_DB_CONNECTION_STRING") ?? throw new InvalidOperationException("Metering point db connection string not found.");
@@ -127,19 +134,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
 
             // Setup pipeline behaviors
             _container.BuildMediator(
-                new[]
-                {
-                    typeof(CreateGridAreaHandler).Assembly,
-                },
-                new[]
-                {
-                    typeof(UnitOfWorkBehavior<,>),
-                    typeof(InputValidationBehavior<,>),
-                    typeof(InternalCommandHandlingBehaviour<,>),
-                    typeof(BusinessProcessResultBehavior<,>),
-                });
+                new[] { typeof(CreateGridAreaHandler).Assembly, },
+                new[] { typeof(UnitOfWorkBehavior<,>), typeof(InputValidationBehavior<,>), typeof(InternalCommandHandlingBehaviour<,>), typeof(BusinessProcessResultBehavior<,>), });
 
-            _container.Register<IRequestHandler<MeteringPointByGsrnQuery, MeteringPointDto?>, MeteringPointByGsrnQueryHandler>();
+            _container.Register<IRequestHandler<MeteringPointByGsrnQuery, MeteringPointCimDto?>, MeteringPointByGsrnQueryHandler>();
 
             _container.SendProtobuf<MeteringPointEnvelope>();
         }
