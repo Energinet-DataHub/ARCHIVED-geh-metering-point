@@ -26,7 +26,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
 {
     public class MeteringPointHttpTrigger
     {

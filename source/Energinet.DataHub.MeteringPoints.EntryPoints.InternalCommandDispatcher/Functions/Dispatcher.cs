@@ -19,7 +19,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher.Functions
 {
     public class Dispatcher
     {
