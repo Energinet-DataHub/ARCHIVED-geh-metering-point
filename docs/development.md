@@ -22,7 +22,6 @@ Build and execute the command line tool `ApplyDBMigrationsApp` with connection s
 
 The connection string can be found in the configuration of the metering point functions in the Azure portal.
 
-
 ## Test by executing integration tests
 
 Run integration tests as [documented here](https://github.com/Energinet-DataHub/green-force-art/blob/main/wiki/datahub/environments/integrationtest.md)
