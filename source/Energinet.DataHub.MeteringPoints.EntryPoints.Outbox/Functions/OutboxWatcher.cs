@@ -18,7 +18,7 @@ using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Functions
 {
     internal class OutboxWatcher
     {
