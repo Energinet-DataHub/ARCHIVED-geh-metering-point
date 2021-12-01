@@ -52,6 +52,14 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
             await Task.CompletedTask.ConfigureAwait(false);
         }
 
+        private static string CreateSuccessMessage(DefaultChargeLinksCreatedSuccessfullyDto createDefaultChargeLinksSucceeded)
+        {
+            const string message = "Add default Charge Link request was successful.";
+            const string noChargeLinksWereCreated = " No charge links were created";
+
+            return createDefaultChargeLinksSucceeded.DidCreateChargeLinks ? message : $"{message}{noChargeLinksWereCreated}";
+        }
+
         private async Task HandleFailureAsync(DefaultChargeLinksCreationFailedStatusDto createDefaultChargeLinksFailed)
         {
             // TODO: Implement error handling
@@ -61,8 +69,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
 
         private async Task HandleSuccessAsync(DefaultChargeLinksCreatedSuccessfullyDto createDefaultChargeLinksSucceeded)
         {
-            var message = $"Add default Charge Link request was successful.";
-            _logger.LogInformation(createDefaultChargeLinksSucceeded.DidCreateChargeLinks ? message : $"{message} No charge links were created");
+            _logger.LogInformation(CreateSuccessMessage(createDefaultChargeLinksSucceeded));
             CreateDefaultChargeLinksSucceeded notification = new(createDefaultChargeLinksSucceeded.MeteringPointId, createDefaultChargeLinksSucceeded.DidCreateChargeLinks, _correlationContext.Id);
             await _mediator.Publish(notification).ConfigureAwait(false);
             await Task.CompletedTask.ConfigureAwait(false);
