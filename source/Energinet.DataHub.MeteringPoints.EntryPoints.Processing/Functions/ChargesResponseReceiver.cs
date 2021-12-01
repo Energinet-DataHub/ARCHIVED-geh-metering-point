@@ -61,7 +61,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
 
         private async Task HandleSuccessAsync(DefaultChargeLinksCreatedSuccessfullyDto createDefaultChargeLinksSucceeded)
         {
-            _logger.LogInformation($"Add default Charge Link request was successful.");
+            var message = $"Add default Charge Link request was successful.";
+            _logger.LogInformation(createDefaultChargeLinksSucceeded.DidCreateChargeLinks ? message : $"{message} No charge links were created");
             CreateDefaultChargeLinksSucceeded notification = new(createDefaultChargeLinksSucceeded.MeteringPointId, createDefaultChargeLinksSucceeded.DidCreateChargeLinks, _correlationContext.Id);
             await _mediator.Publish(notification).ConfigureAwait(false);
             await Task.CompletedTask.ConfigureAwait(false);
