@@ -12,53 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.Helpers;
-using Squadron;
+using Xunit;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
 {
-    public class DatabaseFixture : SqlServerResource
+    public class DatabaseFixture : IAsyncLifetime
     {
-        private const string LocalConnectionStringName = "IntegrationTests_ConnectionString";
-
-        private static bool UseLocalDatabase =>
-            Environment.GetEnvironmentVariable(LocalConnectionStringName) != null;
-
-        private static string LocalConnectionString =>
-            Environment.GetEnvironmentVariable(LocalConnectionStringName)
-            ?? throw new InvalidOperationException($"{LocalConnectionStringName} config not set");
-
-        public override Task InitializeAsync()
+        public DatabaseFixture()
         {
-            // If we're using a local database, skip the squadron initialization.
-            return UseLocalDatabase
-                ? Task.CompletedTask
-                : base.InitializeAsync();
+            DatabaseManager = new MeteringPointDatabaseManager();
         }
 
-        public string GetConnectionString()
+        public MeteringPointDatabaseManager DatabaseManager { get; }
+
+        public Task InitializeAsync()
         {
-            var connectionString = CreateConnectionString();
-            UpdateDatabase(connectionString);
-            return connectionString;
+            return DatabaseManager.CreateDatabaseAsync();
         }
 
-        private static void UpdateDatabase(string connectionString)
+        public Task DisposeAsync()
         {
-            var result = DefaultUpgrader.Upgrade(connectionString);
-            if (!result.Successful)
-            {
-                throw new InvalidOperationException("Couldn't start test SQL server");
-            }
-        }
-
-        private string CreateConnectionString()
-        {
-            return UseLocalDatabase
-                ? LocalConnectionString
-                : CreateConnectionString(UniqueNameGenerator.Create("db"));
+            return DatabaseManager.DeleteDatabaseAsync();
         }
     }
 }

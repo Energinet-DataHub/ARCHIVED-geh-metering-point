@@ -25,6 +25,10 @@ resource "azurerm_app_service" "webapi" {
     }
   }
 
+  app_settings = {
+    "APPINSIGHTS_INSTRUMENTATIONKEY" = "${data.azurerm_key_vault_secret.appi_instrumentation_key.value}"
+  }
+
   connection_string {
     name  = "METERINGPOINT_DB_CONNECTION_STRING"
     type  = "SQLServer"

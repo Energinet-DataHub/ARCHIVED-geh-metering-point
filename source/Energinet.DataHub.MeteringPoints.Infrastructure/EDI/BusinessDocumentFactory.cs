@@ -16,7 +16,7 @@ using System;
 using System.Globalization;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
-using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
+using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Domain.Extensions;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
@@ -88,7 +88,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                         Type: meteringPoint.MeteringPointType,
                         SettlementMethod: meteringPoint.SettlementMethod,
                         MeteringMethod: meteringPoint.MeteringPointSubType,
-                        ConnectionState: meteringPoint.ConnectionState,
+                        ConnectionState: meteringPoint.PhysicalState,
                         ReadCycle: meteringPoint.ReadingOccurrence,
                         NetSettlementGroup: meteringPoint.NetSettlementGroup,
                         NextReadingDate: "N/A", // TODO: Only for netsettlement group 6, format: "MMdd"

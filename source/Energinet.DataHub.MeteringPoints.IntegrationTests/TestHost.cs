@@ -75,8 +75,12 @@ using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentAssertions;
 using FluentValidation;
 using MediatR;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Xunit;
@@ -93,20 +97,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 #pragma warning disable CA1724 // TODO: TestHost is reserved. Maybe refactor to base EntryPoint?
     public class TestHost : IDisposable
     {
+        private readonly JsonSerializer _jsonSerializer = new();
         private readonly Scope _scope;
         private readonly Container _container;
         private readonly IServiceProvider _serviceProvider;
         private bool _disposed;
-        private JsonSerializer _jsonSerializer = new();
 
         protected TestHost(DatabaseFixture databaseFixture)
         {
-            if (databaseFixture == null) throw new ArgumentNullException(nameof(databaseFixture));
+            if (databaseFixture == null)
+                throw new ArgumentNullException(nameof(databaseFixture));
+            databaseFixture.DatabaseManager.UpgradeDatabase();
 
             _container = new Container();
             _container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
-
-            var connectionString = databaseFixture.GetConnectionString();
 
             var serviceCollection = new ServiceCollection();
 
@@ -119,7 +123,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             serviceCollection.AddDbContext<MeteringPointContext>(
                 x =>
-                    x.UseSqlServer(connectionString, y => y.UseNodaTime()),
+                    x.UseSqlServer(databaseFixture.DatabaseManager.ConnectionString, y => y.UseNodaTime()),
                 ServiceLifetime.Scoped);
             serviceCollection.AddLogging();
             serviceCollection.AddSimpleInjector(_container, options =>
@@ -161,7 +165,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IUserContext>(() => new UserContextStub { CurrentUser = new UserIdentity(Guid.NewGuid().ToString(), "8200000001409"), }, Lifestyle.Scoped);
             _container.Register<MeteringPointPipelineContext>(Lifestyle.Scoped);
 
-            _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
+            _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(databaseFixture.DatabaseManager.ConnectionString), Lifestyle.Scoped);
             _container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
             Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
 
@@ -209,6 +213,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                     typeof(InternalCommandHandlingBehaviour<,>),
                     typeof(BusinessProcessResultBehavior<,>),
                 });
+
+            // Specific for test instead of using Application Insights package
+            _container.Register(() => new TelemetryClient(new TelemetryConfiguration()), Lifestyle.Scoped);
 
             _container.Verify();
 
@@ -275,7 +282,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         protected void AssertOutboxMessage<TMessage>(Func<TMessage, bool> funcAssert, int count = 1)
         {
-            if (funcAssert == null) throw new ArgumentNullException(nameof(funcAssert));
+            if (funcAssert == null)
+                throw new ArgumentNullException(nameof(funcAssert));
 
             var messages = GetOutboxMessages<TMessage>()
                 .Where(funcAssert.Invoke)
@@ -400,7 +408,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         protected async Task AssertMeteringPointExistsAsync(string gsrnNumber)
         {
-            if (gsrnNumber == null) throw new ArgumentNullException(nameof(gsrnNumber));
+            if (gsrnNumber == null)
+                throw new ArgumentNullException(nameof(gsrnNumber));
             Assert.NotNull(await GetService<IMeteringPointRepository>().GetByGsrnNumberAsync(GsrnNumber.Create(gsrnNumber)).ConfigureAwait(false));
         }
 
