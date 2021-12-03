@@ -50,7 +50,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 .QuerySingleOrDefaultAsync<MeteringPointDto>(sql, new { request.GsrnNumber })
                 .ConfigureAwait(false);
 
-            return MapToCimDto(result);
+            return result != null
+                ? MapToCimDto(result)
+                : null;
         }
 
         private static MeteringPointCimDto MapToCimDto(MeteringPointDto meteringPointDto)

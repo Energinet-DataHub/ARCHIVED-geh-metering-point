@@ -47,5 +47,19 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Client
             response.Should().NotBeNull();
             response?.MeteringPointId.Should().Be("e4e88496-1bfd-456d-afcc-3aa9ddd4ef72");
         }
+
+        [Fact]
+        public async Task Get_metering_point_when_not_found_should_be_null()
+        {
+            // Arrange
+            var httpClient = _factory.CreateClient();
+            var meteringPointClient = MeteringPointClientFactory.CreateClient(httpClient);
+
+            // Act
+            var response = await meteringPointClient.GetMeteringPointByGsrnAsync("foo").ConfigureAwait(false);
+
+            // Assert
+            response.Should().BeNull();
+        }
     }
 }
