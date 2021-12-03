@@ -22,26 +22,26 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
 {
     public class MessageHubMessageRepositoryMock : IMessageHubMessageRepository
     {
-        private readonly List<MessageHubMessage> _messageHubMessages = new();
+        internal List<MessageHubMessage> MessageHubMessages { get; } = new();
 
         public Task<MessageHubMessage> GetMessageAsync(Guid messageId)
         {
-            return Task.FromResult(_messageHubMessages.First(x => x.Id == messageId));
+            return Task.FromResult(MessageHubMessages.First(x => x.Id == messageId));
         }
 
         public Task<MessageHubMessage[]> GetMessagesAsync(Guid[] messageIds)
         {
-            return Task.FromResult(_messageHubMessages.ToArray());
+            return Task.FromResult(MessageHubMessages.ToArray());
         }
 
         public void AddMessageMetadata(MessageHubMessage messageHubMessage)
         {
-            _messageHubMessages.Add(messageHubMessage);
+            MessageHubMessages.Add(messageHubMessage);
         }
 
         public MessageHubMessage GetMessageByCorrelation(string correlation)
         {
-            return _messageHubMessages.Single(x => x.Correlation == correlation);
+            return MessageHubMessages.Single(x => x.Correlation == correlation);
         }
     }
 }

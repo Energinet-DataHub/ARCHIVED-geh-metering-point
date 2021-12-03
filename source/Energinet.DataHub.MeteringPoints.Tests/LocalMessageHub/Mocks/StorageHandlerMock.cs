@@ -13,7 +13,9 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Model;
@@ -22,6 +24,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
 {
     public class StorageHandlerMock : IStorageHandler
     {
+        private readonly MessageHubMessageRepositoryMock _messageHubMessageRepository;
+
+        public StorageHandlerMock(MessageHubMessageRepositoryMock messageHubMessageRepository)
+        {
+            _messageHubMessageRepository = messageHubMessageRepository;
+        }
+
         public static Task<Stream> GetStreamFromStorageAsync(Uri contentPath)
         {
             if (contentPath == null) throw new ArgumentNullException(nameof(contentPath));
@@ -31,6 +40,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
         public Task<Uri> AddStreamToStorageAsync(Stream stream, DataBundleRequestDto requestDto)
         {
             return Task.FromResult(new Uri("https://someUri"));
+        }
+
+        public Task<IReadOnlyList<Guid>> GetDataAvailableNotificationIdsAsync(DataBundleRequestDto bundleRequest)
+        {
+            return Task.FromResult((IReadOnlyList<Guid>)_messageHubMessageRepository.MessageHubMessages.Select(x => x.Id).ToList());
+        }
+
+        public Task<IReadOnlyList<Guid>> GetDataAvailableNotificationIdsAsync(DequeueNotificationDto dequeueNotification)
+        {
+            return Task.FromResult((IReadOnlyList<Guid>)_messageHubMessageRepository.MessageHubMessages.Select(x => x.Id).ToList());
         }
     }
 }

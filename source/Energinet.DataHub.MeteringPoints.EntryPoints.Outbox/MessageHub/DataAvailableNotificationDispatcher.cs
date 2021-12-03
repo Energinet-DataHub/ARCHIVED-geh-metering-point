@@ -17,6 +17,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Model.Model;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 using MediatR;
 
@@ -25,17 +26,23 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.MessageHub
     public class DataAvailableNotificationDispatcher : IRequestHandler<DataAvailableNotification>
     {
         private readonly IDataAvailableNotificationSender _dataAvailableNotificationSender;
+        private readonly ICorrelationContext _correlationContext;
 
-        public DataAvailableNotificationDispatcher(IDataAvailableNotificationSender dataAvailableNotificationSender)
+        public DataAvailableNotificationDispatcher(
+            IDataAvailableNotificationSender dataAvailableNotificationSender,
+            ICorrelationContext correlationContext)
         {
             _dataAvailableNotificationSender = dataAvailableNotificationSender;
+            _correlationContext = correlationContext;
         }
 
         public async Task<Unit> Handle(DataAvailableNotification request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            await _dataAvailableNotificationSender.SendAsync(new DataAvailableNotificationDto(request.Uuid, request.Recipient, request.MessageType, request.Origin, request.SupportsBundling, request.RelativeWeight)).ConfigureAwait(false);
+            await _dataAvailableNotificationSender.SendAsync(
+                _correlationContext.Id,
+                new DataAvailableNotificationDto(request.Uuid, request.Recipient, request.MessageType, request.Origin, request.SupportsBundling, request.RelativeWeight)).ConfigureAwait(false);
 
             return Unit.Value;
         }
