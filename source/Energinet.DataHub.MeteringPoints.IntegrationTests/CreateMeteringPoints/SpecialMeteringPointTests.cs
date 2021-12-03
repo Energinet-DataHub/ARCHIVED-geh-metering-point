@@ -65,17 +65,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task Should_not_generate_integration_event_message_if_parentId_is_null()
-        {
-            var specialCommand = CreateCommand()
-                with { ParentRelatedMeteringPoint = null };
-            await SendCommandAsync(specialCommand).ConfigureAwait(false);
-
-            var message = GetOutboxMessages<SpecialMeteringPointCreatedIntegrationEvent>();
-            Assert.Empty(message);
-        }
-
-        [Fact]
         public async Task Should_reject_if_parent_metering_point_is_not_in_same_grid_area()
         {
             var consumptionCommand = Scenarios.CreateConsumptionMeteringPointCommand()

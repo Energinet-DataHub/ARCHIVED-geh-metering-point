@@ -27,6 +27,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         Instant EffectiveDate,
         string ConnectionState,
         string UnitType,
-        string ParentRelatedMeteringPoint,
+        string? ParentRelatedMeteringPoint,
         string MeteringPointType) : IIntegrationEvent, IRequest, IOutboundMessage;
 }

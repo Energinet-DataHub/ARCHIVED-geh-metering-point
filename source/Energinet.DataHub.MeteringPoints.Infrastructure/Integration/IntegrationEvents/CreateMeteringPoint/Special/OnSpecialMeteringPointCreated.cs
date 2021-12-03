@@ -37,24 +37,22 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         public override async Task Handle(SpecialMeteringPointCreated notification, CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
-            if (notification.ParentRelatedMeteringPoint != null)
-            {
-                var gridAreaCode = await _dbGridAreaHelper.GetGridAreaCodeAsync(notification.GridAreaLinkId)
-                    .ConfigureAwait(false);
-                var message = new SpecialMeteringPointCreatedIntegrationEvent(
-                    notification.MeteringPointId.ToString(),
-                    notification.GsrnNumber,
-                    gridAreaCode,
-                    notification.ProductType,
-                    notification.ReadingOccurrence,
-                    notification.EffectiveDate,
-                    notification.PhysicalState,
-                    notification.UnitType,
-                    notification.ParentRelatedMeteringPoint,
-                    notification.MeteringPointType);
 
-                CreateAndAddOutboxMessage(message);
-            }
+            var gridAreaCode = await _dbGridAreaHelper.GetGridAreaCodeAsync(notification.GridAreaLinkId)
+                .ConfigureAwait(false);
+            var message = new SpecialMeteringPointCreatedIntegrationEvent(
+                notification.MeteringPointId.ToString(),
+                notification.GsrnNumber,
+                gridAreaCode,
+                notification.ProductType,
+                notification.ReadingOccurrence,
+                notification.EffectiveDate,
+                notification.PhysicalState,
+                notification.UnitType,
+                notification.ParentRelatedMeteringPoint,
+                notification.MeteringPointType);
+
+            CreateAndAddOutboxMessage(message);
         }
     }
 }

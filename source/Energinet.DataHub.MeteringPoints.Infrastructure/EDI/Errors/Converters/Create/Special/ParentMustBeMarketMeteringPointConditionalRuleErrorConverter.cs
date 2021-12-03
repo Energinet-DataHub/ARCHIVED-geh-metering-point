@@ -23,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new ErrorMessage("D18", "Only a metering point in group 3 and 4 can be a child of 17 and 18 metering point.");
+            return new ErrorMessage("D18", "Only a metering point in group 3 and 4 can be a child of a consumption and production metering point.");
         }
     }
 }
