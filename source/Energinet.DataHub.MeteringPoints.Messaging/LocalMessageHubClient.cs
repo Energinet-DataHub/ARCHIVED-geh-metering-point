@@ -60,7 +60,8 @@ namespace Energinet.DataHub.MeteringPoints.Messaging
         {
             var bundleRequestDto = _requestBundleParser.Parse(request);
 
-            var messages = await _messageHubMessageRepository.GetMessagesAsync(bundleRequestDto.DataAvailableNotificationIds.ToArray()).ConfigureAwait(false);
+            var dataAvailableIds = await _storageHandler.GetDataAvailableNotificationIdsAsync(bundleRequestDto).ConfigureAwait(false);
+            var messages = await _messageHubMessageRepository.GetMessagesAsync(dataAvailableIds.ToArray()).ConfigureAwait(false);
 
             var bundle = await _bundleCreator.CreateBundleAsync(messages).ConfigureAwait(false);
 
@@ -80,7 +81,8 @@ namespace Energinet.DataHub.MeteringPoints.Messaging
         {
             var dequeueNotificationDto = _dequeueNotificationParser.Parse(notification);
 
-            var messages = await _messageHubMessageRepository.GetMessagesAsync(dequeueNotificationDto.DataAvailableNotificationIds.ToArray()).ConfigureAwait(false);
+            var dataAvailableIds = await _storageHandler.GetDataAvailableNotificationIdsAsync(dequeueNotificationDto).ConfigureAwait(false);
+            var messages = await _messageHubMessageRepository.GetMessagesAsync(dataAvailableIds.ToArray()).ConfigureAwait(false);
 
             foreach (var message in messages)
             {

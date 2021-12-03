@@ -50,7 +50,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 .QuerySingleOrDefaultAsync<MeteringPointDto>(sql, new { request.GsrnNumber })
                 .ConfigureAwait(false);
 
-            return MapToCimDto(result);
+            return result != null
+                ? MapToCimDto(result)
+                : null;
         }
 
         private static MeteringPointCimDto MapToCimDto(MeteringPointDto meteringPointDto)
@@ -63,7 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             var settlementMethod = ConvertNullableEnumerationTypeToEnum<SettlementMethod, Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.SettlementMethod>(meteringPointDto.SettlementMethod);
             var netSettlementGroup = ConvertNullableEnumerationTypeToEnum<NetSettlementGroup, Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.NetSettlementGroup>(meteringPointDto.NetSettlementGroup);
             var connectionType = ConvertNullableEnumerationTypeToEnum<ConnectionType, Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.ConnectionType>(meteringPointDto.ConnectionType);
-            var disconnectionType = ConvertNullableEnumerationTypeToEnum<DisconnectionType, Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.DisconnectionType>(meteringPointDto.ConnectionType);
+            var disconnectionType = ConvertNullableEnumerationTypeToEnum<DisconnectionType, Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.DisconnectionType>(meteringPointDto.DisconnectionType);
 
             return new MeteringPointCimDto(
                 meteringPointDto.MeteringPointId,
