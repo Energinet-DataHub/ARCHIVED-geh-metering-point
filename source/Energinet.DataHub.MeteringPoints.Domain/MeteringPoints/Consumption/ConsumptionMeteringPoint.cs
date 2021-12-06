@@ -31,7 +31,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 {
     public class ConsumptionMeteringPoint : MarketMeteringPoint
     {
-        private ScheduledMeterReadingDate? _scheduledMeterReadingDate;
         private MasterData _masterData;
 
 #pragma warning disable
@@ -49,7 +48,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             DisconnectionType disconnectionType,
             ConnectionType? connectionType,
             AssetType? assetType,
-            ScheduledMeterReadingDate? scheduledMeterReadingDate,
             Capacity? capacity,
             MeteringConfiguration meteringConfiguration,
             MasterData masterData)
@@ -73,8 +71,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         {
             _productType = masterData.ProductType;
             ConnectionState = ConnectionState.New();
-            _scheduledMeterReadingDate = masterData.ScheduledMeterReadingDate;
-
             _masterData = masterData;
 
             var @event = new ConsumptionMeteringPointCreated(
@@ -109,7 +105,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 ConnectionType?.Name,
                 _assetType?.Name,
                 ConnectionState.PhysicalState.Name,
-                _scheduledMeterReadingDate?.MonthAndDay,
+                _masterData.ScheduledMeterReadingDate?.MonthAndDay,
                 capacity?.Kw);
 
             AddDomainEvent(@event);
@@ -157,7 +153,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointDetails.DisconnectionType,
                 meteringPointDetails.ConnectionType,
                 meteringPointDetails.AssetType,
-                meteringPointDetails.ScheduledMeterReadingDate,
                 meteringPointDetails.Capacity,
                 meteringPointDetails.MeteringConfiguration,
                 masterData);
