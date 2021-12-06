@@ -75,7 +75,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             _settlementMethod = masterData.SettlementMethod;
             _productType = masterData.ProductType;
             ConnectionState = ConnectionState.New();
-            _scheduledMeterReadingDate = scheduledMeterReadingDate;
+            _scheduledMeterReadingDate = masterData.ScheduledMeterReadingDate;
 
             var @event = new ConsumptionMeteringPointCreated(
                 id.Value,
