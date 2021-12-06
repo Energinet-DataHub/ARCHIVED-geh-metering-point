@@ -26,26 +26,6 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 {
     #pragma warning disable
-    public interface IMasterDataBuilder
-    {
-        BusinessRulesValidationResult Validate();
-        IMasterDataBuilder WithNetSettlementGroup(string netSettlementGroup);
-        MasterData Build();
-        IMasterDataBuilder WithMeteringConfiguration(string method, string meterNumber);
-        IMasterDataBuilder WithAddress(string? streetName = null, string? streetCode = null, string? buildingNumber = null, string? city = null, string? citySubDivision = null, string? postCode = null, CountryCode? countryCode = null, string? floor = null, string? room = null, int? municipalityCode = null, bool? isActual = null, Guid? geoInfoReference = null, string? locationDescription = null);
-        IMasterDataBuilder WithMeasurementUnitType(string? measurementUnitType);
-        IMasterDataBuilder WithPowerPlant(string gsrnNumber);
-        IMasterDataBuilder WithReadingPeriodicity(string? readingPeriodicity);
-        IMasterDataBuilder WithPowerLimit(int kwh, int ampere);
-        IMasterDataBuilder WithSettlementMethod(string settlementMethod);
-        IMasterDataBuilder WithDisconnectionType(string disconnectionType);
-        IMasterDataBuilder WithAssetType(string? assetType);
-        IMasterDataBuilder WithScheduledMeterReadingDate(string scheduledMeterReadingDate);
-        IMasterDataBuilder WithCapacity(double? capacity);
-        IMasterDataBuilder EffectiveOn(string? effectiveDate);
-        IMasterDataBuilder WithProductType(string productType);
-        IMasterDataBuilder WithConnectionType(string? connectionType);
-    }
 
     public class TestMasterDataBuilder : IMasterDataBuilder
     {
