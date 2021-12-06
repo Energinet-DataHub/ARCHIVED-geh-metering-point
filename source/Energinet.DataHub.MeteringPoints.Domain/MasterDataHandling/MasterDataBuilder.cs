@@ -107,9 +107,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public IMasterDataBuilder WithSettlementMethod(string settlementMethod)
+        public IMasterDataBuilder WithSettlementMethod(string? settlementMethod)
         {
-            SetValue(nameof(MasterData.SettlementMethod), EnumerationType.FromName<SettlementMethod>(settlementMethod));
+            SetValue(nameof(MasterData.SettlementMethod), string.IsNullOrEmpty(settlementMethod) ? null : EnumerationType.FromName<SettlementMethod>(settlementMethod));
             return this;
         }
 

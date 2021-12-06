@@ -72,7 +72,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 assetType,
                 meteringConfiguration)
         {
-            _settlementMethod = settlementMethod;
+            _settlementMethod = masterData.SettlementMethod;
             _productType = ProductType.EnergyActive;
             ConnectionState = ConnectionState.New();
             _scheduledMeterReadingDate = scheduledMeterReadingDate;
