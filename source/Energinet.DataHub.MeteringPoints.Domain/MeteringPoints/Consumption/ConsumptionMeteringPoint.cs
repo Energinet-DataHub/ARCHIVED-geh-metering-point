@@ -18,6 +18,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
@@ -33,6 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         private SettlementMethod _settlementMethod;
         private ScheduledMeterReadingDate? _scheduledMeterReadingDate;
 
+        #pragma warning disable
         private ConsumptionMeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
@@ -50,7 +52,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             AssetType? assetType,
             ScheduledMeterReadingDate? scheduledMeterReadingDate,
             Capacity? capacity,
-            MeteringConfiguration meteringConfiguration)
+            MeteringConfiguration meteringConfiguration,
+            MasterData masterData)
             : base(
                 id,
                 gsrnNumber,
@@ -132,8 +135,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
         }
 
-        public static ConsumptionMeteringPoint Create(ConsumptionMeteringPointDetails meteringPointDetails)
+        public static ConsumptionMeteringPoint Create(ConsumptionMeteringPointDetails meteringPointDetails, MasterData masterData)
         {
+            if (masterData == null) throw new ArgumentNullException(nameof(masterData));
             if (!CanCreate(meteringPointDetails).Success)
             {
                 throw new ConsumptionMeteringPointException($"Cannot create consumption metering point due to violation of one or more business rules.");
@@ -156,7 +160,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointDetails.AssetType,
                 meteringPointDetails.ScheduledMeterReadingDate,
                 meteringPointDetails.Capacity,
-                meteringPointDetails.MeteringConfiguration);
+                meteringPointDetails.MeteringConfiguration,
+                masterData);
         }
 
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)

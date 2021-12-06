@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
@@ -97,7 +98,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 {
                     MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                 };
-            return ConsumptionMeteringPoint.Create(details);
+
+            var builder =
+                new MasterDataBuilder(
+                    new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Consumption));
+            return ConsumptionMeteringPoint.Create(details, builder.Build());
         }
 
         private static ProductionMeteringPoint CreateProductionMeteringPoint()

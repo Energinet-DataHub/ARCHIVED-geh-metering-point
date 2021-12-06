@@ -16,6 +16,7 @@ using System;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
@@ -110,7 +111,10 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                     NetSettlementGroup = netSettlementGroup,
                 };
 
-            var meteringPoint = ConsumptionMeteringPoint.Create(consumptionMeteringPointDetails);
+            var builder =
+                new MasterDataBuilder(
+                    new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Consumption));
+            var meteringPoint = ConsumptionMeteringPoint.Create(consumptionMeteringPointDetails, builder.Build());
 
             var createdEvent = meteringPoint.DomainEvents.First(e => e is ConsumptionMeteringPointCreated) as ConsumptionMeteringPointCreated;
             Assert.Equal(address.City, createdEvent!.City);
@@ -183,7 +187,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 ScheduledMeterReadingDate = null,
             };
 
-            var meteringPoint = ConsumptionMeteringPoint.Create(details);
+            var builder =
+                new MasterDataBuilder(
+                    new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Consumption));
+
+            var meteringPoint = ConsumptionMeteringPoint.Create(details, builder.Build());
 
             var createdEvent = meteringPoint.DomainEvents.First(e => e is ConsumptionMeteringPointCreated) as ConsumptionMeteringPointCreated;
             Assert.Equal(ProductType.EnergyActive.Name, createdEvent!.ProductType);
@@ -291,7 +299,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                     ScheduledMeterReadingDate = ScheduledMeterReadingDate.Create("0101"),
                 };
 
-            var meteringPoint = ConsumptionMeteringPoint.Create(meteringPointDetails);
+            var builder =
+                new MasterDataBuilder(
+                    new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Consumption));
+
+            var meteringPoint = ConsumptionMeteringPoint.Create(meteringPointDetails, builder.Build());
 
             var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is ConsumptionMeteringPointCreated) as ConsumptionMeteringPointCreated;
 

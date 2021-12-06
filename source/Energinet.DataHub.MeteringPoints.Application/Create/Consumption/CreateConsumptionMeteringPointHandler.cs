@@ -23,6 +23,7 @@ using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
@@ -89,7 +90,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
                 return rulesCheckResult;
             }
 
-            _meteringPointRepository.Add(ConsumptionMeteringPoint.Create(meteringPointDetails));
+            var builder =
+                new MasterDataBuilder(
+                    new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Consumption));
+            _meteringPointRepository.Add(ConsumptionMeteringPoint.Create(meteringPointDetails, builder.Build()));
 
             return BusinessProcessResult.Ok(request.TransactionId);
         }
