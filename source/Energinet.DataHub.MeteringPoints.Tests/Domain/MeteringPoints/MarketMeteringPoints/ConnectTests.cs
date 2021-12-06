@@ -99,9 +99,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                     MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                 };
 
-            var builder =
-                new MasterDataBuilder(
-                    new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Consumption));
+            var builder = MasterDataBuilder(MeteringPointType.Consumption);
+
             return ConsumptionMeteringPoint.Create(details, builder.Build());
         }
 

@@ -16,6 +16,7 @@ using System;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
@@ -35,6 +36,39 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             if (rulesValidationResult == null) throw new ArgumentNullException(nameof(rulesValidationResult));
             var hasError = rulesValidationResult.Errors.Any(error => error is TRuleError);
             Assert.Equal(errorExpected, hasError);
+        }
+
+        protected static IMasterDataBuilder MasterDataBuilder(MeteringPointType meteringPointType)
+        {
+            var builder = new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(meteringPointType))
+                .WithNetSettlementGroup(NetSettlementGroup.One.Name)
+                .WithSettlementMethod(SettlementMethod.Flex.Name)
+                .WithScheduledMeterReadingDate("0101")
+                .WithCapacity(1)
+                .WithAddress(
+                    SampleData.StreetName,
+                    SampleData.StreetCode,
+                    string.Empty,
+                    SampleData.CityName,
+                    string.Empty,
+                    SampleData.PostCode,
+                    CountryCode.DK,
+                    string.Empty,
+                    string.Empty,
+                    default,
+                    isActual: true,
+                    geoInfoReference: Guid.NewGuid(),
+                    null)
+                .WithAssetType(AssetType.GasTurbine.Name)
+                .WithPowerPlant(SampleData.PowerPlant)
+                .WithReadingPeriodicity(ReadingOccurrence.Hourly.Name)
+                .WithPowerLimit(0, 0)
+                .EffectiveOn(SampleData.EffectiveDate)
+                .WithDisconnectionType(DisconnectionType.Manual.Name)
+                .WithConnectionType(ConnectionType.Installation.Name)
+                .WithMeteringConfiguration(MeteringMethod.Virtual.Name, string.Empty);
+
+            return builder;
         }
 
         protected static ConsumptionMeteringPointDetails CreateConsumptionDetails()

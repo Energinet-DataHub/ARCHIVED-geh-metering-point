@@ -163,10 +163,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
 
         private static ConsumptionMeteringPoint CreateMeteringPoint()
         {
-            var builder =
-                new MasterDataBuilder(
-                    new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Consumption));
-            return ConsumptionMeteringPoint.Create(CreateConsumptionDetails(), builder.Build());
+            return ConsumptionMeteringPoint.Create(CreateConsumptionDetails(), MasterDataBuilder(MeteringPointType.Consumption).Build());
         }
 
         private static ConsumptionMeteringPoint CreatePhysical()
@@ -179,9 +176,10 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                     MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Physical, MeterId.Create("1")),
                 };
 
-            var builder =
-                new MasterDataBuilder(
-                    new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Consumption));
+            var builder = MasterDataBuilder(MeteringPointType.Consumption)
+                .WithNetSettlementGroup(NetSettlementGroup.Zero.Name)
+                .WithConnectionType(null)
+                .WithMeteringConfiguration(MeteringMethod.Physical.Name, "1");
 
             return ConsumptionMeteringPoint.Create(details, builder.Build());
         }
