@@ -32,7 +32,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
     #pragma warning disable
     public class ProductionMeteringPoint : MarketMeteringPoint
     {
-        private NetSettlementGroup _netSettlementGroup;
         private bool _productionObligation;
         private MasterData _masterData;
 
@@ -72,7 +71,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 assetType,
                 meteringConfiguration)
         {
-            _netSettlementGroup = netSettlementGroup;
             _productionObligation = productionObligation;
             _masterData = masterData;
             _productType = ProductType.EnergyActive;
