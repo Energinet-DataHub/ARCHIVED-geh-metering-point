@@ -111,7 +111,10 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 {
                     MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                 };
-            return ProductionMeteringPoint.Create(details);
+
+            var builder = MasterDataBuilderForProduction()
+                .WithMeteringConfiguration(MeteringMethod.Virtual.Name, string.Empty);
+            return ProductionMeteringPoint.Create(details, builder.Build());
         }
 
         private static void SetStartOfSupplyAheadOfEffectiveDate(MarketMeteringPoint meteringPoint, Instant effectiveDate)

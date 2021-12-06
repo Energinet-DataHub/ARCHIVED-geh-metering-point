@@ -18,6 +18,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
@@ -33,6 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
     {
         private NetSettlementGroup _netSettlementGroup;
         private bool _productionObligation;
+        private MasterData _masterData;
 
         private ProductionMeteringPoint(
             MeteringPointId id,
@@ -50,7 +52,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
             ConnectionType? connectionType,
             AssetType assetType,
             Capacity capacity,
-            MeteringConfiguration meteringConfiguration)
+            MeteringConfiguration meteringConfiguration,
+            MasterData masterData)
             : base(
                 id,
                 gsrnNumber,
@@ -71,6 +74,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
         {
             _netSettlementGroup = netSettlementGroup;
             _productionObligation = productionObligation;
+            _masterData = masterData;
             _productType = ProductType.EnergyActive;
             ProductionObligation = false;
             ConnectionState = ConnectionState.New();
@@ -155,8 +159,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
             return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
         }
 
-        public static ProductionMeteringPoint Create(ProductionMeteringPointDetails meteringPointDetails)
+        public static ProductionMeteringPoint Create(ProductionMeteringPointDetails meteringPointDetails, MasterData masterData)
         {
+            if (masterData == null) throw new ArgumentNullException(nameof(masterData));
             if (!CanCreate(meteringPointDetails).Success)
             {
                 throw new ProductionMeteringPointException($"Cannot create production metering point due to violation of one or more business rules.");
@@ -177,7 +182,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 meteringPointDetails.ConnectionType,
                 meteringPointDetails.AssetType,
                 meteringPointDetails.Capacity,
-                meteringPointDetails.MeteringConfiguration);
+                meteringPointDetails.MeteringConfiguration,
+                masterData);
         }
     }
 }

@@ -107,7 +107,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Production
                     string.IsNullOrWhiteSpace(request.GeoInfoReference) ? default : Guid.Parse(request.GeoInfoReference),
                     request.LocationDescription);
 
-            _meteringPointRepository.Add(ProductionMeteringPoint.Create(meteringPointDetails));
+            _meteringPointRepository.Add(ProductionMeteringPoint.Create(meteringPointDetails, builder.Build()));
 
             return BusinessProcessResult.Ok(request.TransactionId);
         }
