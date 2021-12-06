@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
@@ -47,7 +48,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         {
             var method = EnumerationType.FromName<MeteringMethod>(meteringMethod);
             var meter = method == MeteringMethod.Physical ? "Fake" : string.Empty;
-            var details = new TestMasterDataBuilder()
+            var details = Builder()
                 .WithNetSettlementGroup(netSettlementGroup)
                 .WithMeteringConfiguration(meteringMethod, meter)
                 .Build();
@@ -138,8 +139,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             AssertContainsValidationError<ConnectionTypeDoesNotMatchNetSettlementGroupRuleError>(CheckRules(masterData));
         }
 
-        private static TestMasterDataBuilder Builder() =>
-            new();
+        private static IMasterDataBuilder Builder() =>
+            new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Production))
+                .WithAddress(streetName: "Test Street", countryCode: CountryCode.DK)
+                .WithNetSettlementGroup(NetSettlementGroup.Two.Name)
+                .WithMeteringConfiguration(MeteringMethod.Virtual.Name, string.Empty);
 
         private static BusinessRulesValidationResult CheckRules(MasterData masterData)
         {

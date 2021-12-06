@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
@@ -47,7 +48,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [InlineData(nameof(MeteringPointType.VEProduction))]
         public void Power_plant_should_not_be_required(string meteringPointType)
         {
-            var masterData = Builder()
+            var masterData = BuilderFor(meteringPointType)
                 .WithPowerPlant(null!)
                 .Build();
 
@@ -75,7 +76,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [InlineData(nameof(MeteringPointType.VEProduction))]
         public void Street_name_is_required(string meteringPointType)
         {
-            var masterData = Builder()
+            var masterData = BuilderFor(meteringPointType)
                 .WithAddress(streetName: string.Empty)
                 .Build();
 
@@ -152,15 +153,17 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [InlineData(nameof(MeteringPointType.SurplusProductionGroup), nameof(ReadingOccurrence.Yearly), true)]
         public void Meter_reading_periodicity_is_hourly_or_quaterly(string meteringPointType, string readingOccurrence, bool expectError)
         {
-            var masterData = Builder()
+            var masterData = BuilderFor(meteringPointType)
                 .WithReadingPeriodicity(readingOccurrence)
                 .Build();
 
             AssertError<InvalidMeterReadingOccurrenceRuleError>(CheckRules(masterData, From(meteringPointType)), expectError);
         }
 
-        private static TestMasterDataBuilder Builder() =>
-            new();
+        private static IMasterDataBuilder BuilderFor(string meteringPointType) =>
+            new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(From(meteringPointType)))
+                .WithReadingPeriodicity(ReadingOccurrence.Quarterly.Name)
+                .WithAddress(streetName: "Test street", countryCode: CountryCode.DK);
 
         private static BusinessRulesValidationResult CheckRules(MasterData masterData, MeteringPointType meteringPointType)
         {

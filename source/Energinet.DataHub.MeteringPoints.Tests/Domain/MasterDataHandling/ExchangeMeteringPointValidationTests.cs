@@ -34,8 +34,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             AssertContainsValidationError<StreetNameIsRequiredRuleError>(CheckRules(masterData));
         }
 
-        private static TestMasterDataBuilder Builder() =>
-            new();
+        private static IMasterDataBuilder Builder() =>
+            new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Exchange));
 
         private static BusinessRulesValidationResult CheckRules(MasterData masterData)
         {

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
@@ -60,8 +61,10 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             AssertError<InvalidMeterReadingOccurrenceRuleError>(CheckRules(masterData), expectError);
         }
 
-        private static TestMasterDataBuilder Builder() =>
-            new();
+        private static IMasterDataBuilder Builder() =>
+            new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.VEProduction))
+                .WithAddress(streetName: "Test Street", countryCode: CountryCode.DK)
+                .WithReadingPeriodicity(ReadingOccurrence.Yearly.Name);
 
         private static BusinessRulesValidationResult CheckRules(MasterData masterData)
         {

@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 {
-    internal class MasterDataFieldSelector
+    public class MasterDataFieldSelector
     {
         private readonly Dictionary<string, List<MasterDataField>> _fields = new()
         {
@@ -48,6 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IEnumerable<MasterDataField> GetMasterDataFieldsFor(MeteringPointType meteringPointType)
         {
+            if (meteringPointType is null) throw new ArgumentNullException(nameof(meteringPointType));
             if (_fields.ContainsKey(meteringPointType.Name))
             {
                 return _fields[meteringPointType.Name];

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -49,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         {
             var method = EnumerationType.FromName<MeteringMethod>(meteringMethod);
             var meter = method == MeteringMethod.Physical ? "Fake" : string.Empty;
-            var details = new TestMasterDataBuilder()
+            var details = Builder()
                 .WithNetSettlementGroup(netSettlementGroup)
                 .WithMeteringConfiguration(meteringMethod, meter)
                 .Build();
@@ -60,7 +61,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [Fact]
         public void Day_of_scheduled_meter_reading_date_must_be_01_when_net_settlement_group_is_6()
         {
-            var masterData = new TestMasterDataBuilder()
+            var masterData = Builder()
                 .WithNetSettlementGroup(NetSettlementGroup.Six.Name)
                 .WithScheduledMeterReadingDate("0512")
                 .Build();
@@ -71,7 +72,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [Fact]
         public void Scheduled_meter_reading_date_is_not_allowed_for_other_than_net_settlement_group_6()
         {
-            var masterData = new TestMasterDataBuilder()
+            var masterData = Builder()
                 .WithNetSettlementGroup(NetSettlementGroup.One.Name)
                 .WithScheduledMeterReadingDate("0512")
                 .Build();
@@ -82,7 +83,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [Fact]
         public void Powerplant_GSRN_is_required_when_netsettlementgroup_is_other_than_0_or_99()
         {
-            var masterData = new TestMasterDataBuilder()
+            var masterData = Builder()
                 .WithNetSettlementGroup(NetSettlementGroup.Six.Name)
                 .WithPowerPlant(null!)
                 .Build();
@@ -188,8 +189,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             AssertContainsValidationError<ConnectionTypeDoesNotMatchNetSettlementGroupRuleError>(CheckRules(masterData));
         }
 
-        private static TestMasterDataBuilder Builder() =>
-            new();
+        private static IMasterDataBuilder Builder() =>
+            new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Consumption))
+                .WithAddress(streetName: "Test Street", countryCode: CountryCode.DK)
+                .WithNetSettlementGroup(NetSettlementGroup.Two.Name)
+                .WithMeteringConfiguration(MeteringMethod.Virtual.Name, string.Empty);
 
         private static BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
