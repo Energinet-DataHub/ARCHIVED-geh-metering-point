@@ -31,10 +31,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 {
     public class ConsumptionMeteringPoint : MarketMeteringPoint
     {
-        private SettlementMethod _settlementMethod;
         private ScheduledMeterReadingDate? _scheduledMeterReadingDate;
+        private MasterData _masterData;
 
-        #pragma warning disable
+#pragma warning disable
         private ConsumptionMeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
@@ -45,7 +45,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             ReadingOccurrence meterReadingOccurrence,
             PowerLimit powerLimit,
             EffectiveDate effectiveDate,
-            SettlementMethod settlementMethod,
             NetSettlementGroup netSettlementGroup,
             DisconnectionType disconnectionType,
             ConnectionType? connectionType,
@@ -72,10 +71,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 assetType,
                 meteringConfiguration)
         {
-            _settlementMethod = masterData.SettlementMethod;
             _productType = masterData.ProductType;
             ConnectionState = ConnectionState.New();
             _scheduledMeterReadingDate = masterData.ScheduledMeterReadingDate;
+
+            _masterData = masterData;
 
             var @event = new ConsumptionMeteringPointCreated(
                 id.Value,
@@ -85,7 +85,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 _productType.Name,
                 meterReadingOccurrence.Name,
                 _unitType.Name,
-                _settlementMethod.Name,
+                masterData.SettlementMethod.Name,
                 netSettlementGroup.Name,
                 address.City,
                 address.Floor,
@@ -153,7 +153,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointDetails.ReadingOccurrence,
                 meteringPointDetails.PowerLimit,
                 meteringPointDetails.EffectiveDate,
-                meteringPointDetails.SettlementMethod,
                 meteringPointDetails.NetSettlementGroup,
                 meteringPointDetails.DisconnectionType,
                 meteringPointDetails.ConnectionType,
