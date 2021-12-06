@@ -14,6 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
@@ -39,7 +40,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             DisconnectionType disconnectionType,
             NetSettlementGroup netSettlementGroup,
             AssetType? assetType,
-            MeteringConfiguration meteringConfiguration)
+            MeteringConfiguration meteringConfiguration,
+            MasterData masterData)
             : base(
                 id,
                 gsrnNumber,
@@ -56,7 +58,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 disconnectionType,
                 netSettlementGroup,
                 assetType,
-                meteringConfiguration)
+                meteringConfiguration,
+                masterData)
         {
         }
 

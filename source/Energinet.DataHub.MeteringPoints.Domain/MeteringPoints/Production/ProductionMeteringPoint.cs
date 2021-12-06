@@ -69,7 +69,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 disconnectionType,
                 netSettlementGroup,
                 assetType,
-                meteringConfiguration)
+                meteringConfiguration,
+                masterData)
         {
             _productionObligation = productionObligation;
             _masterData = masterData;

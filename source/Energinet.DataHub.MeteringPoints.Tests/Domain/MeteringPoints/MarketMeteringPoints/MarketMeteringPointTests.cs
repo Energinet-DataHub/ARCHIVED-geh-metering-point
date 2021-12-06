@@ -98,6 +98,18 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 SampleData.IsActualAddress,
                 SampleData.GeoInfoReference);
 
+            var builder = MasterDataBuilder(MeteringPointType.Consumption)
+                .WithNetSettlementGroup(NetSettlementGroup.Six.Name)
+                .WithMeteringConfiguration(SampleData.SubTypeName, SampleData.MeterNumber)
+                .WithScheduledMeterReadingDate(null!)
+                .WithReadingPeriodicity(ReadingOccurrence.Hourly.Name)
+                .WithPowerLimit(0, 0)
+                .EffectiveOn(SampleData.EffectiveDate)
+                .WithCapacity(1.2)
+                .WithConnectionType(ConnectionType.Installation.Name)
+                .WithDisconnectionType(DisconnectionType.Remote.Name)
+                .WithAssetType(AssetType.HydroelectricPower.Name);
+
             return new MarketMeteringPointMock(
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
@@ -114,7 +126,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 DisconnectionType.Remote,
                 NetSettlementGroup.Six,
                 AssetType.HydroelectricPower,
-                MeteringConfiguration.Create(EnumerationType.FromName<MeteringMethod>(SampleData.SubTypeName), MeterId.Create(SampleData.MeterNumber)));
+                MeteringConfiguration.Create(EnumerationType.FromName<MeteringMethod>(SampleData.SubTypeName), MeterId.Create(SampleData.MeterNumber)),
+                builder.Build());
         }
     }
 }

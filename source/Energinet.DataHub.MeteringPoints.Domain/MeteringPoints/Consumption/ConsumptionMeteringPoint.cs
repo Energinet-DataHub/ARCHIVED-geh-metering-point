@@ -67,7 +67,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 disconnectionType,
                 netSettlementGroup,
                 assetType,
-                meteringConfiguration)
+                meteringConfiguration,
+                masterData)
         {
             _productType = masterData.ProductType;
             ConnectionState = ConnectionState.New();

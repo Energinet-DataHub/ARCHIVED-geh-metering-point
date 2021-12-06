@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
@@ -29,8 +30,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
     public abstract class MarketMeteringPoint : MeteringPoint
     {
         #pragma warning disable CS8618 // Ignore uninitialized properties
+        private readonly MasterData _masterData;
+
         protected MarketMeteringPoint() { }
-        #pragma warning restore
+#pragma warning restore
 
         protected MarketMeteringPoint(
             MeteringPointId id,
@@ -48,7 +51,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             DisconnectionType disconnectionType,
             NetSettlementGroup netSettlementGroup,
             AssetType? assetType,
-            MeteringConfiguration meteringConfiguration)
+            MeteringConfiguration meteringConfiguration,
+            MasterData masterData)
             : base(
                 id,
                 gsrnNumber,
@@ -64,6 +68,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
                 assetType,
                 meteringConfiguration)
         {
+            _masterData = masterData;
             ConnectionType = connectionType;
             DisconnectionType = disconnectionType;
             NetSettlementGroup = netSettlementGroup;
