@@ -125,9 +125,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public IMasterDataBuilder WithScheduledMeterReadingDate(string scheduledMeterReadingDate)
+        public IMasterDataBuilder WithScheduledMeterReadingDate(string? scheduledMeterReadingDate)
         {
-            SetValue(nameof(MasterData.ScheduledMeterReadingDate), ScheduledMeterReadingDate.Create(scheduledMeterReadingDate));
+            SetValue(nameof(MasterData.ScheduledMeterReadingDate), string.IsNullOrEmpty(scheduledMeterReadingDate) ? null : ScheduledMeterReadingDate.Create(scheduledMeterReadingDate));
             return this;
         }
 
