@@ -111,7 +111,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                     NetSettlementGroup = netSettlementGroup,
                 };
 
-            var masterData = MasterDataBuilder(MeteringPointType.Consumption).Build();
+            var masterData = MasterDataBuilder(MeteringPointType.Consumption)
+                .WithCapacity(capacity.Kw)
+                .Build();
             var meteringPoint = ConsumptionMeteringPoint.Create(consumptionMeteringPointDetails, masterData);
 
             var createdEvent = meteringPoint.DomainEvents.First(e => e is ConsumptionMeteringPointCreated) as ConsumptionMeteringPointCreated;

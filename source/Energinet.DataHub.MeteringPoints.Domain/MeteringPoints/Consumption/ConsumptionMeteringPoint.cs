@@ -44,7 +44,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             NetSettlementGroup netSettlementGroup,
             DisconnectionType disconnectionType,
             ConnectionType? connectionType,
-            Capacity? capacity,
             MeteringConfiguration meteringConfiguration,
             MasterData masterData)
             : base(
@@ -54,7 +53,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointType,
                 gridAreaLinkId,
                 effectiveDate,
-                capacity,
                 connectionType,
                 disconnectionType,
                 netSettlementGroup,
@@ -97,7 +95,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 _masterData.AssetType?.Name,
                 ConnectionState.PhysicalState.Name,
                 _masterData.ScheduledMeterReadingDate?.MonthAndDay,
-                capacity?.Kw);
+                _masterData.Capacity?.Kw);
 
             AddDomainEvent(@event);
         }
@@ -140,7 +138,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointDetails.NetSettlementGroup,
                 meteringPointDetails.DisconnectionType,
                 meteringPointDetails.ConnectionType,
-                meteringPointDetails.Capacity,
                 meteringPointDetails.MeteringConfiguration,
                 masterData);
         }

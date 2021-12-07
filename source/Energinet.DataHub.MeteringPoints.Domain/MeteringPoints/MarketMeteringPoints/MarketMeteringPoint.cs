@@ -42,7 +42,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             EffectiveDate effectiveDate,
-            Capacity? capacity,
             ConnectionType? connectionType,
             DisconnectionType disconnectionType,
             NetSettlementGroup netSettlementGroup,
@@ -55,7 +54,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
                 meteringPointType,
                 gridAreaLinkId,
                 effectiveDate,
-                capacity,
                 meteringConfiguration,
                 masterData)
         {

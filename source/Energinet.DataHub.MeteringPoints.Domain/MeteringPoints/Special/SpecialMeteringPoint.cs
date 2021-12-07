@@ -39,7 +39,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
             MeteringPointType meteringPointType,
             [NotNull]GridAreaLinkId gridAreaLinkId,
             [NotNull]EffectiveDate effectiveDate,
-            Capacity? capacity,
             MeteringConfiguration meteringConfiguration,
             MasterData masterData)
             : base(
@@ -49,7 +48,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
                 meteringPointType,
                 gridAreaLinkId,
                 effectiveDate,
-                capacity,
                 meteringConfiguration,
                 masterData)
         {
@@ -77,7 +75,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
                 effectiveDate.DateInUtc,
                 ConnectionState.PhysicalState.Name,
                 _masterData.PowerPlantGsrnNumber?.Value,
-                capacity?.Kw,
+                _masterData.Capacity?.Kw,
                 _masterData.AssetType?.Name,
                 _masterData.UnitType.Name);
 
@@ -116,7 +114,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
                 meteringPointDetails.MeteringPointType,
                 meteringPointDetails.GridAreaLinkId,
                 meteringPointDetails.EffectiveDate,
-                meteringPointDetails.Capacity,
                 meteringPointDetails.MeteringConfiguration,
                 masterData);
         }

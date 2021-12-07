@@ -34,7 +34,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 #pragma warning restore
         private GridAreaLinkId _gridAreaLinkId;
         private EffectiveDate _effectiveDate;
-        private Capacity? _capacity;
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
         protected MeteringPoint() { }
@@ -48,7 +47,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             EffectiveDate effectiveDate,
-            Capacity? capacity,
             MeteringConfiguration meteringConfiguration,
             MasterData masterData)
         {
@@ -58,7 +56,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _meteringPointType = meteringPointType;
             _gridAreaLinkId = gridAreaLinkId;
             _effectiveDate = effectiveDate;
-            _capacity = capacity;
             _masterData = masterData;
             MeteringConfiguration = meteringConfiguration;
         }

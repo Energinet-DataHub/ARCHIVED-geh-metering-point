@@ -85,8 +85,16 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 mapper.Property(x => x.PowerPlantGsrnNumber)
                     .HasColumnName("PowerPlant")
                     .HasConversion(toDbValue => toDbValue == null ? null : toDbValue.Value, fromDbValue => string.IsNullOrEmpty(fromDbValue) ? null : GsrnNumber.Create(fromDbValue));
+                mapper.Property(x => x.Capacity)
+                    .HasColumnName("Capacity")
+                    .HasConversion<double?>(
+                        toDbValue => toDbValue == null
+                            ? null
+                            : toDbValue.Kw!,
+                        convertFromProviderExpression: fromDbValue => fromDbValue.HasValue
+                            ? Capacity.Create(fromDbValue.Value)
+                            : null!);
                 mapper.Ignore(x => x.Address);
-                mapper.Ignore(x => x.Capacity);
                 mapper.Ignore(x => x.ConnectionType);
                 mapper.Ignore(x => x.DisconnectionType);
                 mapper.Ignore(x => x.EffectiveDate);
@@ -157,16 +165,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             builder.Property<EffectiveDate>("_effectiveDate")
                 .HasColumnName("EffectiveDate")
                 .HasConversion<DateTime>(toDbValue => toDbValue.DateInUtc.ToDateTimeUtc(), fromDbValue => EffectiveDate.Create(fromDbValue));
-
-            builder.Property<Capacity>("_capacity")
-                .HasColumnName("Capacity")
-                .HasConversion<double?>(
-                    toDbValue => toDbValue == null
-                    ? null
-                    : toDbValue.Kw!,
-                    convertFromProviderExpression: fromDbValue => fromDbValue.HasValue
-                        ? Capacity.Create(fromDbValue.Value)
-                        : null!);
         }
     }
 

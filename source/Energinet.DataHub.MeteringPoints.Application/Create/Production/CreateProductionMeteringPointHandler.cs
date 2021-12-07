@@ -95,6 +95,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Production
                 .WithPowerLimit(request.MaximumPower, request.MaximumCurrent)
                 .WithNetSettlementGroup(request.NetSettlementGroup!)
                 .WithPowerPlant(request.PowerPlant)
+                .WithCapacity(string.IsNullOrWhiteSpace(request.PhysicalConnectionCapacity) ? null : double.Parse(request.PhysicalConnectionCapacity, NumberStyles.Number, new NumberFormatInfo()))
                 .WithAddress(
                     request.StreetName,
                     request.StreetCode,

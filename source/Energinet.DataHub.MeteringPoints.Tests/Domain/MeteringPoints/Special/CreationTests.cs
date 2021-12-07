@@ -70,7 +70,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Special
                     MeteringConfiguration = meteringConfiguration,
                 };
 
-            var meteringPoint = SpecialMeteringPoint.Create(specialMeteringPointDetails, MasterDataBuilderForSpecial().Build());
+            var meteringPoint = SpecialMeteringPoint.Create(specialMeteringPointDetails, MasterDataBuilderForSpecial()
+                .WithCapacity(capacity.Kw)
+                .Build());
 
             var createdEvent = meteringPoint.DomainEvents.First(e => e is SpecialMeteringPointCreated) as SpecialMeteringPointCreated;
             Assert.Equal(address.City, createdEvent!.City);

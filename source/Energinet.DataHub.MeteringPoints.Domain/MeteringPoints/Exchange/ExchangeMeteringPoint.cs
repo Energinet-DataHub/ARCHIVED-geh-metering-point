@@ -52,7 +52,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
                 meteringPointType,
                 gridAreaLinkId,
                 effectiveDate,
-                capacity: null,
                 meteringConfiguration,
                 masterData)
         {
