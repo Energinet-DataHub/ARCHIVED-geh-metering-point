@@ -82,6 +82,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     y.Property(x => x.Kwh)
                         .HasColumnName("MaximumPower");
                 });
+                mapper.Property(x => x.PowerPlantGsrnNumber)
+                    .HasColumnName("PowerPlant")
+                    .HasConversion(toDbValue => toDbValue == null ? null : toDbValue.Value, fromDbValue => string.IsNullOrEmpty(fromDbValue) ? null : GsrnNumber.Create(fromDbValue));
                 mapper.Ignore(x => x.Address);
                 mapper.Ignore(x => x.Capacity);
                 mapper.Ignore(x => x.ConnectionType);
@@ -90,7 +93,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 mapper.Ignore(x => x.MeteringConfiguration);
                 mapper.Ignore(x => x.SettlementMethod);
                 mapper.Ignore(x => x.NetSettlementGroup);
-                mapper.Ignore(x => x.PowerPlantGsrnNumber);
                 mapper.Ignore(x => x.ScheduledMeterReadingDate);
             });
 
@@ -139,10 +141,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 .HasConversion(
                     toDbValue => toDbValue.Value,
                     fromDbValue => new GridAreaLinkId(fromDbValue));
-
-            builder.Property<GsrnNumber>("_powerPlantGsrnNumber")
-                .HasColumnName("PowerPlant")
-                .HasConversion(toDbValue => toDbValue.Value, fromDbValue => GsrnNumber.Create(fromDbValue));
 
             builder.OwnsOne<MeteringConfiguration>("MeteringConfiguration", mapper =>
             {

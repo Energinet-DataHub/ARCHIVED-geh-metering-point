@@ -29,11 +29,14 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
 {
-    #pragma warning disable
     public class ProductionMeteringPoint : MarketMeteringPoint
     {
         private bool _productionObligation;
         private MasterData _masterData;
+
+#pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
+        private ProductionMeteringPoint() { }
+#pragma warning restore 8618
 
         private ProductionMeteringPoint(
             MeteringPointId id,
@@ -41,7 +44,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
             Address address,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
-            GsrnNumber powerPlantGsrnNumber,
             EffectiveDate effectiveDate,
             NetSettlementGroup netSettlementGroup,
             bool productionObligation,
@@ -56,7 +58,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 address,
                 meteringPointType,
                 gridAreaLinkId,
-                powerPlantGsrnNumber,
                 effectiveDate,
                 capacity,
                 connectionType,
@@ -74,32 +75,32 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 id.Value,
                 GsrnNumber.Value,
                 gridAreaLinkId.Value,
-                 MeteringConfiguration.Method.Name,
+                MeteringConfiguration.Method.Name,
                 _masterData.ProductType.Name,
                 _masterData.ReadingOccurrence.Name,
                 _masterData.UnitType.Name,
                 netSettlementGroup.Name,
-                address.City,
-                address.Floor,
-                address.Room,
-                address.BuildingNumber,
-                address.CountryCode?.Name,
-                address.MunicipalityCode,
-                address.PostCode,
-                address.StreetCode,
-                address.StreetName,
-                address.CitySubDivision,
+                address.City!,
+                address.Floor!,
+                address.Room!,
+                address.BuildingNumber!,
+                address.CountryCode?.Name!,
+                address.MunicipalityCode!,
+                address.PostCode!,
+                address.StreetCode!,
+                address.StreetName!,
+                address.CitySubDivision!,
                 address.IsActual.GetValueOrDefault(),
                 address.GeoInfoReference,
-                powerPlantGsrnNumber.Value,
-                MeteringConfiguration.Meter?.Value,
-                address.LocationDescription,
+                _masterData.PowerPlantGsrnNumber!.Value,
+                MeteringConfiguration.Meter?.Value!,
+                address.LocationDescription!,
                 _masterData.PowerLimit.Ampere,
                 _masterData.PowerLimit.Kwh,
                 effectiveDate.DateInUtc,
                 DisconnectionType.Name,
-                ConnectionType?.Name,
-                _masterData.AssetType?.Name,
+                ConnectionType?.Name!,
+                _masterData.AssetType?.Name!,
                 ConnectionState.PhysicalState.Name,
                 ProductionObligation,
                 capacity.Kw);
@@ -109,9 +110,43 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
 
         protected bool ProductionObligation { get; }
 
-#pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
-        private ProductionMeteringPoint() { }
-#pragma warning restore 8618
+        public static new BusinessRulesValidationResult CanCreate(ProductionMeteringPointDetails meteringPointDetails)
+        {
+            if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
+            var generalRuleCheckResult = MarketMeteringPoint.CanCreate(meteringPointDetails);
+            var rules = new List<IBusinessRule>()
+            {
+                new CapacityRequirementRule(meteringPointDetails.Capacity, meteringPointDetails.NetSettlementGroup),
+                new AssetTypeRequirementRule(meteringPointDetails.AssetType),
+                new PowerplantRequirementRule(meteringPointDetails.GsrnNumber, meteringPointDetails.PowerPlantGsrnNumber),
+            };
+
+            return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
+        }
+
+        public static ProductionMeteringPoint Create(ProductionMeteringPointDetails meteringPointDetails, MasterData masterData)
+        {
+            if (masterData == null) throw new ArgumentNullException(nameof(masterData));
+            if (!CanCreate(meteringPointDetails).Success)
+            {
+                throw new ProductionMeteringPointException($"Cannot create production metering point due to violation of one or more business rules.");
+            }
+
+            return new ProductionMeteringPoint(
+                meteringPointDetails.Id,
+                meteringPointDetails.GsrnNumber,
+                meteringPointDetails.Address,
+                MeteringPointType.Production,
+                meteringPointDetails.GridAreaLinkId,
+                meteringPointDetails.EffectiveDate,
+                meteringPointDetails.NetSettlementGroup,
+                false,
+                meteringPointDetails.DisconnectionType,
+                meteringPointDetails.ConnectionType,
+                meteringPointDetails.Capacity,
+                meteringPointDetails.MeteringConfiguration,
+                masterData);
+        }
 
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
         {
@@ -134,44 +169,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
 
             ConnectionState = ConnectionState.Connected(connectionDetails.EffectiveDate);
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
-        }
-
-        public static BusinessRulesValidationResult CanCreate(ProductionMeteringPointDetails meteringPointDetails)
-        {
-            if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
-            var generalRuleCheckResult= MarketMeteringPoint.CanCreate(meteringPointDetails);
-            var rules = new List<IBusinessRule>()
-            {
-                new CapacityRequirementRule(meteringPointDetails.Capacity, meteringPointDetails.NetSettlementGroup),
-                new AssetTypeRequirementRule(meteringPointDetails.AssetType),
-                new PowerplantRequirementRule(meteringPointDetails.GsrnNumber, meteringPointDetails.PowerPlantGsrnNumber),
-            };
-
-            return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
-        }
-
-        public static ProductionMeteringPoint Create(ProductionMeteringPointDetails meteringPointDetails, MasterData masterData)
-        {
-            if (masterData == null) throw new ArgumentNullException(nameof(masterData));
-            if (!CanCreate(meteringPointDetails).Success)
-            {
-                throw new ProductionMeteringPointException($"Cannot create production metering point due to violation of one or more business rules.");
-            }
-            return new ProductionMeteringPoint(
-                meteringPointDetails.Id,
-                meteringPointDetails.GsrnNumber,
-                meteringPointDetails.Address,
-                MeteringPointType.Production,
-                meteringPointDetails.GridAreaLinkId,
-                meteringPointDetails.PowerPlantGsrnNumber,
-                meteringPointDetails.EffectiveDate,
-                meteringPointDetails.NetSettlementGroup,
-                false,
-                meteringPointDetails.DisconnectionType,
-                meteringPointDetails.ConnectionType,
-                meteringPointDetails.Capacity,
-                meteringPointDetails.MeteringConfiguration,
-                masterData);
         }
     }
 }

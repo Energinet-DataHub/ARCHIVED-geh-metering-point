@@ -81,7 +81,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         /// </summary>
         /// <param name="gsrnNumber"></param>
         /// <returns><see cref="IMasterDataBuilder"/></returns>
-        IMasterDataBuilder WithPowerPlant(string gsrnNumber);
+        IMasterDataBuilder WithPowerPlant(string? gsrnNumber);
 
         /// <summary>
         /// Configures meter reading periodicity

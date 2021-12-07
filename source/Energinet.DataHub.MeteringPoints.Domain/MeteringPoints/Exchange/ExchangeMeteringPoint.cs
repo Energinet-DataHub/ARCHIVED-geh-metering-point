@@ -51,7 +51,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
                 address,
                 meteringPointType,
                 gridAreaLinkId,
-                powerPlantGsrnNumber: null,
                 effectiveDate,
                 capacity: null,
                 meteringConfiguration,

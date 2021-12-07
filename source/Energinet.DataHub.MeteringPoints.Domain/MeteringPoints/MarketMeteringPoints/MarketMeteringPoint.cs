@@ -41,7 +41,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             Address address,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
-            GsrnNumber? powerPlantGsrnNumber,
             EffectiveDate effectiveDate,
             Capacity? capacity,
             ConnectionType? connectionType,
@@ -55,7 +54,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
                 address,
                 meteringPointType,
                 gridAreaLinkId,
-                powerPlantGsrnNumber,
                 effectiveDate,
                 capacity,
                 meteringConfiguration,
@@ -65,7 +63,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             ConnectionType = connectionType;
             DisconnectionType = disconnectionType;
             NetSettlementGroup = netSettlementGroup;
-            PowerPlantGsrnNumber = powerPlantGsrnNumber;
         }
 
         protected EnergySupplierDetails? EnergySupplierDetails { get; private set; }
@@ -75,8 +72,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
         protected DisconnectionType DisconnectionType { get; }
 
         protected NetSettlementGroup NetSettlementGroup { get;  }
-
-        protected GsrnNumber? PowerPlantGsrnNumber { get; }
 
         public static BusinessRulesValidationResult CanCreate(ProductionMeteringPointDetails meteringPointDetails)
         {

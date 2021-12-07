@@ -94,6 +94,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Production
                 .WithReadingPeriodicity(request.MeterReadingOccurrence)
                 .WithPowerLimit(request.MaximumPower, request.MaximumCurrent)
                 .WithNetSettlementGroup(request.NetSettlementGroup!)
+                .WithPowerPlant(request.PowerPlant)
                 .WithAddress(
                     request.StreetName,
                     request.StreetCode,

@@ -100,6 +100,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
                 .WithScheduledMeterReadingDate(request.ScheduledMeterReadingDate!)
                 .WithReadingPeriodicity(request.MeterReadingOccurrence)
                 .WithPowerLimit(request.MaximumPower, request.MaximumCurrent)
+                .WithPowerPlant(request.PowerPlant)
                 .WithAddress(
                     request.StreetName,
                     request.StreetCode,
