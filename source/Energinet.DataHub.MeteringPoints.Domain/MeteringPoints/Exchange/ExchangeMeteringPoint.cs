@@ -66,14 +66,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
             _toGrid = toGrid;
             _fromGrid = fromGrid;
             _masterData = masterData;
-            _productType = ProductType.EnergyActive;
 
             var @event = new ExchangeMeteringPointCreated(
                 id.Value,
                 GsrnNumber.Value,
                 gridAreaLinkId.Value,
                 MeteringConfiguration.Method.Name,
-                _productType.Name,
+                _masterData.ProductType.Name,
                 meterReadingOccurrence.Name,
                 _unitType.Name,
                 address.City,

@@ -15,6 +15,7 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
@@ -49,6 +50,29 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 .HasConversion(
                     toDbValue => toDbValue.Value,
                     fromDbValue => GsrnNumber.Create(fromDbValue));
+
+            builder.OwnsOne<MasterData>("_masterData", mapper =>
+            {
+                mapper.Property(x => x.ProductType)
+                    .HasColumnName("ProductType")
+                    .HasConversion(
+                        toDbValue => toDbValue.Name,
+                        fromDbValue => EnumerationType.FromName<ProductType>(fromDbValue));
+                mapper.Ignore(x => x.Address);
+                mapper.Ignore(x => x.Capacity);
+                mapper.Ignore(x => x.AssetType);
+                mapper.Ignore(x => x.ConnectionType);
+                mapper.Ignore(x => x.DisconnectionType);
+                mapper.Ignore(x => x.EffectiveDate);
+                mapper.Ignore(x => x.MeteringConfiguration);
+                mapper.Ignore(x => x.PowerLimit);
+                mapper.Ignore(x => x.ReadingOccurrence);
+                mapper.Ignore(x => x.SettlementMethod);
+                mapper.Ignore(x => x.UnitType);
+                mapper.Ignore(x => x.NetSettlementGroup);
+                mapper.Ignore(x => x.PowerPlantGsrnNumber);
+                mapper.Ignore(x => x.ScheduledMeterReadingDate);
+            });
 
             builder.OwnsOne<Address>("Address", y =>
             {
@@ -100,12 +124,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 .HasColumnName("PowerPlant")
                 .HasConversion(toDbValue => toDbValue.Value, fromDbValue => GsrnNumber.Create(fromDbValue));
 
-            builder.Property<ProductType>("_productType")
-                .HasColumnName("ProductType")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<ProductType>(fromDbValue));
-
+            // builder.Property<ProductType>("_productType")
+            //     .HasColumnName("ProductType")
+            //     .HasConversion(
+            //         toDbValue => toDbValue.Name,
+            //         fromDbValue => EnumerationType.FromName<ProductType>(fromDbValue));
             builder.Property<MeasurementUnitType>("_unitType")
                 .HasColumnName("UnitType")
                 .HasConversion(

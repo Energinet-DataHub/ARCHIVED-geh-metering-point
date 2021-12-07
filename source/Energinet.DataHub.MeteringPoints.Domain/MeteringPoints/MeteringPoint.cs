@@ -30,7 +30,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
     {
         #pragma warning disable SA1401, CA1051 // Field cannot be private since it is set by derivatives
         protected MeteringPointType _meteringPointType;
-        protected ProductType _productType;
         protected MeasurementUnitType _unitType;
         protected AssetType? _assetType;
         private readonly MasterData _masterData;

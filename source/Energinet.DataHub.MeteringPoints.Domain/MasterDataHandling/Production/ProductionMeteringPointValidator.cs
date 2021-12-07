@@ -29,10 +29,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production
                 new StreetNameIsRequiredRule(masterData.Address),
                 new PostCodeIsRequiredRule(masterData.Address),
                 new GeoInfoReferenceRequirementRule(masterData.Address),
-                new MeteringMethodRule(masterData.NetSettlementGroup, masterData.MeteringConfiguration.Method),
+                new MeteringMethodRule(masterData.NetSettlementGroup!, masterData.MeteringConfiguration.Method),
                 new MeteringPoints.Production.Rules.AssetTypeRequirementRule(masterData.AssetType),
                 new PowerplantRequirementRule(masterData.PowerPlantGsrnNumber),
-                new ConnectionTypeRequirementRule(masterData.NetSettlementGroup, masterData.ConnectionType),
+                new ConnectionTypeRequirementRule(masterData.NetSettlementGroup!, masterData.ConnectionType),
             });
         }
     }

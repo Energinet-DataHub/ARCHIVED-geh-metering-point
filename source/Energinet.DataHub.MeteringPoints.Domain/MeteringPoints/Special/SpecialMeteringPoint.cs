@@ -63,14 +63,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
                 masterData)
         {
             _masterData = masterData;
-            _productType = ProductType.EnergyActive;
-
             var @event = new SpecialMeteringPointCreated(
                 id.Value,
                 GsrnNumber.Value,
                 gridAreaLinkId.Value,
                 MeteringConfiguration.Method.Name,
-                _productType.Name,
+                _masterData.ProductType.Name,
                 meterReadingOccurrence.Name,
                 address.City,
                 address.Floor,

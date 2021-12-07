@@ -70,7 +70,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringConfiguration,
                 masterData)
         {
-            _productType = masterData.ProductType;
             ConnectionState = ConnectionState.New();
             _masterData = masterData;
 
@@ -79,7 +78,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 GsrnNumber.Value,
                 gridAreaLinkId.Value,
                 MeteringConfiguration.Method.Name,
-                _productType.Name,
+                _masterData.ProductType.Name,
                 meterReadingOccurrence.Name,
                 _unitType.Name,
                 masterData.SettlementMethod.Name,

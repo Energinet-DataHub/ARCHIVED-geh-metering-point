@@ -30,12 +30,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
                 new StreetNameIsRequiredRule(masterData.Address),
                 new PostCodeIsRequiredRule(masterData.Address),
                 new GeoInfoReferenceRequirementRule(masterData.Address),
-                new MeteringMethodRule(masterData.NetSettlementGroup, masterData.MeteringConfiguration.Method),
-                new ScheduledMeterReadingDateRule(masterData.ScheduledMeterReadingDate, masterData.NetSettlementGroup),
-                new PowerPlantIsRequiredForNetSettlementGroupRule(masterData.NetSettlementGroup, masterData.PowerPlantGsrnNumber),
-                new CapacityRequirementRule(masterData.Capacity, masterData.NetSettlementGroup),
-                new AssetTypeRequirementRule(masterData.AssetType, masterData.NetSettlementGroup),
-                new ConnectionTypeRequirementRule(masterData.NetSettlementGroup, masterData.ConnectionType),
+                new MeteringMethodRule(masterData.NetSettlementGroup!, masterData.MeteringConfiguration.Method),
+                new ScheduledMeterReadingDateRule(masterData.ScheduledMeterReadingDate, masterData.NetSettlementGroup!),
+                new PowerPlantIsRequiredForNetSettlementGroupRule(masterData.NetSettlementGroup!, masterData.PowerPlantGsrnNumber),
+                new CapacityRequirementRule(masterData.Capacity, masterData.NetSettlementGroup!),
+                new AssetTypeRequirementRule(masterData.AssetType, masterData.NetSettlementGroup!),
+                new ConnectionTypeRequirementRule(masterData.NetSettlementGroup!, masterData.ConnectionType),
             });
         }
     }

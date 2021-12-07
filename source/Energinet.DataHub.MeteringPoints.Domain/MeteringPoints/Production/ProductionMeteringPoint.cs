@@ -74,7 +74,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
         {
             _productionObligation = productionObligation;
             _masterData = masterData;
-            _productType = ProductType.EnergyActive;
             ProductionObligation = false;
             ConnectionState = ConnectionState.New();
 
@@ -83,7 +82,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 GsrnNumber.Value,
                 gridAreaLinkId.Value,
                  MeteringConfiguration.Method.Name,
-                _productType.Name,
+                _masterData.ProductType.Name,
                 meterReadingOccurrence.Name,
                 _unitType.Name,
                 netSettlementGroup.Name,
