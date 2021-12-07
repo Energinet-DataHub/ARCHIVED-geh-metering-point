@@ -55,6 +55,7 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Model\202112071500 Move settlement method.sql" />
     <EmbeddedResource Include="Scripts\Model\202112071531 Move scheduled meter reading date.sql" />
     <EmbeddedResource Include="Scripts\Model\202112071541 Move production obligation.sql" />
+    <EmbeddedResource Include="Scripts\Model\202112071556 Move net settlement group.sql" />
     <EmbeddedResource Include="Scripts\Seed\202109232130 Create Grid Area seed data.sql" />
     <EmbeddedResource Include="Scripts\Test\202109232129 Clean database.sql" />
     <EmbeddedResource Include="Scripts\Test\202109232130 Create Grid Area test data.sql" />

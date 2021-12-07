@@ -43,7 +43,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             EffectiveDate effectiveDate,
             ConnectionType? connectionType,
             DisconnectionType disconnectionType,
-            NetSettlementGroup netSettlementGroup,
             MasterData masterData)
             : base(
                 id,
@@ -56,7 +55,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             _masterData = masterData;
             ConnectionType = connectionType;
             DisconnectionType = disconnectionType;
-            NetSettlementGroup = netSettlementGroup;
         }
 
         protected EnergySupplierDetails? EnergySupplierDetails { get; private set; }
@@ -64,8 +62,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
         protected ConnectionType? ConnectionType { get; }
 
         protected DisconnectionType DisconnectionType { get; }
-
-        protected NetSettlementGroup NetSettlementGroup { get;  }
 
         public static BusinessRulesValidationResult CanCreate(ProductionMeteringPointDetails meteringPointDetails)
         {

@@ -40,7 +40,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             EffectiveDate effectiveDate,
-            NetSettlementGroup netSettlementGroup,
             DisconnectionType disconnectionType,
             ConnectionType? connectionType,
             MasterData masterData)
@@ -52,7 +51,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 effectiveDate,
                 connectionType,
                 disconnectionType,
-                netSettlementGroup,
                 masterData)
         {
             ConnectionState = ConnectionState.New();
@@ -67,7 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 _masterData.ReadingOccurrence.Name,
                 _masterData.UnitType.Name,
                 _masterData.SettlementMethod.Name,
-                netSettlementGroup.Name,
+                _masterData.NetSettlementGroup?.Name,
                 _masterData.Address.City,
                 _masterData.Address.Floor,
                 _masterData.Address.Room,
@@ -130,7 +128,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 MeteringPointType.Consumption,
                 meteringPointDetails.GridAreaLinkId,
                 meteringPointDetails.EffectiveDate,
-                meteringPointDetails.NetSettlementGroup,
                 meteringPointDetails.DisconnectionType,
                 meteringPointDetails.ConnectionType,
                 masterData);

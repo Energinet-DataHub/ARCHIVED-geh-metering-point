@@ -142,6 +142,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 mapper.Property(x => x.ProductionObligation)
                     .HasColumnName("ProductionObligation");
 
+                mapper.Property(x => x.NetSettlementGroup)
+                    .HasColumnName("NetSettlementGroup")
+                    .HasConversion(
+                        toDbValue => toDbValue! == null! ? null : toDbValue.Name,
+                        fromDbValue => string.IsNullOrEmpty(fromDbValue) ? null : EnumerationType.FromName<NetSettlementGroup>(fromDbValue));
                 mapper.Ignore(x => x.ConnectionType);
                 mapper.Ignore(x => x.DisconnectionType);
                 mapper.Ignore(x => x.EffectiveDate);
@@ -204,12 +209,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<DisconnectionType>(fromDbValue));
-
-            builder.Property<NetSettlementGroup>("_netSettlementGroup")
-                .HasColumnName("NetSettlementGroup")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<NetSettlementGroup>(fromDbValue));
         }
     }
 

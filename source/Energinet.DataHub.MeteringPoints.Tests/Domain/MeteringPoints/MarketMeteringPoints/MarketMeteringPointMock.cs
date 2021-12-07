@@ -32,7 +32,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             EffectiveDate effectiveDate,
             ConnectionType? connectionType,
             DisconnectionType disconnectionType,
-            NetSettlementGroup netSettlementGroup,
             MasterData masterData)
             : base(
                 id,
@@ -42,7 +41,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 effectiveDate,
                 connectionType,
                 disconnectionType,
-                netSettlementGroup,
                 masterData)
         {
         }

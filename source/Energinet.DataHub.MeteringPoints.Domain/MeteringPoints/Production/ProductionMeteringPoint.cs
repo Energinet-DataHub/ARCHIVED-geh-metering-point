@@ -44,7 +44,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             EffectiveDate effectiveDate,
-            NetSettlementGroup netSettlementGroup,
             bool productionObligation,
             DisconnectionType disconnectionType,
             ConnectionType? connectionType,
@@ -57,7 +56,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 effectiveDate,
                 connectionType,
                 disconnectionType,
-                netSettlementGroup,
                 masterData)
         {
             _productionObligation = productionObligation;
@@ -73,7 +71,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 _masterData.ProductType.Name,
                 _masterData.ReadingOccurrence.Name,
                 _masterData.UnitType.Name,
-                netSettlementGroup.Name,
+                _masterData.NetSettlementGroup?.Name!,
                 _masterData.Address.City!,
                 _masterData.Address.Floor!,
                 _masterData.Address.Room!,
@@ -132,7 +130,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 MeteringPointType.Production,
                 meteringPointDetails.GridAreaLinkId,
                 meteringPointDetails.EffectiveDate,
-                meteringPointDetails.NetSettlementGroup,
                 false,
                 meteringPointDetails.DisconnectionType,
                 meteringPointDetails.ConnectionType,
