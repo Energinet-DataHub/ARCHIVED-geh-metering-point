@@ -116,7 +116,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 EnumerationType.FromName<MeteringPointType>(SampleData.TypeName),
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
                 EffectiveDate.Create(SampleData.EffectiveDate),
-                ConnectionType.Installation,
                 builder.Build());
         }
     }

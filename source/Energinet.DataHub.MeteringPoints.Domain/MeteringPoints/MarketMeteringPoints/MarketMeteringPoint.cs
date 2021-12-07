@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
@@ -40,7 +39,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             EffectiveDate effectiveDate,
-            ConnectionType? connectionType,
             MasterData masterData)
             : base(
                 id,
@@ -51,12 +49,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
                 masterData)
         {
             _masterData = masterData;
-            ConnectionType = connectionType;
         }
 
         protected EnergySupplierDetails? EnergySupplierDetails { get; private set; }
-
-        protected ConnectionType? ConnectionType { get; }
 
         public static BusinessRulesValidationResult CanCreate(ProductionMeteringPointDetails meteringPointDetails)
         {

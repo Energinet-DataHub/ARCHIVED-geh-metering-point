@@ -30,7 +30,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             EffectiveDate effectiveDate,
-            ConnectionType? connectionType,
             MasterData masterData)
             : base(
                 id,
@@ -38,7 +37,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 meteringPointType,
                 gridAreaLinkId,
                 effectiveDate,
-                connectionType,
                 masterData)
         {
         }

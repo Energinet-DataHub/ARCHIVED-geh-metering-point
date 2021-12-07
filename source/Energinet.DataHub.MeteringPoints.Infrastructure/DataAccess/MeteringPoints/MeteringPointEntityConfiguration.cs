@@ -152,7 +152,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     .HasConversion(
                         toDbValue => toDbValue.Name,
                         fromDbValue => EnumerationType.FromName<DisconnectionType>(fromDbValue));
-
+                mapper.Property(x => x.ConnectionType)
+                    .HasColumnName("ConnectionType")
+                    .HasConversion(
+                        toDbValue => toDbValue! == null! ? null : toDbValue.Name,
+                        fromDbValue => string.IsNullOrEmpty(fromDbValue) ? null : EnumerationType.FromName<ConnectionType>(fromDbValue));
                 mapper.Ignore(x => x.ConnectionType);
                 mapper.Ignore(x => x.EffectiveDate);
             });
@@ -202,11 +206,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 config.Property(x => x.StartOfSupply)
                     .HasColumnName("StartOfSupplyDate");
             });
-            builder.Property<ConnectionType>("ConnectionType")
-                .HasColumnName("ConnectionType")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<ConnectionType>(fromDbValue));
         }
     }
 

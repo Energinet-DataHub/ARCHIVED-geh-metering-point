@@ -40,7 +40,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             EffectiveDate effectiveDate,
-            ConnectionType? connectionType,
             MasterData masterData)
             : base(
                 id,
@@ -48,7 +47,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointType,
                 gridAreaLinkId,
                 effectiveDate,
-                connectionType,
                 masterData)
         {
             ConnectionState = ConnectionState.New();
@@ -83,7 +81,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 _masterData.PowerLimit.Kwh,
                 effectiveDate.DateInUtc,
                 _masterData.DisconnectionType.Name,
-                ConnectionType?.Name,
+                _masterData.ConnectionType?.Name,
                 _masterData.AssetType?.Name,
                 ConnectionState.PhysicalState.Name,
                 _masterData.ScheduledMeterReadingDate?.MonthAndDay,
@@ -126,7 +124,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 MeteringPointType.Consumption,
                 meteringPointDetails.GridAreaLinkId,
                 meteringPointDetails.EffectiveDate,
-                meteringPointDetails.ConnectionType,
                 masterData);
         }
 
