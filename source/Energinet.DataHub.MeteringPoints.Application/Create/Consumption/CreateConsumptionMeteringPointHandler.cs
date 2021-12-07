@@ -95,6 +95,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
                     new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Consumption));
 
             builder
+                .WithMeteringConfiguration(request.MeteringMethod, request.MeterNumber)
                 .WithSettlementMethod(request.SettlementMethod)
                 .WithNetSettlementGroup(request.NetSettlementGroup!)
                 .WithScheduledMeterReadingDate(request.ScheduledMeterReadingDate!)

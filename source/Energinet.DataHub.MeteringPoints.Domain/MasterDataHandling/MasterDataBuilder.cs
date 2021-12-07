@@ -58,9 +58,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 netSettlementGroup: GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)));
         }
 
-        public IMasterDataBuilder WithMeteringConfiguration(string method, string meterNumber)
+        public IMasterDataBuilder WithMeteringConfiguration(string method, string? meterNumber)
         {
-            SetValue(nameof(MasterData.MeteringConfiguration), MeteringConfiguration.Create(EnumerationType.FromName<MeteringMethod>(method), MeterId.Create(meterNumber)));
+            SetValue(nameof(MasterData.MeteringConfiguration), MeteringConfiguration.Create(EnumerationType.FromName<MeteringMethod>(method), string.IsNullOrEmpty(meterNumber) ? MeterId.Empty() : MeterId.Create(meterNumber)));
             return this;
         }
 

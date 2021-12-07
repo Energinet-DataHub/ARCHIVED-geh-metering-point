@@ -34,7 +34,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             ConnectionType? connectionType,
             DisconnectionType disconnectionType,
             NetSettlementGroup netSettlementGroup,
-            MeteringConfiguration meteringConfiguration,
             MasterData masterData)
             : base(
                 id,
@@ -46,7 +45,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 connectionType,
                 disconnectionType,
                 netSettlementGroup,
-                meteringConfiguration,
                 masterData)
         {
         }

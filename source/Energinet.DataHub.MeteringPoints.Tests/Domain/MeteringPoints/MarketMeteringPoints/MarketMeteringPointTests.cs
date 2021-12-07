@@ -120,7 +120,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
                 ConnectionType.Installation,
                 DisconnectionType.Remote,
                 NetSettlementGroup.Six,
-                MeteringConfiguration.Create(EnumerationType.FromName<MeteringMethod>(SampleData.SubTypeName), MeterId.Create(SampleData.MeterNumber)),
                 builder.Build());
         }
     }

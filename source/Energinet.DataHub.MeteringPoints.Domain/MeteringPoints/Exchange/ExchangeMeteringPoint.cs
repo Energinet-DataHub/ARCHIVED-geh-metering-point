@@ -43,7 +43,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
             [NotNull]EffectiveDate effectiveDate,
             [NotNull]GridAreaLinkId toGrid,
             [NotNull]GridAreaLinkId fromGrid,
-            MeteringConfiguration meteringConfiguration,
             MasterData masterData)
             : base(
                 id,
@@ -52,7 +51,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
                 meteringPointType,
                 gridAreaLinkId,
                 effectiveDate,
-                meteringConfiguration,
                 masterData)
         {
             _toGrid = toGrid;
@@ -124,7 +122,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
                 meteringPointDetails.EffectiveDate,
                 meteringPointDetails.ToGridLinkId,
                 meteringPointDetails.FromGridLinkId,
-                meteringPointDetails.MeteringConfiguration,
                 masterData);
         }
 

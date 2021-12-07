@@ -39,7 +39,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
             MeteringPointType meteringPointType,
             [NotNull]GridAreaLinkId gridAreaLinkId,
             [NotNull]EffectiveDate effectiveDate,
-            MeteringConfiguration meteringConfiguration,
             MasterData masterData)
             : base(
                 id,
@@ -48,7 +47,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
                 meteringPointType,
                 gridAreaLinkId,
                 effectiveDate,
-                meteringConfiguration,
                 masterData)
         {
             _masterData = masterData;
@@ -114,7 +112,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
                 meteringPointDetails.MeteringPointType,
                 meteringPointDetails.GridAreaLinkId,
                 meteringPointDetails.EffectiveDate,
-                meteringPointDetails.MeteringConfiguration,
                 masterData);
         }
 

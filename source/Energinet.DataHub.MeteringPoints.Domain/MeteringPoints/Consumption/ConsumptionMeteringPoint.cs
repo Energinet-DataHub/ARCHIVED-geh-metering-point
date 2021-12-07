@@ -44,7 +44,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             NetSettlementGroup netSettlementGroup,
             DisconnectionType disconnectionType,
             ConnectionType? connectionType,
-            MeteringConfiguration meteringConfiguration,
             MasterData masterData)
             : base(
                 id,
@@ -56,7 +55,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 connectionType,
                 disconnectionType,
                 netSettlementGroup,
-                meteringConfiguration,
                 masterData)
         {
             ConnectionState = ConnectionState.New();
@@ -138,7 +136,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointDetails.NetSettlementGroup,
                 meteringPointDetails.DisconnectionType,
                 meteringPointDetails.ConnectionType,
-                meteringPointDetails.MeteringConfiguration,
                 masterData);
         }
 

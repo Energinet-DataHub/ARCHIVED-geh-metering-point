@@ -91,6 +91,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Production
                     new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Production));
 
             builder
+                .WithMeteringConfiguration(request.MeteringMethod, request.MeterNumber)
                 .WithReadingPeriodicity(request.MeterReadingOccurrence)
                 .WithPowerLimit(request.MaximumPower, request.MaximumCurrent)
                 .WithNetSettlementGroup(request.NetSettlementGroup!)

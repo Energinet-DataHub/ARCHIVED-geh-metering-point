@@ -30,7 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
     {
         #pragma warning disable SA1401, CA1051 // Field cannot be private since it is set by derivatives
         protected MeteringPointType _meteringPointType;
-        private readonly MasterData _masterData;
+        private MasterData _masterData;
 #pragma warning restore
         private GridAreaLinkId _gridAreaLinkId;
         private EffectiveDate _effectiveDate;
@@ -47,7 +47,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             EffectiveDate effectiveDate,
-            MeteringConfiguration meteringConfiguration,
             MasterData masterData)
         {
             Id = id;
@@ -57,7 +56,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _gridAreaLinkId = gridAreaLinkId;
             _effectiveDate = effectiveDate;
             _masterData = masterData;
-            MeteringConfiguration = meteringConfiguration;
         }
 
         public MeteringPointId Id { get; }
@@ -66,7 +64,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public Address Address { get; private set; }
 
-        internal MeteringConfiguration MeteringConfiguration { get; private set; }
+        internal MeteringConfiguration MeteringConfiguration => _masterData.MeteringConfiguration;
 
         protected ConnectionState ConnectionState { get; set; } = ConnectionState.New();
 
@@ -142,7 +140,37 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 return;
             }
 
-            MeteringConfiguration = configuration;
+            var builder =
+                new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(_meteringPointType))
+                    .WithNetSettlementGroup(_masterData.NetSettlementGroup?.Name)
+                    .WithCapacity(_masterData.Capacity?.Kw)
+                    .WithMeteringConfiguration(configuration.Method.Name, configuration.Meter.Value)
+                    .WithReadingPeriodicity(_masterData.ReadingOccurrence.Name)
+                    .WithScheduledMeterReadingDate(_masterData.ScheduledMeterReadingDate?.MonthAndDay)
+                    .WithAddress(
+                        Address.StreetName,
+                        Address.StreetCode,
+                        Address.BuildingNumber,
+                        Address.City,
+                        Address.CitySubDivision,
+                        Address.PostCode,
+                        Address.CountryCode,
+                        Address.Floor,
+                        Address.Room,
+                        Address.MunicipalityCode,
+                        Address.IsActual,
+                        Address.GeoInfoReference,
+                        Address.LocationDescription)
+                    .WithAssetType(_masterData.AssetType?.Name)
+                    .WithConnectionType(_masterData.ConnectionType?.Name)
+                    .WithDisconnectionType(_masterData.DisconnectionType.Name)
+                    .WithPowerLimit(_masterData.PowerLimit.Kwh, _masterData.PowerLimit.Ampere)
+                    .WithPowerPlant(_masterData.PowerPlantGsrnNumber?.Value)
+                    .WithProductType(_masterData.ProductType.Name)
+                    .WithSettlementMethod(_masterData.SettlementMethod?.Name)
+                    .WithMeasurementUnitType(_masterData.UnitType?.Name);
+
+            _masterData = builder.Build();
 
             AddDomainEvent(new MeteringConfigurationChanged(
                 Id.Value.ToString(),

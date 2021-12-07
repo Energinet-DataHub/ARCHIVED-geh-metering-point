@@ -45,7 +45,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             ConnectionType? connectionType,
             DisconnectionType disconnectionType,
             NetSettlementGroup netSettlementGroup,
-            MeteringConfiguration meteringConfiguration,
             MasterData masterData)
             : base(
                 id,
@@ -54,7 +53,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
                 meteringPointType,
                 gridAreaLinkId,
                 effectiveDate,
-                meteringConfiguration,
                 masterData)
         {
             _masterData = masterData;

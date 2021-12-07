@@ -48,7 +48,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         /// <param name="method"></param>
         /// <param name="meterNumber"></param>
         /// <returns><see cref="IMasterDataBuilder"/></returns>
-        IMasterDataBuilder WithMeteringConfiguration(string method, string meterNumber);
+        IMasterDataBuilder WithMeteringConfiguration(string method, string? meterNumber);
 
         /// <summary>
         /// Configures address
@@ -103,7 +103,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         /// </summary>
         /// <param name="settlementMethod"></param>
         /// <returns><see cref="IMasterDataBuilder"/></returns>
-        IMasterDataBuilder WithSettlementMethod(string settlementMethod);
+        IMasterDataBuilder WithSettlementMethod(string? settlementMethod);
 
         /// <summary>
         /// Configures disconnection type
@@ -124,7 +124,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         /// </summary>
         /// <param name="scheduledMeterReadingDate"></param>
         /// <returns><see cref="IMasterDataBuilder"/></returns>
-        IMasterDataBuilder WithScheduledMeterReadingDate(string scheduledMeterReadingDate);
+        IMasterDataBuilder WithScheduledMeterReadingDate(string? scheduledMeterReadingDate);
 
         /// <summary>
         /// Configures capacity

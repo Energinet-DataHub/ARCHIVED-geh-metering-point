@@ -49,7 +49,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
             bool productionObligation,
             DisconnectionType disconnectionType,
             ConnectionType? connectionType,
-            MeteringConfiguration meteringConfiguration,
             MasterData masterData)
             : base(
                 id,
@@ -61,7 +60,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 connectionType,
                 disconnectionType,
                 netSettlementGroup,
-                meteringConfiguration,
                 masterData)
         {
             _productionObligation = productionObligation;
@@ -141,7 +139,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 false,
                 meteringPointDetails.DisconnectionType,
                 meteringPointDetails.ConnectionType,
-                meteringPointDetails.MeteringConfiguration,
                 masterData);
         }
 
