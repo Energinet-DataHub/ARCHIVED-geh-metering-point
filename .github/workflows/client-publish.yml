@@ -99,7 +99,7 @@ jobs:
         run: dotnet test ${{ env.SOLUTION_FILE_PATH }} --no-build --configuration ${{ env.BUILD_CONFIGURATION }} --verbosity normal --filter "FullyQualifiedName~MeteringPointClientTests"
 
       - name: Get version suffix property value
-        uses: Energinet-DataHub/.github/.github/actions/get-version-suffix@2.3.0
+        uses: Energinet-DataHub/.github/.github/actions/get-version-suffix@2.4.1
         id: get_version_suffix
 
       - name: Pack MeteringPoints.Client project
@@ -113,7 +113,7 @@ jobs:
           PROJECT_PATH: 'source/Energinet.DataHub.MeteringPoints.Client.Abstractions/Energinet.DataHub.MeteringPoints.Client.Abstractions.csproj'
 
       - name: Check each NuGet package version does not exists (not looking at prereleases)
-        uses: Energinet-DataHub/.github/.github/actions/nuget-assert-release-version@2.3.0
+        uses: Energinet-DataHub/.github/.github/actions/nuget-assert-release-version@2.4.1
         with:
           NUPKG_RECURSE_PATH: 'source'
 
