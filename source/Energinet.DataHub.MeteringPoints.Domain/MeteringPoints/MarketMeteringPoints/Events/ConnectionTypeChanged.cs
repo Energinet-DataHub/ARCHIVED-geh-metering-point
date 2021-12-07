@@ -12,15 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Events
 {
-    public record MasterDataDetails(
-        EffectiveDate EffectiveDate,
-        Domain.Addresses.Address? Address = null,
-        MeteringConfiguration? MeteringConfiguration = null,
-        ConnectionType? ConnectionType = null);
+    public class ConnectionTypeChanged : DomainEventBase
+    {
+        public ConnectionTypeChanged(Guid meteringPointId, string connectionType)
+        {
+            MeteringPointId = meteringPointId;
+            ConnectionType = connectionType;
+        }
+
+        public Guid MeteringPointId { get; }
+
+        public string ConnectionType { get; }
+    }
 }

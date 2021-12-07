@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
@@ -53,6 +54,18 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
             {
                 _targetMeteringPoint.ChangeMeteringConfiguration(_masterDataDetails.MeteringConfiguration, _masterDataDetails.EffectiveDate);
             }
+
+            TryChangeConnectionType();
+        }
+
+        private void TryChangeConnectionType()
+        {
+            if (_masterDataDetails.ConnectionType is null)
+            {
+                return;
+            }
+
+            _targetMeteringPoint.SetConnectionType(_masterDataDetails.ConnectionType);
         }
 
         private void CheckIfValuesAreApplicable()
@@ -60,6 +73,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
             if (_masterDataDetails.Address is not null)
             {
                 _errors.AddRange(_targetMeteringPoint.CanChangeAddress(_masterDataDetails.Address).Errors);
+            }
+
+            if (_masterDataDetails.ConnectionType is not null)
+            {
+                _errors.AddRange(_targetMeteringPoint.CanChangeConnectionType(_masterDataDetails.ConnectionType).Errors);
             }
         }
     }
