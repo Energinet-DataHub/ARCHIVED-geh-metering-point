@@ -23,6 +23,7 @@ using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special;
@@ -81,7 +82,26 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Special
                 return rulesCheckResult;
             }
 
-            _meteringPointRepository.Add(SpecialMeteringPoint.Create(meteringPointDetails));
+            var builder =
+                new MasterDataBuilder(
+                    new MasterDataFieldSelector().GetMasterDataFieldsFor(EnumerationType.FromName<MeteringPointType>(request.MeteringPointType)));
+
+            builder
+                .WithAddress(
+                    request.StreetName,
+                    request.StreetCode,
+                    request.BuildingNumber,
+                    request.CityName,
+                    request.CitySubDivisionName,
+                    request.PostCode,
+                    EnumerationType.FromName<CountryCode>(request.CountryCode),
+                    request.FloorIdentification,
+                    request.RoomIdentification,
+                    string.IsNullOrWhiteSpace(request.MunicipalityCode) ? default : int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()),
+                    request.IsActualAddress,
+                    string.IsNullOrWhiteSpace(request.GeoInfoReference) ? default : Guid.Parse(request.GeoInfoReference),
+                    request.LocationDescription);
+            _meteringPointRepository.Add(SpecialMeteringPoint.Create(meteringPointDetails, builder.Build()));
 
             return BusinessProcessResult.Ok(request.TransactionId);
         }

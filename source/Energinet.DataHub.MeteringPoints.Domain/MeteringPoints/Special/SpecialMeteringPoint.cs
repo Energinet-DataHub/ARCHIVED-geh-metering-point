@@ -18,6 +18,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special.Rules;
@@ -27,6 +28,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
 {
     public class SpecialMeteringPoint : MeteringPoint
     {
+        #pragma warning disable
+        private readonly MasterData _masterData;
+        #pragma warning restore
+
         public SpecialMeteringPoint(
             [NotNull]MeteringPointId id,
             GsrnNumber gsrnNumber,
@@ -39,7 +44,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
             GsrnNumber? powerPlantGsrnNumber,
             Capacity? capacity,
             AssetType? assetType,
-            MeteringConfiguration meteringConfiguration)
+            MeteringConfiguration meteringConfiguration,
+            MasterData masterData)
             : base(
                 id,
                 gsrnNumber,
@@ -55,6 +61,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
                 assetType,
                 meteringConfiguration)
         {
+            _masterData = masterData;
             _productType = ProductType.EnergyActive;
 
             var @event = new SpecialMeteringPointCreated(
@@ -104,8 +111,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
             return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
         }
 
-        public static SpecialMeteringPoint Create(SpecialMeteringPointDetails meteringPointDetails)
+        public static SpecialMeteringPoint Create(SpecialMeteringPointDetails meteringPointDetails, MasterData masterData)
         {
+            if (masterData == null) throw new ArgumentNullException(nameof(masterData));
             if (!CanCreate(meteringPointDetails).Success)
             {
                 throw new SpecialMeteringPointException($"Cannot create {meteringPointDetails.MeteringPointType.Name} metering point due to violation of one or more business rules.");
@@ -123,7 +131,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
                 meteringPointDetails.PowerPlantGsrnNumber,
                 meteringPointDetails.Capacity,
                 meteringPointDetails.AssetType,
-                meteringPointDetails.MeteringConfiguration);
+                meteringPointDetails.MeteringConfiguration,
+                masterData);
         }
 
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)

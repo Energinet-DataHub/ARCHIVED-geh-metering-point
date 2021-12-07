@@ -70,7 +70,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Special
                     MeteringConfiguration = meteringConfiguration,
                 };
 
-            var meteringPoint = SpecialMeteringPoint.Create(specialMeteringPointDetails);
+            var meteringPoint = SpecialMeteringPoint.Create(specialMeteringPointDetails, MasterDataBuilderForSpecial().Build());
 
             var createdEvent = meteringPoint.DomainEvents.First(e => e is SpecialMeteringPointCreated) as SpecialMeteringPointCreated;
             Assert.Equal(address.City, createdEvent!.City);
@@ -106,7 +106,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Special
                 MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
             };
 
-            var meteringPoint = SpecialMeteringPoint.Create(details);
+            var meteringPoint = SpecialMeteringPoint.Create(details, MasterDataBuilderForSpecial().Build());
 
             var createdEvent = meteringPoint.DomainEvents.First(e => e is SpecialMeteringPointCreated) as SpecialMeteringPointCreated;
             Assert.Equal(ProductType.EnergyActive.Name, createdEvent!.ProductType);
@@ -124,7 +124,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Special
                     MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                 };
 
-            var meteringPoint = SpecialMeteringPoint.Create(meteringPointDetails);
+            var meteringPoint = SpecialMeteringPoint.Create(meteringPointDetails, MasterDataBuilderForSpecial().Build());
 
             var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is SpecialMeteringPointCreated) as SpecialMeteringPointCreated;
 

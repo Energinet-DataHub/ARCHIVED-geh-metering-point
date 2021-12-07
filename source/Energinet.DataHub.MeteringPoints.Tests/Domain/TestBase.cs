@@ -113,6 +113,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()));
         }
 
+        protected static IMasterDataBuilder MasterDataBuilderForSpecial()
+        {
+            return MasterDataBuilder(MeteringPointType.VEProduction);
+        }
+
         protected static ProductionMeteringPointDetails CreateProductionDetails()
         {
             var address = CreateAddress();
