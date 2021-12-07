@@ -78,10 +78,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
             Fixture.TestLogger.WriteLine(ingestionResponseBody);
 
             // Processing
-            await AssertFunctionExecuted("QueueSubscriber").ConfigureAwait(false);
+            await AssertFunctionExecuted(Fixture.ProcessingHostManager, "QueueSubscriber").ConfigureAwait(false);
 
             // Outbox
-            await AssertFunctionExecuted("OutboxWatcher").ConfigureAwait(false);
+            await AssertFunctionExecuted(Fixture.OutboxHostManager, "OutboxWatcher").ConfigureAwait(false);
 
             // MessageHub
             await Fixture.MessageHubSimulator.WaitForNotificationsInDataAvailableQueueAsync(correlationId)
@@ -92,26 +92,26 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
             await Fixture.MessageHubSimulator.PeekAsync().ConfigureAwait(false);
 
             // Local MessageHub
-            await AssertFunctionExecuted("RequestBundleQueueSubscriber").ConfigureAwait(false);
+            await AssertFunctionExecuted(Fixture.LocalMessageHubHostManager, "RequestBundleQueueSubscriber").ConfigureAwait(false);
 
             // MessageHub
             await Fixture.MessageHubSimulator.DequeueAsync().ConfigureAwait(false);
 
             // Local MessageHub
-            await AssertFunctionExecuted("BundleDequeuedQueueSubscriber").ConfigureAwait(false);
+            await AssertFunctionExecuted(Fixture.LocalMessageHubHostManager, "BundleDequeuedQueueSubscriber").ConfigureAwait(false);
         }
 
-        private async Task AssertFunctionExecuted(string functionName)
+        private static async Task AssertFunctionExecuted(FunctionAppHostManager hostManager, string functionName)
         {
-            var waitTimespan = TimeSpan.FromSeconds(120);
+            var waitTimespan = TimeSpan.FromSeconds(10);
 
-            var localMessageHubDequeueExecuted = await Awaiter
+            var functionExecuted = await Awaiter
                 .TryWaitUntilConditionAsync(
-                    () => Fixture.LocalMessageHubHostManager.CheckIfFunctionWasExecuted(
+                    () => hostManager.CheckIfFunctionWasExecuted(
                         $"Functions.{functionName}"),
                     waitTimespan)
                 .ConfigureAwait(false);
-            localMessageHubDequeueExecuted.Should().BeTrue();
+            functionExecuted.Should().BeTrue($"{functionName} was expected to run.");
         }
     }
 }
