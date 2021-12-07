@@ -45,7 +45,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
             GridAreaLinkId gridAreaLinkId,
             EffectiveDate effectiveDate,
             bool productionObligation,
-            DisconnectionType disconnectionType,
             ConnectionType? connectionType,
             MasterData masterData)
             : base(
@@ -55,7 +54,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 gridAreaLinkId,
                 effectiveDate,
                 connectionType,
-                disconnectionType,
                 masterData)
         {
             _productionObligation = productionObligation;
@@ -90,7 +88,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 _masterData.PowerLimit.Ampere,
                 _masterData.PowerLimit.Kwh,
                 effectiveDate.DateInUtc,
-                DisconnectionType.Name,
+                _masterData.DisconnectionType.Name,
                 ConnectionType?.Name!,
                 _masterData.AssetType?.Name!,
                 ConnectionState.PhysicalState.Name,
@@ -131,7 +129,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 meteringPointDetails.GridAreaLinkId,
                 meteringPointDetails.EffectiveDate,
                 false,
-                meteringPointDetails.DisconnectionType,
                 meteringPointDetails.ConnectionType,
                 masterData);
         }

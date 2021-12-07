@@ -147,10 +147,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     .HasConversion(
                         toDbValue => toDbValue! == null! ? null : toDbValue.Name,
                         fromDbValue => string.IsNullOrEmpty(fromDbValue) ? null : EnumerationType.FromName<NetSettlementGroup>(fromDbValue));
+                mapper.Property(x => x.DisconnectionType)
+                    .HasColumnName("DisconnectionType")
+                    .HasConversion(
+                        toDbValue => toDbValue.Name,
+                        fromDbValue => EnumerationType.FromName<DisconnectionType>(fromDbValue));
+
                 mapper.Ignore(x => x.ConnectionType);
-                mapper.Ignore(x => x.DisconnectionType);
                 mapper.Ignore(x => x.EffectiveDate);
-                mapper.Ignore(x => x.NetSettlementGroup);
             });
 
             builder.OwnsOne<ConnectionState>("ConnectionState", config =>
@@ -203,12 +207,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<ConnectionType>(fromDbValue));
-
-            builder.Property<DisconnectionType>("DisconnectionType")
-                .HasColumnName("DisconnectionType")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<DisconnectionType>(fromDbValue));
         }
     }
 

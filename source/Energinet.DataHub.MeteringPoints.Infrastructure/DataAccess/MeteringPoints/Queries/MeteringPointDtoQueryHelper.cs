@@ -52,7 +52,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                                 ,MP.[NetSettlementGroup]
 	                            ,MMP.[StartOfSupplyDate] AS SupplyStart
                                 ,MMP.[ConnectionType]
-                                ,MMP.[DisconnectionType]
+                                ,MP.[DisconnectionType]
                                 ,MP.[ProductionObligation]
                           FROM  [dbo].[MeteringPoints] MP LEFT OUTER JOIN
 	                            [dbo].[ExchangeMeteringPoints] EMP ON EMP.Id = MP.Id LEFT OUTER JOIN
