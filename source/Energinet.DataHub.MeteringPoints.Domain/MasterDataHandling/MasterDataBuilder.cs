@@ -151,7 +151,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithConnectionType(string? connectionType)
         {
-            SetValue(nameof(MasterData.ConnectionType), connectionType is null ? null : EnumerationType.FromName<ConnectionType>(connectionType));
+            SetValue(nameof(MasterData.ConnectionType), string.IsNullOrEmpty(connectionType) ? null : EnumerationType.FromName<ConnectionType>(connectionType));
             return this;
         }
 

@@ -66,7 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 _masterData.ProductType.Name,
                 _masterData.ReadingOccurrence.Name,
                 _masterData.UnitType.Name,
-                masterData.SettlementMethod.Name,
+                _masterData.SettlementMethod.Name,
                 netSettlementGroup.Name,
                 _masterData.Address.City,
                 _masterData.Address.Floor,

@@ -129,10 +129,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     y.Property(x => x.GeoInfoReference).HasColumnName("GeoInfoReference");
                     y.Property(x => x.LocationDescription).HasColumnName("LocationDescription");
                 });
+                mapper.Property(x => x.SettlementMethod)
+                    .HasColumnName("SettlementMethod")
+                    .HasConversion(
+                        toDbValue => toDbValue! == null! ? null : toDbValue.Name,
+                        fromDbValue => string.IsNullOrEmpty(fromDbValue) ? null : EnumerationType.FromName<SettlementMethod>(fromDbValue));
                 mapper.Ignore(x => x.ConnectionType);
                 mapper.Ignore(x => x.DisconnectionType);
                 mapper.Ignore(x => x.EffectiveDate);
-                mapper.Ignore(x => x.SettlementMethod);
                 mapper.Ignore(x => x.NetSettlementGroup);
                 mapper.Ignore(x => x.ScheduledMeterReadingDate);
             });
@@ -212,12 +216,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             }
 
             builder.ToTable("ConsumptionMeteringPoints", "dbo");
-
-            builder.Property<SettlementMethod>("_settlementMethod")
-                .HasColumnName("SettlementMethod")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<SettlementMethod>(fromDbValue));
 
             builder.Property<ScheduledMeterReadingDate>("_scheduledMeterReadingDate")
                 .HasColumnName("ScheduledMeterReadingDate")
