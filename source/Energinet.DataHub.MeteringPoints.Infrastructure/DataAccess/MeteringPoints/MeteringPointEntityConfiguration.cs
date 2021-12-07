@@ -139,6 +139,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     .HasConversion(
                         toDbValue => toDbValue! == null! ? null : toDbValue.Name,
                         fromDbValue => string.IsNullOrEmpty(fromDbValue) ? null : EnumerationType.FromName<SettlementMethod>(fromDbValue));
+                mapper.Property(x => x.ProductionObligation)
+                    .HasColumnName("ProductionObligation");
+
                 mapper.Ignore(x => x.ConnectionType);
                 mapper.Ignore(x => x.DisconnectionType);
                 mapper.Ignore(x => x.EffectiveDate);
@@ -233,9 +236,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             }
 
             builder.ToTable("ProductionMeteringPoints", "dbo");
-
-            builder.Property("_productionObligation")
-                .HasColumnName("ProductionObligation");
         }
     }
 

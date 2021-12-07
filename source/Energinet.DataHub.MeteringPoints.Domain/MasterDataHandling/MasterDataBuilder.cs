@@ -55,7 +55,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 scheduledMeterReadingDate: GetValue<ScheduledMeterReadingDate>(nameof(MasterData.ScheduledMeterReadingDate)),
                 connectionType: GetValue<ConnectionType>(nameof(MasterData.ConnectionType)),
                 disconnectionType: GetValue<DisconnectionType>(nameof(MasterData.DisconnectionType)),
-                netSettlementGroup: GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)));
+                netSettlementGroup: GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)),
+                productionObligation: GetValue<bool?>(nameof(MasterData.ProductionObligation)));
         }
 
         public IMasterDataBuilder WithMeteringConfiguration(string method, string? meterNumber)
@@ -152,6 +153,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         public IMasterDataBuilder WithConnectionType(string? connectionType)
         {
             SetValue(nameof(MasterData.ConnectionType), string.IsNullOrEmpty(connectionType) ? null : EnumerationType.FromName<ConnectionType>(connectionType));
+            return this;
+        }
+
+        public IMasterDataBuilder WithProductionObligation(bool? productionObligation)
+        {
+            SetValue(nameof(MasterData.ProductionObligation), productionObligation);
             return this;
         }
 

@@ -153,5 +153,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         /// <param name="connectionType"></param>
         /// <returns><see cref="IMasterDataBuilder"/></returns>
         IMasterDataBuilder WithConnectionType(string? connectionType);
+
+        /// <summary>
+        /// Configures production obligation of a production metering point
+        /// </summary>
+        /// <param name="productionObligation"></param>
+        /// <returns><see cref="IMasterDataBuilder"/></returns>
+        IMasterDataBuilder WithProductionObligation(bool? productionObligation);
     }
 }
