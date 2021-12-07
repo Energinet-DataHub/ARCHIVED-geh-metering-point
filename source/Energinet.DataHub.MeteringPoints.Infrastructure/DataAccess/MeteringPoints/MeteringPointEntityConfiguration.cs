@@ -70,6 +70,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                         fromDbValue => !string.IsNullOrEmpty(fromDbValue)
                             ? EnumerationType.FromName<AssetType>(fromDbValue)
                             : null!);
+                mapper.Property(x => x.ReadingOccurrence)
+                    .HasColumnName("MeterReadingOccurrence")
+                    .HasConversion(
+                        toDbValue => toDbValue.Name,
+                        fromDbValue => EnumerationType.FromName<ReadingOccurrence>(fromDbValue));
+
                 mapper.Ignore(x => x.Address);
                 mapper.Ignore(x => x.Capacity);
                 mapper.Ignore(x => x.AssetType);
@@ -78,7 +84,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 mapper.Ignore(x => x.EffectiveDate);
                 mapper.Ignore(x => x.MeteringConfiguration);
                 mapper.Ignore(x => x.PowerLimit);
-                mapper.Ignore(x => x.ReadingOccurrence);
                 mapper.Ignore(x => x.SettlementMethod);
                 mapper.Ignore(x => x.NetSettlementGroup);
                 mapper.Ignore(x => x.PowerPlantGsrnNumber);
@@ -134,12 +139,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             builder.Property<GsrnNumber>("_powerPlantGsrnNumber")
                 .HasColumnName("PowerPlant")
                 .HasConversion(toDbValue => toDbValue.Value, fromDbValue => GsrnNumber.Create(fromDbValue));
-
-            builder.Property<ReadingOccurrence>("_meterReadingOccurrence")
-                .HasColumnName("MeterReadingOccurrence")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<ReadingOccurrence>(fromDbValue));
 
             builder.OwnsOne<MeteringConfiguration>("MeteringConfiguration", mapper =>
             {

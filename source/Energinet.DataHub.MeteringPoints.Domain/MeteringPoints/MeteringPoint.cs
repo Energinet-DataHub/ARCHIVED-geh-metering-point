@@ -33,7 +33,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private readonly MasterData _masterData;
 #pragma warning restore
         private GridAreaLinkId _gridAreaLinkId;
-        private ReadingOccurrence _meterReadingOccurrence;
         private PowerLimit _powerLimit;
         private GsrnNumber? _powerPlantGsrnNumber;
         private EffectiveDate _effectiveDate;
@@ -51,7 +50,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             GsrnNumber? powerPlantGsrnNumber,
-            ReadingOccurrence meterReadingOccurrence,
             PowerLimit powerLimit,
             EffectiveDate effectiveDate,
             Capacity? capacity,
@@ -64,7 +62,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _meteringPointType = meteringPointType;
             _gridAreaLinkId = gridAreaLinkId;
             _powerPlantGsrnNumber = powerPlantGsrnNumber;
-            _meterReadingOccurrence = meterReadingOccurrence;
             _powerLimit = powerLimit;
             _effectiveDate = effectiveDate;
             _capacity = capacity;

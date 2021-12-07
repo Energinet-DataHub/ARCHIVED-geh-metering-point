@@ -98,6 +98,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
                 .WithSettlementMethod(request.SettlementMethod)
                 .WithNetSettlementGroup(request.NetSettlementGroup!)
                 .WithScheduledMeterReadingDate(request.ScheduledMeterReadingDate!)
+                .WithReadingPeriodicity(request.MeterReadingOccurrence)
                 .WithAddress(
                     request.StreetName,
                     request.StreetCode,
