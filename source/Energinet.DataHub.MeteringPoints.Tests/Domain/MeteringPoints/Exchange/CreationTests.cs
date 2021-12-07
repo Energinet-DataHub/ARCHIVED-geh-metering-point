@@ -64,7 +64,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
                     MeteringConfiguration = meteringConfiguration,
                 };
 
-            var meteringPoint = ExchangeMeteringPoint.Create(exchangeMeteringPointDetails, MasterDataBuilderForExchange().Build());
+            var meteringPoint = ExchangeMeteringPoint.Create(exchangeMeteringPointDetails, MasterDataBuilderForExchange()
+                .WithAddress(address.StreetName, address.StreetCode, address.BuildingNumber, address.City, address.CitySubDivision, address.PostCode, address.CountryCode, address.Floor, address.Room, address.MunicipalityCode, address.IsActual, address.GeoInfoReference, address.LocationDescription)
+                .Build());
 
             var createdEvent = meteringPoint.DomainEvents.First(e => e is ExchangeMeteringPointCreated) as ExchangeMeteringPointCreated;
             Assert.Equal(address.City, createdEvent!.City);

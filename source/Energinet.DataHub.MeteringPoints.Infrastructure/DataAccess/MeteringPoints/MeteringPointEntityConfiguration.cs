@@ -106,36 +106,35 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                             toDbValue => toDbValue.Name,
                             fromDbValue => EnumerationType.FromName<MeteringMethod>(fromDbValue));
                 });
-                mapper.Ignore(x => x.Address);
+
+                mapper.OwnsOne(x => x.Address, y =>
+                {
+                    y.Property(x => x.StreetName).HasColumnName("StreetName");
+                    y.Property(x => x.StreetCode).HasColumnName("StreetCode");
+                    y.Property(x => x.City).HasColumnName("CityName");
+                    y.Property(x => x.CountryCode)
+                        .HasColumnName("CountryCode")
+                        .HasConversion(
+                            toDbValue => toDbValue! == null! ? null : toDbValue.Name,
+                            fromDbValue => !string.IsNullOrWhiteSpace(fromDbValue)
+                                ? EnumerationType.FromName<CountryCode>(fromDbValue)
+                                : null);
+                    y.Property(x => x.PostCode).HasColumnName("PostCode");
+                    y.Property(x => x.CitySubDivision).HasColumnName("CitySubdivision");
+                    y.Property(x => x.Floor).HasColumnName("Floor");
+                    y.Property(x => x.Room).HasColumnName("Room");
+                    y.Property(x => x.BuildingNumber).HasColumnName("BuildingNumber");
+                    y.Property(x => x.MunicipalityCode).HasColumnName("MunicipalityCode");
+                    y.Property(x => x.IsActual).HasColumnName("IsActualAddress");
+                    y.Property(x => x.GeoInfoReference).HasColumnName("GeoInfoReference");
+                    y.Property(x => x.LocationDescription).HasColumnName("LocationDescription");
+                });
                 mapper.Ignore(x => x.ConnectionType);
                 mapper.Ignore(x => x.DisconnectionType);
                 mapper.Ignore(x => x.EffectiveDate);
                 mapper.Ignore(x => x.SettlementMethod);
                 mapper.Ignore(x => x.NetSettlementGroup);
                 mapper.Ignore(x => x.ScheduledMeterReadingDate);
-            });
-
-            builder.OwnsOne<Address>("Address", y =>
-            {
-                y.Property(x => x.StreetName).HasColumnName("StreetName");
-                y.Property(x => x.StreetCode).HasColumnName("StreetCode");
-                y.Property(x => x.City).HasColumnName("CityName");
-                y.Property(x => x.CountryCode)
-                    .HasColumnName("CountryCode")
-                    .HasConversion(
-                        toDbValue => toDbValue! == null! ? null : toDbValue.Name,
-                        fromDbValue => !string.IsNullOrWhiteSpace(fromDbValue)
-                            ? EnumerationType.FromName<CountryCode>(fromDbValue)
-                            : null);
-                y.Property(x => x.PostCode).HasColumnName("PostCode");
-                y.Property(x => x.CitySubDivision).HasColumnName("CitySubdivision");
-                y.Property(x => x.Floor).HasColumnName("Floor");
-                y.Property(x => x.Room).HasColumnName("Room");
-                y.Property(x => x.BuildingNumber).HasColumnName("BuildingNumber");
-                y.Property(x => x.MunicipalityCode).HasColumnName("MunicipalityCode");
-                y.Property(x => x.IsActual).HasColumnName("IsActualAddress");
-                y.Property(x => x.GeoInfoReference).HasColumnName("GeoInfoReference");
-                y.Property(x => x.LocationDescription).HasColumnName("LocationDescription");
             });
 
             builder.OwnsOne<ConnectionState>("ConnectionState", config =>

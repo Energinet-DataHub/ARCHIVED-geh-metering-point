@@ -88,20 +88,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Productio
                 .EffectiveOn(SampleData.EffectiveDate)
                 .WithDisconnectionType(DisconnectionType.Manual.Name)
                 .WithAssetType(AssetType.GasTurbine.Name)
-                .WithAddress(
-                    streetName: "Test Street",
-                    streetCode: "1000",
-                    buildingNumber: string.Empty,
-                    city: "Test City",
-                    citySubDivision: string.Empty,
-                    postCode: "8000",
-                    countryCode: CountryCode.DK,
-                    floor: string.Empty,
-                    room: string.Empty,
-                    municipalityCode: null,
-                    isActual: true,
-                    geoInfoReference: Guid.NewGuid(),
-                    locationDescription: string.Empty)
+                .WithAddress(address.StreetName, address.StreetCode, address.BuildingNumber, address.City, address.CitySubDivision, address.PostCode, address.CountryCode, address.Floor, address.Room, address.MunicipalityCode, address.IsActual, address.GeoInfoReference, address.LocationDescription)
                 .WithCapacity(1.2);
 
             var meteringPoint = ProductionMeteringPoint.Create(productionMeteringPointDetails, builder.Build());

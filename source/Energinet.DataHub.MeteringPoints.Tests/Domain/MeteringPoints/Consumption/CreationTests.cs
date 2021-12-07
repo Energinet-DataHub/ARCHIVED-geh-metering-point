@@ -113,6 +113,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
 
             var masterData = MasterDataBuilder(MeteringPointType.Consumption)
                 .WithCapacity(capacity.Kw)
+                .WithAddress(address.StreetName, address.StreetCode, address.BuildingNumber, address.City, address.CitySubDivision, address.PostCode, address.CountryCode, address.Floor, address.Room, address.MunicipalityCode, address.IsActual, address.GeoInfoReference, address.LocationDescription)
                 .Build();
             var meteringPoint = ConsumptionMeteringPoint.Create(consumptionMeteringPointDetails, masterData);
 

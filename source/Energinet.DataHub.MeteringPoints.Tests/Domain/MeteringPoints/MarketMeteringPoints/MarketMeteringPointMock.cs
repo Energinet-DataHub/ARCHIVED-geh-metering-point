@@ -27,7 +27,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
         public MarketMeteringPointMock(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
-            Address address,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             EffectiveDate effectiveDate,
@@ -38,7 +37,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             : base(
                 id,
                 gsrnNumber,
-                address,
                 meteringPointType,
                 gridAreaLinkId,
                 effectiveDate,

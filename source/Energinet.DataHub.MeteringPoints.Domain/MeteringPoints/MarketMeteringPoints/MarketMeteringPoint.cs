@@ -38,7 +38,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
         protected MarketMeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
-            Address address,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             EffectiveDate effectiveDate,
@@ -49,7 +48,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             : base(
                 id,
                 gsrnNumber,
-                address,
                 meteringPointType,
                 gridAreaLinkId,
                 effectiveDate,

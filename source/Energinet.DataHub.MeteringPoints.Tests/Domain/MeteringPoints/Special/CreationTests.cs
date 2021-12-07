@@ -71,6 +71,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Special
                 };
 
             var meteringPoint = SpecialMeteringPoint.Create(specialMeteringPointDetails, MasterDataBuilderForSpecial()
+                .WithAddress(address.StreetName, address.StreetCode, address.BuildingNumber, address.City, address.CitySubDivision, address.PostCode, address.CountryCode, address.Floor, address.Room, address.MunicipalityCode, address.IsActual, address.GeoInfoReference, address.LocationDescription)
                 .WithCapacity(capacity.Kw)
                 .Build());
 

@@ -43,7 +43,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         protected MeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
-            Address address,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
             EffectiveDate effectiveDate,
@@ -51,7 +50,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             Id = id;
             GsrnNumber = gsrnNumber;
-            Address = address;
             _meteringPointType = meteringPointType;
             _gridAreaLinkId = gridAreaLinkId;
             _effectiveDate = effectiveDate;
@@ -62,7 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public GsrnNumber GsrnNumber { get; }
 
-        public Address Address { get; private set; }
+        public Address Address => _masterData.Address;
 
         internal MeteringConfiguration MeteringConfiguration => _masterData.MeteringConfiguration;
 
@@ -111,7 +109,39 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
             if (newAddress.Equals(Address) == false)
             {
-                Address = newAddress;
+                var builder =
+                    new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(_meteringPointType))
+                        .WithNetSettlementGroup(_masterData.NetSettlementGroup?.Name)
+                        .WithCapacity(_masterData.Capacity?.Kw)
+                        .WithMeteringConfiguration(_masterData.MeteringConfiguration.Method.Name, _masterData.MeteringConfiguration.Meter.Value)
+                        .WithReadingPeriodicity(_masterData.ReadingOccurrence.Name)
+                        .WithScheduledMeterReadingDate(_masterData.ScheduledMeterReadingDate?.MonthAndDay)
+                        .WithAddress(
+                            newAddress.StreetName,
+                            newAddress.StreetCode,
+                            newAddress.BuildingNumber,
+                            newAddress.City,
+                            newAddress.CitySubDivision,
+                            newAddress.PostCode,
+                            newAddress.CountryCode,
+                            newAddress.Floor,
+                            newAddress.Room,
+                            newAddress.MunicipalityCode,
+                            newAddress.IsActual,
+                            newAddress.GeoInfoReference,
+                            newAddress.LocationDescription)
+                        .WithAssetType(_masterData.AssetType?.Name)
+                        .WithConnectionType(_masterData.ConnectionType?.Name)
+                        .WithDisconnectionType(_masterData.DisconnectionType.Name)
+                        .WithPowerLimit(_masterData.PowerLimit.Kwh, _masterData.PowerLimit.Ampere)
+                        .WithPowerPlant(_masterData.PowerPlantGsrnNumber?.Value)
+                        .WithProductType(_masterData.ProductType.Name)
+                        .WithSettlementMethod(_masterData.SettlementMethod?.Name)
+                        .WithMeasurementUnitType(_masterData.UnitType?.Name)
+                        .EffectiveOn(_masterData.EffectiveDate?.ToString());
+
+                _masterData = builder.Build();
+
                 AddDomainEvent(new AddressChanged(
                     Address.StreetName,
                     Address.PostCode,

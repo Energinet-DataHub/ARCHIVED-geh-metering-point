@@ -113,7 +113,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             return new MarketMeteringPointMock(
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
-                address,
                 EnumerationType.FromName<MeteringPointType>(SampleData.TypeName),
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
                 EffectiveDate.Create(SampleData.EffectiveDate),
