@@ -12,15 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
-
-namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
+namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums
 {
-    public record MasterDataDetails(
-        EffectiveDate EffectiveDate,
-        Domain.Addresses.Address? Address = null,
-        MeteringConfiguration? MeteringConfiguration = null,
-        ConnectionType? ConnectionType = null);
+    public enum ReadingOccurrence
+    {
+        P1Y = 0, // Yearly
+        P1M = 1, // Monthly
+        PT1H = 2, // Hourly
+        PT15M = 3, // Quarterly
+    }
 }
