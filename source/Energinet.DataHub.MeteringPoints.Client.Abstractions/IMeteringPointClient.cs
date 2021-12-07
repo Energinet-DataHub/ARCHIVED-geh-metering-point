@@ -27,6 +27,6 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions
         /// </summary>
         /// <param name="gsrn">GSRN number to identify a Metering Point.</param>
         /// <returns>A Metering Point DTO if found. If not found null will be returned.</returns>
-        public Task<MeteringPointDto?> GetMeteringPointByGsrnAsync(string gsrn);
+        public Task<MeteringPointCimDto?> GetMeteringPointByGsrnAsync(string gsrn);
     }
 }

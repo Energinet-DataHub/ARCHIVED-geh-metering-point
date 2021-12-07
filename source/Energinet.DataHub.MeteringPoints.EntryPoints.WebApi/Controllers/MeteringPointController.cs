@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
+using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.Controllers
         }
 
         [HttpGet("GetMeteringPointByGsrn")]
-        public async Task<IActionResult> GetMeteringPointByGsrnAsync(string gsrn)
+        public async Task<ActionResult<MeteringPointCimDto?>> GetMeteringPointByGsrnAsync(string gsrn)
         {
             var request = new MeteringPointByGsrnQuery(gsrn);
             var result = await _mediator.Send(request).ConfigureAwait(false);

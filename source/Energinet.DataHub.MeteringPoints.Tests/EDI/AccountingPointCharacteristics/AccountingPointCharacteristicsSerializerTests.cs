@@ -18,7 +18,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
-using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
+using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;

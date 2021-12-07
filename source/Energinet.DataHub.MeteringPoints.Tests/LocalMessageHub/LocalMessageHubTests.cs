@@ -52,7 +52,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
             _requestBundleParser = new RequestBundleParser();
             _dequeueNotificationParser = new DequeueNotificationParser();
             _localMessageHubClient = new LocalMessageHubClient(
-                new StorageHandlerMock(),
+                new StorageHandlerMock(_messageHubMessageRepository),
                 _messageHubMessageRepository,
                 _messageDequeuedIntegrationEventOutboxDispatcher,
                 _dataBundleResponseOutboxDispatcher,
@@ -98,7 +98,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
 
             await RequestBundle(messages).ConfigureAwait(false);
 
-            var bytes = _dequeueNotificationParser.Parse(new DequeueNotificationDto(messages.Select(x => x.Message.Id).ToArray(), new GlobalLocationNumberDto("recipient")));
+            var bytes = _dequeueNotificationParser.Parse(new DequeueNotificationDto("foo", new GlobalLocationNumberDto("recipient")));
 
             await _localMessageHubClient.BundleDequeuedAsync(bytes).ConfigureAwait(false);
 
@@ -121,9 +121,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
             var requestBundleDto =
                 new DataBundleRequestDto(
                     messageHubMessage.Id,
+                    "foo",
                     "idempotencyId",
-                    DocumentType.CreateMeteringPointAccepted.Name,
-                    new Guid[] { messageHubMessage!.Id });
+                    DocumentType.CreateMeteringPointAccepted.Name);
 
             var bytes = _requestBundleParser.Parse(requestBundleDto);
 
