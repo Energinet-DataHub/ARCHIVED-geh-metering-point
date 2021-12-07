@@ -78,7 +78,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
                 mapper.Ignore(x => x.Address);
                 mapper.Ignore(x => x.Capacity);
-                mapper.Ignore(x => x.AssetType);
                 mapper.Ignore(x => x.ConnectionType);
                 mapper.Ignore(x => x.DisconnectionType);
                 mapper.Ignore(x => x.EffectiveDate);
