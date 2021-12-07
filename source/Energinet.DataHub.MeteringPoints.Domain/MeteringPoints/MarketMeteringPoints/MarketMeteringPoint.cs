@@ -66,7 +66,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
                 effectiveDate,
                 capacity,
                 assetType,
-                meteringConfiguration)
+                meteringConfiguration,
+                masterData)
         {
             _masterData = masterData;
             ConnectionType = connectionType;

@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
@@ -32,6 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         protected ProductType _productType;
         protected MeasurementUnitType _unitType;
         protected AssetType? _assetType;
+        private readonly MasterData _masterData;
 #pragma warning restore
         private GridAreaLinkId _gridAreaLinkId;
         private ReadingOccurrence _meterReadingOccurrence;
@@ -58,7 +60,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             EffectiveDate effectiveDate,
             Capacity? capacity,
             AssetType? assetType,
-            MeteringConfiguration meteringConfiguration)
+            MeteringConfiguration meteringConfiguration,
+            MasterData masterData)
         {
             Id = id;
             GsrnNumber = gsrnNumber;
@@ -72,6 +75,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _effectiveDate = effectiveDate;
             _capacity = capacity;
             _assetType = assetType;
+            _masterData = masterData;
             MeteringConfiguration = meteringConfiguration;
         }
 

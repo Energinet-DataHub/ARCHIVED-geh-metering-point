@@ -60,7 +60,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
                 effectiveDate,
                 capacity: null,
                 assetType: null,
-                meteringConfiguration)
+                meteringConfiguration,
+                masterData)
         {
             _toGrid = toGrid;
             _fromGrid = fromGrid;

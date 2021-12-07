@@ -59,7 +59,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
                 effectiveDate,
                 capacity,
                 assetType,
-                meteringConfiguration)
+                meteringConfiguration,
+                masterData)
         {
             _masterData = masterData;
             _productType = ProductType.EnergyActive;
