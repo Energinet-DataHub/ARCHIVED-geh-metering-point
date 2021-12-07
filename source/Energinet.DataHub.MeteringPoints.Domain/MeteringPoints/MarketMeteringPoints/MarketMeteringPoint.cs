@@ -49,7 +49,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             ConnectionType? connectionType,
             DisconnectionType disconnectionType,
             NetSettlementGroup netSettlementGroup,
-            AssetType? assetType,
             MeteringConfiguration meteringConfiguration,
             MasterData masterData)
             : base(
@@ -63,7 +62,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
                 powerLimit,
                 effectiveDate,
                 capacity,
-                assetType,
                 meteringConfiguration,
                 masterData)
         {

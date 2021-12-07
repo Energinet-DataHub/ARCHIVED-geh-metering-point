@@ -30,7 +30,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
     {
         #pragma warning disable SA1401, CA1051 // Field cannot be private since it is set by derivatives
         protected MeteringPointType _meteringPointType;
-        protected AssetType? _assetType;
         private readonly MasterData _masterData;
 #pragma warning restore
         private GridAreaLinkId _gridAreaLinkId;
@@ -56,7 +55,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             PowerLimit powerLimit,
             EffectiveDate effectiveDate,
             Capacity? capacity,
-            AssetType? assetType,
             MeteringConfiguration meteringConfiguration,
             MasterData masterData)
         {
@@ -70,7 +68,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _powerLimit = powerLimit;
             _effectiveDate = effectiveDate;
             _capacity = capacity;
-            _assetType = assetType;
             _masterData = masterData;
             MeteringConfiguration = meteringConfiguration;
         }

@@ -58,7 +58,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
                 powerLimit,
                 effectiveDate,
                 capacity: null,
-                assetType: null,
                 meteringConfiguration,
                 masterData)
         {

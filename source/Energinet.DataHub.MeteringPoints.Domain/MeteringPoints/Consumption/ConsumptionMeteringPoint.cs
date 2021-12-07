@@ -47,7 +47,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             NetSettlementGroup netSettlementGroup,
             DisconnectionType disconnectionType,
             ConnectionType? connectionType,
-            AssetType? assetType,
             Capacity? capacity,
             MeteringConfiguration meteringConfiguration,
             MasterData masterData)
@@ -65,7 +64,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 connectionType,
                 disconnectionType,
                 netSettlementGroup,
-                assetType,
                 meteringConfiguration,
                 masterData)
         {
@@ -102,7 +100,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 effectiveDate.DateInUtc,
                 DisconnectionType.Name,
                 ConnectionType?.Name,
-                _assetType?.Name,
+                _masterData.AssetType?.Name,
                 ConnectionState.PhysicalState.Name,
                 _masterData.ScheduledMeterReadingDate?.MonthAndDay,
                 capacity?.Kw);
@@ -151,7 +149,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointDetails.NetSettlementGroup,
                 meteringPointDetails.DisconnectionType,
                 meteringPointDetails.ConnectionType,
-                meteringPointDetails.AssetType,
                 meteringPointDetails.Capacity,
                 meteringPointDetails.MeteringConfiguration,
                 masterData);

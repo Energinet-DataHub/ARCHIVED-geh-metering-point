@@ -49,7 +49,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
             bool productionObligation,
             DisconnectionType disconnectionType,
             ConnectionType? connectionType,
-            AssetType assetType,
             Capacity capacity,
             MeteringConfiguration meteringConfiguration,
             MasterData masterData)
@@ -67,7 +66,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 connectionType,
                 disconnectionType,
                 netSettlementGroup,
-                assetType,
                 meteringConfiguration,
                 masterData)
         {
@@ -105,7 +103,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 effectiveDate.DateInUtc,
                 DisconnectionType.Name,
                 ConnectionType?.Name,
-                _assetType.Name,
+                _masterData.AssetType?.Name,
                 ConnectionState.PhysicalState.Name,
                 ProductionObligation,
                 capacity.Kw);
@@ -177,7 +175,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 false,
                 meteringPointDetails.DisconnectionType,
                 meteringPointDetails.ConnectionType,
-                meteringPointDetails.AssetType,
                 meteringPointDetails.Capacity,
                 meteringPointDetails.MeteringConfiguration,
                 masterData);

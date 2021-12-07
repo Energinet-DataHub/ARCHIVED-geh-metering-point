@@ -43,7 +43,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
             [NotNull]EffectiveDate effectiveDate,
             GsrnNumber? powerPlantGsrnNumber,
             Capacity? capacity,
-            AssetType? assetType,
             MeteringConfiguration meteringConfiguration,
             MasterData masterData)
             : base(
@@ -57,7 +56,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
                 powerLimit,
                 effectiveDate,
                 capacity,
-                assetType,
                 meteringConfiguration,
                 masterData)
         {
@@ -86,7 +84,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
                 ConnectionState.PhysicalState.Name,
                 powerPlantGsrnNumber?.Value,
                 capacity?.Kw,
-                assetType?.Name,
+                _masterData.AssetType?.Name,
                 _masterData.UnitType.Name);
 
             AddDomainEvent(@event);
@@ -128,7 +126,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
                 meteringPointDetails.EffectiveDate,
                 meteringPointDetails.PowerPlantGsrnNumber,
                 meteringPointDetails.Capacity,
-                meteringPointDetails.AssetType,
                 meteringPointDetails.MeteringConfiguration,
                 masterData);
         }

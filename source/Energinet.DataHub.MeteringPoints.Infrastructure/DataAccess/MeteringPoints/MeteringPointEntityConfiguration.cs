@@ -63,6 +63,13 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     .HasConversion(
                         toDbValue => toDbValue.Name,
                         fromDbValue => EnumerationType.FromName<MeasurementUnitType>(fromDbValue));
+                mapper.Property(x => x.AssetType)
+                    .HasColumnName("AssetType")
+                    .HasConversion(
+                        toDbValue => toDbValue! == null! ? null : toDbValue.Name,
+                        fromDbValue => !string.IsNullOrEmpty(fromDbValue)
+                            ? EnumerationType.FromName<AssetType>(fromDbValue)
+                            : null!);
                 mapper.Ignore(x => x.Address);
                 mapper.Ignore(x => x.Capacity);
                 mapper.Ignore(x => x.AssetType);
@@ -166,14 +173,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     : toDbValue.Kw!,
                     convertFromProviderExpression: fromDbValue => fromDbValue.HasValue
                         ? Capacity.Create(fromDbValue.Value)
-                        : null!);
-
-            builder.Property<AssetType>("_assetType")
-                .HasColumnName("AssetType")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => !string.IsNullOrEmpty(fromDbValue)
-                        ? EnumerationType.FromName<AssetType>(fromDbValue)
                         : null!);
         }
     }
