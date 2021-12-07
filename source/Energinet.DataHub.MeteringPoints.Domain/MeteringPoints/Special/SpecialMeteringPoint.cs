@@ -53,7 +53,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
                 meteringPointType,
                 gridAreaLinkId,
                 powerPlantGsrnNumber,
-                GetUnitType(meteringPointType),
                 meterReadingOccurrence,
                 powerLimit,
                 effectiveDate,
@@ -88,7 +87,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
                 powerPlantGsrnNumber?.Value,
                 capacity?.Kw,
                 assetType?.Name,
-                _unitType.Name);
+                _masterData.UnitType.Name);
 
             AddDomainEvent(@event);
         }
@@ -142,11 +141,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
         public override void Connect(ConnectionDetails connectionDetails)
         {
             throw new NotImplementedException();
-        }
-
-        private static MeasurementUnitType GetUnitType(EnumerationType meteringPointType)
-        {
-            return meteringPointType == MeteringPointType.ExchangeReactiveEnergy ? MeasurementUnitType.KVArh : MeasurementUnitType.KWh;
         }
     }
 }

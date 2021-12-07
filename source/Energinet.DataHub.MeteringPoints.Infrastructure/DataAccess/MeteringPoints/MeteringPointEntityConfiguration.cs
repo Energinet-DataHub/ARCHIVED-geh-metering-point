@@ -58,6 +58,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     .HasConversion(
                         toDbValue => toDbValue.Name,
                         fromDbValue => EnumerationType.FromName<ProductType>(fromDbValue));
+                mapper.Property(x => x.UnitType)
+                    .HasColumnName("UnitType")
+                    .HasConversion(
+                        toDbValue => toDbValue.Name,
+                        fromDbValue => EnumerationType.FromName<MeasurementUnitType>(fromDbValue));
                 mapper.Ignore(x => x.Address);
                 mapper.Ignore(x => x.Capacity);
                 mapper.Ignore(x => x.AssetType);
@@ -68,7 +73,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 mapper.Ignore(x => x.PowerLimit);
                 mapper.Ignore(x => x.ReadingOccurrence);
                 mapper.Ignore(x => x.SettlementMethod);
-                mapper.Ignore(x => x.UnitType);
                 mapper.Ignore(x => x.NetSettlementGroup);
                 mapper.Ignore(x => x.PowerPlantGsrnNumber);
                 mapper.Ignore(x => x.ScheduledMeterReadingDate);
@@ -123,17 +127,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             builder.Property<GsrnNumber>("_powerPlantGsrnNumber")
                 .HasColumnName("PowerPlant")
                 .HasConversion(toDbValue => toDbValue.Value, fromDbValue => GsrnNumber.Create(fromDbValue));
-
-            // builder.Property<ProductType>("_productType")
-            //     .HasColumnName("ProductType")
-            //     .HasConversion(
-            //         toDbValue => toDbValue.Name,
-            //         fromDbValue => EnumerationType.FromName<ProductType>(fromDbValue));
-            builder.Property<MeasurementUnitType>("_unitType")
-                .HasColumnName("UnitType")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<MeasurementUnitType>(fromDbValue));
 
             builder.Property<ReadingOccurrence>("_meterReadingOccurrence")
                 .HasColumnName("MeterReadingOccurrence")

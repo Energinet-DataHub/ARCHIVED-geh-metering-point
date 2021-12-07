@@ -49,6 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 MeteringPointType.Exchange.Name, new List<MasterDataField>()
                 {
                     new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
+                    new(nameof(MasterData.UnitType), Applicability.Required, true, MeasurementUnitType.KWh),
                 }
             },
             {
