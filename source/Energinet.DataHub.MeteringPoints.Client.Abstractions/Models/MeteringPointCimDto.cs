@@ -26,7 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
         string CountryCode,
         ConnectionState ConnectionState,
         MeteringMethod MeteringMethod,
-        string ReadingOccurrence,
+        ReadingOccurrence ReadingOccurrence,
         MeteringPointType MeteringPointType,
         int? RatedCapacity,
         int? RatedCurrent,
