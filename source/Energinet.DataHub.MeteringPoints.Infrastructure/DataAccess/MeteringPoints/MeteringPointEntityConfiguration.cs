@@ -75,14 +75,19 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     .HasConversion(
                         toDbValue => toDbValue.Name,
                         fromDbValue => EnumerationType.FromName<ReadingOccurrence>(fromDbValue));
-
+                mapper.OwnsOne(x => x.PowerLimit, y =>
+                {
+                    y.Property(x => x.Ampere)
+                        .HasColumnName("MaximumCurrent");
+                    y.Property(x => x.Kwh)
+                        .HasColumnName("MaximumPower");
+                });
                 mapper.Ignore(x => x.Address);
                 mapper.Ignore(x => x.Capacity);
                 mapper.Ignore(x => x.ConnectionType);
                 mapper.Ignore(x => x.DisconnectionType);
                 mapper.Ignore(x => x.EffectiveDate);
                 mapper.Ignore(x => x.MeteringConfiguration);
-                mapper.Ignore(x => x.PowerLimit);
                 mapper.Ignore(x => x.SettlementMethod);
                 mapper.Ignore(x => x.NetSettlementGroup);
                 mapper.Ignore(x => x.PowerPlantGsrnNumber);
@@ -149,14 +154,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     .HasConversion(
                         toDbValue => toDbValue.Name,
                         fromDbValue => EnumerationType.FromName<MeteringMethod>(fromDbValue));
-            });
-
-            builder.OwnsOne<PowerLimit>("_powerLimit", mapper =>
-            {
-                mapper.Property(x => x.Ampere)
-                    .HasColumnName("MaximumCurrent");
-                mapper.Property(x => x.Kwh)
-                    .HasColumnName("MaximumPower");
             });
 
             builder.Property<EffectiveDate>("_effectiveDate")

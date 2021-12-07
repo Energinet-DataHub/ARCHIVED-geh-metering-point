@@ -86,6 +86,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Exchange
                 new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Exchange));
             builder
                 .WithReadingPeriodicity(request.MeterReadingOccurrence)
+                .WithPowerLimit(request.MaximumPower, request.MaximumCurrent)
                 .WithAddress(
                     request.StreetName,
                     request.StreetCode,
