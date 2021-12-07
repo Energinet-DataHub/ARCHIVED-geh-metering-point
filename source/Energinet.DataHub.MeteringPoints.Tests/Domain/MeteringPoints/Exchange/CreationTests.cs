@@ -64,7 +64,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
                     MeteringConfiguration = meteringConfiguration,
                 };
 
-            var meteringPoint = ExchangeMeteringPoint.Create(exchangeMeteringPointDetails);
+            var meteringPoint = ExchangeMeteringPoint.Create(exchangeMeteringPointDetails, MasterDataBuilderForExchange().Build());
 
             var createdEvent = meteringPoint.DomainEvents.First(e => e is ExchangeMeteringPointCreated) as ExchangeMeteringPointCreated;
             Assert.Equal(address.City, createdEvent!.City);
@@ -93,7 +93,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
         {
             var details = CreateExchangeDetails();
 
-            var meteringPoint = ExchangeMeteringPoint.Create(details);
+            var meteringPoint = ExchangeMeteringPoint.Create(details, MasterDataBuilderForExchange().Build());
 
             var createdEvent = meteringPoint.DomainEvents.First(e => e is ExchangeMeteringPointCreated) as ExchangeMeteringPointCreated;
             Assert.Equal(ProductType.EnergyActive.Name, createdEvent!.ProductType);
@@ -138,7 +138,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
                     MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
                 };
 
-            var meteringPoint = ExchangeMeteringPoint.Create(meteringPointDetails);
+            var meteringPoint = ExchangeMeteringPoint.Create(meteringPointDetails, MasterDataBuilderForExchange().Build());
 
             var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is ExchangeMeteringPointCreated) as ExchangeMeteringPointCreated;
 

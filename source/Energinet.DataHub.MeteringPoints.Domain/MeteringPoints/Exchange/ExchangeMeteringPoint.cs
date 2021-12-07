@@ -18,6 +18,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
@@ -29,6 +30,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
     public class ExchangeMeteringPoint : MeteringPoint
     {
         private GridAreaLinkId _fromGrid;
+        #pragma warning disable
+        private readonly MasterData _masterData;
         private GridAreaLinkId _toGrid;
 
         public ExchangeMeteringPoint(
@@ -42,7 +45,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
             [NotNull]EffectiveDate effectiveDate,
             [NotNull]GridAreaLinkId toGrid,
             [NotNull]GridAreaLinkId fromGrid,
-            MeteringConfiguration meteringConfiguration)
+            MeteringConfiguration meteringConfiguration,
+            MasterData masterData)
             : base(
                 id,
                 gsrnNumber,
@@ -60,6 +64,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
         {
             _toGrid = toGrid;
             _fromGrid = fromGrid;
+            _masterData = masterData;
             _productType = ProductType.EnergyActive;
 
             var @event = new ExchangeMeteringPointCreated(
@@ -110,8 +115,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
             return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
         }
 
-        public static ExchangeMeteringPoint Create(ExchangeMeteringPointDetails meteringPointDetails)
+        public static ExchangeMeteringPoint Create(ExchangeMeteringPointDetails meteringPointDetails, MasterData masterData)
         {
+            if (masterData == null) throw new ArgumentNullException(nameof(masterData));
             if (!CanCreate(meteringPointDetails).Success)
             {
                 throw new ConsumptionMeteringPointException($"Cannot create exchange metering point due to violation of one or more business rules.");
@@ -128,7 +134,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
                 meteringPointDetails.EffectiveDate,
                 meteringPointDetails.ToGridLinkId,
                 meteringPointDetails.FromGridLinkId,
-                meteringPointDetails.MeteringConfiguration);
+                meteringPointDetails.MeteringConfiguration,
+                masterData);
         }
 
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)

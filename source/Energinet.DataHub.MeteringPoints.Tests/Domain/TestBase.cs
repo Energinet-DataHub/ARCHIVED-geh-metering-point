@@ -184,6 +184,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 MeteringConfiguration.Create(MeteringMethod.Physical, MeterId.Create(SampleData.MeterNumber)));
         }
 
+        protected static IMasterDataBuilder MasterDataBuilderForExchange()
+        {
+            return MasterDataBuilder(MeteringPointType.Exchange);
+        }
+
         protected static Address CreateAddress()
         {
             return Address.Create(
