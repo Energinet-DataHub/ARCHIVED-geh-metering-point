@@ -126,28 +126,5 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 meteringPointDetails.EffectiveDate,
                 masterData);
         }
-
-        public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
-        {
-            var rules = new Collection<IBusinessRule>
-            {
-                new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, _meteringPointType, ConnectionState.PhysicalState),
-                new MustHaveEnergySupplierRule(GsrnNumber, connectionDetails, EnergySupplierDetails),
-            };
-
-            return new BusinessRulesValidationResult(rules);
-        }
-
-        public override void Connect(ConnectionDetails connectionDetails)
-        {
-            if (connectionDetails == null) throw new ArgumentNullException(nameof(connectionDetails));
-            if (!ConnectAcceptable(connectionDetails).Success)
-            {
-                throw MeteringPointConnectException.Create(Id, GsrnNumber);
-            }
-
-            ConnectionState = ConnectionState.Connected(connectionDetails.EffectiveDate);
-            AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
-        }
     }
 }

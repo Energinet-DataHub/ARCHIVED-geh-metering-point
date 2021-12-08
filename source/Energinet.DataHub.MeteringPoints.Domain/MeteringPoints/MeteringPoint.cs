@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
@@ -23,6 +24,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Execeptions;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -96,10 +98,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             };
             return new BusinessRulesValidationResult(rules);
         }
-
-        public abstract BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails);
-
-        public abstract void Connect(ConnectionDetails connectionDetails);
 
         public void ChangeAddress(Address newAddress)
         {
@@ -249,6 +247,29 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
             EnergySupplierDetails = energySupplierDetails;
             AddDomainEvent(new EnergySupplierDetailsChanged(Id.Value, EnergySupplierDetails.StartOfSupply));
+        }
+
+        public virtual BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
+        {
+            var rules = new Collection<IBusinessRule>
+            {
+                new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, _meteringPointType, ConnectionState.PhysicalState),
+                new MustHaveEnergySupplierRule(GsrnNumber, connectionDetails, EnergySupplierDetails),
+            };
+
+            return new BusinessRulesValidationResult(rules);
+        }
+
+        public virtual void Connect(ConnectionDetails connectionDetails)
+        {
+            if (connectionDetails == null) throw new ArgumentNullException(nameof(connectionDetails));
+            if (!ConnectAcceptable(connectionDetails).Success)
+            {
+                throw MeteringPointConnectException.Create(Id, GsrnNumber);
+            }
+
+            ConnectionState = ConnectionState.Connected(connectionDetails.EffectiveDate);
+            AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
 
         private void ThrowIfClosedDown()
