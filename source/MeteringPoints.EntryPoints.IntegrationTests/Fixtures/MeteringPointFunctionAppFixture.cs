@@ -228,7 +228,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             StartHost(ProcessingHostManager);
             StartHost(OutboxHostManager);
             StartHost(LocalMessageHubHostManager);
-            // StartHost(InternalCommandDispatcherHostManager);
         }
 
         public async Task DisposeAsync()
@@ -238,11 +237,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             OutboxHostManager.Dispose();
             LocalMessageHubHostManager.Dispose();
 
-            // InternalCommandDispatcherHostManager.Dispose();
             AzuriteManager.Dispose();
 
             // => Service Bus
-            // await MessageHubDataAvailableListenerMock.DisposeAsync().ConfigureAwait(false);
             await ServiceBusResourceProvider.DisposeAsync().ConfigureAwait(false);
 
             // => Database
