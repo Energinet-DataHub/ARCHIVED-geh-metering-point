@@ -20,6 +20,7 @@ using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -65,6 +66,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         internal MeteringConfiguration MeteringConfiguration => _masterData.MeteringConfiguration;
 
         protected ConnectionState ConnectionState { get; set; } = ConnectionState.New();
+
+        protected EnergySupplierDetails? EnergySupplierDetails { get; private set; }
 
         public static BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
         {
@@ -231,6 +234,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public void CloseDown()
         {
             ConnectionState = ConnectionState.ClosedDown();
+        }
+
+        public void SetEnergySupplierDetails(EnergySupplierDetails energySupplierDetails)
+        {
+            if (energySupplierDetails == null) throw new ArgumentNullException(nameof(energySupplierDetails));
+            if (EnergySupplierDetails?.StartOfSupply != null) return;
+
+            EnergySupplierDetails = energySupplierDetails;
+            AddDomainEvent(new EnergySupplierDetailsChanged(Id.Value, EnergySupplierDetails.StartOfSupply));
         }
 
         private void ThrowIfClosedDown()

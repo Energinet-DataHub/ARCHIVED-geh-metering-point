@@ -51,8 +51,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             _masterData = masterData;
         }
 
-        protected EnergySupplierDetails? EnergySupplierDetails { get; private set; }
-
         public static BusinessRulesValidationResult CanCreate(ProductionMeteringPointDetails meteringPointDetails)
         {
             if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
@@ -87,15 +85,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringP
             };
 
             return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
-        }
-
-        public void SetEnergySupplierDetails(EnergySupplierDetails energySupplierDetails)
-        {
-            if (energySupplierDetails == null) throw new ArgumentNullException(nameof(energySupplierDetails));
-            if (EnergySupplierDetails?.StartOfSupply != null) return;
-
-            EnergySupplierDetails = energySupplierDetails;
-            AddDomainEvent(new EnergySupplierDetailsChanged(Id.Value, EnergySupplierDetails.StartOfSupply));
         }
     }
 }
