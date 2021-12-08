@@ -50,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                                 ,(SELECT TOP(1) G.Code FROM [GridAreas] G INNER JOIN [GridAreaLinks] GL ON G.Id = GL.GridAreaId WHERE GL.Id = EMP.[ToGrid]) AS ToGridAreaCode
                                 ,(SELECT TOP(1) G.Code FROM [GridAreas] G INNER JOIN [GridAreaLinks] GL ON G.Id = GL.GridAreaId WHERE GL.Id = EMP.[FromGrid]) AS FromGridAreaCode
                                 ,MP.[NetSettlementGroup]
-	                            ,MMP.[StartOfSupplyDate] AS SupplyStart
+	                            ,MP.[StartOfSupplyDate] AS SupplyStart
                                 ,MP.[ConnectionType]
                                 ,MP.[DisconnectionType]
                                 ,MP.[ProductionObligation]

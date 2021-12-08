@@ -187,6 +187,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             builder.Property<EffectiveDate>("_effectiveDate")
                 .HasColumnName("EffectiveDate")
                 .HasConversion<DateTime>(toDbValue => toDbValue.DateInUtc.ToDateTimeUtc(), fromDbValue => EffectiveDate.Create(fromDbValue));
+
+            builder.OwnsOne<EnergySupplierDetails>("EnergySupplierDetails", config =>
+            {
+                config.Property(x => x.StartOfSupply)
+                    .HasColumnName("StartOfSupplyDate");
+            });
         }
     }
 
@@ -200,12 +206,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             }
 
             builder.ToTable("MarketMeteringPoints", "dbo");
-
-            builder.OwnsOne<EnergySupplierDetails>("EnergySupplierDetails", config =>
-            {
-                config.Property(x => x.StartOfSupply)
-                    .HasColumnName("StartOfSupplyDate");
-            });
         }
     }
 
