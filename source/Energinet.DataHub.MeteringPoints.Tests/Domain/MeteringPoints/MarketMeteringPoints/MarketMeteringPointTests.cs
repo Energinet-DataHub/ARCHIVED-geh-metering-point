@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Execeptions;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
@@ -34,6 +35,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
         public MarketMeteringPointTests()
         {
             _systemDateTimeProvider = new SystemDateTimeProviderStub();
+        }
+
+        [Fact]
+        public void Energy_supplier_cannot_be_assigned_to_non_accounting_point()
+        {
+            var meteringPoint = new MarketMeteringPointMock(
+                MeteringPointId.New(),
+                GsrnNumber.Create(SampleData.GsrnNumber),
+                MeteringPointType.Exchange,
+                new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
+                EffectiveDate.Create(SampleData.EffectiveDate),
+                MasterDataBuilderForExchange().Build());
+
+            Assert.Throws<CannotAssignEnergySupplierExeception>(() => meteringPoint.SetEnergySupplierDetails(EnergySupplierDetails.Create(_systemDateTimeProvider.Now())));
         }
 
         [Fact]

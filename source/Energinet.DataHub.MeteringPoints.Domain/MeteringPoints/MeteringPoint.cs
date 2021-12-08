@@ -21,6 +21,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Execeptions;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -240,6 +241,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             if (energySupplierDetails == null) throw new ArgumentNullException(nameof(energySupplierDetails));
             if (EnergySupplierDetails?.StartOfSupply != null) return;
+
+            if (_meteringPointType.IsAccountingPoint == false)
+            {
+                throw new CannotAssignEnergySupplierExeception();
+            }
 
             EnergySupplierDetails = energySupplierDetails;
             AddDomainEvent(new EnergySupplierDetailsChanged(Id.Value, EnergySupplierDetails.StartOfSupply));
