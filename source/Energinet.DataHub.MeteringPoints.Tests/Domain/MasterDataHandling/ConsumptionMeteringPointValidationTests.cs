@@ -199,6 +199,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             AssertContainsValidationError<ConnectionTypeDoesNotMatchNetSettlementGroupRuleError>(CheckRules(masterData));
         }
 
+        [Fact]
+        public void Meter_reading_occurrence_must_be_quarterly_or_hourly()
+        {
+            var masterData = Builder()
+                .WithReadingPeriodicity(ReadingOccurrence.Yearly.Name)
+                .Build();
+
+            AssertContainsValidationError<InvalidMeterReadingOccurrenceRuleError>(CheckRules(masterData));
+        }
+
         private static IMasterDataBuilder Builder() =>
             new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Consumption))
                 .WithAddress(streetName: "Test Street", countryCode: CountryCode.DK)
