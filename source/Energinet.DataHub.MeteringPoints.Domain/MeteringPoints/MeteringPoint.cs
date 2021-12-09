@@ -82,6 +82,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             return new BusinessRulesValidationResult(rules);
         }
 
+        public static BusinessRulesValidationResult CanCreate(MeteringPointType type, MasterData masterData, MasterDataValidator validator)
+        {
+            if (type is null) throw new ArgumentNullException(nameof(type));
+            if (masterData == null) throw new ArgumentNullException(nameof(masterData));
+            if (validator == null) throw new ArgumentNullException(nameof(validator));
+            return validator.CheckRulesFor(type, masterData);
+        }
+
         public BusinessRulesValidationResult CanChangeAddress(Address address)
         {
             var canBeChangedCheck = CanBeChanged();

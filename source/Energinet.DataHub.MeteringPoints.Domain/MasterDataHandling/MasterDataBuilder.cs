@@ -92,7 +92,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithPowerPlant(string? gsrnNumber)
         {
-            SetValue(nameof(MasterData.PowerPlantGsrnNumber), gsrnNumber is null ? null : GsrnNumber.Create(gsrnNumber));
+            SetValue(nameof(MasterData.PowerPlantGsrnNumber), string.IsNullOrEmpty(gsrnNumber) ? null : GsrnNumber.Create(gsrnNumber));
             return this;
         }
 
@@ -122,7 +122,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithAssetType(string? assetType)
         {
-            SetValue(nameof(MasterData.AssetType), assetType is null ? null : EnumerationType.FromName<AssetType>(assetType));
+            SetValue(nameof(MasterData.AssetType), string.IsNullOrEmpty(assetType) ? null : EnumerationType.FromName<AssetType>(assetType));
             return this;
         }
 

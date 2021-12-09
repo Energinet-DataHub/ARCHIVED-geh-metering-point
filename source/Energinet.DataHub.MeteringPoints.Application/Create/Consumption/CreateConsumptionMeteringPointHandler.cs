@@ -84,12 +84,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
             }
 
             var meteringPointDetails = CreateDetails(request, gridArea?.DefaultLink.Id!);
-            var rulesCheckResult = CheckBusinessRules(request, meteringPointDetails);
-            if (!rulesCheckResult.Success)
-            {
-                return rulesCheckResult;
-            }
-
             var builder =
                 new MasterDataBuilder(
                     new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Consumption));
@@ -122,7 +116,15 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
                     string.IsNullOrWhiteSpace(request.GeoInfoReference) ? default : Guid.Parse(request.GeoInfoReference),
                     request.LocationDescription);
 
-            _meteringPointRepository.Add(ConsumptionMeteringPoint.Create(meteringPointDetails, builder.Build()));
+            var masterData = builder.Build();
+
+            var rulesCheckResult = CheckBusinessRules(request, masterData);
+            if (!rulesCheckResult.Success)
+            {
+                return rulesCheckResult;
+            }
+
+            _meteringPointRepository.Add(ConsumptionMeteringPoint.Create(meteringPointDetails, masterData));
 
             return BusinessProcessResult.Ok(request.TransactionId);
         }
@@ -137,9 +139,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
             return new BusinessProcessResult(request.TransactionId, validationRules);
         }
 
-        private static BusinessProcessResult CheckBusinessRules(CreateConsumptionMeteringPoint request, ConsumptionMeteringPointDetails meteringPointDetails)
+        private static BusinessProcessResult CheckBusinessRules(CreateConsumptionMeteringPoint request, MasterData masterData)
         {
-            var validationResult = ConsumptionMeteringPoint.CanCreate(meteringPointDetails);
+            var validationResult = MeteringPoint.CanCreate(MeteringPointType.Consumption, masterData, new MasterDataValidator());
             return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
         }
 
