@@ -61,9 +61,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
         public void Should_succeed_consumption()
         {
             var meteringPoint = CreateConsumptionMeteringPoint();
-            var connectionDetails = ConnectNow();
-            SetStartOfSupplyPriorToEffectiveDate(meteringPoint, connectionDetails.EffectiveDate);
+            var currentDate = SystemClock.Instance.GetCurrentInstant().InUtc();
+            var effectiveDate = Instant.FromUtc(currentDate.Year, currentDate.Month, currentDate.Day, 22, 0, 0);
+            var connectionDetails = ConnectionDetails.Create(effectiveDate);
 
+            // SetStartOfSupplyPriorToEffectiveDate(meteringPoint, connectionDetails.EffectiveDate);
             meteringPoint.Connect(connectionDetails);
 
             Assert.Contains(meteringPoint.DomainEvents, evt => evt is MeteringPointConnected);
