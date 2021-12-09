@@ -124,7 +124,19 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
                 return rulesCheckResult;
             }
 
-            _meteringPointRepository.Add(ConsumptionMeteringPoint.Create(meteringPointDetails, masterData));
+            if (gridArea is null)
+            {
+                throw new BusinessOperationException("Grid are not found.");
+            }
+
+            _meteringPointRepository.Add(
+                MeteringPoint.Create(
+                    MeteringPointId.New(),
+                    GsrnNumber.Create(request.GsrnNumber),
+                    MeteringPointType.Consumption,
+                    gridArea.DefaultLink.Id,
+                    EffectiveDate.Create(request.EffectiveDate),
+                    masterData)!);
 
             return BusinessProcessResult.Ok(request.TransactionId);
         }

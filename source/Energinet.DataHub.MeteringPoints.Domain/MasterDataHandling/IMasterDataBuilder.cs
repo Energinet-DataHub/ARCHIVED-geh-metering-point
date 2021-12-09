@@ -110,7 +110,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         /// </summary>
         /// <param name="disconnectionType"></param>
         /// <returns><see cref="IMasterDataBuilder"/></returns>
-        IMasterDataBuilder WithDisconnectionType(string disconnectionType);
+        IMasterDataBuilder WithDisconnectionType(string? disconnectionType);
 
         /// <summary>
         /// Configures asset type

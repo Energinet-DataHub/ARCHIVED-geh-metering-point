@@ -25,11 +25,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
     public class MasterDataValueTransformer
     {
         private readonly ChangeMasterDataRequest _request;
-        private readonly ConsumptionMeteringPoint _targetMeteringPoint;
+        private readonly MeteringPoint _targetMeteringPoint;
         private readonly List<ValidationError> _errors = new();
         private readonly MasterDataDetails _updatedValues;
 
-        public MasterDataValueTransformer(ChangeMasterDataRequest request, ConsumptionMeteringPoint targetMeteringPoint)
+        public MasterDataValueTransformer(ChangeMasterDataRequest request, MeteringPoint targetMeteringPoint)
         {
             _request = request ?? throw new ArgumentNullException(nameof(request));
             _targetMeteringPoint = targetMeteringPoint ?? throw new ArgumentNullException(nameof(targetMeteringPoint));

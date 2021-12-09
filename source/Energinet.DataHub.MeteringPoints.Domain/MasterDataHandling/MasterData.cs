@@ -80,7 +80,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public ConnectionType? ConnectionType { get; }
 
-        public DisconnectionType DisconnectionType { get; }
+        public DisconnectionType? DisconnectionType { get; }
 
         public NetSettlementGroup? NetSettlementGroup { get; }
 

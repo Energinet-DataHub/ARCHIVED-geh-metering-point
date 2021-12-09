@@ -150,8 +150,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 mapper.Property(x => x.DisconnectionType)
                     .HasColumnName("DisconnectionType")
                     .HasConversion(
-                        toDbValue => toDbValue.Name,
-                        fromDbValue => EnumerationType.FromName<DisconnectionType>(fromDbValue));
+                        toDbValue => toDbValue! == null! ? null : toDbValue.Name,
+                        fromDbValue => string.IsNullOrEmpty(fromDbValue) ? null : EnumerationType.FromName<DisconnectionType>(fromDbValue));
                 mapper.Property(x => x.ConnectionType)
                     .HasColumnName("ConnectionType")
                     .HasConversion(

@@ -86,7 +86,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production
                 _masterData.PowerLimit.Ampere,
                 _masterData.PowerLimit.Kwh,
                 effectiveDate.DateInUtc,
-                _masterData.DisconnectionType.Name,
+                _masterData.DisconnectionType?.Name!,
                 _masterData.ConnectionType?.Name!,
                 _masterData.AssetType?.Name!,
                 ConnectionState.PhysicalState.Name,

@@ -211,6 +211,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         private static IMasterDataBuilder Builder() =>
             new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Consumption))
+                .WithReadingPeriodicity(ReadingOccurrence.Quarterly.Name)
                 .WithAddress(streetName: "Test Street", countryCode: CountryCode.DK)
                 .WithNetSettlementGroup(NetSettlementGroup.Two.Name)
                 .WithMeteringConfiguration(MeteringMethod.Virtual.Name, string.Empty);
