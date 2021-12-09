@@ -61,6 +61,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
         public void Should_succeed_consumption()
         {
             var meteringPoint = CreateConsumptionMeteringPoint();
+
+            // TODO: Remove this when metering points are merged
             var currentDate = SystemClock.Instance.GetCurrentInstant().InUtc();
             var effectiveDate = Instant.FromUtc(currentDate.Year, currentDate.Month, currentDate.Day, 22, 0, 0);
             var connectionDetails = ConnectionDetails.Create(effectiveDate);

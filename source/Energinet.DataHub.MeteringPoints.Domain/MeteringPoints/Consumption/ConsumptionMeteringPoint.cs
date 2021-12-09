@@ -111,6 +111,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 
             AddDomainEvent(@event);
 
+            // TODO: Remove this auto add energy supplier hack after public test
             SetEnergySupplierDetails(EnergySupplierDetails.Create(effectiveDate.DateInUtc));
         }
 
