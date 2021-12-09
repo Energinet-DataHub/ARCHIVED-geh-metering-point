@@ -14,9 +14,10 @@
 
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using StreetNameIsRequiredRule = Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules.StreetNameIsRequiredRule;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production
 {
@@ -26,6 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production
         {
             return new BusinessRulesValidationResult(new List<IBusinessRule>()
             {
+                new MeterReadingOccurrenceRule(masterData.ReadingOccurrence),
                 new CityIsRequiredRule(masterData.Address),
                 new StreetNameIsRequiredRule(masterData.Address),
                 new PostCodeIsRequiredRule(masterData.Address),
