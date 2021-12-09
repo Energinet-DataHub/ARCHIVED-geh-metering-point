@@ -13,17 +13,12 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
-using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using Energinet.DataHub.Core.TestCommon;
-using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Extensions;
 using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures;
 using FluentAssertions;
 using Xunit;
@@ -54,50 +49,69 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
         public Task DisposeAsync()
         {
             Fixture.SetTestOutputHelper(null!);
-            Fixture.MessageHubListenerMock.ResetMessageHandlersAndReceivedMessages();
 
             return Task.CompletedTask;
         }
 
         [Fact]
-        public async Task When_CallingMeteringPoint_Then_RequestIsProcessed()
+        public async Task Create_metering_point_flow_should_succeed()
         {
             // Arrange
             var xml = TestFileLoader.ReadFile("TestFiles/Cim/CreateMeteringPoint.xml")
                 .Replace("{{transactionId}}", "1", StringComparison.OrdinalIgnoreCase)
                 .Replace("{{gsrn}}", "571313140733089609", StringComparison.OrdinalIgnoreCase);
             using var request = new HttpRequestMessage(HttpMethod.Post, "api/MeteringPoint");
+            request.Headers.Add("gln", "8200000009917");
             request.Content = new StringContent(xml, Encoding.UTF8, "application/xml");
 
             // Act
             var ingestionResponse = await Fixture.IngestionHostManager.HttpClient.SendAsync(request)
                 .ConfigureAwait(false);
+            var ingestionResponseBody = await ingestionResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var correlationId = ingestionResponseBody
+                .Replace("Correlation id: ", string.Empty, StringComparison.Ordinal)
+                .Trim();
 
             // Assert
-            // => Ingestion
+            // Ingestion
             ingestionResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            Fixture.TestLogger.WriteLine(ingestionResponseBody);
 
-            // => Queue subscriber
-            var queueSubscriberExecuted = await Awaiter
+            // Processing
+            await AssertFunctionExecuted(Fixture.ProcessingHostManager, "QueueSubscriber").ConfigureAwait(false);
+
+            // Outbox
+            await AssertFunctionExecuted(Fixture.OutboxHostManager, "OutboxWatcher").ConfigureAwait(false);
+
+            // MessageHub
+            await Fixture.MessageHubSimulator.WaitForNotificationsInDataAvailableQueueAsync(correlationId)
+                .ConfigureAwait(false);
+
+            // MessageHub
+            // TODO: Check content for accept?
+            await Fixture.MessageHubSimulator.PeekAsync().ConfigureAwait(false);
+
+            // Local MessageHub
+            await AssertFunctionExecuted(Fixture.LocalMessageHubHostManager, "RequestBundleQueueSubscriber").ConfigureAwait(false);
+
+            // MessageHub
+            await Fixture.MessageHubSimulator.DequeueAsync().ConfigureAwait(false);
+
+            // Local MessageHub
+            await AssertFunctionExecuted(Fixture.LocalMessageHubHostManager, "BundleDequeuedQueueSubscriber").ConfigureAwait(false);
+        }
+
+        private static async Task AssertFunctionExecuted(FunctionAppHostManager hostManager, string functionName)
+        {
+            var waitTimespan = TimeSpan.FromSeconds(10);
+
+            var functionExecuted = await Awaiter
                 .TryWaitUntilConditionAsync(
-                    () => Fixture.ProcessingHostManager.CheckIfFunctionWasExecuted("Functions.QueueSubscriber"),
-                    TimeSpan.FromSeconds(10))
+                    () => hostManager.CheckIfFunctionWasExecuted(
+                        $"Functions.{functionName}"),
+                    waitTimespan)
                 .ConfigureAwait(false);
-
-            queueSubscriberExecuted.Should().BeTrue();
-
-            // => Outbox
-            var outboxResponse = await Fixture.OutboxHostManager.TriggerFunctionAsync("OutboxWatcher")
-                .ConfigureAwait(false);
-
-            outboxResponse.StatusCode.Should().Be(HttpStatusCode.Accepted);
-
-            using var isMessageReceivedEvent = await Fixture.MessageHubListenerMock
-                .WhenMessageType("CreateMeteringPointAccepted")
-                .VerifyOnceAsync().ConfigureAwait(false);
-
-            var isMessageReceived = isMessageReceivedEvent.Wait(TimeSpan.FromSeconds(10));
-            isMessageReceived.Should().BeTrue();
+            functionExecuted.Should().BeTrue($"{functionName} was expected to run.");
         }
     }
 }
