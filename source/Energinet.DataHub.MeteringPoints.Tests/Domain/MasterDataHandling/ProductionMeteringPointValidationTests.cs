@@ -77,6 +77,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Fact]
+        public void City_is_required()
+        {
+            var masterData = Builder()
+                .WithAddress(city: string.Empty)
+                .Build();
+
+            AssertContainsValidationError<CityIsRequiredRuleError>(CheckRules(masterData));
+        }
+
+        [Fact]
         public void Geo_info_reference_is_required()
         {
             var masterData = Builder()
