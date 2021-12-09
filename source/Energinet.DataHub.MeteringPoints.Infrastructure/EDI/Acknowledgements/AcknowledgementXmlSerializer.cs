@@ -42,10 +42,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements
                     new XElement(
                         xmlNamespace + "MktActivityRecord",
                         new XElement(xmlNamespace + "mRID", message.MarketActivityRecord.Id),
-                        new XElement(xmlNamespace + "businessProcessReference_MktActivityRecord.mRID", message.MarketActivityRecord.BusinessProcessReference),
                         new XElement(xmlNamespace + "originalTransactionReference_MktActivityRecord.mRID", message.MarketActivityRecord.OriginalTransaction),
-                        new XElement(xmlNamespace + "marketEvaluationPoint.mRID", message.MarketActivityRecord.MarketEvaluationPoint),
-                        new XElement(xmlNamespace + "start_DateAndOrTime.date", message.MarketActivityRecord.StartDateAndOrTime))));
+                        new XElement(xmlNamespace + "marketEvaluationPoint.mRID", message.MarketActivityRecord.MarketEvaluationPoint)))); // TODO: add coding scheme
 
             return Serialize(document);
         }
@@ -67,14 +65,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements
                     new XElement(xmlNamespace + "receiver_MarketParticipant.mRID", new XAttribute("codingScheme", message.Receiver.CodingScheme), message.Receiver.Id),
                     new XElement(xmlNamespace + "receiver_MarketParticipant.marketRole.type", message.Receiver.Role),
                     new XElement(xmlNamespace + "createdDateTime", message.CreatedDateTime),
-                    GetReasonElement(xmlNamespace, message.Reason.Code, message.Reason.Text),
+                    new XElement(xmlNamespace + "Reason", message.Reason),
                     new XElement(
                         xmlNamespace + "MktActivityRecord",
                         new XElement(xmlNamespace + "mRID", message.MarketActivityRecord.Id),
-                        new XElement(xmlNamespace + "businessProcessReference_MktActivityRecord.mRID", message.MarketActivityRecord.BusinessProcessReference),
                         new XElement(xmlNamespace + "originalTransactionReference_MktActivityRecord.mRID", message.MarketActivityRecord.OriginalTransaction),
-                        new XElement(xmlNamespace + "marketEvaluationPoint.mRID", message.MarketActivityRecord.MarketEvaluationPoint),
-                        new XElement(xmlNamespace + "start_DateAndOrTime.date", message.MarketActivityRecord.StartDateAndOrTime),
+                        new XElement(xmlNamespace + "marketEvaluationPoint.mRID", message.MarketActivityRecord.MarketEvaluationPoint), // TODO: add coding scheme
                         message.MarketActivityRecord.Reasons.Select(r => GetReasonElement(xmlNamespace, r.Code, r.Text)))));
 
             return Serialize(document);

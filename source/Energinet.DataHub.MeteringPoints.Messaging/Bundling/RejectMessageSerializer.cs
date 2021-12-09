@@ -65,10 +65,8 @@ namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling
             return new XElement(
                 _xmlNamespace + "MktActivityRecord",
                 new XElement(_xmlNamespace + "mRID", message.MarketActivityRecord.Id),
-                new XElement(_xmlNamespace + "businessProcessReference_MktActivityRecord.mRID", message.MarketActivityRecord.BusinessProcessReference),
                 new XElement(_xmlNamespace + "originalTransactionReference_MktActivityRecord.mRID", message.MarketActivityRecord.OriginalTransaction),
                 new XElement(_xmlNamespace + "marketEvaluationPoint.mRID", message.MarketActivityRecord.MarketEvaluationPoint),
-                new XElement(_xmlNamespace + "start_DateAndOrTime.date", message.MarketActivityRecord.StartDateAndOrTime),
                 message.MarketActivityRecord.Reasons.Select(r => GetReasonElement(r.Code, r.Text)));
         }
 
@@ -87,7 +85,7 @@ namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling
                     new XElement(_xmlNamespace + "receiver_MarketParticipant.mRID", new XAttribute("codingScheme", message.Receiver.CodingScheme), message.Receiver.Id),
                     new XElement(_xmlNamespace + "receiver_MarketParticipant.marketRole.type", message.Receiver.Role),
                     new XElement(_xmlNamespace + "createdDateTime", message.CreatedDateTime),
-                    GetReasonElement(message.Reason.Code, message.Reason.Text)));
+                    new XElement(_xmlNamespace + "Reason", message.Reason)));
 
             return document;
         }

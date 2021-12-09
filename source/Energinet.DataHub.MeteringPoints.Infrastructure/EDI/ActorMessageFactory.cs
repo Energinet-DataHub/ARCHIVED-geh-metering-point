@@ -43,24 +43,22 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
             return new ConfirmMessage(
                 DocumentName: "ConfirmRequestChangeAccountingPointCharacteristics_MarketDocument",
                 Id: Guid.NewGuid().ToString(),
-                Type: "414",
-                ProcessType: "E65",
-                BusinessSectorType: "E21",
+                Type: "E59", // Changes with the document type. ie E59 for ConfirmRequestChangeAccountingPointCharacteristics_MarketDocument
+                ProcessType: "E02", // Changes with BRS, D15 for connect
+                BusinessSectorType: "23", // Electricity
                 Sender: new MarketRoleParticipant(
-                    Id: "DataHub GLN", // TODO: Use correct GLN
-                    CodingScheme: "9",
-                    Role: "EZ"),
+                    Id: "DataHub GLN", // TODO: Use from actor register
+                    CodingScheme: "A10",
+                    Role: "DDZ"),
                 Receiver: new MarketRoleParticipant(
-                    Id: _userContext.CurrentUser?.GlnNumber ?? glnNumber, // TODO: Hardcoded
-                    CodingScheme: "9",
+                    Id: _userContext.CurrentUser?.GlnNumber ?? glnNumber, // TODO: Use from actor register
+                    CodingScheme: "A10",
                     Role: "DDQ"),
                 CreatedDateTime: _dateTimeProvider.Now(),
-                ReasonCode: "39",
+                ReasonCode: "A01", // Confirm
                 MarketActivityRecord: new MarketActivityRecord(
                     Id: Guid.NewGuid().ToString(),
-                    BusinessProcessReference: _correlationContext.Id, // TODO: is correlation id the same as BusinessProcessReference?
                     MarketEvaluationPoint: gsrnNumber,
-                    StartDateAndOrTime: effectiveDate,
                     OriginalTransaction: transactionId));
         }
 
@@ -70,26 +68,22 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
             return new RejectMessage(
                 DocumentName: "RejectRequestChangeAccountingPointCharacteristics_MarketDocument",
                 Id: Guid.NewGuid().ToString(),
-                Type: "414",
-                ProcessType: "E65",
-                BusinessSectorType: "E21",
-                Sender: new MarketRoleParticipant(
-                    Id: "DataHub GLN", // TODO: Use correct GLN
-                    CodingScheme: "9",
-                    Role: "EZ"),
-                Receiver: new MarketRoleParticipant(
-                    Id: _userContext.CurrentUser?.GlnNumber ?? glnNumber, // TODO: Hardcoded
-                    CodingScheme: "9",
-                    Role: "DDQ"),
+                Type: "E59", // Changes with the document type. ie E59 for ConfirmRequestChangeAccountingPointCharacteristics_MarketDocument
+                ProcessType: "E02", // Changes with BRS, D15 for connect
+                BusinessSectorType: "23", // Electricity
+                Sender: new MarketRoleParticipant(// TODO: Use from actor register
+                    Id: "DataHub GLN",
+                    CodingScheme: "A10",
+                    Role: "DDZ"),
+                Receiver: new MarketRoleParticipant(// TODO: Use from actor register
+                    Id: _userContext.CurrentUser?.GlnNumber ?? glnNumber,
+                    CodingScheme: "A10",
+                    Role: "DDM"),
                 CreatedDateTime: _dateTimeProvider.Now(),
-                Reason: new Reason(
-                    Code: "41",
-                    Text: string.Empty),
+                Reason: "A02",
                 MarketActivityRecord: new MarketActivityRecordWithReasons(
                     Id: Guid.NewGuid().ToString(),
-                    BusinessProcessReference: _correlationContext.Id, // TODO: is correlation id the same as BusinessProcessReference?
                     MarketEvaluationPoint: gsrnNumber,
-                    StartDateAndOrTime: effectiveDate,
                     OriginalTransaction: transactionId,
                     Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
         }

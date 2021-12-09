@@ -26,6 +26,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements
         MarketRoleParticipant Sender,
         MarketRoleParticipant Receiver,
         Instant CreatedDateTime,
-        Reason Reason,
+        string Reason,
         MarketActivityRecordWithReasons MarketActivityRecord);
 }
