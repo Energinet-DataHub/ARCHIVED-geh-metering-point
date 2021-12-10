@@ -69,34 +69,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.MarketMet
             Assert.Equal(1, marketMeteringPoint.DomainEvents.Count(e => e is EnergySupplierDetailsChanged));
         }
 
-        [Fact]
-        public void Should_return_error_when_geo_info_reference_is_undefined()
-        {
-            var address = Address.Create(
-                SampleData.StreetName,
-                SampleData.StreetCode,
-                SampleData.BuildingNumber,
-                SampleData.CityName,
-                SampleData.CitySubdivision,
-                SampleData.PostCode,
-                EnumerationType.FromName<CountryCode>(SampleData.CountryCode),
-                SampleData.Floor,
-                SampleData.Room,
-                SampleData.MunicipalityCode,
-                SampleData.IsActualAddress,
-                null);
-
-            var details = CreateConsumptionDetails()
-                with
-                {
-                    Address = address,
-                };
-
-            var checkResult = MarketMeteringPoint.CanCreate(details);
-
-            AssertError<GeoInfoReferenceIsRequiredRuleError>(checkResult, true);
-        }
-
         private static MarketMeteringPoint CreateMarketMeteringPoint()
         {
             var address = Address.Create(
