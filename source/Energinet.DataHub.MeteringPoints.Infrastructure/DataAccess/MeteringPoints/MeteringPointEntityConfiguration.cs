@@ -196,32 +196,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
         }
     }
 
-    public class MarketMeteringPointEntityConfiguration : IEntityTypeConfiguration<MarketMeteringPoint>
-    {
-        public void Configure(EntityTypeBuilder<MarketMeteringPoint> builder)
-        {
-            if (builder == null)
-            {
-                throw new ArgumentNullException(nameof(builder));
-            }
-
-            builder.ToTable("MarketMeteringPoints", "dbo");
-        }
-    }
-
-    public class ProductionMeteringPointEntityConfiguration : IEntityTypeConfiguration<ProductionMeteringPoint>
-    {
-        public void Configure(EntityTypeBuilder<ProductionMeteringPoint> builder)
-        {
-            if (builder == null)
-            {
-                throw new ArgumentNullException(nameof(builder));
-            }
-
-            builder.ToTable("ProductionMeteringPoints", "dbo");
-        }
-    }
-
     public class ExchangeMeteringPointEntityConfiguration : IEntityTypeConfiguration<ExchangeMeteringPoint>
     {
         public void Configure(EntityTypeBuilder<ExchangeMeteringPoint> builder)
