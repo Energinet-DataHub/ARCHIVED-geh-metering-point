@@ -38,6 +38,18 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             Assert.Equal(errorExpected, hasError);
         }
 
+        protected static MeteringPoint CreateMeteringPoint(MeteringPointType type, IMasterDataBuilder? masterDataBuilder = null)
+        {
+            var builder = masterDataBuilder ?? MasterDataBuilder(type);
+            return MeteringPoint.Create(
+                MeteringPointId.New(),
+                GsrnNumber.Create(SampleData.GsrnNumber),
+                type,
+                new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
+                EffectiveDate.Create(SampleData.EffectiveDate),
+                builder.Build());
+        }
+
         protected static IMasterDataBuilder MasterDataBuilder(MeteringPointType meteringPointType)
         {
             var builder = new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(meteringPointType))
