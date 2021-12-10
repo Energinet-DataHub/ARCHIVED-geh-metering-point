@@ -13,17 +13,17 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class MeasureUnitTypeMandatoryErrorConverter : ErrorConverter<MeasureUnitTypeMandatoryValidationError>
+    public class MeasureUnitTypeMandatoryErrorConverter : ErrorConverter<UnitTypeIsRequired>
     {
-        protected override ErrorMessage Convert(MeasureUnitTypeMandatoryValidationError validationError)
+        protected override ErrorMessage Convert(UnitTypeIsRequired validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new ErrorMessage("D02", $"Energy time series measure unit is missing for metering point {validationError.GsrnNumber}");
+            return new ErrorMessage("D02", $"Energy time series measure unit is required.");
         }
     }
 }
