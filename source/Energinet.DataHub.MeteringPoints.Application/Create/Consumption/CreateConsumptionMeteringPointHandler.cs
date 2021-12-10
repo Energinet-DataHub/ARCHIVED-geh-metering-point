@@ -57,12 +57,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
                 return validationResult;
             }
 
-            var addressValidationResult = ValidateAddress(request);
-            if (!addressValidationResult.Success)
-            {
-                return new BusinessProcessResult(request.TransactionId, addressValidationResult.Errors);
-            }
-
             var gridArea = await GetGridAreaAsync(request).ConfigureAwait(false);
             var gridAreaValidationResult = ValidateGridArea(request, gridArea);
             if (!gridAreaValidationResult.Success)
@@ -148,30 +142,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
         {
             var validationResult = MeteringPoint.CanCreate(MeteringPointType.Consumption, masterData, new MasterDataValidator());
             return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
-        }
-
-        private static BusinessRulesValidationResult ValidateMeteringConfiguration(string method, string meter)
-        {
-            return MeteringConfiguration.CheckRules(
-                EnumerationType.FromName<MeteringMethod>(method),
-                string.IsNullOrWhiteSpace(meter) ? MeterId.Empty() : MeterId.Create(meter));
-        }
-
-        private static BusinessRulesValidationResult ValidateAddress(CreateConsumptionMeteringPoint request)
-        {
-            var municipalityCode = int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo());
-            return Domain.Addresses.Address.CheckRules(
-                streetName: request.StreetName,
-                streetCode: request.StreetCode,
-                buildingNumber: request.BuildingNumber,
-                city: request.CityName,
-                citySubDivision: request.CitySubDivisionName,
-                postCode: request.PostCode,
-                countryCode: EnumerationType.FromName<CountryCode>(request.CountryCode),
-                floor: request.FloorIdentification,
-                room: request.RoomIdentification,
-                municipalityCode: municipalityCode,
-                locationDescription: request.LocationDescription);
         }
 
         private Task<GridArea?> GetGridAreaAsync(CreateConsumptionMeteringPoint request)
