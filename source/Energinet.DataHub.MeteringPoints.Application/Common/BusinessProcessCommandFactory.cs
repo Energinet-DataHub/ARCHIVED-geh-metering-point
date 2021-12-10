@@ -92,7 +92,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
                 return CreateExchangeMeteringPoint(document);
             }
 
-            return CreateSpecialMeteringPoint(document);
+            return CreateConsumptionMeteringPoint(document);
         }
 
         private static IBusinessRequest CreateConsumptionMeteringPoint(MasterDataDocument document)
@@ -160,35 +160,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
                 CitySubDivisionName = document.CitySubDivisionName,
                 FromGrid = document.FromGrid ?? string.Empty,
                 ToGrid = document.ToGrid ?? string.Empty,
-            };
-        }
-
-        private static IBusinessRequest CreateSpecialMeteringPoint(MasterDataDocument document)
-        {
-            return new CreateSpecialMeteringPoint
-            {
-                MeteringPointType = document.TypeOfMeteringPoint,
-                BuildingNumber = document.BuildingNumber,
-                CityName = document.CityName,
-                CountryCode = document.CountryCode,
-                EffectiveDate = document.EffectiveDate,
-                FloorIdentification = document.FloorIdentification,
-                GsrnNumber = document.GsrnNumber,
-                LocationDescription = document.LocationDescription,
-                MaximumCurrent = document.MaximumCurrent,
-                MaximumPower = document.MaximumPower,
-                MeteringMethod = document.MeteringMethod ?? string.Empty,
-                MeterNumber = document.MeterNumber,
-                MunicipalityCode = document.MunicipalityCode,
-                PostCode = document.PostCode,
-                RoomIdentification = document.RoomIdentification,
-                StreetCode = document.StreetCode,
-                StreetName = document.StreetName,
-                TransactionId = document.TransactionId,
-                MeteringGridArea = document.MeteringGridArea,
-                MeterReadingOccurrence = document.MeterReadingOccurrence,
-                PhysicalConnectionCapacity = document.PhysicalConnectionCapacity,
-                CitySubDivisionName = document.CitySubDivisionName,
             };
         }
     }

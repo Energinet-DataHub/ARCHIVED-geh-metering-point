@@ -57,7 +57,92 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 MeteringPointType.VEProduction.Name, new List<MasterDataField>()
                 {
                     new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
-                    new(nameof(MasterData.UnitType), Applicability.Required, true, MeasurementUnitType.KWh),
+                    new(nameof(MasterData.UnitType), Applicability.Required, true, MeasurementUnitType.KVArh),
+                }
+            },
+            {
+                MeteringPointType.Analysis.Name, new List<MasterDataField>()
+                {
+                }
+            },
+            {
+                MeteringPointType.ElectricalHeating.Name, new List<MasterDataField>()
+                {
+                }
+            },
+            {
+                MeteringPointType.InternalUse.Name, new List<MasterDataField>()
+                {
+                }
+            },
+            {
+                MeteringPointType.NetConsumption.Name, new List<MasterDataField>()
+                {
+                }
+            },
+            {
+                MeteringPointType.NetProduction.Name, new List<MasterDataField>()
+                {
+                }
+            },
+            {
+                MeteringPointType.OtherConsumption.Name, new List<MasterDataField>()
+                {
+                }
+            },
+            {
+                MeteringPointType.OtherProduction.Name, new List<MasterDataField>()
+                {
+                }
+            },
+            {
+                MeteringPointType.OwnProduction.Name, new List<MasterDataField>()
+                {
+                }
+            },
+            {
+                MeteringPointType.TotalConsumption.Name, new List<MasterDataField>()
+                {
+                }
+            },
+            {
+                MeteringPointType.WholesaleServices.Name, new List<MasterDataField>()
+                {
+                }
+            },
+            {
+                MeteringPointType.ConsumptionFromGrid.Name, new List<MasterDataField>()
+                {
+                }
+            },
+            {
+                MeteringPointType.ExchangeReactiveEnergy.Name, new List<MasterDataField>()
+                {
+                }
+            },
+            {
+                MeteringPointType.GridLossCorrection.Name, new List<MasterDataField>()
+                {
+                }
+            },
+            {
+                MeteringPointType.NetFromGrid.Name, new List<MasterDataField>()
+                {
+                }
+            },
+            {
+                MeteringPointType.NetToGrid.Name, new List<MasterDataField>()
+                {
+                }
+            },
+            {
+                MeteringPointType.SupplyToGrid.Name, new List<MasterDataField>()
+                {
+                }
+            },
+            {
+                MeteringPointType.SurplusProductionGroup.Name, new List<MasterDataField>()
+                {
                 }
             },
         };

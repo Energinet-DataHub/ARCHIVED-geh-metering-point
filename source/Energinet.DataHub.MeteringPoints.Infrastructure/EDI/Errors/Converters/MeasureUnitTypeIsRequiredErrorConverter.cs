@@ -17,7 +17,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class MeasureUnitTypeMandatoryErrorConverter : ErrorConverter<UnitTypeIsRequired>
+    public class MeasureUnitTypeIsRequiredErrorConverter : ErrorConverter<UnitTypeIsRequired>
     {
         protected override ErrorMessage Convert(UnitTypeIsRequired validationError)
         {

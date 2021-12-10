@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Create.Special;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
@@ -49,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         public async Task Should_reject_if_type_is_ve_production_and_meter_reading_occurrence_is_not_quarterly_or_hourly_or_monthly()
         {
             var invalidReadingOccurrence = ReadingOccurrence.Yearly.Name;
-            var request = CreateCommand()
+            var request = Scenarios.CreateCommand(MeteringPointType.VEProduction)
                 with
                 {
                     MeterReadingOccurrence = invalidReadingOccurrence,
@@ -60,9 +61,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("D02", DocumentType.CreateMeteringPointRejected);
         }
 
-        private static CreateSpecialMeteringPoint CreateCommand()
+        private static CreateMeteringPoint CreateCommand()
         {
-            return Scenarios.CreateSpecialMeteringPointCommand();
+            return Scenarios.CreateCommand(MeteringPointType.ElectricalHeating);
         }
     }
 }

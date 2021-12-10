@@ -17,6 +17,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Categories;
 
@@ -36,15 +37,19 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             Assert.Equal(ProductType.EnergyActive, sut.ProductType);
         }
 
-        [Fact]
-        public void Measurement_unit_type_is_Kwh()
+        [Theory]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.KWh))]
+        [InlineData(nameof(MeteringPointType.Production), nameof(MeasurementUnitType.KWh))]
+        [InlineData(nameof(MeteringPointType.Exchange), nameof(MeasurementUnitType.KWh))]
+        [InlineData(nameof(MeteringPointType.VEProduction), nameof(MeasurementUnitType.KVArh))]
+        public void Measurement_unit_type_is_correct(string type, string unitType)
         {
             var fields = new MasterDataFieldSelector();
-            var sut = new MasterDataBuilder(fields.GetMasterDataFieldsFor(MeteringPointType.Consumption))
-                .WithMeasurementUnitType(MeasurementUnitType.Tonne.Name)
+            var sut = new MasterDataBuilder(fields.GetMasterDataFieldsFor(EnumerationType.FromName<MeteringPointType>(type)))
+                .WithMeasurementUnitType(unitType)
                 .Build();
 
-            Assert.Equal(MeasurementUnitType.KWh, sut.UnitType);
+            Assert.Equal(EnumerationType.FromName<MeasurementUnitType>(unitType), sut.UnitType);
         }
 
         [Fact]

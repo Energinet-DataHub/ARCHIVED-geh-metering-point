@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Special
             var isActualAddress = SampleData.IsActualAddress;
             var gridAreaLinkId = new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId));
             var powerPlantGsrn = GsrnNumber.Create(SampleData.PowerPlant);
-            var measurementUnitType = MeasurementUnitType.KWh;
+            var measurementUnitType = MeasurementUnitType.KVArh;
             var readingOccurrence = ReadingOccurrence.Hourly;
             var powerLimit = PowerLimit.Create(0, 0);
             var effectiveDate = EffectiveDate.Create(SampleData.EffectiveDate);
