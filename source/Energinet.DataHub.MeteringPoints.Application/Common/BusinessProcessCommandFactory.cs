@@ -85,7 +85,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
 
             if (meteringPointType == MeteringPointType.Production)
             {
-                return CreateProductionMeteringPoint(document);
+                return CreateConsumptionMeteringPoint(document);
             }
 
             if (meteringPointType == MeteringPointType.Exchange)
