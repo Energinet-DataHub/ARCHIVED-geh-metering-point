@@ -61,26 +61,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             var scheduledMeterReadingDate = ScheduledMeterReadingDate.Create("0101");
             var capacity = Capacity.Create(SampleData.Capacity);
 
-            var consumptionMeteringPointDetails = CreateConsumptionDetails()
-                with
-                {
-                    Id = meteringPointId,
-                    Address = address,
-                    GridAreaLinkId = gridAreaLinkId,
-                    PowerLimit = powerLimit,
-                    DisconnectionType = disconnectionType,
-                    ConnectionType = null,
-                    ScheduledMeterReadingDate = null,
-                    Capacity = capacity,
-                    NetSettlementGroup = netSettlementGroup,
-                };
-
             var masterData = MasterDataBuilder(MeteringPointType.Consumption)
                 .WithCapacity(capacity.Kw)
                 .WithAddress(address.StreetName, address.StreetCode, address.BuildingNumber, address.City, address.CitySubDivision, address.PostCode, address.CountryCode, address.Floor, address.Room, address.MunicipalityCode, address.IsActual, address.GeoInfoReference, address.LocationDescription)
                 .WithNetSettlementGroup(netSettlementGroup.Name)
                 .Build();
-            var meteringPoint = ConsumptionMeteringPoint.Create(consumptionMeteringPointDetails, masterData);
+            var meteringPoint = MeteringPoint.Create(meteringPointId, meteringPointGsrn, MeteringPointType.Consumption, gridAreaLinkId, effectiveDate, masterData);
 
             var createdEvent = meteringPoint.DomainEvents.First(e => e is ConsumptionMeteringPointCreated) as ConsumptionMeteringPointCreated;
             Assert.Equal(address.City, createdEvent!.City);
@@ -99,7 +85,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(meteringPointGsrn.Value, createdEvent.GsrnNumber);
             Assert.Equal(meteringMethod.Name, createdEvent.MeteringPointSubType);
             Assert.Equal(gridAreaLinkId.Value, createdEvent.GridAreaLinkId);
-            Assert.Equal(consumptionMeteringPointDetails.NetSettlementGroup.Name, createdEvent.NetSettlementGroup);
+            Assert.Equal(masterData.NetSettlementGroup?.Name, createdEvent.NetSettlementGroup);
             Assert.Equal(powerPlantGsrn.Value, createdEvent.PowerPlantGsrnNumber);
             Assert.Equal(address.LocationDescription, createdEvent.LocationDescription);
             Assert.Equal(measurementUnitType.Name, createdEvent.UnitType);
