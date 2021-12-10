@@ -132,7 +132,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<ChargesResponseReceiver>(Lifestyle.Scoped);
             container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
             container.Register<IEnergySupplierRepository, EnergySupplierRepository>(Lifestyle.Scoped);
-            container.Register<IMarketMeteringPointRepository, MarketMeteringPointRepository>(Lifestyle.Scoped);
             container.Register<IGridAreaRepository, GridAreaRepository>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
             container.Register<CorrelationIdMiddleware>(Lifestyle.Scoped);

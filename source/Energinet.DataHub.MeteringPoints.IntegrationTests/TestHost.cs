@@ -133,7 +133,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
             _container.Register<IEnergySupplierRepository, EnergySupplierRepository>(Lifestyle.Scoped);
             _container.Register<IGridAreaRepository, GridAreaRepository>(Lifestyle.Scoped);
-            _container.Register<IMarketMeteringPointRepository, MarketMeteringPointRepository>(Lifestyle.Scoped);
             _container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
             _container.Register<IOutboxManager, OutboxManager>(Lifestyle.Scoped);
             _container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Singleton);
