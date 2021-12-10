@@ -65,11 +65,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
             }
 
             var meteringPointType = EnumerationType.FromName<MeteringPointType>(request.MeteringPointType);
-            var builder =
+            var masterDataBuilder =
                 new MasterDataBuilder(
                     new MasterDataFieldSelector().GetMasterDataFieldsFor(meteringPointType));
 
-            builder
+            masterDataBuilder
                 .WithAssetType(request.AssetType)
                 .WithConnectionType(request.ConnectionType)
                 .WithDisconnectionType(request.DisconnectionType)
@@ -97,23 +97,23 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
                     string.IsNullOrWhiteSpace(request.GeoInfoReference) ? default : Guid.Parse(request.GeoInfoReference),
                     request.LocationDescription);
 
-            var masterDataValidationResult = builder.Validate();
+            var masterDataValidationResult = masterDataBuilder.Validate();
             if (masterDataValidationResult.Success == false)
             {
                 return new BusinessProcessResult(request.TransactionId, masterDataValidationResult.Errors);
             }
 
-            var masterData = builder.Build();
+            var masterData = masterDataBuilder.Build();
 
-            var rulesCheckResult = CheckBusinessRules(request, masterData);
-            if (!rulesCheckResult.Success)
+            var creationValidationResult = MeteringPoint.CanCreate(meteringPointType, masterData, new MasterDataValidator());
+            if (creationValidationResult.Success == false)
             {
-                return rulesCheckResult;
+                return new BusinessProcessResult(request.TransactionId, creationValidationResult.Errors);
             }
 
             if (gridArea is null)
             {
-                throw new BusinessOperationException("Grid are not found.");
+                throw new BusinessOperationException("Grid area is required in order to create metering points.");
             }
 
             _meteringPointRepository.Add(
@@ -136,12 +136,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
             };
 
             return new BusinessProcessResult(request.TransactionId, validationRules);
-        }
-
-        private static BusinessProcessResult CheckBusinessRules(CreateConsumptionMeteringPoint request, MasterData masterData)
-        {
-            var validationResult = MeteringPoint.CanCreate(MeteringPointType.Consumption, masterData, new MasterDataValidator());
-            return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
         }
 
         private Task<GridArea?> GetGridAreaAsync(CreateConsumptionMeteringPoint request)
