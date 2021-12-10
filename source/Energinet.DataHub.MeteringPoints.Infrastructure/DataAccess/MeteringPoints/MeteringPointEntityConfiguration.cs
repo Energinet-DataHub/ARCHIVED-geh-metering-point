@@ -209,19 +209,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
         }
     }
 
-    public class ConsumptionMeteringPointEntityConfiguration : IEntityTypeConfiguration<ConsumptionMeteringPoint>
-    {
-        public void Configure(EntityTypeBuilder<ConsumptionMeteringPoint> builder)
-        {
-            if (builder == null)
-            {
-                throw new ArgumentNullException(nameof(builder));
-            }
-
-            builder.ToTable("ConsumptionMeteringPoints", "dbo");
-        }
-    }
-
     public class ProductionMeteringPointEntityConfiguration : IEntityTypeConfiguration<ProductionMeteringPoint>
     {
         public void Configure(EntityTypeBuilder<ProductionMeteringPoint> builder)
