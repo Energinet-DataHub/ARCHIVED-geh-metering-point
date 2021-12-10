@@ -94,22 +94,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         private ConsumptionMeteringPoint() { }
 #pragma warning restore 8618
 
-        public static new BusinessRulesValidationResult CanCreate(ConsumptionMeteringPointDetails meteringPointDetails)
-        {
-            if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
-            var generalRuleCheckResult = MarketMeteringPoint.CanCreate(meteringPointDetails);
-            var rules = new List<IBusinessRule>()
-            {
-                new PowerPlantIsRequiredForNetSettlementGroupRule(meteringPointDetails.GsrnNumber, meteringPointDetails.NetSettlementGroup, meteringPointDetails.PowerPlantGsrnNumber),
-                new ScheduledMeterReadingDateRule(meteringPointDetails.ScheduledMeterReadingDate, meteringPointDetails.NetSettlementGroup),
-                new CapacityRequirementRule(meteringPointDetails.Capacity, meteringPointDetails.NetSettlementGroup),
-                new AssetTypeRequirementRule(meteringPointDetails.AssetType, meteringPointDetails.NetSettlementGroup),
-                new SettlementMethodMustBeFlexOrNonProfiledRule(meteringPointDetails.SettlementMethod),
-            };
-
-            return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
-        }
-
         public static ConsumptionMeteringPoint Create(ConsumptionMeteringPointDetails meteringPointDetails, MasterData masterData)
         {
             if (masterData == null) throw new ArgumentNullException(nameof(masterData));
