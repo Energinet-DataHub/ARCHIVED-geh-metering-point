@@ -77,9 +77,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
                 return new BusinessProcessResult(request.TransactionId, meteringConfigurationResult.Errors);
             }
 
+            var meteringPointType = EnumerationType.FromName<MeteringPointType>(request.MeteringPointType);
             var builder =
                 new MasterDataBuilder(
-                    new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Consumption));
+                    new MasterDataFieldSelector().GetMasterDataFieldsFor(meteringPointType));
 
             builder
                 .WithAssetType(request.AssetType)
@@ -126,7 +127,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
                 MeteringPoint.Create(
                     MeteringPointId.New(),
                     GsrnNumber.Create(request.GsrnNumber),
-                    MeteringPointType.Consumption,
+                    meteringPointType,
                     gridArea.DefaultLink.Id,
                     EffectiveDate.Create(request.EffectiveDate),
                     masterData)!);

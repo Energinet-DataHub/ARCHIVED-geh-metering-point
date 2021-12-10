@@ -17,7 +17,7 @@ using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
 {
     public record CreateConsumptionMeteringPoint(
-            string? MeteringPointType = null,
+            string MeteringPointType = "",
             string? StreetName = null,
             string? BuildingNumber = null,
             string? PostCode = null,
