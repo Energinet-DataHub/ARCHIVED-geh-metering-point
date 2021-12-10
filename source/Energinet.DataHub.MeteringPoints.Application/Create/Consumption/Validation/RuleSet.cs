@@ -12,10 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Validation
@@ -25,8 +29,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Valida
         public RuleSet()
         {
             RuleFor(request => request.MeteringPointType)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .WithState(request => new MeteringPointTypeRequiredValidationError(string.Empty));
+                .WithState(request => new MeteringPointTypeRequiredValidationError(string.Empty))
+                .Must(value => EnumerationType.GetAll<MeteringPointType>().Select(item => item.Name).Contains(value, StringComparer.OrdinalIgnoreCase))
+                .WithState(request =>
+                    new MeteringPointTypeValidationError(string.Empty, request.MeteringPointType ?? string.Empty));
             RuleFor(request => request.EffectiveDate).SetValidator(new EffectiveDateRule());
             RuleFor(request => request.CountryCode)
                 .NotEmpty()

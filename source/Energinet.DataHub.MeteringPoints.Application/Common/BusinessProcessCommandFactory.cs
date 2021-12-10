@@ -14,6 +14,7 @@
 
 using System;
 using System.Globalization;
+using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
@@ -70,7 +71,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
 
         private static IBusinessRequest? CreateNewMeteringPointCommand(MasterDataDocument document)
         {
-            if (string.IsNullOrEmpty(document.TypeOfMeteringPoint))
+            if (string.IsNullOrEmpty(document.TypeOfMeteringPoint) || EnumerationType.GetAll<MeteringPointType>().Select(item => item.Name).Contains(document.TypeOfMeteringPoint) == false)
             {
                 return CreateConsumptionMeteringPoint(document);
             }
