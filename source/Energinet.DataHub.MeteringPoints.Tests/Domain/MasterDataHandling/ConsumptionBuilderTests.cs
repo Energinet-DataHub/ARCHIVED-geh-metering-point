@@ -26,15 +26,29 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     [UnitTest]
     public class ConsumptionBuilderTests
     {
-        [Fact]
-        public void Product_type_is_set_to_active_energy()
+        [Theory]
+        [InlineData(nameof(MeteringPointType.Consumption), nameof(ProductType.EnergyActive))]
+        [InlineData(nameof(MeteringPointType.Production), nameof(ProductType.EnergyActive))]
+        [InlineData(nameof(MeteringPointType.Exchange), nameof(ProductType.EnergyActive))]
+        [InlineData(nameof(MeteringPointType.ElectricalHeating), nameof(ProductType.EnergyActive))]
+        [InlineData(nameof(MeteringPointType.NetConsumption), nameof(ProductType.EnergyActive))]
+        [InlineData(nameof(MeteringPointType.NetProduction), nameof(ProductType.EnergyActive))]
+        [InlineData(nameof(MeteringPointType.OtherConsumption), nameof(ProductType.EnergyActive))]
+        [InlineData(nameof(MeteringPointType.OtherProduction), nameof(ProductType.EnergyActive))]
+        [InlineData(nameof(MeteringPointType.OwnProduction), nameof(ProductType.EnergyActive))]
+        [InlineData(nameof(MeteringPointType.TotalConsumption), nameof(ProductType.EnergyActive))]
+        [InlineData(nameof(MeteringPointType.ConsumptionFromGrid), nameof(ProductType.EnergyActive))]
+        [InlineData(nameof(MeteringPointType.WholesaleServices), nameof(ProductType.EnergyActive))]
+        [InlineData(nameof(MeteringPointType.GridLossCorrection), nameof(ProductType.EnergyActive))]
+        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), nameof(ProductType.EnergyReactive))]
+        public void Product_type_has_correct_default_value(string type, string expectedDefaultValue)
         {
             var fields = new MasterDataFieldSelector();
-            var sut = new MasterDataBuilder(fields.GetMasterDataFieldsFor(MeteringPointType.Consumption))
+            var sut = new MasterDataBuilder(fields.GetMasterDataFieldsFor(EnumerationType.FromName<MeteringPointType>(type)))
                 .WithProductType(ProductType.PowerReactive.Name)
                 .Build();
 
-            Assert.Equal(ProductType.EnergyActive, sut.ProductType);
+            Assert.Equal(EnumerationType.FromName<ProductType>(expectedDefaultValue), sut.ProductType);
         }
 
         [Theory]

@@ -69,25 +69,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Fact]
-        public void Product_type_is_set_to_active_energy()
-        {
-            var sut = Builder()
-                .WithProductType(ProductType.PowerReactive.Name)
-                .Build();
-
-            Assert.Equal(ProductType.EnergyActive, sut.ProductType);
-        }
-
-        [Fact]
-        public void Measurement_unit_type_is_Kwh()
-        {
-            var sut = Builder()
-                .Build();
-
-            Assert.Equal(MeasurementUnitType.KWh, sut.UnitType);
-        }
-
-        [Fact]
         public void Net_settlement_group_is_required()
         {
             var sut = Builder()

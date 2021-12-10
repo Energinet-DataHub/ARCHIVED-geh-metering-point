@@ -68,6 +68,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             {
                 MeteringPointType.ElectricalHeating.Name, new List<MasterDataField>()
                 {
+                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
                 }
             },
             {
@@ -78,71 +79,85 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             {
                 MeteringPointType.NetConsumption.Name, new List<MasterDataField>()
                 {
+                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
                 }
             },
             {
                 MeteringPointType.NetProduction.Name, new List<MasterDataField>()
                 {
+                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
                 }
             },
             {
                 MeteringPointType.OtherConsumption.Name, new List<MasterDataField>()
                 {
+                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
                 }
             },
             {
                 MeteringPointType.OtherProduction.Name, new List<MasterDataField>()
                 {
+                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
                 }
             },
             {
                 MeteringPointType.OwnProduction.Name, new List<MasterDataField>()
                 {
+                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
                 }
             },
             {
                 MeteringPointType.TotalConsumption.Name, new List<MasterDataField>()
                 {
+                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
                 }
             },
             {
                 MeteringPointType.WholesaleServices.Name, new List<MasterDataField>()
                 {
+                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
                 }
             },
             {
                 MeteringPointType.ConsumptionFromGrid.Name, new List<MasterDataField>()
                 {
+                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
                 }
             },
             {
                 MeteringPointType.ExchangeReactiveEnergy.Name, new List<MasterDataField>()
                 {
+                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyReactive),
                 }
             },
             {
                 MeteringPointType.GridLossCorrection.Name, new List<MasterDataField>()
                 {
+                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
                 }
             },
             {
                 MeteringPointType.NetFromGrid.Name, new List<MasterDataField>()
                 {
+                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
                 }
             },
             {
                 MeteringPointType.NetToGrid.Name, new List<MasterDataField>()
                 {
+                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
                 }
             },
             {
                 MeteringPointType.SupplyToGrid.Name, new List<MasterDataField>()
                 {
+                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
                 }
             },
             {
                 MeteringPointType.SurplusProductionGroup.Name, new List<MasterDataField>()
                 {
+                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
                 }
             },
         };
