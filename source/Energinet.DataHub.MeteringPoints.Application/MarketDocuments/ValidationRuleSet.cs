@@ -26,7 +26,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
             When(message => message.ProcessType.Equals(BusinessProcessType.CreateMeteringPoint.Name, StringComparison.OrdinalIgnoreCase), () =>
             {
                 RuleFor(request => request).SetValidator(new MeteringGridAreaValidRule());
-                RuleFor(request => request).SetValidator(new MeteringPointTypeValidRule());
                 RuleFor(request => request.ProductType).SetValidator(new ProductTypeRule());
                 RuleFor(request => request).SetValidator(new MeasureUnitTypeRule());
                 RuleFor(request => request).SetValidator(new MeterReadingOccurenceRule());

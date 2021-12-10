@@ -49,6 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         internal static CreateConsumptionMeteringPoint CreateConsumptionMeteringPointCommand()
         {
             return new CreateConsumptionMeteringPoint(
+                MeteringPointType: MeteringPointType.Consumption.Name,
                 SampleData.StreetName,
                 SampleData.BuildingNumber,
                 SampleData.PostCode,

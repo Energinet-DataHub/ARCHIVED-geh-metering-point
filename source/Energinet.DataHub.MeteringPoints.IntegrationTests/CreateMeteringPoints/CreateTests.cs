@@ -301,6 +301,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
+        public async Task Metering_point_type_is_required()
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    TypeOfMeteringPoint = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
+        }
+
+        [Fact]
         public async Task Should_reject_when_maximum_power_is_invalid()
         {
             var invalidPowerLimit = 12345567;

@@ -70,6 +70,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
 
         private static IBusinessRequest? CreateNewMeteringPointCommand(MasterDataDocument document)
         {
+            if (string.IsNullOrEmpty(document.TypeOfMeteringPoint))
+            {
+                return CreateConsumptionMeteringPoint(document);
+            }
+
             var meteringPointType = EnumerationType.FromName<MeteringPointType>(document.TypeOfMeteringPoint);
 
             if (meteringPointType == MeteringPointType.Consumption)
@@ -94,6 +99,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
         {
             return new CreateConsumptionMeteringPoint
             {
+                MeteringPointType = document.TypeOfMeteringPoint,
                 AssetType = document.AssetType,
                 BuildingNumber = document.BuildingNumber,
                 CityName = document.CityName,
