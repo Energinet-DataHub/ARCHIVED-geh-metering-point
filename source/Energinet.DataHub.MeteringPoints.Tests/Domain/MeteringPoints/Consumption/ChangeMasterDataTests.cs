@@ -15,10 +15,8 @@
 using System;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
@@ -161,27 +159,19 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             return domainEntity.DomainEvents.FirstOrDefault(e => e is TDomainEvent) as TDomainEvent;
         }
 
-        private static ConsumptionMeteringPoint CreateMeteringPoint()
+        private static MeteringPoint CreateMeteringPoint()
         {
-            return ConsumptionMeteringPoint.Create(CreateConsumptionDetails(), MasterDataBuilder(MeteringPointType.Consumption).Build());
+            return CreateMeteringPoint(MeteringPointType.Consumption);
         }
 
-        private static ConsumptionMeteringPoint CreatePhysical()
+        private static MeteringPoint CreatePhysical()
         {
-            var details = CreateConsumptionDetails()
-                with
-                {
-                    NetSettlementGroup = NetSettlementGroup.Zero,
-                    ConnectionType = null,
-                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Physical, MeterId.Create("1")),
-                };
-
             var builder = MasterDataBuilder(MeteringPointType.Consumption)
                 .WithNetSettlementGroup(NetSettlementGroup.Zero.Name)
                 .WithConnectionType(null)
                 .WithMeteringConfiguration(MeteringMethod.Physical.Name, "1");
 
-            return ConsumptionMeteringPoint.Create(details, builder.Build());
+            return CreateMeteringPoint(MeteringPointType.Consumption, builder);
         }
     }
 }
