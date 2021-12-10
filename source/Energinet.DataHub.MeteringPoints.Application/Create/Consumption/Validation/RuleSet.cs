@@ -31,10 +31,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Valida
             RuleFor(request => request.MeteringPointType)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .WithState(request => new MeteringPointTypeRequiredValidationError(string.Empty))
+                .WithState(request => new MeteringPointTypeRequiredValidationError())
                 .Must(value => EnumerationType.GetAll<MeteringPointType>().Select(item => item.Name).Contains(value, StringComparer.OrdinalIgnoreCase))
                 .WithState(request =>
-                    new MeteringPointTypeValidationError(string.Empty, request.MeteringPointType ?? string.Empty));
+                    new MeteringPointTypeValidationError(request.MeteringPointType ?? string.Empty));
             RuleFor(request => request.EffectiveDate).SetValidator(new EffectiveDateRule());
             RuleFor(request => request.CountryCode)
                 .NotEmpty()
