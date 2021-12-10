@@ -43,6 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                     new(nameof(MasterData.ScheduledMeterReadingDate), Applicability.NotAllowed),
                     new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
                     new(nameof(MasterData.UnitType), Applicability.Required, true, MeasurementUnitType.KWh),
+                    new(nameof(MasterData.NetSettlementGroup), Applicability.Required),
                 }
             },
             {

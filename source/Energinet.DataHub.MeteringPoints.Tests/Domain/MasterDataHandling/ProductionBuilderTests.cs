@@ -17,6 +17,7 @@ using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Xunit;
@@ -25,7 +26,7 @@ using Xunit.Categories;
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 {
     [UnitTest]
-    public class ProductionBuilderTests
+    public class ProductionBuilderTests : TestBase
     {
         [Fact]
         public void Settlement_method_is_not_allowed()
@@ -84,6 +85,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .Build();
 
             Assert.Equal(MeasurementUnitType.KWh, sut.UnitType);
+        }
+
+        [Fact]
+        public void Net_settlement_group_is_required()
+        {
+            var sut = Builder()
+                .Validate();
+
+            AssertContainsValidationError<NetSettlementGroupIsRequired>(sut);
         }
 
         private static IMasterDataBuilder Builder() =>
