@@ -63,20 +63,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithMeteringConfiguration(string method, string? meterNumber)
         {
-            if (GetMasterValueItem<MeteringConfiguration>(nameof(MasterData.MeteringConfiguration)).CanBeChanged)
-            {
-                var meter = string.IsNullOrEmpty(meterNumber) ? MeterId.Empty() : MeterId.Create(meterNumber);
-                var meteringMethod = EnumerationType.FromName<MeteringMethod>(method);
-                var validationResult = MeteringConfiguration.CheckRules(meteringMethod, meter);
-                if (validationResult.Success)
-                {
-                    SetValue(nameof(MasterData.MeteringConfiguration), MeteringConfiguration.Create(EnumerationType.FromName<MeteringMethod>(method), string.IsNullOrEmpty(meterNumber) ? MeterId.Empty() : MeterId.Create(meterNumber)));
-                }
-                else
-                {
-                    _validationErrors.AddRange(validationResult.Errors);
-                }
-            }
+            var meter = string.IsNullOrEmpty(meterNumber) ? MeterId.Empty() : MeterId.Create(meterNumber);
+            var meteringMethod = EnumerationType.FromName<MeteringMethod>(method);
+            SetValueIfValid(
+                nameof(MasterData.MeteringConfiguration),
+                () => MeteringConfiguration.CheckRules(meteringMethod, meter),
+                () => MeteringConfiguration.Create(meteringMethod, meter));
 
             return this;
         }
@@ -184,6 +176,20 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             if (GetMasterValueItem<MeasurementUnitType>(nameof(MasterData.UnitType)).HasRequiredValue() == false) _validationErrors.Add(new UnitTypeIsRequired());
 
             return new BusinessRulesValidationResult(_validationErrors);
+        }
+
+        private void SetValueIfValid<T>(string valueName, Func<BusinessRulesValidationResult> validator, Func<T> creator)
+        {
+            if (!GetMasterValueItem<MeteringConfiguration>(valueName).CanBeChanged) return;
+            var validationResult = validator.Invoke();
+            if (validationResult.Success)
+            {
+                SetValue(valueName, creator.Invoke());
+            }
+            else
+            {
+                _validationErrors.AddRange(validationResult.Errors);
+            }
         }
     }
 }
