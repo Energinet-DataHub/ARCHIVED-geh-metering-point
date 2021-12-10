@@ -70,13 +70,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
                 return new BusinessProcessResult(request.TransactionId, gridAreaValidationResult.ValidationErrors);
             }
 
-            var meteringConfigurationResult =
-                ValidateMeteringConfiguration(request.MeteringMethod, request.MeterNumber!);
-            if (meteringConfigurationResult.Success == false)
-            {
-                return new BusinessProcessResult(request.TransactionId, meteringConfigurationResult.Errors);
-            }
-
             var meteringPointType = EnumerationType.FromName<MeteringPointType>(request.MeteringPointType);
             var builder =
                 new MasterDataBuilder(
@@ -109,6 +102,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
                     request.IsActualAddress,
                     string.IsNullOrWhiteSpace(request.GeoInfoReference) ? default : Guid.Parse(request.GeoInfoReference),
                     request.LocationDescription);
+
+            var masterDataValidationResult = builder.Validate();
+            if (masterDataValidationResult.Success == false)
+            {
+                return new BusinessProcessResult(request.TransactionId, masterDataValidationResult.Errors);
+            }
 
             var masterData = builder.Build();
 

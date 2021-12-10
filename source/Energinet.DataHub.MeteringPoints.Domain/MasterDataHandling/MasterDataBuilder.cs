@@ -27,6 +27,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 {
     public class MasterDataBuilder : MasterDataBuilderBase, IMasterDataBuilder
     {
+        private readonly List<ValidationError> _validationErrors = new();
+
         public MasterDataBuilder(IEnumerable<MasterDataField> masterDataFields)
             : base(masterDataFields)
         {
@@ -61,7 +63,21 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithMeteringConfiguration(string method, string? meterNumber)
         {
-            SetValue(nameof(MasterData.MeteringConfiguration), MeteringConfiguration.Create(EnumerationType.FromName<MeteringMethod>(method), string.IsNullOrEmpty(meterNumber) ? MeterId.Empty() : MeterId.Create(meterNumber)));
+            if (GetMasterValueItem<MeteringConfiguration>(nameof(MasterData.MeteringConfiguration)).CanBeChanged)
+            {
+                var meter = string.IsNullOrEmpty(meterNumber) ? MeterId.Empty() : MeterId.Create(meterNumber);
+                var meteringMethod = EnumerationType.FromName<MeteringMethod>(method);
+                var validationResult = MeteringConfiguration.CheckRules(meteringMethod, meter);
+                if (validationResult.Success)
+                {
+                    SetValue(nameof(MasterData.MeteringConfiguration), MeteringConfiguration.Create(EnumerationType.FromName<MeteringMethod>(method), string.IsNullOrEmpty(meterNumber) ? MeterId.Empty() : MeterId.Create(meterNumber)));
+                }
+                else
+                {
+                    _validationErrors.AddRange(validationResult.Errors);
+                }
+            }
+
             return this;
         }
 
@@ -164,11 +180,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public BusinessRulesValidationResult Validate()
         {
-            var validationErrors = new List<ValidationError>();
-            if (GetMasterValueItem<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence)).HasRequiredValue() == false) validationErrors.Add(new MeterReadingPeriodicityIsRequired());
-            if (GetMasterValueItem<MeasurementUnitType>(nameof(MasterData.UnitType)).HasRequiredValue() == false) validationErrors.Add(new UnitTypeIsRequired());
+            if (GetMasterValueItem<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence)).HasRequiredValue() == false) _validationErrors.Add(new MeterReadingPeriodicityIsRequired());
+            if (GetMasterValueItem<MeasurementUnitType>(nameof(MasterData.UnitType)).HasRequiredValue() == false) _validationErrors.Add(new UnitTypeIsRequired());
 
-            return new BusinessRulesValidationResult(validationErrors);
+            return new BusinessRulesValidationResult(_validationErrors);
         }
     }
 }
