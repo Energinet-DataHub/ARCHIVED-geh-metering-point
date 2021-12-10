@@ -12,18 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
-    public class NetSettlementGroupMandatoryErrorConverter : ErrorConverter<NetSettlementGroupIsRequired>
+    public class NetSettlementGroupIsRequired : ValidationError
     {
-        protected override ErrorMessage Convert(NetSettlementGroupIsRequired validationError)
-        {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-
-            return new("D02", $"Net settlement group is missing (type E17/E18)");
-        }
     }
 }

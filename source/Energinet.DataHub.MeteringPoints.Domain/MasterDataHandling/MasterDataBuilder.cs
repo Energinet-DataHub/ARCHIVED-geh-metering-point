@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
@@ -36,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithNetSettlementGroup(string? netSettlementGroup)
         {
-            SetValue(nameof(MasterData.NetSettlementGroup), netSettlementGroup is null ? null : EnumerationType.FromName<NetSettlementGroup>(netSettlementGroup));
+            SetValue(nameof(MasterData.NetSettlementGroup), string.IsNullOrEmpty(netSettlementGroup) ? null : EnumerationType.FromName<NetSettlementGroup>(netSettlementGroup));
             return this;
         }
 
@@ -177,8 +178,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         {
             if (GetMasterValueItem<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence)).HasRequiredValue() == false) _validationErrors.Add(new MeterReadingPeriodicityIsRequired());
             if (GetMasterValueItem<MeasurementUnitType>(nameof(MasterData.UnitType)).HasRequiredValue() == false) _validationErrors.Add(new UnitTypeIsRequired());
-
+            AddValidationErrorIfRequiredFieldIsMissing<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup), new NetSettlementGroupIsRequired());
             return new BusinessRulesValidationResult(_validationErrors);
+        }
+
+        private void AddValidationErrorIfRequiredFieldIsMissing<T>(string valueName, ValidationError validationError)
+        {
+            if (GetMasterValueItem<T>(valueName).HasRequiredValue() == false) _validationErrors.Add(validationError);
         }
 
         private void SetValueIfValid<T>(string valueName, Func<BusinessRulesValidationResult> validator, Func<T> creator)

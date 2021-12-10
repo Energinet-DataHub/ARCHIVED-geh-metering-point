@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 
@@ -67,8 +68,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Valida
                     .WithState(value => new InvalidScheduledMeterReadingDateRuleError());
             });
             RuleFor(request => request.NetSettlementGroup)
-                .NotEmpty()
-                .WithState(createMeteringPoint => new NetSettlementGroupMandatoryValidationError());
+                .Must(value => EnumerationType.GetAll<NetSettlementGroup>().Select(item => item.Name)
+                    .Contains(value, StringComparer.OrdinalIgnoreCase))
+                .WithState(createMeteringPoint => new NetSettlementGroupMandatoryValidationError())
+                .Unless(request => string.IsNullOrEmpty(request.NetSettlementGroup));
+
             RuleFor(request => request.MeterReadingOccurrence)
                 .NotEmpty()
                 .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError());
