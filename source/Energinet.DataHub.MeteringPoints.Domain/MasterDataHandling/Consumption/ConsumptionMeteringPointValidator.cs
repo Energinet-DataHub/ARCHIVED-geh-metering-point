@@ -39,6 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
                 new CapacityRequirementRule(masterData.Capacity, masterData.NetSettlementGroup!),
                 new AssetTypeRequirementRule(masterData.AssetType, masterData.NetSettlementGroup!),
                 new ConnectionTypeRequirementRule(masterData.NetSettlementGroup!, masterData.ConnectionType),
+                new SettlementMethodMustBeFlexOrNonProfiledRule(masterData.SettlementMethod!),
             });
         }
     }

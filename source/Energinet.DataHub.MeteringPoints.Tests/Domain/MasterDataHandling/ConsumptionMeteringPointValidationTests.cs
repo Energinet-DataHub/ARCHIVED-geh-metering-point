@@ -16,6 +16,7 @@ using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
@@ -207,6 +208,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .Build();
 
             AssertContainsValidationError<InvalidMeterReadingOccurrenceRuleError>(CheckRules(masterData));
+        }
+
+        [Fact]
+        public void Settlement_method_of_profiled_is_not_allowed()
+        {
+            var masterData = Builder()
+                .WithSettlementMethod(SettlementMethod.Profiled.Name)
+                .Build();
+
+            AssertContainsValidationError<InvalidSettlementMethodRuleError>(CheckRules(masterData));
         }
 
         private static IMasterDataBuilder Builder() =>
