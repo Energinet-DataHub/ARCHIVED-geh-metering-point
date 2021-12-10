@@ -98,7 +98,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
 
         private static IBusinessRequest CreateConsumptionMeteringPoint(MasterDataDocument document)
         {
-            return new CreateConsumptionMeteringPoint
+            return new CreateMeteringPoint
             {
                 MeteringPointType = document.TypeOfMeteringPoint,
                 AssetType = document.AssetType,

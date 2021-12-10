@@ -142,7 +142,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
             _container.Register<ISystemDateTimeProvider, SystemDateTimeProviderStub>(Lifestyle.Singleton);
             _container.Register(typeof(IBusinessProcessResultHandler<ChangeMasterDataRequest>), typeof(ChangeMasterDataResultHandler), Lifestyle.Scoped);
-            _container.Register(typeof(IBusinessProcessResultHandler<CreateConsumptionMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateConsumptionMeteringPoint>), Lifestyle.Scoped);
+            _container.Register(typeof(IBusinessProcessResultHandler<CreateMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateMeteringPoint>), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<CreateProductionMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateProductionMeteringPoint>), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<CreateExchangeMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateExchangeMeteringPoint>), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<CreateSpecialMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateSpecialMeteringPoint>), Lifestyle.Scoped);
@@ -151,7 +151,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IValidator<MasterDataDocument>, ValidationRuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<ConnectMeteringPoint>, ConnectMeteringPointRuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<CreateGridArea>, CreateGridAreaRuleSet>(Lifestyle.Scoped);
-            _container.Register<IValidator<CreateConsumptionMeteringPoint>, Application.Create.Consumption.Validation.RuleSet>(Lifestyle.Scoped);
+            _container.Register<IValidator<CreateMeteringPoint>, Application.Create.Consumption.Validation.RuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<ChangeMasterDataRequest>, ChangeMasterDataRequestValidator>(Lifestyle.Scoped);
             _container.Register<IValidator<CreateProductionMeteringPoint>, Application.Create.Production.Validation.RuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<CreateExchangeMeteringPoint>, Application.Create.Exchange.Validation.RuleSet>(Lifestyle.Scoped);
@@ -184,7 +184,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
 
             _container.Register<IAuthorizer<ChangeMasterDataRequest>, Authorizer>();
-            _container.Register<IAuthorizer<CreateConsumptionMeteringPoint>, NullAuthorizer<CreateConsumptionMeteringPoint>>();
+            _container.Register<IAuthorizer<CreateMeteringPoint>, NullAuthorizer<CreateMeteringPoint>>();
             _container.Register<IAuthorizer<CreateProductionMeteringPoint>, NullAuthorizer<CreateProductionMeteringPoint>>();
             _container.Register<IAuthorizer<CreateExchangeMeteringPoint>, NullAuthorizer<CreateExchangeMeteringPoint>>();
             _container.Register<IAuthorizer<CreateSpecialMeteringPoint>, NullAuthorizer<CreateSpecialMeteringPoint>>();

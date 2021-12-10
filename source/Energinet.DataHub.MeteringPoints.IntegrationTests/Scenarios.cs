@@ -46,9 +46,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 Guid.Parse(SampleData.GeoInfoReference));
         }
 
-        internal static CreateConsumptionMeteringPoint CreateConsumptionMeteringPointCommand()
+        internal static CreateMeteringPoint CreateConsumptionMeteringPointCommand()
         {
-            return new CreateConsumptionMeteringPoint(
+            return new CreateMeteringPoint(
                 MeteringPointType: MeteringPointType.Consumption.Name,
                 SampleData.StreetName,
                 SampleData.BuildingNumber,

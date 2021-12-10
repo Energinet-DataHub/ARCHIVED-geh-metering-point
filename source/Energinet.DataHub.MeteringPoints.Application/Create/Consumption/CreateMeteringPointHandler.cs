@@ -30,13 +30,13 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
 {
-    public class CreateConsumptionMeteringPointHandler : IBusinessRequestHandler<CreateConsumptionMeteringPoint>
+    public class CreateMeteringPointHandler : IBusinessRequestHandler<CreateMeteringPoint>
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly IGridAreaRepository _gridAreaRepository;
         private readonly IMediator _mediator;
 
-        public CreateConsumptionMeteringPointHandler(
+        public CreateMeteringPointHandler(
             IMeteringPointRepository meteringPointRepository,
             IGridAreaRepository gridAreaRepository,
             IMediator mediator)
@@ -46,7 +46,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
             _mediator = mediator;
         }
 
-        public async Task<BusinessProcessResult> Handle(CreateConsumptionMeteringPoint request, CancellationToken cancellationToken)
+        public async Task<BusinessProcessResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -127,7 +127,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
             return BusinessProcessResult.Ok(request.TransactionId);
         }
 
-        private static BusinessProcessResult ValidateGridArea(CreateConsumptionMeteringPoint request, GridArea? gridArea)
+        private static BusinessProcessResult ValidateGridArea(CreateMeteringPoint request, GridArea? gridArea)
         {
             var validationRules = new List<IBusinessRule>
             {
@@ -137,12 +137,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
             return new BusinessProcessResult(request.TransactionId, validationRules);
         }
 
-        private Task<GridArea?> GetGridAreaAsync(CreateConsumptionMeteringPoint request)
+        private Task<GridArea?> GetGridAreaAsync(CreateMeteringPoint request)
         {
             return _gridAreaRepository.GetByCodeAsync(request.MeteringGridArea);
         }
 
-        private async Task<BusinessProcessResult> ValidateAsync(CreateConsumptionMeteringPoint request, CancellationToken cancellationToken)
+        private async Task<BusinessProcessResult> ValidateAsync(CreateMeteringPoint request, CancellationToken cancellationToken)
         {
             var gsrnNumberExists = await _mediator.Send(new MeteringPointGsrnExistsQuery(request.GsrnNumber), cancellationToken).ConfigureAwait(false);
 

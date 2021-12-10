@@ -31,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcess
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             container.Register<IAuthorizer<ChangeMasterDataRequest>, Authorizer>();
-            container.Register<IAuthorizer<CreateConsumptionMeteringPoint>, NullAuthorizer<CreateConsumptionMeteringPoint>>();
+            container.Register<IAuthorizer<CreateMeteringPoint>, NullAuthorizer<CreateMeteringPoint>>();
             container.Register<IAuthorizer<CreateProductionMeteringPoint>, NullAuthorizer<CreateProductionMeteringPoint>>();
             container.Register<IAuthorizer<CreateExchangeMeteringPoint>, NullAuthorizer<CreateExchangeMeteringPoint>>();
             container.Register<IAuthorizer<ConnectMeteringPoint>, NullAuthorizer<ConnectMeteringPoint>>();

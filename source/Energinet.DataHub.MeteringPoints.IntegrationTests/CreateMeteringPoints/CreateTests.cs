@@ -432,7 +432,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("E86");
         }
 
-        private static CreateConsumptionMeteringPoint CreateCommand()
+        private static CreateMeteringPoint CreateCommand()
         {
             return Scenarios.CreateConsumptionMeteringPointCommand();
         }
