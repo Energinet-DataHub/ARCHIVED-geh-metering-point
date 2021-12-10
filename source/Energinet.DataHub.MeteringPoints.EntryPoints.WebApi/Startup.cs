@@ -108,7 +108,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             _container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
             _container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
             _container.Register<IGridAreaRepository, GridAreaRepository>(Lifestyle.Scoped);
-            _container.Register<IMarketMeteringPointRepository, MarketMeteringPointRepository>(Lifestyle.Scoped);
             _container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
             _container.Register<IOutboxManager, OutboxManager>(Lifestyle.Scoped);
             _container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Singleton);

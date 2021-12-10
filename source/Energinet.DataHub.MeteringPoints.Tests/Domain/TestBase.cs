@@ -83,72 +83,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             return builder;
         }
 
-        protected static ConsumptionMeteringPointDetails CreateConsumptionDetails()
-        {
-            var address = CreateAddress();
-
-            return new ConsumptionMeteringPointDetails(
-                SettlementMethod.Flex,
-                null,
-                AssetType.GasTurbine,
-                Capacity.Create(SampleData.Capacity),
-                MeteringPointId.New(),
-                GsrnNumber.Create(SampleData.GsrnNumber),
-                address,
-                new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
-                GsrnNumber.Create(SampleData.PowerPlant),
-                ReadingOccurrence.Hourly,
-                PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
-                EffectiveDate.Create(SampleData.EffectiveDate),
-                NetSettlementGroup.One,
-                DisconnectionType.Manual,
-                ConnectionType.Installation,
-                MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()));
-        }
-
-        protected static SpecialMeteringPointDetails CreateSpecialDetails()
-        {
-            var address = CreateAddress();
-
-            return new SpecialMeteringPointDetails(
-                MeteringPointId.New(),
-                MeteringPointType.VEProduction,
-                GsrnNumber.Create(SampleData.GsrnNumber),
-                address,
-                new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
-                ReadingOccurrence.Hourly,
-                PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
-                EffectiveDate.Create(SampleData.EffectiveDate),
-                GsrnNumber.Create(SampleData.PowerPlant),
-                Capacity.Create(SampleData.Capacity),
-                AssetType.GasTurbine,
-                MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()));
-        }
-
         protected static IMasterDataBuilder MasterDataBuilderForSpecial()
         {
             return MasterDataBuilder(MeteringPointType.VEProduction);
-        }
-
-        protected static ProductionMeteringPointDetails CreateProductionDetails()
-        {
-            var address = CreateAddress();
-
-            return new ProductionMeteringPointDetails(
-                MeteringPointId.New(),
-                GsrnNumber.Create(SampleData.GsrnNumber),
-                address,
-                new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
-                GsrnNumber.Create(SampleData.PowerPlant),
-                ReadingOccurrence.Hourly,
-                PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
-                EffectiveDate.Create(SampleData.EffectiveDate),
-                NetSettlementGroup.Six,
-                DisconnectionType.Manual,
-                ConnectionType.Installation,
-                AssetType.GasTurbine,
-                Capacity.Create(SampleData.Capacity),
-                MeteringConfiguration.Create(MeteringMethod.Physical, MeterId.Create(SampleData.MeterNumber)));
         }
 
         protected static IMasterDataBuilder MasterDataBuilderForProduction()
