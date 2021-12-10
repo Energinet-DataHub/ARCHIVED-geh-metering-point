@@ -15,15 +15,12 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Dapper;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
-using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Production
 {
-    public class OnProductionMeteringPointCreated : IntegrationEventPublisher<ProductionMeteringPointCreated>
+    public class OnProductionMeteringPointCreated : IntegrationEventPublisher<ConsumptionMeteringPointCreated>
     {
         private readonly DbGridAreaHelper _dbGridAreaHelper;
 
@@ -33,7 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
             _dbGridAreaHelper = dbGridAreaHelper;
         }
 
-        public override async Task Handle(ProductionMeteringPointCreated notification, CancellationToken cancellationToken)
+        public override async Task Handle(ConsumptionMeteringPointCreated notification, CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
             var gridAreaCode = await _dbGridAreaHelper.GetGridAreaCodeAsync(notification.GridAreaLinkId).ConfigureAwait(false);

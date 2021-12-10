@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production.Rules;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Create.Production
 {
     public class PowerplantRequirementRuleErrorConverter : ErrorConverter<PowerPlantRequirementRuleError>
     {
