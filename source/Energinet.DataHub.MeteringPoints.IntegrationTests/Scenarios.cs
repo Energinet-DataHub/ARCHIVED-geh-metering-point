@@ -16,7 +16,6 @@ using System;
 using System.Globalization;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
-using Energinet.DataHub.MeteringPoints.Application.Create.Exchange;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
@@ -115,36 +114,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 SampleData.GeoInfoReference,
                 "0101",
                 new ExchangeDetails(SampleData.MeteringGridArea, SampleData.MeteringGridArea));
-        }
-
-        internal static CreateExchangeMeteringPoint CreateExchangeMeteringPointCommand()
-        {
-            return new CreateExchangeMeteringPoint(
-                SampleData.StreetName,
-                SampleData.BuildingNumber,
-                SampleData.PostCode,
-                SampleData.CityName,
-                SampleData.CitySubDivisionName,
-                SampleData.MunicipalityCode,
-                SampleData.CountryCode,
-                SampleData.StreetCode,
-                SampleData.FloorIdentification,
-                SampleData.RoomIdentification,
-                SampleData.IsActualAddress,
-                SampleData.GsrnNumber,
-                MeteringMethod.Physical.Name,
-                SampleData.ReadingOccurrence,
-                0,
-                0,
-                SampleData.MeteringGridArea,
-                string.Empty,
-                SampleData.EffectiveDate,
-                SampleData.MeterNumber,
-                SampleData.MeteringGridArea,
-                SampleData.MeteringGridArea,
-                Guid.NewGuid().ToString(),
-                ConnectionType.Installation.Name,
-                SampleData.GeoInfoReference);
         }
 
         internal static MasterDataDocument CreateDocument()

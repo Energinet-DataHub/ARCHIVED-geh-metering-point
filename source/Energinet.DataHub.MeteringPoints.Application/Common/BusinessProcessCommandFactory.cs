@@ -18,7 +18,6 @@ using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
-using Energinet.DataHub.MeteringPoints.Application.Create.Exchange;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -130,36 +129,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
                 CitySubDivisionName = document.CitySubDivisionName,
                 ScheduledMeterReadingDate = document.ScheduledMeterReadingDate,
                 ExchangeDetails = new ExchangeDetails(document.FromGrid, document.FromGrid),
-            };
-        }
-
-        private static IBusinessRequest CreateExchangeMeteringPoint(MasterDataDocument document)
-        {
-            return new CreateExchangeMeteringPoint
-            {
-                BuildingNumber = document.BuildingNumber,
-                CityName = document.CityName,
-                CountryCode = document.CountryCode,
-                EffectiveDate = document.EffectiveDate,
-                FloorIdentification = document.FloorIdentification,
-                GsrnNumber = document.GsrnNumber,
-                LocationDescription = document.LocationDescription,
-                MaximumCurrent = document.MaximumCurrent,
-                MaximumPower = document.MaximumPower,
-                MeteringMethod = document.MeteringMethod ?? string.Empty,
-                MeterNumber = document.MeterNumber,
-                MunicipalityCode = document.MunicipalityCode,
-                PostCode = document.PostCode,
-                RoomIdentification = document.RoomIdentification,
-                StreetCode = document.StreetCode,
-                StreetName = document.StreetName,
-                TransactionId = document.TransactionId,
-                MeteringGridArea = document.MeteringGridArea,
-                MeterReadingOccurrence = document.MeterReadingOccurrence,
-                PhysicalConnectionCapacity = document.PhysicalConnectionCapacity,
-                CitySubDivisionName = document.CitySubDivisionName,
-                FromGrid = document.FromGrid ?? string.Empty,
-                ToGrid = document.ToGrid ?? string.Empty,
             };
         }
     }
