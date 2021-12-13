@@ -129,6 +129,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
                 PhysicalConnectionCapacity = document.PhysicalConnectionCapacity,
                 CitySubDivisionName = document.CitySubDivisionName,
                 ScheduledMeterReadingDate = document.ScheduledMeterReadingDate,
+                ExchangeDetails = new ExchangeDetails(document.FromGrid, document.FromGrid),
             };
         }
 

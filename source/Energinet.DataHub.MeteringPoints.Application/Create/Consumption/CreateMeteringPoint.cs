@@ -47,7 +47,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
             string? AssetType = null,
             string? PhysicalConnectionCapacity = null,
             string? GeoInfoReference = null,
-            string? ScheduledMeterReadingDate = "")
+            string? ScheduledMeterReadingDate = "",
+            ExchangeDetails? ExchangeDetails = null)
         : ICreateMeteringPointRequest,
             IOutboundMessage,
             IInboundMessage;
