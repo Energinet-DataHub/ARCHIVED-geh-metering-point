@@ -63,37 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             }
 
             var meteringPointType = EnumerationType.FromName<MeteringPointType>(request.MeteringPointType);
-            var masterDataBuilder =
-                new MasterDataBuilder(
-                    new MasterDataFieldSelector().GetMasterDataFieldsFor(meteringPointType));
-
-            masterDataBuilder
-                .WithAssetType(request.AssetType)
-                .WithConnectionType(request.ConnectionType)
-                .WithDisconnectionType(request.DisconnectionType)
-                .EffectiveOn(request.EffectiveDate)
-                .WithMeteringConfiguration(request.MeteringMethod, request.MeterNumber)
-                .WithSettlementMethod(request.SettlementMethod)
-                .WithNetSettlementGroup(request.NetSettlementGroup!)
-                .WithScheduledMeterReadingDate(request.ScheduledMeterReadingDate!)
-                .WithReadingPeriodicity(request.MeterReadingOccurrence)
-                .WithPowerLimit(request.MaximumPower, request.MaximumCurrent)
-                .WithPowerPlant(request.PowerPlant)
-                .WithCapacity(string.IsNullOrWhiteSpace(request.PhysicalConnectionCapacity) ? null : double.Parse(request.PhysicalConnectionCapacity, NumberStyles.Number, new NumberFormatInfo()))
-                .WithAddress(
-                    request.StreetName,
-                    request.StreetCode,
-                    request.BuildingNumber,
-                    request.CityName,
-                    request.CitySubDivisionName,
-                    request.PostCode,
-                    EnumerationType.FromName<CountryCode>(request.CountryCode),
-                    request.FloorIdentification,
-                    request.RoomIdentification,
-                    string.IsNullOrWhiteSpace(request.MunicipalityCode) ? default : int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()),
-                    request.IsActualAddress,
-                    string.IsNullOrWhiteSpace(request.GeoInfoReference) ? default : Guid.Parse(request.GeoInfoReference),
-                    request.LocationDescription);
+            var masterDataBuilder = MasterDataBuilderFor(request, meteringPointType);
 
             var masterDataValidationResult = masterDataBuilder.Validate();
             if (masterDataValidationResult.Success == false)
@@ -149,6 +119,44 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             }
 
             return BusinessProcessResult.Ok(request.TransactionId);
+        }
+
+        private static MasterDataBuilder MasterDataBuilderFor(CreateMeteringPoint request, MeteringPointType meteringPointType)
+        {
+            var masterDataBuilder =
+                new MasterDataBuilder(
+                    new MasterDataFieldSelector().GetMasterDataFieldsFor(meteringPointType));
+
+            masterDataBuilder
+                .WithAssetType(request.AssetType)
+                .WithConnectionType(request.ConnectionType)
+                .WithDisconnectionType(request.DisconnectionType)
+                .EffectiveOn(request.EffectiveDate)
+                .WithMeteringConfiguration(request.MeteringMethod, request.MeterNumber)
+                .WithSettlementMethod(request.SettlementMethod)
+                .WithNetSettlementGroup(request.NetSettlementGroup!)
+                .WithScheduledMeterReadingDate(request.ScheduledMeterReadingDate!)
+                .WithReadingPeriodicity(request.MeterReadingOccurrence)
+                .WithPowerLimit(request.MaximumPower, request.MaximumCurrent)
+                .WithPowerPlant(request.PowerPlant)
+                .WithCapacity(string.IsNullOrWhiteSpace(request.PhysicalConnectionCapacity)
+                    ? null
+                    : double.Parse(request.PhysicalConnectionCapacity, NumberStyles.Number, new NumberFormatInfo()))
+                .WithAddress(
+                    request.StreetName,
+                    request.StreetCode,
+                    request.BuildingNumber,
+                    request.CityName,
+                    request.CitySubDivisionName,
+                    request.PostCode,
+                    EnumerationType.FromName<CountryCode>(request.CountryCode),
+                    request.FloorIdentification,
+                    request.RoomIdentification,
+                    string.IsNullOrWhiteSpace(request.MunicipalityCode) ? default : int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()),
+                    request.IsActualAddress,
+                    string.IsNullOrWhiteSpace(request.GeoInfoReference) ? default : Guid.Parse(request.GeoInfoReference),
+                    request.LocationDescription);
+            return masterDataBuilder;
         }
 
         private Task<GridArea?> GetGridAreaAsync(CreateMeteringPoint request)
