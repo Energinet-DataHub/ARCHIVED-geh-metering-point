@@ -52,6 +52,7 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Model\202111091330 Move NetSettlementGroup.sql" />
     <EmbeddedResource Include="Scripts\Model\202111091345 Remove connection types from production.sql" />
     <EmbeddedResource Include="Scripts\Model\202111091346 Move asset type.sql" />
+    <EmbeddedResource Include="Scripts\Model\202112131115 Add GridCompany.sql" />
     <EmbeddedResource Include="Scripts\Seed\202109232130 Create Grid Area seed data.sql" />
     <EmbeddedResource Include="Scripts\Test\202109232129 Clean database.sql" />
     <EmbeddedResource Include="Scripts\Test\202109232130 Create Grid Area test data.sql" />
