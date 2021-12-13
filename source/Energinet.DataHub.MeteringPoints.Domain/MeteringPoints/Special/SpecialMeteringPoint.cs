@@ -31,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
             [NotNull]MeteringPointId id,
             GsrnNumber gsrnNumber,
             [NotNull]Address address,
-            MeteringPointType meteringPointType,
+            [NotNull]MeteringPointType meteringPointType,
             [NotNull]GridAreaLinkId gridAreaLinkId,
             [NotNull]ReadingOccurrence meterReadingOccurrence,
             [NotNull]PowerLimit powerLimit,
@@ -39,7 +39,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
             GsrnNumber? powerPlantGsrnNumber,
             Capacity? capacity,
             AssetType? assetType,
-            MeteringConfiguration meteringConfiguration)
+            MeteringConfiguration meteringConfiguration,
+            GsrnNumber? parentRelatedMeteringPoint)
             : base(
                 id,
                 gsrnNumber,
@@ -82,7 +83,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
                 powerPlantGsrnNumber?.Value,
                 capacity?.Kw,
                 assetType?.Name,
-                _unitType.Name);
+                _unitType.Name,
+                parentRelatedMeteringPoint?.Value,
+                meteringPointType.Name);
 
             AddDomainEvent(@event);
         }
@@ -98,17 +101,22 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
             var rules = new List<IBusinessRule>
             {
                 new StreetNameIsRequiredRule(meteringPointDetails.GsrnNumber, meteringPointDetails.Address),
-                new MeterReadingOccurrenceConditionalRule(meteringPointDetails.ReadingOccurrence, meteringPointDetails.MeteringPointType),
+                new MeterReadingOccurrenceConditionalRule(
+                    meteringPointDetails.ReadingOccurrence,
+                    meteringPointDetails.MeteringPointType),
             };
 
-            return new BusinessRulesValidationResult(generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError).ToList()));
+            return new BusinessRulesValidationResult(
+                generalRuleCheckResult.Errors.Concat(rules.Where(r => r.IsBroken).Select(r => r.ValidationError)
+                    .ToList()));
         }
 
         public static SpecialMeteringPoint Create(SpecialMeteringPointDetails meteringPointDetails)
         {
             if (!CanCreate(meteringPointDetails).Success)
             {
-                throw new SpecialMeteringPointException($"Cannot create {meteringPointDetails.MeteringPointType.Name} metering point due to violation of one or more business rules.");
+                throw new SpecialMeteringPointException(
+                    $"Cannot create {meteringPointDetails.MeteringPointType.Name} metering point due to violation of one or more business rules.");
             }
 
             return new SpecialMeteringPoint(
@@ -123,7 +131,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
                 meteringPointDetails.PowerPlantGsrnNumber,
                 meteringPointDetails.Capacity,
                 meteringPointDetails.AssetType,
-                meteringPointDetails.MeteringConfiguration);
+                meteringPointDetails.MeteringConfiguration,
+                meteringPointDetails.ParentRelatedMeteringPoint);
         }
 
         public override BusinessRulesValidationResult ConnectAcceptable(ConnectionDetails connectionDetails)
@@ -138,7 +147,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
 
         private static MeasurementUnitType GetUnitType(EnumerationType meteringPointType)
         {
-            return meteringPointType == MeteringPointType.ExchangeReactiveEnergy ? MeasurementUnitType.KVArh : MeasurementUnitType.KWh;
+            return meteringPointType == MeteringPointType.ExchangeReactiveEnergy
+                ? MeasurementUnitType.KVArh
+                : MeasurementUnitType.KWh;
         }
     }
 }

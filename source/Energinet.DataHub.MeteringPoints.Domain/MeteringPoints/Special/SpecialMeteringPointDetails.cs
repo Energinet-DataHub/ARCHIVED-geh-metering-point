@@ -30,7 +30,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special
         GsrnNumber? PowerPlantGsrnNumber,
         Capacity? Capacity,
         AssetType? AssetType,
-        MeteringConfiguration MeteringConfiguration) : MeteringPointDetails(
+        MeteringConfiguration MeteringConfiguration,
+        GsrnNumber? ParentRelatedMeteringPoint) : MeteringPointDetails(
         Id,
         GsrnNumber,
         Address,

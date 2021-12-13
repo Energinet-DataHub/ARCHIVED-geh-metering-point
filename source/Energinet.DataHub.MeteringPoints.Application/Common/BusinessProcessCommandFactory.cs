@@ -218,6 +218,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
                 MeterReadingOccurrence = document.MeterReadingOccurrence,
                 PhysicalConnectionCapacity = document.PhysicalConnectionCapacity,
                 CitySubDivisionName = document.CitySubDivisionName,
+                ParentRelatedMeteringPoint = document.ParentRelatedMeteringPoint,
             };
         }
     }

@@ -42,7 +42,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Special
             string? PhysicalConnectionCapacity = null,
             string? GeoInfoReference = null,
             string? PowerPlant = null,
-            string? AssetType = null)
+            string? AssetType = null,
+            string? ParentRelatedMeteringPoint = null)
         : ICreateMeteringPointRequest,
             IOutboundMessage,
             IInboundMessage;

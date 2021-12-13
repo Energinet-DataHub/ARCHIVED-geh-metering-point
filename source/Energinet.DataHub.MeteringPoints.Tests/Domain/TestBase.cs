@@ -76,7 +76,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 GsrnNumber.Create(SampleData.PowerPlant),
                 Capacity.Create(SampleData.Capacity),
                 AssetType.GasTurbine,
-                MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()));
+                MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
+                null);
         }
 
         protected static ProductionMeteringPointDetails CreateProductionDetails()

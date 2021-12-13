@@ -12,20 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Application.Queries
 {
-    /// <summary>
-    /// Repository for market facing metering points
-    /// </summary>
-    public interface IMarketMeteringPointRepository
+    public class GridAreaContainsMeteringPointIdsQuery : IRequest<bool>
     {
-        /// <summary>
-        /// Fetch metering point by GSRN number
-        /// </summary>
-        /// <param name="gsrnNumber"></param>
-        /// <returns><see cref="MarketMeteringPoint"/></returns>
-        Task<MarketMeteringPoint?> GetByGSRNAsync(GsrnNumber gsrnNumber);
+        public GridAreaContainsMeteringPointIdsQuery(string gridAreaId, params string[] meteringPointIds)
+        {
+            GridAreaId = gridAreaId;
+            MeteringPointIds = new(meteringPointIds);
+        }
+
+        public Collection<string> MeteringPointIds { get; }
+
+        public string GridAreaId { get; }
     }
 }

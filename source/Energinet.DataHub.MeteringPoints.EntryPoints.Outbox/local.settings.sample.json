@@ -16,7 +16,7 @@
     "EXCHANGE_METERING_POINT_CREATED_TOPIC": "<Topic name for ExchangeMeteringPointCreated events>",
     "METERING_POINT_CONNECTED_TOPIC": "<Topic name for MeteringPointConnected events>",
     "METERING_POINT_MESSAGE_DEQUEUED_TOPIC": "<Topic name for MeteringPointMessageDequeued events>",
-
+    "SPECIAL_METERING_POINT_CREATED_TOPIC": "<Topic name for SpecialMeteringPointCreated events>",
     "METERINGPOINT_DB_CONNECTION_STRING": "<Main SQL database connection string>",
     "ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER": "*/10 * * * * *",
     "MESSAGEHUB_QUEUE_CONNECTION_STRING": "<MessageHub Service Bus connection string>",
