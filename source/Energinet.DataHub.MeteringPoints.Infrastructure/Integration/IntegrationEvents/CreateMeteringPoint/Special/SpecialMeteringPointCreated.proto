@@ -20,7 +20,7 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEventContracts";
 
 /**
- * This message is sent out when a Consumption metering point is created.
+ * This message is sent out when a Special metering point is created.
  */
 message SpecialMeteringPointCreated {
   enum NetSettlementGroup {
