@@ -57,10 +57,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             }
 
             var gridArea = await GetGridAreaAsync(request).ConfigureAwait(false);
-            var gridAreaValidationResult = ValidateGridArea(request, gridArea);
-            if (!gridAreaValidationResult.Success)
+            if (gridArea is null)
             {
-                return new BusinessProcessResult(request.TransactionId, gridAreaValidationResult.ValidationErrors);
+                return new BusinessProcessResult(request.TransactionId, new List<ValidationError>() { new GridAreaMustExistRuleError() });
             }
 
             var meteringPointType = EnumerationType.FromName<MeteringPointType>(request.MeteringPointType);
@@ -110,11 +109,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 return new BusinessProcessResult(request.TransactionId, creationValidationResult.Errors);
             }
 
-            if (gridArea is null)
-            {
-                throw new BusinessOperationException("Grid area is required in order to create metering points.");
-            }
-
             if (meteringPointType == MeteringPointType.Exchange)
             {
                 var sourceGridArea = await _gridAreaRepository.GetByCodeAsync(request.ExchangeDetails?.SourceGridAreaCode!).ConfigureAwait(false);
@@ -155,16 +149,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             }
 
             return BusinessProcessResult.Ok(request.TransactionId);
-        }
-
-        private static BusinessProcessResult ValidateGridArea(CreateMeteringPoint request, GridArea? gridArea)
-        {
-            var validationRules = new List<IBusinessRule>
-            {
-                new GridAreaMustExistRule(gridArea),
-            };
-
-            return new BusinessProcessResult(request.TransactionId, validationRules);
         }
 
         private Task<GridArea?> GetGridAreaAsync(CreateMeteringPoint request)
