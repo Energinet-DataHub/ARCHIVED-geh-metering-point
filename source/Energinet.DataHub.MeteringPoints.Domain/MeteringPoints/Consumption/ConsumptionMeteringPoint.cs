@@ -110,6 +110,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
                 capacity?.Kw);
 
             AddDomainEvent(@event);
+
+            // TODO: Remove this auto add energy supplier hack after public test
+            SetEnergySupplierDetails(EnergySupplierDetails.Create(effectiveDate.DateInUtc));
         }
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
