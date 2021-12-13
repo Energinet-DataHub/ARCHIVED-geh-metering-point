@@ -15,12 +15,14 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.GridCompanies;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridCompanies;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
@@ -63,6 +65,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
 
         public DbSet<EnergySupplier> EnergySuppliers { get; private set; }
 
+        public DbSet<GridCompany> GridCompanies { get; private set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             if (modelBuilder == null) throw new ArgumentNullException(nameof(modelBuilder));
@@ -78,6 +82,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
             modelBuilder.ApplyConfiguration(new GridAreaEntityConfiguration());
             modelBuilder.ApplyConfiguration(new MessageHubMessageEntityConfiguration());
             modelBuilder.ApplyConfiguration(new EnergySupplierEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new GridCompanyEntityConfiguration());
         }
     }
 }
