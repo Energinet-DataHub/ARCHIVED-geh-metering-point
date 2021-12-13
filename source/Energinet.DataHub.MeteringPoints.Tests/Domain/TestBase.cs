@@ -20,10 +20,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 
@@ -119,23 +116,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 .WithMeteringConfiguration(MeteringMethod.Physical.Name, "1");
 
             return builder;
-        }
-
-        protected static ExchangeMeteringPointDetails CreateExchangeDetails()
-        {
-            var address = CreateAddress();
-
-            return new ExchangeMeteringPointDetails(
-                MeteringPointId.New(),
-                GsrnNumber.Create(SampleData.GsrnNumber),
-                address,
-                new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
-                ReadingOccurrence.Hourly,
-                PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
-                EffectiveDate.Create(SampleData.EffectiveDate),
-                GridAreaLinkId.New(),
-                GridAreaLinkId.New(),
-                MeteringConfiguration.Create(MeteringMethod.Physical, MeterId.Create(SampleData.MeterNumber)));
         }
 
         protected static IMasterDataBuilder MasterDataBuilderForExchange()
