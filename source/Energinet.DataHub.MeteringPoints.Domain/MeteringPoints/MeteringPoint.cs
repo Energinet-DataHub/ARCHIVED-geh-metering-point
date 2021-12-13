@@ -165,9 +165,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         internal MeteringConfiguration MeteringConfiguration => _masterData.MeteringConfiguration;
 
-        protected ConnectionState ConnectionState { get; set; } = ConnectionState.New();
+        internal ConnectionState ConnectionState { get; set; } = ConnectionState.New();
 
-        protected EnergySupplierDetails? EnergySupplierDetails { get; private set; }
+        internal EnergySupplierDetails? EnergySupplierDetails { get; private set; }
 
         public static BusinessRulesValidationResult CanCreate(MeteringPointType type, MasterData masterData, MasterDataValidator validator)
         {
