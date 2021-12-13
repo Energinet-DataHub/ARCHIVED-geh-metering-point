@@ -47,17 +47,13 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                                 ,MP.[Capacity]
                                 ,MP.[AssetType]
                                 ,MP.[SettlementMethod]
-                                ,(SELECT TOP(1) G.Code FROM [GridAreas] G INNER JOIN [GridAreaLinks] GL ON G.Id = GL.GridAreaId WHERE GL.Id = EMP.[ToGrid]) AS ToGridAreaCode
-                                ,(SELECT TOP(1) G.Code FROM [GridAreas] G INNER JOIN [GridAreaLinks] GL ON G.Id = GL.GridAreaId WHERE GL.Id = EMP.[FromGrid]) AS FromGridAreaCode
+                                ,(SELECT TOP(1) G.Code FROM [GridAreas] G INNER JOIN [GridAreaLinks] GL ON G.Id = GL.GridAreaId WHERE GL.Id = MP.[ToGrid]) AS ToGridAreaCode
+                                ,(SELECT TOP(1) G.Code FROM [GridAreas] G INNER JOIN [GridAreaLinks] GL ON G.Id = GL.GridAreaId WHERE GL.Id = MP.[FromGrid]) AS FromGridAreaCode
                                 ,MP.[NetSettlementGroup]
 	                            ,MP.[StartOfSupplyDate] AS SupplyStart
                                 ,MP.[ConnectionType]
                                 ,MP.[DisconnectionType]
                                 ,MP.[ProductionObligation]
-                          FROM  [dbo].[MeteringPoints] MP LEFT OUTER JOIN
-	                            [dbo].[ExchangeMeteringPoints] EMP ON EMP.Id = MP.Id LEFT OUTER JOIN
-	                            [dbo].[MarketMeteringPoints] MMP ON MMP.Id = MP.Id LEFT OUTER JOIN
-	                            [dbo].[ConsumptionMeteringPoints] CMP ON CMP.Id = MP.Id LEFT OUTER JOIN
-	                            [dbo].[ProductionMeteringPoints] PMP ON PMP.Id = MP.Id";
+                          FROM  [dbo].[MeteringPoints] MP";
     }
 }

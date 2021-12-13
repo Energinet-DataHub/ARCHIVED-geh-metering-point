@@ -21,7 +21,6 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -193,27 +192,16 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 config.Property(x => x.StartOfSupply)
                     .HasColumnName("StartOfSupplyDate");
             });
-        }
-    }
 
-    public class ExchangeMeteringPointEntityConfiguration : IEntityTypeConfiguration<ExchangeMeteringPoint>
-    {
-        public void Configure(EntityTypeBuilder<ExchangeMeteringPoint> builder)
-        {
-            if (builder == null)
+            builder.OwnsOne<ExchangeDetails>("_exchangeDetails", mapper =>
             {
-                throw new ArgumentNullException(nameof(builder));
-            }
-
-            builder.ToTable("ExchangeMeteringPoints", "dbo");
-
-            builder.Property<GridAreaLinkId>("_fromGrid")
-                .HasColumnName("FromGrid")
-                .HasConversion(toDbValue => toDbValue.Value, fromDbValue => new GridAreaLinkId(fromDbValue));
-
-            builder.Property<GridAreaLinkId>("_toGrid")
-                .HasColumnName("ToGrid")
-                .HasConversion(toDbValue => toDbValue.Value, fromDbValue => new GridAreaLinkId(fromDbValue));
+                mapper.Property(x => x.SourceGridArea)
+                    .HasColumnName("FromGrid")
+                    .HasConversion(toDbValue => toDbValue.Value, fromDbValue => new GridAreaLinkId(fromDbValue));
+                mapper.Property(x => x.TargetGridArea)
+                    .HasColumnName("ToGrid")
+                    .HasConversion(toDbValue => toDbValue.Value, fromDbValue => new GridAreaLinkId(fromDbValue));
+            });
         }
     }
 }
