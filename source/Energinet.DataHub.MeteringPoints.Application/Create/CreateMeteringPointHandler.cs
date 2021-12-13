@@ -15,12 +15,12 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
-using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
@@ -53,13 +53,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
 
             if (await MeteringPointExistsAsync(request, cancellationToken).ConfigureAwait(false))
             {
-                return new BusinessProcessResult(request.TransactionId, new List<ValidationError>() { new MeteringPointGsrnMustBeUniqueValidationError(request.GsrnNumber) });
+                return Failure(request, new MeteringPointGsrnMustBeUniqueValidationError(request.GsrnNumber));
             }
 
             var gridArea = await GetGridAreaAsync(request).ConfigureAwait(false);
             if (gridArea is null)
             {
-                return new BusinessProcessResult(request.TransactionId, new List<ValidationError>() { new GridAreaMustExistRuleError() });
+                return Failure(request, new GridAreaMustExistRuleError());
             }
 
             var meteringPointType = EnumerationType.FromName<MeteringPointType>(request.MeteringPointType);
@@ -68,7 +68,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             var masterDataValidationResult = masterDataBuilder.Validate();
             if (masterDataValidationResult.Success == false)
             {
-                return new BusinessProcessResult(request.TransactionId, masterDataValidationResult.Errors);
+                return Failure(request, masterDataValidationResult.Errors.ToArray());
             }
 
             var masterData = masterDataBuilder.Build();
@@ -76,49 +76,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             var creationValidationResult = MeteringPoint.CanCreate(meteringPointType, masterData, new MasterDataValidator());
             if (creationValidationResult.Success == false)
             {
-                return new BusinessProcessResult(request.TransactionId, creationValidationResult.Errors);
+                return Failure(request, creationValidationResult.Errors.ToArray());
             }
 
-            if (meteringPointType == MeteringPointType.Exchange)
-            {
-                var sourceGridArea = await _gridAreaRepository.GetByCodeAsync(request.ExchangeDetails?.SourceGridAreaCode!).ConfigureAwait(false);
-                if (sourceGridArea is null)
-                {
-                    return new BusinessProcessResult(
-                        request.TransactionId,
-                        new[] { new FromGridAreaMustExistRuleError(null), });
-                }
+            return await CreateMeteringPointAsync(request, meteringPointType, gridArea, masterData).ConfigureAwait(false);
+        }
 
-                var targetGridArea = await _gridAreaRepository.GetByCodeAsync(request.ExchangeDetails?.TargetGridAreaCode!).ConfigureAwait(false);
-                if (targetGridArea is null)
-                {
-                    return new BusinessProcessResult(
-                        request.TransactionId,
-                        new[] { new ToGridAreaMustExistRuleError(null), });
-                }
-
-                _meteringPointRepository.Add(
-                    MeteringPoint.CreateExchange(
-                        MeteringPointId.New(),
-                        GsrnNumber.Create(request.GsrnNumber),
-                        gridArea.DefaultLink.Id,
-                        EffectiveDate.Create(request.EffectiveDate),
-                        Domain.MeteringPoints.Exchange.ExchangeDetails.Create(sourceGridArea!.DefaultLink.Id, targetGridArea!.DefaultLink.Id),
-                        masterData));
-            }
-            else
-            {
-                _meteringPointRepository.Add(
-                    MeteringPoint.Create(
-                        MeteringPointId.New(),
-                        GsrnNumber.Create(request.GsrnNumber),
-                        meteringPointType,
-                        gridArea.DefaultLink.Id,
-                        EffectiveDate.Create(request.EffectiveDate),
-                        masterData)!);
-            }
-
-            return BusinessProcessResult.Ok(request.TransactionId);
+        private static BusinessProcessResult Failure(CreateMeteringPoint request, params ValidationError[] validationErrors)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            return new BusinessProcessResult(request.TransactionId, validationErrors);
         }
 
         private static MasterDataBuilder MasterDataBuilderFor(CreateMeteringPoint request, MeteringPointType meteringPointType)
@@ -157,6 +124,59 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                     string.IsNullOrWhiteSpace(request.GeoInfoReference) ? default : Guid.Parse(request.GeoInfoReference),
                     request.LocationDescription);
             return masterDataBuilder;
+        }
+
+        private async Task<BusinessProcessResult> CreateMeteringPointAsync(CreateMeteringPoint request, MeteringPointType meteringPointType, GridArea gridArea, MasterData masterData)
+        {
+            if (meteringPointType == MeteringPointType.Exchange)
+            {
+                return await CreateExchangeMeteringPointAsync(request, gridArea, masterData).ConfigureAwait(false);
+            }
+
+            _meteringPointRepository.Add(
+                MeteringPoint.Create(
+                    MeteringPointId.New(),
+                    GsrnNumber.Create(request.GsrnNumber),
+                    meteringPointType,
+                    gridArea.DefaultLink.Id,
+                    EffectiveDate.Create(request.EffectiveDate),
+                    masterData)!);
+
+            return BusinessProcessResult.Ok(request.TransactionId);
+        }
+
+        private async Task<BusinessProcessResult> CreateExchangeMeteringPointAsync(CreateMeteringPoint request, GridArea gridArea, MasterData masterData)
+        {
+            if (request.ExchangeDetails?.SourceGridAreaCode is null ||
+                request.ExchangeDetails?.TargetGridAreaCode is null)
+            {
+                throw new BusinessOperationException(
+                    "Cannot create an Exchange metering point without specifying source and target grid areas.");
+            }
+
+            var sourceGridArea = await _gridAreaRepository.GetByCodeAsync(request.ExchangeDetails.SourceGridAreaCode).ConfigureAwait(false);
+            var targetGridArea = await _gridAreaRepository.GetByCodeAsync(request.ExchangeDetails.TargetGridAreaCode).ConfigureAwait(false);
+
+            var errors = new List<ValidationError>();
+            if (sourceGridArea is null) errors.Add(new FromGridAreaMustExistRuleError(null));
+            if (targetGridArea is null) errors.Add(new ToGridAreaMustExistRuleError(null));
+
+            if (errors.Count > 0)
+            {
+                return Failure(
+                    request, errors.ToArray());
+            }
+
+            _meteringPointRepository.Add(
+                MeteringPoint.CreateExchange(
+                    MeteringPointId.New(),
+                    GsrnNumber.Create(request.GsrnNumber),
+                    gridArea.DefaultLink.Id,
+                    EffectiveDate.Create(request.EffectiveDate),
+                    Domain.MeteringPoints.Exchange.ExchangeDetails.Create(sourceGridArea!.DefaultLink.Id, targetGridArea!.DefaultLink.Id),
+                    masterData));
+
+            return BusinessProcessResult.Ok(request.TransactionId);
         }
 
         private Task<GridArea?> GetGridAreaAsync(CreateMeteringPoint request)

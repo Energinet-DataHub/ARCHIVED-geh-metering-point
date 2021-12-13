@@ -72,7 +72,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             var request = CreateCommand()
                 with
                 {
-                    ExchangeDetails = new ExchangeDetails(GridAreaCode.Create("111").Value, null),
+                    ExchangeDetails = new ExchangeDetails(GridAreaCode.Create("111").Value, GridAreaCode.Create("870").Value),
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
