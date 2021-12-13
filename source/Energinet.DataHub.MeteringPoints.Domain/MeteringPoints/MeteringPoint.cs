@@ -59,45 +59,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _effectiveDate = effectiveDate;
             _masterData = masterData;
 
-            var @event = new ConsumptionMeteringPointCreated(
-                _meteringPointType.Name,
-                Id.Value,
-                GsrnNumber.Value,
-                _gridAreaLinkId.Value,
-                MeteringConfiguration.Method.Name,
-                _masterData.ProductType.Name,
-                _masterData.ReadingOccurrence.Name,
-                _masterData.UnitType.Name,
-                _masterData.SettlementMethod?.Name!,
-                _masterData.NetSettlementGroup?.Name!,
-                _masterData.Address.City,
-                _masterData.Address.Floor,
-                _masterData.Address.Room,
-                _masterData.Address.BuildingNumber,
-                _masterData.Address.CountryCode?.Name,
-                _masterData.Address.MunicipalityCode,
-                _masterData.Address.PostCode,
-                _masterData.Address.StreetCode,
-                _masterData.Address.StreetName,
-                _masterData.Address.CitySubDivision,
-                _masterData.Address.IsActual.GetValueOrDefault(),
-                _masterData.Address.GeoInfoReference,
-                _masterData.PowerPlantGsrnNumber?.Value,
-                _masterData.Address.LocationDescription,
-                MeteringConfiguration.Meter?.Value,
-                _masterData.PowerLimit.Ampere,
-                _masterData.PowerLimit.Kwh,
-                _effectiveDate.DateInUtc,
-                _masterData.DisconnectionType?.Name!,
-                _masterData.ConnectionType?.Name,
-                _masterData.AssetType?.Name,
-                ConnectionState.PhysicalState.Name,
-                _masterData.ScheduledMeterReadingDate?.MonthAndDay,
-                _masterData.Capacity?.Kw,
-                _exchangeDetails?.SourceGridArea.Value,
-                _exchangeDetails?.TargetGridArea.Value);
-
-            AddDomainEvent(@event);
+            RaiseMeteringPointCreated();
         }
 
         private MeteringPoint(
@@ -116,45 +78,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _exchangeDetails = exchangeDetails ?? throw new ArgumentNullException(nameof(exchangeDetails));
             _masterData = masterData;
 
-            var @event = new ConsumptionMeteringPointCreated(
-                _meteringPointType.Name,
-                Id.Value,
-                GsrnNumber.Value,
-                _gridAreaLinkId.Value,
-                MeteringConfiguration.Method.Name,
-                _masterData.ProductType.Name,
-                _masterData.ReadingOccurrence.Name,
-                _masterData.UnitType.Name,
-                _masterData.SettlementMethod?.Name!,
-                _masterData.NetSettlementGroup?.Name!,
-                _masterData.Address.City,
-                _masterData.Address.Floor,
-                _masterData.Address.Room,
-                _masterData.Address.BuildingNumber,
-                _masterData.Address.CountryCode?.Name,
-                _masterData.Address.MunicipalityCode,
-                _masterData.Address.PostCode,
-                _masterData.Address.StreetCode,
-                _masterData.Address.StreetName,
-                _masterData.Address.CitySubDivision,
-                _masterData.Address.IsActual.GetValueOrDefault(),
-                _masterData.Address.GeoInfoReference,
-                _masterData.PowerPlantGsrnNumber?.Value,
-                _masterData.Address.LocationDescription,
-                MeteringConfiguration.Meter?.Value,
-                _masterData.PowerLimit.Ampere,
-                _masterData.PowerLimit.Kwh,
-                _effectiveDate.DateInUtc,
-                _masterData.DisconnectionType?.Name!,
-                _masterData.ConnectionType?.Name,
-                _masterData.AssetType?.Name,
-                ConnectionState.PhysicalState.Name,
-                _masterData.ScheduledMeterReadingDate?.MonthAndDay,
-                _masterData.Capacity?.Kw,
-                _exchangeDetails.SourceGridArea.Value,
-                _exchangeDetails.TargetGridArea.Value);
-
-            AddDomainEvent(@event);
+            RaiseMeteringPointCreated();
         }
 
         public MeteringPointId Id { get; }
@@ -403,6 +327,49 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             {
                 throw new MeteringPointClosedForChangesException(checkResult.Errors);
             }
+        }
+
+        private void RaiseMeteringPointCreated()
+        {
+            var @event = new ConsumptionMeteringPointCreated(
+                _meteringPointType.Name,
+                Id.Value,
+                GsrnNumber.Value,
+                _gridAreaLinkId.Value,
+                MeteringConfiguration.Method.Name,
+                _masterData.ProductType.Name,
+                _masterData.ReadingOccurrence.Name,
+                _masterData.UnitType.Name,
+                _masterData.SettlementMethod?.Name!,
+                _masterData.NetSettlementGroup?.Name!,
+                _masterData.Address.City,
+                _masterData.Address.Floor,
+                _masterData.Address.Room,
+                _masterData.Address.BuildingNumber,
+                _masterData.Address.CountryCode?.Name,
+                _masterData.Address.MunicipalityCode,
+                _masterData.Address.PostCode,
+                _masterData.Address.StreetCode,
+                _masterData.Address.StreetName,
+                _masterData.Address.CitySubDivision,
+                _masterData.Address.IsActual.GetValueOrDefault(),
+                _masterData.Address.GeoInfoReference,
+                _masterData.PowerPlantGsrnNumber?.Value,
+                _masterData.Address.LocationDescription,
+                MeteringConfiguration.Meter?.Value,
+                _masterData.PowerLimit.Ampere,
+                _masterData.PowerLimit.Kwh,
+                _effectiveDate.DateInUtc,
+                _masterData.DisconnectionType?.Name!,
+                _masterData.ConnectionType?.Name,
+                _masterData.AssetType?.Name,
+                ConnectionState.PhysicalState.Name,
+                _masterData.ScheduledMeterReadingDate?.MonthAndDay,
+                _masterData.Capacity?.Kw,
+                _exchangeDetails?.SourceGridArea.Value,
+                _exchangeDetails?.TargetGridArea.Value);
+
+            AddDomainEvent(@event);
         }
     }
 }
