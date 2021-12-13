@@ -409,10 +409,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             var cleanupStatement = new StringBuilder();
 
             cleanupStatement.AppendLine($"DELETE FROM EnergySuppliers");
-            cleanupStatement.AppendLine($"DELETE FROM ConsumptionMeteringPoints");
-            cleanupStatement.AppendLine($"DELETE FROM ProductionMeteringPoints");
-            cleanupStatement.AppendLine($"DELETE FROM ExchangeMeteringPoints");
-            cleanupStatement.AppendLine($"DELETE FROM MarketMeteringPoints");
             cleanupStatement.AppendLine($"DELETE FROM MeteringPoints");
             cleanupStatement.AppendLine($"DELETE FROM OutboxMessages");
             cleanupStatement.AppendLine($"DELETE FROM QueuedInternalCommands");

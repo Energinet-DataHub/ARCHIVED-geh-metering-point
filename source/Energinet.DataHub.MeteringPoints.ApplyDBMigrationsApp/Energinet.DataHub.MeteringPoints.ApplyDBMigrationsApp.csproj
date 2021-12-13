@@ -61,6 +61,7 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Model\202112081000 Move energy supplier details.sql" />
     <EmbeddedResource Include="Scripts\Model\202112091530 Change EnergySuppliers foreign key constraint.sql" />
     <EmbeddedResource Include="Scripts\Model\202112131100 Move exchange metering point details.sql" />
+    <EmbeddedResource Include="Scripts\Model\202112132025 Delete specific metering point tables.sql" />
     <EmbeddedResource Include="Scripts\Seed\202109232130 Create Grid Area seed data.sql" />
     <EmbeddedResource Include="Scripts\Test\202109232129 Clean database.sql" />
     <EmbeddedResource Include="Scripts\Test\202109232130 Create Grid Area test data.sql" />
