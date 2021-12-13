@@ -19,7 +19,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
-using MeteringPointCreated = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.MeteringPointCreated;
+using MeteringPointCreated = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events.MeteringPointCreated;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Exchange
 {

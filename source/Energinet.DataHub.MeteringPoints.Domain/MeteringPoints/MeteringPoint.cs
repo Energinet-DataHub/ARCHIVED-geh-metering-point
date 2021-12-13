@@ -20,7 +20,6 @@ using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
@@ -331,7 +330,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         private void RaiseMeteringPointCreated()
         {
-            var @event = new Consumption.MeteringPointCreated(
+            var @event = new Events.MeteringPointCreated(
                 _meteringPointType.Name,
                 Id.Value,
                 GsrnNumber.Value,

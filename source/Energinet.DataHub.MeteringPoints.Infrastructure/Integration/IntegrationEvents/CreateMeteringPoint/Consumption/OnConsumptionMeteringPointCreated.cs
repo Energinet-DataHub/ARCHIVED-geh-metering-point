@@ -16,6 +16,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
