@@ -34,13 +34,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class MeteringPoint : AggregateRootBase
     {
-#pragma warning disable SA1401, CA1051 // Field cannot be private since it is set by derivatives
-        protected MeteringPointType _meteringPointType;
+        private readonly MeteringPointType _meteringPointType;
         private readonly ExchangeDetails? _exchangeDetails;
+        private readonly GridAreaLinkId _gridAreaLinkId;
+        private readonly EffectiveDate _effectiveDate;
         private MasterData _masterData;
-#pragma warning restore
-        private GridAreaLinkId _gridAreaLinkId;
-        private EffectiveDate _effectiveDate;
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
         protected MeteringPoint() { }
