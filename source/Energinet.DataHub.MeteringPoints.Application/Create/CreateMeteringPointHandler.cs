@@ -51,10 +51,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var validationResult = await ValidateAsync(request, cancellationToken).ConfigureAwait(false);
-            if (!validationResult.Success)
+            if (await MeteringPointExistsAsync(request, cancellationToken).ConfigureAwait(false))
             {
-                return validationResult;
+                return new BusinessProcessResult(request.TransactionId, new List<ValidationError>() { new MeteringPointGsrnMustBeUniqueValidationError(request.GsrnNumber) });
             }
 
             var gridArea = await GetGridAreaAsync(request).ConfigureAwait(false);
@@ -173,16 +172,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             return _gridAreaRepository.GetByCodeAsync(request.MeteringGridArea);
         }
 
-        private async Task<BusinessProcessResult> ValidateAsync(CreateMeteringPoint request, CancellationToken cancellationToken)
+        private async Task<bool> MeteringPointExistsAsync(CreateMeteringPoint request, CancellationToken cancellationToken)
         {
-            var gsrnNumberExists = await _mediator.Send(new MeteringPointGsrnExistsQuery(request.GsrnNumber), cancellationToken).ConfigureAwait(false);
-
-            var validationRules = new List<IBusinessRule>
-            {
-                new MeteringPointGsrnMustBeUniqueRule(gsrnNumberExists, request.GsrnNumber),
-            };
-
-            return new BusinessProcessResult(request.TransactionId, validationRules);
+            return await _mediator.Send(new MeteringPointGsrnExistsQuery(request.GsrnNumber), cancellationToken).ConfigureAwait(false);
         }
     }
 }
