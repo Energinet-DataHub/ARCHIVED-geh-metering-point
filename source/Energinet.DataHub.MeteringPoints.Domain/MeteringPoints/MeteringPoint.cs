@@ -169,16 +169,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         protected EnergySupplierDetails? EnergySupplierDetails { get; private set; }
 
-        public static BusinessRulesValidationResult CanCreate(MeteringPointDetails meteringPointDetails)
-        {
-            if (meteringPointDetails == null) throw new ArgumentNullException(nameof(meteringPointDetails));
-            var rules = new List<IBusinessRule>()
-            {
-            };
-
-            return new BusinessRulesValidationResult(rules);
-        }
-
         public static BusinessRulesValidationResult CanCreate(MeteringPointType type, MasterData masterData, MasterDataValidator validator)
         {
             if (type is null) throw new ArgumentNullException(nameof(type));
