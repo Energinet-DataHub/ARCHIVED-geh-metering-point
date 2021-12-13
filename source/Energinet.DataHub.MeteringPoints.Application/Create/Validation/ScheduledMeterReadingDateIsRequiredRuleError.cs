@@ -14,7 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Validation
+namespace Energinet.DataHub.MeteringPoints.Application.Create.Validation
 {
     public class ScheduledMeterReadingDateIsRequiredRuleError : ValidationError
     {

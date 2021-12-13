@@ -29,7 +29,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
+namespace Energinet.DataHub.MeteringPoints.Application.Create
 {
     public class CreateMeteringPointHandler : IBusinessRequestHandler<CreateMeteringPoint>
     {

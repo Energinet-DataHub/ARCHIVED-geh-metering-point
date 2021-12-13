@@ -23,7 +23,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoint
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption.Validation
+namespace Energinet.DataHub.MeteringPoints.Application.Create.Validation
 {
     public class RuleSet : AbstractValidator<CreateMeteringPoint>
     {

@@ -27,7 +27,8 @@ using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
-using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
+using Energinet.DataHub.MeteringPoints.Application.Create;
+using Energinet.DataHub.MeteringPoints.Application.Create.Validation;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
@@ -143,7 +144,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IValidator<MasterDataDocument>, ValidationRuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<ConnectMeteringPoint>, ConnectMeteringPointRuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<CreateGridArea>, CreateGridAreaRuleSet>(Lifestyle.Scoped);
-            _container.Register<IValidator<CreateMeteringPoint>, Application.Create.Consumption.Validation.RuleSet>(Lifestyle.Scoped);
+            _container.Register<IValidator<CreateMeteringPoint>, RuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<ChangeMasterDataRequest>, ChangeMasterDataRequestValidator>(Lifestyle.Scoped);
             _container.Register<IDomainEventsAccessor, DomainEventsAccessor>();
             _container.Register<IDomainEventsDispatcher, DomainEventsDispatcher>();

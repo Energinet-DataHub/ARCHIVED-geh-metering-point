@@ -14,7 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Create.Consumption
+namespace Energinet.DataHub.MeteringPoints.Application.Create
 {
     public record CreateMeteringPoint(
             string MeteringPointType = "",

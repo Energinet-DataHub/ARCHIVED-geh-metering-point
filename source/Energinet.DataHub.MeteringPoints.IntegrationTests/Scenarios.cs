@@ -15,7 +15,7 @@
 using System;
 using System.Globalization;
 using Energinet.DataHub.MeteringPoints.Application;
-using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
+using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;

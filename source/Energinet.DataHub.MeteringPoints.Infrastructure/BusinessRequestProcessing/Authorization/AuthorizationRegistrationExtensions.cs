@@ -17,7 +17,7 @@ using Energinet.DataHub.MeteringPoints.Application.Authorization;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
-using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
+using Energinet.DataHub.MeteringPoints.Application.Create;
 using SimpleInjector;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Authorization
