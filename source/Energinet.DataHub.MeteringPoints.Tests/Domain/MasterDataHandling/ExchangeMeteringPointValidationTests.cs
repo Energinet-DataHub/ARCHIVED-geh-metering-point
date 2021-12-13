@@ -15,6 +15,7 @@
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Categories;
@@ -32,6 +33,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .Build();
 
             AssertContainsValidationError<StreetNameIsRequiredRuleError>(CheckRules(masterData));
+        }
+
+        [Fact]
+        public void Geo_info_reference_is_required()
+        {
+            var masterData = Builder()
+                .WithAddress(geoInfoReference: null)
+                .Build();
+
+            AssertContainsValidationError<GeoInfoReferenceIsRequiredRuleError>(CheckRules(masterData));
         }
 
         private static IMasterDataBuilder Builder() =>
