@@ -113,7 +113,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 SampleData.AssetType,
                 "0",
                 SampleData.GeoInfoReference,
-                "0101");
+                "0101",
+                new ExchangeDetails(SampleData.MeteringGridArea, SampleData.MeteringGridArea));
         }
 
         internal static CreateExchangeMeteringPoint CreateExchangeMeteringPointCommand()

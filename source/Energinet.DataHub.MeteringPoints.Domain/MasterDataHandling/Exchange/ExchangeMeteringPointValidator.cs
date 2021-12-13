@@ -14,6 +14,7 @@
 
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exchange
@@ -25,6 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exchange
             return new BusinessRulesValidationResult(new List<IBusinessRule>()
             {
                 new StreetNameIsRequiredRule(masterData.Address),
+                new GeoInfoReferenceRequirementRule(masterData.Address),
             });
         }
     }

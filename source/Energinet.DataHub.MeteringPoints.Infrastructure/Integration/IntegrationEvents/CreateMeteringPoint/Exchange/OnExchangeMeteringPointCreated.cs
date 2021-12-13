@@ -15,13 +15,14 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Exchange
 {
-    public class OnExchangeMeteringPointCreated : IntegrationEventPublisher<ExchangeMeteringPointCreated>
+    public class OnExchangeMeteringPointCreated : IntegrationEventPublisher<ConsumptionMeteringPointCreated>
     {
         private readonly DbGridAreaHelper _dbGridAreaHelper;
 
@@ -31,27 +32,31 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
             _dbGridAreaHelper = dbGridAreaHelper;
         }
 
-        public override async Task Handle(ExchangeMeteringPointCreated notification, CancellationToken cancellationToken)
+        public override async Task Handle(ConsumptionMeteringPointCreated notification, CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
 
-            // TODO: Should we avoid making 3 db calls in a row? Find a more suitable way to make read queries
-            var gridAreaCode = await _dbGridAreaHelper.GetGridAreaCodeAsync(notification.GridAreaLinkId).ConfigureAwait(false);
-            var fromGridAreaCode = await _dbGridAreaHelper.GetGridAreaCodeAsync(notification.FromGrid).ConfigureAwait(false);
-            var toGridAreaCode = await _dbGridAreaHelper.GetGridAreaCodeAsync(notification.ToGrid).ConfigureAwait(false);
-            var message = new ExchangeMeteringPointCreatedIntegrationEvent(
-                notification.MeteringPointId.ToString(),
-                notification.GsrnNumber,
-                gridAreaCode,
-                notification.MeteringPointSubType,
-                notification.ReadingOccurrence,
-                notification.ProductType,
-                notification.EffectiveDate,
-                notification.PhysicalState,
-                fromGridAreaCode,
-                toGridAreaCode);
+            if (EnumerationType.FromName<MeteringPointType>(notification.MeteringPointType) ==
+                MeteringPointType.Exchange)
+            {
+                // TODO: Should we avoid making 3 db calls in a row? Find a more suitable way to make read queries
+                var gridAreaCode = await _dbGridAreaHelper.GetGridAreaCodeAsync(notification.GridAreaLinkId).ConfigureAwait(false);
+                var fromGridAreaCode = await _dbGridAreaHelper.GetGridAreaCodeAsync(notification.SourceGridAreaLinkId.GetValueOrDefault()).ConfigureAwait(false);
+                var toGridAreaCode = await _dbGridAreaHelper.GetGridAreaCodeAsync(notification.TargetGridAreaLinkId.GetValueOrDefault()).ConfigureAwait(false);
+                var message = new ExchangeMeteringPointCreatedIntegrationEvent(
+                    notification.MeteringPointId.ToString(),
+                    notification.GsrnNumber,
+                    gridAreaCode,
+                    notification.MeteringPointSubType,
+                    notification.ReadingOccurrence,
+                    notification.ProductType,
+                    notification.EffectiveDate,
+                    notification.PhysicalState,
+                    fromGridAreaCode,
+                    toGridAreaCode);
 
-            CreateAndAddOutboxMessage(message);
+                CreateAndAddOutboxMessage(message);
+            }
         }
     }
 }

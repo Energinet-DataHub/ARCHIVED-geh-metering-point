@@ -13,8 +13,10 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Create.Exchange;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Exchange;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
@@ -46,8 +48,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             Assert.Equal(request.MeteringMethod, integrationEvent?.MeteringMethod);
             Assert.Equal(request.MeteringGridArea, integrationEvent?.GridAreaCode);
             Assert.Equal(request.MeterReadingOccurrence, integrationEvent?.MeterReadingPeriodicity);
-            Assert.Equal(request.FromGrid, integrationEvent?.FromGrid);
-            Assert.Equal(request.ToGrid, integrationEvent?.ToGrid);
+            Assert.Equal(request.ExchangeDetails?.SourceGridAreaCode, integrationEvent?.FromGrid);
+            Assert.Equal(request.ExchangeDetails?.TargetGridAreaCode, integrationEvent?.ToGrid);
             Assert.Equal(request.MeterReadingOccurrence, integrationEvent?.MeterReadingPeriodicity);
         }
 
@@ -71,7 +73,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             var request = CreateCommand()
                 with
                 {
-                    FromGrid = GridAreaCode.Create("111").Value,
+                    ExchangeDetails = new ExchangeDetails(GridAreaCode.Create("111").Value, null),
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
@@ -85,8 +87,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             var request = CreateCommand()
                 with
                 {
-                    FromGrid = SampleData.MeteringGridArea,
-                    ToGrid = GridAreaCode.Create("111").Value,
+                    ExchangeDetails = new ExchangeDetails(SampleData.MeteringGridArea, GridAreaCode.Create("111").Value),
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
@@ -108,9 +109,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("E86", DocumentType.CreateMeteringPointRejected);
         }
 
-        private static CreateExchangeMeteringPoint CreateCommand()
+        private static CreateMeteringPoint CreateCommand()
         {
-            return Scenarios.CreateExchangeMeteringPointCommand();
+            return Scenarios.CreateCommand(MeteringPointType.Exchange);
         }
     }
 }

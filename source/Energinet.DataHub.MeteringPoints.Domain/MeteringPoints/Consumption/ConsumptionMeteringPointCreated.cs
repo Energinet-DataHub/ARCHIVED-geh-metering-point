@@ -21,6 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
     public class ConsumptionMeteringPointCreated : DomainEventBase
     {
         public ConsumptionMeteringPointCreated(
+            string meteringPointType,
             Guid meteringPointId,
             string gsrnNumber,
             Guid gridAreaId,
@@ -53,8 +54,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             string? assetType,
             string physicalState,
             string? scheduledMeterReadingDate,
-            double? capacity)
+            double? capacity,
+            Guid? sourceGridAreaLinkId,
+            Guid? targetGridAreaLinkId)
         {
+            MeteringPointType = meteringPointType;
             MeteringPointId = meteringPointId;
             GsrnNumber = gsrnNumber;
             GridAreaLinkId = gridAreaId;
@@ -88,7 +92,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
             PhysicalState = physicalState;
             ScheduledMeterReadingDate = scheduledMeterReadingDate;
             Capacity = capacity;
+            SourceGridAreaLinkId = sourceGridAreaLinkId;
+            TargetGridAreaLinkId = targetGridAreaLinkId;
         }
+
+        public string MeteringPointType { get; }
 
         public Guid MeteringPointId { get; }
 
@@ -155,5 +163,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
         public Guid? GeoInfoReference { get; }
 
         public double? Capacity { get; }
+
+        public Guid? SourceGridAreaLinkId { get; }
+
+        public Guid? TargetGridAreaLinkId { get; }
     }
 }
