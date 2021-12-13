@@ -18,6 +18,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using Energinet.DataHub.Core.Schemas;
+using Energinet.DataHub.Core.SchemaValidation;
+using Energinet.DataHub.Core.SchemaValidation.Extensions;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -34,13 +38,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
     [UnitTest]
     public class XmlConverterTests
     {
-        private Stream _xmlStream;
-
-        public XmlConverterTests()
-        {
-            _xmlStream = GetResourceStream("CreateMeteringPointCimXml.xml");
-        }
-
         [Fact]
         public void AssertConfigurationsValid()
         {
@@ -54,8 +51,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
             var xmlMapper = new XmlMapper((processType, type) => new MasterDataDocumentXmlMappingConfiguration());
 
             var xmlConverter = new XmlDeserializer(xmlMapper);
+            var (errors, element) = await PerformSchemaValidation().ConfigureAwait(false);
 
-            var commandsRaw = await xmlConverter.DeserializeAsync(_xmlStream).ConfigureAwait(false);
+            errors.Should().BeEmpty();
+            element.Should().NotBeNull();
+
+            var commandsRaw = xmlConverter.Deserialize(element!);
             var commands = commandsRaw.Cast<MasterDataDocument>();
 
             var command = commands.First();
@@ -100,7 +101,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
             var xmlMapper = new XmlMapper((processType, type) => new MasterDataDocumentXmlMappingConfiguration());
 
             var xmlConverter = new XmlDeserializer(xmlMapper);
-            var commandsRaw = await xmlConverter.DeserializeAsync(_xmlStream).ConfigureAwait(false);
+            var (errors, element) = await PerformSchemaValidation().ConfigureAwait(false);
+
+            errors.Should().BeEmpty();
+            element.Should().NotBeNull();
+
+            var commandsRaw = xmlConverter.Deserialize(element!);
             var commands = commandsRaw.Cast<MasterDataDocument>();
 
             var command = commands.First();
@@ -122,10 +128,21 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
 
             var resourceName = resourcePath.Replace(@"/", ".", StringComparison.Ordinal);
             var resource = resourceNames.FirstOrDefault(r => r.Contains(resourceName, StringComparison.Ordinal))
-                ?? throw new FileNotFoundException("Resource not found");
+                           ?? throw new FileNotFoundException("Resource not found");
 
             return assembly.GetManifestResourceStream(resource)
                    ?? throw new InvalidOperationException($"Couldn't get requested resource: {resourcePath}");
+        }
+
+        private static async Task<(List<string> Errors, XElement? Element)> PerformSchemaValidation()
+        {
+            var reader = new SchemaValidatingReader(
+                GetResourceStream("CreateMeteringPointCimXml.xml"),
+                Schemas.CimXml.StructureAccountingPointCharacteristics);
+
+            var element = await reader.AsXElementAsync().ConfigureAwait(false);
+
+            return (reader.Errors.Select(x => x.Description).ToList(), element);
         }
     }
 }

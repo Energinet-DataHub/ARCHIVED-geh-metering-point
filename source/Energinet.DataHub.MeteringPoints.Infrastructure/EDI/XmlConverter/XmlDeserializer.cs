@@ -13,9 +13,6 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 
@@ -30,9 +27,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
             _xmlMapper = xmlMapper;
         }
 
-        public async Task<IEnumerable<IInternalMarketDocument>> DeserializeAsync(Stream body)
+        public IEnumerable<IInternalMarketDocument> Deserialize(XElement rootElement)
         {
-            XElement rootElement = await XElement.LoadAsync(body, LoadOptions.None, CancellationToken.None).ConfigureAwait(false);
             return _xmlMapper.Map(rootElement);
         }
     }

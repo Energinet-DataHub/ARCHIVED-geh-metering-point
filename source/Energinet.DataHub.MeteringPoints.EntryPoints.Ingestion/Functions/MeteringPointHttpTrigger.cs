@@ -14,9 +14,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using Energinet.DataHub.Core.Schemas;
+using Energinet.DataHub.Core.SchemaValidation;
+using Energinet.DataHub.Core.SchemaValidation.Extensions;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
@@ -56,10 +59,15 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
 
             if (request == null) throw new ArgumentNullException(nameof(request));
 
+            var (succeeded, response, element) = await DeserializeAsync(request).ConfigureAwait(false);
+
+            if (!succeeded) return response;
+
             IEnumerable<IInternalMarketDocument> commands;
+
             try
             {
-               commands = await DeserializeInputAsync(request.Body).ConfigureAwait(false);
+                commands = _xmlConverter.Deserialize(element!);
             }
             #pragma warning disable CA1031 // TODO: We'll allow catching Exception in the entrypoint, I guess?
             catch (Exception exception)
@@ -73,6 +81,33 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
             return await CreateOkResponseAsync(request).ConfigureAwait(false);
         }
 
+        private async Task<(bool Succeeded, HttpResponseData Response, XElement? Element)> DeserializeAsync(HttpRequestData request)
+        {
+            var reader = new SchemaValidatingReader(request.Body, Schemas.CimXml.StructureAccountingPointCharacteristics);
+
+            HttpResponseData response;
+            var isSucceeded = true;
+
+            var xmlElement = await reader.AsXElementAsync().ConfigureAwait(false);
+
+            if (reader.HasErrors)
+            {
+                isSucceeded = false;
+                response = request.CreateResponse(HttpStatusCode.BadRequest);
+
+                await reader
+                    .CreateErrorResponse()
+                    .WriteAsXmlAsync(response.Body)
+                    .ConfigureAwait(false);
+            }
+            else
+            {
+                response = await CreateOkResponseAsync(request).ConfigureAwait(false);
+            }
+
+            return (isSucceeded, response, xmlElement);
+        }
+
         private async Task<HttpResponseData> CreateOkResponseAsync(HttpRequestData request)
         {
             var response = request.CreateResponse(HttpStatusCode.OK);
@@ -82,11 +117,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
             await response.WriteStringAsync("Correlation id: " + _correlationContext.Id)
                 .ConfigureAwait(false);
             return response;
-        }
-
-        private async Task<IEnumerable<IInternalMarketDocument>> DeserializeInputAsync(Stream stream)
-        {
-            return await _xmlConverter.DeserializeAsync(stream).ConfigureAwait(false);
         }
 
         private async Task DispatchCommandsAsync(IEnumerable<IInternalMarketDocument> commands)

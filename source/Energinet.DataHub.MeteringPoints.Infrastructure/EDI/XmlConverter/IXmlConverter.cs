@@ -13,8 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
+using System.Xml.Linq;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
@@ -27,8 +26,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
         /// <summary>
         /// Deserializes an EDI message in XML format to a generic collection
         /// </summary>
-        /// <param name="body"></param>
+        /// <param name="rootElement"></param>
         /// <returns>A generic collection</returns>
-        public Task<IEnumerable<IInternalMarketDocument>> DeserializeAsync(Stream body);
+        public IEnumerable<IInternalMarketDocument> Deserialize(XElement rootElement);
     }
 }
