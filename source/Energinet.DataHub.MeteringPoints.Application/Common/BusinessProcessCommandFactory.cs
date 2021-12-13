@@ -14,13 +14,11 @@
 
 using System;
 using System.Globalization;
-using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Common
@@ -67,33 +65,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
         }
 
         private static IBusinessRequest? CreateNewMeteringPointCommand(MasterDataDocument document)
-        {
-            if (string.IsNullOrEmpty(document.TypeOfMeteringPoint) || EnumerationType.GetAll<MeteringPointType>().Select(item => item.Name).Contains(document.TypeOfMeteringPoint) == false)
-            {
-                return CreateConsumptionMeteringPoint(document);
-            }
-
-            var meteringPointType = EnumerationType.FromName<MeteringPointType>(document.TypeOfMeteringPoint);
-
-            if (meteringPointType == MeteringPointType.Consumption)
-            {
-                return CreateConsumptionMeteringPoint(document);
-            }
-
-            if (meteringPointType == MeteringPointType.Production)
-            {
-                return CreateConsumptionMeteringPoint(document);
-            }
-
-            if (meteringPointType == MeteringPointType.Exchange)
-            {
-                return CreateConsumptionMeteringPoint(document);
-            }
-
-            return CreateConsumptionMeteringPoint(document);
-        }
-
-        private static IBusinessRequest CreateConsumptionMeteringPoint(MasterDataDocument document)
         {
             return new CreateMeteringPoint
             {
