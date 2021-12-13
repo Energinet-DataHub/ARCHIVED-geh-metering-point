@@ -18,9 +18,9 @@ using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
 {
-    public class ConsumptionMeteringPointCreated : DomainEventBase
+    public class MeteringPointCreated : DomainEventBase
     {
-        public ConsumptionMeteringPointCreated(
+        public MeteringPointCreated(
             string meteringPointType,
             Guid meteringPointId,
             string gsrnNumber,

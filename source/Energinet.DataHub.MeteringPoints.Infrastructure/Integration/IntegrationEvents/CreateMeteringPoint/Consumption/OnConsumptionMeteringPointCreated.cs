@@ -21,7 +21,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption
 {
-    public class OnConsumptionMeteringPointCreated : IntegrationEventPublisher<ConsumptionMeteringPointCreated>
+    public class OnConsumptionMeteringPointCreated : IntegrationEventPublisher<MeteringPointCreated>
     {
         private readonly DbGridAreaHelper _dbGridAreaHelper;
 
@@ -31,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
             _dbGridAreaHelper = dbGridAreaHelper;
         }
 
-        public override async Task Handle(ConsumptionMeteringPointCreated notification, CancellationToken cancellationToken)
+        public override async Task Handle(MeteringPointCreated notification, CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
             var gridAreaCode = await _dbGridAreaHelper.GetGridAreaCodeAsync(notification.GridAreaLinkId).ConfigureAwait(false);

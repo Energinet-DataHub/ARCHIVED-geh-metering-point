@@ -19,10 +19,11 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using MeteringPointCreated = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.MeteringPointCreated;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Exchange
 {
-    public class OnExchangeMeteringPointCreated : IntegrationEventPublisher<ConsumptionMeteringPointCreated>
+    public class OnExchangeMeteringPointCreated : IntegrationEventPublisher<MeteringPointCreated>
     {
         private readonly DbGridAreaHelper _dbGridAreaHelper;
 
@@ -32,7 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
             _dbGridAreaHelper = dbGridAreaHelper;
         }
 
-        public override async Task Handle(ConsumptionMeteringPointCreated notification, CancellationToken cancellationToken)
+        public override async Task Handle(MeteringPointCreated notification, CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
 

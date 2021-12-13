@@ -28,6 +28,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Categories;
+using MeteringPointCreated = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.MeteringPointCreated;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Production
 {
@@ -82,7 +83,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Productio
 
             var meteringPoint = MeteringPoint.Create(meteringPointId, meteringPointGsrn, MeteringPointType.Production, gridAreaLinkId, effectiveDate, masterData);
 
-            var createdEvent = meteringPoint.DomainEvents.First(e => e is ConsumptionMeteringPointCreated) as ConsumptionMeteringPointCreated;
+            var createdEvent = meteringPoint.DomainEvents.First(e => e is MeteringPointCreated) as MeteringPointCreated;
             Assert.Equal(address.City, createdEvent!.City);
             Assert.Equal(address.Floor, createdEvent.Floor);
             Assert.Equal(address.Room, createdEvent.Room);

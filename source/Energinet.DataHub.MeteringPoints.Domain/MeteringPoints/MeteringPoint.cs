@@ -331,7 +331,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         private void RaiseMeteringPointCreated()
         {
-            var @event = new ConsumptionMeteringPointCreated(
+            var @event = new Consumption.MeteringPointCreated(
                 _meteringPointType.Name,
                 Id.Value,
                 GsrnNumber.Value,

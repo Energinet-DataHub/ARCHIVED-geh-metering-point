@@ -24,6 +24,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Categories;
+using MeteringPointCreated = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.MeteringPointCreated;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
 {
@@ -67,7 +68,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
                 .WithAddress(address.StreetName, address.StreetCode, address.BuildingNumber, address.City, address.CitySubDivision, address.PostCode, address.CountryCode, address.Floor, address.Room, address.MunicipalityCode, address.IsActual, address.GeoInfoReference, address.LocationDescription)
                 .Build());
 
-            var createdEvent = meteringPoint.DomainEvents.First(e => e is ConsumptionMeteringPointCreated) as ConsumptionMeteringPointCreated;
+            var createdEvent = meteringPoint.DomainEvents.First(e => e is MeteringPointCreated) as MeteringPointCreated;
             Assert.Equal(address.City, createdEvent!.City);
             Assert.Equal(address.Floor, createdEvent.Floor);
             Assert.Equal(address.Room, createdEvent.Room);
