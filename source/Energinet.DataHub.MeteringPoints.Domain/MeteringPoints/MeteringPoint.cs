@@ -41,11 +41,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private MasterData _masterData;
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
-        protected MeteringPoint() { }
+        private MeteringPoint() { }
 #pragma warning restore 8618
 
-        #pragma warning disable CS8618 //Disable nullable check
-        protected MeteringPoint(
+        private MeteringPoint(
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             MeteringPointType meteringPointType,
