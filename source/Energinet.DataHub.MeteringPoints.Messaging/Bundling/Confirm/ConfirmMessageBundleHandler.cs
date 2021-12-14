@@ -12,20 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
-using NodaTime;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bundling;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements
+namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.Confirm
 {
-    public record RejectMessage(
-        string DocumentName,
-        string Id,
-        string Type,
-        string ProcessType,
-        string BusinessSectorType,
-        MarketRoleParticipant Sender,
-        MarketRoleParticipant Receiver,
-        Instant CreatedDateTime,
-        string ReasonCode,
-        MarketActivityRecordWithReasons MarketActivityRecord);
+    public class ConfirmMessageBundleHandler : BundleHandler<ConfirmMessage>
+    {
+        public ConfirmMessageBundleHandler(IJsonSerializer jsonSerializer, IDocumentSerializer<ConfirmMessage> documentSerializer)
+            : base(jsonSerializer, documentSerializer)
+        {
+        }
+    }
 }

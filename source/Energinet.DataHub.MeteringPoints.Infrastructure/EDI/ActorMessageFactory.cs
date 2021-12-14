@@ -40,56 +40,38 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
         public ConfirmMessage CreateNewMeteringPointConfirmation(string gsrnNumber, string effectiveDate, string transactionId)
         {
             var glnNumber = "8200000008842";
-            return new ConfirmMessage(
-                DocumentName: "ConfirmRequestChangeAccountingPointCharacteristics_MarketDocument",
-                Id: Guid.NewGuid().ToString(),
-                Type: "414",
-                ProcessType: "E65",
-                BusinessSectorType: "E21",
-                Sender: new MarketRoleParticipant(
-                    Id: "DataHub GLN", // TODO: Use correct GLN
-                    CodingScheme: "9",
-                    Role: "EZ"),
-                Receiver: new MarketRoleParticipant(
-                    Id: _userContext.CurrentUser?.GlnNumber ?? glnNumber, // TODO: Hardcoded
-                    CodingScheme: "9",
+            return ConfirmMessageFactory.CreateMeteringPoint(
+                sender: new MarketRoleParticipant(
+                    Id: "DataHub GLN", // TODO: Use from actor register
+                    CodingScheme: "A10",
+                    Role: "DDZ"),
+                receiver: new MarketRoleParticipant(
+                    Id: _userContext.CurrentUser?.GlnNumber ?? glnNumber, // TODO: Use from actor register
+                    CodingScheme: "A10",
                     Role: "DDQ"),
-                CreatedDateTime: _dateTimeProvider.Now(),
-                ReasonCode: "39",
-                MarketActivityRecord: new MarketActivityRecord(
+                createdDateTime: _dateTimeProvider.Now(),
+                marketActivityRecord: new MarketActivityRecord(
                     Id: Guid.NewGuid().ToString(),
-                    BusinessProcessReference: _correlationContext.Id, // TODO: is correlation id the same as BusinessProcessReference?
                     MarketEvaluationPoint: gsrnNumber,
-                    StartDateAndOrTime: effectiveDate,
                     OriginalTransaction: transactionId));
         }
 
         public RejectMessage CreateNewMeteringPointReject(string gsrnNumber, string effectiveDate, string transactionId, IEnumerable<ErrorMessage> errors)
         {
             var glnNumber = "8200000008842";
-            return new RejectMessage(
-                DocumentName: "RejectRequestChangeAccountingPointCharacteristics_MarketDocument",
-                Id: Guid.NewGuid().ToString(),
-                Type: "414",
-                ProcessType: "E65",
-                BusinessSectorType: "E21",
-                Sender: new MarketRoleParticipant(
-                    Id: "DataHub GLN", // TODO: Use correct GLN
-                    CodingScheme: "9",
-                    Role: "EZ"),
-                Receiver: new MarketRoleParticipant(
-                    Id: _userContext.CurrentUser?.GlnNumber ?? glnNumber, // TODO: Hardcoded
-                    CodingScheme: "9",
-                    Role: "DDQ"),
-                CreatedDateTime: _dateTimeProvider.Now(),
-                Reason: new Reason(
-                    Code: "41",
-                    Text: string.Empty),
-                MarketActivityRecord: new MarketActivityRecordWithReasons(
+            return RejectMessageFactory.CreateMeteringPoint(
+                sender: new MarketRoleParticipant(// TODO: Use from actor register
+                    Id: "DataHub GLN",
+                    CodingScheme: "A10",
+                    Role: "DDZ"),
+                receiver: new MarketRoleParticipant(// TODO: Use from actor register
+                    Id: _userContext.CurrentUser?.GlnNumber ?? glnNumber,
+                    CodingScheme: "A10",
+                    Role: "DDM"),
+                createdDateTime: _dateTimeProvider.Now(),
+                marketActivityRecord: new MarketActivityRecordWithReasons(
                     Id: Guid.NewGuid().ToString(),
-                    BusinessProcessReference: _correlationContext.Id, // TODO: is correlation id the same as BusinessProcessReference?
                     MarketEvaluationPoint: gsrnNumber,
-                    StartDateAndOrTime: effectiveDate,
                     OriginalTransaction: transactionId,
                     Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
         }
