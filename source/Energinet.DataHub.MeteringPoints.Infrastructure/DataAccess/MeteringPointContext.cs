@@ -29,20 +29,16 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
 {
     public class MeteringPointContext : DbContext
     {
-        private readonly IJsonSerializer _jsonSerializer;
-
-#nullable disable
-        public MeteringPointContext(DbContextOptions<MeteringPointContext> options, IJsonSerializer jsonSerializer)
+        #nullable disable
+        public MeteringPointContext(DbContextOptions<MeteringPointContext> options)
             : base(options)
         {
-            _jsonSerializer = jsonSerializer;
         }
 
         public MeteringPointContext()
@@ -86,8 +82,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
             modelBuilder.ApplyConfiguration(new GridAreaEntityConfiguration());
             modelBuilder.ApplyConfiguration(new MessageHubMessageEntityConfiguration());
             modelBuilder.ApplyConfiguration(new EnergySupplierEntityConfiguration());
-            // TODO: Can this be handled with some proper DI instead?
-            modelBuilder.ApplyConfiguration(new ActorEntityConfiguration(_jsonSerializer));
+            modelBuilder.ApplyConfiguration(new ActorEntityConfiguration());
         }
     }
 }

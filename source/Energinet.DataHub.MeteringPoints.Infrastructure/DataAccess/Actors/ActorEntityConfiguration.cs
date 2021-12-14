@@ -16,7 +16,6 @@ using System;
 using System.Collections.ObjectModel;
 using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -24,13 +23,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.Actors
 {
     public class ActorEntityConfiguration : IEntityTypeConfiguration<Actor>
     {
-        private readonly IJsonSerializer _jsonSerializer;
-
-        public ActorEntityConfiguration(IJsonSerializer jsonSerializer)
-        {
-            _jsonSerializer = jsonSerializer;
-        }
-
         public void Configure(EntityTypeBuilder<Actor> builder)
         {
             if (builder == null)
@@ -55,8 +47,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.Actors
 
             builder.Property(x => x.Roles)
                 .HasConversion(
-                    v => _jsonSerializer.Serialize(v),
-                    v => _jsonSerializer.Deserialize<Collection<string>>(v));
+                    v => string.Join(",", v),
+                    v => new Collection<string>(v.Split(",", StringSplitOptions.None)));
         }
     }
 }
