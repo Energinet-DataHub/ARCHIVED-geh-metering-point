@@ -16,8 +16,10 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint
@@ -29,15 +31,21 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
         private readonly IActorMessageFactory _actorMessageFactory;
         private readonly IMessageHubDispatcher _messageHubDispatcher;
         private readonly ErrorMessageFactory _errorMessageFactory;
+        private readonly IUserContext _userContext;
+        private readonly ActorAccessor _actorAccessor;
 
         public CreateMeteringPointResultHandler(
             IActorMessageFactory actorMessageFactory,
             IMessageHubDispatcher messageHubDispatcher,
-            ErrorMessageFactory errorMessageFactory)
+            ErrorMessageFactory errorMessageFactory,
+            IUserContext userContext,
+            ActorAccessor actorAccessor)
         {
             _actorMessageFactory = actorMessageFactory;
             _messageHubDispatcher = messageHubDispatcher;
             _errorMessageFactory = errorMessageFactory;
+            _userContext = userContext;
+            _actorAccessor = actorAccessor;
         }
 
         public Task HandleAsync(TMeteringPoint request, BusinessProcessResult result)
@@ -52,7 +60,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
 
         private Task CreateAcceptMessageAsync(string gsrnNumber, string effectiveDate, string transactionId)
         {
-            var message = _actorMessageFactory.CreateNewMeteringPointConfirmation(gsrnNumber, effectiveDate, transactionId);
+            // TODO: Maybe the whole "Actor" object is available on the context?
+            var receivingActor = _actorAccessor.GetByIdentifier(_userContext.CurrentUser!.GlnNumber, "GS1");
+            var sendingActor = _actorAccessor.GetDataHub();
+
+            var message = _actorMessageFactory.CreateNewMeteringPointConfirmation(gsrnNumber, effectiveDate, transactionId, sendingActor, receivingActor);
             return _messageHubDispatcher.DispatchAsync(message, DocumentType.CreateMeteringPointAccepted, gsrnNumber);
         }
 

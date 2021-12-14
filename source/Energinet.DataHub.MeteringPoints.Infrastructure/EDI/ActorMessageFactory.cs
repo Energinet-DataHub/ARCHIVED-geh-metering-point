@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
@@ -28,27 +28,26 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
     {
         private readonly IUserContext _userContext;
         private readonly ISystemDateTimeProvider _dateTimeProvider;
-        private readonly ICorrelationContext _correlationContext;
 
-        public ActorMessageFactory(IUserContext userContext, ISystemDateTimeProvider dateTimeProvider, ICorrelationContext correlationContext)
+        public ActorMessageFactory(IUserContext userContext, ISystemDateTimeProvider dateTimeProvider)
         {
             _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             _dateTimeProvider = dateTimeProvider ?? throw new ArgumentNullException(nameof(dateTimeProvider));
-            _correlationContext = correlationContext ?? throw new ArgumentNullException(nameof(correlationContext));
         }
 
-        public ConfirmMessage CreateNewMeteringPointConfirmation(string gsrnNumber, string effectiveDate, string transactionId)
+        public ConfirmMessage CreateNewMeteringPointConfirmation(
+            string gsrnNumber,
+            string effectiveDate,
+            string transactionId,
+            ActorAccessor.Actor sender,
+            ActorAccessor.Actor receiver)
         {
-            var glnNumber = "8200000008842";
+            if (sender == null) throw new ArgumentNullException(nameof(sender));
+            if (receiver == null) throw new ArgumentNullException(nameof(receiver));
+
             return ConfirmMessageFactory.CreateMeteringPoint(
-                sender: new MarketRoleParticipant(
-                    Id: "DataHub GLN", // TODO: Use from actor register
-                    CodingScheme: "A10",
-                    Role: "DDZ"),
-                receiver: new MarketRoleParticipant(
-                    Id: _userContext.CurrentUser?.GlnNumber ?? glnNumber, // TODO: Use from actor register
-                    CodingScheme: "A10",
-                    Role: "DDQ"),
+                sender: Map(sender),
+                receiver: Map(receiver),
                 createdDateTime: _dateTimeProvider.Now(),
                 marketActivityRecord: new MarketActivityRecord(
                     Id: Guid.NewGuid().ToString(),
@@ -74,6 +73,18 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     MarketEvaluationPoint: gsrnNumber,
                     OriginalTransaction: transactionId,
                     Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
+        }
+
+        private static MarketRoleParticipant Map(ActorAccessor.Actor actor)
+        {
+            var codingScheme = actor.IdType switch
+            {
+                "GS1" => "A10",
+                "EIC" => "A01",
+                _ => throw new InvalidOperationException("Unknown actor identifier type"),
+            };
+
+            return new MarketRoleParticipant(actor.Id, codingScheme, actor.Role);
         }
     }
 }

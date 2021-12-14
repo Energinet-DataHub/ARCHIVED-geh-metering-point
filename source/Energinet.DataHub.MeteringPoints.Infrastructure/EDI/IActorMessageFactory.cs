@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
@@ -27,7 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
         /// Creates a confirmation message for the create new metering point business process
         /// </summary>
         /// <returns><see cref="ConfirmMessage"/></returns>
-        ConfirmMessage CreateNewMeteringPointConfirmation(string gsrnNumber, string effectiveDate, string transactionId);
+        ConfirmMessage CreateNewMeteringPointConfirmation(string gsrnNumber, string effectiveDate, string transactionId, ActorAccessor.Actor sender, ActorAccessor.Actor receiver);
 
         /// <summary>
         /// Creates a reject message for the create new metering point business process

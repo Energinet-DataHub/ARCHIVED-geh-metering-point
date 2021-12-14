@@ -15,10 +15,11 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData
@@ -28,16 +29,22 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData
         private readonly IActorMessageFactory _actorMessageFactory;
         private readonly IMessageHubDispatcher _messageHubDispatcher;
         private readonly ErrorMessageFactory _errorMessageFactory;
+        private readonly IUserContext _userContext;
+        private readonly ActorAccessor _actorAccessor;
 
         public ChangeMasterDataResultHandler(
             IActorMessageFactory actorMessageFactory,
             IMessageHubDispatcher messageHubDispatcher,
-            ErrorMessageFactory errorMessageFactory)
+            ErrorMessageFactory errorMessageFactory,
+            IUserContext userContext,
+            ActorAccessor actorAccessor)
         {
             _actorMessageFactory = actorMessageFactory ?? throw new ArgumentNullException(nameof(actorMessageFactory));
             _messageHubDispatcher =
                 messageHubDispatcher ?? throw new ArgumentNullException(nameof(messageHubDispatcher));
             _errorMessageFactory = errorMessageFactory ?? throw new ArgumentNullException(nameof(errorMessageFactory));
+            _userContext = userContext;
+            _actorAccessor = actorAccessor;
         }
 
         public Task HandleAsync(ChangeMasterDataRequest request, BusinessProcessResult result)
@@ -54,7 +61,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var message = _actorMessageFactory.CreateNewMeteringPointConfirmation(request.GsrnNumber, request.EffectiveDate, request.TransactionId);
+            // TODO: Maybe the whole "Actor" object is available on the context?
+            var receivingActor = _actorAccessor.GetByIdentifier(_userContext.CurrentUser!.GlnNumber, "GS1");
+            var sendingActor = _actorAccessor.GetDataHub();
+
+            var message = _actorMessageFactory.CreateNewMeteringPointConfirmation(request.GsrnNumber, request.EffectiveDate, request.TransactionId, sendingActor, receivingActor);
             return _messageHubDispatcher.DispatchAsync(message, DocumentType.ChangeMasterDataAccepted, request.GsrnNumber);
         }
 

@@ -171,6 +171,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<INotificationReceiver, NotificationReceiver>(Lifestyle.Scoped);
             container.Register<IBusinessDocumentFactory, BusinessDocumentFactory>(Lifestyle.Scoped);
             container.Register<MeteringPointPipelineContext>(Lifestyle.Scoped);
+            container.Register<ActorAccessor>(Lifestyle.Scoped);
 
             container.Register<IBusinessProcessValidationContext, BusinessProcessValidationContext>(Lifestyle.Scoped);
             container.Register<IBusinessProcessCommandFactory, BusinessProcessCommandFactory>(Lifestyle.Singleton);
