@@ -18,8 +18,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements
 {
     public record MarketActivityRecordWithReasons(
             string Id,
-            string MarketEvaluationPoint,
             string OriginalTransaction,
+            string MarketEvaluationPoint,
             IReadOnlyCollection<Reason> Reasons)
         : MarketActivityRecord(
             Id,

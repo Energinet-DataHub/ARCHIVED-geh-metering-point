@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bundling;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
+using System.Xml.Linq;
+using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Xml;
 
-namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling
+namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.Confirm
 {
-    public class ConfirmMessageBundleHandler : BundleHandler<ConfirmMessage>
+    public class ConfirmRequestChangeOfAccountingPointCharacteristicsXmlDeclaration : XmlDeclaration
     {
-        public ConfirmMessageBundleHandler(IJsonSerializer jsonSerializer, IDocumentSerializer<ConfirmMessage> documentSerializer)
-            : base(jsonSerializer, documentSerializer)
-        {
-        }
+        public override string XmlNamespaceText => "urn:ediel.org:structure:confirmrequestchangeofaccountingpointcharacteristics:0:1";
+
+        public override string SchemaLocationText => "urn-ediel-org-structure-confirmrequestchangeofaccountingpointcharacteristics-0-1.xsd";
+
+        public override XNamespace XmlNamespace => XmlNamespaceText;
     }
 }

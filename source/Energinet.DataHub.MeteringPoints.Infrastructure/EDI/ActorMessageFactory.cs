@@ -40,23 +40,17 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
         public ConfirmMessage CreateNewMeteringPointConfirmation(string gsrnNumber, string effectiveDate, string transactionId)
         {
             var glnNumber = "8200000008842";
-            return new ConfirmMessage(
-                DocumentName: "ConfirmRequestChangeAccountingPointCharacteristics_MarketDocument",
-                Id: Guid.NewGuid().ToString(),
-                Type: "E59", // Changes with the document type. ie E59 for ConfirmRequestChangeAccountingPointCharacteristics_MarketDocument
-                ProcessType: "E02", // Changes with BRS, D15 for connect
-                BusinessSectorType: "23", // Electricity
-                Sender: new MarketRoleParticipant(
+            return ConfirmMessageFactory.CreateMeteringPoint(
+                sender: new MarketRoleParticipant(
                     Id: "DataHub GLN", // TODO: Use from actor register
                     CodingScheme: "A10",
                     Role: "DDZ"),
-                Receiver: new MarketRoleParticipant(
+                receiver: new MarketRoleParticipant(
                     Id: _userContext.CurrentUser?.GlnNumber ?? glnNumber, // TODO: Use from actor register
                     CodingScheme: "A10",
                     Role: "DDQ"),
-                CreatedDateTime: _dateTimeProvider.Now(),
-                ReasonCode: "A01", // Confirm
-                MarketActivityRecord: new MarketActivityRecord(
+                createdDateTime: _dateTimeProvider.Now(),
+                marketActivityRecord: new MarketActivityRecord(
                     Id: Guid.NewGuid().ToString(),
                     MarketEvaluationPoint: gsrnNumber,
                     OriginalTransaction: transactionId));
@@ -65,23 +59,17 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
         public RejectMessage CreateNewMeteringPointReject(string gsrnNumber, string effectiveDate, string transactionId, IEnumerable<ErrorMessage> errors)
         {
             var glnNumber = "8200000008842";
-            return new RejectMessage(
-                DocumentName: "RejectRequestChangeAccountingPointCharacteristics_MarketDocument",
-                Id: Guid.NewGuid().ToString(),
-                Type: "E59", // Changes with the document type. ie E59 for ConfirmRequestChangeAccountingPointCharacteristics_MarketDocument
-                ProcessType: "E02", // Changes with BRS, D15 for connect
-                BusinessSectorType: "23", // Electricity
-                Sender: new MarketRoleParticipant(// TODO: Use from actor register
+            return RejectMessageFactory.CreateMeteringPoint(
+                sender: new MarketRoleParticipant(// TODO: Use from actor register
                     Id: "DataHub GLN",
                     CodingScheme: "A10",
                     Role: "DDZ"),
-                Receiver: new MarketRoleParticipant(// TODO: Use from actor register
+                receiver: new MarketRoleParticipant(// TODO: Use from actor register
                     Id: _userContext.CurrentUser?.GlnNumber ?? glnNumber,
                     CodingScheme: "A10",
                     Role: "DDM"),
-                CreatedDateTime: _dateTimeProvider.Now(),
-                Reason: "A02",
-                MarketActivityRecord: new MarketActivityRecordWithReasons(
+                createdDateTime: _dateTimeProvider.Now(),
+                marketActivityRecord: new MarketActivityRecordWithReasons(
                     Id: Guid.NewGuid().ToString(),
                     MarketEvaluationPoint: gsrnNumber,
                     OriginalTransaction: transactionId,
