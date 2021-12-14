@@ -18,9 +18,9 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
 {
-    public class ExchangeDetails : ValueObject
+    public class ExchangeGridAreas : ValueObject
     {
-        private ExchangeDetails(GridAreaLinkId sourceGridArea, GridAreaLinkId targetGridArea)
+        private ExchangeGridAreas(GridAreaLinkId sourceGridArea, GridAreaLinkId targetGridArea)
         {
             SourceGridArea = sourceGridArea ?? throw new ArgumentNullException(nameof(sourceGridArea));
             TargetGridArea = targetGridArea ?? throw new ArgumentNullException(nameof(targetGridArea));
@@ -30,9 +30,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange
 
         public GridAreaLinkId TargetGridArea { get; }
 
-        public static ExchangeDetails Create(GridAreaLinkId sourceGridArea, GridAreaLinkId targetGridArea)
+        public static ExchangeGridAreas Create(GridAreaLinkId sourceGridArea, GridAreaLinkId targetGridArea)
         {
-            return new ExchangeDetails(sourceGridArea, targetGridArea);
+            return new ExchangeGridAreas(sourceGridArea, targetGridArea);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
     public class MeteringPoint : AggregateRootBase
     {
         private readonly MeteringPointType _meteringPointType;
-        private readonly ExchangeDetails? _exchangeDetails;
+        private readonly ExchangeGridAreas? _exchangeGridAreas;
         private readonly GridAreaLinkId _gridAreaLinkId;
         private readonly EffectiveDate _effectiveDate;
         private MasterData _masterData;
@@ -66,7 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GsrnNumber gsrnNumber,
             GridAreaLinkId gridAreaLinkId,
             EffectiveDate effectiveDate,
-            ExchangeDetails exchangeDetails,
+            ExchangeGridAreas exchangeGridAreas,
             MasterData masterData)
         {
             Id = id;
@@ -74,7 +74,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             _meteringPointType = MeteringPointType.Exchange;
             _gridAreaLinkId = gridAreaLinkId;
             _effectiveDate = effectiveDate;
-            _exchangeDetails = exchangeDetails ?? throw new ArgumentNullException(nameof(exchangeDetails));
+            _exchangeGridAreas = exchangeGridAreas ?? throw new ArgumentNullException(nameof(exchangeGridAreas));
             _masterData = masterData;
 
             RaiseMeteringPointCreated();
@@ -105,17 +105,17 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GsrnNumber gsrnNumber,
             GridAreaLinkId gridAreaLinkId,
             EffectiveDate effectiveDate,
-            ExchangeDetails exchangeDetails,
+            ExchangeGridAreas exchangeGridAreas,
             MasterData masterData)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
             if (gsrnNumber == null) throw new ArgumentNullException(nameof(gsrnNumber));
             if (gridAreaLinkId == null) throw new ArgumentNullException(nameof(gridAreaLinkId));
             if (effectiveDate == null) throw new ArgumentNullException(nameof(effectiveDate));
-            if (exchangeDetails == null) throw new ArgumentNullException(nameof(exchangeDetails));
+            if (exchangeGridAreas == null) throw new ArgumentNullException(nameof(exchangeGridAreas));
             if (masterData == null) throw new ArgumentNullException(nameof(masterData));
 
-            return new MeteringPoint(id, gsrnNumber, gridAreaLinkId, effectiveDate, exchangeDetails, masterData);
+            return new MeteringPoint(id, gsrnNumber, gridAreaLinkId, effectiveDate, exchangeGridAreas, masterData);
         }
 
         public static MeteringPoint Create(MeteringPointId id, GsrnNumber gsrnNumber, MeteringPointType meteringPointType, GridAreaLinkId gridAreaLinkId, EffectiveDate effectiveDate, MasterData masterData)
@@ -365,8 +365,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 ConnectionState.PhysicalState.Name,
                 _masterData.ScheduledMeterReadingDate?.MonthAndDay,
                 _masterData.Capacity?.Kw,
-                _exchangeDetails?.SourceGridArea.Value,
-                _exchangeDetails?.TargetGridArea.Value);
+                _exchangeGridAreas?.SourceGridArea.Value,
+                _exchangeGridAreas?.TargetGridArea.Value);
 
             AddDomainEvent(@event);
         }

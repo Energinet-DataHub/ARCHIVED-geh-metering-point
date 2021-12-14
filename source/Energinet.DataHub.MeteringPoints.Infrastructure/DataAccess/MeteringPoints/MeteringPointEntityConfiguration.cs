@@ -193,7 +193,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     .HasColumnName("StartOfSupplyDate");
             });
 
-            builder.OwnsOne<ExchangeDetails>("_exchangeDetails", mapper =>
+            builder.OwnsOne<ExchangeGridAreas>("_exchangeGridAreas", mapper =>
             {
                 mapper.Property(x => x.SourceGridArea)
                     .HasColumnName("FromGrid")
