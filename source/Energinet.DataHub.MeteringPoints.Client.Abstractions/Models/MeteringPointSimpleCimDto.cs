@@ -21,5 +21,6 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
         Guid MeteringPointId,
         string GsrnNumber,
         ConnectionState ConnectionState,
+        MeteringPointType MeteringPointType,
         DateTime EffectiveDate);
 }
