@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
 
 namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
@@ -55,5 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
         DateTime? SupplyStart,
         ConnectionType? ConnectionType,
         DisconnectionType? DisconnectionType,
-        bool? ProductionObligation);
+        bool? ProductionObligation,
+        IEnumerable<MeteringPointSimpleCimDto>? ChildMeteringPoints,
+        MeteringPointSimpleCimDto? ParentMeteringPoint);
 }

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Xunit;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling.WebApi
@@ -26,6 +27,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling.WebApi
 
             databaseFixture.DatabaseManager.UpgradeDatabase();
             Environment.SetEnvironmentVariable("CONNECTIONSTRINGS:METERINGPOINT_DB_CONNECTION_STRING", databaseFixture.DatabaseManager.ConnectionString);
+
+            Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
         }
     }
 }
