@@ -13,42 +13,40 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text.Json.Serialization;
-using Energinet.DataHub.MeteringPoints.Domain.GridCompanies;
+using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridCompanies
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.Actors
 {
-    public class GridCompanyEntityConfiguration : IEntityTypeConfiguration<GridCompany>
+    public class ActorEntityConfiguration : IEntityTypeConfiguration<Actor>
     {
         private readonly IJsonSerializer _jsonSerializer;
 
-        public GridCompanyEntityConfiguration(IJsonSerializer jsonSerializer)
+        public ActorEntityConfiguration(IJsonSerializer jsonSerializer)
         {
             _jsonSerializer = jsonSerializer;
         }
 
-        public void Configure(EntityTypeBuilder<GridCompany> builder)
+        public void Configure(EntityTypeBuilder<Actor> builder)
         {
             if (builder == null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            builder.ToTable("GridCompany", "dbo");
+            builder.ToTable("Actor", "dbo");
 
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id)
                 .HasConversion(
                     toDbValue => toDbValue.Value,
-                    fromDbValue => new GridCompanyId(fromDbValue));
+                    fromDbValue => new ActorId(fromDbValue));
 
-            builder.Property(x => x.ActorId);
+            builder.Property(x => x.IdentificationNumber);
 
             builder.Property(x => x.ActorType)
                 .HasConversion(

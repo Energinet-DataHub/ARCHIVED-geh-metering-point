@@ -12,31 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.GridCompanies
+namespace Energinet.DataHub.MeteringPoints.Domain.Actors
 {
-    public class GridCompany
+    public class Actor
     {
-        public GridCompany(GridCompanyId gridCompanyId, ActorType actorType, string actorId, Collection<string> roles)
+        public Actor(ActorId actorId, ActorType actorType, string identificationNumber, Collection<string> roles)
         {
-            Id = gridCompanyId;
+            Id = actorId;
             ActorType = actorType;
-            ActorId = actorId;
+            IdentificationNumber = identificationNumber;
             Roles = roles;
         }
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind complex types in constructor
-        private GridCompany()
+        private Actor()
         {
         }
 #pragma warning restore 8618
 
-        public GridCompanyId Id { get; }
+        public ActorId Id { get; }
 
-        public string ActorId { get; }
+        public string IdentificationNumber { get; }
 
         public ActorType ActorType { get; }
 

@@ -1,12 +1,12 @@
-CREATE TABLE [dbo].[GridCompany]
+CREATE TABLE [dbo].[Actor]
 (
     [Id] UNIQUEIDENTIFIER NOT NULL,
     [RecordId] INT IDENTITY(1,1) NOT NULL,
-    [ActorId] nvarchar(50) NOT NULL,
+    [IdentificationNumber] nvarchar(50) NOT NULL,
     [ActorType] nvarchar(50) NOT NULL,
     [Roles] nvarchar(max) NOT NULL,
 
-    CONSTRAINT [PK_GridCompany] PRIMARY KEY NONCLUSTERED ([Id])
+    CONSTRAINT [PK_Actor] PRIMARY KEY NONCLUSTERED ([Id])
 )
 ALTER TABLE [dbo].[GridAreaLinks]
     DROP CONSTRAINT [FK_GridAreaLinks_GridAreas]
@@ -20,8 +20,8 @@ ALTER TABLE [dbo].[GridAreaLinks]
         FOREIGN KEY ([GridAreaId]) REFERENCES [GridAreas]([Id])
 
 ALTER TABLE [dbo].[GridAreas]
-    ADD [GridCompanyId] UNIQUEIDENTIFIER NOT NULL
+    ADD [ActorId] UNIQUEIDENTIFIER NOT NULL
 
 ALTER TABLE [dbo].[GridAreas]
-    ADD CONSTRAINT FK_GridAreas_GridCompany
-        FOREIGN KEY (GridCompanyId) REFERENCES [dbo].[GridCompany](Id)
+    ADD CONSTRAINT FK_GridAreas_Actor
+        FOREIGN KEY (ActorId) REFERENCES [dbo].[Actor](Id)

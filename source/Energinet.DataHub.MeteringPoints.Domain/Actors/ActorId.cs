@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.GridCompanies
+namespace Energinet.DataHub.MeteringPoints.Domain.Actors
 {
-    public class ActorType : EnumerationType
+    public class ActorId : ValueObject
     {
-        public static readonly ActorType GLN = new ActorType(0, nameof(GLN));
-        public static readonly ActorType EIK = new ActorType(1, nameof(EIK));
-
-        public ActorType(int id, string name)
-            : base(id, name)
+        public ActorId(Guid value)
         {
+            Value = value;
         }
+
+        public Guid Value { get; }
     }
 }
