@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Categories;
@@ -115,10 +116,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         }
     }
 
-    public class CoupledToParent : DomainEventBase
-    {
-    }
-
     public class ParentCouplingException : BusinessOperationException
     {
         public ParentCouplingException()
@@ -185,6 +182,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             {
                 throw new ParentCouplingException();
             }
+
+            _meteringPoint.SetParent(parent.Id);
         }
     }
 

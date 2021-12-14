@@ -36,6 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private readonly ExchangeDetails? _exchangeDetails;
         private readonly EffectiveDate _effectiveDate;
         private MasterData _masterData;
+        private MeteringPointId? _parentMeteringPoint;
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
         private MeteringPoint() { }
@@ -319,6 +320,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
             ConnectionState = ConnectionState.Connected(connectionDetails.EffectiveDate);
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
+        }
+
+        internal void SetParent(MeteringPointId? parentId)
+        {
+            if (parentId is not null)
+            {
+                _parentMeteringPoint = parentId;
+                AddDomainEvent(new CoupledToParent(Id.Value, parentId.Value));
+            }
         }
 
         private void ThrowIfClosedDown()
