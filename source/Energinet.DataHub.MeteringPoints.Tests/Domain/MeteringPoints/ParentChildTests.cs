@@ -63,9 +63,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         public async Task Only_metering_points_in_group_5_can_act_as_child_of_a_metering_point_in_group_2()
         {
             var parent = CreateMeteringPoint(MeteringPointType.Exchange);
-            var childMeteringPoint = CreateChildMeteringPoint(MeteringPointType.ElectricalHeating);
+            var childMeteringPoint = CreateChildMeteringPoint(MeteringPointType.Consumption);
 
-            AssertContainsValidationError<CannotActAsParent>(await childMeteringPoint.CanCoupleToAsync(parent));
+            AssertContainsValidationError<CannotActAsChild>(await childMeteringPoint.CanCoupleToAsync(parent));
             Assert.ThrowsAsync<ParentCouplingException>(() => childMeteringPoint.CoupleToAsync(parent));
         }
 
@@ -164,6 +164,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             {
                 new OnlySpecificGroupsCanActAsParentRule(parent),
                 new OnlySpecificGroupsCanActAsChildOfGroup1(parent, _meteringPoint),
+                new OnlySpecificGroupsCanActAsChildOfGroup2(parent, _meteringPoint),
             };
 
             errors.AddRange(rules.Where(rule => rule.IsBroken).Select(rule => rule.ValidationError).ToList());
@@ -194,6 +195,21 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             if (parent.MeteringPointType.MeteringPointGroup == 1)
             {
                 IsBroken = meteringPoint.MeteringPointType.MeteringPointGroup is not (3 or 4);
+            }
+        }
+
+        public bool IsBroken { get; }
+
+        public ValidationError ValidationError => new CannotActAsChild();
+    }
+
+    public class OnlySpecificGroupsCanActAsChildOfGroup2 : IBusinessRule
+    {
+        public OnlySpecificGroupsCanActAsChildOfGroup2(MeteringPoint parent, MeteringPoint meteringPoint)
+        {
+            if (parent.MeteringPointType.MeteringPointGroup == 2)
+            {
+                IsBroken = meteringPoint.MeteringPointType.MeteringPointGroup is not 5;
             }
         }
 
