@@ -12,18 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Extensions
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Events
 {
-    public static class WhenProviderExtensions
+    public class ConnectionTypeChanged : DomainEventBase
     {
-        public static DoProvider WhenMessageType(this ServiceBusListenerMock provider, string messageType)
+        public ConnectionTypeChanged(Guid meteringPointId, string connectionType)
         {
-            var parser = new MessageHub.Model.DataAvailable.DataAvailableNotificationParser();
-
-            return provider.When(message =>
-                parser.Parse(message.Body.ToArray()).MessageType.Value == messageType);
+            MeteringPointId = meteringPointId;
+            ConnectionType = connectionType;
         }
+
+        public Guid MeteringPointId { get; }
+
+        public string ConnectionType { get; }
     }
 }

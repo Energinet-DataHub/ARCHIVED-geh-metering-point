@@ -12,27 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
+using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
+using ConnectionState = System.Data.ConnectionState;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.ConsumptionMeteringPoints
 {
     [IntegrationTest]
     public class ChangeTests : TestHost
     {
+        private readonly ISystemDateTimeProvider _timeProvider;
+
         public ChangeTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
         {
+            _timeProvider = GetService<ISystemDateTimeProvider>();
         }
 
         [Fact]
@@ -186,6 +194,35 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
                     ScheduledMeterReadingDate = null,
                 };
             await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+        }
+
+        private async Task CreateConsumptionMeteringPointInNetSettlementGroup6()
+        {
+            var request = Scenarios.CreateConsumptionMeteringPointCommand()
+                with
+                {
+                    EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
+                    MeteringMethod = MeteringMethod.Virtual.Name,
+                    NetSettlementGroup = NetSettlementGroup.Six.Name,
+                    ConnectionType = ConnectionType.Installation.Name,
+                    ScheduledMeterReadingDate = "0101",
+                };
+            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+        }
+
+        private EffectiveDate CreateEffectiveDateAsOfToday()
+        {
+            var today = _timeProvider.Now().ToDateTimeUtc();
+            return EffectiveDate.Create(new DateTime(today.Year, today.Month, today.Day, 22, 0, 0));
+        }
+
+        private ChangeMasterDataRequest CreateChangeRequest()
+        {
+            return TestUtils.CreateRequest()
+                with
+                {
+                    EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
+                };
         }
     }
 }
