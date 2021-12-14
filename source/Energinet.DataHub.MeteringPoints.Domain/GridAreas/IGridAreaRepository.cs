@@ -13,9 +13,8 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 
-namespace Energinet.DataHub.MeteringPoints.Application.GridAreas
+namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 {
     /// <summary>
     /// Repository for grid areas.

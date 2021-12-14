@@ -12,16 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild.Exceptions;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild.Rules;
 using Xunit;
 using Xunit.Categories;
 
@@ -114,130 +113,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             _gridAreaRepository.Add(gridArea);
             return gridArea;
         }
-    }
-
-    public class ParentCouplingException : BusinessOperationException
-    {
-        public ParentCouplingException()
-        {
-        }
-
-        public ParentCouplingException(string? message)
-            : base(message)
-        {
-        }
-
-        public ParentCouplingException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
-
-        protected ParentCouplingException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
-    }
-
-    public class ChildMeteringPoint
-    {
-        private readonly MeteringPoint _meteringPoint;
-        private readonly IGridAreaRepository _gridAreaRepository;
-
-        public ChildMeteringPoint(MeteringPoint meteringPoint, IGridAreaRepository gridAreaRepository)
-        {
-            _meteringPoint = meteringPoint ?? throw new ArgumentNullException(nameof(meteringPoint));
-            _gridAreaRepository = gridAreaRepository ?? throw new ArgumentNullException(nameof(gridAreaRepository));
-        }
-
-        public async Task<BusinessRulesValidationResult> CanCoupleToAsync(MeteringPoint parent)
-        {
-            var errors = new List<ValidationError>();
-            if (await GridAreasMatchAsync(parent) == false)
-            {
-                errors.Add(new ParentAndChildGridAreasMustBeTheSame());
-            }
-
-            var rules = new List<IBusinessRule>()
-            {
-                new OnlySpecificGroupsCanActAsParentRule(parent),
-                new OnlySpecificGroupsCanActAsChildOfGroup1(parent, _meteringPoint),
-                new OnlySpecificGroupsCanActAsChildOfGroup2(parent, _meteringPoint),
-            };
-
-            errors.AddRange(rules.Where(rule => rule.IsBroken).Select(rule => rule.ValidationError).ToList());
-
-            return new BusinessRulesValidationResult(errors);
-        }
-
-        private async Task<bool> GridAreasMatchAsync(MeteringPoint parent)
-        {
-            var parentGridArea = await _gridAreaRepository.GetByLinkIdAsync(parent.GridAreaLinkId);
-            var childGridArea = await _gridAreaRepository.GetByLinkIdAsync(_meteringPoint.GridAreaLinkId);
-            return parentGridArea.Equals(childGridArea);
-        }
-
-        public async Task CoupleToAsync(MeteringPoint parent)
-        {
-            if ((await CanCoupleToAsync(parent)).Success == false)
-            {
-                throw new ParentCouplingException();
-            }
-
-            _meteringPoint.SetParent(parent.Id);
-        }
-    }
-
-    public class OnlySpecificGroupsCanActAsChildOfGroup1 : IBusinessRule
-    {
-        public OnlySpecificGroupsCanActAsChildOfGroup1(MeteringPoint parent, MeteringPoint meteringPoint)
-        {
-            if (parent.MeteringPointType.MeteringPointGroup == 1)
-            {
-                IsBroken = meteringPoint.MeteringPointType.MeteringPointGroup is not (3 or 4);
-            }
-        }
-
-        public bool IsBroken { get; }
-
-        public ValidationError ValidationError => new CannotActAsChild();
-    }
-
-    public class OnlySpecificGroupsCanActAsChildOfGroup2 : IBusinessRule
-    {
-        public OnlySpecificGroupsCanActAsChildOfGroup2(MeteringPoint parent, MeteringPoint meteringPoint)
-        {
-            if (parent.MeteringPointType.MeteringPointGroup == 2)
-            {
-                IsBroken = meteringPoint.MeteringPointType.MeteringPointGroup is not 5;
-            }
-        }
-
-        public bool IsBroken { get; }
-
-        public ValidationError ValidationError => new CannotActAsChild();
-    }
-
-    public class CannotActAsChild : ValidationError
-    {
-    }
-
-    public class OnlySpecificGroupsCanActAsParentRule : IBusinessRule
-    {
-        public OnlySpecificGroupsCanActAsParentRule(MeteringPoint parent)
-        {
-            IsBroken = parent.MeteringPointType.MeteringPointGroup is not (1 or 2);
-        }
-
-        public bool IsBroken { get; }
-        public ValidationError ValidationError => new CannotActAsParent();
-    }
-
-    public class ParentAndChildGridAreasMustBeTheSame : ValidationError
-    {
-    }
-
-    public class CannotActAsParent : ValidationError
-    {
     }
 
     public class GridAreaRepositoryStub : IGridAreaRepository
