@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.Actors
                     toDbValue => toDbValue.Value,
                     fromDbValue => new ActorId(fromDbValue));
 
-            builder.Property(x => x.IdentificationNumber);
+            builder.Property(x => x.IdentificationType);
 
             builder.Property(x => x.ActorType)
                 .HasConversion(

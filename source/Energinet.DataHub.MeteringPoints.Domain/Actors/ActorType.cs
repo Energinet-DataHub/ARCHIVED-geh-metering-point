@@ -19,7 +19,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Actors
     public class ActorType : EnumerationType
     {
         public static readonly ActorType GLN = new ActorType(0, nameof(GLN));
-        public static readonly ActorType EIK = new ActorType(1, nameof(EIK));
+        public static readonly ActorType EIC = new ActorType(1, nameof(EIC));
 
         public ActorType(int id, string name)
             : base(id, name)
