@@ -33,7 +33,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class MeteringPoint : AggregateRootBase
     {
-        private readonly MeteringPointType _meteringPointType;
         private readonly ExchangeDetails? _exchangeDetails;
         private readonly EffectiveDate _effectiveDate;
         private MasterData _masterData;
@@ -52,7 +51,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             Id = id;
             GsrnNumber = gsrnNumber;
-            _meteringPointType = meteringPointType;
+            MeteringPointType = meteringPointType;
             GridAreaLinkId = gridAreaLinkId;
             _effectiveDate = effectiveDate;
             _masterData = masterData;
@@ -70,7 +69,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             Id = id;
             GsrnNumber = gsrnNumber;
-            _meteringPointType = MeteringPointType.Exchange;
+            MeteringPointType = MeteringPointType.Exchange;
             GridAreaLinkId = gridAreaLinkId;
             _effectiveDate = effectiveDate;
             _exchangeDetails = exchangeDetails ?? throw new ArgumentNullException(nameof(exchangeDetails));
@@ -86,6 +85,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public Address Address => _masterData.Address;
 
         internal GridAreaLinkId GridAreaLinkId { get; }
+
+        internal MeteringPointType MeteringPointType { get; }
 
         internal MeteringConfiguration MeteringConfiguration => _masterData.MeteringConfiguration;
 
@@ -160,7 +161,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             if (newAddress.Equals(Address) == false)
             {
                 var builder =
-                    new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(_meteringPointType))
+                    new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType))
                         .WithNetSettlementGroup(_masterData.NetSettlementGroup?.Name)
                         .WithCapacity(_masterData.Capacity?.Kw)
                         .WithMeteringConfiguration(_masterData.MeteringConfiguration.Method.Name, _masterData.MeteringConfiguration.Meter.Value)
@@ -221,7 +222,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             }
 
             var builder =
-                new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(_meteringPointType))
+                new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType))
                     .WithNetSettlementGroup(_masterData.NetSettlementGroup?.Name)
                     .WithCapacity(_masterData.Capacity?.Kw)
                     .WithMeteringConfiguration(configuration.Method.Name, configuration.Meter.Value)
@@ -288,7 +289,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             if (energySupplierDetails == null) throw new ArgumentNullException(nameof(energySupplierDetails));
             if (EnergySupplierDetails?.StartOfSupply != null) return;
 
-            if (_meteringPointType.IsAccountingPoint == false)
+            if (MeteringPointType.IsAccountingPoint == false)
             {
                 throw new CannotAssignEnergySupplierExeception();
             }
@@ -301,7 +302,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             var rules = new Collection<IBusinessRule>
             {
-                new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, _meteringPointType, ConnectionState.PhysicalState),
+                new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, MeteringPointType, ConnectionState.PhysicalState),
                 new MustHaveEnergySupplierRule(GsrnNumber, connectionDetails, EnergySupplierDetails),
             };
 
@@ -332,7 +333,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private void RaiseMeteringPointCreated()
         {
             var @event = new Events.MeteringPointCreated(
-                _meteringPointType.Name,
+                MeteringPointType.Name,
                 Id.Value,
                 GsrnNumber.Value,
                 GridAreaLinkId.Value,

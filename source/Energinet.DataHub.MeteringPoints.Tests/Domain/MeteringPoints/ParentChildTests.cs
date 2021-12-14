@@ -86,7 +86,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             var child = CreateMeteringPoint(MeteringPointType.NetConsumption);
             var childMeteringPoint = new ChildMeteringPoint(child, _gridAreaRepository);
 
-            childMeteringPoint.CoupleToAsync(parent);
+            await childMeteringPoint.CoupleToAsync(parent);
 
             Assert.Contains(child.DomainEvents, e => e is CoupledToParent);
         }
@@ -161,7 +161,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 errors.Add(new ParentAndChildGridAreasMustBeTheSame());
             }
 
-            errors.Add(new CannotActAsParent());
+            var rules = new List<IBusinessRule>() { new OnlySpecificGroupsCanActAsParentRule(parent), };
+
+            errors.AddRange(rules.Where(rule => rule.IsBroken).Select(rule => rule.ValidationError).ToList());
 
             return new BusinessRulesValidationResult(errors);
         }
@@ -180,6 +182,17 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 throw new ParentCouplingException();
             }
         }
+    }
+
+    public class OnlySpecificGroupsCanActAsParentRule : IBusinessRule
+    {
+        public OnlySpecificGroupsCanActAsParentRule(MeteringPoint parent)
+        {
+            IsBroken = parent.MeteringPointType.MeteringPointGroup is not (1 or 2);
+        }
+
+        public bool IsBroken { get; }
+        public ValidationError ValidationError => new CannotActAsParent();
     }
 
     public class ParentAndChildGridAreasMustBeTheSame : ValidationError
