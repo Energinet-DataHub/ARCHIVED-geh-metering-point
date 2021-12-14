@@ -73,9 +73,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         public async Task Only_metering_points_in_group_3_and_4_can_act_as_child_of_a_metering_point_in_group_1()
         {
             var parent = CreateMeteringPoint(MeteringPointType.Production);
-            var childMeteringPoint = CreateChildMeteringPoint(MeteringPointType.InternalUse);
+            var childMeteringPoint = CreateChildMeteringPoint(MeteringPointType.Consumption);
 
-            AssertContainsValidationError<CannotActAsParent>(await childMeteringPoint.CanCoupleToAsync(parent));
+            AssertContainsValidationError<CannotActAsChild>(await childMeteringPoint.CanCoupleToAsync(parent));
             Assert.ThrowsAsync<ParentCouplingException>(() => childMeteringPoint.CoupleToAsync(parent));
         }
 
@@ -145,7 +145,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
     {
         private readonly MeteringPoint _meteringPoint;
         private readonly IGridAreaRepository _gridAreaRepository;
-        private readonly GridArea _parentGridArea = GridArea.Create(new GridAreaDetails(GridAreaName.Create("870"), GridAreaCode.Create("870"), PriceAreaCode.DK1, null));
 
         public ChildMeteringPoint(MeteringPoint meteringPoint, IGridAreaRepository gridAreaRepository)
         {
@@ -161,7 +160,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 errors.Add(new ParentAndChildGridAreasMustBeTheSame());
             }
 
-            var rules = new List<IBusinessRule>() { new OnlySpecificGroupsCanActAsParentRule(parent), };
+            var rules = new List<IBusinessRule>()
+            {
+                new OnlySpecificGroupsCanActAsParentRule(parent),
+                new OnlySpecificGroupsCanActAsChildOfGroup1(parent, _meteringPoint),
+            };
 
             errors.AddRange(rules.Where(rule => rule.IsBroken).Select(rule => rule.ValidationError).ToList());
 
@@ -182,6 +185,25 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 throw new ParentCouplingException();
             }
         }
+    }
+
+    public class OnlySpecificGroupsCanActAsChildOfGroup1 : IBusinessRule
+    {
+        public OnlySpecificGroupsCanActAsChildOfGroup1(MeteringPoint parent, MeteringPoint meteringPoint)
+        {
+            if (parent.MeteringPointType.MeteringPointGroup == 1)
+            {
+                IsBroken = meteringPoint.MeteringPointType.MeteringPointGroup is not (3 or 4);
+            }
+        }
+
+        public bool IsBroken { get; }
+
+        public ValidationError ValidationError => new CannotActAsChild();
+    }
+
+    public class CannotActAsChild : ValidationError
+    {
     }
 
     public class OnlySpecificGroupsCanActAsParentRule : IBusinessRule
