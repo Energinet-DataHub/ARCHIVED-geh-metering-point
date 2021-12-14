@@ -338,7 +338,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 MeteringConfiguration.Method.Name,
                 _masterData.ProductType.Name,
                 _masterData.ReadingOccurrence.Name,
-                _masterData.UnitType.Name,
+                _masterData.UnitType?.Name!,
                 _masterData.SettlementMethod?.Name!,
                 _masterData.NetSettlementGroup?.Name!,
                 _masterData.Address.City,
