@@ -31,47 +31,63 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
     public class ParentChildTests : TestBase
     {
         [Fact]
-        public void Parent_and_child_metering_points_must_reside_in_the_same_grid_area()
+        public async Task Parent_and_child_metering_points_must_reside_in_the_same_grid_area()
         {
             var parent = CreateMeteringPoint(MeteringPointType.Consumption);
             var childMeteringPoint = new ChildMeteringPoint(CreateMeteringPoint(MeteringPointType.ElectricalHeating));
 
-            AssertContainsValidationError<ParentAndChildGridAreasMustBeTheSame>(childMeteringPoint.CanCoupleTo(parent));
-            Assert.Throws<ParentCouplingException>(() => childMeteringPoint.CoupleTo(parent));
+            AssertContainsValidationError<ParentAndChildGridAreasMustBeTheSame>(await childMeteringPoint.CanCoupleToAsync(parent));
+            Assert.ThrowsAsync<ParentCouplingException>(() => childMeteringPoint.CoupleToAsync(parent));
         }
 
         [Fact]
-        public void Only_metering_points_in_group_1_or_2_can_act_as_parent()
+        public async Task Only_metering_points_in_group_1_or_2_can_act_as_parent()
         {
             var parent = CreateMeteringPoint(MeteringPointType.InternalUse);
             var childMeteringPoint = new ChildMeteringPoint(CreateMeteringPoint(MeteringPointType.ElectricalHeating));
 
-            AssertContainsValidationError<CannotActAsParent>(childMeteringPoint.CanCoupleTo(parent));
-            Assert.Throws<ParentCouplingException>(() => childMeteringPoint.CoupleTo(parent));
+            AssertContainsValidationError<CannotActAsParent>(await childMeteringPoint.CanCoupleToAsync(parent));
+            Assert.ThrowsAsync<ParentCouplingException>(() => childMeteringPoint.CoupleToAsync(parent));
         }
 
         [Fact]
-        public void Only_metering_points_in_group_5_can_act_as_child_of_a_metering_point_in_group_2()
+        public async Task Only_metering_points_in_group_5_can_act_as_child_of_a_metering_point_in_group_2()
         {
             var parent = CreateMeteringPoint(MeteringPointType.Exchange);
             var childMeteringPoint = new ChildMeteringPoint(CreateMeteringPoint(MeteringPointType.ElectricalHeating));
 
-            AssertContainsValidationError<CannotActAsParent>(childMeteringPoint.CanCoupleTo(parent));
-            Assert.Throws<ParentCouplingException>(() => childMeteringPoint.CoupleTo(parent));
+            AssertContainsValidationError<CannotActAsParent>(await childMeteringPoint.CanCoupleToAsync(parent));
+            Assert.ThrowsAsync<ParentCouplingException>(() => childMeteringPoint.CoupleToAsync(parent));
         }
 
         [Fact]
-        public void Only_metering_points_in_group_3_and_4_can_act_as_child_of_a_metering_point_in_group_1()
+        public async Task Only_metering_points_in_group_3_and_4_can_act_as_child_of_a_metering_point_in_group_1()
         {
             var parent = CreateMeteringPoint(MeteringPointType.Production);
             var childMeteringPoint = new ChildMeteringPoint(CreateMeteringPoint(MeteringPointType.InternalUse));
 
-            AssertContainsValidationError<CannotActAsParent>(childMeteringPoint.CanCoupleTo(parent));
-            Assert.Throws<ParentCouplingException>(() => childMeteringPoint.CoupleTo(parent));
+            AssertContainsValidationError<CannotActAsParent>(await childMeteringPoint.CanCoupleToAsync(parent));
+            Assert.ThrowsAsync<ParentCouplingException>(() => childMeteringPoint.CoupleToAsync(parent));
+        }
+
+        [Fact]
+        public async Task Coupling_is_successful()
+        {
+            var parent = CreateMeteringPoint(MeteringPointType.Consumption);
+            var child = CreateMeteringPoint(MeteringPointType.NetConsumption);
+            var childMeteringPoint = new ChildMeteringPoint(child);
+
+            childMeteringPoint.CoupleToAsync(parent);
+
+            Assert.Contains(child.DomainEvents, e => e is CoupledToParent);
         }
     }
 
-    public class ParentCouplingException : BusinessRuleException
+    public class CoupledToParent : DomainEventBase
+    {
+    }
+
+    public class ParentCouplingException : BusinessOperationException
     {
         public ParentCouplingException()
         {
@@ -99,18 +115,27 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         {
         }
 
-        public BusinessRulesValidationResult CanCoupleTo(MeteringPoint parent)
+        public Task<BusinessRulesValidationResult> CanCoupleToAsync(MeteringPoint parent)
         {
-            return new BusinessRulesValidationResult(new List<ValidationError>()
+            var errors = new List<ValidationError>();
+            if (GridAreaDoesNotMatch(parent))
             {
-                new ParentAndChildGridAreasMustBeTheSame(),
-                new CannotActAsParent(),
-            });
+                errors.Add(new ParentAndChildGridAreasMustBeTheSame());
+            }
+
+            errors.Add(new CannotActAsParent());
+
+            return Task.FromResult(new BusinessRulesValidationResult(errors));
         }
 
-        public void CoupleTo(MeteringPoint parent)
+        private bool GridAreaDoesNotMatch(MeteringPoint parent)
         {
-            if (CanCoupleTo(parent).Success == false)
+            return true;
+        }
+
+        public async Task CoupleToAsync(MeteringPoint parent)
+        {
+            if ((await CanCoupleToAsync(parent)).Success == false)
             {
                 throw new ParentCouplingException();
             }
