@@ -13,8 +13,12 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Text.Json.Serialization;
 using Energinet.DataHub.MeteringPoints.Domain.GridCompanies;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -22,6 +26,13 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridCompani
 {
     public class GridCompanyEntityConfiguration : IEntityTypeConfiguration<GridCompany>
     {
+        private readonly IJsonSerializer _jsonSerializer;
+
+        public GridCompanyEntityConfiguration(IJsonSerializer jsonSerializer)
+        {
+            _jsonSerializer = jsonSerializer;
+        }
+
         public void Configure(EntityTypeBuilder<GridCompany> builder)
         {
             if (builder == null)
@@ -43,6 +54,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridCompani
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<ActorType>(fromDbValue));
+
+            builder.Property(x => x.Roles)
+                .HasConversion(
+                    v => _jsonSerializer.Serialize(v),
+                    v => _jsonSerializer.Deserialize<Collection<string>>(v));
         }
     }
 }
