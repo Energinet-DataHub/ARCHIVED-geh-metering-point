@@ -127,6 +127,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
             _container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
 
+            Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
+
             // TODO: Probably not needed
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
