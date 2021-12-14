@@ -42,5 +42,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas
                 ? _meteringPointContext.GridAreas.SingleOrDefaultAsync(gridArea => gridArea.Code == GridAreaCode.Create(code))
                 : Task.FromResult<GridArea?>(null);
         }
+
+        public Task<GridArea?> GetByLinkIdAsync(GridAreaLinkId linkId)
+        {
+            return _meteringPointContext.GridAreas.SingleOrDefaultAsync(gridArea =>
+                gridArea.DefaultLink.Id.Equals(linkId));
+        }
     }
 }

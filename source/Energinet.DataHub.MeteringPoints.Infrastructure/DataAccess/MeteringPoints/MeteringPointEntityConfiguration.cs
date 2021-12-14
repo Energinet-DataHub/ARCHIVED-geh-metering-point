@@ -60,8 +60,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 mapper.Property(x => x.UnitType)
                     .HasColumnName("UnitType")
                     .HasConversion(
-                        toDbValue => toDbValue.Name,
-                        fromDbValue => EnumerationType.FromName<MeasurementUnitType>(fromDbValue));
+                        toDbValue => toDbValue! == null! ? null : toDbValue.Name,
+                        fromDbValue => string.IsNullOrEmpty(fromDbValue) ? null : EnumerationType.FromName<MeasurementUnitType>(fromDbValue));
                 mapper.Property(x => x.AssetType)
                     .HasColumnName("AssetType")
                     .HasConversion(

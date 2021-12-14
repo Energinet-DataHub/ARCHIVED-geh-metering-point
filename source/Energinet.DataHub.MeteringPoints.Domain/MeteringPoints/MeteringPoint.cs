@@ -35,7 +35,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
     {
         private readonly MeteringPointType _meteringPointType;
         private readonly ExchangeDetails? _exchangeDetails;
-        private readonly GridAreaLinkId _gridAreaLinkId;
         private readonly EffectiveDate _effectiveDate;
         private MasterData _masterData;
 
@@ -54,7 +53,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             Id = id;
             GsrnNumber = gsrnNumber;
             _meteringPointType = meteringPointType;
-            _gridAreaLinkId = gridAreaLinkId;
+            GridAreaLinkId = gridAreaLinkId;
             _effectiveDate = effectiveDate;
             _masterData = masterData;
 
@@ -72,7 +71,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             Id = id;
             GsrnNumber = gsrnNumber;
             _meteringPointType = MeteringPointType.Exchange;
-            _gridAreaLinkId = gridAreaLinkId;
+            GridAreaLinkId = gridAreaLinkId;
             _effectiveDate = effectiveDate;
             _exchangeDetails = exchangeDetails ?? throw new ArgumentNullException(nameof(exchangeDetails));
             _masterData = masterData;
@@ -85,6 +84,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public GsrnNumber GsrnNumber { get; }
 
         public Address Address => _masterData.Address;
+
+        internal GridAreaLinkId GridAreaLinkId { get; }
 
         internal MeteringConfiguration MeteringConfiguration => _masterData.MeteringConfiguration;
 
@@ -334,7 +335,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 _meteringPointType.Name,
                 Id.Value,
                 GsrnNumber.Value,
-                _gridAreaLinkId.Value,
+                GridAreaLinkId.Value,
                 MeteringConfiguration.Method.Name,
                 _masterData.ProductType.Name,
                 _masterData.ReadingOccurrence.Name,

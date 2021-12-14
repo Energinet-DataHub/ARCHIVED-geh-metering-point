@@ -33,5 +33,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.GridAreas
         /// </summary>
         /// <param name="code"></param>
         Task<GridArea?> GetByCodeAsync(string code);
+
+        /// <summary>
+        /// Find grid area by link id
+        /// </summary>
+        /// <param name="linkId"></param>
+        Task<GridArea?> GetByLinkIdAsync(GridAreaLinkId linkId);
     }
 }
