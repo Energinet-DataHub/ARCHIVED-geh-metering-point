@@ -190,7 +190,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             ConnectionState = ConnectionState.ClosedDown();
         }
 
-        private void ThrowIfClosedDown()
+        protected void ThrowIfClosedDown()
         {
             var checkResult = CanBeChanged();
             if (checkResult.Success == false)
