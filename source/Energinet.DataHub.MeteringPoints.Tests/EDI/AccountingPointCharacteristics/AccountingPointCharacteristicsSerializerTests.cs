@@ -25,6 +25,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common.Address;
 using Energinet.DataHub.MeteringPoints.Tests.Tooling;
 using FluentAssertions;
+using NodaTime;
 using NodaTime.Extensions;
 using Xunit.Categories;
 
@@ -139,7 +140,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.AccountingPointCharacterist
                 "pumpestation",
                 "8716867000115",
                 "KWH",
-                DateTimeOffset.Parse("2021-12-17T23:00:00Z", CultureInfo.InvariantCulture).UtcDateTime,
+                Instant.FromDateTimeUtc(new DateTime(2021, 12, 17, 23, 00, 00, DateTimeKind.Utc)),
                 "29746",
                 "0304",
                 "Strib",
