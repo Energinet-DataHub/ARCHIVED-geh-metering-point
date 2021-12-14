@@ -24,6 +24,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling;
+using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Confirm;
 using FluentAssertions;
 using MediatR;
 using Microsoft.ApplicationInsights;
@@ -48,7 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
             container.Register<IRequestHandler<BundleRequest<ConfirmMessage>, string>, ConfirmMessageBundleHandler>();
             container.Register<IJsonSerializer, JsonSerializer>();
             container.Register<IBundleCreator, BundleCreator>();
-            container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageSerializer>();
+            container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageXmlSerializer>();
             container.Register(() => new TelemetryClient(new TelemetryConfiguration()));
             container.Register<ILogger>(() => NullLogger.Instance, Lifestyle.Singleton);
             var sut = container.GetInstance<IBundleCreator>();

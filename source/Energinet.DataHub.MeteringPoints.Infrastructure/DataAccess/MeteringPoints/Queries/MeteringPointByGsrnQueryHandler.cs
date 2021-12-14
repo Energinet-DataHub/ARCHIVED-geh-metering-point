@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
@@ -88,7 +89,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 meteringPointDto.LocationDescription,
                 meteringPointDto.Product,
                 unitType,
-                meteringPointDto.EffectiveDate,
+                meteringPointDto.EffectiveDate.ToDateTimeUtc(),
                 meteringPointDto.MeterNumber,
                 meteringPointDto.StreetCode,
                 meteringPointDto.CitySubDivisionName,
@@ -107,7 +108,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 meteringPointDto.SupplyStart,
                 connectionType,
                 disconnectionType,
-                meteringPointDto.ProductionObligation);
+                meteringPointDto.ProductionObligation,
+                new List<MeteringPointSimpleCimDto>(),
+                null);
         }
 
         private static TEnum ConvertEnumerationTypeToEnum<TEnum, TEnumerationType>(string enumerationTypeName)
