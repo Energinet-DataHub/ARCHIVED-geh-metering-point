@@ -34,7 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task Parent_can_act_as_parent()
+        public async Task Cannot_act_as_parent()
         {
             var createInvalidParentCommand = Scenarios.CreateCommand(MeteringPointType.NetConsumption) with
             {
