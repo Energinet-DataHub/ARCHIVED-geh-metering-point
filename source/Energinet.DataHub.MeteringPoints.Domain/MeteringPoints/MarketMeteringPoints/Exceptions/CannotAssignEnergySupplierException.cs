@@ -17,23 +17,23 @@ using System.Runtime.Serialization;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Exceptions
 {
-    public class CannotAssignEnergySupplierExeception : BusinessRuleException
+    public class CannotAssignEnergySupplierException : BusinessRuleException
     {
-        public CannotAssignEnergySupplierExeception()
+        public CannotAssignEnergySupplierException()
         {
         }
 
-        public CannotAssignEnergySupplierExeception(string? message)
+        public CannotAssignEnergySupplierException(string? message)
             : base(message)
         {
         }
 
-        public CannotAssignEnergySupplierExeception(string message, Exception innerException)
+        public CannotAssignEnergySupplierException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
-        protected CannotAssignEnergySupplierExeception(SerializationInfo info, StreamingContext context)
+        protected CannotAssignEnergySupplierException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

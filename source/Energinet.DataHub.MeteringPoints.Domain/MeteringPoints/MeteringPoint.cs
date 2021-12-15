@@ -289,7 +289,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
             if (_meteringPointType.IsAccountingPoint == false)
             {
-                throw new CannotAssignEnergySupplierExeception();
+                throw new CannotAssignEnergySupplierException();
             }
 
             EnergySupplierDetails = energySupplierDetails;
