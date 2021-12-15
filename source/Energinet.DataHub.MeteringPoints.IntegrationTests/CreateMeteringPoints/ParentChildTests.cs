@@ -103,5 +103,24 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             AssertValidationError("D18");
         }
+
+        [Fact]
+        public async Task Cannot_couple_group_5_metering_points_to_group_1_metering_points()
+        {
+            var createInvalidParentCommand = Scenarios.CreateCommand(MeteringPointType.Production) with
+            {
+                GsrnNumber = "570851247381952311",
+            };
+            await SendCommandAsync(createInvalidParentCommand).ConfigureAwait(false);
+
+            var createChildCommand = Scenarios.CreateCommand(MeteringPointType.ExchangeReactiveEnergy)
+                with
+                {
+                    ParentRelatedMeteringPoint = createInvalidParentCommand.GsrnNumber,
+                };
+            await SendCommandAsync(createChildCommand).ConfigureAwait(false);
+
+            AssertValidationError("D18");
+        }
     }
 }
