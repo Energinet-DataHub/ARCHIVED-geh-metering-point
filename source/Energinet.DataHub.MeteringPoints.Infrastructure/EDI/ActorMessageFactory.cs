@@ -16,8 +16,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application.Common.Users;
+using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
@@ -39,8 +39,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
             string gsrnNumber,
             string effectiveDate,
             string transactionId,
-            ActorAccessor.Actor sender,
-            ActorAccessor.Actor receiver)
+            Actor sender,
+            Actor receiver)
         {
             if (sender == null) throw new ArgumentNullException(nameof(sender));
             if (receiver == null) throw new ArgumentNullException(nameof(receiver));
@@ -75,16 +75,17 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
         }
 
-        private static MarketRoleParticipant Map(ActorAccessor.Actor actor)
+        private static MarketRoleParticipant Map(Actor actor)
         {
-            var codingScheme = actor.IdType switch
+            var codingScheme = actor.IdentificationType.Name switch
             {
-                "GS1" => "A10",
-                "EIC" => "A01",
+                nameof(IdentificationType.GLN) => "A10",
+                nameof(IdentificationType.EIC) => "A01",
                 _ => throw new InvalidOperationException("Unknown actor identifier type"),
             };
 
-            return new MarketRoleParticipant(actor.Id, codingScheme, actor.Role);
+            // TODO: Which role?
+            return new MarketRoleParticipant(actor.IdentificationNumber, codingScheme, actor.Roles.First());
         }
     }
 }

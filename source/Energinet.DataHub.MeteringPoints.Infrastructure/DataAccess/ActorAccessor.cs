@@ -13,41 +13,37 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
+using Energinet.DataHub.MeteringPoints.Domain.Actors;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
 {
     public class ActorAccessor
     {
+        private readonly MeteringPointContext _context;
+
+        public ActorAccessor(MeteringPointContext context)
+        {
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+        }
+
 #pragma warning disable // TODO: Re-visit when real actor model exists
         public Actor GetDataHub()
         {
-            return new Actor("5790001330552", "GS1", "DDZ");
+            // TODO: Hardcoded
+            return new Actor(new ActorId(Guid.NewGuid()), IdentificationType.GLN, "5790001330552", new Collection<string> { "DDZ" });
         }
 
-        public Actor GetByIdentifier(string glnNumber, string type)
+        public Actor? GetByIdentifier(string number, string type)
         {
-            return new Actor(glnNumber, type, "Foo");
-        }
+            var actors = _context.Actors
+                .Where(actor =>
+                    actor.IdentificationNumber == number &&
+                    actor.IdentificationType == EnumerationType.FromName<IdentificationType>(type));
 
-        // TODO: Remove when real actor model exists
-        public class Actor
-        {
-            public Actor(string id, string idType, string role)
-            {
-                Id = id;
-                IdType = idType;
-                Role = role;
-            }
-
-            public string Id { get; set; }
-
-            public string IdType { get; set; }
-
-            public string Role { get; set; }
+            return actors.FirstOrDefault();
         }
     }
 }

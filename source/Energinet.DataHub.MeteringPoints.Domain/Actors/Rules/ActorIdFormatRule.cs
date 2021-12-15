@@ -30,20 +30,18 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Actors.Rules
 
         public ValidationError ValidationError => new ActorIdFormatRuleError();
 
-        private bool IsValid => IsValidEic() || IsValidGln();
+        private static bool IsValid => IsValidEic() || IsValidGln();
 
         private static bool IsValidEic()
         {
-            throw new NotImplementedException();
             // TODO: Should this be a standalone validation or should we create an EIC object instead?
-            return false;
+            throw new NotImplementedException();
         }
 
         private static bool IsValidGln()
         {
-            throw new NotImplementedException();
             // TODO: Should this be a standalone validation or use the GLN number object instead?
-            return false;
+            throw new NotImplementedException();
         }
     }
 }

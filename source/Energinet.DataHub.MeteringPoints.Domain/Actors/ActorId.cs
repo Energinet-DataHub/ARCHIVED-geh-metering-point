@@ -21,36 +21,21 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Actors
 {
     public class ActorId : ValueObject
     {
-        public ActorId(string value)
+        public ActorId(Guid value)
         {
             Value = value;
         }
 
-        public string Value { get; }
+        public Guid Value { get; }
 
-        public static ActorId Create(string? actorId)
+        public static ActorId Create(string id)
         {
-            if (string.IsNullOrWhiteSpace(actorId))
-            {
-                throw new ArgumentException($"'{nameof(actorId)}' cannot be empty", nameof(actorId));
-            }
-
-            var result = CheckRules(actorId);
-            if (!result.Success)
-            {
-                throw new InvalidOperationException("Invalid Actor Id");
-            }
-
-            return new ActorId(actorId);
+            return new ActorId(Guid.Parse(id));
         }
 
-        public static BusinessRulesValidationResult CheckRules(string? actorId)
+        public static ActorId Create()
         {
-            return new BusinessRulesValidationResult(new List<IBusinessRule>()
-            {
-                // TODO: Should this use its own format rule or should we use a GLN / EIC rule based on what format the string has?
-                new ActorIdFormatRule(actorId),
-            });
+            return new ActorId(Guid.NewGuid());
         }
     }
 }

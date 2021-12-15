@@ -113,7 +113,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
         [Fact]
         public async Task Grid_operator_is_the_owner_of_the_metering_point()
         {
-            SetGridOperatorAsAuthenticatedUser("This_is_not_the_owner_of_this_metering_point");
+            SetGridOperatorAsAuthenticatedUser("820000000140x"); // This is not the owner of this metering point
             await CreateMeteringPointAsync().ConfigureAwait(false);
 
             await InvokeBusinessProcessAsync(TestUtils.CreateRequest()).ConfigureAwait(false);

@@ -61,7 +61,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
                 .Replace("{{transactionId}}", "1", StringComparison.OrdinalIgnoreCase)
                 .Replace("{{gsrn}}", "571313140733089609", StringComparison.OrdinalIgnoreCase);
             using var request = new HttpRequestMessage(HttpMethod.Post, "api/MeteringPoint");
-            request.Headers.Add("gln", "8200000009917");
+            request.Headers.Add("gln", "8200000001409");
             request.Content = new StringContent(xml, Encoding.UTF8, "application/xml");
 
             // Act
