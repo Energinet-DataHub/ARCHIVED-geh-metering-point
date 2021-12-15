@@ -16,12 +16,12 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.Actors
 {
-    public class ActorType : EnumerationType
+    public class IdentificationType : EnumerationType
     {
-        public static readonly ActorType GLN = new ActorType(0, nameof(GLN));
-        public static readonly ActorType EIC = new ActorType(1, nameof(EIC));
+        public static readonly IdentificationType GLN = new IdentificationType(0, nameof(GLN));
+        public static readonly IdentificationType EIC = new IdentificationType(1, nameof(EIC));
 
-        public ActorType(int id, string name)
+        public IdentificationType(int id, string name)
             : base(id, name)
         {
         }

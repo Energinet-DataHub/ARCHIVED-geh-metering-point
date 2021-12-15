@@ -18,11 +18,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Actors
 {
     public class Actor
     {
-        public Actor(ActorId actorId, ActorType actorType, string identificationType, Collection<string> roles)
+        public Actor(ActorId actorId, IdentificationType identificationType, string identificationNumber, Collection<string> roles)
         {
             Id = actorId;
-            ActorType = actorType;
             IdentificationType = identificationType;
+            IdentificationNumber = identificationNumber;
             Roles = roles;
         }
 
@@ -34,9 +34,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Actors
 
         public ActorId Id { get; }
 
-        public string IdentificationType { get; }
+        public string IdentificationNumber { get; }
 
-        public ActorType ActorType { get; }
+        public IdentificationType IdentificationType { get; }
 
         public Collection<string> Roles { get; }
     }

@@ -38,12 +38,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.Actors
                     toDbValue => toDbValue.Value,
                     fromDbValue => new ActorId(fromDbValue));
 
-            builder.Property(x => x.IdentificationType);
+            builder.Property(x => x.IdentificationNumber);
 
-            builder.Property(x => x.ActorType)
+            builder.Property(x => x.IdentificationType)
                 .HasConversion(
                     toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<ActorType>(fromDbValue));
+                    fromDbValue => EnumerationType.FromName<IdentificationType>(fromDbValue));
 
             builder.Property(x => x.Roles)
                 .HasConversion(
