@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Categories;
 
@@ -121,6 +124,29 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(createChildCommand).ConfigureAwait(false);
 
             AssertValidationError("D18");
+        }
+
+        [Fact]
+        public async Task Child_is_coupled_to_parent()
+        {
+            var createParentCommand = Scenarios.CreateCommand(MeteringPointType.Production) with
+            {
+                GsrnNumber = "570851247381952311",
+            };
+            await SendCommandAsync(createParentCommand).ConfigureAwait(false);
+
+            var createChildCommand = Scenarios.CreateCommand(MeteringPointType.ElectricalHeating)
+                with
+                {
+                    ParentRelatedMeteringPoint = createParentCommand.GsrnNumber,
+                };
+            await SendCommandAsync(createChildCommand).ConfigureAwait(false);
+
+            var context = GetService<MeteringPointContext>();
+            var found = await context.MeteringPoints.FromSqlInterpolated($"SELECT * FROM [dbo].[MeteringPoints] WHERE ParentRelatedMeteringPoint IS NOT NULL")
+                .SingleOrDefaultAsync(x => x.GsrnNumber.Equals(GsrnNumber.Create(createChildCommand.GsrnNumber)))
+                .ConfigureAwait(false);
+            Assert.NotNull(found);
         }
     }
 }

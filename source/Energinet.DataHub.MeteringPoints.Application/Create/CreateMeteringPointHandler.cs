@@ -164,8 +164,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 return Failure(request, new ParentMeteringPointWasNotFound());
             }
 
-            var parentChildValidation = await childMeteringPoint.CanCoupleToAsync(parentMeteringPoint!).ConfigureAwait(false);
-            return parentChildValidation.Success == false ? Failure(request, parentChildValidation.Errors.ToArray()) : BusinessProcessResult.Ok(request.TransactionId);
+            var parentChildValidation = await childMeteringPoint.CanCoupleToAsync(parentMeteringPoint).ConfigureAwait(false);
+            if (parentChildValidation.Success == false)
+                return Failure(request, parentChildValidation.Errors.ToArray());
+
+            await childMeteringPoint.CoupleToAsync(parentMeteringPoint).ConfigureAwait(false);
+            return BusinessProcessResult.Ok(request.TransactionId);
         }
 
         private async Task<BusinessProcessResult> CreateExchangeMeteringPointAsync(CreateMeteringPoint request, GridArea gridArea, MasterData masterData)
