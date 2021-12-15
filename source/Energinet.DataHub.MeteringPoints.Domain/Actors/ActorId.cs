@@ -13,17 +13,44 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using Energinet.DataHub.MeteringPoints.Domain.Actors.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.Actors
 {
     public class ActorId : ValueObject
     {
-        public ActorId(Guid value)
+        public ActorId(string value)
         {
             Value = value;
         }
 
-        public Guid Value { get; }
+        public string Value { get; }
+
+        public static ActorId Create(string? actorId)
+        {
+            if (string.IsNullOrWhiteSpace(actorId))
+            {
+                throw new ArgumentException($"'{nameof(actorId)}' cannot be empty", nameof(actorId));
+            }
+
+            var result = CheckRules(actorId);
+            if (!result.Success)
+            {
+                throw new InvalidOperationException("Invalid Actor Id");
+            }
+
+            return new ActorId(actorId);
+        }
+
+        public static BusinessRulesValidationResult CheckRules(string? actorId)
+        {
+            return new BusinessRulesValidationResult(new List<IBusinessRule>()
+            {
+                // TODO: Should this use its own format rule or should we use a GLN / EIC rule based on what format the string has?
+                new ActorIdFormatRule(actorId),
+            });
+        }
     }
 }
