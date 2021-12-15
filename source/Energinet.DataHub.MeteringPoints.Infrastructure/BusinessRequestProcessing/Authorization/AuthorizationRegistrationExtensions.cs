@@ -17,10 +17,7 @@ using Energinet.DataHub.MeteringPoints.Application.Authorization;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
-using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
-using Energinet.DataHub.MeteringPoints.Application.Create.Exchange;
-using Energinet.DataHub.MeteringPoints.Application.Create.Production;
-using Energinet.DataHub.MeteringPoints.Application.Create.Special;
+using Energinet.DataHub.MeteringPoints.Application.Create;
 using SimpleInjector;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Authorization
@@ -31,11 +28,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcess
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
             container.Register<IAuthorizer<ChangeMasterDataRequest>, Authorizer>();
-            container.Register<IAuthorizer<CreateConsumptionMeteringPoint>, NullAuthorizer<CreateConsumptionMeteringPoint>>();
-            container.Register<IAuthorizer<CreateProductionMeteringPoint>, NullAuthorizer<CreateProductionMeteringPoint>>();
-            container.Register<IAuthorizer<CreateExchangeMeteringPoint>, NullAuthorizer<CreateExchangeMeteringPoint>>();
+            container.Register<IAuthorizer<CreateMeteringPoint>, NullAuthorizer<CreateMeteringPoint>>();
             container.Register<IAuthorizer<ConnectMeteringPoint>, NullAuthorizer<ConnectMeteringPoint>>();
-            container.Register<IAuthorizer<CreateSpecialMeteringPoint>, NullAuthorizer<CreateSpecialMeteringPoint>>();
         }
     }
 }

@@ -16,13 +16,11 @@ using System;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Special;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 
@@ -37,84 +35,92 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             Assert.Equal(errorExpected, hasError);
         }
 
-        protected static ConsumptionMeteringPointDetails CreateConsumptionDetails()
+        protected static MeteringPoint CreateMeteringPoint(MeteringPointType type, IMasterDataBuilder? masterDataBuilder = null)
         {
-            var address = CreateAddress();
-
-            return new ConsumptionMeteringPointDetails(
-                SettlementMethod.Flex,
-                null,
-                AssetType.GasTurbine,
-                Capacity.Create(SampleData.Capacity),
+            var builder = masterDataBuilder ?? MasterDataBuilder(type);
+            return MeteringPoint.Create(
                 MeteringPointId.New(),
                 GsrnNumber.Create(SampleData.GsrnNumber),
-                address,
+                type,
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
-                GsrnNumber.Create(SampleData.PowerPlant),
-                ReadingOccurrence.Hourly,
-                PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
                 EffectiveDate.Create(SampleData.EffectiveDate),
-                NetSettlementGroup.One,
-                DisconnectionType.Manual,
-                ConnectionType.Installation,
-                MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()));
+                builder.Build());
         }
 
-        protected static SpecialMeteringPointDetails CreateSpecialDetails()
+        protected static IMasterDataBuilder MasterDataBuilder(MeteringPointType meteringPointType)
         {
-            var address = CreateAddress();
+            var builder = new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(meteringPointType))
+                .WithNetSettlementGroup(NetSettlementGroup.One.Name)
+                .WithSettlementMethod(SettlementMethod.Flex.Name)
+                .WithScheduledMeterReadingDate("0101")
+                .WithCapacity(1)
+                .WithAddress(
+                    SampleData.StreetName,
+                    SampleData.StreetCode,
+                    string.Empty,
+                    SampleData.CityName,
+                    string.Empty,
+                    SampleData.PostCode,
+                    CountryCode.DK,
+                    string.Empty,
+                    string.Empty,
+                    default,
+                    isActual: true,
+                    geoInfoReference: Guid.NewGuid(),
+                    null)
+                .WithAssetType(AssetType.GasTurbine.Name)
+                .WithPowerPlant(SampleData.PowerPlant)
+                .WithReadingPeriodicity(ReadingOccurrence.Hourly.Name)
+                .WithPowerLimit(0, 0)
+                .EffectiveOn(SampleData.EffectiveDate)
+                .WithDisconnectionType(DisconnectionType.Manual.Name)
+                .WithConnectionType(ConnectionType.Installation.Name)
+                .WithMeteringConfiguration(MeteringMethod.Virtual.Name, string.Empty);
 
-            return new SpecialMeteringPointDetails(
-                MeteringPointId.New(),
-                MeteringPointType.VEProduction,
-                GsrnNumber.Create(SampleData.GsrnNumber),
-                address,
-                new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
-                ReadingOccurrence.Hourly,
-                PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
-                EffectiveDate.Create(SampleData.EffectiveDate),
-                GsrnNumber.Create(SampleData.PowerPlant),
-                Capacity.Create(SampleData.Capacity),
-                AssetType.GasTurbine,
-                MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()));
+            return builder;
         }
 
-        protected static ProductionMeteringPointDetails CreateProductionDetails()
+        protected static IMasterDataBuilder MasterDataBuilderForSpecial()
         {
-            var address = CreateAddress();
-
-            return new ProductionMeteringPointDetails(
-                MeteringPointId.New(),
-                GsrnNumber.Create(SampleData.GsrnNumber),
-                address,
-                new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
-                GsrnNumber.Create(SampleData.PowerPlant),
-                ReadingOccurrence.Hourly,
-                PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
-                EffectiveDate.Create(SampleData.EffectiveDate),
-                NetSettlementGroup.Six,
-                DisconnectionType.Manual,
-                ConnectionType.Installation,
-                AssetType.GasTurbine,
-                Capacity.Create(SampleData.Capacity),
-                MeteringConfiguration.Create(MeteringMethod.Physical, MeterId.Create(SampleData.MeterNumber)));
+            return MasterDataBuilder(MeteringPointType.VEProduction);
         }
 
-        protected static ExchangeMeteringPointDetails CreateExchangeDetails()
+        protected static IMasterDataBuilder MasterDataBuilderForProduction()
         {
-            var address = CreateAddress();
+            var builder = new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Production))
+                .WithNetSettlementGroup(NetSettlementGroup.One.Name)
+                .WithSettlementMethod(SettlementMethod.Flex.Name)
+                .WithScheduledMeterReadingDate("0101")
+                .WithCapacity(1)
+                .WithAddress(
+                    SampleData.StreetName,
+                    SampleData.StreetCode,
+                    string.Empty,
+                    SampleData.CityName,
+                    string.Empty,
+                    SampleData.PostCode,
+                    CountryCode.DK,
+                    string.Empty,
+                    string.Empty,
+                    default,
+                    isActual: true,
+                    geoInfoReference: Guid.NewGuid(),
+                    null)
+                .WithAssetType(AssetType.GasTurbine.Name)
+                .WithPowerPlant(SampleData.PowerPlant)
+                .WithReadingPeriodicity(ReadingOccurrence.Hourly.Name)
+                .WithPowerLimit(0, 0)
+                .EffectiveOn(SampleData.EffectiveDate)
+                .WithDisconnectionType(DisconnectionType.Manual.Name)
+                .WithConnectionType(ConnectionType.Installation.Name)
+                .WithMeteringConfiguration(MeteringMethod.Physical.Name, "1");
 
-            return new ExchangeMeteringPointDetails(
-                MeteringPointId.New(),
-                GsrnNumber.Create(SampleData.GsrnNumber),
-                address,
-                new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
-                ReadingOccurrence.Hourly,
-                PowerLimit.Create(SampleData.MaximumPower, SampleData.MaximumCurrent),
-                EffectiveDate.Create(SampleData.EffectiveDate),
-                GridAreaLinkId.New(),
-                GridAreaLinkId.New(),
-                MeteringConfiguration.Create(MeteringMethod.Physical, MeterId.Create(SampleData.MeterNumber)));
+            return builder;
+        }
+
+        protected static IMasterDataBuilder MasterDataBuilderForExchange()
+        {
+            return MasterDataBuilder(MeteringPointType.Exchange);
         }
 
         protected static Address CreateAddress()

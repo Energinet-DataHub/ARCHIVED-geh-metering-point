@@ -26,14 +26,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
     public class SetEnergySupplierDetailsHandler : ICommandHandler<SetEnergySupplierInfo>
     {
-        private readonly IMarketMeteringPointRepository _marketMeteringPointRepository;
+        private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
 
         public SetEnergySupplierDetailsHandler(
-            IMarketMeteringPointRepository meteringPointRepository,
+            IMeteringPointRepository meteringPointRepository,
             ISystemDateTimeProvider systemDateTimeProvider)
         {
-            _marketMeteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
+            _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _systemDateTimeProvider = systemDateTimeProvider;
         }
 
@@ -42,7 +42,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var meteringPoint =
-                await _marketMeteringPointRepository.GetByGSRNAsync(GsrnNumber.Create(request.MeteringPointGsrn)).ConfigureAwait(false);
+                await _meteringPointRepository.GetByGsrnNumberAsync(GsrnNumber.Create(request.MeteringPointGsrn)).ConfigureAwait(false);
+
+            if (meteringPoint is null)
+            {
+                throw new BusinessOperationException($"Metering point ({request.MeteringPointGsrn}) not found.");
+            }
 
             meteringPoint.SetEnergySupplierDetails(EnergySupplierDetails.Create(request.StartOfSupply));
             return Unit.Value;

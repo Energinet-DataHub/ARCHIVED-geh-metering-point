@@ -13,13 +13,13 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class NetSettlementGroupMandatoryErrorConverter : ErrorConverter<NetSettlementGroupMandatoryValidationError>
+    public class NetSettlementGroupMandatoryErrorConverter : ErrorConverter<NetSettlementGroupIsRequired>
     {
-        protected override ErrorMessage Convert(NetSettlementGroupMandatoryValidationError validationError)
+        protected override ErrorMessage Convert(NetSettlementGroupIsRequired validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 

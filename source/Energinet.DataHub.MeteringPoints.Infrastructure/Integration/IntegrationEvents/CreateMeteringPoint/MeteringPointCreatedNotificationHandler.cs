@@ -15,12 +15,13 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint
 {
     public class MeteringPointCreatedNotificationHandler
-        : IntegrationEventPublisher<Domain.MeteringPoints.MeteringPointCreated>
+        : IntegrationEventPublisher<MeteringPointCreated>
     {
         public MeteringPointCreatedNotificationHandler(IOutbox outbox, IOutboxMessageFactory outboxMessageFactory)
             : base(outbox, outboxMessageFactory)
@@ -28,23 +29,23 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         }
 
         public override Task Handle(
-            Domain.MeteringPoints.MeteringPointCreated notification,
+            MeteringPointCreated notification,
             CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
             var message = new MeteringPointCreatedEventMessage(
-                notification.GsrnNumber.Value,
-                notification.MeteringPointType.Name,
-                notification.GridAreaLinkId.Value.ToString(),
-                notification.SettlementMethod?.Name ?? string.Empty,
-                notification.MeteringMethod.Name,
-                notification.PhysicalState.Name,
-                notification.ReadingOccurrence.Name,
-                notification.NetSettlementGroup?.Name ?? string.Empty,
-                notification.ToGridAreaLinkId == null ? string.Empty : notification.ToGridAreaLinkId.Value.ToString(),
-                notification.FromGridAreaLinkId == null ? string.Empty : notification.FromGridAreaLinkId.Value.ToString(),
-                notification.ProductType.Name,
-                notification.MeasurementUnitType.Name,
+                notification.GsrnNumber,
+                notification.MeteringPointType,
+                notification.GridAreaLinkId.ToString(),
+                notification.SettlementMethod,
+                notification.MeteringPointSubType,
+                notification.PhysicalState,
+                notification.ReadingOccurrence,
+                notification.NetSettlementGroup,
+                notification.TargetGridAreaLinkId == null ? string.Empty : notification.TargetGridAreaLinkId.Value.ToString(),
+                notification.SourceGridAreaLinkId == null ? string.Empty : notification.SourceGridAreaLinkId.Value.ToString(),
+                notification.ProductType,
+                notification.UnitType,
                 string.Empty,
                 notification.OccurredOn.ToString());
 

@@ -15,8 +15,6 @@
 using System;
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
@@ -24,10 +22,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
     public class MasterDataValueUpdater
     {
         private readonly MasterDataDetails _masterDataDetails;
-        private readonly ConsumptionMeteringPoint _targetMeteringPoint;
+        private readonly MeteringPoint _targetMeteringPoint;
         private readonly List<ValidationError> _errors = new();
 
-        public MasterDataValueUpdater(MasterDataDetails masterDataDetails, ConsumptionMeteringPoint targetMeteringPoint)
+        public MasterDataValueUpdater(MasterDataDetails masterDataDetails, MeteringPoint targetMeteringPoint)
         {
             _masterDataDetails = masterDataDetails ?? throw new ArgumentNullException(nameof(masterDataDetails));
             _targetMeteringPoint = targetMeteringPoint ?? throw new ArgumentNullException(nameof(targetMeteringPoint));
@@ -65,7 +63,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 return;
             }
 
-            _targetMeteringPoint.SetConnectionType(_masterDataDetails.ConnectionType);
+            //TODO: Fix in update master data story
+            //_targetMeteringPoint.SetConnectionType(_masterDataDetails.ConnectionType);
         }
 
         private void CheckIfValuesAreApplicable()
@@ -77,7 +76,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
 
             if (_masterDataDetails.ConnectionType is not null)
             {
-                _errors.AddRange(_targetMeteringPoint.CanChangeConnectionType(_masterDataDetails.ConnectionType).Errors);
+                //_errors.AddRange(_targetMeteringPoint.CanChangeConnectionType(_masterDataDetails.ConnectionType).Errors);
             }
         }
     }

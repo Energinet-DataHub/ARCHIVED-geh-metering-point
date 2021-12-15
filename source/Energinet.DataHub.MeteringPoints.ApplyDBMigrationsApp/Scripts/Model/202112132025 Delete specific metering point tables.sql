@@ -1,0 +1,6 @@
+DROP TABLE ExchangeMeteringPoints
+GO
+DROP TABLE ProductionMeteringPoints
+GO
+DROP TABLE MarketMeteringPoints
+GO

@@ -82,11 +82,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
             return BusinessProcessResult.Ok(request.TransactionId);
         }
 
-        private async Task<ConsumptionMeteringPoint?> FetchTargetMeteringPointAsync(ChangeMasterDataRequest request)
+        private async Task<MeteringPoint?> FetchTargetMeteringPointAsync(ChangeMasterDataRequest request)
         {
             return await _meteringPointRepository
                 .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
-                .ConfigureAwait(false) as ConsumptionMeteringPoint;
+                .ConfigureAwait(false);
         }
 
         private Task<BusinessRulesValidationResult> CheckPoliciesAsync(MasterDataDetails masterDataDetails)

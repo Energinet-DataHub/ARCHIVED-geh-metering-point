@@ -19,50 +19,16 @@ using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Categories;
+using MeteringPointCreated = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events.MeteringPointCreated;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumption
 {
     [UnitTest]
     public class CreationTests : TestBase
     {
-        [Theory]
-        [InlineData("Zero", "Physical", false)]
-        [InlineData("One", "Physical", true)]
-        [InlineData("One", "Virtual", false)]
-        [InlineData("One", "Calculated", false)]
-        [InlineData("Two", "Physical", true)]
-        [InlineData("Two", "Virtual", false)]
-        [InlineData("Two", "Calculated", false)]
-        [InlineData("Three", "Physical", true)]
-        [InlineData("Three", "Virtual", false)]
-        [InlineData("Three", "Calculated", false)]
-        [InlineData("Six", "Physical", true)]
-        [InlineData("Six", "Virtual", false)]
-        [InlineData("Six", "Calculated", false)]
-        [InlineData("NinetyNine", "Physical", false)]
-        public void Metering_method_must_be_virtual_or_calculated_when_net_settlement_group_is_not_0_or_99(string netSettlementGroup, string meteringMethod, bool expectError)
-        {
-            var method = EnumerationType.FromName<MeteringMethod>(meteringMethod);
-            var meter = method == MeteringMethod.Physical ? MeterId.Create("Fake") : MeterId.Empty();
-            var details = CreateConsumptionDetails()
-                with
-                {
-                    NetSettlementGroup = EnumerationType.FromName<NetSettlementGroup>(netSettlementGroup),
-                    MeteringConfiguration = MeteringConfiguration.Create(method, meter),
-                };
-
-            var result = ConsumptionMeteringPoint.CanCreate(details);
-
-            AssertError<MeteringMethodDoesNotMatchNetSettlementGroupRuleError>(result, expectError);
-        }
-
         [Fact]
         public void Should_succeed()
         {
@@ -96,23 +62,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             var scheduledMeterReadingDate = ScheduledMeterReadingDate.Create("0101");
             var capacity = Capacity.Create(SampleData.Capacity);
 
-            var consumptionMeteringPointDetails = CreateConsumptionDetails()
-                with
-                {
-                    Id = meteringPointId,
-                    Address = address,
-                    GridAreaLinkId = gridAreaLinkId,
-                    PowerLimit = powerLimit,
-                    DisconnectionType = disconnectionType,
-                    ConnectionType = null,
-                    ScheduledMeterReadingDate = null,
-                    Capacity = capacity,
-                    NetSettlementGroup = netSettlementGroup,
-                };
+            var masterData = MasterDataBuilder(MeteringPointType.Consumption)
+                .WithCapacity(capacity.Kw)
+                .WithAddress(address.StreetName, address.StreetCode, address.BuildingNumber, address.City, address.CitySubDivision, address.PostCode, address.CountryCode, address.Floor, address.Room, address.MunicipalityCode, address.IsActual, address.GeoInfoReference, address.LocationDescription)
+                .WithNetSettlementGroup(netSettlementGroup.Name)
+                .Build();
+            var meteringPoint = MeteringPoint.Create(meteringPointId, meteringPointGsrn, MeteringPointType.Consumption, gridAreaLinkId, effectiveDate, masterData);
 
-            var meteringPoint = ConsumptionMeteringPoint.Create(consumptionMeteringPointDetails);
-
-            var createdEvent = meteringPoint.DomainEvents.First(e => e is ConsumptionMeteringPointCreated) as ConsumptionMeteringPointCreated;
+            var createdEvent = meteringPoint.DomainEvents.First(e => e is MeteringPointCreated) as MeteringPointCreated;
             Assert.Equal(address.City, createdEvent!.City);
             Assert.Equal(address.Floor, createdEvent.Floor);
             Assert.Equal(address.Room, createdEvent.Room);
@@ -129,7 +86,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(meteringPointGsrn.Value, createdEvent.GsrnNumber);
             Assert.Equal(meteringMethod.Name, createdEvent.MeteringPointSubType);
             Assert.Equal(gridAreaLinkId.Value, createdEvent.GridAreaLinkId);
-            Assert.Equal(consumptionMeteringPointDetails.NetSettlementGroup.Name, createdEvent.NetSettlementGroup);
+            Assert.Equal(masterData.NetSettlementGroup?.Name, createdEvent.NetSettlementGroup);
             Assert.Equal(powerPlantGsrn.Value, createdEvent.PowerPlantGsrnNumber);
             Assert.Equal(address.LocationDescription, createdEvent.LocationDescription);
             Assert.Equal(measurementUnitType.Name, createdEvent.UnitType);
@@ -141,214 +98,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             Assert.Equal(disconnectionType.Name, createdEvent.DisconnectionType);
             Assert.Equal(assetType.Name, createdEvent.AssetType);
             Assert.Equal(capacity.Kw, createdEvent.Capacity);
-        }
-
-        [Fact]
-        public void Day_of_scheduled_meter_reading_date_must_be_01_when_net_settlement_group_is_6()
-        {
-            var details = CreateConsumptionDetails()
-                with
-                {
-                    ScheduledMeterReadingDate = ScheduledMeterReadingDate.Create("0512"),
-                    NetSettlementGroup = NetSettlementGroup.Six,
-                };
-
-            var checkResult = ConsumptionMeteringPoint.CanCreate(details);
-
-            AssertContainsValidationError<InvalidScheduledMeterReadingDateNetSettlementGroupRuleError>(checkResult);
-        }
-
-        [Fact]
-        public void Scheduled_meter_reading_date_is_not_allowed_for_other_than_net_settlement_group_6()
-        {
-            var details = CreateConsumptionDetails()
-                with
-                {
-                    ScheduledMeterReadingDate = ScheduledMeterReadingDate.Create("0512"),
-                    NetSettlementGroup = NetSettlementGroup.One,
-                };
-
-            var checkResult = ConsumptionMeteringPoint.CanCreate(details);
-
-            AssertContainsValidationError<ScheduledMeterReadingDateNotAllowedRuleError>(checkResult);
-        }
-
-        [Fact]
-        public void Product_type_should_as_default_be_active_energy()
-        {
-            var details = CreateConsumptionDetails()
-            with
-            {
-                MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
-                ScheduledMeterReadingDate = null,
-            };
-
-            var meteringPoint = ConsumptionMeteringPoint.Create(details);
-
-            var createdEvent = meteringPoint.DomainEvents.First(e => e is ConsumptionMeteringPointCreated) as ConsumptionMeteringPointCreated;
-            Assert.Equal(ProductType.EnergyActive.Name, createdEvent!.ProductType);
-        }
-
-        [Fact]
-        public void Powerplant_GSRN_is_required_when_netsettlementgroup_is_other_than_0_or_99()
-        {
-            var meteringPointDetails = CreateConsumptionDetails()
-                with
-                {
-                    PowerPlantGsrnNumber = null,
-                    NetSettlementGroup = NetSettlementGroup.Six,
-                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
-                };
-
-            var checkResult = CheckCreationRules(meteringPointDetails);
-
-            AssertContainsValidationError<PowerPlantIsRequiredForNetSettlementGroupRuleError>(checkResult);
-        }
-
-        [Theory]
-        [InlineData(nameof(NetSettlementGroup.Zero))]
-        [InlineData(nameof(NetSettlementGroup.Ninetynine))]
-        public void Powerplant_GSRN_is_not_required_when_netsettlementgroup_is_0_or_99(string netSettlementGroupName)
-        {
-            var netSettlementGroup = EnumerationType.FromName<NetSettlementGroup>(netSettlementGroupName);
-            var meteringPointDetails = CreateConsumptionDetails()
-                with
-                {
-                    NetSettlementGroup = netSettlementGroup,
-                };
-
-            var checkResult = CheckCreationRules(meteringPointDetails);
-
-            AssertDoesNotContainValidationError<PowerPlantIsRequiredForNetSettlementGroupRuleError>(checkResult);
-        }
-
-        [Fact]
-        public void Should_return_error_when_street_name_is_missing()
-        {
-            var address = Address.Create(
-                string.Empty,
-                SampleData.StreetCode,
-                string.Empty,
-                SampleData.CityName,
-                string.Empty,
-                string.Empty,
-                null,
-                string.Empty,
-                string.Empty,
-                default,
-                isActual: true,
-                geoInfoReference: Guid.NewGuid());
-
-            var meteringPointDetails = CreateConsumptionDetails()
-                with
-                {
-                    Address = address,
-                };
-
-            var checkResult = CheckCreationRules(meteringPointDetails);
-            AssertContainsValidationError<StreetNameIsRequiredRuleError>(checkResult);
-        }
-
-        [Fact]
-        public void Should_return_error_when_post_code_is_missing()
-        {
-            var address = Address.Create(
-                SampleData.StreetName,
-                SampleData.StreetCode,
-                string.Empty,
-                SampleData.CityName,
-                string.Empty,
-                string.Empty,
-                null,
-                string.Empty,
-                string.Empty,
-                default,
-                isActual: true,
-                geoInfoReference: Guid.NewGuid());
-
-            var meteringPointDetails = CreateConsumptionDetails()
-                with
-                {
-                    Address = address,
-                };
-
-            var checkResult = ConsumptionMeteringPoint.CanCreate(meteringPointDetails);
-
-            Assert.Contains(checkResult.Errors, error => error is PostCodeIsRequiredRuleError);
-        }
-
-        [Fact]
-        public void Product_type_should_be_set_to_active_energy()
-        {
-            var address = CreateAddress();
-
-            var meteringPointDetails = CreateConsumptionDetails()
-                with
-                {
-                    Address = address,
-                    NetSettlementGroup = NetSettlementGroup.Six,
-                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
-                    ScheduledMeterReadingDate = ScheduledMeterReadingDate.Create("0101"),
-                };
-
-            var meteringPoint = ConsumptionMeteringPoint.Create(meteringPointDetails);
-
-            var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is ConsumptionMeteringPointCreated) as ConsumptionMeteringPointCreated;
-
-            Assert.Equal(ProductType.EnergyActive.Name, createdEvent!.ProductType);
-        }
-
-        [Fact]
-        public void Capacity_is_required_for_all_net_settlement_groups_but_0()
-        {
-            var details = CreateConsumptionDetails()
-                with
-                {
-                    NetSettlementGroup = NetSettlementGroup.Six,
-                    Capacity = null,
-                };
-
-            var checkResult = CheckCreationRules(details);
-
-            AssertContainsValidationError<CapacityIsRequiredRuleError>(checkResult);
-        }
-
-        [Fact]
-        public void Asset_type_is_required_for_net_settlement_groups_other_than_0()
-        {
-            var details = CreateConsumptionDetails()
-                with
-                {
-                    NetSettlementGroup = NetSettlementGroup.Six,
-                    AssetType = null,
-                };
-
-            var checkResult = CheckCreationRules(details);
-
-            AssertContainsValidationError<AssetTypeIsRequiredRuleError>(checkResult);
-        }
-
-        [Theory]
-        [InlineData("Profiled", true)]
-        [InlineData("NonProfiled", false)]
-        [InlineData("Flex", false)]
-        public void Settlement_method_must_be_flex_or_non_profiled(string settlementMethod, bool expectError)
-        {
-            var details = CreateConsumptionDetails()
-                with
-                {
-                    NetSettlementGroup = NetSettlementGroup.Six,
-                    SettlementMethod = EnumerationType.FromName<SettlementMethod>(settlementMethod),
-                };
-
-            var checkResult = CheckCreationRules(details);
-
-            AssertError<InvalidSettlementMethodRuleError>(checkResult, expectError);
-        }
-
-        private static BusinessRulesValidationResult CheckCreationRules(ConsumptionMeteringPointDetails meteringPointDetails)
-        {
-            return ConsumptionMeteringPoint.CanCreate(meteringPointDetails);
         }
     }
 }
