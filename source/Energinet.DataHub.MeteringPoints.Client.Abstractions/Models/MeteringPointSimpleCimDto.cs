@@ -12,20 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
-using NodaTime;
+using System;
+using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements
+namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
 {
-    public record RejectMessage(
-        string DocumentName,
-        string Id,
-        string Type,
-        string ProcessType,
-        string BusinessSectorType,
-        MarketRoleParticipant Sender,
-        MarketRoleParticipant Receiver,
-        Instant CreatedDateTime,
-        string ReasonCode,
-        MarketActivityRecordWithReasons MarketActivityRecord);
+    public record MeteringPointSimpleCimDto(
+        Guid MeteringPointId,
+        string GsrnNumber,
+        ConnectionState ConnectionState,
+        MeteringPointType MeteringPointType,
+        DateTime EffectiveDate);
 }

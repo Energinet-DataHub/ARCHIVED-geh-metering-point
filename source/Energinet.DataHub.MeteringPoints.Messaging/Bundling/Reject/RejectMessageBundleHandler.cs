@@ -12,19 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.Addresses;
-using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bundling;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.Reject
 {
-    public record MeteringPointDetails(
-        MeteringPointId Id,
-        GsrnNumber GsrnNumber,
-        Address Address,
-        GridAreaLinkId GridAreaLinkId,
-        ReadingOccurrence ReadingOccurrence,
-        PowerLimit PowerLimit,
-        EffectiveDate EffectiveDate,
-        MeteringConfiguration MeteringConfiguration);
+    public class RejectMessageBundleHandler : BundleHandler<RejectMessage>
+    {
+        public RejectMessageBundleHandler(IJsonSerializer jsonSerializer, IDocumentSerializer<RejectMessage> documentSerializer)
+            : base(jsonSerializer, documentSerializer)
+        {
+        }
+    }
 }

@@ -17,7 +17,7 @@ using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Execeptions;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Exceptions;
 using Xunit;
 using Xunit.Categories;
 
@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         {
             var meteringPoint = CreateMeteringPoint(MeteringPointType.Exchange);
 
-            Assert.Throws<CannotAssignEnergySupplierExeception>(() => meteringPoint.SetEnergySupplierDetails(EnergySupplierDetails.Create(_systemDateTimeProvider.Now())));
+            Assert.Throws<CannotAssignEnergySupplierException>(() => meteringPoint.SetEnergySupplierDetails(EnergySupplierDetails.Create(_systemDateTimeProvider.Now())));
         }
 
         [Fact]
