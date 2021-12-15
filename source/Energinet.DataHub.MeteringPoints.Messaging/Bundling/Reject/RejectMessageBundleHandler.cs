@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bundling;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Extensions
+namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.Reject
 {
-    public static class WhenProviderExtensions
+    public class RejectMessageBundleHandler : BundleHandler<RejectMessage>
     {
-        public static DoProvider WhenMessageType(this ServiceBusListenerMock provider, string messageType)
+        public RejectMessageBundleHandler(IJsonSerializer jsonSerializer, IDocumentSerializer<RejectMessage> documentSerializer)
+            : base(jsonSerializer, documentSerializer)
         {
-            var parser = new MessageHub.Model.DataAvailable.DataAvailableNotificationParser();
-
-            return provider.When(message =>
-                parser.Parse(message.Body.ToArray()).MessageType.Value == messageType);
         }
     }
 }

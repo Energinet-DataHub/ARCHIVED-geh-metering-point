@@ -12,19 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.Addresses;
-using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Events
 {
-    public record MeteringPointDetails(
-        MeteringPointId Id,
-        GsrnNumber GsrnNumber,
-        Address Address,
-        GridAreaLinkId GridAreaLinkId,
-        ReadingOccurrence ReadingOccurrence,
-        PowerLimit PowerLimit,
-        EffectiveDate EffectiveDate,
-        MeteringConfiguration MeteringConfiguration);
+    public class ConnectionTypeChanged : DomainEventBase
+    {
+        public ConnectionTypeChanged(Guid meteringPointId, string connectionType)
+        {
+            MeteringPointId = meteringPointId;
+            ConnectionType = connectionType;
+        }
+
+        public Guid MeteringPointId { get; }
+
+        public string ConnectionType { get; }
+    }
 }

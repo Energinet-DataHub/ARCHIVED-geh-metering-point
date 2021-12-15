@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
@@ -26,6 +27,7 @@ using AssetType = Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums.Ass
 using ConnectionState = Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums.ConnectionState;
 using MeteringMethod = Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums.MeteringMethod;
 using MeteringPointType = Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums.MeteringPointType;
+using ReadingOccurrence = Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums.ReadingOccurrence;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints.Queries
 {
@@ -66,6 +68,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             var netSettlementGroup = ConvertNullableEnumerationTypeToEnum<NetSettlementGroup, Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.NetSettlementGroup>(meteringPointDto.NetSettlementGroup);
             var connectionType = ConvertNullableEnumerationTypeToEnum<ConnectionType, Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.ConnectionType>(meteringPointDto.ConnectionType);
             var disconnectionType = ConvertNullableEnumerationTypeToEnum<DisconnectionType, Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.DisconnectionType>(meteringPointDto.DisconnectionType);
+            var readingOccurrence = ConvertEnumerationTypeToEnum<ReadingOccurrence, Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ReadingOccurrence>(meteringPointDto.ReadingOccurrence);
 
             return new MeteringPointCimDto(
                 meteringPointDto.MeteringPointId,
@@ -76,7 +79,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 meteringPointDto.CountryCode,
                 connectionState,
                 meteringPointSubType,
-                meteringPointDto.ReadingOccurrence,
+                readingOccurrence,
                 meteringPointType,
                 meteringPointDto.MaximumCurrent,
                 meteringPointDto.MaximumPower,
@@ -86,7 +89,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 meteringPointDto.LocationDescription,
                 meteringPointDto.Product,
                 unitType,
-                meteringPointDto.EffectiveDate,
+                meteringPointDto.EffectiveDate.ToDateTimeUtc(),
                 meteringPointDto.MeterNumber,
                 meteringPointDto.StreetCode,
                 meteringPointDto.CitySubDivisionName,
@@ -105,7 +108,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 meteringPointDto.SupplyStart,
                 connectionType,
                 disconnectionType,
-                meteringPointDto.ProductionObligation);
+                meteringPointDto.ProductionObligation,
+                new List<MeteringPointSimpleCimDto>(),
+                null);
         }
 
         private static TEnum ConvertEnumerationTypeToEnum<TEnum, TEnumerationType>(string enumerationTypeName)

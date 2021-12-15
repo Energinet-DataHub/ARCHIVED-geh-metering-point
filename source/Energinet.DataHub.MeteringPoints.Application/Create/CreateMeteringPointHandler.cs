@@ -172,7 +172,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                     GsrnNumber.Create(request.GsrnNumber),
                     gridArea.DefaultLink.Id,
                     EffectiveDate.Create(request.EffectiveDate),
-                    Domain.MeteringPoints.Exchange.ExchangeDetails.Create(sourceGridArea!.DefaultLink.Id, targetGridArea!.DefaultLink.Id),
+                    Domain.MeteringPoints.Exchange.ExchangeGridAreas.Create(sourceGridArea!.DefaultLink.Id, targetGridArea!.DefaultLink.Id),
                     masterData));
 
             return BusinessProcessResult.Ok(request.TransactionId);

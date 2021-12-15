@@ -12,20 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
-using NodaTime;
-
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements
+namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums
 {
-    public record RejectMessage(
-        string DocumentName,
-        string Id,
-        string Type,
-        string ProcessType,
-        string BusinessSectorType,
-        MarketRoleParticipant Sender,
-        MarketRoleParticipant Receiver,
-        Instant CreatedDateTime,
-        string ReasonCode,
-        MarketActivityRecordWithReasons MarketActivityRecord);
+    public enum ReadingOccurrence
+    {
+        P1Y = 0, // Yearly
+        P1M = 1, // Monthly
+        PT1H = 2, // Hourly
+        PT15M = 3, // Quarterly
+    }
 }

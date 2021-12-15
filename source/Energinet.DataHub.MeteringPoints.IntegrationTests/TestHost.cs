@@ -64,9 +64,9 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Providers.MeteringPointOwn
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
-using Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
-using Energinet.DataHub.MeteringPoints.Messaging.Bundling;
+using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Confirm;
+using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Reject;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentAssertions;
 using FluentValidation;
@@ -75,8 +75,6 @@ using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Xunit;
@@ -162,8 +160,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IBusinessProcessCommandFactory, BusinessProcessCommandFactory>(Lifestyle.Singleton);
 
             // TODO: remove this when infrastructure and application has been split into more assemblies.
-            _container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageSerializer>(Lifestyle.Singleton);
-            _container.Register<IDocumentSerializer<RejectMessage>, RejectMessageSerializer>(Lifestyle.Singleton);
+            _container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageXmlSerializer>(Lifestyle.Singleton);
+            _container.Register<IDocumentSerializer<RejectMessage>, RejectMessageXmlSerializer>(Lifestyle.Singleton);
 
             _container.Register<IActorMessageFactory, ActorMessageFactory>(Lifestyle.Scoped);
             _container.Register<IMessageHubDispatcher, MessageHubDispatcher>(Lifestyle.Scoped);

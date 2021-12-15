@@ -47,7 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
         }
 
         [Fact]
-        public async Task When_CallingMeteringPoint_Then_RequestIsProcessed()
+        public async Task Create_metering_point_request_returns_ok()
         {
             // Arrange
             var xml = TestFileLoader.ReadFile("TestFiles/Cim/CreateMeteringPoint.xml")
