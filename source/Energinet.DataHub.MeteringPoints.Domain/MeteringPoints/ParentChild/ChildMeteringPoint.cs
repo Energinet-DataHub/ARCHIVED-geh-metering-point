@@ -46,7 +46,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild
             var rules = new List<IBusinessRule>()
             {
                 new OnlySpecificGroupsCanActAsParentRule(parent),
-                new OnlySpecificGroupsCanActAsChildOfGroup1(parent, _meteringPoint),
+                new OnlyGroup3And4CanActAsChildOfGroup1(parent, _meteringPoint),
                 new OnlySpecificGroupsCanActAsChildOfGroup2(parent, _meteringPoint),
             };
 

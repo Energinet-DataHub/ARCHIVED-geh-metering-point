@@ -12,11 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild.Rules;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild.Rules
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.ParentChild
 {
-    public class CannotActAsChild : ValidationError
+    public class CannotActAsChildOfGroup2MeteringPointsConverter : ErrorConverter<CannotActAsChildOfGroup2MeteringPoints>
     {
+        protected override ErrorMessage Convert(CannotActAsChildOfGroup2MeteringPoints validationError)
+        {
+            return new ErrorMessage("D18", "Only group 5 metering points can act as child of group 2 metering points.");
+        }
     }
 }

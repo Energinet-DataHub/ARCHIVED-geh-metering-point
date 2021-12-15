@@ -17,20 +17,20 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild.Rules
 {
-    public class OnlySpecificGroupsCanActAsChildOfGroup2 : IBusinessRule
+    public class OnlyGroup3And4CanActAsChildOfGroup1 : IBusinessRule
     {
-        public OnlySpecificGroupsCanActAsChildOfGroup2(MeteringPoint parent, MeteringPoint meteringPoint)
+        public OnlyGroup3And4CanActAsChildOfGroup1(MeteringPoint parent, MeteringPoint meteringPoint)
         {
             if (parent == null) throw new ArgumentNullException(nameof(parent));
             if (meteringPoint == null) throw new ArgumentNullException(nameof(meteringPoint));
-            if (parent.MeteringPointType.MeteringPointGroup == 2)
+            if (parent.MeteringPointType.MeteringPointGroup == 1)
             {
-                IsBroken = meteringPoint.MeteringPointType.MeteringPointGroup is not 5;
+                IsBroken = meteringPoint.MeteringPointType.MeteringPointGroup is not (3 or 4);
             }
         }
 
         public bool IsBroken { get; }
 
-        public ValidationError ValidationError => new CannotActAsChildOfGroup2MeteringPoints();
+        public ValidationError ValidationError => new CannotActAsChildOfGroup1MeteringPoints();
     }
 }

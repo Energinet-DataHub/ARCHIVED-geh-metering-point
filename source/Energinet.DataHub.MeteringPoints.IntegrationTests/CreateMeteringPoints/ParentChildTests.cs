@@ -81,5 +81,24 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             AssertValidationError("D46");
         }
+
+        [Fact]
+        public async Task Cannot_couple_a_group_3_metering_point_to_a_group_2_metering_point()
+        {
+            var createInvalidParentCommand = Scenarios.CreateCommand(MeteringPointType.Exchange) with
+            {
+                GsrnNumber = "570851247381952311",
+            };
+            await SendCommandAsync(createInvalidParentCommand).ConfigureAwait(false);
+
+            var createChildCommand = Scenarios.CreateCommand(MeteringPointType.NetConsumption)
+                with
+                {
+                    ParentRelatedMeteringPoint = createInvalidParentCommand.GsrnNumber,
+                };
+            await SendCommandAsync(createChildCommand).ConfigureAwait(false);
+
+            AssertValidationError("D18");
+        }
     }
 }

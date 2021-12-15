@@ -12,25 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild.Rules
 {
-    public class OnlySpecificGroupsCanActAsChildOfGroup1 : IBusinessRule
+    public class CannotActAsChildOfGroup1MeteringPoints : ValidationError
     {
-        public OnlySpecificGroupsCanActAsChildOfGroup1(MeteringPoint parent, MeteringPoint meteringPoint)
-        {
-            if (parent == null) throw new ArgumentNullException(nameof(parent));
-            if (meteringPoint == null) throw new ArgumentNullException(nameof(meteringPoint));
-            if (parent.MeteringPointType.MeteringPointGroup == 1)
-            {
-                IsBroken = meteringPoint.MeteringPointType.MeteringPointGroup is not (3 or 4);
-            }
-        }
-
-        public bool IsBroken { get; }
-
-        public ValidationError ValidationError => new CannotActAsChild();
     }
 }
