@@ -60,5 +60,26 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             AssertValidationError("E10");
         }
+
+        [Fact]
+        public async Task Parent_and_child_must_be_in_same_grid_area()
+        {
+            var createInvalidParentCommand = Scenarios.CreateCommand(MeteringPointType.Production) with
+            {
+                MeteringGridArea = "870",
+                GsrnNumber = "570851247381952311",
+            };
+            await SendCommandAsync(createInvalidParentCommand).ConfigureAwait(false);
+
+            var createChildCommand = Scenarios.CreateCommand(MeteringPointType.NetConsumption)
+                with
+                {
+                    MeteringGridArea = "871",
+                    ParentRelatedMeteringPoint = createInvalidParentCommand.GsrnNumber,
+                };
+            await SendCommandAsync(createChildCommand).ConfigureAwait(false);
+
+            AssertValidationError("D46");
+        }
     }
 }
