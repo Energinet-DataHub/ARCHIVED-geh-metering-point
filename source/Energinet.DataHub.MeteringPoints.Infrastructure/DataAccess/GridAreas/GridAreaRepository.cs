@@ -44,8 +44,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas
 
         public Task<GridArea?> GetByLinkIdAsync(GridAreaLinkId linkId)
         {
-            return _meteringPointContext.GridAreas.SingleOrDefaultAsync(gridArea =>
-                gridArea.DefaultLink.Id.Equals(linkId));
+            if (linkId == null) throw new ArgumentNullException(nameof(linkId));
+            return _meteringPointContext.GridAreas
+                .FromSqlInterpolated(
+                    $"SELECT g.* FROM [dbo].[GridAreas] g JOIN [dbo].[GridAreaLinks] gl ON g.Id = gl.GridAreaId WHERE gl.Id = {linkId.Value}")
+                .SingleOrDefaultAsync();
         }
     }
 }
