@@ -16,7 +16,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bund
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling
+namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.Reject
 {
     public class RejectMessageBundleHandler : BundleHandler<RejectMessage>
     {

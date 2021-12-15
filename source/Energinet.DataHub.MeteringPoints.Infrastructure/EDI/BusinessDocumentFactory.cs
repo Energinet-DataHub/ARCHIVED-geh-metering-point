@@ -79,7 +79,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                 CreatedDateTime: createdDate,
                 MarketActivityRecord: new MarketActivityRecord(
                     Id: Guid.NewGuid().ToString(),
-                    ValidityStartDateAndOrTime: meteringPoint.EffectiveDate!.Value.ToUtcString(),
+                    ValidityStartDateAndOrTime: meteringPoint.EffectiveDate.ToDateTimeUtc().ToUtcString(),
                     OriginalTransaction: requestTransactionId,
                     MarketEvaluationPoint: new MarketEvaluationPoint(
                         Id: new Mrid(meteringPoint.GsrnNumber, "A10"),
