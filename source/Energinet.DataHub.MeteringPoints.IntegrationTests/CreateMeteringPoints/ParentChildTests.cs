@@ -86,7 +86,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Theory]
         [InlineData(nameof(MeteringPointType.InternalUse))]
         [InlineData(nameof(MeteringPointType.NetConsumption))]
-        public async Task Only_group_5_metering_points_can_be_coupled_to_group_2_metering_point(string childMeteringPointType)
+        public async Task Cannot_couple_group_3_or_4_metering_points_to_group_2_metering_points(string childMeteringPointType)
         {
             var createInvalidParentCommand = Scenarios.CreateCommand(MeteringPointType.Exchange) with
             {
