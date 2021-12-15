@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
@@ -82,8 +83,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("D46");
         }
 
-        [Fact]
-        public async Task Cannot_couple_a_group_3_metering_point_to_a_group_2_metering_point()
+        [Theory]
+        [InlineData(nameof(MeteringPointType.InternalUse))]
+        [InlineData(nameof(MeteringPointType.NetConsumption))]
+        public async Task Only_group_5_metering_points_can_be_coupled_to_group_2_metering_point(string childMeteringPointType)
         {
             var createInvalidParentCommand = Scenarios.CreateCommand(MeteringPointType.Exchange) with
             {
@@ -91,7 +94,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             };
             await SendCommandAsync(createInvalidParentCommand).ConfigureAwait(false);
 
-            var createChildCommand = Scenarios.CreateCommand(MeteringPointType.NetConsumption)
+            var createChildCommand = Scenarios.CreateCommand(EnumerationType.FromName<MeteringPointType>(childMeteringPointType))
                 with
                 {
                     ParentRelatedMeteringPoint = createInvalidParentCommand.GsrnNumber,
