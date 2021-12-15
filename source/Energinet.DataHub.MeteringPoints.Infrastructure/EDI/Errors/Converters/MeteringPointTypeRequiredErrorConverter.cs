@@ -23,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D02", $"Metering point type is missing for metering point {validationError.GsrnNumber}");
+            return new("D02", $"Metering point type is required.");
         }
     }
 }

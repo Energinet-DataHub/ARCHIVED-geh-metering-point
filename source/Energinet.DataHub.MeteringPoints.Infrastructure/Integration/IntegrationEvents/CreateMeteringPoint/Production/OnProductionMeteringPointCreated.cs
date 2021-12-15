@@ -15,15 +15,14 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Dapper;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
-using MediatR;
+using MeteringPointCreated = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events.MeteringPointCreated;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Production
 {
-    public class OnProductionMeteringPointCreated : IntegrationEventPublisher<ProductionMeteringPointCreated>
+    public class OnProductionMeteringPointCreated : IntegrationEventPublisher<MeteringPointCreated>
     {
         private readonly DbGridAreaHelper _dbGridAreaHelper;
 
@@ -33,23 +32,27 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
             _dbGridAreaHelper = dbGridAreaHelper;
         }
 
-        public override async Task Handle(ProductionMeteringPointCreated notification, CancellationToken cancellationToken)
+        public override async Task Handle(MeteringPointCreated notification, CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
-            var gridAreaCode = await _dbGridAreaHelper.GetGridAreaCodeAsync(notification.GridAreaLinkId).ConfigureAwait(false);
-            var message = new ProductionMeteringPointCreatedIntegrationEvent(
-                notification.MeteringPointId.ToString(),
-                notification.GsrnNumber,
-                gridAreaCode,
-                notification.MeteringPointSubType,
-                notification.ReadingOccurrence,
-                notification.NetSettlementGroup,
-                notification.ProductType,
-                notification.PhysicalState,
-                notification.UnitType,
-                notification.EffectiveDate);
+            if (EnumerationType.FromName<MeteringPointType>(notification.MeteringPointType) ==
+                MeteringPointType.Production)
+            {
+                var gridAreaCode = await _dbGridAreaHelper.GetGridAreaCodeAsync(notification.GridAreaLinkId).ConfigureAwait(false);
+                var message = new ProductionMeteringPointCreatedIntegrationEvent(
+                    notification.MeteringPointId.ToString(),
+                    notification.GsrnNumber,
+                    gridAreaCode,
+                    notification.MeteringPointSubType,
+                    notification.ReadingOccurrence,
+                    notification.NetSettlementGroup,
+                    notification.ProductType,
+                    notification.PhysicalState,
+                    notification.UnitType,
+                    notification.EffectiveDate);
 
-            CreateAndAddOutboxMessage(message);
+                CreateAndAddOutboxMessage(message);
+            }
         }
     }
 }

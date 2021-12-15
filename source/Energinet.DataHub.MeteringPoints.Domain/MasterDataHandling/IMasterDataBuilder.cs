@@ -48,7 +48,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         /// <param name="method"></param>
         /// <param name="meterNumber"></param>
         /// <returns><see cref="IMasterDataBuilder"/></returns>
-        IMasterDataBuilder WithMeteringConfiguration(string method, string meterNumber);
+        IMasterDataBuilder WithMeteringConfiguration(string method, string? meterNumber);
 
         /// <summary>
         /// Configures address
@@ -81,7 +81,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         /// </summary>
         /// <param name="gsrnNumber"></param>
         /// <returns><see cref="IMasterDataBuilder"/></returns>
-        IMasterDataBuilder WithPowerPlant(string gsrnNumber);
+        IMasterDataBuilder WithPowerPlant(string? gsrnNumber);
 
         /// <summary>
         /// Configures meter reading periodicity
@@ -103,14 +103,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         /// </summary>
         /// <param name="settlementMethod"></param>
         /// <returns><see cref="IMasterDataBuilder"/></returns>
-        IMasterDataBuilder WithSettlementMethod(string settlementMethod);
+        IMasterDataBuilder WithSettlementMethod(string? settlementMethod);
 
         /// <summary>
         /// Configures disconnection type
         /// </summary>
         /// <param name="disconnectionType"></param>
         /// <returns><see cref="IMasterDataBuilder"/></returns>
-        IMasterDataBuilder WithDisconnectionType(string disconnectionType);
+        IMasterDataBuilder WithDisconnectionType(string? disconnectionType);
 
         /// <summary>
         /// Configures asset type
@@ -124,7 +124,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         /// </summary>
         /// <param name="scheduledMeterReadingDate"></param>
         /// <returns><see cref="IMasterDataBuilder"/></returns>
-        IMasterDataBuilder WithScheduledMeterReadingDate(string scheduledMeterReadingDate);
+        IMasterDataBuilder WithScheduledMeterReadingDate(string? scheduledMeterReadingDate);
 
         /// <summary>
         /// Configures capacity
@@ -153,5 +153,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         /// <param name="connectionType"></param>
         /// <returns><see cref="IMasterDataBuilder"/></returns>
         IMasterDataBuilder WithConnectionType(string? connectionType);
+
+        /// <summary>
+        /// Configures production obligation of a production metering point
+        /// </summary>
+        /// <param name="productionObligation"></param>
+        /// <returns><see cref="IMasterDataBuilder"/></returns>
+        IMasterDataBuilder WithProductionObligation(bool? productionObligation);
     }
 }

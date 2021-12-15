@@ -16,6 +16,7 @@ using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
@@ -125,6 +126,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Fact]
+        public void City_is_required()
+        {
+            var masterData = Builder()
+                .WithAddress(city: string.Empty)
+                .Build();
+
+            AssertContainsValidationError<CityIsRequiredRuleError>(CheckRules(masterData));
+        }
+
+        [Fact]
         public void Capacity_is_required_for_all_net_settlement_groups_but_0()
         {
             var masterData = Builder()
@@ -189,8 +200,29 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             AssertContainsValidationError<ConnectionTypeDoesNotMatchNetSettlementGroupRuleError>(CheckRules(masterData));
         }
 
+        [Fact]
+        public void Meter_reading_occurrence_must_be_quarterly_or_hourly()
+        {
+            var masterData = Builder()
+                .WithReadingPeriodicity(ReadingOccurrence.Yearly.Name)
+                .Build();
+
+            AssertContainsValidationError<InvalidMeterReadingOccurrenceRuleError>(CheckRules(masterData));
+        }
+
+        [Fact]
+        public void Settlement_method_of_profiled_is_not_allowed()
+        {
+            var masterData = Builder()
+                .WithSettlementMethod(SettlementMethod.Profiled.Name)
+                .Build();
+
+            AssertContainsValidationError<InvalidSettlementMethodRuleError>(CheckRules(masterData));
+        }
+
         private static IMasterDataBuilder Builder() =>
             new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Consumption))
+                .WithReadingPeriodicity(ReadingOccurrence.Quarterly.Name)
                 .WithAddress(streetName: "Test Street", countryCode: CountryCode.DK)
                 .WithNetSettlementGroup(NetSettlementGroup.Two.Name)
                 .WithMeteringConfiguration(MeteringMethod.Virtual.Name, string.Empty);

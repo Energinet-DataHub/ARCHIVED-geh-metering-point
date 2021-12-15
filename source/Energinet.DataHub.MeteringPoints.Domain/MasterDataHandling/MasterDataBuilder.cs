@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
@@ -27,6 +28,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 {
     public class MasterDataBuilder : MasterDataBuilderBase, IMasterDataBuilder
     {
+        private readonly List<ValidationError> _validationErrors = new();
+
         public MasterDataBuilder(IEnumerable<MasterDataField> masterDataFields)
             : base(masterDataFields)
         {
@@ -34,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithNetSettlementGroup(string? netSettlementGroup)
         {
-            SetValue(nameof(MasterData.NetSettlementGroup), netSettlementGroup is null ? null : EnumerationType.FromName<NetSettlementGroup>(netSettlementGroup));
+            SetValue(nameof(MasterData.NetSettlementGroup), string.IsNullOrEmpty(netSettlementGroup) ? null : EnumerationType.FromName<NetSettlementGroup>(netSettlementGroup));
             return this;
         }
 
@@ -55,12 +58,19 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 scheduledMeterReadingDate: GetValue<ScheduledMeterReadingDate>(nameof(MasterData.ScheduledMeterReadingDate)),
                 connectionType: GetValue<ConnectionType>(nameof(MasterData.ConnectionType)),
                 disconnectionType: GetValue<DisconnectionType>(nameof(MasterData.DisconnectionType)),
-                netSettlementGroup: GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)));
+                netSettlementGroup: GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)),
+                productionObligation: GetValue<bool?>(nameof(MasterData.ProductionObligation)));
         }
 
-        public IMasterDataBuilder WithMeteringConfiguration(string method, string meterNumber)
+        public IMasterDataBuilder WithMeteringConfiguration(string method, string? meterNumber)
         {
-            SetValue(nameof(MasterData.MeteringConfiguration), MeteringConfiguration.Create(EnumerationType.FromName<MeteringMethod>(method), MeterId.Create(meterNumber)));
+            var meter = string.IsNullOrEmpty(meterNumber) ? MeterId.Empty() : MeterId.Create(meterNumber);
+            var meteringMethod = EnumerationType.FromName<MeteringMethod>(method);
+            SetValueIfValid(
+                nameof(MasterData.MeteringConfiguration),
+                () => MeteringConfiguration.CheckRules(meteringMethod, meter),
+                () => MeteringConfiguration.Create(meteringMethod, meter));
+
             return this;
         }
 
@@ -79,7 +89,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             Guid? geoInfoReference = null,
             string? locationDescription = null)
         {
-            SetValue(nameof(MasterData.Address), Address.Create(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, isActual, geoInfoReference, locationDescription));
+            SetValueIfValid(
+                nameof(MasterData.Address),
+                () => Address.CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, locationDescription),
+                () => Address.Create(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, isActual, geoInfoReference, locationDescription));
             return this;
         }
 
@@ -91,7 +104,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithPowerPlant(string? gsrnNumber)
         {
-            SetValue(nameof(MasterData.PowerPlantGsrnNumber), gsrnNumber is null ? null : GsrnNumber.Create(gsrnNumber));
+            SetValue(nameof(MasterData.PowerPlantGsrnNumber), string.IsNullOrEmpty(gsrnNumber) ? null : GsrnNumber.Create(gsrnNumber));
             return this;
         }
 
@@ -107,9 +120,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public IMasterDataBuilder WithSettlementMethod(string settlementMethod)
+        public IMasterDataBuilder WithSettlementMethod(string? settlementMethod)
         {
-            SetValue(nameof(MasterData.SettlementMethod), EnumerationType.FromName<SettlementMethod>(settlementMethod));
+            SetValue(nameof(MasterData.SettlementMethod), string.IsNullOrEmpty(settlementMethod) ? null : EnumerationType.FromName<SettlementMethod>(settlementMethod));
             return this;
         }
 
@@ -121,13 +134,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithAssetType(string? assetType)
         {
-            SetValue(nameof(MasterData.AssetType), assetType is null ? null : EnumerationType.FromName<AssetType>(assetType));
+            SetValue(nameof(MasterData.AssetType), string.IsNullOrEmpty(assetType) ? null : EnumerationType.FromName<AssetType>(assetType));
             return this;
         }
 
-        public IMasterDataBuilder WithScheduledMeterReadingDate(string scheduledMeterReadingDate)
+        public IMasterDataBuilder WithScheduledMeterReadingDate(string? scheduledMeterReadingDate)
         {
-            SetValue(nameof(MasterData.ScheduledMeterReadingDate), ScheduledMeterReadingDate.Create(scheduledMeterReadingDate));
+            SetValue(nameof(MasterData.ScheduledMeterReadingDate), string.IsNullOrEmpty(scheduledMeterReadingDate) ? null : ScheduledMeterReadingDate.Create(scheduledMeterReadingDate));
             return this;
         }
 
@@ -151,17 +164,41 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithConnectionType(string? connectionType)
         {
-            SetValue(nameof(MasterData.ConnectionType), connectionType is null ? null : EnumerationType.FromName<ConnectionType>(connectionType));
+            SetValue(nameof(MasterData.ConnectionType), string.IsNullOrEmpty(connectionType) ? null : EnumerationType.FromName<ConnectionType>(connectionType));
+            return this;
+        }
+
+        public IMasterDataBuilder WithProductionObligation(bool? productionObligation)
+        {
+            SetValue(nameof(MasterData.ProductionObligation), productionObligation);
             return this;
         }
 
         public BusinessRulesValidationResult Validate()
         {
-            var validationErrors = new List<ValidationError>();
-            if (GetMasterValueItem<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence)).HasRequiredValue() == false) validationErrors.Add(new MeterReadingPeriodicityIsRequired());
-            if (GetMasterValueItem<MeasurementUnitType>(nameof(MasterData.UnitType)).HasRequiredValue() == false) validationErrors.Add(new UnitTypeIsRequired());
+            if (GetMasterValueItem<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence)).HasRequiredValue() == false) _validationErrors.Add(new MeterReadingPeriodicityIsRequired());
+            if (GetMasterValueItem<MeasurementUnitType>(nameof(MasterData.UnitType)).HasRequiredValue() == false) _validationErrors.Add(new UnitTypeIsRequired());
+            AddValidationErrorIfRequiredFieldIsMissing<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup), new NetSettlementGroupIsRequired());
+            return new BusinessRulesValidationResult(_validationErrors);
+        }
 
-            return new BusinessRulesValidationResult(validationErrors);
+        private void AddValidationErrorIfRequiredFieldIsMissing<T>(string valueName, ValidationError validationError)
+        {
+            if (GetMasterValueItem<T>(valueName).HasRequiredValue() == false) _validationErrors.Add(validationError);
+        }
+
+        private void SetValueIfValid<T>(string valueName, Func<BusinessRulesValidationResult> validator, Func<T> creator)
+        {
+            if (!GetMasterValueItem<MeteringConfiguration>(valueName).CanBeChanged) return;
+            var validationResult = validator.Invoke();
+            if (validationResult.Success)
+            {
+                SetValue(valueName, creator.Invoke());
+            }
+            else
+            {
+                _validationErrors.AddRange(validationResult.Errors);
+            }
         }
     }
 }

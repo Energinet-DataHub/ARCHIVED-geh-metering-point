@@ -77,6 +77,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Fact]
+        public void City_is_required()
+        {
+            var masterData = Builder()
+                .WithAddress(city: string.Empty)
+                .Build();
+
+            AssertContainsValidationError<CityIsRequiredRuleError>(CheckRules(masterData));
+        }
+
+        [Fact]
         public void Geo_info_reference_is_required()
         {
             var masterData = Builder()
@@ -139,8 +149,19 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             AssertContainsValidationError<ConnectionTypeDoesNotMatchNetSettlementGroupRuleError>(CheckRules(masterData));
         }
 
+        [Fact]
+        public void Meter_reading_occurrence_must_be_quarterly_or_hourly()
+        {
+            var masterData = Builder()
+                .WithReadingPeriodicity(ReadingOccurrence.Yearly.Name)
+                .Build();
+
+            AssertContainsValidationError<InvalidMeterReadingOccurrenceRuleError>(CheckRules(masterData));
+        }
+
         private static IMasterDataBuilder Builder() =>
             new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Production))
+                .WithReadingPeriodicity(ReadingOccurrence.Quarterly.Name)
                 .WithAddress(streetName: "Test Street", countryCode: CountryCode.DK)
                 .WithNetSettlementGroup(NetSettlementGroup.Two.Name)
                 .WithMeteringConfiguration(MeteringMethod.Virtual.Name, string.Empty);

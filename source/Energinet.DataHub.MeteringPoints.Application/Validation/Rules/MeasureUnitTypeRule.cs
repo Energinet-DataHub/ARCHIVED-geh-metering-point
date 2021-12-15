@@ -15,6 +15,7 @@
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using FluentValidation;
 
@@ -27,7 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             RuleFor(request => request.MeasureUnitType)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .WithState(createMeteringPoint => new MeasureUnitTypeMandatoryValidationError(createMeteringPoint.GsrnNumber))
+                .WithState(createMeteringPoint => new UnitTypeIsRequired())
                 .Must(measureUnitType => AllowedMeasureUnitTypes().Contains(measureUnitType))
                 .WithState(createMeteringPoint => new MeasureUnitTypeInvalidValueValidationError(createMeteringPoint.MeasureUnitType, createMeteringPoint.GsrnNumber));
 

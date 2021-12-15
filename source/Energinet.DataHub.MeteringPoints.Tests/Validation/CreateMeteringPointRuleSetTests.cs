@@ -47,24 +47,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         }
 
         [Theory]
-        [InlineData("", typeof(MeteringPointTypeRequiredValidationError), true)]
-        [InlineData("Consumption", typeof(MeteringPointTypeValidationError), false)]
-        [InlineData("Production", typeof(MeteringPointTypeValidationError), false)]
-        [InlineData("Exchange", typeof(MeteringPointTypeValidationError), false)]
-        [InlineData("Unknown", typeof(MeteringPointTypeValidationError), true)]
-        public void Validate_TypeOfMeteringPointRequiredAndInKnownType(string typeOfMeteringPoint, System.Type validationError, bool expectedError)
-        {
-            var businessRequest = CreateRequest() with
-            {
-                ProcessType = BusinessProcessType.CreateMeteringPoint.Name,
-                GsrnNumber = SampleData.GsrnNumber,
-                TypeOfMeteringPoint = typeOfMeteringPoint,
-            };
-
-            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
-        }
-
-        [Theory]
         [InlineData(nameof(MeteringPointType.Consumption), "", typeof(MeterReadingOccurenceMandatoryValidationError), true)]
         [InlineData(nameof(MeteringPointType.VEProduction), nameof(ReadingOccurrence.Yearly), typeof(MeterReadingOccurenceInvalidValueValidationError), true)]
         [InlineData(nameof(MeteringPointType.VEProduction), nameof(ReadingOccurrence.Monthly), typeof(MeterReadingOccurenceInvalidValueValidationError), false)]
