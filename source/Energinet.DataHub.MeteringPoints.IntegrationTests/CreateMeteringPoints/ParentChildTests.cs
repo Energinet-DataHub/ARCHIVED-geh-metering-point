@@ -68,18 +68,18 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task Parent_and_child_must_be_in_same_grid_area()
         {
-            var createInvalidParentCommand = Scenarios.CreateCommand(MeteringPointType.Production) with
+            var createParentCommand = Scenarios.CreateCommand(MeteringPointType.Production) with
             {
                 MeteringGridArea = "870",
                 GsrnNumber = "570851247381952311",
             };
-            await SendCommandAsync(createInvalidParentCommand).ConfigureAwait(false);
+            await SendCommandAsync(createParentCommand).ConfigureAwait(false);
 
             var createChildCommand = Scenarios.CreateCommand(MeteringPointType.NetConsumption)
                 with
                 {
                     MeteringGridArea = "871",
-                    ParentRelatedMeteringPoint = createInvalidParentCommand.GsrnNumber,
+                    ParentRelatedMeteringPoint = createParentCommand.GsrnNumber,
                 };
             await SendCommandAsync(createChildCommand).ConfigureAwait(false);
 
@@ -91,16 +91,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [InlineData(nameof(MeteringPointType.NetConsumption))]
         public async Task Cannot_couple_group_3_or_4_metering_points_to_group_2_metering_points(string childMeteringPointType)
         {
-            var createInvalidParentCommand = Scenarios.CreateCommand(MeteringPointType.Exchange) with
+            var createParentCommand = Scenarios.CreateCommand(MeteringPointType.Exchange) with
             {
                 GsrnNumber = "570851247381952311",
             };
-            await SendCommandAsync(createInvalidParentCommand).ConfigureAwait(false);
+            await SendCommandAsync(createParentCommand).ConfigureAwait(false);
 
             var createChildCommand = Scenarios.CreateCommand(EnumerationType.FromName<MeteringPointType>(childMeteringPointType))
                 with
                 {
-                    ParentRelatedMeteringPoint = createInvalidParentCommand.GsrnNumber,
+                    ParentRelatedMeteringPoint = createParentCommand.GsrnNumber,
                 };
             await SendCommandAsync(createChildCommand).ConfigureAwait(false);
 
@@ -110,16 +110,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task Cannot_couple_group_5_metering_points_to_group_1_metering_points()
         {
-            var createInvalidParentCommand = Scenarios.CreateCommand(MeteringPointType.Production) with
+            var createParentCommand = Scenarios.CreateCommand(MeteringPointType.Production) with
             {
                 GsrnNumber = "570851247381952311",
             };
-            await SendCommandAsync(createInvalidParentCommand).ConfigureAwait(false);
+            await SendCommandAsync(createParentCommand).ConfigureAwait(false);
 
             var createChildCommand = Scenarios.CreateCommand(MeteringPointType.ExchangeReactiveEnergy)
                 with
                 {
-                    ParentRelatedMeteringPoint = createInvalidParentCommand.GsrnNumber,
+                    ParentRelatedMeteringPoint = createParentCommand.GsrnNumber,
                 };
             await SendCommandAsync(createChildCommand).ConfigureAwait(false);
 
