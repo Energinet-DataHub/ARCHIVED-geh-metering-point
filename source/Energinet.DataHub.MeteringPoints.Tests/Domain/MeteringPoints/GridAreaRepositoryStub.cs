@@ -13,39 +13,30 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
-using Microsoft.EntityFrameworkCore;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas
+namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 {
-    public class GridAreaRepository : IGridAreaRepository
+    public class GridAreaRepositoryStub : IGridAreaRepository
     {
-        private readonly MeteringPointContext _meteringPointContext;
-
-        public GridAreaRepository(MeteringPointContext meteringPointContext)
-        {
-            _meteringPointContext = meteringPointContext;
-        }
+        private readonly List<GridArea> _gridAreas = new();
 
         public void Add(GridArea gridArea)
         {
-            if (gridArea is null) throw new ArgumentNullException(nameof(gridArea));
-
-            _meteringPointContext.GridAreas.Add(gridArea);
+            _gridAreas.Add(gridArea);
         }
 
         public Task<GridArea?> GetByCodeAsync(string code)
         {
-            return GridAreaCode.CheckRules(code).Success
-                ? _meteringPointContext.GridAreas.SingleOrDefaultAsync(gridArea => gridArea.Code == GridAreaCode.Create(code))
-                : Task.FromResult<GridArea?>(null);
+            return Task.FromResult(_gridAreas.FirstOrDefault(gridArea => gridArea.Code.Value.Equals(code, StringComparison.OrdinalIgnoreCase)));
         }
 
         public Task<GridArea?> GetByLinkIdAsync(GridAreaLinkId linkId)
         {
-            return _meteringPointContext.GridAreas.SingleOrDefaultAsync(gridArea =>
-                gridArea.DefaultLink.Id.Equals(linkId));
+            return Task.FromResult(_gridAreas.FirstOrDefault(gridArea => gridArea.DefaultLink.Id.Equals(linkId)));
         }
     }
 }
