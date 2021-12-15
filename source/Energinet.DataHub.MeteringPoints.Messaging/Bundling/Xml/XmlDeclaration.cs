@@ -12,20 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
-using NodaTime;
+using System.Xml.Linq;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements
+namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.Xml
 {
-    public record RejectMessage(
-        string DocumentName,
-        string Id,
-        string Type,
-        string ProcessType,
-        string BusinessSectorType,
-        MarketRoleParticipant Sender,
-        MarketRoleParticipant Receiver,
-        Instant CreatedDateTime,
-        string ReasonCode,
-        MarketActivityRecordWithReasons MarketActivityRecord);
+    public abstract class XmlDeclaration
+    {
+        public abstract string XmlNamespaceText { get; }
+
+        public abstract string SchemaLocationText { get; }
+
+        public abstract XNamespace XmlNamespace { get; }
+    }
 }

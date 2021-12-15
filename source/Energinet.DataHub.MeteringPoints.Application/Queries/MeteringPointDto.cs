@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Queries
 {
@@ -35,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Queries
         string LocationDescription,
         string Product,
         string UnitType,
-        DateTime? EffectiveDate,
+        Instant EffectiveDate,
         string MeterNumber,
         string StreetCode,
         string CitySubDivisionName,
