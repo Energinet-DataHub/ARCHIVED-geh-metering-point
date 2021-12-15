@@ -16,13 +16,9 @@ using System;
 using System.Globalization;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
-using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
-using Energinet.DataHub.MeteringPoints.Application.Create.Exchange;
-using Energinet.DataHub.MeteringPoints.Application.Create.Production;
-using Energinet.DataHub.MeteringPoints.Application.Create.Special;
+using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Common
@@ -70,30 +66,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
 
         private static IBusinessRequest? CreateNewMeteringPointCommand(MasterDataDocument document)
         {
-            var meteringPointType = EnumerationType.FromName<MeteringPointType>(document.TypeOfMeteringPoint);
-
-            if (meteringPointType == MeteringPointType.Consumption)
+            return new CreateMeteringPoint
             {
-                return CreateConsumptionMeteringPoint(document);
-            }
-
-            if (meteringPointType == MeteringPointType.Production)
-            {
-                return CreateProductionMeteringPoint(document);
-            }
-
-            if (meteringPointType == MeteringPointType.Exchange)
-            {
-                return CreateExchangeMeteringPoint(document);
-            }
-
-            return CreateSpecialMeteringPoint(document);
-        }
-
-        private static IBusinessRequest CreateConsumptionMeteringPoint(MasterDataDocument document)
-        {
-            return new CreateConsumptionMeteringPoint
-            {
+                MeteringPointType = document.TypeOfMeteringPoint,
                 AssetType = document.AssetType,
                 BuildingNumber = document.BuildingNumber,
                 CityName = document.CityName,
@@ -124,100 +99,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
                 PhysicalConnectionCapacity = document.PhysicalConnectionCapacity,
                 CitySubDivisionName = document.CitySubDivisionName,
                 ScheduledMeterReadingDate = document.ScheduledMeterReadingDate,
-            };
-        }
-
-        private static IBusinessRequest CreateProductionMeteringPoint(MasterDataDocument document)
-        {
-            return new CreateProductionMeteringPoint
-            {
-                AssetType = document.AssetType!,
-                BuildingNumber = document.BuildingNumber,
-                CityName = document.CityName,
-                ConnectionType = document.ConnectionType,
-                CountryCode = document.CountryCode,
-                DisconnectionType = document.DisconnectionType,
-                EffectiveDate = document.EffectiveDate,
-                FloorIdentification = document.FloorIdentification,
-                GsrnNumber = document.GsrnNumber,
-                LocationDescription = document.LocationDescription,
-                MaximumCurrent = document.MaximumCurrent,
-                MaximumPower = document.MaximumPower,
-                MeteringMethod = document.MeteringMethod ?? string.Empty,
-                MeterNumber = document.MeterNumber,
-                MunicipalityCode = document.MunicipalityCode,
-                PostCode = document.PostCode,
-                PowerPlant = document.PowerPlant,
-                RoomIdentification = document.RoomIdentification,
-                StreetCode = document.StreetCode,
-                StreetName = document.StreetName,
-                TransactionId = document.TransactionId,
-                GeoInfoReference = document.GeoInfoReference,
-                IsActualAddress = document.IsActualAddress,
-                MeteringGridArea = document.MeteringGridArea,
-                MeterReadingOccurrence = document.MeterReadingOccurrence,
-                NetSettlementGroup = document.NetSettlementGroup,
-                PhysicalConnectionCapacity = document.PhysicalConnectionCapacity,
-                CitySubDivisionName = document.CitySubDivisionName,
-            };
-        }
-
-        private static IBusinessRequest CreateExchangeMeteringPoint(MasterDataDocument document)
-        {
-            return new CreateExchangeMeteringPoint
-            {
-                BuildingNumber = document.BuildingNumber,
-                CityName = document.CityName,
-                CountryCode = document.CountryCode,
-                EffectiveDate = document.EffectiveDate,
-                FloorIdentification = document.FloorIdentification,
-                GsrnNumber = document.GsrnNumber,
-                LocationDescription = document.LocationDescription,
-                MaximumCurrent = document.MaximumCurrent,
-                MaximumPower = document.MaximumPower,
-                MeteringMethod = document.MeteringMethod ?? string.Empty,
-                MeterNumber = document.MeterNumber,
-                MunicipalityCode = document.MunicipalityCode,
-                PostCode = document.PostCode,
-                RoomIdentification = document.RoomIdentification,
-                StreetCode = document.StreetCode,
-                StreetName = document.StreetName,
-                TransactionId = document.TransactionId,
-                MeteringGridArea = document.MeteringGridArea,
-                MeterReadingOccurrence = document.MeterReadingOccurrence,
-                PhysicalConnectionCapacity = document.PhysicalConnectionCapacity,
-                CitySubDivisionName = document.CitySubDivisionName,
-                FromGrid = document.FromGrid ?? string.Empty,
-                ToGrid = document.ToGrid ?? string.Empty,
-            };
-        }
-
-        private static IBusinessRequest CreateSpecialMeteringPoint(MasterDataDocument document)
-        {
-            return new CreateSpecialMeteringPoint
-            {
-                MeteringPointType = document.TypeOfMeteringPoint,
-                BuildingNumber = document.BuildingNumber,
-                CityName = document.CityName,
-                CountryCode = document.CountryCode,
-                EffectiveDate = document.EffectiveDate,
-                FloorIdentification = document.FloorIdentification,
-                GsrnNumber = document.GsrnNumber,
-                LocationDescription = document.LocationDescription,
-                MaximumCurrent = document.MaximumCurrent,
-                MaximumPower = document.MaximumPower,
-                MeteringMethod = document.MeteringMethod ?? string.Empty,
-                MeterNumber = document.MeterNumber,
-                MunicipalityCode = document.MunicipalityCode,
-                PostCode = document.PostCode,
-                RoomIdentification = document.RoomIdentification,
-                StreetCode = document.StreetCode,
-                StreetName = document.StreetName,
-                TransactionId = document.TransactionId,
-                MeteringGridArea = document.MeteringGridArea,
-                MeterReadingOccurrence = document.MeterReadingOccurrence,
-                PhysicalConnectionCapacity = document.PhysicalConnectionCapacity,
-                CitySubDivisionName = document.CitySubDivisionName,
+                ExchangeDetails = new ExchangeDetails(document.FromGrid, document.FromGrid),
             };
         }
     }

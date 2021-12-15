@@ -64,4 +64,8 @@ limitations under the License.
     <Folder Include="Messaging\Incoming\Protobuf\Contracts" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="EDI\Errors\Converters\Create\PowerPlantIsRequiredForNetSettlementGroupConverter.cs" />
+  </ItemGroup>
+
 </Project>

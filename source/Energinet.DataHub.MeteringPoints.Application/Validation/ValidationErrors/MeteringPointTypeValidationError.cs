@@ -18,13 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class MeteringPointTypeValidationError : ValidationError
     {
-        public MeteringPointTypeValidationError(string gsrnNumber, string meteringPointType)
+        public MeteringPointTypeValidationError(string meteringPointType)
         {
-            GsrnNumber = gsrnNumber;
             MeteringPointType = meteringPointType;
         }
-
-        public string GsrnNumber { get; }
 
         public string MeteringPointType { get; }
     }

@@ -18,11 +18,13 @@ using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Categories;
+using MeteringPointCreated = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events.MeteringPointCreated;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
 {
@@ -32,11 +34,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
         [Fact]
         public void Should_succeed()
         {
+            var sourceGridAreaLinkId = GridAreaLinkId.New();
+            var targetGridAreaLinkId = GridAreaLinkId.New();
             var meteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty());
             var meteringPointId = MeteringPointId.New();
             var meteringPointGsrn = GsrnNumber.Create(SampleData.GsrnNumber);
             var meteringMethod = MeteringMethod.Virtual;
-            var areadLinkId = new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId));
+            var gridAreaLinkId = new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId));
             var readingOccurrence = ReadingOccurrence.Hourly;
             var powerLimit = PowerLimit.Create(0, 0);
             var effectiveDate = EffectiveDate.Create(SampleData.EffectiveDate);
@@ -54,19 +58,17 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
                 isActual: false,
                 geoInfoReference: SampleData.GeoInfoReference);
 
-            var exchangeMeteringPointDetails = CreateExchangeDetails()
-                with
-                {
-                    Id = meteringPointId,
-                    Address = address,
-                    GridAreaLinkId = areadLinkId,
-                    PowerLimit = powerLimit,
-                    MeteringConfiguration = meteringConfiguration,
-                };
+            var meteringPoint = MeteringPoint.CreateExchange(
+                meteringPointId,
+                meteringPointGsrn,
+                gridAreaLinkId,
+                effectiveDate,
+                ExchangeGridAreas.Create(sourceGridAreaLinkId, targetGridAreaLinkId),
+                MasterDataBuilderForExchange()
+                .WithAddress(address.StreetName, address.StreetCode, address.BuildingNumber, address.City, address.CitySubDivision, address.PostCode, address.CountryCode, address.Floor, address.Room, address.MunicipalityCode, address.IsActual, address.GeoInfoReference, address.LocationDescription)
+                .Build());
 
-            var meteringPoint = ExchangeMeteringPoint.Create(exchangeMeteringPointDetails);
-
-            var createdEvent = meteringPoint.DomainEvents.First(e => e is ExchangeMeteringPointCreated) as ExchangeMeteringPointCreated;
+            var createdEvent = meteringPoint.DomainEvents.First(e => e is MeteringPointCreated) as MeteringPointCreated;
             Assert.Equal(address.City, createdEvent!.City);
             Assert.Equal(address.Floor, createdEvent.Floor);
             Assert.Equal(address.Room, createdEvent.Room);
@@ -80,74 +82,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
             Assert.Equal(meteringPointId.Value, createdEvent.MeteringPointId);
             Assert.Equal(meteringPointGsrn.Value, createdEvent.GsrnNumber);
             Assert.Equal(meteringConfiguration.Method.Name, createdEvent.MeteringPointSubType);
-            Assert.Equal(areadLinkId.Value, createdEvent.GridAreaLinkId);
+            Assert.Equal(gridAreaLinkId.Value, createdEvent.GridAreaLinkId);
             Assert.Equal(address.LocationDescription, createdEvent.LocationDescription);
             Assert.Equal(readingOccurrence.Name, createdEvent.ReadingOccurrence);
             Assert.Equal(powerLimit.Ampere, createdEvent.MaximumCurrent);
             Assert.Equal(powerLimit.Kwh, createdEvent.MaximumPower);
             Assert.Equal(effectiveDate.DateInUtc, createdEvent.EffectiveDate);
-        }
-
-        [Fact]
-        public void Product_type_should_as_default_be_active_energy()
-        {
-            var details = CreateExchangeDetails();
-
-            var meteringPoint = ExchangeMeteringPoint.Create(details);
-
-            var createdEvent = meteringPoint.DomainEvents.First(e => e is ExchangeMeteringPointCreated) as ExchangeMeteringPointCreated;
-            Assert.Equal(ProductType.EnergyActive.Name, createdEvent!.ProductType);
-        }
-
-        [Fact]
-        public void Should_return_error_when_street_name_is_missing()
-        {
-            var address = Address.Create(
-                string.Empty,
-                SampleData.StreetCode,
-                string.Empty,
-                SampleData.CityName,
-                string.Empty,
-                string.Empty,
-                null,
-                string.Empty,
-                string.Empty,
-                default,
-                isActual: true,
-                geoInfoReference: null);
-
-            var meteringPointDetails = CreateExchangeDetails()
-                with
-                {
-                    Address = address,
-                };
-
-            var checkResult = CheckCreationRules(meteringPointDetails);
-            AssertContainsValidationError<StreetNameIsRequiredRuleError>(checkResult);
-        }
-
-        [Fact]
-        public void Product_type_should_be_set_to_active_energy()
-        {
-            var address = CreateAddress();
-
-            var meteringPointDetails = CreateExchangeDetails()
-                with
-                {
-                    Address = address,
-                    MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty()),
-                };
-
-            var meteringPoint = ExchangeMeteringPoint.Create(meteringPointDetails);
-
-            var createdEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is ExchangeMeteringPointCreated) as ExchangeMeteringPointCreated;
-
-            Assert.Equal(ProductType.EnergyActive.Name, createdEvent!.ProductType);
-        }
-
-        private static BusinessRulesValidationResult CheckCreationRules(ExchangeMeteringPointDetails meteringPointDetails)
-        {
-            return ExchangeMeteringPoint.CanCreate(meteringPointDetails);
+            Assert.Equal(targetGridAreaLinkId.Value, createdEvent.TargetGridAreaLinkId);
+            Assert.Equal(sourceGridAreaLinkId.Value, createdEvent.SourceGridAreaLinkId);
         }
     }
 }

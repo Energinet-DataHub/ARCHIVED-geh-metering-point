@@ -14,7 +14,7 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Create.Consumption;
+using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
@@ -301,6 +301,34 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
+        public async Task Metering_point_type_is_required()
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    TypeOfMeteringPoint = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
+        }
+
+        [Fact]
+        public async Task Metering_point_type_must_be_valid()
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    TypeOfMeteringPoint = "invalid value",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D18");
+        }
+
+        [Fact]
         public async Task Should_reject_when_maximum_power_is_invalid()
         {
             var invalidPowerLimit = 12345567;
@@ -361,20 +389,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
-        public async Task Should_reject_when_measurement_unit_is_missing()
-        {
-            var request = Scenarios.CreateDocument()
-                with
-                {
-                    MeasureUnitType = string.Empty,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("D02");
-        }
-
-        [Fact]
         public async Task Should_reject_when_geo_info_reference_is_specified_and_official_address_is_empty()
         {
             var request = Scenarios.CreateDocument()
@@ -404,7 +418,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("E86");
         }
 
-        private static CreateConsumptionMeteringPoint CreateCommand()
+        private static CreateMeteringPoint CreateCommand()
         {
             return Scenarios.CreateConsumptionMeteringPointCommand();
         }
