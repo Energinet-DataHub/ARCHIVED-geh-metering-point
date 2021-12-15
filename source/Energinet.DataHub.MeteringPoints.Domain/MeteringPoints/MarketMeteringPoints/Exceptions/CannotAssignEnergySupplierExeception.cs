@@ -15,7 +15,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Execeptions
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Exceptions
 {
     public class CannotAssignEnergySupplierExeception : BusinessRuleException
     {
