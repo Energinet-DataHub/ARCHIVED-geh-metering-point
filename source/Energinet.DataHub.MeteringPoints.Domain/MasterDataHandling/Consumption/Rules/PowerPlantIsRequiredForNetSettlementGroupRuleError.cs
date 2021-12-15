@@ -12,15 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption.Rules
 {
-    public record MeteringPointSimpleCimDto(
-        Guid MeteringPointId,
-        string GsrnNumber,
-        ConnectionState ConnectionState,
-        MeteringPointType MeteringPointType,
-        DateTime EffectiveDate);
+    public class PowerPlantIsRequiredForNetSettlementGroupRuleError : ValidationError
+    {
+        public PowerPlantIsRequiredForNetSettlementGroupRuleError(NetSettlementGroup netSettlementGroup)
+        {
+            NetSettlementGroup = netSettlementGroup;
+        }
+
+        public NetSettlementGroup NetSettlementGroup { get; }
+    }
 }

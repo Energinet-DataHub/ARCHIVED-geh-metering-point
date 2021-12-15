@@ -12,15 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
-
-namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 {
-    public record MeteringPointSimpleCimDto(
-        Guid MeteringPointId,
-        string GsrnNumber,
-        ConnectionState ConnectionState,
-        MeteringPointType MeteringPointType,
-        DateTime EffectiveDate);
+    public class MasterDataField
+    {
+        public MasterDataField(string name, Applicability applicability, bool canBeChanged = true, object? defaultValue = null)
+        {
+            Name = name;
+            Applicability = applicability;
+            CanBeChanged = canBeChanged;
+            DefaultValue = defaultValue;
+        }
+
+        public string Name { get; }
+
+        public Applicability Applicability { get; }
+
+        public bool CanBeChanged { get; }
+
+        public object? DefaultValue { get; }
+    }
 }

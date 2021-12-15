@@ -12,15 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
-
-namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 {
-    public record MeteringPointSimpleCimDto(
-        Guid MeteringPointId,
-        string GsrnNumber,
-        ConnectionState ConnectionState,
-        MeteringPointType MeteringPointType,
-        DateTime EffectiveDate);
+    public enum Applicability
+    {
+        Required,
+        Optional,
+        NotAllowed,
+    }
 }

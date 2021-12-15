@@ -12,15 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 {
-    public record MeteringPointSimpleCimDto(
-        Guid MeteringPointId,
-        string GsrnNumber,
-        ConnectionState ConnectionState,
-        MeteringPointType MeteringPointType,
-        DateTime EffectiveDate);
+    /// <summary>
+    /// Validates a master data for specific type of metering point
+    /// </summary>
+    internal interface IMasterDataValidatorStrategy
+    {
+        /// <summary>
+        /// Checks business rules and returns the result
+        /// </summary>
+        /// <param name="masterData"></param>
+        /// <returns><see cref="BusinessRulesValidationResult"/></returns>
+        BusinessRulesValidationResult CheckRules(MasterData masterData);
+    }
 }
