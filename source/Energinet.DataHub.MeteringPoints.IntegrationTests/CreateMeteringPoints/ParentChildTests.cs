@@ -47,5 +47,18 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             AssertValidationError("D18");
         }
+
+        [Fact]
+        public async Task Parent_must_exist()
+        {
+            var createChildCommand = Scenarios.CreateCommand(MeteringPointType.NetConsumption)
+                with
+                {
+                    ParentRelatedMeteringPoint = "570851247381952311",
+                };
+            await SendCommandAsync(createChildCommand).ConfigureAwait(false);
+
+            AssertValidationError("E10");
+        }
     }
 }
