@@ -58,5 +58,8 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
         DisconnectionType? DisconnectionType,
         bool? ProductionObligation,
         IEnumerable<MeteringPointSimpleCimDto>? ChildMeteringPoints,
-        MeteringPointSimpleCimDto? ParentMeteringPoint);
+        MeteringPointSimpleCimDto? ParentMeteringPoint,
+        UnitType UnitType,
+        ProductType ProductType,
+        string PowerPlantGsrnNumber);
 }
