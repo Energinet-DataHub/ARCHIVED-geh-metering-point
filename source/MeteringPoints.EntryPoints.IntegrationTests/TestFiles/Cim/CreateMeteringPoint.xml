@@ -85,7 +85,7 @@ limitations under the License.
       </cim:usagePointLocation.mainAddress>
       <cim:usagePointLocation.actualAddressIndicator>true</cim:usagePointLocation.actualAddressIndicator>
       <cim:usagePointLocation.geoInfoReference>8E58B34D-EFE2-43AA-8143-80A7B2B0EF73</cim:usagePointLocation.geoInfoReference>
-      <cim:parent_MarketEvaluationPoint.mRID codingScheme="NSI">a</cim:parent_MarketEvaluationPoint.mRID>
+      <cim:parent_MarketEvaluationPoint.mRID codingScheme="NSI"></cim:parent_MarketEvaluationPoint.mRID>
       <cim:parent_MarketEvaluationPoint.description>E17</cim:parent_MarketEvaluationPoint.description>
       <cim:Child_MarketEvaluationPoint>
         <cim:mRID codingScheme="NCS">a</cim:mRID>
