@@ -20,6 +20,7 @@ using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
@@ -39,6 +40,19 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             : base(databaseFixture)
         {
             _dateTimeProvider = GetService<ISystemDateTimeProvider>();
+        }
+
+        [Fact]
+        public async Task Metering_point_is_connected()
+        {
+            await CreateMeteringPointWithEnergySupplierAssigned().ConfigureAwait(false);
+
+            await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
+
+            AssertMeteringPoint
+                .Initialize(SampleData.GsrnNumber, GetService<IDbConnectionFactory>())
+                .HasConnectionState(PhysicalState.Connected);
+            AssertConfirmMessage(DocumentType.ConnectMeteringPointAccepted);
         }
 
         [Fact]
@@ -223,6 +237,14 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
 
             var addEnergySupplier = new AddEnergySupplier(meteringPoint?.Id.Value.ToString()!, startOfSupply, SampleData.GlnNumber);
             await SendCommandAsync(addEnergySupplier).ConfigureAwait(false);
+        }
+
+        private async Task CreateMeteringPointWithEnergySupplierAssigned()
+        {
+            await SendCommandAsync(Scenarios.CreateCommand(MeteringPointType.Consumption)).ConfigureAwait(false);
+            var currentDate = _dateTimeProvider.Now().ToDateTimeUtc();
+            var startOfSupplyDate = Instant.FromUtc(currentDate.Year, currentDate.Month, currentDate.Day, 22, 0);
+            await MarkAsEnergySupplierAssigned(startOfSupplyDate).ConfigureAwait(false);
         }
     }
 }
