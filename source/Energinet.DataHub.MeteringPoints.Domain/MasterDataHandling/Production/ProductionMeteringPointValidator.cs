@@ -34,7 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production
                 new PostCodeIsRequiredRule(masterData.Address),
                 new GeoInfoReferenceRequirementRule(masterData.Address),
                 new MeteringMethodRule(masterData.NetSettlementGroup!, masterData.MeteringConfiguration.Method),
-                new MeteringPoints.Production.Rules.AssetTypeRequirementRule(masterData.AssetType),
+                new AssetTypeRequirementRule(masterData.AssetType),
                 new PowerplantRequirementRule(masterData.PowerPlantGsrnNumber),
                 new ConnectionTypeRequirementRule(masterData.NetSettlementGroup!, masterData.ConnectionType),
             });

@@ -13,11 +13,10 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production.Rules
 {
     public class AssetTypeRequirementRule : IBusinessRule
     {
