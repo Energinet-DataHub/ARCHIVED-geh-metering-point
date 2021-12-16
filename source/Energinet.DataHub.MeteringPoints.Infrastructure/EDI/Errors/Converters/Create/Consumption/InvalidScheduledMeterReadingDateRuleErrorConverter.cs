@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Create.Consumption
 {

@@ -13,11 +13,10 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using PowerPlantIsRequiredForNetSettlementGroupRule = Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption.Rules.PowerPlantIsRequiredForNetSettlementGroupRule;
 using StreetNameIsRequiredRule = Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules.StreetNameIsRequiredRule;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption

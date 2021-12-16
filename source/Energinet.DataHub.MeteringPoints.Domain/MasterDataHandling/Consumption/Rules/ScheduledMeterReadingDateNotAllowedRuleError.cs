@@ -12,21 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption.Rules
 {
-    public class SettlementMethodMustBeFlexOrNonProfiledRule : IBusinessRule
+    public class ScheduledMeterReadingDateNotAllowedRuleError : ValidationError
     {
-        public SettlementMethodMustBeFlexOrNonProfiledRule(SettlementMethod settlementMethod)
-        {
-            IsBroken = settlementMethod == SettlementMethod.Profiled;
-            ValidationError = new InvalidSettlementMethodRuleError(settlementMethod);
-        }
-
-        public bool IsBroken { get; }
-
-        public ValidationError ValidationError { get; }
     }
 }

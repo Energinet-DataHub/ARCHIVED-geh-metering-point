@@ -14,9 +14,9 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption.Rules
 {
-    public class InvalidScheduledMeterReadingDateRuleError : ValidationError
+    public class InvalidScheduledMeterReadingDateNetSettlementGroupRuleError : ValidationError
     {
     }
 }

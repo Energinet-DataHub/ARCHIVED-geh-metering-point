@@ -16,7 +16,7 @@ using System;
 using System.Globalization;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption.Rules
 {
     public class ScheduledMeterReadingDateFormatRule : IBusinessRule
     {
