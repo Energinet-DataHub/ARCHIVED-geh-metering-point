@@ -52,6 +52,16 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Model\202111091330 Move NetSettlementGroup.sql" />
     <EmbeddedResource Include="Scripts\Model\202111091345 Remove connection types from production.sql" />
     <EmbeddedResource Include="Scripts\Model\202111091346 Move asset type.sql" />
+    <EmbeddedResource Include="Scripts\Model\202112071500 Move settlement method.sql" />
+    <EmbeddedResource Include="Scripts\Model\202112071531 Move scheduled meter reading date.sql" />
+    <EmbeddedResource Include="Scripts\Model\202112071541 Move production obligation.sql" />
+    <EmbeddedResource Include="Scripts\Model\202112071556 Move net settlement group.sql" />
+    <EmbeddedResource Include="Scripts\Model\202112071604 Move disconnection type.sql" />
+    <EmbeddedResource Include="Scripts\Model\202112071612 Move connection type.sql" />
+    <EmbeddedResource Include="Scripts\Model\202112081000 Move energy supplier details.sql" />
+    <EmbeddedResource Include="Scripts\Model\202112091530 Change EnergySuppliers foreign key constraint.sql" />
+    <EmbeddedResource Include="Scripts\Model\202112131100 Move exchange metering point details.sql" />
+    <EmbeddedResource Include="Scripts\Model\202112132025 Delete specific metering point tables.sql" />
     <EmbeddedResource Include="Scripts\Model\202112131115 Add Actor table.sql" />
     <EmbeddedResource Include="Scripts\Seed\202112142130 Create Grid Area seed data.sql" />
     <EmbeddedResource Include="Scripts\Seed\202112141430 Actor seed data.sql" />

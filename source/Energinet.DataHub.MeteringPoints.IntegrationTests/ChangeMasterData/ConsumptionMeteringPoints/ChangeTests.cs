@@ -169,72 +169,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
             AssertValidationError("D16");
         }
 
-        [Fact]
-        public async Task Can_not_set_connection_type_when_net_settlement_group_is_0()
-        {
-            await CreateConsumptionMeteringPointInNetSettlementGroupZero().ConfigureAwait(false);
-
-            var request = TestUtils.CreateRequest()
-                with
-                {
-                    EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
-                    ConnectionType = ConnectionType.Installation.Name,
-                };
-
-            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("D02");
-        }
-
-        [Fact]
-        public async Task Connection_type_is_installation_for_net_settlement_group_6()
-        {
-            await CreateConsumptionMeteringPointInNetSettlementGroup6().ConfigureAwait(false);
-
-            var request = CreateChangeRequest()
-                with
-                {
-                    ConnectionType = ConnectionType.Direct.Name,
-                };
-
-            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("D55");
-        }
-
-        [Fact]
-        public async Task Connection_type_is_changed()
-        {
-            await CreateConsumptionMeteringPointInNetSettlementGroup(NetSettlementGroup.Two).ConfigureAwait(false);
-
-            await InvokeBusinessProcessAsync(CreateChangeRequest()
-                with
-                {
-                    ConnectionType = ConnectionType.Direct.Name,
-                }).ConfigureAwait(false);
-
-            AssertConfirmMessage(DocumentType.ChangeMasterDataAccepted);
-            await AssertConnectionTypeIsAsync(ConnectionType.Direct).ConfigureAwait(false);
-        }
-
-        private async Task AssertConnectionTypeIsAsync(ConnectionType connectionType)
-        {
-            var assertStatement =
-                $"SELECT COUNT(*) FROM dbo.MeteringPoints mp " +
-                $"JOIN dbo.MarketMeteringPoints mk ON mp.Id = mk.Id " +
-                $" WHERE mk.ConnectionType = '{connectionType.Name}' AND mp.GsrnNumber = '{SampleData.GsrnNumber}'";
-
-            var connectionFactory = GetService<IDbConnectionFactory>();
-            var connection = connectionFactory.GetOpenConnection();
-            if (connection.State == ConnectionState.Closed)
-            {
-                connection.Open();
-            }
-
-            var result = await connection.ExecuteScalarAsync<int>(assertStatement).ConfigureAwait(false);
-            Assert.Equal(1, result);
-        }
-
         private async Task MarkAsClosedDown()
         {
             var context = GetService<MeteringPointContext>();
@@ -255,34 +189,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
                 {
                     MeteringMethod = MeteringMethod.Physical.Name,
                     MeterNumber = "1",
-                    NetSettlementGroup = NetSettlementGroup.Zero.Name,
-                    ConnectionType = null,
-                    ScheduledMeterReadingDate = null,
-                };
-            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
-        }
-
-        private async Task CreateConsumptionMeteringPointInNetSettlementGroup(NetSettlementGroup netSettlementGroup)
-        {
-            var request = Scenarios.CreateConsumptionMeteringPointCommand()
-                with
-                {
-                    EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
-                    MeteringMethod = MeteringMethod.Virtual.Name,
-                    NetSettlementGroup = netSettlementGroup.Name,
-                    ConnectionType = ConnectionType.Installation.Name,
-                    ScheduledMeterReadingDate = null,
-                };
-            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
-        }
-
-        private async Task CreateConsumptionMeteringPointInNetSettlementGroupZero()
-        {
-            var request = Scenarios.CreateConsumptionMeteringPointCommand()
-                with
-                {
-                    EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
-                    MeteringMethod = MeteringMethod.Virtual.Name,
                     NetSettlementGroup = NetSettlementGroup.Zero.Name,
                     ConnectionType = null,
                     ScheduledMeterReadingDate = null,

@@ -23,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 {
     public class MasterData : ValueObject
     {
-        public MasterData(ProductType productType, MeasurementUnitType unitType, AssetType? assetType, ReadingOccurrence readingOccurrence, PowerLimit powerLimit, GsrnNumber? powerPlantGsrnNumber, EffectiveDate effectiveDate, Capacity? capacity, Address address, MeteringConfiguration meteringConfiguration, SettlementMethod settlementMethod, ScheduledMeterReadingDate? scheduledMeterReadingDate, ConnectionType? connectionType, DisconnectionType disconnectionType, NetSettlementGroup netSettlementGroup)
+        public MasterData(ProductType productType, MeasurementUnitType unitType, AssetType? assetType, ReadingOccurrence readingOccurrence, PowerLimit powerLimit, GsrnNumber? powerPlantGsrnNumber, EffectiveDate effectiveDate, Capacity? capacity, Address address, MeteringConfiguration meteringConfiguration, SettlementMethod settlementMethod, ScheduledMeterReadingDate? scheduledMeterReadingDate, ConnectionType? connectionType, DisconnectionType disconnectionType, NetSettlementGroup netSettlementGroup, bool? productionObligation)
         {
             ProductType = productType;
             UnitType = unitType;
@@ -40,6 +40,18 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             ConnectionType = connectionType;
             DisconnectionType = disconnectionType;
             NetSettlementGroup = netSettlementGroup;
+            ProductionObligation = productionObligation;
+        }
+
+        private MasterData()
+        {
+            ProductType = ProductType.EnergyActive;
+            UnitType = MeasurementUnitType.KWh;
+            ReadingOccurrence = ReadingOccurrence.Quarterly;
+            PowerLimit = PowerLimit.Create(0, 0);
+            Address = Address.Create();
+            MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty());
+            DisconnectionType = DisconnectionType.Manual;
         }
 
         public ProductType ProductType { get; }
@@ -54,7 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public GsrnNumber? PowerPlantGsrnNumber { get; }
 
-        public EffectiveDate EffectiveDate { get; }
+        public EffectiveDate? EffectiveDate { get; }
 
         public Capacity? Capacity { get; }
 
@@ -62,14 +74,16 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public MeteringConfiguration MeteringConfiguration { get; }
 
-        public SettlementMethod SettlementMethod { get; }
+        public SettlementMethod? SettlementMethod { get; }
 
         public ScheduledMeterReadingDate? ScheduledMeterReadingDate { get; }
 
         public ConnectionType? ConnectionType { get; }
 
-        public DisconnectionType DisconnectionType { get; }
+        public DisconnectionType? DisconnectionType { get; }
 
-        public NetSettlementGroup NetSettlementGroup { get; }
+        public NetSettlementGroup? NetSettlementGroup { get; }
+
+        public bool? ProductionObligation { get; }
     }
 }

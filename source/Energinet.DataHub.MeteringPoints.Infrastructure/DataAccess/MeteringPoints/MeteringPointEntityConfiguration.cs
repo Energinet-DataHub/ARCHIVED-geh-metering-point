@@ -15,12 +15,12 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -50,27 +50,114 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     toDbValue => toDbValue.Value,
                     fromDbValue => GsrnNumber.Create(fromDbValue));
 
-            builder.OwnsOne<Address>("Address", y =>
+            builder.OwnsOne<MasterData>("_masterData", mapper =>
             {
-                y.Property(x => x.StreetName).HasColumnName("StreetName");
-                y.Property(x => x.StreetCode).HasColumnName("StreetCode");
-                y.Property(x => x.City).HasColumnName("CityName");
-                y.Property(x => x.CountryCode)
-                    .HasColumnName("CountryCode")
+                mapper.Property(x => x.ProductType)
+                    .HasColumnName("ProductType")
+                    .HasConversion(
+                        toDbValue => toDbValue.Name,
+                        fromDbValue => EnumerationType.FromName<ProductType>(fromDbValue));
+                mapper.Property(x => x.UnitType)
+                    .HasColumnName("UnitType")
+                    .HasConversion(
+                        toDbValue => toDbValue.Name,
+                        fromDbValue => EnumerationType.FromName<MeasurementUnitType>(fromDbValue));
+                mapper.Property(x => x.AssetType)
+                    .HasColumnName("AssetType")
                     .HasConversion(
                         toDbValue => toDbValue! == null! ? null : toDbValue.Name,
-                        fromDbValue => !string.IsNullOrWhiteSpace(fromDbValue)
-                            ? EnumerationType.FromName<CountryCode>(fromDbValue)
-                            : null);
-                y.Property(x => x.PostCode).HasColumnName("PostCode");
-                y.Property(x => x.CitySubDivision).HasColumnName("CitySubdivision");
-                y.Property(x => x.Floor).HasColumnName("Floor");
-                y.Property(x => x.Room).HasColumnName("Room");
-                y.Property(x => x.BuildingNumber).HasColumnName("BuildingNumber");
-                y.Property(x => x.MunicipalityCode).HasColumnName("MunicipalityCode");
-                y.Property(x => x.IsActual).HasColumnName("IsActualAddress");
-                y.Property(x => x.GeoInfoReference).HasColumnName("GeoInfoReference");
-                y.Property(x => x.LocationDescription).HasColumnName("LocationDescription");
+                        fromDbValue => !string.IsNullOrEmpty(fromDbValue)
+                            ? EnumerationType.FromName<AssetType>(fromDbValue)
+                            : null!);
+                mapper.Property(x => x.ReadingOccurrence)
+                    .HasColumnName("MeterReadingOccurrence")
+                    .HasConversion(
+                        toDbValue => toDbValue.Name,
+                        fromDbValue => EnumerationType.FromName<ReadingOccurrence>(fromDbValue));
+                mapper.OwnsOne(x => x.PowerLimit, y =>
+                {
+                    y.Property(x => x.Ampere)
+                        .HasColumnName("MaximumCurrent");
+                    y.Property(x => x.Kwh)
+                        .HasColumnName("MaximumPower");
+                });
+                mapper.Property(x => x.PowerPlantGsrnNumber)
+                    .HasColumnName("PowerPlant")
+                    .HasConversion(toDbValue => toDbValue == null ? null : toDbValue.Value, fromDbValue => string.IsNullOrEmpty(fromDbValue) ? null : GsrnNumber.Create(fromDbValue));
+                mapper.Property(x => x.Capacity)
+                    .HasColumnName("Capacity")
+                    .HasConversion<double?>(
+                        toDbValue => toDbValue == null
+                            ? null
+                            : toDbValue.Kw!,
+                        convertFromProviderExpression: fromDbValue => fromDbValue.HasValue
+                            ? Capacity.Create(fromDbValue.Value)
+                            : null!);
+
+                mapper.OwnsOne(x => x.MeteringConfiguration, y =>
+                {
+                    y.Property(x => x.Meter)
+                        .HasColumnName("MeterNumber")
+                        .HasConversion(toDbValue => toDbValue.Value, fromDbValue => MeterId.Create(fromDbValue));
+                    y.Property(x => x.Method)
+                        .HasColumnName("MeteringPointSubType")
+                        .HasConversion(
+                            toDbValue => toDbValue.Name,
+                            fromDbValue => EnumerationType.FromName<MeteringMethod>(fromDbValue));
+                });
+
+                mapper.OwnsOne(x => x.Address, y =>
+                {
+                    y.Property(x => x.StreetName).HasColumnName("StreetName");
+                    y.Property(x => x.StreetCode).HasColumnName("StreetCode");
+                    y.Property(x => x.City).HasColumnName("CityName");
+                    y.Property(x => x.CountryCode)
+                        .HasColumnName("CountryCode")
+                        .HasConversion(
+                            toDbValue => toDbValue! == null! ? null : toDbValue.Name,
+                            fromDbValue => !string.IsNullOrWhiteSpace(fromDbValue)
+                                ? EnumerationType.FromName<CountryCode>(fromDbValue)
+                                : null);
+                    y.Property(x => x.PostCode).HasColumnName("PostCode");
+                    y.Property(x => x.CitySubDivision).HasColumnName("CitySubdivision");
+                    y.Property(x => x.Floor).HasColumnName("Floor");
+                    y.Property(x => x.Room).HasColumnName("Room");
+                    y.Property(x => x.BuildingNumber).HasColumnName("BuildingNumber");
+                    y.Property(x => x.MunicipalityCode).HasColumnName("MunicipalityCode");
+                    y.Property(x => x.IsActual).HasColumnName("IsActualAddress");
+                    y.Property(x => x.GeoInfoReference).HasColumnName("GeoInfoReference");
+                    y.Property(x => x.LocationDescription).HasColumnName("LocationDescription");
+                });
+                mapper.Property(x => x.ScheduledMeterReadingDate)
+                    .HasColumnName("ScheduledMeterReadingDate")
+                    .HasConversion(
+                        toDbValue => toDbValue == null! ? null : toDbValue!.MonthAndDay,
+                        fromDbValue => string.IsNullOrEmpty(fromDbValue) ? null : ScheduledMeterReadingDate.Create(fromDbValue));
+                mapper.Property(x => x.SettlementMethod)
+                    .HasColumnName("SettlementMethod")
+                    .HasConversion(
+                        toDbValue => toDbValue! == null! ? null : toDbValue.Name,
+                        fromDbValue => string.IsNullOrEmpty(fromDbValue) ? null : EnumerationType.FromName<SettlementMethod>(fromDbValue));
+                mapper.Property(x => x.ProductionObligation)
+                    .HasColumnName("ProductionObligation");
+
+                mapper.Property(x => x.NetSettlementGroup)
+                    .HasColumnName("NetSettlementGroup")
+                    .HasConversion(
+                        toDbValue => toDbValue! == null! ? null : toDbValue.Name,
+                        fromDbValue => string.IsNullOrEmpty(fromDbValue) ? null : EnumerationType.FromName<NetSettlementGroup>(fromDbValue));
+                mapper.Property(x => x.DisconnectionType)
+                    .HasColumnName("DisconnectionType")
+                    .HasConversion(
+                        toDbValue => toDbValue! == null! ? null : toDbValue.Name,
+                        fromDbValue => string.IsNullOrEmpty(fromDbValue) ? null : EnumerationType.FromName<DisconnectionType>(fromDbValue));
+                mapper.Property(x => x.ConnectionType)
+                    .HasColumnName("ConnectionType")
+                    .HasConversion(
+                        toDbValue => toDbValue! == null! ? null : toDbValue.Name,
+                        fromDbValue => string.IsNullOrEmpty(fromDbValue) ? null : EnumerationType.FromName<ConnectionType>(fromDbValue));
+                mapper.Ignore(x => x.ConnectionType);
+                mapper.Ignore(x => x.EffectiveDate);
             });
 
             builder.OwnsOne<ConnectionState>("ConnectionState", config =>
@@ -96,167 +183,25 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     toDbValue => toDbValue.Value,
                     fromDbValue => new GridAreaLinkId(fromDbValue));
 
-            builder.Property<GsrnNumber>("_powerPlantGsrnNumber")
-                .HasColumnName("PowerPlant")
-                .HasConversion(toDbValue => toDbValue.Value, fromDbValue => GsrnNumber.Create(fromDbValue));
-
-            builder.Property<ProductType>("_productType")
-                .HasColumnName("ProductType")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<ProductType>(fromDbValue));
-
-            builder.Property<MeasurementUnitType>("_unitType")
-                .HasColumnName("UnitType")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<MeasurementUnitType>(fromDbValue));
-
-            builder.Property<ReadingOccurrence>("_meterReadingOccurrence")
-                .HasColumnName("MeterReadingOccurrence")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<ReadingOccurrence>(fromDbValue));
-
-            builder.OwnsOne<MeteringConfiguration>("MeteringConfiguration", mapper =>
-            {
-                mapper.Property(x => x.Meter)
-                    .HasColumnName("MeterNumber")
-                    .HasConversion(toDbValue => toDbValue.Value, fromDbValue => MeterId.Create(fromDbValue));
-                mapper.Property(x => x.Method)
-                    .HasColumnName("MeteringPointSubType")
-                    .HasConversion(
-                        toDbValue => toDbValue.Name,
-                        fromDbValue => EnumerationType.FromName<MeteringMethod>(fromDbValue));
-            });
-
-            builder.OwnsOne<PowerLimit>("_powerLimit", mapper =>
-            {
-                mapper.Property(x => x.Ampere)
-                    .HasColumnName("MaximumCurrent");
-                mapper.Property(x => x.Kwh)
-                    .HasColumnName("MaximumPower");
-            });
-
             builder.Property<EffectiveDate>("_effectiveDate")
                 .HasColumnName("EffectiveDate")
                 .HasConversion<DateTime>(toDbValue => toDbValue.DateInUtc.ToDateTimeUtc(), fromDbValue => EffectiveDate.Create(fromDbValue));
-
-            builder.Property<Capacity>("_capacity")
-                .HasColumnName("Capacity")
-                .HasConversion<double?>(
-                    toDbValue => toDbValue == null
-                    ? null
-                    : toDbValue.Kw!,
-                    convertFromProviderExpression: fromDbValue => fromDbValue.HasValue
-                        ? Capacity.Create(fromDbValue.Value)
-                        : null!);
-
-            builder.Property<AssetType>("_assetType")
-                .HasColumnName("AssetType")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => !string.IsNullOrEmpty(fromDbValue)
-                        ? EnumerationType.FromName<AssetType>(fromDbValue)
-                        : null!);
-        }
-    }
-
-    public class MarketMeteringPointEntityConfiguration : IEntityTypeConfiguration<MarketMeteringPoint>
-    {
-        public void Configure(EntityTypeBuilder<MarketMeteringPoint> builder)
-        {
-            if (builder == null)
-            {
-                throw new ArgumentNullException(nameof(builder));
-            }
-
-            builder.ToTable("MarketMeteringPoints", "dbo");
 
             builder.OwnsOne<EnergySupplierDetails>("EnergySupplierDetails", config =>
             {
                 config.Property(x => x.StartOfSupply)
                     .HasColumnName("StartOfSupplyDate");
             });
-            builder.Property<ConnectionType>("ConnectionType")
-                .HasColumnName("ConnectionType")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<ConnectionType>(fromDbValue));
 
-            builder.Property<DisconnectionType>("DisconnectionType")
-                .HasColumnName("DisconnectionType")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<DisconnectionType>(fromDbValue));
-
-            builder.Property<NetSettlementGroup>("_netSettlementGroup")
-                .HasColumnName("NetSettlementGroup")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<NetSettlementGroup>(fromDbValue));
-        }
-    }
-
-    public class ConsumptionMeteringPointEntityConfiguration : IEntityTypeConfiguration<ConsumptionMeteringPoint>
-    {
-        public void Configure(EntityTypeBuilder<ConsumptionMeteringPoint> builder)
-        {
-            if (builder == null)
+            builder.OwnsOne<ExchangeGridAreas>("_exchangeGridAreas", mapper =>
             {
-                throw new ArgumentNullException(nameof(builder));
-            }
-
-            builder.ToTable("ConsumptionMeteringPoints", "dbo");
-
-            builder.Property<SettlementMethod>("_settlementMethod")
-                .HasColumnName("SettlementMethod")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<SettlementMethod>(fromDbValue));
-
-            builder.Property<ScheduledMeterReadingDate>("_scheduledMeterReadingDate")
-                .HasColumnName("ScheduledMeterReadingDate")
-                .HasConversion(
-                    toDbValue => toDbValue.MonthAndDay,
-                    fromDbValue => ScheduledMeterReadingDate.Create(fromDbValue));
-        }
-    }
-
-    public class ProductionMeteringPointEntityConfiguration : IEntityTypeConfiguration<ProductionMeteringPoint>
-    {
-        public void Configure(EntityTypeBuilder<ProductionMeteringPoint> builder)
-        {
-            if (builder == null)
-            {
-                throw new ArgumentNullException(nameof(builder));
-            }
-
-            builder.ToTable("ProductionMeteringPoints", "dbo");
-
-            builder.Property("_productionObligation")
-                .HasColumnName("ProductionObligation");
-        }
-    }
-
-    public class ExchangeMeteringPointEntityConfiguration : IEntityTypeConfiguration<ExchangeMeteringPoint>
-    {
-        public void Configure(EntityTypeBuilder<ExchangeMeteringPoint> builder)
-        {
-            if (builder == null)
-            {
-                throw new ArgumentNullException(nameof(builder));
-            }
-
-            builder.ToTable("ExchangeMeteringPoints", "dbo");
-
-            builder.Property<GridAreaLinkId>("_fromGrid")
-                .HasColumnName("FromGrid")
-                .HasConversion(toDbValue => toDbValue.Value, fromDbValue => new GridAreaLinkId(fromDbValue));
-
-            builder.Property<GridAreaLinkId>("_toGrid")
-                .HasColumnName("ToGrid")
-                .HasConversion(toDbValue => toDbValue.Value, fromDbValue => new GridAreaLinkId(fromDbValue));
+                mapper.Property(x => x.SourceGridArea)
+                    .HasColumnName("FromGrid")
+                    .HasConversion(toDbValue => toDbValue.Value, fromDbValue => new GridAreaLinkId(fromDbValue));
+                mapper.Property(x => x.TargetGridArea)
+                    .HasColumnName("ToGrid")
+                    .HasConversion(toDbValue => toDbValue.Value, fromDbValue => new GridAreaLinkId(fromDbValue));
+            });
         }
     }
 }

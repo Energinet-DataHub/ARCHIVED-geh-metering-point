@@ -18,8 +18,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class MeteringPointType : EnumerationType
     {
-        public static readonly MeteringPointType Consumption = new MeteringPointType(0, nameof(Consumption));
-        public static readonly MeteringPointType Production = new MeteringPointType(1, nameof(Production));
+        public static readonly MeteringPointType Consumption = new MeteringPointType(0, nameof(Consumption), true);
+        public static readonly MeteringPointType Production = new MeteringPointType(1, nameof(Production), true);
         public static readonly MeteringPointType Exchange = new MeteringPointType(2, nameof(Exchange));
         public static readonly MeteringPointType GridLossCorrection = new MeteringPointType(3, nameof(GridLossCorrection));
         public static readonly MeteringPointType Analysis = new MeteringPointType(4, nameof(Analysis));
@@ -40,9 +40,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public static readonly MeteringPointType OtherConsumption = new MeteringPointType(19, nameof(OtherConsumption));
         public static readonly MeteringPointType OtherProduction = new MeteringPointType(20, nameof(OtherProduction));
 
-        private MeteringPointType(int id, string name)
+        private MeteringPointType(int id, string name, bool isAccountingPoint = false)
             : base(id, name)
         {
+            IsAccountingPoint = isAccountingPoint;
         }
+
+        public bool IsAccountingPoint { get; }
     }
 }

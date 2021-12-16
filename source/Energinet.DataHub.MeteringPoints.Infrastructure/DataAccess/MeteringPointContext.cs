@@ -17,9 +17,6 @@ using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Production;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.Actors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas;
@@ -49,12 +46,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
 
         public DbSet<MeteringPoint> MeteringPoints { get; private set; }
 
-        public DbSet<ConsumptionMeteringPoint> ConsumptionMeteringPoints { get; private set; }
-
-        public DbSet<ProductionMeteringPoint> ProductionMeteringPoints { get; private set; }
-
-        public DbSet<ExchangeMeteringPoint> ExchangeMeteringPoints { get; private set; }
-
         public DbSet<IncomingMessage> IncomingMessages { get; private set; }
 
         public DbSet<QueuedInternalCommand> QueuedInternalCommands { get; private set; }
@@ -73,10 +64,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
 
             modelBuilder.ApplyConfiguration(new OutboxMessageEntityConfiguration());
             modelBuilder.ApplyConfiguration(new MeteringPointEntityConfiguration());
-            modelBuilder.ApplyConfiguration(new MarketMeteringPointEntityConfiguration());
-            modelBuilder.ApplyConfiguration(new ConsumptionMeteringPointEntityConfiguration());
-            modelBuilder.ApplyConfiguration(new ProductionMeteringPointEntityConfiguration());
-            modelBuilder.ApplyConfiguration(new ExchangeMeteringPointEntityConfiguration());
             modelBuilder.ApplyConfiguration(new IncomingMessageEntityConfiguration());
             modelBuilder.ApplyConfiguration(new QueuedInternalCommandEntityConfiguration());
             modelBuilder.ApplyConfiguration(new GridAreaEntityConfiguration());
