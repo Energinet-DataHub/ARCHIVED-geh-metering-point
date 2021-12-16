@@ -64,7 +64,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
         private static MeteringPointCimDto MapToCimDto(MeteringPointDto meteringPointDto)
         {
-            var meteringPointSubType = ConvertEnumerationTypeToEnum<MeteringMethod, Domain.MeteringDetails.MeteringMethod>(meteringPointDto.MeteringPointSubType);
+            var meteringPointSubType = ConvertEnumerationTypeToEnum<MeteringMethod, Domain.MasterDataHandling.Components.MeteringDetails.MeteringMethod>(meteringPointDto.MeteringPointSubType);
             var connectionState = ConvertEnumerationTypeToEnum<ConnectionState, PhysicalState>(meteringPointDto.PhysicalState);
             var meteringPointType = ConvertEnumerationTypeToEnum<MeteringPointType, Domain.MeteringPoints.MeteringPointType>(meteringPointDto.MeteringPointType);
             var unitType = ConvertEnumerationTypeToEnum<PriceUnit, MeasurementUnitType>(meteringPointDto.UnitType);

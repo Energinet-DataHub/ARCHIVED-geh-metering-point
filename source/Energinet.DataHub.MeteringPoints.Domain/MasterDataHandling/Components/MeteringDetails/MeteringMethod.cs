@@ -12,26 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringDetails
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails
 {
-    public class MeterIdLengthRule : IBusinessRule
+    public class MeteringMethod : EnumerationType
     {
-        private const int MaxLength = 15;
+        public static readonly MeteringMethod Physical = new MeteringMethod(0, nameof(Physical));
+        public static readonly MeteringMethod Virtual = new MeteringMethod(1, nameof(Virtual));
+        public static readonly MeteringMethod Calculated = new MeteringMethod(2, nameof(Calculated));
 
-        public MeterIdLengthRule(string meterId)
+        private MeteringMethod(int id, string name)
+            : base(id, name)
         {
-            if (meterId == null) throw new ArgumentNullException(nameof(meterId));
-            IsBroken = meterId.Length > MaxLength;
-            ValidationError = new InvalidMeterIdRuleError(meterId, MaxLength);
         }
-
-        public bool IsBroken { get; }
-
-        public ValidationError ValidationError { get; }
     }
 }

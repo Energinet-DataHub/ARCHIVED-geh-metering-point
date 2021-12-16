@@ -14,11 +14,9 @@
 
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exceptions;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringDetails
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails
 {
     public class MeterId : ValueObject
     {

@@ -15,25 +15,25 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Domain
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails
 {
-    public class InvalidMeteringPointIdRuleException : BusinessRuleException
+    public class InvalidMeteringConfigurationException : SeedWork.BusinessRuleException
     {
-        public InvalidMeteringPointIdRuleException()
+        public InvalidMeteringConfigurationException()
         {
         }
 
-        public InvalidMeteringPointIdRuleException(string? message)
+        public InvalidMeteringConfigurationException(string? message)
             : base(message)
         {
         }
 
-        public InvalidMeteringPointIdRuleException(string message, Exception innerException)
+        public InvalidMeteringConfigurationException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
-        protected InvalidMeteringPointIdRuleException(SerializationInfo info, StreamingContext context)
+        protected InvalidMeteringConfigurationException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

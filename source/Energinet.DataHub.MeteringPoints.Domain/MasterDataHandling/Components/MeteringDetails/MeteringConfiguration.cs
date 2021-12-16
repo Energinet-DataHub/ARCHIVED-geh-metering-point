@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringDetails
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails
 {
     public class MeteringConfiguration : ValueObject
     {
