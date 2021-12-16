@@ -12,18 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
-    public class KwhPowerLimitRule : IBusinessRule
+    public class MeterReadingOccurrenceRule : IBusinessRule
     {
-        private const int MaxKwh = 999999;
-
-        public KwhPowerLimitRule(int kwh)
+        public MeterReadingOccurrenceRule(ReadingOccurrence readingOccurrence)
         {
-            IsBroken = kwh > MaxKwh;
-            ValidationError = new InvalidKwhPowerLimitRuleError(kwh);
+            if (readingOccurrence == null!) throw new ArgumentNullException(nameof(readingOccurrence));
+            IsBroken = !(readingOccurrence == ReadingOccurrence.Hourly || readingOccurrence == ReadingOccurrence.Quarterly);
+            ValidationError = new InvalidMeterReadingOccurrenceRuleError(readingOccurrence.Name);
         }
 
         public bool IsBroken { get; }

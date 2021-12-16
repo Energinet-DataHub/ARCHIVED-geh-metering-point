@@ -12,22 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
-    public class CapacityRequirementRule : IBusinessRule
+    public class CapacityIsRequiredRuleError : ValidationError
     {
-        public CapacityRequirementRule(Capacity? capacity, NetSettlementGroup netSettlementGroup)
-        {
-            IsBroken = netSettlementGroup != NetSettlementGroup.Zero && capacity == null;
-            ValidationError = new CapacityIsRequiredRuleError();
-        }
-
-        public bool IsBroken { get; }
-
-        public ValidationError ValidationError { get; }
     }
 }

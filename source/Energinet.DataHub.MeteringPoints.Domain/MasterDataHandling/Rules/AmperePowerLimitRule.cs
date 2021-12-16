@@ -14,9 +14,20 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
-    public class CapacityIsRequiredRuleError : ValidationError
+    public class AmperePowerLimitRule : IBusinessRule
     {
+        private const int MaxAmpere = 999999;
+
+        public AmperePowerLimitRule(int ampere)
+        {
+            IsBroken = ampere > MaxAmpere;
+            ValidationError = new InvalidAmperePowerLimitRuleError(ampere);
+        }
+
+        public bool IsBroken { get; }
+
+        public ValidationError ValidationError { get; }
     }
 }
