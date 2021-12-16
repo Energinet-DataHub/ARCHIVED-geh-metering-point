@@ -32,6 +32,19 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
+        public async Task Parent_gsrn_number_is_must_be_valid()
+        {
+            var createChildCommand = Scenarios.CreateCommand(MeteringPointType.NetConsumption)
+                with
+                {
+                    ParentRelatedMeteringPoint = "invalid gsrn number",
+                };
+            await SendCommandAsync(createChildCommand).ConfigureAwait(false);
+
+            AssertValidationError("E10");
+        }
+
+        [Fact]
         public async Task Cannot_act_as_parent()
         {
             var createInvalidParentCommand = Scenarios.CreateCommand(MeteringPointType.NetConsumption) with
