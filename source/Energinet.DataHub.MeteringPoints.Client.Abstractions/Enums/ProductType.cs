@@ -14,8 +14,7 @@
 
 namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums
 {
-    // ReSharper disable once InconsistentNaming
-    public enum ProductID
+    public enum ProductType
     {
         Tariff = 0, //5790001330590
         FuelQuantity = 1, //5790001330606
