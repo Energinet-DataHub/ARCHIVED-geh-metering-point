@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Parties
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors
 {
-    public class Party
+    public class Actor
     {
-        public Party(string identificationNumber, string identificationType, string role)
+        public Actor(string identificationNumber, string identificationType, string role)
         {
             IdentificationNumber = identificationNumber;
             IdentificationType = identificationType;

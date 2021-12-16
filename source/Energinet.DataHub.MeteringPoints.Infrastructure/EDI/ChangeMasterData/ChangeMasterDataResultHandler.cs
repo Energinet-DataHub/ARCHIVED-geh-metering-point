@@ -28,19 +28,19 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData
         private readonly IActorMessageFactory _actorMessageFactory;
         private readonly IMessageHubDispatcher _messageHubDispatcher;
         private readonly ErrorMessageFactory _errorMessageFactory;
-        private readonly PartyProvider _partyProvider;
+        private readonly ActorProvider _actorProvider;
 
         public ChangeMasterDataResultHandler(
             IActorMessageFactory actorMessageFactory,
             IMessageHubDispatcher messageHubDispatcher,
             ErrorMessageFactory errorMessageFactory,
-            PartyProvider partyProvider)
+            ActorProvider actorProvider)
         {
             _actorMessageFactory = actorMessageFactory ?? throw new ArgumentNullException(nameof(actorMessageFactory));
             _messageHubDispatcher =
                 messageHubDispatcher ?? throw new ArgumentNullException(nameof(messageHubDispatcher));
             _errorMessageFactory = errorMessageFactory ?? throw new ArgumentNullException(nameof(errorMessageFactory));
-            _partyProvider = partyProvider;
+            _actorProvider = actorProvider;
         }
 
         public Task HandleAsync(ChangeMasterDataRequest request, BusinessProcessResult result)
@@ -57,8 +57,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var receiver = _partyProvider.CurrentParty;
-            var sender = _partyProvider.DataHub;
+            var receiver = _actorProvider.CurrentActor;
+            var sender = _actorProvider.DataHub;
 
             var message = _actorMessageFactory.CreateNewMeteringPointConfirmation(request.GsrnNumber, request.EffectiveDate, request.TransactionId, sender, receiver);
             return _messageHubDispatcher.DispatchAsync(message, DocumentType.ChangeMasterDataAccepted, request.GsrnNumber);
@@ -66,8 +66,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData
 
         private Task CreateRejectResponseAsync(ChangeMasterDataRequest request, BusinessProcessResult result)
         {
-            var receiver = _partyProvider.CurrentParty;
-            var sender = _partyProvider.DataHub;
+            var receiver = _actorProvider.CurrentActor;
+            var sender = _actorProvider.DataHub;
 
             var errors = result.ValidationErrors
                 .Select(error => _errorMessageFactory.GetErrorMessage(error))

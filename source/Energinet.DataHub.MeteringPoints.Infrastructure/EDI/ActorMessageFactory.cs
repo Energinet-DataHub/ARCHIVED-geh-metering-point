@@ -21,6 +21,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Parties;
+using Actor = Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors.Actor;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
 {
@@ -37,8 +38,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
             string gsrnNumber,
             string effectiveDate,
             string transactionId,
-            Party sender,
-            Party receiver)
+            Actor sender,
+            Actor receiver)
         {
             if (sender == null) throw new ArgumentNullException(nameof(sender));
             if (receiver == null) throw new ArgumentNullException(nameof(receiver));
@@ -58,8 +59,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
             string effectiveDate,
             string transactionId,
             IEnumerable<ErrorMessage> errors,
-            Party sender,
-            Party receiver)
+            Actor sender,
+            Actor receiver)
         {
             if (sender == null) throw new ArgumentNullException(nameof(sender));
             if (receiver == null) throw new ArgumentNullException(nameof(receiver));
@@ -75,23 +76,23 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
         }
 
-        private static MarketRoleParticipant Map(Party party)
+        private static MarketRoleParticipant Map(Actor actor)
         {
-            var codingScheme = party.IdentificationType switch
+            var codingScheme = actor.IdentificationType switch
             {
                 nameof(IdentificationType.GLN) => "A10",
                 nameof(IdentificationType.EIC) => "A01",
                 _ => throw new InvalidOperationException("Unknown party identifier type"),
             };
 
-            var role = party.Role switch
+            var role = actor.Role switch
             {
                 nameof(Role.MeteringPointAdministrator) => "DDZ",
                 nameof(Role.GridAccessProvider) => "DDM",
                 _ => throw new InvalidOperationException("Unknown party role"),
             };
 
-            return new MarketRoleParticipant(party.IdentificationNumber, codingScheme, role);
+            return new MarketRoleParticipant(actor.IdentificationNumber, codingScheme, role);
         }
     }
 }

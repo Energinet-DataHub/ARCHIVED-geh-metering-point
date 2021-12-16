@@ -14,24 +14,25 @@
 
 using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Domain.Actors;
+using Actor = Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors.Actor;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Parties
 {
-    public class PartyProvider
+    public class ActorProvider
     {
         private readonly IUserContext _userContext;
 
-        public PartyProvider(
+        public ActorProvider(
             IUserContext userContext)
         {
             _userContext = userContext;
         }
 
 #pragma warning disable CA1822 // Could be static
-        public Party DataHub => new("5790001330552", IdentificationType.GLN.ToString(), Role.MeteringPointAdministrator.ToString());
+        public Actor DataHub => new("5790001330552", IdentificationType.GLN.ToString(), Role.MeteringPointAdministrator.ToString());
 #pragma warning restore CA1822
 
         // TODO: Fix with new user context
-        public Party CurrentParty => new(_userContext.CurrentUser!.Id, IdentificationType.GLN.ToString(), Role.GridAccessProvider.ToString());
+        public Actor CurrentActor => new(_userContext.CurrentUser!.Id, IdentificationType.GLN.ToString(), Role.GridAccessProvider.ToString());
     }
 }
