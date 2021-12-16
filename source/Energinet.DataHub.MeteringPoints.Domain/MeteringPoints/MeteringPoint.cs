@@ -19,6 +19,7 @@ using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange;
@@ -28,6 +29,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoint
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using StreetNameIsRequiredRule = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.StreetNameIsRequiredRule;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {

@@ -12,26 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
-    public class MeteringMethodRule : IBusinessRule
+    public class MeteringMethodDoesNotMatchNetSettlementGroupRuleError : ValidationError
     {
-        public MeteringMethodRule(NetSettlementGroup netSettlementGroup, MeteringMethod meteringMethod)
+        public MeteringMethodDoesNotMatchNetSettlementGroupRuleError(NetSettlementGroup netSettlementGroup, MeteringMethod meteringMethod)
         {
-            IsBroken =
-                !(netSettlementGroup == NetSettlementGroup.Zero || netSettlementGroup == NetSettlementGroup.Ninetynine) &&
-                !(meteringMethod == MeteringMethod.Calculated || meteringMethod == MeteringMethod.Virtual);
-            ValidationError =
-                new MeteringMethodDoesNotMatchNetSettlementGroupRuleError(netSettlementGroup, meteringMethod);
+            NetSettlementGroup = netSettlementGroup;
+            MeteringMethod = meteringMethod;
         }
 
-        public bool IsBroken { get; }
+        public NetSettlementGroup NetSettlementGroup { get; }
 
-        public ValidationError ValidationError { get; }
+        public MeteringMethod MeteringMethod { get; }
     }
 }

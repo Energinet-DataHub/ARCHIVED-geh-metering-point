@@ -14,7 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
     public class ConnectionTypeDoesNotMatchNetSettlementGroupRuleError : ValidationError
     {

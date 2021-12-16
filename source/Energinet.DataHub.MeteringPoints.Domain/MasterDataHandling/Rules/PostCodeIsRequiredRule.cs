@@ -12,11 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
-    public class CityIsRequiredRuleError : ValidationError
+    public class PostCodeIsRequiredRule : IBusinessRule
     {
+        public PostCodeIsRequiredRule(string? postCode)
+        {
+            IsBroken = postCode?.Length == 0;
+        }
+
+        public PostCodeIsRequiredRule(Address address)
+        {
+            if (address == null) throw new ArgumentNullException(nameof(address));
+            IsBroken = string.IsNullOrWhiteSpace(address.PostCode);
+        }
+
+        public bool IsBroken { get; }
+
+        public ValidationError ValidationError => new PostCodeIsRequiredRuleError();
     }
 }

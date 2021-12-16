@@ -14,9 +14,9 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
-    public class GeoInfoReferenceIsRequiredRuleError : ValidationError
+    public class PostCodeIsRequiredRuleError : ValidationError
     {
     }
 }

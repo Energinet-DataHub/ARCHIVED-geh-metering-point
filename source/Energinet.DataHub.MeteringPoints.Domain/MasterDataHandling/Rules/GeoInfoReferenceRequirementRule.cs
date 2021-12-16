@@ -12,23 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
-    public class CapacityRequirementRule : IBusinessRule
+    public class GeoInfoReferenceRequirementRule : IBusinessRule
     {
-        public CapacityRequirementRule(Capacity? capacity, NetSettlementGroup netSettlementGroup)
+        public GeoInfoReferenceRequirementRule(Address address)
         {
-            IsBroken = netSettlementGroup != NetSettlementGroup.Zero && capacity == null;
-            ValidationError = new CapacityIsRequiredRuleError();
+            if (address == null) throw new ArgumentNullException(nameof(address));
+            IsBroken = !IsGeoInfoReferencePresent(address);
+            ValidationError = new GeoInfoReferenceIsRequiredRuleError();
         }
 
         public bool IsBroken { get; }
 
         public ValidationError ValidationError { get; }
+
+        private static bool IsGeoInfoReferencePresent(Address address)
+        {
+            return !(address.GeoInfoReference == Guid.Empty || address.GeoInfoReference.HasValue == false);
+        }
     }
 }

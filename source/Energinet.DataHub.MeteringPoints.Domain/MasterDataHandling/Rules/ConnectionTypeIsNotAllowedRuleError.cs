@@ -14,15 +14,9 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
-    public class InvalidMeterReadingOccurrenceRuleError : ValidationError
+    public class ConnectionTypeIsNotAllowedRuleError : ValidationError
     {
-        public InvalidMeterReadingOccurrenceRuleError(string meterReadingOccurrence)
-        {
-            MeterReadingOccurrence = meterReadingOccurrence;
-        }
-
-        public string MeterReadingOccurrence { get; }
     }
 }

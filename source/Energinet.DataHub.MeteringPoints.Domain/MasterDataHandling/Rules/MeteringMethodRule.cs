@@ -12,22 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.VEProduction.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
-    public class MeterReadingOccurrenceRule : IBusinessRule
+    public class MeteringMethodRule : IBusinessRule
     {
-        public MeterReadingOccurrenceRule(ReadingOccurrence readingOccurrence)
+        public MeteringMethodRule(NetSettlementGroup netSettlementGroup, MeteringMethod meteringMethod)
         {
-            if (readingOccurrence == null!) throw new ArgumentNullException(nameof(readingOccurrence));
-            IsBroken = !(readingOccurrence == ReadingOccurrence.Hourly || readingOccurrence == ReadingOccurrence.Quarterly || readingOccurrence == ReadingOccurrence.Monthly);
-            ValidationError = new InvalidMeterReadingOccurrenceRuleError(readingOccurrence.Name);
+            IsBroken =
+                !(netSettlementGroup == NetSettlementGroup.Zero || netSettlementGroup == NetSettlementGroup.Ninetynine) &&
+                !(meteringMethod == MeteringMethod.Calculated || meteringMethod == MeteringMethod.Virtual);
+            ValidationError =
+                new MeteringMethodDoesNotMatchNetSettlementGroupRuleError(netSettlementGroup, meteringMethod);
         }
 
         public bool IsBroken { get; }
