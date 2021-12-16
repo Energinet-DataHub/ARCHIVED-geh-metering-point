@@ -14,7 +14,7 @@
 
 namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums
 {
-    public enum UnitType
+    public enum Unit
     {
         AMP = 0, //Ampere
         H87 = 9, //STK
