@@ -14,7 +14,7 @@
 
 namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums
 {
-    public enum ProductType
+    public enum ProductId
     {
         Tariff = 0, //5790001330590
         FuelQuantity = 1, //5790001330606

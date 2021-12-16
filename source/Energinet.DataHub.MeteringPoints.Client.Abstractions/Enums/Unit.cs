@@ -14,17 +14,17 @@
 
 namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums
 {
-    public enum PriceUnit
+    public enum Unit
     {
-        K3 = 1, // KVArh,
-        KWH = 2, // KWh,
-        KWT = 3, // KW,
-        MAW = 4, // MW,
-        MWH = 5, // MWh,
-        TNE = 6, // Tonne,
-        Z03 = 7, // MVAr,
-        AMP = 0, // Ampere,
-        H87 = 9, // STK,
-        Z14 = 8, // DanishTariffCode,
+        AMP = 0, //Ampere
+        H87 = 9, //STK
+        K3 = 1, //kVArh
+        KWH = 2, //kWh
+        KWT = 3, //kW
+        MAW = 4, //MW
+        MWH = 5, //MWh
+        TNE = 6, //Tonne
+        Z03 = 7, //MVAr
+        Z14 = 8, //DanishTariffCode
     }
 }

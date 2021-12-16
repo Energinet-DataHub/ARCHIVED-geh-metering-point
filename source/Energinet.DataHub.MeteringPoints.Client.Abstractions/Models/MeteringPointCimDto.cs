@@ -35,8 +35,8 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
         string GridAreaCode,
         string LinkedExtendedMasterdata,
         string LocationDescription,
-        string ProductId,
-        PriceUnit PriceUnit,
+        ProductId ProductId,
+        Unit Unit,
         DateTime? EffectiveDate,
         string MeterId,
         string StreetCode,
@@ -59,7 +59,5 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
         bool? ProductionObligation,
         IEnumerable<MeteringPointSimpleCimDto>? ChildMeteringPoints,
         MeteringPointSimpleCimDto? ParentMeteringPoint,
-        UnitType UnitType,
-        ProductType ProductType,
         string PowerPlantGsrnNumber);
 }
