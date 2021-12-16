@@ -20,7 +20,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
 {
     public record MasterDataDetails(
         EffectiveDate EffectiveDate,
-        Domain.Addresses.Address? Address = null,
+        Domain.MasterDataHandling.Components.Addresses.Address? Address = null,
         MeteringConfiguration? MeteringConfiguration = null,
         ConnectionType? ConnectionType = null);
 }

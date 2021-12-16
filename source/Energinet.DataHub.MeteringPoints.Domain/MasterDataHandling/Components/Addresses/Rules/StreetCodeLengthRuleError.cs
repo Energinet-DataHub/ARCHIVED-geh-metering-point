@@ -14,23 +14,20 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses.Rules
 {
-    public class PostCodeFormatRuleError : ValidationError
+    public class StreetCodeLengthRuleError : ValidationError
     {
-        public PostCodeFormatRuleError()
+        public StreetCodeLengthRuleError()
         {
-            PostCode = string.Empty;
+            StreetCode = string.Empty;
         }
 
-        public PostCodeFormatRuleError(string postCode, int maxLength)
+        public StreetCodeLengthRuleError(string streetCode)
         {
-            PostCode = postCode;
-            MaxLength = maxLength;
+            StreetCode = streetCode;
         }
 
-        public string PostCode { get; }
-
-        public int MaxLength { get; }
+        public string StreetCode { get; }
     }
 }

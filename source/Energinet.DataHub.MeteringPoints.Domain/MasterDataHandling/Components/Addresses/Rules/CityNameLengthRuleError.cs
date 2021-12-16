@@ -14,15 +14,23 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.Addresses
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses.Rules
 {
-    public class CountryCode : EnumerationType
+    public class CityNameLengthRuleError : ValidationError
     {
-        public static readonly CountryCode DK = new CountryCode(0, nameof(DK));
-
-        public CountryCode(int id, string name)
-            : base(id, name)
+        public CityNameLengthRuleError()
         {
+            City = string.Empty;
         }
+
+        public CityNameLengthRuleError(string city, int maxLength)
+        {
+            City = city;
+            MaxLength = maxLength;
+        }
+
+        public string City { get; }
+
+        public int MaxLength { get; }
     }
 }

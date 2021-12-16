@@ -14,15 +14,20 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses.Rules
 {
-    public class InvalidLocationDescriptionRuleError : ValidationError
+    public class FloorLengthRuleError : ValidationError
     {
-        public InvalidLocationDescriptionRuleError(string locationDescription)
+        public FloorLengthRuleError()
         {
-            LocationDescription = locationDescription;
+            Floor = string.Empty;
         }
 
-        public string LocationDescription { get; }
+        public FloorLengthRuleError(string floor)
+        {
+            Floor = floor;
+        }
+
+        public string Floor { get; }
     }
 }

@@ -14,32 +14,32 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses.Rules
 {
-    public class FloorLengthRule : IBusinessRule
+    public class RoomLengthRule : IBusinessRule
     {
         private const int MaxLength = 4;
 
-        public FloorLengthRule(string? floor)
+        public RoomLengthRule(string? room)
         {
-            Validate(floor);
+            Validate(room);
         }
 
         public bool IsBroken { get; private set; }
 
-        public ValidationError ValidationError { get; private set; } = new FloorLengthRuleError();
+        public ValidationError ValidationError { get; private set; } = new RoomLengthRuleError();
 
-        private void Validate(string? floor)
+        private void Validate(string? room)
         {
-            if (string.IsNullOrWhiteSpace(floor))
+            if (string.IsNullOrWhiteSpace(room))
             {
                 return;
             }
 
-            if (floor.Length > MaxLength)
+            if (room.Length > MaxLength)
             {
                 IsBroken = true;
-                ValidationError = new FloorLengthRuleError(floor);
+                ValidationError = new RoomLengthRuleError(room);
             }
         }
     }

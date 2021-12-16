@@ -15,7 +15,7 @@
 using System.Text.RegularExpressions;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.Addresses.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses.Rules
 {
     public class PostCodeFormatRule : IBusinessRule
     {
