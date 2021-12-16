@@ -16,9 +16,11 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using Energinet.DataHub.Core.TestCommon;
+using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Extensions;
 using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures;
 using FluentAssertions;
 using Xunit;
@@ -99,6 +101,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
 
             // Local MessageHub
             await AssertFunctionExecuted(Fixture.LocalMessageHubHostManager, "BundleDequeuedQueueSubscriber").ConfigureAwait(false);
+
+            // AssertNoExceptionsThrown();
         }
 
         private static async Task AssertFunctionExecuted(FunctionAppHostManager hostManager, string functionName)
@@ -112,6 +116,15 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
                     waitTimespan)
                 .ConfigureAwait(false);
             functionExecuted.Should().BeTrue($"{functionName} was expected to run.");
+        }
+
+        private void AssertNoExceptionsThrown()
+        {
+            Fixture.IngestionHostManager.CheckIfFunctionThrewException().Should().BeFalse();
+            Fixture.ProcessingHostManager.CheckIfFunctionThrewException().Should().BeFalse();
+            Fixture.OutboxHostManager.CheckIfFunctionThrewException().Should().BeFalse();
+            Fixture.LocalMessageHubHostManager.CheckIfFunctionThrewException().Should().BeFalse();
+            Fixture.InternalCommandDispatcherHostManager.CheckIfFunctionThrewException().Should().BeFalse();
         }
     }
 }

@@ -17,11 +17,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Application.Common.Users;
-using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Parties;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData
 {
@@ -30,22 +28,19 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData
         private readonly IActorMessageFactory _actorMessageFactory;
         private readonly IMessageHubDispatcher _messageHubDispatcher;
         private readonly ErrorMessageFactory _errorMessageFactory;
-        private readonly IUserContext _userContext;
-        private readonly ActorAccessor _actorAccessor;
+        private readonly PartyProvider _partyProvider;
 
         public ChangeMasterDataResultHandler(
             IActorMessageFactory actorMessageFactory,
             IMessageHubDispatcher messageHubDispatcher,
             ErrorMessageFactory errorMessageFactory,
-            IUserContext userContext,
-            ActorAccessor actorAccessor)
+            PartyProvider partyProvider)
         {
             _actorMessageFactory = actorMessageFactory ?? throw new ArgumentNullException(nameof(actorMessageFactory));
             _messageHubDispatcher =
                 messageHubDispatcher ?? throw new ArgumentNullException(nameof(messageHubDispatcher));
             _errorMessageFactory = errorMessageFactory ?? throw new ArgumentNullException(nameof(errorMessageFactory));
-            _userContext = userContext;
-            _actorAccessor = actorAccessor;
+            _partyProvider = partyProvider;
         }
 
         public Task HandleAsync(ChangeMasterDataRequest request, BusinessProcessResult result)
@@ -62,27 +57,23 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            // TODO: Maybe the whole "Actor" object is available on the context?
-            var receiver = _actorAccessor.GetByIdentifierAndRole(_userContext.CurrentUser!.GlnNumber, IdentificationType.GLN, Role.GridAccessProvider);
-            var sender = _actorAccessor.GetDataHub();
+            var receiver = _partyProvider.CurrentParty;
+            var sender = _partyProvider.DataHub;
 
-            // TODO: Remove bang when getting current actor from context instead of accessor.
-            var message = _actorMessageFactory.CreateNewMeteringPointConfirmation(request.GsrnNumber, request.EffectiveDate, request.TransactionId, sender, receiver!);
+            var message = _actorMessageFactory.CreateNewMeteringPointConfirmation(request.GsrnNumber, request.EffectiveDate, request.TransactionId, sender, receiver);
             return _messageHubDispatcher.DispatchAsync(message, DocumentType.ChangeMasterDataAccepted, request.GsrnNumber);
         }
 
         private Task CreateRejectResponseAsync(ChangeMasterDataRequest request, BusinessProcessResult result)
         {
-            // TODO: Maybe the whole "Actor" object is available on the context?
-            var receiver = _actorAccessor.GetByIdentifierAndRole(_userContext.CurrentUser!.GlnNumber, IdentificationType.GLN, Role.GridAccessProvider);
-            var sender = _actorAccessor.GetDataHub();
+            var receiver = _partyProvider.CurrentParty;
+            var sender = _partyProvider.DataHub;
 
             var errors = result.ValidationErrors
                 .Select(error => _errorMessageFactory.GetErrorMessage(error))
                 .AsEnumerable();
 
-            // TODO: Remove bang when getting current actor from context instead of accessor.
-            var message = _actorMessageFactory.CreateNewMeteringPointReject(request.GsrnNumber, request.EffectiveDate, request.TransactionId, errors, sender, receiver!);
+            var message = _actorMessageFactory.CreateNewMeteringPointReject(request.GsrnNumber, request.EffectiveDate, request.TransactionId, errors, sender, receiver);
             return _messageHubDispatcher.DispatchAsync(message, DocumentType.ChangeMasterDataRejected, request.GsrnNumber);
         }
     }

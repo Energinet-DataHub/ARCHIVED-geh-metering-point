@@ -12,33 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.ObjectModel;
-
-namespace Energinet.DataHub.MeteringPoints.Domain.Actors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Parties
 {
-    public class Actor
+    public class Party
     {
-        public Actor(ActorId actorId, IdentificationType identificationType, string identificationNumber, Collection<Role> roles)
+        public Party(string identificationNumber, string identificationType, string role)
         {
-            Id = actorId;
-            IdentificationType = identificationType;
             IdentificationNumber = identificationNumber;
-            Roles = roles;
+            IdentificationType = identificationType;
+            Role = role;
         }
-
-#pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind complex types in constructor
-        private Actor()
-        {
-        }
-#pragma warning restore 8618
-
-        public ActorId Id { get; }
 
         public string IdentificationNumber { get; }
 
-        public IdentificationType IdentificationType { get; }
+        public string IdentificationType { get; }
 
-        public Collection<Role> Roles { get; }
+        public string Role { get; }
     }
 }

@@ -56,6 +56,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Parties;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
@@ -151,7 +152,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
             _container.Register<IUserContext>(() => new UserContextStub { CurrentUser = new UserIdentity(Guid.NewGuid().ToString(), "8200000001409"), }, Lifestyle.Scoped);
             _container.Register<MeteringPointPipelineContext>(Lifestyle.Scoped);
-            _container.Register<ActorAccessor>(Lifestyle.Scoped);
+            _container.Register<PartyProvider>(Lifestyle.Scoped);
 
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(databaseFixture.DatabaseManager.ConnectionString), Lifestyle.Scoped);
             _container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
