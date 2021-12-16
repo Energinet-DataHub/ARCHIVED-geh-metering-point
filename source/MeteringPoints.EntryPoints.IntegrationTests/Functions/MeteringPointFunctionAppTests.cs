@@ -91,18 +91,18 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
 
             // MessageHub
             // TODO: Check content for accept?
-            await Fixture.MessageHubSimulator.PeekAsync().ConfigureAwait(false);
+            var peekSimulationResponseDto = await Fixture.MessageHubSimulator.PeekAsync().ConfigureAwait(false);
 
             // Local MessageHub
             await AssertFunctionExecuted(Fixture.LocalMessageHubHostManager, "RequestBundleQueueSubscriber").ConfigureAwait(false);
 
             // MessageHub
-            await Fixture.MessageHubSimulator.DequeueAsync().ConfigureAwait(false);
+            await Fixture.MessageHubSimulator.DequeueAsync(peekSimulationResponseDto).ConfigureAwait(false);
 
             // Local MessageHub
             await AssertFunctionExecuted(Fixture.LocalMessageHubHostManager, "BundleDequeuedQueueSubscriber").ConfigureAwait(false);
 
-            // AssertNoExceptionsThrown();
+            AssertNoExceptionsThrown();
         }
 
         private static async Task AssertFunctionExecuted(FunctionAppHostManager hostManager, string functionName)
