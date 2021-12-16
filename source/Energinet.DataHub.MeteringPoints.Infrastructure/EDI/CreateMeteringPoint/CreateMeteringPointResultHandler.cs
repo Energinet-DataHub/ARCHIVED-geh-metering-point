@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Application.Create;
+using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
@@ -61,11 +62,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
         private Task CreateAcceptMessageAsync(string gsrnNumber, string effectiveDate, string transactionId)
         {
             // TODO: Maybe the whole "Actor" object is available on the context?
-            var receivingActor = _actorAccessor.GetByIdentifier(_userContext.CurrentUser!.GlnNumber, "GLN");
-            var sendingActor = _actorAccessor.GetDataHub();
+            var receiver = _actorAccessor.GetByIdentifierAndRole(_userContext.CurrentUser!.GlnNumber, IdentificationType.GLN, Role.GridAccessProvider);
+            var sender = _actorAccessor.GetDataHub();
 
             // TODO: Remove bang when getting current actor from context instead of accessor.
-            var message = _actorMessageFactory.CreateNewMeteringPointConfirmation(gsrnNumber, effectiveDate, transactionId, sendingActor, receivingActor!);
+            var message = _actorMessageFactory.CreateNewMeteringPointConfirmation(gsrnNumber, effectiveDate, transactionId, sender, receiver!);
             return _messageHubDispatcher.DispatchAsync(message, DocumentType.CreateMeteringPointAccepted, gsrnNumber);
         }
 

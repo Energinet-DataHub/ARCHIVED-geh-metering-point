@@ -84,8 +84,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                 _ => throw new InvalidOperationException("Unknown actor identifier type"),
             };
 
-            // TODO: Which role?
-            return new MarketRoleParticipant(actor.IdentificationNumber, codingScheme, actor.Roles.First());
+            var role = actor.CurrentRole.Name switch
+            {
+                nameof(Role.MeteringPointAdministrator) => "DDZ",
+                nameof(Role.GridAccessProvider) => "DDM",
+                _ => throw new InvalidOperationException("Unknown actor identifier type"),
+            };
+
+            return new MarketRoleParticipant(actor.IdentificationNumber, codingScheme, role);
         }
     }
 }

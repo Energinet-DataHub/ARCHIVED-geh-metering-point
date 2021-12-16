@@ -33,17 +33,22 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
         public Actor GetDataHub()
         {
             // TODO: Hardcoded
-            return new Actor(new ActorId(Guid.NewGuid()), IdentificationType.GLN, "5790001330552", new Collection<string> { "DDZ" });
+            return new Actor(new ActorId(Guid.NewGuid()), IdentificationType.GLN, "5790001330552", Role.MeteringPointAdministrator);
         }
 
-        public Actor? GetByIdentifier(string number, string type)
+        public Actor? GetByIdentifierAndRole(string number, IdentificationType type, Role role)
         {
             var actors = _context.Actors
                 .Where(actor =>
                     actor.IdentificationNumber == number &&
-                    actor.IdentificationType == EnumerationType.FromName<IdentificationType>(type));
+                    actor.IdentificationType == type)
+                .ToList();
 
-            return actors.FirstOrDefault();
+            var actor = actors.FirstOrDefault(actor => actor.Roles.Contains(role));
+            if (actor == null) return null;
+
+            actor.SetRole(role);
+            return actor;
         }
     }
 }

@@ -12,18 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.ObjectModel;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.Actors
 {
     public class Actor
     {
-        public Actor(ActorId actorId, IdentificationType identificationType, string identificationNumber, Collection<string> roles)
+        public Actor(ActorId actorId, IdentificationType identificationType, string identificationNumber, Collection<Role> roles)
         {
             Id = actorId;
             IdentificationType = identificationType;
             IdentificationNumber = identificationNumber;
             Roles = roles;
+            CurrentRole = Role.None;
+        }
+
+        public Actor(ActorId actorId, IdentificationType identificationType, string identificationNumber, Role role)
+        {
+            Id = actorId;
+            IdentificationType = identificationType;
+            IdentificationNumber = identificationNumber;
+            Roles = new Collection<Role> { role };
+            CurrentRole = role;
         }
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind complex types in constructor
@@ -38,6 +49,20 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Actors
 
         public IdentificationType IdentificationType { get; }
 
-        public Collection<string> Roles { get; }
+        public Collection<Role> Roles { get; }
+
+        public Role CurrentRole { get; private set; }
+
+        public void SetRole(Role role)
+        {
+            if (role == null!) throw new ArgumentNullException(nameof(role));
+
+            if (!Roles.Contains(role))
+            {
+                throw new InvalidOperationException($"Actor doesn't have the role: {role.Name}");
+            }
+
+            CurrentRole = role;
+        }
     }
 }

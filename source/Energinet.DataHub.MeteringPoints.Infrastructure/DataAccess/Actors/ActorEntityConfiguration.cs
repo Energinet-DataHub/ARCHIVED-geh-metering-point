@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Microsoft.EntityFrameworkCore;
@@ -47,8 +48,15 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.Actors
 
             builder.Property(x => x.Roles)
                 .HasConversion(
-                    v => string.Join(",", v),
-                    v => new Collection<string>(v.Split(",", StringSplitOptions.None)));
+                    toDbValue => string.Join(",", toDbValue
+                        .Select(role => role.Name)
+                        .ToList()),
+                    fromDbValue => new Collection<Role>(fromDbValue
+                        .Split(",", StringSplitOptions.None)
+                        .Select(EnumerationType.FromName<Role>)
+                        .ToList()));
+
+            builder.Ignore("CurrentRole");
         }
     }
 }
