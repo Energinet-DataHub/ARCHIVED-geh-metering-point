@@ -30,7 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string SettlementMethod => Domain.MasterDataHandling.Components.SettlementMethod.Flex.Name;
 
-        public static string DisconnectionType => Domain.MeteringPoints.MarketMeteringPoints.DisconnectionType.Manual.Name;
+        public static string DisconnectionType => Domain.MasterDataHandling.Components.DisconnectionType.Manual.Name;
 
         public static string ConnectionType => string.Empty;
 
@@ -66,7 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string MeterNumber => "12345678910";
 
-        public static string NetSettlementGroup => Domain.MeteringPoints.MarketMeteringPoints.NetSettlementGroup.Zero.Name;
+        public static string NetSettlementGroup => Domain.MasterDataHandling.Components.NetSettlementGroup.Zero.Name;
 
         public static string FloorIdentification => string.Empty;
 

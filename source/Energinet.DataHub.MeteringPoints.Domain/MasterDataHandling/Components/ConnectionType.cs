@@ -14,14 +14,14 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components
 {
-    public class DisconnectionType : EnumerationType
+    public class ConnectionType : EnumerationType
     {
-        public static readonly DisconnectionType Remote = new DisconnectionType(0, nameof(Remote));
-        public static readonly DisconnectionType Manual = new DisconnectionType(1, nameof(Manual));
+        public static readonly ConnectionType Direct = new ConnectionType(0, nameof(Direct));
+        public static readonly ConnectionType Installation = new ConnectionType(1, nameof(Installation));
 
-        private DisconnectionType(int id, string name)
+        private ConnectionType(int id, string name)
             : base(id, name)
         {
         }
