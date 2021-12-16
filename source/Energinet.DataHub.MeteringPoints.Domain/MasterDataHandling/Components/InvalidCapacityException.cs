@@ -15,7 +15,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components
 {
     [Serializable]
     public class InvalidCapacityException : BusinessRuleException

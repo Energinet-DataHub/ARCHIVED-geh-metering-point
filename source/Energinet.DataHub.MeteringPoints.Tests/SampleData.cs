@@ -61,7 +61,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public static string EffectiveDate => EffectiveDateNow();
 
-        public static string SettlementMethod => MeteringPoints.Domain.MeteringPoints.Consumption.SettlementMethod.Flex.Name;
+        public static string SettlementMethod => MeteringPoints.Domain.MasterDataHandling.Components.SettlementMethod.Flex.Name;
 
         public static string NetSettlementGroup => MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.NetSettlementGroup.Six.Name;
 

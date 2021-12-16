@@ -14,7 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components
 {
     public class SettlementMethod : EnumerationType
     {

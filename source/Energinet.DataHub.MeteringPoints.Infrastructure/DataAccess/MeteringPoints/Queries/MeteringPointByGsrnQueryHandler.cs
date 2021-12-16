@@ -20,6 +20,7 @@ using Dapper;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using MediatR;
@@ -28,6 +29,7 @@ using ConnectionState = Energinet.DataHub.MeteringPoints.Client.Abstractions.Enu
 using MeteringMethod = Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums.MeteringMethod;
 using MeteringPointType = Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums.MeteringPointType;
 using ReadingOccurrence = Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums.ReadingOccurrence;
+using SettlementMethod = Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums.SettlementMethod;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints.Queries
 {
@@ -63,12 +65,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             var connectionState = ConvertEnumerationTypeToEnum<ConnectionState, PhysicalState>(meteringPointDto.PhysicalState);
             var meteringPointType = ConvertEnumerationTypeToEnum<MeteringPointType, Domain.MeteringPoints.MeteringPointType>(meteringPointDto.MeteringPointType);
             var unitType = ConvertEnumerationTypeToEnum<PriceUnit, MeasurementUnitType>(meteringPointDto.UnitType);
-            var assetType = ConvertNullableEnumerationTypeToEnum<AssetType, Domain.MeteringPoints.AssetType>(meteringPointDto.AssetType);
-            var settlementMethod = ConvertNullableEnumerationTypeToEnum<SettlementMethod, Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption.SettlementMethod>(meteringPointDto.SettlementMethod);
+            var assetType = ConvertNullableEnumerationTypeToEnum<AssetType, Domain.MasterDataHandling.Components.AssetType>(meteringPointDto.AssetType);
+            var settlementMethod = ConvertNullableEnumerationTypeToEnum<SettlementMethod, Domain.MasterDataHandling.Components.SettlementMethod>(meteringPointDto.SettlementMethod);
             var netSettlementGroup = ConvertNullableEnumerationTypeToEnum<NetSettlementGroup, Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.NetSettlementGroup>(meteringPointDto.NetSettlementGroup);
             var connectionType = ConvertNullableEnumerationTypeToEnum<ConnectionType, Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.ConnectionType>(meteringPointDto.ConnectionType);
             var disconnectionType = ConvertNullableEnumerationTypeToEnum<DisconnectionType, Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.DisconnectionType>(meteringPointDto.DisconnectionType);
-            var readingOccurrence = ConvertEnumerationTypeToEnum<ReadingOccurrence, Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ReadingOccurrence>(meteringPointDto.ReadingOccurrence);
+            var readingOccurrence = ConvertEnumerationTypeToEnum<ReadingOccurrence, Domain.MasterDataHandling.Components.ReadingOccurrence>(meteringPointDto.ReadingOccurrence);
 
             return new MeteringPointCimDto(
                 meteringPointDto.MeteringPointId,

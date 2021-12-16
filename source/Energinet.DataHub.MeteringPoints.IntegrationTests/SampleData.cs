@@ -28,7 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string SubTypeOfMeteringPoint => MeteringMethod.Physical.Name;
 
-        public static string SettlementMethod => Domain.MeteringPoints.Consumption.SettlementMethod.Flex.Name;
+        public static string SettlementMethod => Domain.MasterDataHandling.Components.SettlementMethod.Flex.Name;
 
         public static string DisconnectionType => Domain.MeteringPoints.MarketMeteringPoints.DisconnectionType.Manual.Name;
 
@@ -36,13 +36,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string PowerPlantGsrnNumber => "571234567891234568";
 
-        public static string ReadingOccurrence => Domain.MeteringPoints.ReadingOccurrence.Hourly.Name;
+        public static string ReadingOccurrence => Domain.MasterDataHandling.Components.ReadingOccurrence.Hourly.Name;
 
-        public static string AssetType => Domain.MeteringPoints.AssetType.GasTurbine.Name;
+        public static string AssetType => Domain.MasterDataHandling.Components.AssetType.GasTurbine.Name;
 
         public static string EffectiveDate => "2021-05-05T22:00:00Z";
 
-        public static string MeasurementUnitType => Domain.MeteringPoints.MeasurementUnitType.KWh.Name;
+        public static string MeasurementUnitType => Domain.MasterDataHandling.Components.MeasurementUnitType.KWh.Name;
 
         public static string MeteringGridArea => "870";
 
@@ -72,7 +72,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string RoomIdentification => string.Empty;
 
-        public static string ProductType => Domain.MeteringPoints.ProductType.EnergyActive.Name;
+        public static string ProductType => Domain.MasterDataHandling.Components.ProductType.EnergyActive.Name;
 
         public static string GeoInfoReference => Guid.NewGuid().ToString();
 

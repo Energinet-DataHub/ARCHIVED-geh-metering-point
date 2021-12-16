@@ -15,26 +15,26 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components
 {
     [Serializable]
-    public class InvalidPowerLimitException : BusinessRuleException
+    public class InvalidScheduledMeterReadingDateException : BusinessRuleException
     {
-        public InvalidPowerLimitException()
+        public InvalidScheduledMeterReadingDateException()
         {
         }
 
-        public InvalidPowerLimitException(string? message)
+        public InvalidScheduledMeterReadingDateException(string? message)
             : base(message)
         {
         }
 
-        public InvalidPowerLimitException(string message, Exception innerException)
+        public InvalidScheduledMeterReadingDateException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
-        protected InvalidPowerLimitException(SerializationInfo info, StreamingContext context)
+        protected InvalidScheduledMeterReadingDateException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
