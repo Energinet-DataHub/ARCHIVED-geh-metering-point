@@ -73,11 +73,16 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData
 
         private Task CreateRejectResponseAsync(ChangeMasterDataRequest request, BusinessProcessResult result)
         {
+            // TODO: Maybe the whole "Actor" object is available on the context?
+            var receiver = _actorAccessor.GetByIdentifierAndRole(_userContext.CurrentUser!.GlnNumber, IdentificationType.GLN, Role.GridAccessProvider);
+            var sender = _actorAccessor.GetDataHub();
+
             var errors = result.ValidationErrors
                 .Select(error => _errorMessageFactory.GetErrorMessage(error))
                 .AsEnumerable();
 
-            var message = _actorMessageFactory.CreateNewMeteringPointReject(request.GsrnNumber, request.EffectiveDate, request.TransactionId, errors);
+            // TODO: Remove bang when getting current actor from context instead of accessor.
+            var message = _actorMessageFactory.CreateNewMeteringPointReject(request.GsrnNumber, request.EffectiveDate, request.TransactionId, errors, sender, receiver!);
             return _messageHubDispatcher.DispatchAsync(message, DocumentType.ChangeMasterDataRejected, request.GsrnNumber);
         }
     }

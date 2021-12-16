@@ -37,7 +37,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
         /// <param name="effectiveDate"></param>
         /// <param name="transactionId"></param>
         /// <param name="errors"></param>
+        /// <param name="sender"></param>
+        /// <param name="receiver"></param>
         /// <returns><see cref="RejectMessage"/></returns>
-        RejectMessage CreateNewMeteringPointReject(string gsrnNumber, string effectiveDate, string transactionId, IEnumerable<ErrorMessage> errors);
+        RejectMessage CreateNewMeteringPointReject(string gsrnNumber, string effectiveDate, string transactionId, IEnumerable<ErrorMessage> errors, Actor sender, Actor receiver);
     }
 }

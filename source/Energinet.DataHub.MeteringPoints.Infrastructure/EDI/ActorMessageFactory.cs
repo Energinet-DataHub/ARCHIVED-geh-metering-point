@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
@@ -26,12 +25,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
 {
     public class ActorMessageFactory : IActorMessageFactory
     {
-        private readonly IUserContext _userContext;
         private readonly ISystemDateTimeProvider _dateTimeProvider;
 
-        public ActorMessageFactory(IUserContext userContext, ISystemDateTimeProvider dateTimeProvider)
+        public ActorMessageFactory(ISystemDateTimeProvider dateTimeProvider)
         {
-            _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             _dateTimeProvider = dateTimeProvider ?? throw new ArgumentNullException(nameof(dateTimeProvider));
         }
 
@@ -55,18 +52,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     OriginalTransaction: transactionId));
         }
 
-        public RejectMessage CreateNewMeteringPointReject(string gsrnNumber, string effectiveDate, string transactionId, IEnumerable<ErrorMessage> errors)
+        public RejectMessage CreateNewMeteringPointReject(string gsrnNumber, string effectiveDate, string transactionId, IEnumerable<ErrorMessage> errors, Actor sender, Actor receiver)
         {
-            var glnNumber = "8200000008842";
+            if (sender == null) throw new ArgumentNullException(nameof(sender));
+            if (receiver == null) throw new ArgumentNullException(nameof(receiver));
+
             return RejectMessageFactory.CreateMeteringPoint(
-                sender: new MarketRoleParticipant(// TODO: Use from actor register
-                    Id: "DataHub GLN",
-                    CodingScheme: "A10",
-                    Role: "DDZ"),
-                receiver: new MarketRoleParticipant(// TODO: Use from actor register
-                    Id: _userContext.CurrentUser?.GlnNumber ?? glnNumber,
-                    CodingScheme: "A10",
-                    Role: "DDM"),
+                sender: Map(sender),
+                receiver: Map(receiver),
                 createdDateTime: _dateTimeProvider.Now(),
                 marketActivityRecord: new MarketActivityRecordWithReasons(
                     Id: Guid.NewGuid().ToString(),

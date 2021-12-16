@@ -72,11 +72,16 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
 
         private Task CreateRejectResponseAsync(string gsrnNumber, string effectiveDate, string transactionId, BusinessProcessResult result)
         {
+            // TODO: Maybe the whole "Actor" object is available on the context?
+            var receiver = _actorAccessor.GetByIdentifierAndRole(_userContext.CurrentUser!.GlnNumber, IdentificationType.GLN, Role.GridAccessProvider);
+            var sender = _actorAccessor.GetDataHub();
+
             var errors = result.ValidationErrors
                 .Select(error => _errorMessageFactory.GetErrorMessage(error))
                 .AsEnumerable();
 
-            var message = _actorMessageFactory.CreateNewMeteringPointReject(gsrnNumber, effectiveDate, transactionId, errors);
+            // TODO: Remove bang when getting current actor from context instead of accessor.
+            var message = _actorMessageFactory.CreateNewMeteringPointReject(gsrnNumber, effectiveDate, transactionId, errors, sender, receiver!);
             return _messageHubDispatcher.DispatchAsync(message, DocumentType.CreateMeteringPointRejected, gsrnNumber);
         }
     }
