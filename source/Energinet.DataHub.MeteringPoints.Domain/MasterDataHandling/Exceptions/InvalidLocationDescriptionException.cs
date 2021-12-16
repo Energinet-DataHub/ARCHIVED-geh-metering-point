@@ -12,23 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Runtime.Serialization;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exceptions
 {
-    public class EnergySupplierDetails : ValueObject
+    [Serializable]
+    public class InvalidLocationDescriptionException : BusinessOperationException
     {
-        public EnergySupplierDetails(Instant startOfSupply)
+        public InvalidLocationDescriptionException(string? message, Exception? innerException)
+            : base(message, innerException)
         {
-            StartOfSupply = startOfSupply;
         }
 
-        public Instant StartOfSupply { get; }
-
-        public static EnergySupplierDetails Create(Instant startOfSupply)
+        public InvalidLocationDescriptionException()
         {
-            return new EnergySupplierDetails(startOfSupply);
+        }
+
+        public InvalidLocationDescriptionException(string? message)
+            : base(message)
+        {
+        }
+
+        protected InvalidLocationDescriptionException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
         }
     }
 }

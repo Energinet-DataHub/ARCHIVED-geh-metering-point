@@ -13,16 +13,20 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Create
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Events
 {
-    public class CityIsRequiredRuleErrorConverter : ErrorConverter<CityIsRequiredRuleError>
+    public class ConnectionTypeChanged : DomainEventBase
     {
-        protected override ErrorMessage Convert(CityIsRequiredRuleError validationError)
+        public ConnectionTypeChanged(Guid meteringPointId, string connectionType)
         {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-            return new ErrorMessage("E86", "City is required for market metering points.");
+            MeteringPointId = meteringPointId;
+            ConnectionType = connectionType;
         }
+
+        public Guid MeteringPointId { get; }
+
+        public string ConnectionType { get; }
     }
 }

@@ -13,31 +13,24 @@
 // limitations under the License.
 
 using System;
-using System.Runtime.Serialization;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events
 {
-    [Serializable]
-    public class InvalidLocationDescriptionException : BusinessOperationException
+    public class MeteringPointConnected : DomainEventBase
     {
-        public InvalidLocationDescriptionException(string? message, Exception? innerException)
-            : base(message, innerException)
+        public MeteringPointConnected(Guid meteringPointId, string gsrnNumber, Instant effectiveDate)
         {
+            MeteringPointId = meteringPointId;
+            GsrnNumber = gsrnNumber;
+            EffectiveDate = effectiveDate;
         }
 
-        public InvalidLocationDescriptionException()
-        {
-        }
+        public Guid MeteringPointId { get; }
 
-        public InvalidLocationDescriptionException(string? message)
-            : base(message)
-        {
-        }
+        public string GsrnNumber { get; }
 
-        protected InvalidLocationDescriptionException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
+        public Instant EffectiveDate { get; }
     }
 }

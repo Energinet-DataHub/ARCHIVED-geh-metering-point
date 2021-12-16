@@ -13,8 +13,9 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules.Connect;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exceptions;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;

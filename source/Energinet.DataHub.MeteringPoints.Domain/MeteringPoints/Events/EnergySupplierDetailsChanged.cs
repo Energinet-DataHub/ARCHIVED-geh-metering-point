@@ -16,7 +16,7 @@ using System;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events
 {
     public class EnergySupplierDetailsChanged : DomainEventBase
     {

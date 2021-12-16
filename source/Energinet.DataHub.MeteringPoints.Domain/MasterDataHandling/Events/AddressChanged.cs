@@ -15,7 +15,7 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Events
 {
     public class AddressChanged : DomainEventBase
     {

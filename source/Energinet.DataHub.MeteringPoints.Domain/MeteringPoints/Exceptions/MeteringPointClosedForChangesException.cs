@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exceptions
 {
     public class MeteringPointClosedForChangesException : BusinessOperationException
     {

@@ -15,26 +15,26 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Exceptions
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exceptions
 {
-    public class CannotAssignEnergySupplierException : BusinessRuleException
+    [Serializable]
+    public class InvalidEffectiveDateFormat : BusinessRuleException
     {
-        public CannotAssignEnergySupplierException()
+        public InvalidEffectiveDateFormat()
         {
         }
 
-        public CannotAssignEnergySupplierException(string? message)
+        public InvalidEffectiveDateFormat(string? message)
             : base(message)
         {
         }
 
-        public CannotAssignEnergySupplierException(string message, Exception innerException)
+        public InvalidEffectiveDateFormat(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
-        protected CannotAssignEnergySupplierException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
+        protected InvalidEffectiveDateFormat(SerializationInfo serializationInfo, StreamingContext streamingContext)
         {
         }
     }

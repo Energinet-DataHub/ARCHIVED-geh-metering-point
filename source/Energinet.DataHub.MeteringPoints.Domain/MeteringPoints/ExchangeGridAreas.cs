@@ -13,24 +13,26 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public class MeteringPointConnected : DomainEventBase
+    public class ExchangeGridAreas : ValueObject
     {
-        public MeteringPointConnected(Guid meteringPointId, string gsrnNumber, Instant effectiveDate)
+        private ExchangeGridAreas(GridAreaLinkId sourceGridArea, GridAreaLinkId targetGridArea)
         {
-            MeteringPointId = meteringPointId;
-            GsrnNumber = gsrnNumber;
-            EffectiveDate = effectiveDate;
+            SourceGridArea = sourceGridArea ?? throw new ArgumentNullException(nameof(sourceGridArea));
+            TargetGridArea = targetGridArea ?? throw new ArgumentNullException(nameof(targetGridArea));
         }
 
-        public Guid MeteringPointId { get; }
+        public GridAreaLinkId SourceGridArea { get; }
 
-        public string GsrnNumber { get; }
+        public GridAreaLinkId TargetGridArea { get; }
 
-        public Instant EffectiveDate { get; }
+        public static ExchangeGridAreas Create(GridAreaLinkId sourceGridArea, GridAreaLinkId targetGridArea)
+        {
+            return new ExchangeGridAreas(sourceGridArea, targetGridArea);
+        }
     }
 }

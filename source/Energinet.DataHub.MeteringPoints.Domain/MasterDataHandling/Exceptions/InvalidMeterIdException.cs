@@ -13,20 +13,30 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using System.Runtime.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Events
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exceptions
 {
-    public class ConnectionTypeChanged : DomainEventBase
+    [Serializable]
+    public class InvalidMeterIdException : BusinessRuleException
     {
-        public ConnectionTypeChanged(Guid meteringPointId, string connectionType)
+        public InvalidMeterIdException()
         {
-            MeteringPointId = meteringPointId;
-            ConnectionType = connectionType;
         }
 
-        public Guid MeteringPointId { get; }
+        public InvalidMeterIdException(string? message)
+            : base(message)
+        {
+        }
 
-        public string ConnectionType { get; }
+        public InvalidMeterIdException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+
+        protected InvalidMeterIdException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
     }
 }

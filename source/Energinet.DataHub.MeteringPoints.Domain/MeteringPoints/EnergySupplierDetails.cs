@@ -12,30 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Runtime.Serialization;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
-    public class InvalidMeteringPointIdRuleException : BusinessRuleException
+    public class EnergySupplierDetails : ValueObject
     {
-        public InvalidMeteringPointIdRuleException()
+        public EnergySupplierDetails(Instant startOfSupply)
         {
+            StartOfSupply = startOfSupply;
         }
 
-        public InvalidMeteringPointIdRuleException(string? message)
-            : base(message)
-        {
-        }
+        public Instant StartOfSupply { get; }
 
-        public InvalidMeteringPointIdRuleException(string message, Exception innerException)
-            : base(message, innerException)
+        public static EnergySupplierDetails Create(Instant startOfSupply)
         {
-        }
-
-        protected InvalidMeteringPointIdRuleException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
+            return new EnergySupplierDetails(startOfSupply);
         }
     }
 }

@@ -12,30 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
-    public class MeteringConfigurationChanged : DomainEventBase
+    public class MustHaveEnergySupplierRuleError : ValidationError
     {
-        public MeteringConfigurationChanged(string meteringPointId, string gsrnNumber, string meterId, string meteringMethod, string effectiveDate)
+        public MustHaveEnergySupplierRuleError(GsrnNumber meteringPointGSRN, Instant effectiveDate)
         {
-            MeteringPointId = meteringPointId;
-            GsrnNumber = gsrnNumber;
-            MeterId = meterId;
-            MeteringMethod = meteringMethod;
+            MeteringPointGsrn = meteringPointGSRN;
             EffectiveDate = effectiveDate;
         }
 
-        public string MeteringPointId { get; }
+        public GsrnNumber MeteringPointGsrn { get; }
 
-        public string GsrnNumber { get; }
-
-        public string MeterId { get; }
-
-        public string EffectiveDate { get; }
-
-        public string MeteringMethod { get; }
+        public Instant EffectiveDate { get;  }
     }
 }
