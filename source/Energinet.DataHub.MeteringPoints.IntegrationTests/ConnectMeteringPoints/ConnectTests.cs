@@ -85,17 +85,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.AccountingPointCharacteristicsMessage, 2);
         }
 
-        // TODO: Remove this skip after public test
-        [Fact(Skip = "Skipped do to there are always set an energy supplier due to actor testing.")]
-        public async Task Reject_When_No_Energy_Supplier_Is_Assigned()
+        [Theory]
+        [InlineData(nameof(MeteringPointType.Consumption))]
+        [InlineData(nameof(MeteringPointType.Production))]
+        public async Task Cannot_connect_metering_point_when_no_energy_supplier_is_assigned(string meteringPointType)
         {
-            var createMeteringPointRequest = CreateMeteringPointRequest();
-            var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
+            await CreateMeteringPointWithoutEnergySupplierAssigned(EnumerationType.FromName<MeteringPointType>(meteringPointType)).ConfigureAwait(false);
 
-            await SendCommandAsync(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
-            await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+            await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
 
-            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConnectMeteringPointRejected);
+            AssertValidationError("D36");
         }
 
         [Fact]
@@ -216,7 +215,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
                 SampleData.ScheduledMeterReadingDate);
         }
 
-        private ConnectMeteringPoint CreateConnectMeteringPointRequest()
+        private ConnectMeteringPointRequest CreateConnectMeteringPointRequest()
         {
             var currentDate = _dateTimeProvider.Now().ToDateTimeUtc();
             var effectiveDate = Instant.FromUtc(currentDate.Year, currentDate.Month, currentDate.Day, 22, 0);
@@ -245,6 +244,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             var currentDate = _dateTimeProvider.Now().ToDateTimeUtc();
             var startOfSupplyDate = Instant.FromUtc(currentDate.Year, currentDate.Month, currentDate.Day, 22, 0);
             await MarkAsEnergySupplierAssigned(startOfSupplyDate).ConfigureAwait(false);
+        }
+
+        private async Task CreateMeteringPointWithoutEnergySupplierAssigned()
+        {
+            await SendCommandAsync(Scenarios.CreateCommand(MeteringPointType.Consumption)).ConfigureAwait(false);
+        }
+
+        private async Task CreateMeteringPointWithoutEnergySupplierAssigned(MeteringPointType meteringPointType)
+        {
+            await SendCommandAsync(Scenarios.CreateCommand(meteringPointType)).ConfigureAwait(false);
         }
     }
 }
