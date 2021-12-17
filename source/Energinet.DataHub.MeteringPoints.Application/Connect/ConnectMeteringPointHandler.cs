@@ -24,7 +24,7 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
-    public class ConnectMeteringPointHandler : IBusinessRequestHandler<ConnectMeteringPoint>
+    public class ConnectMeteringPointHandler : IBusinessRequestHandler<ConnectMeteringPointRequest>
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly MeteringPointPipelineContext _pipelineContext;
@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
         }
 
         public async Task<BusinessProcessResult> Handle(
-            ConnectMeteringPoint request,
+            ConnectMeteringPointRequest request,
             CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
@@ -67,7 +67,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
             return BusinessProcessResult.Ok(request.TransactionId);
         }
 
-        private static BusinessProcessResult Validate(ConnectMeteringPoint request, MeteringPoint? meteringPoint)
+        private static BusinessProcessResult Validate(ConnectMeteringPointRequest request, MeteringPoint? meteringPoint)
         {
             var validationRules = new List<IBusinessRule>()
             {
@@ -78,7 +78,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
         }
 
         private static BusinessProcessResult CheckBusinessRules(
-            ConnectMeteringPoint request,
+            ConnectMeteringPointRequest request,
             ConnectionDetails connectionDetails,
             MeteringPoint meteringPoint)
         {

@@ -17,7 +17,7 @@ using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
-    public record ConnectMeteringPoint(
+    public record ConnectMeteringPointRequest(
         string GsrnNumber = "",
         string EffectiveDate = "",
         string TransactionId = "")

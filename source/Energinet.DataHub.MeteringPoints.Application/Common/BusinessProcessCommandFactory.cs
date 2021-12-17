@@ -61,7 +61,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
 
         private static IBusinessRequest? CreateConnectMeteringPointCommand(MasterDataDocument document)
         {
-            return new ConnectMeteringPoint(document.GsrnNumber, document.EffectiveDate, document.TransactionId);
+            return new ConnectMeteringPointRequest(document.GsrnNumber, document.EffectiveDate, document.TransactionId);
         }
 
         private static IBusinessRequest? CreateNewMeteringPointCommand(MasterDataDocument document)

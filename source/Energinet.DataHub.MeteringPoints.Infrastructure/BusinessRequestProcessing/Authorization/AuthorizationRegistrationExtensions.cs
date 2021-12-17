@@ -29,7 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcess
             if (container == null) throw new ArgumentNullException(nameof(container));
             container.Register<IAuthorizer<ChangeMasterDataRequest>, Authorizer>();
             container.Register<IAuthorizer<CreateMeteringPoint>, NullAuthorizer<CreateMeteringPoint>>();
-            container.Register<IAuthorizer<ConnectMeteringPoint>, NullAuthorizer<ConnectMeteringPoint>>();
+            container.Register<IAuthorizer<ConnectMeteringPointRequest>, NullAuthorizer<ConnectMeteringPointRequest>>();
         }
     }
 }
