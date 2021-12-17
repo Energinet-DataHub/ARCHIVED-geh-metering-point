@@ -13,14 +13,39 @@
 // limitations under the License.
 
 using System;
+using System.ComponentModel.DataAnnotations;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
 
 namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
 {
-    public record MeteringPointSimpleCimDto(
-        Guid MeteringPointId,
-        string GsrnNumber,
-        ConnectionState ConnectionState,
-        MeteringPointType MeteringPointType,
-        DateTime EffectiveDate);
+    public class MeteringPointSimpleCimDto
+    {
+        public MeteringPointSimpleCimDto(
+            Guid meteringPointId,
+            string gsrnNumber,
+            ConnectionState connectionState,
+            MeteringPointType meteringPointType,
+            DateTime effectiveDate)
+        {
+            MeteringPointId = meteringPointId;
+            GsrnNumber = gsrnNumber;
+            ConnectionState = connectionState;
+            MeteringPointType = meteringPointType;
+            EffectiveDate = effectiveDate;
+        }
+
+        [Required]
+        public Guid MeteringPointId { get; private set; }
+
+        [Required] public string GsrnNumber { get; private set; } = null!;
+
+        [Required]
+        public ConnectionState ConnectionState { get; private set; }
+
+        [Required]
+        public MeteringPointType MeteringPointType { get; private set; }
+
+        [Required]
+        public DateTime EffectiveDate { get; private set; }
+    }
 }
