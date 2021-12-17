@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Parties;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint
 {
@@ -29,15 +30,18 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
         private readonly IActorMessageFactory _actorMessageFactory;
         private readonly IMessageHubDispatcher _messageHubDispatcher;
         private readonly ErrorMessageFactory _errorMessageFactory;
+        private readonly ActorProvider _actorProvider;
 
         public CreateMeteringPointResultHandler(
             IActorMessageFactory actorMessageFactory,
             IMessageHubDispatcher messageHubDispatcher,
-            ErrorMessageFactory errorMessageFactory)
+            ErrorMessageFactory errorMessageFactory,
+            ActorProvider actorProvider)
         {
             _actorMessageFactory = actorMessageFactory;
             _messageHubDispatcher = messageHubDispatcher;
             _errorMessageFactory = errorMessageFactory;
+            _actorProvider = actorProvider;
         }
 
         public Task HandleAsync(TMeteringPoint request, BusinessProcessResult result)
@@ -52,17 +56,25 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
 
         private Task CreateAcceptMessageAsync(string gsrnNumber, string effectiveDate, string transactionId)
         {
-            var message = _actorMessageFactory.CreateNewMeteringPointConfirmation(gsrnNumber, effectiveDate, transactionId);
+            // TODO: Maybe the whole "Actor" object is available on the context?
+            var receiver = _actorProvider.CurrentActor;
+            var sender = _actorProvider.DataHub;
+
+            var message = _actorMessageFactory.CreateNewMeteringPointConfirmation(gsrnNumber, effectiveDate, transactionId, sender, receiver);
             return _messageHubDispatcher.DispatchAsync(message, DocumentType.CreateMeteringPointAccepted, gsrnNumber);
         }
 
         private Task CreateRejectResponseAsync(string gsrnNumber, string effectiveDate, string transactionId, BusinessProcessResult result)
         {
+            // TODO: Maybe the whole "Actor" object is available on the context?
+            var receiver = _actorProvider.CurrentActor;
+            var sender = _actorProvider.DataHub;
+
             var errors = result.ValidationErrors
                 .Select(error => _errorMessageFactory.GetErrorMessage(error))
                 .AsEnumerable();
 
-            var message = _actorMessageFactory.CreateNewMeteringPointReject(gsrnNumber, effectiveDate, transactionId, errors);
+            var message = _actorMessageFactory.CreateNewMeteringPointReject(gsrnNumber, effectiveDate, transactionId, errors, sender, receiver);
             return _messageHubDispatcher.DispatchAsync(message, DocumentType.CreateMeteringPointRejected, gsrnNumber);
         }
     }

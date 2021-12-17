@@ -12,14 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.Actors;
-
-namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors
 {
-    public record GridAreaDetails(
-        GridAreaName Name,
-        GridAreaCode Code,
-        PriceAreaCode PriceAreaCode,
-        FullFlexFromDate? FullFlexFromDate,
-        ActorId ActorId);
+    public class Actor
+    {
+        public Actor(string identificationNumber, string identificationType, string role)
+        {
+            IdentificationNumber = identificationNumber;
+            IdentificationType = identificationType;
+            Role = role;
+        }
+
+        public string IdentificationNumber { get; }
+
+        public string IdentificationType { get; }
+
+        public string Role { get; }
+    }
 }

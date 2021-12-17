@@ -21,7 +21,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create
             string Name = "",
             string Code = "",
             string PriceAreaCode = "",
-            string TransactionId = "")
+            string TransactionId = "",
+            string ActorId = "")
         : IBusinessRequest,
             IOutboundMessage,
             IInboundMessage;
