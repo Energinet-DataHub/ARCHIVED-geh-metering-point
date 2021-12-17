@@ -14,17 +14,13 @@
 
 namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums
 {
-    public enum PriceUnit
+    public enum ProductId
     {
-        K3 = 1, // KVArh,
-        KWH = 2, // KWh,
-        KWT = 3, // KW,
-        MAW = 4, // MW,
-        MWH = 5, // MWh,
-        TNE = 6, // Tonne,
-        Z03 = 7, // MVAr,
-        AMP = 0, // Ampere,
-        H87 = 9, // STK,
-        Z14 = 8, // DanishTariffCode,
+        Tariff = 0, //5790001330590
+        FuelQuantity = 1, //5790001330606
+        PowerActive = 2, //8716867000016
+        PowerReactive = 3, //8716867000023
+        EnergyActive = 4, //8716867000030
+        EnergyReactive = 5, //8716867000047
     }
 }
