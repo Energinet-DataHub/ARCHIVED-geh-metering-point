@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Runtime.InteropServices;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
@@ -24,10 +24,8 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
-using Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.ConsumptionMeteringPoints;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using NodaTime;
-using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
 
@@ -46,24 +44,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
         }
 
         [Theory]
-        [InlineData(8, true)]
-        [InlineData(8, false)]
-        public async Task Effective_date_must_be_within_the_allowed_time_period(int numberOfdaysOffset, bool inThePast)
+        [InlineData(8, true, true)]
+        [InlineData(5, true, false)]
+        [InlineData(8, false, true)]
+        public async Task Effective_date_must_be_within_the_allowed_time_period(int numberOfDaysOffset, bool inThePast, bool expectError)
         {
-            var timeProvider = GetService<ISystemDateTimeProvider>() as SystemDateTimeProviderStub;
-            await CreateMeteringPointWithEnergySupplierAssigned().ConfigureAwait(false);
-
-            var effectiveDate = inThePast ?
-                _dateTimeProvider.Now().Minus(Duration.FromDays(numberOfdaysOffset)) :
-                _dateTimeProvider.Now().Plus(Duration.FromDays(numberOfdaysOffset));
-            effectiveDate = Instant.FromUtc(effectiveDate.ToDateTimeUtc().Year, effectiveDate.ToDateTimeUtc().Month, effectiveDate.ToDateTimeUtc().Day, 22, 0);
+            var effectiveDate = inThePast
+                ? EffectiveDateInPast(numberOfDaysOffset)
+                : EffectiveDateInFuture(numberOfDaysOffset);
+            await CreateMeteringPointWithEnergySupplierAssigned(effectiveDate).ConfigureAwait(false);
 
             await SendCommandAsync(CreateConnectMeteringPointRequest() with
             {
                 EffectiveDate = effectiveDate.ToString(),
             }).ConfigureAwait(false);
 
-            AssertValidationError("E17", true);
+            AssertValidationError("E17", expectError);
         }
 
         [Fact]
@@ -264,6 +260,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
                 SampleData.ScheduledMeterReadingDate);
         }
 
+        private static Instant ToEffectiveDate(DateTime date)
+        {
+            return Instant.FromUtc(date.Year, date.Month, date.Day, 22, 0);
+        }
+
         private ConnectMeteringPointRequest CreateConnectMeteringPointRequest()
         {
             var currentDate = _dateTimeProvider.Now().ToDateTimeUtc();
@@ -287,11 +288,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             await SendCommandAsync(addEnergySupplier).ConfigureAwait(false);
         }
 
-        private async Task CreateMeteringPointWithEnergySupplierAssigned()
+        private Task CreateMeteringPointWithEnergySupplierAssigned()
         {
-            await SendCommandAsync(Scenarios.CreateCommand(MeteringPointType.Consumption)).ConfigureAwait(false);
             var currentDate = _dateTimeProvider.Now().ToDateTimeUtc();
             var startOfSupplyDate = Instant.FromUtc(currentDate.Year, currentDate.Month, currentDate.Day, 22, 0);
+            return CreateMeteringPointWithEnergySupplierAssigned(startOfSupplyDate);
+        }
+
+        private async Task CreateMeteringPointWithEnergySupplierAssigned(Instant startOfSupplyDate)
+        {
+            await SendCommandAsync(Scenarios.CreateCommand(MeteringPointType.Consumption)).ConfigureAwait(false);
             await MarkAsEnergySupplierAssigned(startOfSupplyDate).ConfigureAwait(false);
         }
 
@@ -303,6 +309,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
         private async Task CreateMeteringPointWithoutEnergySupplierAssigned(MeteringPointType meteringPointType)
         {
             await SendCommandAsync(Scenarios.CreateCommand(meteringPointType)).ConfigureAwait(false);
+        }
+
+        private Instant EffectiveDateInPast(int numberOfDaysFromToday)
+        {
+            return ToEffectiveDate(_dateTimeProvider.Now().Minus(Duration.FromDays(numberOfDaysFromToday)).ToDateTimeUtc());
+        }
+
+        private Instant EffectiveDateInFuture(int numberOfDaysFromToday)
+        {
+            return ToEffectiveDate(_dateTimeProvider.Now().Plus(Duration.FromDays(numberOfDaysFromToday)).ToDateTimeUtc());
         }
     }
 }
