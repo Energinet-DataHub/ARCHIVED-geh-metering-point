@@ -12,14 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.Actors;
-
-namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
+namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums
 {
-    public record GridAreaDetails(
-        GridAreaName Name,
-        GridAreaCode Code,
-        PriceAreaCode PriceAreaCode,
-        FullFlexFromDate? FullFlexFromDate,
-        ActorId ActorId);
+    public enum Unit
+    {
+        AMP = 0, //Ampere
+        H87 = 9, //STK
+        K3 = 1, //kVArh
+        KWH = 2, //kWh
+        KWT = 3, //kW
+        MAW = 4, //MW
+        MWH = 5, //MWh
+        TNE = 6, //Tonne
+        Z03 = 7, //MVAr
+        Z14 = 8, //DanishTariffCode
+    }
 }

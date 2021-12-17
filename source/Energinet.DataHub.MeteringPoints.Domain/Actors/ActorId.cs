@@ -12,19 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+
+namespace Energinet.DataHub.MeteringPoints.Domain.Actors
 {
-    public enum PriceUnit
+    public class ActorId : ValueObject
     {
-        K3 = 1, // KVArh,
-        KWH = 2, // KWh,
-        KWT = 3, // KW,
-        MAW = 4, // MW,
-        MWH = 5, // MWh,
-        TNE = 6, // Tonne,
-        Z03 = 7, // MVAr,
-        AMP = 0, // Ampere,
-        H87 = 9, // STK,
-        Z14 = 8, // DanishTariffCode,
+        public ActorId(Guid value)
+        {
+            Value = value;
+        }
+
+        public Guid Value { get; }
+
+        public static ActorId Create(string id)
+        {
+            return new ActorId(Guid.Parse(id));
+        }
+
+        public static ActorId Create()
+        {
+            return new ActorId(Guid.NewGuid());
+        }
     }
 }
