@@ -21,7 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
         string GsrnNumber = "",
         string EffectiveDate = "",
         string TransactionId = "")
-        : IBusinessRequest,
+        : IChangeMeteringPointRequest,
             IOutboundMessage,
             IInboundMessage;
 }

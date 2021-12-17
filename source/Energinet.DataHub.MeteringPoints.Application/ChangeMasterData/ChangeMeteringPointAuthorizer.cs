@@ -19,24 +19,25 @@ using System.Security.Authentication;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Authorization;
 using Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperatorPolicies;
-using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Connect
+namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
 {
-    public class Authorizer : IAuthorizer<ConnectMeteringPointRequest>
+    public class ChangeMeteringPointAuthorizer<TRequest> : IAuthorizer<TRequest>
+        where TRequest : IChangeMeteringPointRequest
     {
         private readonly IUserContext _authenticatedUserContext;
         private readonly IMeteringPointOwnershipProvider _ownershipProvider;
 
-        public Authorizer(IUserContext authenticatedUserContext, IMeteringPointOwnershipProvider ownershipProvider)
+        public ChangeMeteringPointAuthorizer(IUserContext authenticatedUserContext, IMeteringPointOwnershipProvider ownershipProvider)
         {
             _authenticatedUserContext = authenticatedUserContext ?? throw new ArgumentNullException(nameof(authenticatedUserContext));
             _ownershipProvider = ownershipProvider ?? throw new ArgumentNullException(nameof(ownershipProvider));
         }
 
-        public Task<AuthorizationResult> AuthorizeAsync(ConnectMeteringPointRequest request)
+        public Task<AuthorizationResult> AuthorizeAsync(TRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (_authenticatedUserContext.CurrentUser is null)
@@ -53,7 +54,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
             return new AuthorizationResult(results.SelectMany(result => result.Errors).ToList());
         }
 
-        private IReadOnlyList<Task<AuthorizationResult>> GetAuthorizationHandlers(ConnectMeteringPointRequest request)
+        private IReadOnlyList<Task<AuthorizationResult>> GetAuthorizationHandlers(TRequest request)
         {
             return new List<Task<AuthorizationResult>>()
             {

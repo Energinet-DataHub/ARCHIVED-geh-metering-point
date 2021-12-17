@@ -12,17 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common;
-
-namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
+namespace Energinet.DataHub.MeteringPoints.Application.Common
 {
-    public record ChangeMasterDataRequest(
-        string TransactionId = "",
-        string GsrnNumber = "",
-        string EffectiveDate = "",
-        string SettlementMethod = "",
-        string? MeterId = null,
-        string? MeteringMethod = null,
-        Address? Address = null,
-        string? ConnectionType = null) : IChangeMeteringPointRequest;
+    /// <summary>
+    /// Request for creating or changing a metering point
+    /// </summary>
+    public interface IChangeMeteringPointRequest : IBusinessRequest
+    {
+        /// <summary>
+        /// Metering point GSRN-number
+        /// </summary>
+        string GsrnNumber { get; }
+    }
 }

@@ -172,10 +172,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             _container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
 
-            _container.Register<IAuthorizer<ChangeMasterDataRequest>, Application.ChangeMasterData.Authorizer>();
+            _container.Register<IAuthorizer<ChangeMasterDataRequest>, ChangeMeteringPointAuthorizer<ChangeMasterDataRequest>>();
             _container.Register<IAuthorizer<CreateMeteringPoint>, NullAuthorizer<CreateMeteringPoint>>();
             _container.Register<IAuthorizer<CreateGridArea>, NullAuthorizer<CreateGridArea>>();
-            _container.Register<IAuthorizer<ConnectMeteringPointRequest>, Application.Connect.Authorizer>();
+            _container.Register<IAuthorizer<ConnectMeteringPointRequest>, ChangeMeteringPointAuthorizer<ConnectMeteringPointRequest>>();
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
                 typeof(MasterDataDocument).Assembly, // Application
