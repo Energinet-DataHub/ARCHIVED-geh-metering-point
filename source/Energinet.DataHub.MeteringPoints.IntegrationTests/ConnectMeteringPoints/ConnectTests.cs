@@ -114,6 +114,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
                 .Initialize(SampleData.GsrnNumber, GetService<IDbConnectionFactory>())
                 .HasConnectionState(PhysicalState.Connected);
             AssertConfirmMessage(DocumentType.ConnectMeteringPointAccepted);
+            Assert.NotNull(FindIntegrationEvent<MeteringPointConnectedIntegrationEvent>());
         }
 
         // [Fact]
@@ -142,19 +143,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
 
             AssertValidationError("D36");
-        }
-
-        [Fact]
-        public async Task ConnectMeteringPoint_WithNoValidationErrors_ShouldGenerateIntegrationEventInOutbox()
-        {
-            var createMeteringPointRequest = CreateMeteringPointRequest();
-            var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
-
-            await SendCommandAsync(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
-            await MarkAsEnergySupplierAssigned(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
-            await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
-
-            AssertOutboxMessage<MeteringPointConnectedIntegrationEvent>();
         }
 
         [Fact]
