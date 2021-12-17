@@ -116,19 +116,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             AssertConfirmMessage(DocumentType.ConnectMeteringPointAccepted);
         }
 
-        [Fact]
-        public async Task ConnectMeteringPoint_WithNoValidationErrors_ShouldGenerateConfirmMessageInOutbox()
-        {
-            var createMeteringPointRequest = CreateMeteringPointRequest();
-            var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
-
-            await SendCommandAsync(createMeteringPointRequest).ConfigureAwait(false);
-            await MarkAsEnergySupplierAssigned(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
-            await SendCommandAsync(connectMeteringPointRequest).ConfigureAwait(false);
-
-            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConnectMeteringPointAccepted);
-        }
-
         // [Fact]
         // public async Task Connect_MeteringPoint_Should_Generate_AccountingPointCharacteristicsMessages_In_Outbox()
         // {
@@ -168,37 +155,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
             AssertOutboxMessage<MeteringPointConnectedIntegrationEvent>();
-        }
-
-        [Fact]
-        public async Task ConnectMeteringPoint_WithValidationErrors_ShouldGenerateRejectMessageInOutbox()
-        {
-            var createMeteringPointRequest = CreateMeteringPointRequest();
-
-            var connectMeteringPointRequest = CreateConnectMeteringPointRequest() with
-            {
-                GsrnNumber = "This is not a valid GSRN number",
-            };
-
-            await SendCommandAsync(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
-            await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
-
-            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConnectMeteringPointRejected);
-        }
-
-        [Fact]
-        public async Task ConnectMeteringPoint_WithNotExistingMetering_ShouldGenerateRejectMessageInOutbox()
-        {
-            var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
-
-            await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
-
-            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConnectMeteringPointRejected);
-        }
-
-        [Fact(Skip = "Not implemented yet")]
-        public void ConnectMeteringPoint_WhenEffectiveDateIsOutOfScope_ShouldGenerateRejectMessageInOutbox()
-        {
         }
 
         [Fact]
