@@ -17,7 +17,21 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint
 {
-    public record MeteringPointCreatedEventMessage(string Gsrn, string MeteringPointType, string GridAreaId,
-        string SettlementMethod, string MeteringMethod, string ConnectionState, string MeterReadingPeriodicity, string NetSettlementGroup, string ToGrid, string FromGrid,
-        string Product, string QuantityUnit, string ParentGsrn, string EffectiveDate) : IOutboundMessage, IRequest, IIntegrationEvent;
+    public record MeteringPointCreatedEventMessage(
+        string MeteringPointId,
+        string GsrnNumber,
+        string MeteringPointType,
+        string GridAreaId,
+        string SettlementMethod,
+        string MeteringMethod,
+        string ConnectionState,
+        string MeterReadingPeriodicity,
+        string NetSettlementGroup,
+        string ToGrid,
+        string FromGrid,
+        string Product,
+        string QuantityUnit,
+        string ParentGsrn,
+        string EffectiveDate)
+        : IOutboundMessage, IRequest, IIntegrationEvent;
 }

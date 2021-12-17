@@ -34,6 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
             var message = new MeteringPointCreatedEventMessage(
+                notification.MeteringPointId.ToString(),
                 notification.GsrnNumber,
                 notification.MeteringPointType,
                 notification.GridAreaLinkId.ToString(),
