@@ -14,7 +14,6 @@
 
 using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,6 +40,15 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas
             return GridAreaCode.CheckRules(code).Success
                 ? _meteringPointContext.GridAreas.SingleOrDefaultAsync(gridArea => gridArea.Code == GridAreaCode.Create(code))
                 : Task.FromResult<GridArea?>(null);
+        }
+
+        public Task<GridArea?> GetByLinkIdAsync(GridAreaLinkId linkId)
+        {
+            if (linkId == null) throw new ArgumentNullException(nameof(linkId));
+            return _meteringPointContext.GridAreas
+                .FromSqlInterpolated(
+                    $"SELECT g.* FROM [dbo].[GridAreas] g JOIN [dbo].[GridAreaLinks] gl ON g.Id = gl.GridAreaId WHERE gl.Id = {linkId.Value}")
+                .SingleOrDefaultAsync();
         }
     }
 }
