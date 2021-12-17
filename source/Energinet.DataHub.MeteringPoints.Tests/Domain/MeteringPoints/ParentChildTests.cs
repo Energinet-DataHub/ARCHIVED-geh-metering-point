@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
@@ -106,7 +107,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 
         private GridArea CreateGridArea()
         {
-            var gridArea = GridArea.Create(new GridAreaDetails(GridAreaName.Create("870"), GridAreaCode.Create("870"), PriceAreaCode.DK1, null));
+            var gridArea = GridArea.Create(new GridAreaDetails(GridAreaName.Create("870"), GridAreaCode.Create("870"), PriceAreaCode.DK1, null, ActorId.Create()));
             _gridAreaRepository.Add(gridArea);
             return gridArea;
         }
