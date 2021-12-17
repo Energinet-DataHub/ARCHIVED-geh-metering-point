@@ -35,17 +35,18 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
         }
 
         [Required]
-        public Guid MeteringPointId { get; private set; }
-
-        [Required] public string GsrnNumber { get; private set; } = null!;
+        public Guid MeteringPointId { get; }
 
         [Required]
-        public ConnectionState ConnectionState { get; private set; }
+        public string GsrnNumber { get; } = null!;
 
         [Required]
-        public MeteringPointType MeteringPointType { get; private set; }
+        public ConnectionState ConnectionState { get; }
 
         [Required]
-        public DateTime EffectiveDate { get; private set; }
+        public MeteringPointType MeteringPointType { get; }
+
+        [Required]
+        public DateTime EffectiveDate { get; }
     }
 }

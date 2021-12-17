@@ -60,8 +60,8 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
             ConnectionType? connectionType,
             DisconnectionType? disconnectionType,
             bool? productionObligation,
-            IEnumerable<MeteringPointSimpleCimDto> childMeteringPoints,
-            MeteringPointSimpleCimDto parentMeteringPoint,
+            IEnumerable<MeteringPointSimpleCimDto>? childMeteringPoints,
+            MeteringPointSimpleCimDto? parentMeteringPoint,
             string? powerPlantGsrnNumber)
         {
             MeteringPointId = meteringPointId;
@@ -108,100 +108,100 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
         }
 
         [Required]
-        public Guid MeteringPointId { get; private set; }
+        public Guid MeteringPointId { get; }
 
         [Required]
-        public string GsrnNumber { get; private set; } = null!;
+        public string GsrnNumber { get; } = null!;
 
         [Required]
-        public string StreetName { get; private set; } = null!;
+        public string StreetName { get; } = null!;
 
         [Required]
-        public string PostalCode { get; private set; } = null!;
+        public string PostalCode { get; } = null!;
 
         [Required]
-        public string CityName { get; private set; } = null!;
+        public string CityName { get; } = null!;
 
         [Required]
-        public string CountryCode { get; private set; } = null!;
+        public string CountryCode { get; } = null!;
 
         [Required]
-        public ConnectionState ConnectionState { get; private set; }
+        public ConnectionState ConnectionState { get; }
 
         [Required]
-        public MeteringMethod MeteringMethod { get; private set; }
+        public MeteringMethod MeteringMethod { get; }
 
         [Required]
-        public ReadingOccurrence ReadingOccurrence { get; private set; }
+        public ReadingOccurrence ReadingOccurrence { get; }
 
         [Required]
-        public MeteringPointType MeteringPointType { get; private set; }
+        public MeteringPointType MeteringPointType { get; }
 
-        public int? RatedCapacity { get; private set; }
+        public int? RatedCapacity { get; }
 
-        public int? RatedCurrent { get; private set; }
-
-        [Required]
-        public string GridAreaName { get; private set; } = null!;
+        public int? RatedCurrent { get; }
 
         [Required]
-        public string GridAreaCode { get; private set; } = null!;
-
-        public string? LinkedExtendedMasterdata { get; private set; }
-
-        public string? LocationDescription { get; private set; }
+        public string GridAreaName { get; } = null!;
 
         [Required]
-        public ProductId ProductId { get; private set; }
+        public string GridAreaCode { get; } = null!;
+
+        public string? LinkedExtendedMasterdata { get; }
+
+        public string? LocationDescription { get; }
 
         [Required]
-        public Unit Unit { get; private set; }
+        public ProductId ProductId { get; }
 
         [Required]
-        public DateTime EffectiveDate { get; private set; }
+        public Unit Unit { get; }
 
-        public string? MeterId { get; private set; }
+        [Required]
+        public DateTime EffectiveDate { get; }
 
-        public string? StreetCode { get; private set; }
+        public string? MeterId { get; }
 
-        public string? CitySubDivisionName { get; private set; }
+        public string? StreetCode { get; }
 
-        public string? FloorIdentification { get; private set; }
+        public string? CitySubDivisionName { get; }
 
-        public string? SuiteNumber { get; private set; }
+        public string? FloorIdentification { get; }
 
-        public string? BuildingNumber { get; private set; }
+        public string? SuiteNumber { get; }
 
-        public int? MunicipalityCode { get; private set; }
+        public string? BuildingNumber { get; }
 
-        public bool? IsActualAddress { get; private set; }
+        public int? MunicipalityCode { get; }
 
-        public Guid? DarReference { get; private set; }
+        public bool? IsActualAddress { get; }
 
-        public double? Capacity { get; private set; }
+        public Guid? DarReference { get; }
 
-        public AssetType? AssetType { get; private set; }
+        public double? Capacity { get; }
 
-        public SettlementMethod? SettlementMethod { get; private set; }
+        public AssetType? AssetType { get; }
 
-        public string? InAreaCode { get; private set; }
+        public SettlementMethod? SettlementMethod { get; }
 
-        public string? OutAreaCode { get; private set; }
+        public string? InAreaCode { get; }
 
-        public NetSettlementGroup? NetSettlementGroup { get; private set; }
+        public string? OutAreaCode { get; }
 
-        public DateTime? SupplyStart { get; private set; }
+        public NetSettlementGroup? NetSettlementGroup { get; }
 
-        public ConnectionType? ConnectionType { get; private set; }
+        public DateTime? SupplyStart { get; }
 
-        public DisconnectionType? DisconnectionType { get; private set; }
+        public ConnectionType? ConnectionType { get; }
 
-        public bool? ProductionObligation { get; private set; }
+        public DisconnectionType? DisconnectionType { get; }
 
-        public IEnumerable<MeteringPointSimpleCimDto>? ChildMeteringPoints { get; private set; }
+        public bool? ProductionObligation { get; }
 
-        public MeteringPointSimpleCimDto? ParentMeteringPoint { get; private set; }
+        public IEnumerable<MeteringPointSimpleCimDto>? ChildMeteringPoints { get; }
 
-        public string? PowerPlantGsrnNumber { get; private set; }
+        public MeteringPointSimpleCimDto? ParentMeteringPoint { get; }
+
+        public string? PowerPlantGsrnNumber { get; }
     }
 }
