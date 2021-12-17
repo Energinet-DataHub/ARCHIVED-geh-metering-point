@@ -43,6 +43,17 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
         }
 
         [Fact]
+        public async Task Cannot_connect_if_already_connected()
+        {
+            await CreateMeteringPointWithEnergySupplierAssigned().ConfigureAwait(false);
+            await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
+
+            await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
+
+            AssertValidationError("D16");
+        }
+
+        [Fact]
         public async Task Metering_point_must_exist()
         {
             await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
@@ -138,21 +149,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
         {
             var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
 
-            await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
-
-            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConnectMeteringPointRejected);
-        }
-
-        [Fact]
-        public async Task ConnectMeteringPoint_WithAlreadyConnected_ShouldGenerateRejectMessageInOutbox()
-        {
-            var createMeteringPointRequest = CreateMeteringPointRequest();
-
-            var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
-
-            await SendCommandAsync(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
-            await MarkAsEnergySupplierAssigned(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
-            await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
             await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
             AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConnectMeteringPointRejected);
