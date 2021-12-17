@@ -43,6 +43,14 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
         }
 
         [Fact]
+        public async Task Metering_point_must_exist()
+        {
+            await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
+
+            AssertValidationError("E10");
+        }
+
+        [Fact]
         public async Task Metering_point_is_connected()
         {
             await CreateMeteringPointWithEnergySupplierAssigned().ConfigureAwait(false);
@@ -68,23 +76,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConnectMeteringPointAccepted);
         }
 
-        [Fact]
-        public async Task Connect_MeteringPoint_Should_Generate_AccountingPointCharacteristicsMessages_In_Outbox()
-        {
-            var createMeteringPointRequest = CreateMeteringPointRequest();
-            var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
-
-            await SendCommandAsync(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
-            await MarkAsEnergySupplierAssigned(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
-            await AddEnergySupplier(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
-            await AddEnergySupplier(connectMeteringPointRequest.EffectiveDate.ToInstant().Plus(Duration.FromDays(2))).ConfigureAwait(false);
-            await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
-
-            await AssertAndRunInternalCommandAsync<SendAccountingPointCharacteristicsMessage>().ConfigureAwait(false);
-
-            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.AccountingPointCharacteristicsMessage, 2);
-        }
-
+        // [Fact]
+        // public async Task Connect_MeteringPoint_Should_Generate_AccountingPointCharacteristicsMessages_In_Outbox()
+        // {
+        //     var createMeteringPointRequest = CreateMeteringPointRequest();
+        //     var connectMeteringPointRequest = CreateConnectMeteringPointRequest();
+        //
+        //     await SendCommandAsync(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+        //     await MarkAsEnergySupplierAssigned(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
+        //     await AddEnergySupplier(connectMeteringPointRequest.EffectiveDate.ToInstant()).ConfigureAwait(false);
+        //     await AddEnergySupplier(connectMeteringPointRequest.EffectiveDate.ToInstant().Plus(Duration.FromDays(2))).ConfigureAwait(false);
+        //     await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
+        //
+        //     await AssertAndRunInternalCommandAsync<SendAccountingPointCharacteristicsMessage>().ConfigureAwait(false);
+        //
+        //     AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.AccountingPointCharacteristicsMessage, 2);
+        // }
         [Theory]
         [InlineData(nameof(MeteringPointType.Consumption))]
         [InlineData(nameof(MeteringPointType.Production))]

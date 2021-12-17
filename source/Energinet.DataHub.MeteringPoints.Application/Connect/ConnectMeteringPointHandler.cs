@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Extensions;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -43,14 +44,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var meteringPoint = await _meteringPointRepository
-                .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
-                .ConfigureAwait(false);
-
-            var validationResult = Validate(request, meteringPoint);
-            if (!validationResult.Success)
+            var meteringPoint = await FetchTargetMeteringPointAsync(request).ConfigureAwait(false);
+            if (meteringPoint == null)
             {
-                return validationResult;
+                return new BusinessProcessResult(request.TransactionId, new List<ValidationError>()
+                {
+                    new MeteringPointMustBeKnownValidationError(request.GsrnNumber),
+                });
             }
 
             var connectionDetails = ConnectionDetails.Create(request.EffectiveDate.ToInstant());
@@ -60,21 +60,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
                 return rulesCheckResult;
             }
 
-            meteringPoint?.Connect(ConnectionDetails.Create(request.EffectiveDate.ToInstant()));
+            meteringPoint.Connect(ConnectionDetails.Create(request.EffectiveDate.ToInstant()));
 
-            _pipelineContext.MeteringPointId = meteringPoint?.Id.Value.ToString()!;
+            _pipelineContext.MeteringPointId = meteringPoint.Id.Value.ToString()!;
 
             return BusinessProcessResult.Ok(request.TransactionId);
-        }
-
-        private static BusinessProcessResult Validate(ConnectMeteringPointRequest request, MeteringPoint? meteringPoint)
-        {
-            var validationRules = new List<IBusinessRule>()
-            {
-                new MeteringPointMustBeKnownRule(meteringPoint, request.GsrnNumber),
-            };
-
-            return new BusinessProcessResult(request.TransactionId, validationRules);
         }
 
         private static BusinessProcessResult CheckBusinessRules(
@@ -85,6 +75,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
             var validationResult = meteringPoint.ConnectAcceptable(connectionDetails);
 
             return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
+        }
+
+        private async Task<MeteringPoint?> FetchTargetMeteringPointAsync(ConnectMeteringPointRequest request)
+        {
+            return await _meteringPointRepository
+                .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
+                .ConfigureAwait(false);
         }
     }
 }
