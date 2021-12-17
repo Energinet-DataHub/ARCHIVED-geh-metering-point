@@ -55,8 +55,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.Actors
                         .Split(",", StringSplitOptions.None)
                         .Select(EnumerationType.FromName<Role>)
                         .ToList()));
-
-            builder.Ignore("CurrentRole");
         }
     }
 }
