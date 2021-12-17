@@ -47,9 +47,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
         [InlineData(8, true, true)]
         [InlineData(5, true, false)]
         [InlineData(8, false, true)]
-        public async Task Effective_date_must_be_within_the_allowed_time_period(int numberOfDaysOffset, bool inThePast, bool expectError)
+        public async Task Effective_date_must_be_within_the_allowed_time_period(int numberOfDaysOffset, bool effectiveDateIsInThePast, bool expectError)
         {
-            var effectiveDate = inThePast
+            var effectiveDate = effectiveDateIsInThePast
                 ? EffectiveDateInPast(numberOfDaysOffset)
                 : EffectiveDateInFuture(numberOfDaysOffset);
             await CreateMeteringPointWithEnergySupplierAssigned(effectiveDate).ConfigureAwait(false);
