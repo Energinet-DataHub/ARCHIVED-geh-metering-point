@@ -20,7 +20,6 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Parties;
 using Actor = Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors.Actor;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
@@ -45,6 +44,36 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
             if (receiver == null) throw new ArgumentNullException(nameof(receiver));
 
             return ConfirmMessageFactory.CreateMeteringPoint(
+                sender: Map(sender),
+                receiver: Map(receiver),
+                createdDateTime: _dateTimeProvider.Now(),
+                marketActivityRecord: new MarketActivityRecord(
+                    Id: Guid.NewGuid().ToString(),
+                    MarketEvaluationPoint: gsrnNumber,
+                    OriginalTransaction: transactionId));
+        }
+
+        public RejectMessage ConnectMeteringPointReject(string gsrnNumber, string effectiveDate, string transactionId, IEnumerable<ErrorMessage> errors, Actor sender, Actor receiver)
+        {
+            if (sender == null) throw new ArgumentNullException(nameof(sender));
+            if (receiver == null) throw new ArgumentNullException(nameof(receiver));
+
+            return RejectMessageFactory.ConnectMeteringPoint(
+                sender: Map(sender),
+                receiver: Map(receiver),
+                createdDateTime: _dateTimeProvider.Now(),
+                marketActivityRecord: new MarketActivityRecordWithReasons(
+                    Id: Guid.NewGuid().ToString(),
+                    MarketEvaluationPoint: gsrnNumber,
+                    OriginalTransaction: transactionId,
+                    Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
+        }
+
+        public ConfirmMessage ConnectMeteringPointConfirmation(string gsrnNumber, string effectiveDate, string transactionId, Actor sender, Actor receiver)
+        {
+            if (sender == null) throw new ArgumentNullException(nameof(sender));
+            if (receiver == null) throw new ArgumentNullException(nameof(receiver));
+            return ConfirmMessageFactory.ConnectMeteringPoint(
                 sender: Map(sender),
                 receiver: Map(receiver),
                 createdDateTime: _dateTimeProvider.Now(),
