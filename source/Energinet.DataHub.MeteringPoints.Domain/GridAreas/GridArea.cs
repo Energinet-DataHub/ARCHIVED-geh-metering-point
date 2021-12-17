@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
@@ -26,6 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
         private readonly PriceAreaCode _priceAreaCode;
         private readonly FullFlexFromDate? _fullFlexFromDate;
         private readonly List<GridAreaLink> _gridAreaLinks = new();
+        private readonly ActorId _actorId;
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind complex types in constructor
         private GridArea() { }
@@ -36,13 +38,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
             GridAreaName name,
             GridAreaCode code,
             PriceAreaCode priceAreaCode,
-            FullFlexFromDate? fullFlexFromDate)
+            FullFlexFromDate? fullFlexFromDate,
+            ActorId actorId)
         {
             Id = gridAreaId;
             Code = code;
             _name = name;
             _priceAreaCode = priceAreaCode;
             _fullFlexFromDate = fullFlexFromDate;
+            _actorId = actorId;
 
             AddDefaultLink();
         }
@@ -79,7 +83,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
                 gridAreaDetails.Name,
                 gridAreaDetails.Code,
                 gridAreaDetails.PriceAreaCode,
-                gridAreaDetails.FullFlexFromDate);
+                gridAreaDetails.FullFlexFromDate,
+                gridAreaDetails.ActorId);
         }
 
         private void AddDefaultLink()

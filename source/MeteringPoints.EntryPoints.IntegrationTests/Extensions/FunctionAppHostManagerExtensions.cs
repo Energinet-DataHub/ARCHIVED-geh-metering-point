@@ -13,23 +13,22 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.GridAreas
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Extensions
 {
-    public static class SampleData
+    public static class FunctionAppHostManagerExtensions
     {
-        public static string GridAreaName => "N1";
+        public static bool CheckIfFunctionThrewException(this FunctionAppHostManager hostManager)
+        {
+            if (hostManager is null)
+            {
+                throw new ArgumentNullException(nameof(hostManager));
+            }
 
-        public static string GridAreaCode => "870";
-
-        public static string OperatorName => "op";
-
-        public static string OperatorId => "5799999911118";
-
-        public static string PriceAreaCode => "DK1";
-
-        public static string Transaction => Guid.NewGuid().ToString();
-
-        public static string ActorId => "158725db-35b5-4740-8ba4-80c616ec9f92";
+            return hostManager.GetHostLogSnapshot()
+                .Any(log => log.Contains($"Exception", StringComparison.OrdinalIgnoreCase));
+        }
     }
 }

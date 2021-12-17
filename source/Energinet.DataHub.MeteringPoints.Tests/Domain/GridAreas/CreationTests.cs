@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentAssertions;
@@ -40,7 +41,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.GridAreas
                 GridAreaName.Create(SampleData.GridAreaName),
                 GridAreaCode.Create(SampleData.GridAreaCode),
                 EnumerationType.FromName<PriceAreaCode>(SampleData.PriceAreaCode),
-                FullFlexFromDate.Create(DateTime.Now));
+                FullFlexFromDate.Create(DateTime.Now),
+                ActorId.Create("158725db-35b5-4740-8ba4-80c616ec9f92"));
         }
 
         private static void AssertContainsValidationError<TValidationError>(BusinessRulesValidationResult result)

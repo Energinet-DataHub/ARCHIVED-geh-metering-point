@@ -14,7 +14,9 @@
 
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Parties;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
 {
@@ -27,7 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
         /// Creates a confirmation message for the create new metering point business process
         /// </summary>
         /// <returns><see cref="ConfirmMessage"/></returns>
-        ConfirmMessage CreateNewMeteringPointConfirmation(string gsrnNumber, string effectiveDate, string transactionId);
+        ConfirmMessage CreateNewMeteringPointConfirmation(string gsrnNumber, string effectiveDate, string transactionId, Actor sender, Actor receiver);
 
         /// <summary>
         /// Creates a reject message for the create new metering point business process
@@ -36,7 +38,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
         /// <param name="effectiveDate"></param>
         /// <param name="transactionId"></param>
         /// <param name="errors"></param>
+        /// <param name="sender"></param>
+        /// <param name="receiver"></param>
         /// <returns><see cref="RejectMessage"/></returns>
-        RejectMessage CreateNewMeteringPointReject(string gsrnNumber, string effectiveDate, string transactionId, IEnumerable<ErrorMessage> errors);
+        RejectMessage CreateNewMeteringPointReject(string gsrnNumber, string effectiveDate, string transactionId, IEnumerable<ErrorMessage> errors, Actor sender, Actor receiver);
     }
 }

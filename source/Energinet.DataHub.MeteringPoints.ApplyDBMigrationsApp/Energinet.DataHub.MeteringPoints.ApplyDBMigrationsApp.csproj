@@ -62,14 +62,17 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Model\202112091530 Change EnergySuppliers foreign key constraint.sql" />
     <EmbeddedResource Include="Scripts\Model\202112131100 Move exchange metering point details.sql" />
     <EmbeddedResource Include="Scripts\Model\202112132025 Delete specific metering point tables.sql" />
-    <EmbeddedResource Include="Scripts\Seed\202109232130 Create Grid Area seed data.sql" />
+    <EmbeddedResource Include="Scripts\Model\202112131115 Add Actor table.sql" />
+    <EmbeddedResource Include="Scripts\Seed\202112142130 Create Grid Area seed data.sql" />
+    <EmbeddedResource Include="Scripts\Seed\202112141430 Actor seed data.sql" />
     <EmbeddedResource Include="Scripts\Test\202109232129 Clean database.sql" />
-    <EmbeddedResource Include="Scripts\Test\202109232130 Create Grid Area test data.sql" />
     <EmbeddedResource Include="Scripts\Model\202109271100 Add IsOfficialAddress.sql" />
     <EmbeddedResource Include="Scripts\Model\202109271400 Add GeoInfoReference.sql" />
     <EmbeddedResource Include="Scripts\Model\202109270930 Add MessageHubMessages table.sql" />
     <EmbeddedResource Include="Scripts\Model\202110080920 Alter Correlation in QueuedInternalCommands.sql" />
     <EmbeddedResource Include="Scripts\Test\202110281315 Create Metering Point test data.sql" />
+    <EmbeddedResource Include="Scripts\Test\202112141430 Actor test data.sql" />
+    <EmbeddedResource Include="Scripts\Test\202112142130 Create Grid Area test data.sql" />
     <None Remove="Scripts\Model\202111041429 Add energy supplier table.sql" />
     <EmbeddedResource Include="Scripts\Model\202111041429 Add energy supplier table.sql" />
   </ItemGroup>

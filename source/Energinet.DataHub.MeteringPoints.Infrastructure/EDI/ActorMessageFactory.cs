@@ -15,40 +15,38 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Application.Common.Users;
+using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Parties;
+using Actor = Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors.Actor;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
 {
     public class ActorMessageFactory : IActorMessageFactory
     {
-        private readonly IUserContext _userContext;
         private readonly ISystemDateTimeProvider _dateTimeProvider;
-        private readonly ICorrelationContext _correlationContext;
 
-        public ActorMessageFactory(IUserContext userContext, ISystemDateTimeProvider dateTimeProvider, ICorrelationContext correlationContext)
+        public ActorMessageFactory(ISystemDateTimeProvider dateTimeProvider)
         {
-            _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             _dateTimeProvider = dateTimeProvider ?? throw new ArgumentNullException(nameof(dateTimeProvider));
-            _correlationContext = correlationContext ?? throw new ArgumentNullException(nameof(correlationContext));
         }
 
-        public ConfirmMessage CreateNewMeteringPointConfirmation(string gsrnNumber, string effectiveDate, string transactionId)
+        public ConfirmMessage CreateNewMeteringPointConfirmation(
+            string gsrnNumber,
+            string effectiveDate,
+            string transactionId,
+            Actor sender,
+            Actor receiver)
         {
-            var glnNumber = "8200000008842";
+            if (sender == null) throw new ArgumentNullException(nameof(sender));
+            if (receiver == null) throw new ArgumentNullException(nameof(receiver));
+
             return ConfirmMessageFactory.CreateMeteringPoint(
-                sender: new MarketRoleParticipant(
-                    Id: "DataHub GLN", // TODO: Use from actor register
-                    CodingScheme: "A10",
-                    Role: "DDZ"),
-                receiver: new MarketRoleParticipant(
-                    Id: _userContext.CurrentUser?.GlnNumber ?? glnNumber, // TODO: Use from actor register
-                    CodingScheme: "A10",
-                    Role: "DDQ"),
+                sender: Map(sender),
+                receiver: Map(receiver),
                 createdDateTime: _dateTimeProvider.Now(),
                 marketActivityRecord: new MarketActivityRecord(
                     Id: Guid.NewGuid().ToString(),
@@ -56,24 +54,45 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     OriginalTransaction: transactionId));
         }
 
-        public RejectMessage CreateNewMeteringPointReject(string gsrnNumber, string effectiveDate, string transactionId, IEnumerable<ErrorMessage> errors)
+        public RejectMessage CreateNewMeteringPointReject(
+            string gsrnNumber,
+            string effectiveDate,
+            string transactionId,
+            IEnumerable<ErrorMessage> errors,
+            Actor sender,
+            Actor receiver)
         {
-            var glnNumber = "8200000008842";
+            if (sender == null) throw new ArgumentNullException(nameof(sender));
+            if (receiver == null) throw new ArgumentNullException(nameof(receiver));
+
             return RejectMessageFactory.CreateMeteringPoint(
-                sender: new MarketRoleParticipant(// TODO: Use from actor register
-                    Id: "DataHub GLN",
-                    CodingScheme: "A10",
-                    Role: "DDZ"),
-                receiver: new MarketRoleParticipant(// TODO: Use from actor register
-                    Id: _userContext.CurrentUser?.GlnNumber ?? glnNumber,
-                    CodingScheme: "A10",
-                    Role: "DDM"),
+                sender: Map(sender),
+                receiver: Map(receiver),
                 createdDateTime: _dateTimeProvider.Now(),
                 marketActivityRecord: new MarketActivityRecordWithReasons(
                     Id: Guid.NewGuid().ToString(),
                     MarketEvaluationPoint: gsrnNumber,
                     OriginalTransaction: transactionId,
                     Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
+        }
+
+        private static MarketRoleParticipant Map(Actor actor)
+        {
+            var codingScheme = actor.IdentificationType switch
+            {
+                nameof(IdentificationType.GLN) => "A10",
+                nameof(IdentificationType.EIC) => "A01",
+                _ => throw new InvalidOperationException("Unknown party identifier type"),
+            };
+
+            var role = actor.Role switch
+            {
+                nameof(Role.MeteringPointAdministrator) => "DDZ",
+                nameof(Role.GridAccessProvider) => "DDM",
+                _ => throw new InvalidOperationException("Unknown party role"),
+            };
+
+            return new MarketRoleParticipant(actor.IdentificationNumber, codingScheme, role);
         }
     }
 }
