@@ -169,6 +169,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IBusinessDocumentFactory, BusinessDocumentFactory>(Lifestyle.Scoped);
 
             _container.Register<ChangeMasterDataSettings>(() => new ChangeMasterDataSettings(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1));
+            _container.Register<ConnectSettings>(() => new ConnectSettings(
+                NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 7,
+                NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));
 
             _container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
 

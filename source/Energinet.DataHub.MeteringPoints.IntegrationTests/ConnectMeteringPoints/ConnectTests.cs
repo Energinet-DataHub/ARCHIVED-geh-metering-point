@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
@@ -23,8 +24,10 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
+using Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.ConsumptionMeteringPoints;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using NodaTime;
+using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
 
@@ -40,6 +43,27 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             : base(databaseFixture)
         {
             _dateTimeProvider = GetService<ISystemDateTimeProvider>();
+        }
+
+        [Theory]
+        [InlineData(8, true)]
+        [InlineData(8, false)]
+        public async Task Effective_date_must_be_within_the_allowed_time_period(int numberOfdaysOffset, bool inThePast)
+        {
+            var timeProvider = GetService<ISystemDateTimeProvider>() as SystemDateTimeProviderStub;
+            await CreateMeteringPointWithEnergySupplierAssigned().ConfigureAwait(false);
+
+            var effectiveDate = inThePast ?
+                _dateTimeProvider.Now().Minus(Duration.FromDays(numberOfdaysOffset)) :
+                _dateTimeProvider.Now().Plus(Duration.FromDays(numberOfdaysOffset));
+            effectiveDate = Instant.FromUtc(effectiveDate.ToDateTimeUtc().Year, effectiveDate.ToDateTimeUtc().Month, effectiveDate.ToDateTimeUtc().Day, 22, 0);
+
+            await SendCommandAsync(CreateConnectMeteringPointRequest() with
+            {
+                EffectiveDate = effectiveDate.ToString(),
+            }).ConfigureAwait(false);
+
+            AssertValidationError("E17", true);
         }
 
         [Fact]

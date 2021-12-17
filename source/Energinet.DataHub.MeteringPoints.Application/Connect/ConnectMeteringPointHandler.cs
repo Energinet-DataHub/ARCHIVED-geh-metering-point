@@ -14,13 +14,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Extensions;
-using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.Policies;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
@@ -29,13 +30,19 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly MeteringPointPipelineContext _pipelineContext;
+        private readonly ISystemDateTimeProvider _systemDateTimeProvider;
+        private readonly ConnectSettings _settings;
 
         public ConnectMeteringPointHandler(
             IMeteringPointRepository meteringPointRepository,
-            MeteringPointPipelineContext pipelineContext)
+            MeteringPointPipelineContext pipelineContext,
+            ISystemDateTimeProvider systemDateTimeProvider,
+            ConnectSettings settings)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _pipelineContext = pipelineContext;
+            _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
+            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
         }
 
         public async Task<BusinessProcessResult> Handle(
@@ -51,6 +58,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
                 {
                     new MeteringPointMustBeKnownValidationError(request.GsrnNumber),
                 });
+            }
+
+            var policyCheckResult = await CheckPoliciesAsync(request).ConfigureAwait(false);
+            if (policyCheckResult.Success == false)
+            {
+                return new BusinessProcessResult(request.TransactionId, policyCheckResult.Errors);
             }
 
             var connectionDetails = ConnectionDetails.Create(request.EffectiveDate.ToInstant());
@@ -82,6 +95,18 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
             return await _meteringPointRepository
                 .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
                 .ConfigureAwait(false);
+        }
+
+        private Task<BusinessRulesValidationResult> CheckPoliciesAsync(ConnectMeteringPointRequest request)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            var validationResults = new List<BusinessRulesValidationResult>()
+            {
+                new EffectiveDatePolicy(_settings.NumberOfDaysEffectiveDateIsAllowedToBeforeToday).Check(_systemDateTimeProvider.Now(), EffectiveDate.Create(request.EffectiveDate)),
+            };
+
+            var validationErrors = validationResults.SelectMany(results => results.Errors).ToList();
+            return Task.FromResult<BusinessRulesValidationResult>(new BusinessRulesValidationResult(validationErrors));
         }
     }
 }
