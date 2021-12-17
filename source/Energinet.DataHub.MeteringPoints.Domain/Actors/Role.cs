@@ -12,14 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.Actors;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
+namespace Energinet.DataHub.MeteringPoints.Domain.Actors
 {
-    public record GridAreaDetails(
-        GridAreaName Name,
-        GridAreaCode Code,
-        PriceAreaCode PriceAreaCode,
-        FullFlexFromDate? FullFlexFromDate,
-        ActorId ActorId);
+    public class Role : EnumerationType
+    {
+        public static readonly Role None = new Role(0, nameof(None));
+        public static readonly Role MeteringPointAdministrator = new Role(1, nameof(MeteringPointAdministrator));
+        public static readonly Role GridAccessProvider = new Role(2, nameof(GridAccessProvider));
+
+        public Role(int id, string name)
+            : base(id, name)
+        {
+        }
+    }
 }

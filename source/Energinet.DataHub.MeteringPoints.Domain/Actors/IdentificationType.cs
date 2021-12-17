@@ -12,14 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.Actors;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
+namespace Energinet.DataHub.MeteringPoints.Domain.Actors
 {
-    public record GridAreaDetails(
-        GridAreaName Name,
-        GridAreaCode Code,
-        PriceAreaCode PriceAreaCode,
-        FullFlexFromDate? FullFlexFromDate,
-        ActorId ActorId);
+    public class IdentificationType : EnumerationType
+    {
+        public static readonly IdentificationType GLN = new IdentificationType(0, nameof(GLN));
+        public static readonly IdentificationType EIC = new IdentificationType(1, nameof(EIC));
+
+        public IdentificationType(int id, string name)
+            : base(id, name)
+        {
+        }
+    }
 }

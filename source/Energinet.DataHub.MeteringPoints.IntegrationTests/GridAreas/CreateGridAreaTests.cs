@@ -105,7 +105,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.GridAreas
                 SampleData.GridAreaName,
                 SampleData.GridAreaCode,
                 SampleData.PriceAreaCode,
-                SampleData.Transaction);
+                SampleData.Transaction,
+                SampleData.ActorId);
         }
     }
 }

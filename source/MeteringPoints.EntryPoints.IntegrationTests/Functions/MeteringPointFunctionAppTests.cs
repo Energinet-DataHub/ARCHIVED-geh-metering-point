@@ -16,9 +16,11 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using Energinet.DataHub.Core.TestCommon;
+using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Extensions;
 using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures;
 using FluentAssertions;
 using Xunit;
@@ -61,7 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
                 .Replace("{{transactionId}}", "1", StringComparison.OrdinalIgnoreCase)
                 .Replace("{{gsrn}}", "571313140733089609", StringComparison.OrdinalIgnoreCase);
             using var request = new HttpRequestMessage(HttpMethod.Post, "api/MeteringPoint");
-            request.Headers.Add("gln", "8200000009917");
+            request.Headers.Add("gln", "8200000001409");
             request.Content = new StringContent(xml, Encoding.UTF8, "application/xml");
 
             // Act
@@ -89,16 +91,18 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
 
             // MessageHub
             // TODO: Check content for accept?
-            await Fixture.MessageHubSimulator.PeekAsync().ConfigureAwait(false);
+            var peekSimulationResponseDto = await Fixture.MessageHubSimulator.PeekAsync().ConfigureAwait(false);
 
             // Local MessageHub
             await AssertFunctionExecuted(Fixture.LocalMessageHubHostManager, "RequestBundleQueueSubscriber").ConfigureAwait(false);
 
             // MessageHub
-            await Fixture.MessageHubSimulator.DequeueAsync().ConfigureAwait(false);
+            await Fixture.MessageHubSimulator.DequeueAsync(peekSimulationResponseDto).ConfigureAwait(false);
 
             // Local MessageHub
             await AssertFunctionExecuted(Fixture.LocalMessageHubHostManager, "BundleDequeuedQueueSubscriber").ConfigureAwait(false);
+
+            AssertNoExceptionsThrown();
         }
 
         private static async Task AssertFunctionExecuted(FunctionAppHostManager hostManager, string functionName)
@@ -112,6 +116,15 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
                     waitTimespan)
                 .ConfigureAwait(false);
             functionExecuted.Should().BeTrue($"{functionName} was expected to run.");
+        }
+
+        private void AssertNoExceptionsThrown()
+        {
+            Fixture.IngestionHostManager.CheckIfFunctionThrewException().Should().BeFalse();
+            Fixture.ProcessingHostManager.CheckIfFunctionThrewException().Should().BeFalse();
+            Fixture.OutboxHostManager.CheckIfFunctionThrewException().Should().BeFalse();
+            Fixture.LocalMessageHubHostManager.CheckIfFunctionThrewException().Should().BeFalse();
+            Fixture.InternalCommandDispatcherHostManager.CheckIfFunctionThrewException().Should().BeFalse();
         }
     }
 }

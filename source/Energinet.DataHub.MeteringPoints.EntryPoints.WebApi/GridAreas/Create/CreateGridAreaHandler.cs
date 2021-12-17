@@ -18,6 +18,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -76,7 +77,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create
                 GridAreaName.Create(request.Name),
                 GridAreaCode.Create(request.Code),
                 EnumerationType.FromName<PriceAreaCode>(request.PriceAreaCode),
-                FullFlexFromDate.Create(_dateTimeProvider.Now().ToDateTimeOffset().Date.ToUniversalTime()));
+                FullFlexFromDate.Create(_dateTimeProvider.Now().ToDateTimeOffset().Date.ToUniversalTime()),
+                ActorId.Create(request.ActorId));
         }
 
         private async Task<BusinessProcessResult> ValidateInputAsync(CreateGridArea request)
