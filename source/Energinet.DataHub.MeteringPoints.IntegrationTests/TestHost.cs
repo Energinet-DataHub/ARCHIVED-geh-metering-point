@@ -149,7 +149,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IDomainEventPublisher, DomainEventPublisher>();
             _container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Singleton);
             _container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
-            _container.Register<IUserContext>(() => new UserContextStub { CurrentUser = new UserIdentity(Guid.NewGuid().ToString(), "8200000001409"), }, Lifestyle.Scoped);
+            _container.Register<IUserContext>(() => new UserContextStub { CurrentUser = new UserIdentity(Guid.NewGuid().ToString(), "8200000001409"), }, Lifestyle.Singleton);
             _container.Register<MeteringPointPipelineContext>(Lifestyle.Scoped);
             _container.Register<ActorProvider>(Lifestyle.Scoped);
 
@@ -172,10 +172,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             _container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
 
-            _container.Register<IAuthorizer<ChangeMasterDataRequest>, Authorizer>();
+            _container.Register<IAuthorizer<ChangeMasterDataRequest>, Application.ChangeMasterData.Authorizer>();
             _container.Register<IAuthorizer<CreateMeteringPoint>, NullAuthorizer<CreateMeteringPoint>>();
             _container.Register<IAuthorizer<CreateGridArea>, NullAuthorizer<CreateGridArea>>();
-            _container.Register<IAuthorizer<ConnectMeteringPointRequest>, NullAuthorizer<ConnectMeteringPointRequest>>();
+            _container.Register<IAuthorizer<ConnectMeteringPointRequest>, Application.Connect.Authorizer>();
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
                 typeof(MasterDataDocument).Assembly, // Application

@@ -27,9 +27,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcess
         public static void AddBusinessProcessAuthorizers(this Container container)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
-            container.Register<IAuthorizer<ChangeMasterDataRequest>, Authorizer>();
+            container.Register<IAuthorizer<ChangeMasterDataRequest>, Application.ChangeMasterData.Authorizer>();
             container.Register<IAuthorizer<CreateMeteringPoint>, NullAuthorizer<CreateMeteringPoint>>();
-            container.Register<IAuthorizer<ConnectMeteringPointRequest>, NullAuthorizer<ConnectMeteringPointRequest>>();
+            container.Register<IAuthorizer<ConnectMeteringPointRequest>, Application.Connect.Authorizer>();
         }
     }
 }
