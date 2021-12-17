@@ -403,6 +403,14 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             ((UserContextStub)GetService<IUserContext>()).SetCurrentUser(new UserIdentity("Fake", glnNumber));
         }
 
+        protected async Task CloseDownMeteringPointAsync()
+        {
+            var context = GetService<MeteringPointContext>();
+            var meteringPoint = context.MeteringPoints.First(meteringPoint => meteringPoint.GsrnNumber.Equals(GsrnNumber.Create(SampleData.GsrnNumber)));
+            meteringPoint?.CloseDown();
+            await context.SaveChangesAsync().ConfigureAwait(false);
+        }
+
         private void CleanupDatabase()
         {
             var cleanupStatement = new StringBuilder();

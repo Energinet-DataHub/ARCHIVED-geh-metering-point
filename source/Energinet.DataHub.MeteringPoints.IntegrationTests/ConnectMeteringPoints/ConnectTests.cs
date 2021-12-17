@@ -54,6 +54,17 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
         }
 
         [Fact]
+        public async Task Cannot_connect_if_closed_down()
+        {
+            await CreateMeteringPointWithEnergySupplierAssigned().ConfigureAwait(false);
+            await CloseDownMeteringPointAsync().ConfigureAwait(false);
+
+            await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
+
+            AssertValidationError("D16");
+        }
+
+        [Fact]
         public async Task Metering_point_must_exist()
         {
             await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
