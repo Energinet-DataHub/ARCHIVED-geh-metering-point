@@ -18,7 +18,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Xunit;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoints
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
     public class AssertMeteringPoint
     {
