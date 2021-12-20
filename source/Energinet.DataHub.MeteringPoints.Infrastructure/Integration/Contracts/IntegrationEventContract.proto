@@ -112,7 +112,8 @@ message MeteringPointCreated {
   UnitType unit_type = 11; // Denotes the unit type. For a production metering point this is always a variation of watt/hour
   string to_grid_area_code = 12; // Denotes which grid area energy is exchanged to
   string from_grid_area_code = 13; // Denotes which grid area energy is exchange from
-  MeteringPointType metering_point_type = 14; // Defines the type of metering point created 
+  MeteringPointType metering_point_type = 14; // Defines the type of metering point created
+  string parent_gsrn_number = 15; // Business facing metering point identifier for this metering points parent 
 
 }
 

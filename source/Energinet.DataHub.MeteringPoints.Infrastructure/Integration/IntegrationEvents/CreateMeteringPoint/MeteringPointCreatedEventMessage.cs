@@ -14,6 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using MediatR;
+using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint
 {
@@ -30,8 +31,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         string ToGrid,
         string FromGrid,
         string Product,
-        string QuantityUnit,
+        string UnitType,
         string ParentGsrn,
-        string EffectiveDate)
+        Instant EffectiveDate)
         : IOutboundMessage, IRequest, IIntegrationEvent;
 }

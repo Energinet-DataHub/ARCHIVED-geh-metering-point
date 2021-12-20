@@ -25,7 +25,54 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
             return @event.MeteringPointType switch
             {
                 "Consumption" => MeteringPointCreated.Types.MeteringPointType.MptConsumption,
+                "Production" => MeteringPointCreated.Types.MeteringPointType.MptProduction,
+                "Exchange" => MeteringPointCreated.Types.MeteringPointType.MptExchange,
+                "GridLossCorrection" => MeteringPointCreated.Types.MeteringPointType.MptGridLossCorrection,
+                "Analysis" => MeteringPointCreated.Types.MeteringPointType.MptAnalysis,
+                "VEProduction" => MeteringPointCreated.Types.MeteringPointType.MptVeproduction,
+                "ExchangeReactiveEnergy" => MeteringPointCreated.Types.MeteringPointType.MptExchangeReactiveEnergy,
+                "InternalUse" => MeteringPointCreated.Types.MeteringPointType.MptInternalUse,
+                "SurplusProductionGroup" => MeteringPointCreated.Types.MeteringPointType.MptSurplusProductionGroup,
+                "NetProduction" => MeteringPointCreated.Types.MeteringPointType.MptNetProduction,
+                "SupplyToGrid" => MeteringPointCreated.Types.MeteringPointType.MptSupplyToGrid,
+                "ConsumptionFromGrid" => MeteringPointCreated.Types.MeteringPointType.MptConsumptionFromGrid,
+                "WholesaleServices" => MeteringPointCreated.Types.MeteringPointType.MptWholesaleServices,
+                "OwnProduction" => MeteringPointCreated.Types.MeteringPointType.MptOwnProduction,
+                "NetFromGrid" => MeteringPointCreated.Types.MeteringPointType.MptNetFromGrid,
+                "NetToGrid" => MeteringPointCreated.Types.MeteringPointType.MptNetToGrid,
+                "TotalConsumption" => MeteringPointCreated.Types.MeteringPointType.MptTotalConsumption,
+                "ElectricalHeating" => MeteringPointCreated.Types.MeteringPointType.MptElectricalHeating,
+                "NetConsumption" => MeteringPointCreated.Types.MeteringPointType.MptNetConsumption,
+                "OtherConsumption" => MeteringPointCreated.Types.MeteringPointType.MptOtherConsumption,
+                "OtherProduction" => MeteringPointCreated.Types.MeteringPointType.MptOtherProduction,
                 _ => throw new ArgumentException("Product type is not recognized."),
+            };
+        }
+
+        public static MeteringPointCreated.Types.SettlementMethod GetSettlementMethod(
+            this MeteringPointCreatedEventMessage @event)
+        {
+            return @event.SettlementMethod switch
+            {
+                "Flex" => MeteringPointCreated.Types.SettlementMethod.SmFlex,
+                "NonProfiled" => MeteringPointCreated.Types.SettlementMethod.SmNonprofiled,
+                "Profiled" => MeteringPointCreated.Types.SettlementMethod.SmProfiled,
+                _ => throw new ArgumentException("Settlement method is not recognized."),
+            };
+        }
+
+        public static MeteringPointCreated.Types.NetSettlementGroup GetNetSettlementGroup(
+            this MeteringPointCreatedEventMessage @event)
+        {
+            return @event.NetSettlementGroup switch
+            {
+                "Zero" => MeteringPointCreated.Types.NetSettlementGroup.NsgZero,
+                "One" => MeteringPointCreated.Types.NetSettlementGroup.NsgOne,
+                "Two" => MeteringPointCreated.Types.NetSettlementGroup.NsgTwo,
+                "Three" => MeteringPointCreated.Types.NetSettlementGroup.NsgThree,
+                "Six" => MeteringPointCreated.Types.NetSettlementGroup.NsgSix,
+                "Ninetynine" => MeteringPointCreated.Types.NetSettlementGroup.NsgNinetynine,
+                _ => throw new ArgumentException("Net settlement group is not recognized."),
             };
         }
 
@@ -73,6 +120,19 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
             return @event.ConnectionState switch
             {
                 "New" => MeteringPointCreated.Types.ConnectionState.CsNew,
+                _ => throw new ArgumentException("Meter reading periodicity is not recognized."),
+            };
+        }
+
+        public static MeteringPointCreated.Types.UnitType GetUnitType(
+            this MeteringPointCreatedEventMessage @event)
+        {
+            return @event.UnitType switch
+            {
+                "Wh" => MeteringPointCreated.Types.UnitType.UtWh,
+                "KWh" => MeteringPointCreated.Types.UnitType.UtKwh,
+                "MWh" => MeteringPointCreated.Types.UnitType.UtMwh,
+                "GWh" => MeteringPointCreated.Types.UnitType.UtGwh,
                 _ => throw new ArgumentException("Meter reading periodicity is not recognized."),
             };
         }
