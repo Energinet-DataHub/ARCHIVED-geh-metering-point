@@ -81,5 +81,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         public static string ScheduledMeterReadingDate => string.Empty;
 
         public static string GlnNumber => "3963865549824";
+
+        public static string ParentGsrnNumber => "570851247381952311";
     }
 }

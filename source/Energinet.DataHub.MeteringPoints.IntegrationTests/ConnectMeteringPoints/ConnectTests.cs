@@ -13,12 +13,15 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture.Xunit2;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Extensions;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
@@ -43,11 +46,34 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             _dateTimeProvider = GetService<ISystemDateTimeProvider>();
         }
 
+        [Theory]
+        [InlineData(nameof(MeteringPointType.NetProduction))]
+        [InlineData(nameof(MeteringPointType.SupplyToGrid))]
+        [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
+        public async Task Metering_point_must_be_physical(string meteringPointType)
+        {
+            await SendCommandAsync(
+                    Scenarios.CreateCommand(EnumerationType.FromName<MeteringPointType>(meteringPointType))
+                        with
+                        {
+                            MeteringMethod = MeteringMethod.Calculated.Name, MeterNumber = null,
+                        })
+                .ConfigureAwait(false);
+
+            await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
+
+            AssertValidationError("D37");
+        }
+
         [Fact]
         public async Task Must_be_coupled_to_parent_to_be_connected()
         {
-            await CreateMeteringPointWithoutEnergySupplierAssigned(MeteringPointType.ExchangeReactiveEnergy)
-                .ConfigureAwait(false);
+            await SendCommandAsync(Scenarios.CreateCommand(MeteringPointType.ExchangeReactiveEnergy)
+                with
+                {
+                    MeteringMethod = MeteringMethod.Physical.Name,
+                    MeterNumber = "Fake",
+                }).ConfigureAwait(false);
 
             await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
 
@@ -264,6 +290,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
         private async Task CreateMeteringPointWithoutEnergySupplierAssigned(MeteringPointType meteringPointType)
         {
             await SendCommandAsync(Scenarios.CreateCommand(meteringPointType)).ConfigureAwait(false);
+        }
+
+        private async Task CreateCoupledExchangeReactiveEnergyMeteringPoint()
+        {
+            await SendCommandAsync(
+                    Scenarios.CreateCommand(MeteringPointType.Exchange)
+                    with { GsrnNumber = SampleData.ParentGsrnNumber })
+                .ConfigureAwait(false);
+            await SendCommandAsync(Scenarios.CreateCommand(MeteringPointType.ExchangeReactiveEnergy)
+                with
+                {
+                    MeteringMethod = MeteringMethod.Virtual.Name,
+                    MeterNumber = null,
+                    ParentRelatedMeteringPoint = SampleData.ParentGsrnNumber,
+                }).ConfigureAwait(false);
         }
 
         private Instant EffectiveDateInPast(int numberOfDaysFromToday)

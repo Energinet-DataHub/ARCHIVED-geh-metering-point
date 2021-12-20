@@ -12,19 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Connect;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Connect
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Connect
 {
-    public class MustBeCoupledToParentRule : IBusinessRule
+    public class MeterMustBePhysicalConverter : ErrorConverter<MeterMustBePhysical>
     {
-        public MustBeCoupledToParentRule(MeteringPointType meteringPointType, MeteringPointId? parentMeteringPointId)
+        protected override ErrorMessage Convert(MeterMustBePhysical validationError)
         {
-            IsBroken = meteringPointType == MeteringPointType.ExchangeReactiveEnergy && parentMeteringPointId is null;
+            return new ErrorMessage(
+                "D37",
+                "Net production, supply to grid or consumption from grid metering points must be physical in order to be connected.");
         }
-
-        public bool IsBroken { get; }
-
-        public ValidationError ValidationError => new MustBeCoupledToParent();
     }
 }

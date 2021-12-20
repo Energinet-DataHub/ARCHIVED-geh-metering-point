@@ -16,15 +16,7 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Connect
 {
-    public class MustBeCoupledToParentRule : IBusinessRule
+    public class MeterMustBePhysical : ValidationError
     {
-        public MustBeCoupledToParentRule(MeteringPointType meteringPointType, MeteringPointId? parentMeteringPointId)
-        {
-            IsBroken = meteringPointType == MeteringPointType.ExchangeReactiveEnergy && parentMeteringPointId is null;
-        }
-
-        public bool IsBroken { get; }
-
-        public ValidationError ValidationError => new MustBeCoupledToParent();
     }
 }

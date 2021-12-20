@@ -16,6 +16,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Connect;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -30,6 +31,17 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         public ConnectTests()
         {
             _systemDateTimeProvider = new SystemDateTimeProviderStub();
+        }
+
+        [Theory]
+        [InlineData(nameof(MeteringPointType.NetProduction))]
+        [InlineData(nameof(MeteringPointType.SupplyToGrid))]
+        [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
+        public void Metering_point_must_be_physical(string meteringPointType)
+        {
+            var meteringPoint = CreateMeteringPoint(EnumerationType.FromName<MeteringPointType>(meteringPointType));
+
+            AssertError<MeterMustBePhysical>(meteringPoint.ConnectAcceptable(ConnectNow()), true);
         }
 
         [Fact]
