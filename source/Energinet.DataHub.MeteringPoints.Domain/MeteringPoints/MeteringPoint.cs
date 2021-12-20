@@ -306,7 +306,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             {
                 new MustBeCoupledToParentRule(MeteringPointType),
                 new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, MeteringPointType, ConnectionState.PhysicalState),
-                new MustHaveEnergySupplierRule(GsrnNumber, connectionDetails, EnergySupplierDetails),
+                new MustHaveEnergySupplierRule(this, connectionDetails),
             };
 
             return new BusinessRulesValidationResult(rules);
