@@ -13,24 +13,32 @@
 // limitations under the License.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.Extensions.Logging;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
 {
     internal class OutboxMessageDispatcherTelemetryDecorator : IOutboxMessageDispatcher
     {
         private readonly TelemetryClient _telemetryClient;
+        private readonly ILogger _logger;
+        private readonly ICorrelationContext _correlationContext;
         private readonly IOutboxMessageDispatcher _decoratee;
 
         public OutboxMessageDispatcherTelemetryDecorator(
             TelemetryClient telemetryClient,
+            ILogger logger,
+            ICorrelationContext correlationContext,
             IOutboxMessageDispatcher decoratee)
         {
             _telemetryClient = telemetryClient;
+            _logger = logger;
+            _correlationContext = correlationContext;
             _decoratee = decoratee;
         }
 
@@ -41,6 +49,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
             var traceContext = TraceContext.Parse(message.Correlation);
             if (!traceContext.IsValid)
             {
+                _logger.LogWarning("Could not parse trace context for outbox message with id: {messageId} and correlation: {correlationId}", message.Id, message.Correlation);
+
                 await _decoratee.DispatchMessageAsync(message).ConfigureAwait(false);
                 return;
             }
@@ -49,6 +59,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
             operation.Telemetry.Type = "Function";
             try
             {
+                _correlationContext.SetId(traceContext.TraceId);
+                _correlationContext.SetParentId(traceContext.ParentId);
+
                 operation.Telemetry.Success = true;
 
                 await _decoratee.DispatchMessageAsync(message).ConfigureAwait(false);
@@ -57,11 +70,15 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
             {
                 operation.Telemetry.Success = false;
                 _telemetryClient.TrackException(exception);
+                _telemetryClient.Flush();
                 throw;
             }
             finally
             {
                 _telemetryClient.StopOperation(operation);
+
+                _correlationContext.SetId(string.Empty);
+                _correlationContext.SetParentId(string.Empty);
             }
         }
     }
