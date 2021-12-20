@@ -16,6 +16,7 @@ using System;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization.Converters;
 using NodaTime.Serialization.SystemTextJson;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Serialization
@@ -30,8 +31,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Serialization
         public JsonSerializer()
         {
             _options = new JsonSerializerOptions();
+            _options.WriteIndented = true;
             _options.Converters.Add(NodaConverters.InstantConverter);
             _options.Converters.Add(new CustomJsonConverterForType());
+            _options.Converters.Add(new ObjectToInferredTypesConverter());
         }
 
         public async ValueTask<object> DeserializeAsync(Stream utf8Json, Type returnType)
