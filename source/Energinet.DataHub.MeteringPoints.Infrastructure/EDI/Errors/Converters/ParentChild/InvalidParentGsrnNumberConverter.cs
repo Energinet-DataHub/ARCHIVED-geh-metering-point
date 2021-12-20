@@ -12,26 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Application.Create.Validation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.GridAreas
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.ParentChild
 {
-    /// <summary>
-    /// Repository for grid areas.
-    /// </summary>
-    public interface IGridAreaRepository
+    public class InvalidParentGsrnNumberConverter : ErrorConverter<InvalidParentGsrnNumber>
     {
-        /// <summary>
-        /// Add new grid area to repository.
-        /// </summary>
-        /// <param name="gridArea"></param>
-        void Add(GridArea gridArea);
-
-        /// <summary>
-        /// Get grid area by grid area code.
-        /// </summary>
-        /// <param name="code"></param>
-        Task<GridArea?> GetByCodeAsync(string code);
+        protected override ErrorMessage Convert(InvalidParentGsrnNumber validationError)
+        {
+            return new ErrorMessage("E10", "Invalid parent metering point GSRN number.");
+        }
     }
 }
