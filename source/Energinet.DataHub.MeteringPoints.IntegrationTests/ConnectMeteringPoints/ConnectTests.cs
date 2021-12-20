@@ -16,6 +16,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
+using Energinet.DataHub.MeteringPoints.Application.Extensions;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
@@ -279,29 +280,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             await MarkAsEnergySupplierAssigned(startOfSupplyDate).ConfigureAwait(false);
         }
 
-        private async Task CreateMeteringPointWithoutEnergySupplierAssigned()
-        {
-            await SendCommandAsync(Scenarios.CreateCommand(MeteringPointType.Consumption)).ConfigureAwait(false);
-        }
-
         private async Task CreateMeteringPointWithoutEnergySupplierAssigned(MeteringPointType meteringPointType)
         {
             await SendCommandAsync(Scenarios.CreateCommand(meteringPointType)).ConfigureAwait(false);
-        }
-
-        private async Task CreateCoupledExchangeReactiveEnergyMeteringPoint()
-        {
-            await SendCommandAsync(
-                    Scenarios.CreateCommand(MeteringPointType.Exchange)
-                    with { GsrnNumber = SampleData.ParentGsrnNumber })
-                .ConfigureAwait(false);
-            await SendCommandAsync(Scenarios.CreateCommand(MeteringPointType.ExchangeReactiveEnergy)
-                with
-                {
-                    MeteringMethod = MeteringMethod.Virtual.Name,
-                    MeterNumber = null,
-                    ParentRelatedMeteringPoint = SampleData.ParentGsrnNumber,
-                }).ConfigureAwait(false);
         }
 
         private Instant EffectiveDateInPast(int numberOfDaysFromToday)
