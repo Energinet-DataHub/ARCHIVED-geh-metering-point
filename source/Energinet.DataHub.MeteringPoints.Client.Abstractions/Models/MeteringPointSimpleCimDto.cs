@@ -20,33 +20,19 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
 {
     public class MeteringPointSimpleCimDto
     {
-        public MeteringPointSimpleCimDto(
-            Guid meteringPointId,
-            string gsrnNumber,
-            ConnectionState connectionState,
-            MeteringPointType meteringPointType,
-            DateTime effectiveDate)
-        {
-            MeteringPointId = meteringPointId;
-            GsrnNumber = gsrnNumber;
-            ConnectionState = connectionState;
-            MeteringPointType = meteringPointType;
-            EffectiveDate = effectiveDate;
-        }
+        [Required]
+        public Guid MeteringPointId { get; set; }
 
         [Required]
-        public Guid MeteringPointId { get; }
+        public string GsrnNumber { get; set; } = null!;
 
         [Required]
-        public string GsrnNumber { get; } = null!;
+        public ConnectionState ConnectionState { get; set; }
 
         [Required]
-        public ConnectionState ConnectionState { get; }
+        public MeteringPointType MeteringPointType { get; set; }
 
         [Required]
-        public MeteringPointType MeteringPointType { get; }
-
-        [Required]
-        public DateTime EffectiveDate { get; }
+        public DateTime EffectiveDate { get; set; }
     }
 }
