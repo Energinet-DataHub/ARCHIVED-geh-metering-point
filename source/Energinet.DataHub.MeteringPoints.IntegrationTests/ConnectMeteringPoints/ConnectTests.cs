@@ -13,12 +13,9 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoFixture.Xunit2;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
-using Energinet.DataHub.MeteringPoints.Application.Extensions;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
