@@ -149,7 +149,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IDomainEventPublisher, DomainEventPublisher>();
             _container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Singleton);
             _container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
-            _container.Register<IUserContext>(() => new UserContextStub { CurrentUser = new UserIdentity(Guid.NewGuid().ToString(), "8200000001409"), }, Lifestyle.Singleton);
+            _container.Register<IUserContext>(() => new UserContextStub { CurrentUser = new UserIdentity(SampleData.GridOperatorIdOfGrid870, "8200000001409"), }, Lifestyle.Singleton);
             _container.Register<MeteringPointPipelineContext>(Lifestyle.Scoped);
             _container.Register<ActorProvider>(Lifestyle.Scoped);
 
@@ -175,10 +175,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             _container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
 
-            _container.Register<IAuthorizer<ChangeMasterDataRequest>, ChangeMeteringPointAuthorizer<ChangeMasterDataRequest>>();
-            _container.Register<IAuthorizer<CreateMeteringPoint>, NullAuthorizer<CreateMeteringPoint>>();
-            _container.Register<IAuthorizer<CreateGridArea>, NullAuthorizer<CreateGridArea>>();
-            _container.Register<IAuthorizer<ConnectMeteringPointRequest>, ChangeMeteringPointAuthorizer<ConnectMeteringPointRequest>>();
+            _container.Register<IAuthorizer, ChangeMeteringPointAuthorizer>();
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
                 typeof(MasterDataDocument).Assembly, // Application
@@ -195,7 +192,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 new[]
                 {
                     typeof(UnitOfWorkBehavior<,>),
-                    typeof(AuthorizationBehavior<,>),
                     typeof(InputValidationBehavior<,>),
                     typeof(DomainEventsDispatcherBehaviour<,>),
                     typeof(InternalCommandHandlingBehaviour<,>),
@@ -403,7 +399,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         protected void SetGridOperatorAsAuthenticatedUser(string glnNumber)
         {
-            ((UserContextStub)GetService<IUserContext>()).SetCurrentUser(new UserIdentity("Fake", glnNumber));
+            ((UserContextStub)GetService<IUserContext>()).SetCurrentUser(new UserIdentity(Guid.NewGuid().ToString(), glnNumber));
+        }
+
+        protected void SetCurrentAuthenticatedActor(string actorId)
+        {
+            ((UserContextStub)GetService<IUserContext>()).SetCurrentUser(new UserIdentity(actorId, "Fake"));
         }
 
         protected async Task CloseDownMeteringPointAsync()

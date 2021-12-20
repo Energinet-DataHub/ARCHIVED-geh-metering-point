@@ -199,7 +199,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 {
                     typeof(UnitOfWorkBehavior<,>),
                     typeof(InputValidationBehavior<,>),
-                    typeof(AuthorizationBehavior<,>),
                     typeof(DomainEventsDispatcherBehaviour<,>),
                     typeof(InternalCommandHandlingBehaviour<,>),
                     typeof(BusinessProcessResultBehavior<,>),

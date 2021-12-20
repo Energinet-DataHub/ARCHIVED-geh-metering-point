@@ -100,7 +100,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
         [Fact]
         public async Task Requesting_user_must_be_the_owner_of_the_metering_point()
         {
-            SetGridOperatorAsAuthenticatedUser("820000000140x"); // This is not the owner of this metering point
+            SetCurrentAuthenticatedActor("Invalid_actor_id");
             await CreateMeteringPointWithEnergySupplierAssigned().ConfigureAwait(false);
 
             await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);

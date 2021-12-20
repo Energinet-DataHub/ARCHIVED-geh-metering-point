@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Authorization;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Extensions;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
@@ -32,17 +33,20 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
         private readonly MeteringPointPipelineContext _pipelineContext;
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
         private readonly ConnectSettings _settings;
+        private readonly IAuthorizer _authorizer;
 
         public ConnectMeteringPointHandler(
             IMeteringPointRepository meteringPointRepository,
             MeteringPointPipelineContext pipelineContext,
             ISystemDateTimeProvider systemDateTimeProvider,
-            ConnectSettings settings)
+            ConnectSettings settings,
+            IAuthorizer authorizer)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _pipelineContext = pipelineContext;
             _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
             _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            _authorizer = authorizer ?? throw new ArgumentNullException(nameof(authorizer));
         }
 
         public async Task<BusinessProcessResult> Handle(
@@ -58,6 +62,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
                 {
                     new MeteringPointMustBeKnownValidationError(request.GsrnNumber),
                 });
+            }
+
+            var authorizationResult = await _authorizer.AuthorizeAsync(meteringPoint).ConfigureAwait(false);
+            if (authorizationResult.Success == false)
+            {
+                return new BusinessProcessResult(request.TransactionId, authorizationResult.Errors);
             }
 
             var policyCheckResult = await CheckPoliciesAsync(request).ConfigureAwait(false);
