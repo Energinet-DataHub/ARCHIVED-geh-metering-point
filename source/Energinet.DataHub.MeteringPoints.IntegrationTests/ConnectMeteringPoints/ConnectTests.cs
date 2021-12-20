@@ -43,6 +43,17 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             _dateTimeProvider = GetService<ISystemDateTimeProvider>();
         }
 
+        [Fact]
+        public async Task Must_be_coupled_to_parent_to_be_connected()
+        {
+            await CreateMeteringPointWithoutEnergySupplierAssigned(MeteringPointType.ExchangeReactiveEnergy)
+                .ConfigureAwait(false);
+
+            await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
+
+            AssertValidationError("D36");
+        }
+
         [Theory]
         [InlineData(8, true, true)]
         [InlineData(5, true, false)]

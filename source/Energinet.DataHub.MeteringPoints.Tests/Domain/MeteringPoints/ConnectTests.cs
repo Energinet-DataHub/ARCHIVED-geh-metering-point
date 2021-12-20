@@ -15,6 +15,7 @@
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules.Connect;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Connect;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -29,6 +30,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         public ConnectTests()
         {
             _systemDateTimeProvider = new SystemDateTimeProviderStub();
+        }
+
+        [Fact]
+        public void Must_be_coupled_to_parent_to_be_connected()
+        {
+            var meteringPoint = CreateMeteringPoint(MeteringPointType.ExchangeReactiveEnergy);
+
+            AssertError<MustBeCoupledToParent>(meteringPoint.ConnectAcceptable(ConnectNow()), true);
         }
 
         [Fact]
