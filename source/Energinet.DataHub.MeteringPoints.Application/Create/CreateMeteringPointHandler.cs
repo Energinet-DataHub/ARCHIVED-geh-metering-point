@@ -19,13 +19,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using MediatR;
 
@@ -95,6 +95,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                     new MasterDataFieldSelector().GetMasterDataFieldsFor(meteringPointType));
 
             masterDataBuilder
+                .WithMeasurementUnitType(request.UnitType)
                 .WithAssetType(request.AssetType)
                 .WithConnectionType(request.ConnectionType)
                 .WithDisconnectionType(request.DisconnectionType)
@@ -133,15 +134,41 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 return await CreateExchangeMeteringPointAsync(request, gridArea, masterData).ConfigureAwait(false);
             }
 
-            _meteringPointRepository.Add(
-                MeteringPoint.Create(
-                    MeteringPointId.New(),
-                    GsrnNumber.Create(request.GsrnNumber),
-                    meteringPointType,
-                    gridArea.DefaultLink.Id,
-                    EffectiveDate.Create(request.EffectiveDate),
-                    masterData)!);
+            var meteringPoint = MeteringPoint.Create(
+                MeteringPointId.New(),
+                GsrnNumber.Create(request.GsrnNumber),
+                meteringPointType,
+                gridArea.DefaultLink.Id,
+                EffectiveDate.Create(request.EffectiveDate),
+                masterData);
 
+            _meteringPointRepository.Add(
+                meteringPoint);
+
+            var parentCouplingResult = await CoupleToParentIfRequestedAsync(request, meteringPoint).ConfigureAwait(false);
+
+            return parentCouplingResult.Success == false ? parentCouplingResult : BusinessProcessResult.Ok(request.TransactionId);
+        }
+
+        private async Task<BusinessProcessResult> CoupleToParentIfRequestedAsync(CreateMeteringPoint request, MeteringPoint meteringPoint)
+        {
+            if (string.IsNullOrEmpty(request.ParentRelatedMeteringPoint))
+                return BusinessProcessResult.Ok(request.TransactionId);
+
+            var childMeteringPoint = new ChildMeteringPoint(meteringPoint, _gridAreaRepository);
+            var parentMeteringPoint =
+                await _meteringPointRepository.GetByGsrnNumberAsync(
+                    GsrnNumber.Create(request.ParentRelatedMeteringPoint)).ConfigureAwait(false);
+            if (parentMeteringPoint is null)
+            {
+                return Failure(request, new ParentMeteringPointWasNotFound());
+            }
+
+            var parentChildValidation = await childMeteringPoint.CanCoupleToAsync(parentMeteringPoint).ConfigureAwait(false);
+            if (parentChildValidation.Success == false)
+                return Failure(request, parentChildValidation.Errors.ToArray());
+
+            await childMeteringPoint.CoupleToAsync(parentMeteringPoint).ConfigureAwait(false);
             return BusinessProcessResult.Ok(request.TransactionId);
         }
 

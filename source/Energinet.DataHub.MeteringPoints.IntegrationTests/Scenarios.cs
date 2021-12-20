@@ -113,7 +113,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 "0",
                 SampleData.GeoInfoReference,
                 "0101",
-                new ExchangeDetails(SampleData.MeteringGridArea, SampleData.MeteringGridArea));
+                new ExchangeDetails(SampleData.MeteringGridArea, SampleData.MeteringGridArea),
+                UnitType: MeasurementUnitType.KWh.Name);
         }
 
         internal static MasterDataDocument CreateDocument()

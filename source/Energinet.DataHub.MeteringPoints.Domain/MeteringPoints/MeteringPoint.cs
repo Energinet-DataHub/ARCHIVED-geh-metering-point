@@ -33,11 +33,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
     public class MeteringPoint : AggregateRootBase
     {
-        private readonly MeteringPointType _meteringPointType;
         private readonly ExchangeGridAreas? _exchangeGridAreas;
-        private readonly GridAreaLinkId _gridAreaLinkId;
         private readonly EffectiveDate _effectiveDate;
         private MasterData _masterData;
+        private MeteringPointId? _parentMeteringPoint;
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
         private MeteringPoint() { }
@@ -53,8 +52,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             Id = id;
             GsrnNumber = gsrnNumber;
-            _meteringPointType = meteringPointType;
-            _gridAreaLinkId = gridAreaLinkId;
+            MeteringPointType = meteringPointType;
+            GridAreaLinkId = gridAreaLinkId;
             _effectiveDate = effectiveDate;
             _masterData = masterData;
 
@@ -71,8 +70,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             Id = id;
             GsrnNumber = gsrnNumber;
-            _meteringPointType = MeteringPointType.Exchange;
-            _gridAreaLinkId = gridAreaLinkId;
+            MeteringPointType = MeteringPointType.Exchange;
+            GridAreaLinkId = gridAreaLinkId;
             _effectiveDate = effectiveDate;
             _exchangeGridAreas = exchangeGridAreas ?? throw new ArgumentNullException(nameof(exchangeGridAreas));
             _masterData = masterData;
@@ -85,6 +84,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public GsrnNumber GsrnNumber { get; }
 
         public Address Address => _masterData.Address;
+
+        internal GridAreaLinkId GridAreaLinkId { get; }
+
+        internal MeteringPointType MeteringPointType { get; }
 
         internal MeteringConfiguration MeteringConfiguration => _masterData.MeteringConfiguration;
 
@@ -159,7 +162,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             if (newAddress.Equals(Address) == false)
             {
                 var builder =
-                    new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(_meteringPointType))
+                    new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType))
                         .WithNetSettlementGroup(_masterData.NetSettlementGroup?.Name)
                         .WithCapacity(_masterData.Capacity?.Kw)
                         .WithMeteringConfiguration(_masterData.MeteringConfiguration.Method.Name, _masterData.MeteringConfiguration.Meter.Value)
@@ -220,7 +223,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             }
 
             var builder =
-                new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(_meteringPointType))
+                new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType))
                     .WithNetSettlementGroup(_masterData.NetSettlementGroup?.Name)
                     .WithCapacity(_masterData.Capacity?.Kw)
                     .WithMeteringConfiguration(configuration.Method.Name, configuration.Meter.Value)
@@ -287,7 +290,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             if (energySupplierDetails == null) throw new ArgumentNullException(nameof(energySupplierDetails));
             if (EnergySupplierDetails?.StartOfSupply != null) return;
 
-            if (_meteringPointType.IsAccountingPoint == false)
+            if (MeteringPointType.IsAccountingPoint == false)
             {
                 throw new CannotAssignEnergySupplierException();
             }
@@ -300,7 +303,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             var rules = new Collection<IBusinessRule>
             {
-                new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, _meteringPointType, ConnectionState.PhysicalState),
+                new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, MeteringPointType, ConnectionState.PhysicalState),
                 new MustHaveEnergySupplierRule(GsrnNumber, connectionDetails, EnergySupplierDetails),
             };
 
@@ -319,6 +322,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
 
+        internal void SetParent(MeteringPointId? parentId)
+        {
+            if (parentId is not null)
+            {
+                _parentMeteringPoint = parentId;
+                AddDomainEvent(new CoupledToParent(Id.Value, parentId.Value));
+            }
+        }
+
         private void ThrowIfClosedDown()
         {
             var checkResult = CanBeChanged();
@@ -331,14 +343,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         private void RaiseMeteringPointCreated()
         {
             var @event = new Events.MeteringPointCreated(
-                _meteringPointType.Name,
+                MeteringPointType.Name,
                 Id.Value,
                 GsrnNumber.Value,
-                _gridAreaLinkId.Value,
+                GridAreaLinkId.Value,
                 MeteringConfiguration.Method.Name,
                 _masterData.ProductType.Name,
                 _masterData.ReadingOccurrence.Name,
-                _masterData.UnitType.Name,
+                _masterData.UnitType?.Name!,
                 _masterData.SettlementMethod?.Name!,
                 _masterData.NetSettlementGroup?.Name!,
                 _masterData.Address.City,

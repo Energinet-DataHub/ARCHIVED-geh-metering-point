@@ -29,5 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.GridAreas
         public static string PriceAreaCode => "DK1";
 
         public static string Transaction => Guid.NewGuid().ToString();
+
+        public static string ActorId => "158725db-35b5-4740-8ba4-80c616ec9f92";
     }
 }
