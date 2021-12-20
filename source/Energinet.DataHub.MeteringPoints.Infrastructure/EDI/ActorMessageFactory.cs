@@ -20,7 +20,6 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Parties;
 using Actor = Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors.Actor;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI

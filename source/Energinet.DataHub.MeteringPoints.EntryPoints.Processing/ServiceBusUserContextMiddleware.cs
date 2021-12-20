@@ -15,8 +15,8 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common.Users;
-using Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity;
+using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
+using Energinet.DataHub.MeteringPoints.Infrastructure.ServiceBus;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
 using Microsoft.Extensions.Logging;
@@ -27,16 +27,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
     {
         private readonly ILogger _logger;
         private readonly IUserContext _userContext;
-        private readonly UserIdentityFactory _userIdentityFactory;
 
         public ServiceBusUserContextMiddleware(
             ILogger logger,
-            IUserContext userContext,
-            UserIdentityFactory userIdentityFactory)
+            IUserContext userContext)
         {
             _logger = logger;
             _userContext = userContext;
-            _userIdentityFactory = userIdentityFactory;
         }
 
         public async Task Invoke(FunctionContext context, [NotNull] FunctionExecutionDelegate next)
@@ -45,7 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             if (context.BindingContext.BindingData.TryGetValue("UserProperties", out var userPropertiesObject) && userPropertiesObject != null)
             {
-                _userContext.CurrentUser = _userIdentityFactory.FromDictionaryString(userPropertiesObject as string ?? string.Empty, _userContext.Key);
+                _userContext.CurrentUser = ServiceBusUserIdentityFactory.FromDictionaryString(userPropertiesObject as string ?? string.Empty, Constants.ServiceBusIdentityKey);
             }
             else
             {
