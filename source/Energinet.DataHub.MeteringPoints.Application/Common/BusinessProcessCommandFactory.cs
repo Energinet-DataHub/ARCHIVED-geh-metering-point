@@ -100,6 +100,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
                 CitySubDivisionName = document.CitySubDivisionName,
                 ScheduledMeterReadingDate = document.ScheduledMeterReadingDate,
                 ExchangeDetails = new ExchangeDetails(document.FromGrid, document.FromGrid),
+                ParentRelatedMeteringPoint = document.ParentRelatedMeteringPoint,
+                UnitType = document.MeasureUnitType,
             };
         }
     }
