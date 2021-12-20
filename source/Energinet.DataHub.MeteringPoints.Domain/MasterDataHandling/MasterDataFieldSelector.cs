@@ -63,6 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             {
                 MeteringPointType.Analysis.Name, new List<MasterDataField>()
                 {
+                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
                 }
             },
             {
@@ -74,6 +75,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             {
                 MeteringPointType.InternalUse.Name, new List<MasterDataField>()
                 {
+                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
                 }
             },
             {

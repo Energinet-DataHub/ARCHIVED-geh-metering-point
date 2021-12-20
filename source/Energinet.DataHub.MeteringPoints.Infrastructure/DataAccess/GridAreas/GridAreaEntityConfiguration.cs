@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Microsoft.EntityFrameworkCore;
@@ -77,6 +78,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas
                             toDbValue => toDbValue.Value,
                             fromDbValue => new GridAreaId(fromDbValue));
                 });
+
+            builder.Property<ActorId>("_actorId")
+                .HasColumnName("ActorId")
+                .HasConversion(
+                    toDbValue => toDbValue.Value,
+                    fromDbValue => new ActorId(fromDbValue));
         }
     }
 }

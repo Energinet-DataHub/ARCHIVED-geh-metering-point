@@ -14,8 +14,8 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.GridAreas;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules;
 using Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
@@ -105,7 +105,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.GridAreas
                 SampleData.GridAreaName,
                 SampleData.GridAreaCode,
                 SampleData.PriceAreaCode,
-                SampleData.Transaction);
+                SampleData.Transaction,
+                SampleData.ActorId);
         }
     }
 }
