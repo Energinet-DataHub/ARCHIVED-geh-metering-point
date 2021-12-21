@@ -15,10 +15,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.MeteringPoints.Application.Common.Users;
+using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
+using Energinet.DataHub.MeteringPoints.Infrastructure.ServiceBus;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
-using Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion
 {
@@ -42,7 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion
         {
             var message = new ServiceBusMessage(data);
             message.CorrelationId = _correlationContext.Id;
-            message.ApplicationProperties.Add(_userContext.Key, _userContext.CurrentUser?.AsString() ?? string.Empty);
+            message.ApplicationProperties.Add(Constants.ServiceBusIdentityKey, _userContext.CurrentUser?.AsString() ?? string.Empty);
 
             await _sender.SendMessageAsync(message, cancellationToken).ConfigureAwait(false);
         }
