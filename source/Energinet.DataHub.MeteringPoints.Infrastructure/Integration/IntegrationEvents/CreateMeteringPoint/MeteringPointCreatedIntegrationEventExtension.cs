@@ -45,7 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 "NetConsumption" => MeteringPointCreated.Types.MeteringPointType.MptNetConsumption,
                 "OtherConsumption" => MeteringPointCreated.Types.MeteringPointType.MptOtherConsumption,
                 "OtherProduction" => MeteringPointCreated.Types.MeteringPointType.MptOtherProduction,
-                _ => throw new ArgumentException("Product type is not recognized."),
+                _ => throw new ArgumentException($"Product type is not recognized. ({@event.MeteringPointType})"),
             };
         }
 
@@ -57,7 +57,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 "Flex" => MeteringPointCreated.Types.SettlementMethod.SmFlex,
                 "NonProfiled" => MeteringPointCreated.Types.SettlementMethod.SmNonprofiled,
                 "Profiled" => MeteringPointCreated.Types.SettlementMethod.SmProfiled,
-                _ => throw new ArgumentException("Settlement method is not recognized."),
+                _ => throw new ArgumentException($"Settlement method is not recognized. ({@event.SettlementMethod})"),
             };
         }
 
@@ -72,7 +72,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 "Three" => MeteringPointCreated.Types.NetSettlementGroup.NsgThree,
                 "Six" => MeteringPointCreated.Types.NetSettlementGroup.NsgSix,
                 "Ninetynine" => MeteringPointCreated.Types.NetSettlementGroup.NsgNinetynine,
-                _ => throw new ArgumentException("Net settlement group is not recognized."),
+                _ => throw new ArgumentException($"Net settlement group is not recognized. ({@event.NetSettlementGroup})"),
             };
         }
 
@@ -87,7 +87,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 "PowerReactive" => MeteringPointCreated.Types.ProductType.PtPowerreactive,
                 "EnergyActive" => MeteringPointCreated.Types.ProductType.PtEnergyactive,
                 "EnergyReactive" => MeteringPointCreated.Types.ProductType.PtEnergyreactive,
-                _ => throw new ArgumentException("Product type is not recognized."),
+                _ => throw new ArgumentException($"Product type is not recognized. ({@event.Product})"),
             };
         }
 
@@ -99,7 +99,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 "Physical" => MeteringPointCreated.Types.MeteringMethod.MmPhysical,
                 "Virtual" => MeteringPointCreated.Types.MeteringMethod.MmVirtual,
                 "Calculated" => MeteringPointCreated.Types.MeteringMethod.MmCalculated,
-                _ => throw new ArgumentException("Metering method is not recognized."),
+                _ => throw new ArgumentException($"Metering method is not recognized. ({@event.MeteringMethod})"),
             };
         }
 
@@ -110,7 +110,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
             {
                 "Hourly" => MeteringPointCreated.Types.MeterReadingPeriodicity.MrpHourly,
                 "Quarterly" => MeteringPointCreated.Types.MeterReadingPeriodicity.MrpQuarterly,
-                _ => throw new ArgumentException("Meter reading periodicity is not recognized."),
+                _ => throw new ArgumentException($"Meter reading periodicity is not recognized. ({@event.MeterReadingPeriodicity})"),
             };
         }
 
@@ -120,7 +120,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
             return @event.ConnectionState switch
             {
                 "New" => MeteringPointCreated.Types.ConnectionState.CsNew,
-                _ => throw new ArgumentException("Meter reading periodicity is not recognized."),
+                _ => throw new ArgumentException($"Meter reading periodicity is not recognized. ({@event.ConnectionState})"),
             };
         }
 
@@ -133,7 +133,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 "KWh" => MeteringPointCreated.Types.UnitType.UtKwh,
                 "MWh" => MeteringPointCreated.Types.UnitType.UtMwh,
                 "GWh" => MeteringPointCreated.Types.UnitType.UtGwh,
-                _ => throw new ArgumentException("Meter reading periodicity is not recognized."),
+                _ => throw new ArgumentException($"Meter reading periodicity is not recognized. ({@event.UnitType})"),
             };
         }
     }
