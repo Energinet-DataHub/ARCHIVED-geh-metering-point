@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
@@ -69,7 +70,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
             catch (Exception exception)
             {
                 operation.Telemetry.Success = false;
-                _telemetryClient.TrackException(exception);
+                _telemetryClient.TrackException(exception, new Dictionary<string, string> { { "OutboxItemOperationId", _correlationContext.Id } });
                 _telemetryClient.Flush();
                 throw;
             }
