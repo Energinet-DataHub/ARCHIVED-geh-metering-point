@@ -145,7 +145,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
 
             await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
 
-            AssertMeteringPoint
+            AssertPersistedMeteringPoint
                 .Initialize(SampleData.GsrnNumber, GetService<IDbConnectionFactory>())
                 .HasConnectionState(PhysicalState.Connected);
             AssertConfirmMessage(DocumentType.ConnectMeteringPointAccepted);

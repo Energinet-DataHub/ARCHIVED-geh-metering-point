@@ -20,18 +20,18 @@ using Xunit;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
-    public class AssertMeteringPoint
+    public class AssertPersistedMeteringPoint
     {
         private readonly dynamic _meteringPoint;
 
-        private AssertMeteringPoint(dynamic meteringPoint)
+        private AssertPersistedMeteringPoint(dynamic meteringPoint)
         {
             if (meteringPoint == null) throw new ArgumentNullException(nameof(meteringPoint));
             Assert.NotNull(meteringPoint);
             _meteringPoint = meteringPoint;
         }
 
-        public static AssertMeteringPoint Initialize(string gsrnNumber, IDbConnectionFactory connectionFactory)
+        public static AssertPersistedMeteringPoint Initialize(string gsrnNumber, IDbConnectionFactory connectionFactory)
         {
             if (connectionFactory == null) throw new ArgumentNullException(nameof(connectionFactory));
             var meteringPoint = connectionFactory.GetOpenConnection().QuerySingle(
@@ -46,10 +46,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 $" WHERE GsrnNumber = {gsrnNumber}");
 
             Assert.NotNull(meteringPoint);
-            return new AssertMeteringPoint(meteringPoint);
+            return new AssertPersistedMeteringPoint(meteringPoint);
         }
 
-        public AssertMeteringPoint HasConnectionState(PhysicalState state)
+        public AssertPersistedMeteringPoint HasConnectionState(PhysicalState state)
         {
             if (state is null) throw new ArgumentNullException(nameof(state));
             Assert.Equal(state.Name, _meteringPoint.ConnectionState_PhysicalState);
