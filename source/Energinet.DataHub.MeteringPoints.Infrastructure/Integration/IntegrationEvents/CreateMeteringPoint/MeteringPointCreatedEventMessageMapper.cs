@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using Google.Protobuf;
@@ -24,25 +25,24 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         protected override IMessage Convert(MeteringPointCreatedEventMessage obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
-            return new IntegrationEventEnvelope()
+
+            return new MeteringPointCreated
             {
-                MeteringPointCreatedMessage = new MeteringPointCreated
-                {
-                    MeteringPointId = obj.Gsrn,
-                    MeteringPointType = obj.MeteringPointType,
-                    MeteringGridArea = obj.GridAreaId,
-                    ToGrid = obj.ToGrid,
-                    FromGrid = obj.FromGrid,
-                    SettlementMethod = obj.SettlementMethod,
-                    NetSettlementGroup = obj.NetSettlementGroup,
-                    MeteringMethod = obj.MeteringMethod,
-                    ConnectionState = obj.ConnectionState,
-                    MeterReadingPeriodicity = obj.MeterReadingPeriodicity,
-                    Product = obj.Product,
-                    QuantityUnit = obj.QuantityUnit,
-                    ParentMeteringPointId = obj.ParentGsrn,
-                    EffectiveDate = obj.EffectiveDate,
-                },
+                MeteringPointId = obj.MeteringPointId,
+                GsrnNumber = obj.GsrnNumber,
+                MeteringPointType = obj.GetMeteringPointType(),
+                GridAreaCode = obj.GridAreaId,
+                ToGridAreaCode = obj.ToGrid,
+                FromGridAreaCode = obj.FromGrid,
+                SettlementMethod = obj.GetSettlementMethod(),
+                NetSettlementGroup = obj.GetNetSettlementGroup(),
+                MeteringMethod = obj.GetMeteringMethod(),
+                ConnectionState = obj.GetConnectionState(),
+                MeterReadingPeriodicity = obj.GetMeterReadingPeriodicity(),
+                Product = obj.GetProductType(),
+                UnitType = obj.GetUnitType(),
+                EffectiveDate = obj.EffectiveDate.ToTimestamp(),
+                ParentGsrnNumber = obj.ParentGsrn,
             };
         }
     }
