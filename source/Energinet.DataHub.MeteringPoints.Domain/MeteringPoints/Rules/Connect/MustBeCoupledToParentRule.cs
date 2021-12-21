@@ -12,19 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Authorization;
-using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Authorization
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Connect
 {
-    public class NullAuthorizer<TRequest> : IAuthorizer<TRequest>
-        where TRequest : IBusinessRequest
+    public class MustBeCoupledToParentRule : IBusinessRule
     {
-        public Task<AuthorizationResult> AuthorizeAsync(TRequest request)
+        public MustBeCoupledToParentRule(MeteringPointType meteringPointType, MeteringPointId? parentMeteringPointId)
         {
-            return Task.FromResult(AuthorizationResult.Ok());
+            IsBroken = meteringPointType == MeteringPointType.ExchangeReactiveEnergy && parentMeteringPointId is null;
         }
+
+        public bool IsBroken { get; }
+
+        public ValidationError ValidationError => new MustBeCoupledToParent();
     }
 }

@@ -12,21 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-
-namespace Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership
+namespace Energinet.DataHub.MeteringPoints.Application.Common
 {
     /// <summary>
-    /// Provides details about the owner (grid operator) of a particular metering point
+    /// Request for creating or changing a metering point
     /// </summary>
-    public interface IMeteringPointOwnershipProvider
+    public interface IChangeMeteringPointRequest : IBusinessRequest
     {
         /// <summary>
-        /// Returns owner details
+        /// Metering point GSRN-number
         /// </summary>
-        /// <param name="meteringPoint">Metering point</param>
-        /// <returns><see cref="Owner"/></returns>
-        Task<Owner> GetOwnerAsync(MeteringPoint meteringPoint);
+        string GsrnNumber { get; }
     }
 }

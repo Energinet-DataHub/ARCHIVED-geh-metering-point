@@ -12,21 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Connect
 {
-    /// <summary>
-    /// Provides details about the owner (grid operator) of a particular metering point
-    /// </summary>
-    public interface IMeteringPointOwnershipProvider
+    public class MeterMustBePhysical : ValidationError
     {
-        /// <summary>
-        /// Returns owner details
-        /// </summary>
-        /// <param name="meteringPoint">Metering point</param>
-        /// <returns><see cref="Owner"/></returns>
-        Task<Owner> GetOwnerAsync(MeteringPoint meteringPoint);
     }
 }

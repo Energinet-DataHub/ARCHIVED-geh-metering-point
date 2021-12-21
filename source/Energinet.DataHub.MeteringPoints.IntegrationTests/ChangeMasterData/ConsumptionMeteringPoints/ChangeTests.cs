@@ -157,7 +157,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
         public async Task Can_not_change_when_metering_point_is_closed_down()
         {
             await CreatePhysicalConsumptionMeteringPoint().ConfigureAwait(false);
-            await MarkAsClosedDown().ConfigureAwait(false);
+            await CloseDownMeteringPointAsync().ConfigureAwait(false);
 
             var request = TestUtils.CreateRequest()
                 with
@@ -167,14 +167,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
             await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
 
             AssertValidationError("D16");
-        }
-
-        private async Task MarkAsClosedDown()
-        {
-            var context = GetService<MeteringPointContext>();
-            var meteringPoint = context.MeteringPoints.First(meteringPoint => meteringPoint.GsrnNumber.Equals(GsrnNumber.Create(SampleData.GsrnNumber)));
-            meteringPoint?.CloseDown();
-            await context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         private Task<BusinessProcessResult> CreateMeteringPointAsync()

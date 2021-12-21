@@ -12,18 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
-using FluentValidation;
+using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
-    public class ConnectMeteringPointRuleSet : AbstractValidator<ConnectMeteringPointRequest>
-    {
-        public ConnectMeteringPointRuleSet()
-        {
-            RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberValidator());
-            RuleFor(request => request.EffectiveDate).SetValidator(request => new EffectiveDateRule());
-            RuleFor(request => request.TransactionId).SetValidator(new TransactionIdentificationRule());
-        }
-    }
+    public record ConnectMeteringPointRequest(
+        string GsrnNumber = "",
+        string EffectiveDate = "",
+        string TransactionId = "")
+        : IChangeMeteringPointRequest,
+            IOutboundMessage,
+            IInboundMessage;
 }

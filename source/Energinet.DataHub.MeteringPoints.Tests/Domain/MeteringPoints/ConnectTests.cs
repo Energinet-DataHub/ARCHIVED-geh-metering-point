@@ -16,6 +16,8 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Connect;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -30,6 +32,25 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         public ConnectTests()
         {
             _systemDateTimeProvider = new SystemDateTimeProviderStub();
+        }
+
+        [Theory]
+        [InlineData(nameof(MeteringPointType.NetProduction))]
+        [InlineData(nameof(MeteringPointType.SupplyToGrid))]
+        [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
+        public void Metering_point_must_be_physical(string meteringPointType)
+        {
+            var meteringPoint = CreateMeteringPoint(EnumerationType.FromName<MeteringPointType>(meteringPointType));
+
+            AssertError<MeterMustBePhysical>(meteringPoint.ConnectAcceptable(ConnectNow()), true);
+        }
+
+        [Fact]
+        public void Must_be_coupled_to_parent_to_be_connected()
+        {
+            var meteringPoint = CreateMeteringPoint(MeteringPointType.ExchangeReactiveEnergy);
+
+            AssertError<MustBeCoupledToParent>(meteringPoint.ConnectAcceptable(ConnectNow()), true);
         }
 
         [Fact]

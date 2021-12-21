@@ -19,32 +19,32 @@ using System.Security.Authentication;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Authorization;
 using Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperatorPolicies;
-using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
 {
-    public class Authorizer : IAuthorizer<ChangeMasterDataRequest>
+    public class ChangeMeteringPointAuthorizer : IAuthorizer
     {
         private readonly IUserContext _authenticatedUserContext;
         private readonly IMeteringPointOwnershipProvider _ownershipProvider;
 
-        public Authorizer(IUserContext authenticatedUserContext, IMeteringPointOwnershipProvider ownershipProvider)
+        public ChangeMeteringPointAuthorizer(IUserContext authenticatedUserContext, IMeteringPointOwnershipProvider ownershipProvider)
         {
             _authenticatedUserContext = authenticatedUserContext ?? throw new ArgumentNullException(nameof(authenticatedUserContext));
             _ownershipProvider = ownershipProvider ?? throw new ArgumentNullException(nameof(ownershipProvider));
         }
 
-        public Task<AuthorizationResult> AuthorizeAsync(ChangeMasterDataRequest request)
+        public Task<AuthorizationResult> AuthorizeAsync(MeteringPoint meteringPoint)
         {
-            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (meteringPoint == null) throw new ArgumentNullException(nameof(meteringPoint));
             if (_authenticatedUserContext.CurrentUser is null)
             {
                 throw new AuthenticationException("No authenticated user");
             }
 
-            return SummarizeResultFromAsync(GetAuthorizationHandlers(request));
+            return SummarizeResultFromAsync(GetAuthorizationHandlers(meteringPoint));
         }
 
         private static async Task<AuthorizationResult> SummarizeResultFromAsync(IEnumerable<Task<AuthorizationResult>> authorizationTasks)
@@ -53,11 +53,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
             return new AuthorizationResult(results.SelectMany(result => result.Errors).ToList());
         }
 
-        private IReadOnlyList<Task<AuthorizationResult>> GetAuthorizationHandlers(ChangeMasterDataRequest request)
+        private IReadOnlyList<Task<AuthorizationResult>> GetAuthorizationHandlers(MeteringPoint request)
         {
             return new List<Task<AuthorizationResult>>()
             {
-                new GridOperatorIsOwnerPolicy(_ownershipProvider, _authenticatedUserContext).AuthorizeAsync(request.GsrnNumber),
+                new GridOperatorIsOwnerPolicy(_ownershipProvider, _authenticatedUserContext).AuthorizeAsync(request),
             };
         }
     }

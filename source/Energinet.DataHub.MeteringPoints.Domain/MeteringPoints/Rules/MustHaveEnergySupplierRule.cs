@@ -18,25 +18,26 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
     public class MustHaveEnergySupplierRule : IBusinessRule
     {
-        private readonly GsrnNumber _gsrnNumber;
+        private readonly MeteringPoint _meteringPoint;
         private readonly ConnectionDetails _connectDetails;
-        private readonly EnergySupplierDetails? _energySupplierDetails;
 
-        public MustHaveEnergySupplierRule(GsrnNumber gsrnNumber, ConnectionDetails connectDetails, EnergySupplierDetails? energySupplierDetails)
+        public MustHaveEnergySupplierRule(MeteringPoint meteringPoint, ConnectionDetails connectDetails)
         {
-            _gsrnNumber = gsrnNumber;
+            _meteringPoint = meteringPoint;
             _connectDetails = connectDetails;
-            _energySupplierDetails = energySupplierDetails;
-            IsBroken = energySupplierDetails is null || EffectiveDateIsOnOrAfterStartOfSupply() == false;
+            if (_meteringPoint.MeteringPointType.IsAccountingPoint)
+            {
+                IsBroken = _meteringPoint.EnergySupplierDetails is null || EffectiveDateIsOnOrAfterStartOfSupply() == false;
+            }
         }
 
         public bool IsBroken { get; }
 
-        public ValidationError ValidationError => new MustHaveEnergySupplierRuleError(_gsrnNumber, _connectDetails.EffectiveDate);
+        public ValidationError ValidationError => new MustHaveEnergySupplierRuleError(_meteringPoint.GsrnNumber, _connectDetails.EffectiveDate);
 
         private bool EffectiveDateIsOnOrAfterStartOfSupply()
         {
-            return _connectDetails.EffectiveDate >= _energySupplierDetails?.StartOfSupply;
+            return _connectDetails.EffectiveDate >= _meteringPoint.EnergySupplierDetails?.StartOfSupply;
         }
     }
 }

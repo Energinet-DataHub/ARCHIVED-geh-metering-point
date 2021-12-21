@@ -15,9 +15,6 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Application.Authorization;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
-using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
-using Energinet.DataHub.MeteringPoints.Application.Connect;
-using Energinet.DataHub.MeteringPoints.Application.Create;
 using SimpleInjector;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Authorization
@@ -27,9 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcess
         public static void AddBusinessProcessAuthorizers(this Container container)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
-            container.Register<IAuthorizer<ChangeMasterDataRequest>, Authorizer>();
-            container.Register<IAuthorizer<CreateMeteringPoint>, NullAuthorizer<CreateMeteringPoint>>();
-            container.Register<IAuthorizer<ConnectMeteringPoint>, NullAuthorizer<ConnectMeteringPoint>>();
+            container.Register<IAuthorizer, ChangeMeteringPointAuthorizer>();
         }
     }
 }
