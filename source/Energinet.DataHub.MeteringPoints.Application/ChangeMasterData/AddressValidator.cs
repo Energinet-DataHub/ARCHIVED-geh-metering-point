@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application.Validation.Extensions;
-using Energinet.DataHub.MeteringPoints.Domain.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 
@@ -26,7 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
             When(address => address is not null, () =>
             {
                 RuleFor(address => address!)
-                    .CheckRules(address => Domain.Addresses.Address.CheckRules(
+                    .CheckRules(address => Domain.MasterDataHandling.Components.Addresses.Address.CheckRules(
                         address?.StreetName,
                         address?.StreetCode,
                         address?.BuildingNumber,

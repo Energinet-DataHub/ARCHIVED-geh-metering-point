@@ -14,11 +14,10 @@
 
 using System;
 using System.Collections.Generic;
-using Energinet.DataHub.MeteringPoints.Domain.Addresses;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Consumption;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
@@ -88,14 +87,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
             return null;
         }
 
-        private Domain.Addresses.Address? TryCreateAddress()
+        private Domain.MasterDataHandling.Components.Addresses.Address? TryCreateAddress()
         {
             if (_request.Address is null)
             {
                 return null;
             }
 
-            var address = Domain.Addresses.Address.Create(
+            var address = Domain.MasterDataHandling.Components.Addresses.Address.Create(
                 _request.Address.StreetName,
                 _request.Address.StreetCode,
                 _request.Address.BuildingNumber,
