@@ -19,6 +19,7 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 
 option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEventContracts";
 
@@ -110,8 +111,8 @@ message MeteringPointCreated {
   google.protobuf.Timestamp effective_date = 9; // The date on which the metering point is created
   ConnectionState connection_state = 10; // Denotes which connection state a metering point is created with. For a consumption metering point this is always "New"
   UnitType unit_type = 11; // Denotes the unit type. For a production metering point this is always a variation of watt/hour
-  string to_grid_area_code = 12; // Denotes which grid area energy is exchanged to
-  string from_grid_area_code = 13; // Denotes which grid area energy is exchange from
+  google.protobuf.StringValue to_grid_area_code = 12; // Denotes which grid area energy is exchanged to
+  google.protobuf.StringValue from_grid_area_code = 13; // Denotes which grid area energy is exchange from
   MeteringPointType metering_point_type = 14; // Defines the type of metering point created
   string parent_gsrn_number = 15; // Business facing metering point identifier for this metering points parent 
 
