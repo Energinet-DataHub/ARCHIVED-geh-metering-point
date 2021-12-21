@@ -27,6 +27,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoint
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
@@ -303,8 +304,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             var rules = new Collection<IBusinessRule>
             {
+                new MeterMustBePhysicalRule(MeteringPointType, _masterData.MeteringConfiguration),
+                new MustBeCoupledToParentRule(MeteringPointType, _parentMeteringPoint),
                 new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, MeteringPointType, ConnectionState.PhysicalState),
-                new MustHaveEnergySupplierRule(GsrnNumber, connectionDetails, EnergySupplierDetails),
+                new MustHaveEnergySupplierRule(this, connectionDetails),
             };
 
             return new BusinessRulesValidationResult(rules);

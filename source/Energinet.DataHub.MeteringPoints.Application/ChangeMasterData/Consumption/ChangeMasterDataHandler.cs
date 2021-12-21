@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Authorization;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -31,12 +32,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
         private readonly ChangeMasterDataSettings _settings;
+        private readonly IAuthorizer _authorizer;
 
-        public ChangeMasterDataHandler(IMeteringPointRepository meteringPointRepository, ISystemDateTimeProvider systemDateTimeProvider, ChangeMasterDataSettings settings)
+        public ChangeMasterDataHandler(IMeteringPointRepository meteringPointRepository, ISystemDateTimeProvider systemDateTimeProvider, ChangeMasterDataSettings settings, IAuthorizer authorizer)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
             _settings = settings;
+            _authorizer = authorizer ?? throw new ArgumentNullException(nameof(authorizer));
         }
 
         public async Task<BusinessProcessResult> Handle(ChangeMasterDataRequest request, CancellationToken cancellationToken)
@@ -50,6 +53,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 {
                     new MeteringPointMustBeKnownValidationError(request.GsrnNumber),
                 });
+            }
+
+            var authorizationResult = await _authorizer.AuthorizeAsync(targetMeteringPoint).ConfigureAwait(false);
+            if (authorizationResult.Success == false)
+            {
+                return new BusinessProcessResult(request.TransactionId, authorizationResult.Errors);
             }
 
             var preCheckResult = targetMeteringPoint.CanBeChanged();

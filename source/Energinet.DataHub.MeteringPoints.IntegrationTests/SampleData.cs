@@ -46,6 +46,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string MeteringGridArea => "870";
 
+        public static string GridOperatorIdOfGrid870 => "158725db-35b5-4740-8ba4-80c616ec9f92";
+
         public static string StreetName => "Test Road 1";
 
         public static string BuildingNumber => "145K";
@@ -81,5 +83,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         public static string ScheduledMeterReadingDate => string.Empty;
 
         public static string GlnNumber => "3963865549824";
+
+        public static string ParentGsrnNumber => "570851247381952311";
     }
 }

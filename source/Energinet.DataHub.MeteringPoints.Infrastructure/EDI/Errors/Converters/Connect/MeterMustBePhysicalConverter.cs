@@ -12,21 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Connect;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Connect
 {
-    /// <summary>
-    /// Provides details about the owner (grid operator) of a particular metering point
-    /// </summary>
-    public interface IMeteringPointOwnershipProvider
+    public class MeterMustBePhysicalConverter : ErrorConverter<MeterMustBePhysical>
     {
-        /// <summary>
-        /// Returns owner details
-        /// </summary>
-        /// <param name="meteringPoint">Metering point</param>
-        /// <returns><see cref="Owner"/></returns>
-        Task<Owner> GetOwnerAsync(MeteringPoint meteringPoint);
+        protected override ErrorMessage Convert(MeterMustBePhysical validationError)
+        {
+            return new ErrorMessage(
+                "D37",
+                "Net production, supply to grid or consumption from grid metering points must be physical in order to be connected.");
+        }
     }
 }

@@ -24,7 +24,7 @@ using Xunit.Categories;
 namespace Energinet.DataHub.MeteringPoints.Tests.Validation
 {
     [UnitTest]
-    public class ConnectMeteringPointRulesTest : RuleSetTest<ConnectMeteringPoint, ConnectMeteringPointRuleSet>
+    public class ConnectMeteringPointRulesTest : RuleSetTest<ConnectMeteringPointRequest, ConnectMeteringPointRuleSet>
     {
         [Theory]
         [InlineData("571234567891234568", "2021-05-05T22:00:00Z", "a9932d11-3884-4257-8c69-09d4d88302fa")]
@@ -50,9 +50,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
             ShouldValidateWithSingleError(request, expectedError);
         }
 
-        private static ConnectMeteringPoint CreateRequest(string gsrn, string effectiveDate, string transaction)
+        private static ConnectMeteringPointRequest CreateRequest(string gsrn, string effectiveDate, string transaction)
         {
-            return new ConnectMeteringPoint
+            return new ConnectMeteringPointRequest
             {
                 GsrnNumber = gsrn,
                 EffectiveDate = effectiveDate,

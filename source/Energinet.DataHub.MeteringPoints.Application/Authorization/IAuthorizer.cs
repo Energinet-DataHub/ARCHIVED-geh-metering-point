@@ -13,20 +13,19 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Authorization
 {
     /// <summary>
     /// Service for handling business process specific authorization
     /// </summary>
-    public interface IAuthorizer<in TBusinessRequest>
-        where TBusinessRequest : IBusinessRequest
+    public interface IAuthorizer
     {
         /// <summary>
         /// Invoke authorization process
         /// </summary>
         /// <returns><see cref="AuthorizationResult"/></returns>
-        Task<AuthorizationResult> AuthorizeAsync(TBusinessRequest request);
+        Task<AuthorizationResult> AuthorizeAsync(MeteringPoint meteringPoint);
     }
 }
