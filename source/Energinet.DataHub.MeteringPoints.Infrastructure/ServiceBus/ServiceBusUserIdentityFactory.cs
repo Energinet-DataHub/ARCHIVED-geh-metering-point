@@ -15,19 +15,19 @@
 using System;
 using System.Linq;
 using System.Text.Json;
+using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.ServiceBus
 {
-#pragma warning disable CA1822 // Could be static, but we keep it non-static for now.
-    public class UserIdentityFactory
+    public static class ServiceBusUserIdentityFactory
     {
-        public Application.Common.Users.UserIdentity FromString(string userIdentity)
+        public static UserIdentity FromString(string userIdentity)
         {
             if (string.IsNullOrWhiteSpace(userIdentity)) throw new ArgumentNullException(nameof(userIdentity));
-            return JsonSerializer.Deserialize<Application.Common.Users.UserIdentity>(userIdentity) ?? throw new JsonException(nameof(userIdentity));
+            return JsonSerializer.Deserialize<UserIdentity>(userIdentity) ?? throw new JsonException(nameof(userIdentity));
         }
 
-        public Application.Common.Users.UserIdentity? FromDictionaryString(string inputText, string propertyKey)
+        public static UserIdentity? FromDictionaryString(string inputText, string propertyKey)
         {
             if (string.IsNullOrWhiteSpace(inputText)) throw new ArgumentNullException(nameof(inputText));
             if (string.IsNullOrWhiteSpace(propertyKey)) throw new ArgumentNullException(nameof(propertyKey));

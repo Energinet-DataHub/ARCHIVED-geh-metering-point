@@ -21,8 +21,8 @@ using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Parties;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint
 {

@@ -16,7 +16,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Serialization
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Serialization.Converters
 {
     /// <summary>
     /// Workaround for System.Type with System.Text.Json using converters
