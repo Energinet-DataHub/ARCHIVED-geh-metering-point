@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 

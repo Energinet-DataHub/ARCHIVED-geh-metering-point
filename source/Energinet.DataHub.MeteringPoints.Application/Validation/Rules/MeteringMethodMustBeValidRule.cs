@@ -15,7 +15,7 @@
 using System;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 

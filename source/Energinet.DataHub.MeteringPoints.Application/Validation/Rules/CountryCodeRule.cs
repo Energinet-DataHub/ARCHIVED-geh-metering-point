@@ -14,7 +14,7 @@
 
 using System;
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Domain.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 

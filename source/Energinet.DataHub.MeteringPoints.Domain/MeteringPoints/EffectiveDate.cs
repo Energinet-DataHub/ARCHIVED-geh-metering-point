@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.ObjectModel;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;

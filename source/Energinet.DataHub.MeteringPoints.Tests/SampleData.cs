@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using NodaTime;
 
@@ -61,9 +61,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public static string EffectiveDate => EffectiveDateNow();
 
-        public static string SettlementMethod => MeteringPoints.Domain.MeteringPoints.Consumption.SettlementMethod.Flex.Name;
+        public static string SettlementMethod => MeteringPoints.Domain.MasterDataHandling.Components.SettlementMethod.Flex.Name;
 
-        public static string NetSettlementGroup => MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.NetSettlementGroup.Six.Name;
+        public static string NetSettlementGroup => MeteringPoints.Domain.MasterDataHandling.Components.NetSettlementGroup.Six.Name;
 
         public static string DisconnectionType => string.Empty;
 

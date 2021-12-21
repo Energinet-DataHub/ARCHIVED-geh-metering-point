@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
