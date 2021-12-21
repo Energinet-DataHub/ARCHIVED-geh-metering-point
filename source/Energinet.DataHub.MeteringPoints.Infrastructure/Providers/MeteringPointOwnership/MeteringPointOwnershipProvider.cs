@@ -12,17 +12,41 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
+using Dapper;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Providers.MeteringPointOwnership
 {
     public class MeteringPointOwnershipProvider : IMeteringPointOwnershipProvider
     {
-        public Task<Owner> GetOwnerAsync(string gsrnNumber)
+        private readonly IDbConnectionFactory _dbConnectionFactory;
+
+        public MeteringPointOwnershipProvider(IDbConnectionFactory dbConnectionFactory)
         {
-            //TODO: Currently grid area does not hold any details about the owner. Thus, this method cannot be completed. We just return a fake GLN number
-            return Task.FromResult(new Owner("8200000001409"));
+            _dbConnectionFactory = dbConnectionFactory ?? throw new ArgumentNullException(nameof(dbConnectionFactory));
+        }
+
+        public async Task<Owner> GetOwnerAsync(MeteringPoint meteringPoint)
+        {
+            if (meteringPoint == null) throw new ArgumentNullException(nameof(meteringPoint));
+            var gridOperatorId = await _dbConnectionFactory.GetOpenConnection().QueryFirstOrDefaultAsync<Guid>(
+                    $"SELECT ga.ActorId FROM GridAreas ga " +
+                    $"JOIN GridAreaLinks gl on ga.Id = gl.GridAreaId " +
+                    $"JOIN MeteringPoints mp on mp.MeteringGridArea = gl.Id " +
+                    $"WHERE mp.GsrnNumber = @GsrnNumber",
+                    new { GsrnNumber = meteringPoint.GsrnNumber.Value })
+                .ConfigureAwait(false);
+
+            if (gridOperatorId == Guid.Empty)
+            {
+                throw new MeteringPointOwnershipProviderException($"Could not determine owner of metering point with GSRN-number '{meteringPoint.GsrnNumber.Value}'.");
+            }
+
+            return new Owner(gridOperatorId);
         }
     }
 }

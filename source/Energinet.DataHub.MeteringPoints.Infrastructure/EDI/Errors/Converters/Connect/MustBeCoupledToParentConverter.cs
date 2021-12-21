@@ -12,21 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Connect;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Connect
 {
-    /// <summary>
-    /// Provides details about the owner (grid operator) of a particular metering point
-    /// </summary>
-    public interface IMeteringPointOwnershipProvider
+    public class MustBeCoupledToParentConverter : ErrorConverter<MustBeCoupledToParent>
     {
-        /// <summary>
-        /// Returns owner details
-        /// </summary>
-        /// <param name="meteringPoint">Metering point</param>
-        /// <returns><see cref="Owner"/></returns>
-        Task<Owner> GetOwnerAsync(MeteringPoint meteringPoint);
+        protected override ErrorMessage Convert(MustBeCoupledToParent validationError)
+        {
+            return new ErrorMessage("D36", "Exchange reactive energy metering points cannot be connected unless coupled to parent metering point.");
+        }
     }
 }

@@ -37,6 +37,23 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements
                 };
         }
 
+        public static RejectMessage ConnectMeteringPoint(
+            MarketRoleParticipant sender,
+            MarketRoleParticipant receiver,
+            Instant createdDateTime,
+            MarketActivityRecordWithReasons marketActivityRecord)
+        {
+            return Defaults()
+                with
+                {
+                    ProcessType = "D15",
+                    Sender = sender,
+                    Receiver = receiver,
+                    CreatedDateTime = createdDateTime,
+                    MarketActivityRecord = marketActivityRecord,
+                };
+        }
+
         private static RejectMessage Defaults()
         {
             return new RejectMessage(
