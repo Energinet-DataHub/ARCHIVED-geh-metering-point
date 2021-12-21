@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests
@@ -28,23 +28,25 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string SubTypeOfMeteringPoint => MeteringMethod.Physical.Name;
 
-        public static string SettlementMethod => Domain.MeteringPoints.Consumption.SettlementMethod.Flex.Name;
+        public static string SettlementMethod => Domain.MasterDataHandling.Components.SettlementMethod.Flex.Name;
 
-        public static string DisconnectionType => Domain.MeteringPoints.MarketMeteringPoints.DisconnectionType.Manual.Name;
+        public static string DisconnectionType => Domain.MasterDataHandling.Components.DisconnectionType.Manual.Name;
 
         public static string ConnectionType => string.Empty;
 
         public static string PowerPlantGsrnNumber => "571234567891234568";
 
-        public static string ReadingOccurrence => Domain.MeteringPoints.ReadingOccurrence.Hourly.Name;
+        public static string ReadingOccurrence => Domain.MasterDataHandling.Components.ReadingOccurrence.Hourly.Name;
 
-        public static string AssetType => Domain.MeteringPoints.AssetType.GasTurbine.Name;
+        public static string AssetType => Domain.MasterDataHandling.Components.AssetType.GasTurbine.Name;
 
         public static string EffectiveDate => "2021-05-05T22:00:00Z";
 
-        public static string MeasurementUnitType => Domain.MeteringPoints.MeasurementUnitType.KWh.Name;
+        public static string MeasurementUnitType => Domain.MasterDataHandling.Components.MeasurementUnitType.KWh.Name;
 
         public static string MeteringGridArea => "870";
+
+        public static Guid GridOperatorIdOfGrid870 => Guid.Parse("158725db-35b5-4740-8ba4-80c616ec9f92");
 
         public static string StreetName => "Test Road 1";
 
@@ -66,13 +68,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string MeterNumber => "12345678910";
 
-        public static string NetSettlementGroup => Domain.MeteringPoints.MarketMeteringPoints.NetSettlementGroup.Zero.Name;
+        public static string NetSettlementGroup => Domain.MasterDataHandling.Components.NetSettlementGroup.Zero.Name;
 
         public static string FloorIdentification => string.Empty;
 
         public static string RoomIdentification => string.Empty;
 
-        public static string ProductType => Domain.MeteringPoints.ProductType.EnergyActive.Name;
+        public static string ProductType => Domain.MasterDataHandling.Components.ProductType.EnergyActive.Name;
 
         public static string GeoInfoReference => Guid.NewGuid().ToString();
 
@@ -81,5 +83,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         public static string ScheduledMeterReadingDate => string.Empty;
 
         public static string GlnNumber => "3963865549824";
+
+        public static string ParentGsrnNumber => "570851247381952311";
     }
 }

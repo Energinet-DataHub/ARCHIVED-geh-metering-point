@@ -65,7 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             var result = CheckRules(gsrnValue);
             if (!result.Success)
             {
-                throw new InvalidMeteringPointIdRuleException("Invalid metering point id.");
+                throw new Exceptions.InvalidMeteringPointIdRuleException("Invalid metering point id.");
             }
         }
     }

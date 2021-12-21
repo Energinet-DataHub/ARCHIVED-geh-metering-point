@@ -40,6 +40,24 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
         /// <param name="sender"></param>
         /// <param name="receiver"></param>
         /// <returns><see cref="RejectMessage"/></returns>
+        RejectMessage ConnectMeteringPointReject(string gsrnNumber, string effectiveDate, string transactionId, IEnumerable<ErrorMessage> errors, Actor sender, Actor receiver);
+
+        /// <summary>
+        /// Creates a confirmation message for the connect metering point business process
+        /// </summary>
+        /// <returns><see cref="ConfirmMessage"/></returns>
+        ConfirmMessage ConnectMeteringPointConfirmation(string gsrnNumber, string effectiveDate, string transactionId, Actor sender, Actor receiver);
+
+        /// <summary>
+        /// Creates a reject message for the connect metering point business process
+        /// </summary>
+        /// <param name="gsrnNumber">GSRN number of metering point</param>
+        /// <param name="effectiveDate"></param>
+        /// <param name="transactionId"></param>
+        /// <param name="errors"></param>
+        /// <param name="sender"></param>
+        /// <param name="receiver"></param>
+        /// <returns><see cref="RejectMessage"/></returns>
         RejectMessage CreateNewMeteringPointReject(string gsrnNumber, string effectiveDate, string transactionId, IEnumerable<ErrorMessage> errors, Actor sender, Actor receiver);
     }
 }
