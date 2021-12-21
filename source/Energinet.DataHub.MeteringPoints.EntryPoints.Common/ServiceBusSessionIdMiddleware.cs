@@ -17,19 +17,21 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
-using Newtonsoft.Json;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common
 {
     public class ServiceBusSessionIdMiddleware : IFunctionsWorkerMiddleware
     {
         private readonly ISessionContext _sessionContext;
+        private readonly IJsonSerializer _jsonSerializer;
 
-        public ServiceBusSessionIdMiddleware(ISessionContext sessionContext)
+        public ServiceBusSessionIdMiddleware(ISessionContext sessionContext, IJsonSerializer jsonSerializer)
         {
             _sessionContext = sessionContext;
+            _jsonSerializer = jsonSerializer;
         }
 
         public async Task Invoke(FunctionContext context, [NotNull] FunctionExecutionDelegate next)
@@ -38,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common
 
             if (context.BindingContext.BindingData.TryGetValue("MessageSession", out var value) && value is string session)
             {
-                var sessionData = JsonConvert.DeserializeObject<Dictionary<string, object>>(session);
+                var sessionData = _jsonSerializer.Deserialize<Dictionary<string, object>>(session) ?? throw new InvalidOperationException();
 
                 if (sessionData["SessionId"] is not string sessionId)
                 {
