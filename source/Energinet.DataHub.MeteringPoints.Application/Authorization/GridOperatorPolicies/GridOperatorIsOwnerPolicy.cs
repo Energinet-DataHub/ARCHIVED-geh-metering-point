@@ -15,7 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common.Users;
+using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperato
             if (meteringPoint == null) throw new ArgumentNullException(nameof(meteringPoint));
 
             var ownerOfMeteringPoint = await _ownershipProvider.GetOwnerAsync(meteringPoint).ConfigureAwait(false);
-            if (ownerOfMeteringPoint.ActorId.ToString().Equals(_userContext.CurrentUser?.Id, StringComparison.OrdinalIgnoreCase))
+            if (ownerOfMeteringPoint.ActorId == _userContext.CurrentUser?.ActorId)
             {
                 return AuthorizationResult.Ok();
             }

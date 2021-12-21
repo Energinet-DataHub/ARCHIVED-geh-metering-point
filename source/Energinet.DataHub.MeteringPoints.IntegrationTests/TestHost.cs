@@ -18,6 +18,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
+using Energinet.DataHub.Core.FunctionApp.Common.Identity;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Authorization;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
@@ -25,7 +27,6 @@ using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
-using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Create.Validation;
@@ -40,7 +41,6 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
-using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Authorization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
 using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
@@ -52,11 +52,11 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Parties;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
@@ -149,7 +149,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IDomainEventPublisher, DomainEventPublisher>();
             _container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Singleton);
             _container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
-            _container.Register<IUserContext>(() => new UserContextStub { CurrentUser = new UserIdentity(SampleData.GridOperatorIdOfGrid870, "8200000001409"), }, Lifestyle.Singleton);
+            _container.Register<IUserContext>(() => new UserContextStub { CurrentUser = new UserIdentity(SampleData.GridOperatorIdOfGrid870,  "SomeRole", "gln", "8200000001409"), }, Lifestyle.Singleton);
             _container.Register<MeteringPointPipelineContext>(Lifestyle.Scoped);
             _container.Register<ActorProvider>(Lifestyle.Scoped);
 
@@ -399,12 +399,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         protected void SetGridOperatorAsAuthenticatedUser(string glnNumber)
         {
-            ((UserContextStub)GetService<IUserContext>()).SetCurrentUser(new UserIdentity(Guid.NewGuid().ToString(), glnNumber));
+            ((UserContextStub)GetService<IUserContext>()).SetCurrentUser(new UserIdentity(Guid.NewGuid(), "SomeRole", "gln", glnNumber));
         }
 
-        protected void SetCurrentAuthenticatedActor(string actorId)
+        protected void SetCurrentAuthenticatedActor(Guid actorId)
         {
-            ((UserContextStub)GetService<IUserContext>()).SetCurrentUser(new UserIdentity(actorId, "Fake"));
+            ((UserContextStub)GetService<IUserContext>()).SetCurrentUser(new UserIdentity(actorId, "FakeRole", "gln", "FakeIdentifier"));
         }
 
         protected async Task CloseDownMeteringPointAsync()

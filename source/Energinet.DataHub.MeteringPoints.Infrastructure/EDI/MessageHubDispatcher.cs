@@ -14,7 +14,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common.Users;
+using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
@@ -42,7 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
         {
             var glnNumber = "8200000008842";
             var envelope = CreateMessageHubEnvelope(
-                recipient: _userContext.CurrentUser?.GlnNumber ?? glnNumber, // TODO: Hardcoded
+                recipient: _userContext.CurrentUser?.Identifier ?? glnNumber, // TODO: can be either GLN or EIC - is this supported in MessageHub?
                 cimContent: _jsonSerializer.Serialize(message),
                 messageType: documentType,
                 gsrnNumber: gsrnNumber);
