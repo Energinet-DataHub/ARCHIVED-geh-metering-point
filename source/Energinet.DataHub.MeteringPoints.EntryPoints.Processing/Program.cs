@@ -138,7 +138,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<EntryPointTelemetryScopeMiddleware>(Lifestyle.Scoped);
             container.Register<ServiceBusUserContextMiddleware>(Lifestyle.Scoped);
             container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
-            container.Register<UserIdentityFactory>(Lifestyle.Singleton);
             container.Register<IDomainEventPublisher, DomainEventPublisher>();
             container.Register<IUnitOfWork, UnitOfWork>();
             container.Register<IValidator<CreateMeteringPoint>, RuleSet>(Lifestyle.Scoped);
