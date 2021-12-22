@@ -30,7 +30,7 @@ limitations under the License.
     <PackageReference Include="AutoFixture" Version="4.17.0" />
     <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
     <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="1.1.0" />
-    <PackageReference Include="Energinet.DataHub.MessageHub.IntegrationTesting" Version="1.1.1" />
+    <PackageReference Include="Energinet.DataHub.MessageHub.IntegrationTesting" Version="1.1.2-alpha-06" />
     <PackageReference Include="FluentAssertions" Version="6.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="Moq" Version="4.16.1" />
@@ -58,7 +58,13 @@ limitations under the License.
     <None Update="integrationtest.local.settings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\Cim\CreateMeteringPoint.xml">
+    <None Update="TestFiles\Cim\CreateMeteringPointConsumption.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFiles\Cim\CreateMeteringPointProduction.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFiles\Cim\CreateMeteringPointExchange.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

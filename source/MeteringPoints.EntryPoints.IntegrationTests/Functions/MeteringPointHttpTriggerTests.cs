@@ -50,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
         public async Task Create_metering_point_request_returns_ok()
         {
             // Arrange
-            var xml = TestFileLoader.ReadFile("TestFiles/Cim/CreateMeteringPoint.xml")
+            var xml = TestFileLoader.ReadFile("TestFiles/Cim/CreateMeteringPointConsumption.xml")
                 .Replace("{{transactionId}}", "1", StringComparison.OrdinalIgnoreCase)
                 .Replace("{{gsrn}}", "571234567891234567", StringComparison.OrdinalIgnoreCase);
             using var request = new HttpRequestMessage(HttpMethod.Post, "api/MeteringPoint");
