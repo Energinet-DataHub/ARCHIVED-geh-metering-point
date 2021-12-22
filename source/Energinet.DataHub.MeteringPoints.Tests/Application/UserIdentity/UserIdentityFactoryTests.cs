@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity;
+using System;
+using Energinet.DataHub.MeteringPoints.Infrastructure.ServiceBus;
 using Xunit;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Application.UserIdentity
@@ -20,18 +21,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Application.UserIdentity
     public class UserIdentityFactoryTests
     {
         [Theory]
-        [InlineData("{\"geh_userIdentity\":\"{\\\"Id\\\":\\\"5\\\"}\"}", "geh_userIdentity", "5")]
-        [InlineData("{\"other_userIdentity\":\"{\\\"Id\\\":\\\"5\\\"}\", \"geh_userIdentity\":\"{\\\"Id\\\":\\\"5\\\"}\"}", "geh_userIdentity", "5")]
+        [InlineData("{\"geh_userIdentity\":\"{\\\"ActorId\\\":\\\"c6043cb9-b79c-407e-b8e8-f1d87d9f7b50\\\"}\"}", "geh_userIdentity", "c6043cb9-b79c-407e-b8e8-f1d87d9f7b50")]
+        [InlineData("{\"other_userIdentity\":\"{\\\"ActorId\\\":\\\"c6043cb9-b79c-407e-b8e8-f1d87d9f7b50\\\"}\", \"geh_userIdentity\":\"{\\\"ActorId\\\":\\\"c6043cb9-b79c-407e-b8e8-f1d87d9f7b50\\\"}\"}", "geh_userIdentity", "c6043cb9-b79c-407e-b8e8-f1d87d9f7b50")]
         public void ConvertToUserIdentityFromDictionaryString(string inputText, string propertyKey, string expectedUserId)
         {
-            // Arrange
-            var userIdentityFactory = new UserIdentityFactory();
+            var userIdentityParsed = ServiceBusUserIdentityFactory.FromDictionaryString(inputText, propertyKey);
 
-            // Act
-            var userIdentityParsed = userIdentityFactory.FromDictionaryString(inputText, propertyKey);
-
-            // Assert
-            Assert.Equal(expectedUserId, userIdentityParsed?.Id);
+            Assert.Equal(Guid.Parse(expectedUserId), userIdentityParsed?.ActorId);
         }
     }
 }
