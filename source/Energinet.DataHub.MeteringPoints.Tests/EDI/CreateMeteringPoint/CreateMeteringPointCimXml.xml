@@ -33,7 +33,7 @@ limitations under the License.
             <cim:connectionState>D03</cim:connectionState> <!-- tilslutningsstatus -->
             <cim:readCycle>PT1H</cim:readCycle> <!-- Aflæsningsfrekvens -->
             <cim:netSettlementGroup>6</cim:netSettlementGroup>
-            <cim:nextReadingDate>1201</cim:nextReadingDate> <!-- Medsendes kun for nettoafregningsgruppe 6, format: MM01 -->
+            <cim:nextReadingDate>--12-01</cim:nextReadingDate> <!-- Medsendes kun for nettoafregningsgruppe 6, format: MM01 -->
             <cim:meteringGridArea_Domain.mRID codingScheme="NDK">244</cim:meteringGridArea_Domain.mRID>
             <cim:inMeteringGridArea_Domain.mRID codingScheme="NDK">031</cim:inMeteringGridArea_Domain.mRID> <!-- Kun udvekslingsmålepunkt -->
             <cim:outMeteringGridArea_Domain.mRID codingScheme="NDK">244</cim:outMeteringGridArea_Domain.mRID> <!-- Kun udvekslingsmålepunkt -->
