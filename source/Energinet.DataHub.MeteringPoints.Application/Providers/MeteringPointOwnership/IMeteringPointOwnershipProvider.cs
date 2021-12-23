@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership
 {
@@ -24,8 +25,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOw
         /// <summary>
         /// Returns owner details
         /// </summary>
-        /// <param name="gsrnNumber"></param>
+        /// <param name="meteringPoint">Metering point</param>
         /// <returns><see cref="Owner"/></returns>
-        Task<Owner> GetOwnerAsync(string gsrnNumber);
+        Task<Owner> GetOwnerAsync(MeteringPoint meteringPoint);
     }
 }

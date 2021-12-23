@@ -20,56 +20,54 @@ using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint
 {
-    public sealed class ConnectMeteringPointResultHandler : IBusinessProcessResultHandler<Application.Connect.ConnectMeteringPoint>
+    public sealed class ConnectMeteringPointResultHandler : IBusinessProcessResultHandler<ConnectMeteringPointRequest>
     {
-        private readonly ICommandScheduler _commandScheduler;
+        private readonly IActorMessageFactory _actorMessageFactory;
+        private readonly IMessageHubDispatcher _messageHubDispatcher;
         private readonly ErrorMessageFactory _errorMessageFactory;
-        private readonly IOutbox _outbox;
-        private readonly IOutboxMessageFactory _outboxMessageFactory;
-        private readonly IJsonSerializer _jsonSerializer;
-        private readonly ICorrelationContext _correlationContext;
+        private readonly ActorProvider _actorProvider;
         private readonly MeteringPointPipelineContext _pipelineContext;
+        private readonly ICommandScheduler _commandScheduler;
 
         public ConnectMeteringPointResultHandler(
+            IActorMessageFactory actorMessageFactory,
+            IMessageHubDispatcher messageHubDispatcher,
             ErrorMessageFactory errorMessageFactory,
-            IOutbox outbox,
-            IOutboxMessageFactory outboxMessageFactory,
-            IJsonSerializer jsonSerializer,
-            ICorrelationContext correlationContext,
-            ICommandScheduler commandScheduler,
-            MeteringPointPipelineContext pipelineContext)
+            ActorProvider actorProvider,
+            MeteringPointPipelineContext pipelineContext,
+            ICommandScheduler commandScheduler)
         {
-            _errorMessageFactory = errorMessageFactory;
-            _outbox = outbox;
-            _outboxMessageFactory = outboxMessageFactory;
-            _jsonSerializer = jsonSerializer;
-            _correlationContext = correlationContext;
-            _commandScheduler = commandScheduler;
-            _pipelineContext = pipelineContext;
+            _actorMessageFactory = actorMessageFactory ?? throw new ArgumentNullException(nameof(actorMessageFactory));
+            _messageHubDispatcher =
+                messageHubDispatcher ?? throw new ArgumentNullException(nameof(messageHubDispatcher));
+            _errorMessageFactory = errorMessageFactory ?? throw new ArgumentNullException(nameof(errorMessageFactory));
+            _actorProvider = actorProvider ?? throw new ArgumentNullException(nameof(actorProvider));
+            _pipelineContext = pipelineContext ?? throw new ArgumentNullException(nameof(pipelineContext));
+            _commandScheduler = commandScheduler ?? throw new ArgumentNullException(nameof(commandScheduler));
         }
 
-        public Task HandleAsync(Application.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
+        public Task HandleAsync(ConnectMeteringPointRequest request, BusinessProcessResult result)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (result == null) throw new ArgumentNullException(nameof(result));
 
             return result.Success
-                ? SuccessAsync(request, result)
-                : RejectAsync(request, result);
+                ? CreateAcceptMessageAsync(request)
+                : CreateRejectResponseAsync(request, result);
         }
 
-        private async Task SuccessAsync(Application.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
+        private async Task CreateAcceptMessageAsync(ConnectMeteringPointRequest request)
         {
-            var confirmMessage = CreateConfirmMessage(request, result);
-            AddToOutbox(confirmMessage);
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
+            var message = _actorMessageFactory.ConnectMeteringPointConfirmation(request.GsrnNumber, request.EffectiveDate, request.TransactionId, _actorProvider.DataHub, _actorProvider.CurrentActor);
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.ConnectMeteringPointAccepted, request.GsrnNumber).ConfigureAwait(false);
 
             var command = new SendAccountingPointCharacteristicsMessage(
                 _pipelineContext.MeteringPointId,
@@ -78,48 +76,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
             await _commandScheduler.EnqueueAsync(command).ConfigureAwait(false);
         }
 
-        private MessageHubEnvelope? CreateConfirmMessage(Application.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
-        {
-            var confirmMessage = new ConnectMeteringPointAccepted(
-                TransactionId: result.TransactionId,
-                GsrnNumber: request.GsrnNumber,
-                Status: "Accepted");
-
-            var serializedMessage = _jsonSerializer.Serialize(confirmMessage);
-
-            var envelope = new MessageHubEnvelope(
-                string.Empty,
-                serializedMessage,
-                DocumentType.ConnectMeteringPointAccepted,
-                _correlationContext.AsTraceContext(),
-                request.GsrnNumber);
-
-            return envelope;
-        }
-
-        private Task RejectAsync(Application.Connect.ConnectMeteringPoint request, BusinessProcessResult result)
+        private Task CreateRejectResponseAsync(ConnectMeteringPointRequest request, BusinessProcessResult result)
         {
             var errors = result.ValidationErrors
                 .Select(error => _errorMessageFactory.GetErrorMessage(error))
-                .ToArray();
+                .AsEnumerable();
 
-            var ediMessage = new ConnectMeteringPointRejected(
-                TransactionId: result.TransactionId,
-                GsrnNumber: request.GsrnNumber,
-                Status: "Rejected", // TODO: Is this necessary? Also, Reason?
-                Reason: "TODO",
-                Errors: errors);
-
-            var envelope = new MessageHubEnvelope(string.Empty, _jsonSerializer.Serialize(ediMessage), DocumentType.ConnectMeteringPointRejected, _correlationContext.AsTraceContext(), request.GsrnNumber);
-            AddToOutbox(envelope);
-
-            return Task.CompletedTask;
-        }
-
-        private void AddToOutbox<TEdiMessage>(TEdiMessage ediMessage)
-        {
-            var outboxMessage = _outboxMessageFactory.CreateFrom(ediMessage, OutboxMessageCategory.ActorMessage);
-            _outbox.Add(outboxMessage);
+            var message = _actorMessageFactory.ConnectMeteringPointReject(request.GsrnNumber, request.EffectiveDate, request.TransactionId, errors, _actorProvider.DataHub, _actorProvider.CurrentActor);
+            return _messageHubDispatcher.DispatchAsync(message, DocumentType.ConnectMeteringPointRejected, request.GsrnNumber);
         }
     }
 }

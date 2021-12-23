@@ -16,18 +16,19 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Domain.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringDetails;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Events;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exceptions;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exchange;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Exceptions;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MarketMeteringPoints.Rules.Connect;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using StreetNameIsRequiredRule = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.StreetNameIsRequiredRule;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
@@ -303,8 +304,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             var rules = new Collection<IBusinessRule>
             {
+                new MeterMustBePhysicalRule(MeteringPointType, _masterData.MeteringConfiguration),
+                new MustBeCoupledToParentRule(MeteringPointType, _parentMeteringPoint),
                 new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, MeteringPointType, ConnectionState.PhysicalState),
-                new MustHaveEnergySupplierRule(GsrnNumber, connectionDetails, EnergySupplierDetails),
+                new MustHaveEnergySupplierRule(this, connectionDetails),
             };
 
             return new BusinessRulesValidationResult(rules);

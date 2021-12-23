@@ -15,7 +15,9 @@
 using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.MeteringPoints.Application.Common.Users;
+using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
+using Energinet.DataHub.Core.FunctionApp.Common.Identity;
+using Energinet.DataHub.Core.FunctionApp.Common.Middleware;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions;
@@ -26,7 +28,6 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Resilience;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
-using Energinet.DataHub.MeteringPoints.Infrastructure.UserIdentity;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Hosting;
 using SimpleInjector;
@@ -48,9 +49,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
         {
             base.ConfigureFunctionsWorkerDefaults(options);
 
+            options.UseMiddleware<JwtTokenMiddleware>();
             options.UseMiddleware<CorrelationIdMiddleware>();
             options.UseMiddleware<EntryPointTelemetryScopeMiddleware>();
-            options.UseMiddleware<HttpUserContextMiddleware>();
         }
 
         protected override void ConfigureContainer(Container container)
@@ -63,7 +64,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
             container.Register<CorrelationIdMiddleware>(Lifestyle.Scoped);
             container.Register<EntryPointTelemetryScopeMiddleware>(Lifestyle.Scoped);
-            container.Register<HttpUserContextMiddleware>(Lifestyle.Scoped);
+            container.Register<JwtTokenMiddleware>(Lifestyle.Scoped);
             container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
 
             container.Register<MessageDispatcher, InternalDispatcher>(Lifestyle.Scoped);

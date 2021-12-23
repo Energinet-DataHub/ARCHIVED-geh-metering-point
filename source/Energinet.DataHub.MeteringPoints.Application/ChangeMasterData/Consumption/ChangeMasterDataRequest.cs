@@ -24,5 +24,5 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
         string? MeterId = null,
         string? MeteringMethod = null,
         Address? Address = null,
-        string? ConnectionType = null) : IBusinessRequest;
+        string? ConnectionType = null) : IChangeMeteringPointRequest;
 }

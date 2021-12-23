@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+
 namespace Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership
 {
-    public record Owner(string GlnNumber);
+    public record Owner(Guid ActorId);
 }

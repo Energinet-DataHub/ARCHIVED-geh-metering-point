@@ -12,18 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common.Users;
+using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
 using Energinet.DataHub.MeteringPoints.Domain.Actors;
-using Actor = Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors.Actor;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Parties
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors
 {
     public class ActorProvider
     {
         private readonly IUserContext _userContext;
 
-        public ActorProvider(
-            IUserContext userContext)
+        public ActorProvider(IUserContext userContext)
         {
             _userContext = userContext;
         }
@@ -33,6 +31,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Parties
 #pragma warning restore CA1822
 
         // TODO: Fix with new user context
-        public Actor CurrentActor => new(_userContext.CurrentUser!.Id, IdentificationType.GLN.ToString(), Role.GridAccessProvider.ToString());
+        public Actor CurrentActor => new(_userContext.CurrentUser!.ActorId.ToString(), IdentificationType.GLN.ToString(), Role.GridAccessProvider.ToString());
     }
 }

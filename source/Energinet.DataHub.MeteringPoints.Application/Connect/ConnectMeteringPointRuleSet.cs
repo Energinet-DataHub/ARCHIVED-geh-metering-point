@@ -17,7 +17,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
-    public class ConnectMeteringPointRuleSet : AbstractValidator<ConnectMeteringPoint>
+    public class ConnectMeteringPointRuleSet : AbstractValidator<ConnectMeteringPointRequest>
     {
         public ConnectMeteringPointRuleSet()
         {

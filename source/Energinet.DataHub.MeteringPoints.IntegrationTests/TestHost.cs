@@ -18,6 +18,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
+using Energinet.DataHub.Core.FunctionApp.Common.Identity;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Authorization;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
@@ -25,7 +27,6 @@ using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
-using Energinet.DataHub.MeteringPoints.Application.Common.Users;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Create.Validation;
@@ -40,7 +41,6 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
-using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Authorization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
 using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
@@ -52,11 +52,11 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Parties;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
@@ -81,7 +81,6 @@ using SimpleInjector.Lifestyles;
 using Xunit;
 using Xunit.Categories;
 using Xunit.Sdk;
-using ConnectMeteringPoint = Energinet.DataHub.MeteringPoints.Application.Connect.ConnectMeteringPoint;
 using JsonSerializer = Energinet.DataHub.MeteringPoints.Infrastructure.Serialization.JsonSerializer;
 using MasterDataDocument = Energinet.DataHub.MeteringPoints.Application.MarketDocuments.MasterDataDocument;
 
@@ -138,10 +137,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<ISystemDateTimeProvider, SystemDateTimeProviderStub>(Lifestyle.Singleton);
             _container.Register(typeof(IBusinessProcessResultHandler<ChangeMasterDataRequest>), typeof(ChangeMasterDataResultHandler), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<CreateMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateMeteringPoint>), Lifestyle.Scoped);
-            _container.Register(typeof(IBusinessProcessResultHandler<ConnectMeteringPoint>), typeof(ConnectMeteringPointResultHandler), Lifestyle.Scoped);
+            _container.Register(typeof(IBusinessProcessResultHandler<ConnectMeteringPointRequest>), typeof(ConnectMeteringPointResultHandler), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<CreateGridArea>), typeof(CreateGridAreaNullResultHandler), Lifestyle.Singleton);
             _container.Register<IValidator<MasterDataDocument>, ValidationRuleSet>(Lifestyle.Scoped);
-            _container.Register<IValidator<ConnectMeteringPoint>, ConnectMeteringPointRuleSet>(Lifestyle.Scoped);
+            _container.Register<IValidator<ConnectMeteringPointRequest>, ConnectMeteringPointRuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<CreateGridArea>, CreateGridAreaRuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<CreateMeteringPoint>, RuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<ChangeMasterDataRequest>, ChangeMasterDataRequestValidator>(Lifestyle.Scoped);
@@ -150,7 +149,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IDomainEventPublisher, DomainEventPublisher>();
             _container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Singleton);
             _container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
-            _container.Register<IUserContext>(() => new UserContextStub { CurrentUser = new UserIdentity(Guid.NewGuid().ToString(), "8200000001409"), }, Lifestyle.Scoped);
+            _container.Register<IUserContext>(() => new UserContextStub { CurrentUser = new UserIdentity(SampleData.GridOperatorIdOfGrid870,  "SomeRole", "gln", "8200000001409"), }, Lifestyle.Singleton);
             _container.Register<MeteringPointPipelineContext>(Lifestyle.Scoped);
             _container.Register<ActorProvider>(Lifestyle.Scoped);
 
@@ -170,13 +169,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IBusinessDocumentFactory, BusinessDocumentFactory>(Lifestyle.Scoped);
 
             _container.Register<ChangeMasterDataSettings>(() => new ChangeMasterDataSettings(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1));
+            _container.Register<ConnectSettings>(() => new ConnectSettings(
+                NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 7,
+                NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));
 
             _container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
 
-            _container.Register<IAuthorizer<ChangeMasterDataRequest>, Authorizer>();
-            _container.Register<IAuthorizer<CreateMeteringPoint>, NullAuthorizer<CreateMeteringPoint>>();
-            _container.Register<IAuthorizer<CreateGridArea>, NullAuthorizer<CreateGridArea>>();
-            _container.Register<IAuthorizer<ConnectMeteringPoint>, NullAuthorizer<ConnectMeteringPoint>>();
+            _container.Register<IAuthorizer, ChangeMeteringPointAuthorizer>();
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
                 typeof(MasterDataDocument).Assembly, // Application
@@ -193,7 +192,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 new[]
                 {
                     typeof(UnitOfWorkBehavior<,>),
-                    typeof(AuthorizationBehavior<,>),
                     typeof(InputValidationBehavior<,>),
                     typeof(DomainEventsDispatcherBehaviour<,>),
                     typeof(InternalCommandHandlingBehaviour<,>),
@@ -401,7 +399,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         protected void SetGridOperatorAsAuthenticatedUser(string glnNumber)
         {
-            ((UserContextStub)GetService<IUserContext>()).SetCurrentUser(new UserIdentity("Fake", glnNumber));
+            ((UserContextStub)GetService<IUserContext>()).SetCurrentUser(new UserIdentity(Guid.NewGuid(), "SomeRole", "gln", glnNumber));
+        }
+
+        protected void SetCurrentAuthenticatedActor(Guid actorId)
+        {
+            ((UserContextStub)GetService<IUserContext>()).SetCurrentUser(new UserIdentity(actorId, "FakeRole", "gln", "FakeIdentifier"));
+        }
+
+        protected async Task CloseDownMeteringPointAsync()
+        {
+            var context = GetService<MeteringPointContext>();
+            var meteringPoint = context.MeteringPoints.First(meteringPoint => meteringPoint.GsrnNumber.Equals(GsrnNumber.Create(SampleData.GsrnNumber)));
+            meteringPoint?.CloseDown();
+            await context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         private void CleanupDatabase()

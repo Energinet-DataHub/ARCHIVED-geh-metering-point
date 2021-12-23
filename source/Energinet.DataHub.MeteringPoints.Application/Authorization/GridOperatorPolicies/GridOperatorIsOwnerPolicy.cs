@@ -15,8 +15,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common.Users;
+using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperatorPolicies
@@ -32,19 +33,19 @@ namespace Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperato
             _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
         }
 
-        public async Task<AuthorizationResult> AuthorizeAsync(string gsrnNumber)
+        public async Task<AuthorizationResult> AuthorizeAsync(MeteringPoint meteringPoint)
         {
-            if (gsrnNumber == null) throw new ArgumentNullException(nameof(gsrnNumber));
+            if (meteringPoint == null) throw new ArgumentNullException(nameof(meteringPoint));
 
-            var ownerOfMeteringPoint = await _ownershipProvider.GetOwnerAsync(gsrnNumber).ConfigureAwait(false);
-            if (ownerOfMeteringPoint.GlnNumber.Equals(_userContext.CurrentUser?.GlnNumber, StringComparison.OrdinalIgnoreCase))
+            var ownerOfMeteringPoint = await _ownershipProvider.GetOwnerAsync(meteringPoint).ConfigureAwait(false);
+            if (ownerOfMeteringPoint.ActorId == _userContext.CurrentUser?.ActorId)
             {
                 return AuthorizationResult.Ok();
             }
 
             return new AuthorizationResult(new List<ValidationError>()
             {
-                new GridOperatorIsNotOwnerOfMeteringPoint(gsrnNumber),
+                new GridOperatorIsNotOwnerOfMeteringPoint(meteringPoint.GsrnNumber.Value),
             });
         }
     }
