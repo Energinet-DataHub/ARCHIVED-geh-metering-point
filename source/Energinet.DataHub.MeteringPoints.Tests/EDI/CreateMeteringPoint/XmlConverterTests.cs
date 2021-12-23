@@ -137,7 +137,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
         {
             var reader = new SchemaValidatingReader(
                 GetResourceStream("CreateMeteringPointCimXml.xml"),
-                Schemas.CimXml.StructureAccountingPointCharacteristics);
+                Schemas.CimXml.StructureRequestChangeAccountingPointCharacteristics);
 
             var element = await reader.AsXElementAsync().ConfigureAwait(false);
 
