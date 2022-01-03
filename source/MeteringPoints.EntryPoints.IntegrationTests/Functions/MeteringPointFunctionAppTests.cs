@@ -131,7 +131,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
                 foreach (var notificationDto in Fixture.MessageHubSimulator.Notifications)
                 {
                     // TODO: Do actual check for confirmed or maybe put the expected type in the InlineData.
-                    notificationDto.MessageType.Value.Should().EndWith("Confirmed");
+                    notificationDto.MessageType.Value.Should().StartWith("Confirm");
                 }
 
                 // Clear available messages in simulator between runs.

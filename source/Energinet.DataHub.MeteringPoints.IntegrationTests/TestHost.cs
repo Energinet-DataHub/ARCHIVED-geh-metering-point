@@ -317,7 +317,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         {
             var message = GetOutboxMessages
                     <MessageHubEnvelope>()
-                .SingleOrDefault(msg => msg.MessageType.Name.EndsWith("rejected", StringComparison.OrdinalIgnoreCase));
+                .SingleOrDefault(msg => msg.MessageType.Name.StartsWith("Reject", StringComparison.OrdinalIgnoreCase));
 
             if (message == null && expectError == false)
             {

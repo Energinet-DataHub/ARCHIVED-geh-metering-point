@@ -44,7 +44,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("D02", DocumentType.CreateMeteringPointRejected);
+            AssertValidationError("D02", DocumentType.RejectCreateMeteringPoint);
         }
 
         [Fact]
@@ -58,7 +58,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("E86", DocumentType.CreateMeteringPointRejected);
+            AssertValidationError("E86", DocumentType.RejectCreateMeteringPoint);
         }
 
         [Fact]
@@ -72,7 +72,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("D02", DocumentType.CreateMeteringPointRejected);
+            AssertValidationError("D02", DocumentType.RejectCreateMeteringPoint);
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("D55", DocumentType.CreateMeteringPointRejected);
+            AssertValidationError("D55", DocumentType.RejectCreateMeteringPoint);
         }
 
         [Fact]
@@ -102,7 +102,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("D37", DocumentType.CreateMeteringPointRejected);
+            AssertValidationError("D37", DocumentType.RejectCreateMeteringPoint);
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("D59", DocumentType.CreateMeteringPointRejected);
+            AssertValidationError("D59", DocumentType.RejectCreateMeteringPoint);
         }
 
         private static CreateMeteringPoint CreateCommand()
