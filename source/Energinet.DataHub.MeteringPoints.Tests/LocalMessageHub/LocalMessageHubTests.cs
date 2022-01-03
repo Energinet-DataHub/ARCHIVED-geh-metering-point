@@ -123,7 +123,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
                     messageHubMessage.Id,
                     "foo",
                     "idempotencyId",
-                    DocumentType.CreateMeteringPointAccepted.Name);
+                    DocumentType.ConfirmCreateMeteringPoint.Name);
 
             var bytes = _requestBundleParser.Parse(requestBundleDto);
 
