@@ -148,7 +148,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             AssertPersistedMeteringPoint
                 .Initialize(SampleData.GsrnNumber, GetService<IDbConnectionFactory>())
                 .HasConnectionState(PhysicalState.Connected);
-            AssertConfirmMessage(DocumentType.ConnectMeteringPointAccepted);
+            AssertConfirmMessage(DocumentType.AcceptConnectMeteringPoint);
             Assert.NotNull(FindIntegrationEvent<MeteringPointConnectedIntegrationEvent>());
         }
 
@@ -194,7 +194,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             await SendCommandAsync(createMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
             await SendCommandAsync(connectMeteringPointRequest, CancellationToken.None).ConfigureAwait(false);
 
-            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConnectMeteringPointRejected);
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.RejectConnectMeteringPoint);
         }
 
         private static MasterDataDocument CreateMeteringPointRequest()
