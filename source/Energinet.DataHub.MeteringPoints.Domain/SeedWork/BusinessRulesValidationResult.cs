@@ -31,9 +31,23 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
                 Errors = errors.ToList();
             }
 
+            private BusinessRulesValidationResult()
+            {
+            }
+
             public bool Success => !Errors.Any();
 
             public IReadOnlyCollection<ValidationError> Errors { get; private set; } = new List<ValidationError>();
+
+            public static BusinessRulesValidationResult Failure(params ValidationError[] validationErrors)
+            {
+                return new BusinessRulesValidationResult(validationErrors);
+            }
+
+            public static BusinessRulesValidationResult Valid()
+            {
+                return new BusinessRulesValidationResult();
+            }
 
             private void SetValidationErrors(IEnumerable<IBusinessRule> rules)
             {
