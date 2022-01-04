@@ -20,7 +20,6 @@ using Dapper;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
