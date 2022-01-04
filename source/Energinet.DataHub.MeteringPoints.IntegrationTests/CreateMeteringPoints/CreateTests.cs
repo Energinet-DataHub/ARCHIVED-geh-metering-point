@@ -39,7 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("E10", DocumentType.CreateMeteringPointRejected);
+            AssertValidationError("E10", DocumentType.RejectCreateMeteringPoint);
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
             await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
 
-            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.CreateMeteringPointRejected);
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.RejectCreateMeteringPoint);
         }
 
         [Fact(Skip = "Not implemented yet")]
@@ -87,7 +87,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("D31", DocumentType.CreateMeteringPointRejected);
+            AssertValidationError("D31", DocumentType.RejectCreateMeteringPoint);
         }
 
         [Fact]
@@ -102,7 +102,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("E86", DocumentType.CreateMeteringPointRejected);
+            AssertValidationError("E86", DocumentType.RejectCreateMeteringPoint);
         }
 
         [Fact]
@@ -119,7 +119,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("D56", DocumentType.CreateMeteringPointRejected);
+            AssertValidationError("D56", DocumentType.RejectCreateMeteringPoint);
         }
 
         [Fact]
@@ -135,7 +135,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("D02", DocumentType.CreateMeteringPointRejected);
+            AssertValidationError("D02", DocumentType.RejectCreateMeteringPoint);
         }
 
         [Fact]
@@ -149,7 +149,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("D02", DocumentType.CreateMeteringPointRejected);
+            AssertValidationError("D02", DocumentType.RejectCreateMeteringPoint);
         }
 
         [Fact]

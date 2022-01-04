@@ -36,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             var request = CreateCommand();
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertConfirmMessage(DocumentType.CreateMeteringPointAccepted);
+            AssertConfirmMessage(DocumentType.ConfirmCreateMeteringPoint);
             await AssertMeteringPointExistsAsync(request.GsrnNumber).ConfigureAwait(false);
             var integrationEvent = FindIntegrationEvent<ProductionMeteringPointCreatedIntegrationEvent>();
             Assert.NotNull(integrationEvent);
@@ -58,7 +58,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("D02", DocumentType.CreateMeteringPointRejected);
+            AssertValidationError("D02", DocumentType.RejectCreateMeteringPoint);
         }
 
         [Fact]
@@ -72,7 +72,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("D57", DocumentType.CreateMeteringPointRejected);
+            AssertValidationError("D57", DocumentType.RejectCreateMeteringPoint);
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("D02", DocumentType.CreateMeteringPointRejected);
+            AssertValidationError("D02", DocumentType.RejectCreateMeteringPoint);
         }
 
         [Fact]
@@ -100,7 +100,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("D02", DocumentType.CreateMeteringPointRejected);
+            AssertValidationError("D02", DocumentType.RejectCreateMeteringPoint);
         }
 
         [Fact]

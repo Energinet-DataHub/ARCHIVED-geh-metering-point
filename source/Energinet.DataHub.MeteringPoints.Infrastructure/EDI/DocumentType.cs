@@ -21,13 +21,13 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
 {
     public sealed class DocumentType : EnumerationType
     {
-        public static readonly DocumentType CreateMeteringPointAccepted = new(1, nameof(CreateMeteringPointAccepted), typeof(ConfirmMessage));
-        public static readonly DocumentType CreateMeteringPointRejected = new(2, nameof(CreateMeteringPointRejected), typeof(RejectMessage));
-        public static readonly DocumentType ConnectMeteringPointAccepted = new(3, nameof(ConnectMeteringPointAccepted), typeof(ConfirmMessage));
-        public static readonly DocumentType ConnectMeteringPointRejected = new(4, nameof(ConnectMeteringPointRejected), typeof(RejectMessage));
+        public static readonly DocumentType ConfirmCreateMeteringPoint = new(1, nameof(ConfirmCreateMeteringPoint), typeof(ConfirmMessage));
+        public static readonly DocumentType RejectCreateMeteringPoint = new(2, nameof(RejectCreateMeteringPoint), typeof(RejectMessage));
+        public static readonly DocumentType AcceptConnectMeteringPoint = new(3, nameof(AcceptConnectMeteringPoint), typeof(ConfirmMessage));
+        public static readonly DocumentType RejectConnectMeteringPoint = new(4, nameof(RejectConnectMeteringPoint), typeof(RejectMessage));
         public static readonly DocumentType AccountingPointCharacteristicsMessage = new(5, nameof(AccountingPointCharacteristicsMessage), typeof(AccountingPointCharacteristicsMessage));
-        public static readonly DocumentType ChangeMasterDataAccepted = new(6, nameof(ChangeMasterDataAccepted), typeof(ConfirmMessage));
-        public static readonly DocumentType ChangeMasterDataRejected = new(7, nameof(ChangeMasterDataRejected), typeof(RejectMessage));
+        public static readonly DocumentType AcceptChangeMasterData = new(6, nameof(AcceptChangeMasterData), typeof(ConfirmMessage));
+        public static readonly DocumentType RejectChangeMasterData = new(7, nameof(RejectChangeMasterData), typeof(RejectMessage));
 
         public DocumentType(int id, string name)
             : base(id, name)
