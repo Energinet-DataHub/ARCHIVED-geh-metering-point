@@ -17,7 +17,9 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
+using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Extensions;
 using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures;
 using FluentAssertions;
 using Xunit;
@@ -54,8 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
                 .Replace("{{transactionId}}", "1", StringComparison.OrdinalIgnoreCase)
                 .Replace("{{gsrn}}", "571234567891234567", StringComparison.OrdinalIgnoreCase);
             using var request = new HttpRequestMessage(HttpMethod.Post, "api/MeteringPoint");
-
-            request.Headers.Add("Authorization", @"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY3RvcklkIjoiYjE5NTE5NjUtYTQ5ZC00ODBmLTliYWEtYzdhZjJkYjcwMmU0IiwiaWRlbnRpZmllclR5cGUiOiJnbG4iLCJpZGVudGlmaWVyIjoiODIwMDAwMDAwNTcxMSIsInJvbGVzIjpbInNvbWVyb2xlIl19.HfhMutQgCt6hbrFjz_sT3Bsx06W6WybDMGV68omqKa0");
+            request.AddDefaultJwtToken();
             request.Content = new StringContent(xml, Encoding.UTF8, "application/xml");
 
             // Act
