@@ -202,10 +202,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public BusinessRulesValidationResult Validate()
         {
+            _validationErrors.Clear();
+            _validationErrors.AddRange(AllValueValidationErrors());
+
             AddValidationErrorIfRequiredFieldIsMissing<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence), new MeterReadingPeriodicityIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<MeasurementUnitType>(nameof(MasterData.UnitType), new UnitTypeIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup), new NetSettlementGroupIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<SettlementMethod>(nameof(MasterData.SettlementMethod), new SettlementMethodIsRequired());
+
             return new BusinessRulesValidationResult(_validationErrors);
         }
 
@@ -224,7 +228,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         {
             var valueItem = GetMasterValueItem<T>(valueName);
             valueItem.SetValue(validator, creator);
-            _validationErrors.AddRange(valueItem.ValidationErrors);
         }
     }
 }
