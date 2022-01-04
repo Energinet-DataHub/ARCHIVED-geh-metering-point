@@ -77,11 +77,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Validation
             RuleFor(request => request.MeterReadingOccurrence)
                 .NotEmpty()
                 .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError());
-            RuleFor(createMeteringPoint => createMeteringPoint.SettlementMethod)
-                .Cascade(CascadeMode.Stop)
-                .NotEmpty()
-                .WithState(createMeteringPoint => new SettlementMethodRequiredValidationError())
-                .SetValidator(new SettlementMethodMustBeValidRule()!);
             RuleFor(createMeteringPoint => createMeteringPoint.DisconnectionType)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
