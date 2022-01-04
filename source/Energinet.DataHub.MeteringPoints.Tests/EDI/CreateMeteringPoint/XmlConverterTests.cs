@@ -18,11 +18,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.XmlConversion.XmlConverter;
+using Energinet.DataHub.Core.XmlConversion.XmlConverter.Configuration;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
+using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappings;
 using FluentAssertions;
 using Xunit;
@@ -43,19 +45,22 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
         [Fact]
         public void AssertConfigurationsValid()
         {
-            Action assertConfigurationValid = ConverterMapperConfigurations.AssertConfigurationValid;
+            Action assertConfigurationValid = () => ConverterMapperConfigurations.AssertConfigurationValid(typeof(MasterDataDocument), typeof(MasterDataDocumentXmlMappingConfiguration).Assembly);
             assertConfigurationValid.Should().NotThrow();
         }
 
         [Fact]
         public async Task ValidateValuesFromEachElementTest()
         {
-            var xmlMapper = new XmlMapper((processType, type) => new MasterDataDocumentXmlMappingConfiguration());
+            var xmlMapper = new XmlMapper((type) => new MasterDataDocumentXmlMappingConfiguration(), (processType) => BusinessProcessType.CreateMeteringPoint.Name);
 
             var xmlConverter = new XmlDeserializer(xmlMapper);
 
-            var commandsRaw = await xmlConverter.DeserializeAsync(_xmlStream).ConfigureAwait(false);
-            var commands = commandsRaw.Cast<MasterDataDocument>();
+            var deserializationResult = await xmlConverter.DeserializeAsync(_xmlStream).ConfigureAwait(false);
+
+            deserializationResult.HeaderData.Sender.Id.Should().Be("afsender");
+
+            var commands = deserializationResult.Documents.Cast<MasterDataDocument>();
 
             var command = commands.First();
 
@@ -96,11 +101,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
         [Fact]
         public async Task ValidateTranslationOfCimXmlValuesToDomainSpecificValuesTest()
         {
-            var xmlMapper = new XmlMapper((processType, type) => new MasterDataDocumentXmlMappingConfiguration());
+            var xmlMapper = new XmlMapper((type) => new MasterDataDocumentXmlMappingConfiguration(), (processType) => BusinessProcessType.CreateMeteringPoint.Name);
 
             var xmlConverter = new XmlDeserializer(xmlMapper);
-            var commandsRaw = await xmlConverter.DeserializeAsync(_xmlStream).ConfigureAwait(false);
-            var commands = commandsRaw.Cast<MasterDataDocument>();
+            var deserializationResult = await xmlConverter.DeserializeAsync(_xmlStream).ConfigureAwait(false);
+            var commands = deserializationResult.Documents.Cast<MasterDataDocument>();
 
             var command = commands.First();
 

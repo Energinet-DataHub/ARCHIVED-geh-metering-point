@@ -14,13 +14,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.Core.XmlConversion.XmlConverter.Abstractions;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -33,18 +31,21 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
         private readonly ILogger _logger;
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageDispatcher _dispatcher;
-        private readonly IXmlConverter _xmlConverter;
+        private readonly IXmlDeserializer _xmlDeserializer;
+        private readonly XmlSenderValidator _xmlSenderValidator;
 
         public MeteringPointHttpTrigger(
             ILogger logger,
             ICorrelationContext correlationContext,
             MessageDispatcher dispatcher,
-            IXmlConverter xmlConverter)
+            IXmlDeserializer xmlDeserializer,
+            XmlSenderValidator xmlSenderValidator)
         {
             _logger = logger;
             _correlationContext = correlationContext;
             _dispatcher = dispatcher;
-            _xmlConverter = xmlConverter;
+            _xmlDeserializer = xmlDeserializer;
+            _xmlSenderValidator = xmlSenderValidator;
         }
 
         [Function("MeteringPoint")]
@@ -59,7 +60,14 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
             IEnumerable<IInternalMarketDocument> commands;
             try
             {
-               commands = await DeserializeInputAsync(request.Body).ConfigureAwait(false);
+                var result = await _xmlDeserializer.DeserializeAsync(request.Body).ConfigureAwait(false);
+
+                var senderValidationResult = _xmlSenderValidator.ValidateSender(result.HeaderData.Sender);
+
+                if (!senderValidationResult.IsValid)
+                    return await CreateForbiddenResponseAsync(request, senderValidationResult.ErrorMessage).ConfigureAwait(false);
+
+                commands = result.Documents;
             }
             #pragma warning disable CA1031 // TODO: We'll allow catching Exception in the entrypoint, I guess?
             catch (Exception exception)
@@ -73,6 +81,16 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
             return await CreateOkResponseAsync(request).ConfigureAwait(false);
         }
 
+        private static async Task<HttpResponseData> CreateForbiddenResponseAsync(HttpRequestData request, string errorMessage)
+        {
+            var response = request.CreateResponse(HttpStatusCode.Forbidden);
+
+            response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
+
+            await response.WriteStringAsync(errorMessage).ConfigureAwait(false);
+            return response;
+        }
+
         private async Task<HttpResponseData> CreateOkResponseAsync(HttpRequestData request)
         {
             var response = request.CreateResponse(HttpStatusCode.OK);
@@ -82,11 +100,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
             await response.WriteStringAsync("Correlation id: " + _correlationContext.Id)
                 .ConfigureAwait(false);
             return response;
-        }
-
-        private async Task<IEnumerable<IInternalMarketDocument>> DeserializeInputAsync(Stream stream)
-        {
-            return await _xmlConverter.DeserializeAsync(stream).ConfigureAwait(false);
         }
 
         private async Task DispatchCommandsAsync(IEnumerable<IInternalMarketDocument> commands)
