@@ -49,7 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             masterDataFields.ToList().ForEach(field => ConfigureValue(field.Name, field.Applicability, field.DefaultValue, field.CanBeChanged));
         }
 
-        protected void SetValue<T>(string name, T value)
+        protected void SetValue<T>(string name, T? value)
         {
             var valueItem = GetMasterValueItem<T>(name);
             if (valueItem.CanBeChanged && valueItem.Applicability != Applicability.NotAllowed)

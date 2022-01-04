@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
@@ -121,7 +122,33 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithSettlementMethod(string? settlementMethod)
         {
-            SetValue(nameof(MasterData.SettlementMethod), string.IsNullOrEmpty(settlementMethod) ? null : EnumerationType.FromName<SettlementMethod>(settlementMethod));
+            if (string.IsNullOrEmpty(settlementMethod))
+            {
+                SetValue<SettlementMethod>(nameof(MasterData.SettlementMethod), null);
+            }
+            else
+            {
+                SetValueIfValid(
+                    nameof(MasterData.SettlementMethod),
+                    () =>
+                    {
+                        if (EnumerationType.GetAll<SettlementMethod>()
+                            .Select(item => item.Name)
+                            .Contains(settlementMethod) == false)
+                        {
+                            return new BusinessRulesValidationResult(new List<ValidationError>()
+                            {
+                                new InvalidSettlementMethodValue(settlementMethod!),
+                            });
+                        }
+                        else
+                        {
+                            return new BusinessRulesValidationResult(new List<IBusinessRule>());
+                        }
+                    },
+                    () => EnumerationType.FromName<SettlementMethod>(settlementMethod!));
+            }
+
             return this;
         }
 
@@ -178,6 +205,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             if (GetMasterValueItem<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence)).HasRequiredValue() == false) _validationErrors.Add(new MeterReadingPeriodicityIsRequired());
             if (GetMasterValueItem<MeasurementUnitType>(nameof(MasterData.UnitType)).HasRequiredValue() == false) _validationErrors.Add(new UnitTypeIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup), new NetSettlementGroupIsRequired());
+            AddValidationErrorIfRequiredFieldIsMissing<SettlementMethod>(nameof(MasterData.SettlementMethod), new SettlementMethodIsRequired());
             return new BusinessRulesValidationResult(_validationErrors);
         }
 
@@ -188,7 +216,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         private void SetValueIfValid<T>(string valueName, Func<BusinessRulesValidationResult> validator, Func<T> creator)
         {
-            if (!GetMasterValueItem<MeteringConfiguration>(valueName).CanBeChanged) return;
+            if (!GetMasterValueItem<T>(valueName).CanBeChanged) return;
             var validationResult = validator.Invoke();
             if (validationResult.Success)
             {
