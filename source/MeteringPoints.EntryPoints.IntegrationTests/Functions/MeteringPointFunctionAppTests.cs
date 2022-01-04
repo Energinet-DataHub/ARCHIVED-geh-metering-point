@@ -66,8 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
                 .Replace("{{transactionId}}", "1", StringComparison.OrdinalIgnoreCase)
                 .Replace("{{gsrn}}", TestDataCreator.CreateGsrn(), StringComparison.OrdinalIgnoreCase);
             using var request = new HttpRequestMessage(HttpMethod.Post, "api/MeteringPoint");
-
-            request.Headers.Add("Authorization", @"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY3RvcklkIjoiYjE5NTE5NjUtYTQ5ZC00ODBmLTliYWEtYzdhZjJkYjcwMmU0IiwiaWRlbnRpZmllclR5cGUiOiJnbG4iLCJpZGVudGlmaWVyIjoiODIwMDAwMDAwMTQwOSIsInJvbGVzIjpbInNvbWVyb2xlIl19.m-R_MpL7O5HP8bvR6DfVhZt_JvYfS2iIbP4Lk23n8j0");
+            request.AddDefaultJwtToken();
             request.Content = new StringContent(xml, Encoding.UTF8, "application/xml");
 
             // Act
