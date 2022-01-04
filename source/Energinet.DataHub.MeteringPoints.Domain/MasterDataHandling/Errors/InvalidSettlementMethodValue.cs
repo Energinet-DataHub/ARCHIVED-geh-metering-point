@@ -14,21 +14,15 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
-    public class SettlementMethodNotAllowedValidationError : ValidationError
+    public class InvalidSettlementMethodValue : ValidationError
     {
-        public SettlementMethodNotAllowedValidationError(string gsrnNumber, string? settlementMethod, string typeOfMeteringPoint)
+        public InvalidSettlementMethodValue(string providedValue)
         {
-            GsrnNumber = gsrnNumber;
-            SettlementMethod = settlementMethod;
-            TypeOfMeteringPoint = typeOfMeteringPoint;
+            ProvidedValue = providedValue;
         }
 
-        public string GsrnNumber { get; }
-
-        public string? SettlementMethod { get; }
-
-        public string TypeOfMeteringPoint { get; }
+        public string ProvidedValue { get; }
     }
 }

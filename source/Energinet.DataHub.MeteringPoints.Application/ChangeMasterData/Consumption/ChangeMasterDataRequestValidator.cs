@@ -28,9 +28,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 .SetValidator(new GsrnNumberValidator());
             RuleFor(request => request.EffectiveDate)
                 .SetValidator(new EffectiveDateRule());
-            RuleFor(request => request.SettlementMethod)
-                .SetValidator(new SettlementMethodValidator())
-                .Unless(request => string.IsNullOrEmpty(request.SettlementMethod));
             RuleFor(request => request.TransactionId)
                 .SetValidator(new TransactionIdentificationRule());
         }

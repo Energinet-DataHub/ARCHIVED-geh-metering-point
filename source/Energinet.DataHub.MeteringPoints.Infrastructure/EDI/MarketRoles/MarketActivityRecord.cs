@@ -12,17 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.MarketRoles
 {
-    public class SettlementMethodMissingRequiredDomainValuesValidationError : ValidationError
-    {
-        public SettlementMethodMissingRequiredDomainValuesValidationError(string settlementMethod)
-        {
-            SettlementMethod = settlementMethod;
-        }
-
-        public string SettlementMethod { get; }
-    }
+    // TODO: This is a hack used during the test period and should be removed as soon as the business processes from Market roles are included
+    public record MarketActivityRecord(
+        string Id,
+        string MarketEvaluationPoint,
+        string OriginalTransaction,
+        Instant StartDateAndOrTime);
 }

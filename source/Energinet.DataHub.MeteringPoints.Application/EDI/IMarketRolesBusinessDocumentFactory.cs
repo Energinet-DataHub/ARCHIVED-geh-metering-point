@@ -12,14 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
+using Energinet.DataHub.MeteringPoints.Application.Queries;
+using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Application.EDI
 {
-    public class SettlementMethodRequiredValidationError : ValidationError
+    /// <summary>
+    /// Create business documents.
+    /// TODO: Should be moved to market roles at a later point in time.
+    /// </summary>
+    public interface IMarketRolesBusinessDocumentFactory
     {
-        public SettlementMethodRequiredValidationError()
-        {
-        }
+        /// <summary>
+        /// RSM 004
+        /// </summary>
+        void CreateMoveInMessage(string gsrn, Instant startDate);
     }
 }

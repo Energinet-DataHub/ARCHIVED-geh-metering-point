@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
@@ -50,6 +51,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
             if (!traceContext.IsValid)
             {
                 _logger.LogWarning("Could not parse trace context for outbox message with id: {messageId} and correlation: {correlationId}", message.Id, message.Correlation);
+                _logger.LogInformation("Outbox dispatched: {messageType}", message.Type);
 
                 await _decoratee.DispatchMessageAsync(message).ConfigureAwait(false);
                 return;
@@ -64,13 +66,14 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
 
                 operation.Telemetry.Success = true;
 
+                _logger.LogInformation("Outbox dispatched: {messageType}", message.Type);
+
                 await _decoratee.DispatchMessageAsync(message).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
                 operation.Telemetry.Success = false;
-                _telemetryClient.TrackException(exception);
-                _telemetryClient.Flush();
+                _telemetryClient.TrackException(exception, new Dictionary<string, string> { { "OutboxItemOperationId", _correlationContext.Id } });
                 throw;
             }
             finally
