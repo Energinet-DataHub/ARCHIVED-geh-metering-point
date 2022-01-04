@@ -18,11 +18,14 @@ using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
 using Energinet.DataHub.Core.FunctionApp.Common.Identity;
 using Energinet.DataHub.Core.FunctionApp.Common.Middleware;
+using Energinet.DataHub.Core.XmlConversion.XmlConverter;
+using Energinet.DataHub.Core.XmlConversion.XmlConverter.Abstractions;
+using Energinet.DataHub.Core.XmlConversion.XmlConverter.Configuration;
 using Energinet.DataHub.MeteringPoints.Contracts;
+using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappings;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Resilience;
@@ -66,6 +69,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             container.Register<EntryPointTelemetryScopeMiddleware>(Lifestyle.Scoped);
             container.Register<JwtTokenMiddleware>(Lifestyle.Scoped);
             container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
+            container.Register<XmlSenderValidator>(Lifestyle.Scoped);
 
             container.Register<MessageDispatcher, InternalDispatcher>(Lifestyle.Scoped);
             container.Register<Channel, InternalServiceBus>(Lifestyle.Scoped);
@@ -74,30 +78,34 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             container.Register<IChannelResiliencePolicy>(() => new RetryNTimesPolicy(policyRetryCount), Lifestyle.Scoped);
             container.RegisterDecorator<Channel, ChannelResilienceDecorator>(Lifestyle.Scoped);
 
-            // TODO: Expand factory for handling other XML types
-            container.Register<Func<string, string, XmlMappingConfigurationBase>>(
-                () => (processType, type) => XmlMappingConfiguration(type), Lifestyle.Singleton);
-            container.Register<XmlMapper>(Lifestyle.Singleton);
-            container.Register<IXmlConverter, XmlDeserializer>(Lifestyle.Singleton);
+            container.Register(() => new XmlMapper(XmlMappingConfiguration, TranslateProcessType), Lifestyle.Singleton);
+            container.Register<IXmlDeserializer, XmlDeserializer>(Lifestyle.Singleton);
 
             var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING");
             var topic = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME");
-            container.Register<ServiceBusSender>(
-                () => new ServiceBusClient(connectionString).CreateSender(topic),
-                Lifestyle.Singleton);
+            container.Register(() => new ServiceBusClient(connectionString).CreateSender(topic), Lifestyle.Singleton);
 
             container.SendProtobuf<MeteringPointEnvelope>();
         }
 
         private static XmlMappingConfigurationBase XmlMappingConfiguration(string documentType)
         {
-            switch (documentType)
+            return documentType.ToUpperInvariant() switch
             {
-                case "E58":
-                    return new MasterDataDocumentXmlMappingConfiguration();
-                default:
-                    throw new NotImplementedException();
-            }
+                "E58" => new MasterDataDocumentXmlMappingConfiguration(),
+                _ => throw new NotImplementedException(documentType),
+            };
+        }
+
+        private static string TranslateProcessType(string processType)
+        {
+            return processType.ToUpperInvariant() switch
+            {
+                "E02" => nameof(BusinessProcessType.CreateMeteringPoint),
+                "D15" => nameof(BusinessProcessType.ConnectMeteringPoint),
+                "E32" => nameof(BusinessProcessType.ChangeMasterData),
+                _ => throw new NotImplementedException(processType),
+            };
         }
     }
 }

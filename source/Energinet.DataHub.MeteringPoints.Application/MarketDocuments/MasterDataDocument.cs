@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Core.XmlConversion.XmlConverter.Abstractions;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
 {
@@ -58,5 +60,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
             string? ScheduledMeterReadingDate = "")
         : IInternalMarketDocument,
             IOutboundMessage,
-            IInboundMessage;
+            IInboundMessage,
+            IRequest<BusinessProcessResult>;
 }
