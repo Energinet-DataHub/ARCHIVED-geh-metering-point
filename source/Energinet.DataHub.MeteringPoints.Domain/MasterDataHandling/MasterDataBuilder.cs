@@ -211,21 +211,20 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         private void AddValidationErrorIfRequiredFieldIsMissing<T>(string valueName, ValidationError validationError)
         {
-            if (GetMasterValueItem<T>(valueName).HasRequiredValue() == false) _validationErrors.Add(validationError);
+            var valueItem = GetMasterValueItem<T>(valueName);
+            if (valueItem.HasErrors())
+            {
+                return;
+            }
+
+            if (valueItem.HasRequiredValue() == false) _validationErrors.Add(validationError);
         }
 
         private void SetValueIfValid<T>(string valueName, Func<BusinessRulesValidationResult> validator, Func<T> creator)
         {
-            if (!GetMasterValueItem<T>(valueName).CanBeChanged) return;
-            var validationResult = validator.Invoke();
-            if (validationResult.Success)
-            {
-                SetValue(valueName, creator.Invoke());
-            }
-            else
-            {
-                _validationErrors.AddRange(validationResult.Errors);
-            }
+            var valueItem = GetMasterValueItem<T>(valueName);
+            valueItem.SetValue(validator, creator);
+            _validationErrors.AddRange(valueItem.ValidationErrors);
         }
     }
 }
