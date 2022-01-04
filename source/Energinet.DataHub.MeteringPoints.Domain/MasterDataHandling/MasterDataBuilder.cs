@@ -136,17 +136,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                             .Select(item => item.Name)
                             .Contains(settlementMethod) == false)
                         {
-                            return new BusinessRulesValidationResult(new List<ValidationError>()
-                            {
-                                new InvalidSettlementMethodValue(settlementMethod!),
-                            });
+                            return BusinessRulesValidationResult.Failure(new InvalidSettlementMethodValue(settlementMethod));
                         }
-                        else
-                        {
-                            return new BusinessRulesValidationResult(new List<IBusinessRule>());
-                        }
+
+                        return BusinessRulesValidationResult.Valid();
                     },
-                    () => EnumerationType.FromName<SettlementMethod>(settlementMethod!));
+                    () => EnumerationType.FromName<SettlementMethod>(settlementMethod));
             }
 
             return this;
