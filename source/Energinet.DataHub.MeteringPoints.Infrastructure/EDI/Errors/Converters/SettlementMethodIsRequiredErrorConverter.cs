@@ -12,17 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class SettlementMethodMissingRequiredDomainValuesValidationError : ValidationError
+    public class SettlementMethodIsRequiredErrorConverter : ErrorConverter<SettlementMethodIsRequired>
     {
-        public SettlementMethodMissingRequiredDomainValuesValidationError(string settlementMethod)
+        protected override ErrorMessage Convert(SettlementMethodIsRequired validationError)
         {
-            SettlementMethod = settlementMethod;
+            return new ErrorMessage("D02", "Settlement method is required.");
         }
-
-        public string SettlementMethod { get; }
     }
 }

@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 {
@@ -49,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             masterDataFields.ToList().ForEach(field => ConfigureValue(field.Name, field.Applicability, field.DefaultValue, field.CanBeChanged));
         }
 
-        protected void SetValue<T>(string name, T value)
+        protected void SetValue<T>(string name, T? value)
         {
             var valueItem = GetMasterValueItem<T>(name);
             if (valueItem.CanBeChanged && valueItem.Applicability != Applicability.NotAllowed)
@@ -66,6 +67,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         protected MasterDataValue GetMasterValueItem<T>(string name)
         {
             return _values.First(v => v.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        }
+
+        protected IEnumerable<ValidationError> AllValueValidationErrors()
+        {
+            return _values.SelectMany(value => value.ValidationErrors).AsEnumerable();
         }
 
         private void ConfigureValue<T>(string name, Applicability applicability, T? defaultValue = default(T), bool canBeChanged = true)
