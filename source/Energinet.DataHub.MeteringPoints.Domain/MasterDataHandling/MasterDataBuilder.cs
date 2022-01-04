@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
@@ -121,7 +122,28 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithSettlementMethod(string? settlementMethod)
         {
-            SetValue(nameof(MasterData.SettlementMethod), string.IsNullOrEmpty(settlementMethod) ? null : EnumerationType.FromName<SettlementMethod>(settlementMethod));
+            if (string.IsNullOrEmpty(settlementMethod))
+            {
+                SetValue<SettlementMethod>(nameof(MasterData.SettlementMethod), null);
+            }
+            else
+            {
+                SetValueIfValid(
+                    nameof(MasterData.SettlementMethod),
+                    () =>
+                    {
+                        if (EnumerationType.GetAll<SettlementMethod>()
+                            .Select(item => item.Name)
+                            .Contains(settlementMethod) == false)
+                        {
+                            return BusinessRulesValidationResult.Failure(new InvalidSettlementMethodValue(settlementMethod));
+                        }
+
+                        return BusinessRulesValidationResult.Valid();
+                    },
+                    () => EnumerationType.FromName<SettlementMethod>(settlementMethod));
+            }
+
             return this;
         }
 
@@ -175,29 +197,32 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public BusinessRulesValidationResult Validate()
         {
-            if (GetMasterValueItem<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence)).HasRequiredValue() == false) _validationErrors.Add(new MeterReadingPeriodicityIsRequired());
-            if (GetMasterValueItem<MeasurementUnitType>(nameof(MasterData.UnitType)).HasRequiredValue() == false) _validationErrors.Add(new UnitTypeIsRequired());
+            _validationErrors.Clear();
+            _validationErrors.AddRange(AllValueValidationErrors());
+
+            AddValidationErrorIfRequiredFieldIsMissing<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence), new MeterReadingPeriodicityIsRequired());
+            AddValidationErrorIfRequiredFieldIsMissing<MeasurementUnitType>(nameof(MasterData.UnitType), new UnitTypeIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup), new NetSettlementGroupIsRequired());
+            AddValidationErrorIfRequiredFieldIsMissing<SettlementMethod>(nameof(MasterData.SettlementMethod), new SettlementMethodIsRequired());
+
             return new BusinessRulesValidationResult(_validationErrors);
         }
 
         private void AddValidationErrorIfRequiredFieldIsMissing<T>(string valueName, ValidationError validationError)
         {
-            if (GetMasterValueItem<T>(valueName).HasRequiredValue() == false) _validationErrors.Add(validationError);
+            var valueItem = GetMasterValueItem<T>(valueName);
+            if (valueItem.HasErrors())
+            {
+                return;
+            }
+
+            if (valueItem.HasRequiredValue() == false) _validationErrors.Add(validationError);
         }
 
         private void SetValueIfValid<T>(string valueName, Func<BusinessRulesValidationResult> validator, Func<T> creator)
         {
-            if (!GetMasterValueItem<MeteringConfiguration>(valueName).CanBeChanged) return;
-            var validationResult = validator.Invoke();
-            if (validationResult.Success)
-            {
-                SetValue(valueName, creator.Invoke());
-            }
-            else
-            {
-                _validationErrors.AddRange(validationResult.Errors);
-            }
+            var valueItem = GetMasterValueItem<T>(valueName);
+            valueItem.SetValue(validator, creator);
         }
     }
 }

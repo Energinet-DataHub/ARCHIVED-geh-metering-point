@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Create
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
-    public class SettlementMethodRequiredErrorConverter : ErrorConverter<SettlementMethodRequiredValidationError>
+    public class InvalidSettlementMethodValue : ValidationError
     {
-        protected override ErrorMessage Convert(SettlementMethodRequiredValidationError validationError)
+        public InvalidSettlementMethodValue(string providedValue)
         {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-
-            return new("D02", $"Settlement method is missing (type E17) or not allowed (other types)");
+            ProvidedValue = providedValue;
         }
+
+        public string ProvidedValue { get; }
     }
 }
