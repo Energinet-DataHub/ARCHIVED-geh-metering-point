@@ -40,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(request).ConfigureAwait(false);
 
             await AssertMeteringPointExistsAsync(request.GsrnNumber).ConfigureAwait(false);
-            AssertConfirmMessage(DocumentType.CreateMeteringPointAccepted);
+            AssertConfirmMessage(DocumentType.ConfirmCreateMeteringPoint);
             var integrationEvent = FindIntegrationEvent<ExchangeMeteringPointCreatedIntegrationEvent>();
             Assert.NotNull(integrationEvent);
             Assert.Equal(request.GsrnNumber, integrationEvent?.GsrnNumber);
@@ -63,7 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("E86", DocumentType.CreateMeteringPointRejected);
+            AssertValidationError("E86", DocumentType.RejectCreateMeteringPoint);
         }
 
         [Fact]
@@ -77,7 +77,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("D46", DocumentType.CreateMeteringPointRejected);
+            AssertValidationError("D46", DocumentType.RejectCreateMeteringPoint);
         }
 
         [Fact]
@@ -91,7 +91,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("D46", DocumentType.CreateMeteringPointRejected);
+            AssertValidationError("D46", DocumentType.RejectCreateMeteringPoint);
         }
 
         [Fact]
@@ -105,7 +105,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("E86", DocumentType.CreateMeteringPointRejected);
+            AssertValidationError("E86", DocumentType.RejectCreateMeteringPoint);
         }
 
         private static CreateMeteringPoint CreateCommand()

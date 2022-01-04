@@ -72,7 +72,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
                     Content = jsonSerializer.Serialize(message),
                     GsrnNumber = message.MarketActivityRecord.MarketEvaluationPoint,
                 })
-                .Select(message => new MessageHubMessage(message.Content, "correlation", DocumentType.CreateMeteringPointAccepted, "recipient", SystemClock.Instance.GetCurrentInstant(), message.GsrnNumber))
+                .Select(message => new MessageHubMessage(message.Content, "correlation", DocumentType.ConfirmCreateMeteringPoint, "recipient", SystemClock.Instance.GetCurrentInstant(), message.GsrnNumber))
                 .ToList();
             return officeMessages;
         }
