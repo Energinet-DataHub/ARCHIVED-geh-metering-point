@@ -76,7 +76,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 SampleData.AssetType,
                 "0",
                 SampleData.GeoInfoReference,
-                "0101");
+                "0101",
+                UnitType: MeasurementUnitType.KWh.Name);
         }
 
         internal static CreateMeteringPoint CreateCommand(MeteringPointType meteringPointType)
