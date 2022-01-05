@@ -22,7 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.
         protected override ErrorMessage Convert(CurrentActorIsNotGridOperator validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-            return new ErrorMessage("E123", "You are not operator in the specified grid area."); // TODO ... Which code and description?
+            return new ErrorMessage("E0I", $"Grid operator {validationError.ActorIdentifier} is not an authorized market party for this Grid area {validationError.GridAreaGsrn}");
         }
     }
 }

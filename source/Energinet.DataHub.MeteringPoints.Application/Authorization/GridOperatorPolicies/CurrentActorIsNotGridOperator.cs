@@ -18,5 +18,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperato
 {
     public class CurrentActorIsNotGridOperator : ValidationError
     {
+        public CurrentActorIsNotGridOperator(string actorIdentifier, string gridAreaGsrn)
+        {
+            ActorIdentifier = actorIdentifier;
+            GridAreaGsrn = gridAreaGsrn;
+        }
+
+        public string ActorIdentifier { get; }
+
+        public string GridAreaGsrn { get; }
     }
 }

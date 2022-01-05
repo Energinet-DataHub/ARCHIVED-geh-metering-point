@@ -33,15 +33,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperato
         public Task<AuthorizationResult> AuthorizeAsync(GridArea gridArea)
         {
             if (gridArea == null) throw new ArgumentNullException(nameof(gridArea));
+            if (_userContext.CurrentUser == null) throw new InvalidOperationException("No current user found");
 
-            if (gridArea.ActorId.Value == _userContext.CurrentUser?.ActorId)
+            if (gridArea.ActorId.Value == _userContext.CurrentUser.ActorId)
             {
                 return Task.FromResult(AuthorizationResult.Ok());
             }
 
             return Task.FromResult(new AuthorizationResult(new List<ValidationError>()
             {
-                new CurrentActorIsNotGridOperator(),
+                new CurrentActorIsNotGridOperator(_userContext.CurrentUser.Identifier, gridArea.Code.Value),
             }));
         }
     }

@@ -426,7 +426,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             var request = Scenarios.CreateDocument();
 
             await SendCommandAsync(request).ConfigureAwait(false);
-            AssertValidationError("E123"); // TODO: fix expected code when right code has been applied to 'CurrentActorIsNotGridOperatorErrorConverter'
+            AssertValidationError("E0I");
         }
 
         private static CreateMeteringPoint CreateCommand()
