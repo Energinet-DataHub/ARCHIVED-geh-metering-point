@@ -15,7 +15,6 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using SimpleInjector;
 
@@ -27,7 +26,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
 
-            var validationErrorTypes = container.GetTypesToRegister(typeof(ValidationError), assemblies).ToList();
             var errorConverterTypes = container.GetTypesToRegister(typeof(ErrorConverter<>), assemblies).ToList();
             container.Register(typeof(ErrorConverter<>), errorConverterTypes, Lifestyle.Singleton);
             container.Register<ErrorMessageFactory>(Lifestyle.Singleton);

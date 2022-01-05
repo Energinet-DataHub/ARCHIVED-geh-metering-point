@@ -12,20 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Authorization
+namespace Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperatorPolicies
 {
-    /// <summary>
-    /// Service for handling business process specific authorization
-    /// </summary>
-    public interface IAuthorizer
+    public class CurrentActorIsNotGridOperator : ValidationError
     {
-        /// <summary>
-        /// Invoke authorization process
-        /// </summary>
-        /// <returns><see cref="AuthorizationResult"/></returns>
-        Task<AuthorizationResult> AuthorizeAsync(MeteringPoint meteringPoint);
+        public CurrentActorIsNotGridOperator(string actorIdentifier, string gridAreaGsrn)
+        {
+            ActorIdentifier = actorIdentifier;
+            GridAreaGsrn = gridAreaGsrn;
+        }
+
+        public string ActorIdentifier { get; }
+
+        public string GridAreaGsrn { get; }
     }
 }
