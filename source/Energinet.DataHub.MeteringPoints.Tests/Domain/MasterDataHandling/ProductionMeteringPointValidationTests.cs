@@ -30,6 +30,18 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class ProductionMeteringPointValidationTests : TestBase
     {
         [Theory]
+        [InlineData(nameof(MeasurementUnitType.KWh), false)]
+        [InlineData(nameof(MeasurementUnitType.Ampere), true)]
+        public void Unit_type_must_be_kwh(string measurementUnitType, bool expectError)
+        {
+            var masterData = Builder()
+                .WithMeasurementUnitType(measurementUnitType)
+                .Build();
+
+            AssertError<UnitTypeIsNotValidForMeteringPointType>(CheckRules(masterData), expectError);
+        }
+
+        [Theory]
         [InlineData("Zero", "Physical", false)]
         [InlineData("One", "Physical", true)]
         [InlineData("One", "Virtual", false)]
