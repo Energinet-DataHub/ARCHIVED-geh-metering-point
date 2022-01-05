@@ -59,6 +59,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
 
         [Theory]
         [InlineData("TestFiles/Cim/CreateMeteringPointConsumption.xml")]
+        [InlineData("TestFiles/Cim/CreateMeteringPointProduction.xml")]
+        [InlineData("TestFiles/Cim/CreateMeteringPointExchange.xml")]
         public async Task Create_metering_point_flow_should_succeed(string testFileXml)
         {
             // Arrange
@@ -87,6 +89,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
 
             // Outbox
             await AssertFunctionExecuted(Fixture.OutboxHostManager, "OutboxWatcher").ConfigureAwait(false);
+
+            // InternalCommands
+            await AssertFunctionExecuted(Fixture.InternalCommandDispatcherHostManager, "Dispatcher").ConfigureAwait(false);
 
             // MessageHub
             await Fixture.MessageHubSimulator
