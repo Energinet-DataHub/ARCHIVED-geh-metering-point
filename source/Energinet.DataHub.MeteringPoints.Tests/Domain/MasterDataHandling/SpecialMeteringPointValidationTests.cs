@@ -43,6 +43,54 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [InlineData(nameof(MeteringPointType.NetToGrid))]
         [InlineData(nameof(MeteringPointType.SupplyToGrid))]
         [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
+        public void Unit_type_must_be_kwh(string meteringPointType)
+        {
+            var masterData = BuilderFor(meteringPointType)
+                .WithMeasurementUnitType(MeasurementUnitType.Ampere.Name)
+                .Build();
+
+            AssertError<UnitTypeIsNotValidForMeteringPointType>(CheckRules(masterData, From(meteringPointType)), true);
+        }
+
+        [Theory]
+        [InlineData(nameof(MeteringPointType.ElectricalHeating))]
+        [InlineData(nameof(MeteringPointType.NetConsumption))]
+        [InlineData(nameof(MeteringPointType.NetProduction))]
+        [InlineData(nameof(MeteringPointType.OtherConsumption))]
+        [InlineData(nameof(MeteringPointType.OtherProduction))]
+        [InlineData(nameof(MeteringPointType.OwnProduction))]
+        [InlineData(nameof(MeteringPointType.TotalConsumption))]
+        [InlineData(nameof(MeteringPointType.WholesaleServices))]
+        [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
+        [InlineData(nameof(MeteringPointType.GridLossCorrection))]
+        [InlineData(nameof(MeteringPointType.NetFromGrid))]
+        [InlineData(nameof(MeteringPointType.NetToGrid))]
+        [InlineData(nameof(MeteringPointType.SupplyToGrid))]
+        [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
+        public void Unit_type_valid(string meteringPointType)
+        {
+            var masterData = BuilderFor(meteringPointType)
+                .WithMeasurementUnitType(MeasurementUnitType.KWh.Name)
+                .Build();
+
+            AssertDoesNotContainValidationError<UnitTypeIsNotValidForMeteringPointType>(CheckRules(masterData, From(meteringPointType)));
+        }
+
+        [Theory]
+        [InlineData(nameof(MeteringPointType.ElectricalHeating))]
+        [InlineData(nameof(MeteringPointType.NetConsumption))]
+        [InlineData(nameof(MeteringPointType.NetProduction))]
+        [InlineData(nameof(MeteringPointType.OtherConsumption))]
+        [InlineData(nameof(MeteringPointType.OtherProduction))]
+        [InlineData(nameof(MeteringPointType.OwnProduction))]
+        [InlineData(nameof(MeteringPointType.TotalConsumption))]
+        [InlineData(nameof(MeteringPointType.WholesaleServices))]
+        [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
+        [InlineData(nameof(MeteringPointType.GridLossCorrection))]
+        [InlineData(nameof(MeteringPointType.NetFromGrid))]
+        [InlineData(nameof(MeteringPointType.NetToGrid))]
+        [InlineData(nameof(MeteringPointType.SupplyToGrid))]
+        [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
         public void Product_type_must_be_energy_active(string meteringPointType)
         {
             var masterData = BuilderFor(meteringPointType)
