@@ -201,11 +201,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     .HasConversion(toDbValue => toDbValue.Value, fromDbValue => new GridAreaLinkId(fromDbValue));
             });
 
-            builder.Property<MeteringPointId>("_parentMeteringPoint")
+            builder.Property<MeteringPointId?>("_parentMeteringPoint")
                 .HasColumnName("ParentRelatedMeteringPoint")
-                .HasConversion(
-                    toDbValue => toDbValue == null ? null : toDbValue.Value.ToString(),
-                    fromDbValue => string.IsNullOrEmpty(fromDbValue!) ? null! : new MeteringPointId(Guid.Parse(fromDbValue)));
+                .HasConversion<Guid?>(
+                    toDbValue => toDbValue == null ? null : toDbValue.Value,
+                    fromDbValue => fromDbValue.HasValue ? new MeteringPointId(fromDbValue.Value) : null);
         }
     }
 }
