@@ -90,6 +90,25 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("D31", DocumentType.RejectCreateMeteringPoint);
         }
 
+        [Theory]
+        [InlineData("01")]
+        [InlineData("01A")]
+        [InlineData("0S1")]
+        [InlineData("1404")]
+        [InlineData("1D404")]
+        [InlineData("0101D")]
+        public async Task Should_reject_if_scheduled_meter_reading_date_format_is_wrong(string scheduledMeterReadingDate)
+        {
+            var request = CreateCommand()
+                with
+                {
+                    ScheduledMeterReadingDate = scheduledMeterReadingDate,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+            AssertValidationError("E86", DocumentType.RejectCreateMeteringPoint);
+        }
+
         [Fact]
         public async Task Should_reject_if_metering_method_is_not_physical_and_meter_identification_is_defined()
         {
