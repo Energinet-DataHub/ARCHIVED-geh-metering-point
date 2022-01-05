@@ -12,18 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using MediatR;
+using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Common
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.MarketRoles
 {
-    /// <summary>
-    /// Internal representation of an actor document
-    /// </summary>
-    public interface IInternalMarketDocument : IRequest<BusinessProcessResult>
-    {
-        /// <summary>
-        /// Process type
-        /// </summary>
-        string ProcessType { get; }
-    }
+    // TODO: This is a hack used during the test period and should be removed as soon as the business processes from Market roles are included
+    public record MarketActivityRecord(
+        string Id,
+        string MarketEvaluationPoint,
+        string OriginalTransaction,
+        Instant StartDateAndOrTime);
 }

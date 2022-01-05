@@ -61,7 +61,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData
             var sender = _actorProvider.DataHub;
 
             var message = _actorMessageFactory.CreateNewMeteringPointConfirmation(request.GsrnNumber, request.EffectiveDate, request.TransactionId, sender, receiver);
-            return _messageHubDispatcher.DispatchAsync(message, DocumentType.ChangeMasterDataAccepted, request.GsrnNumber);
+            return _messageHubDispatcher.DispatchAsync(message, DocumentType.AcceptChangeMasterData, request.GsrnNumber);
         }
 
         private Task CreateRejectResponseAsync(ChangeMasterDataRequest request, BusinessProcessResult result)
@@ -74,7 +74,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData
                 .AsEnumerable();
 
             var message = _actorMessageFactory.CreateNewMeteringPointReject(request.GsrnNumber, request.EffectiveDate, request.TransactionId, errors, sender, receiver);
-            return _messageHubDispatcher.DispatchAsync(message, DocumentType.ChangeMasterDataRejected, request.GsrnNumber);
+            return _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectChangeMasterData, request.GsrnNumber);
         }
     }
 }

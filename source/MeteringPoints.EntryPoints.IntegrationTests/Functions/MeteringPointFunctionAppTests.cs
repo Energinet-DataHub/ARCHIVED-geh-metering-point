@@ -13,15 +13,18 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using Energinet.DataHub.Core.TestCommon;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Extensions;
 using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -54,16 +57,16 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
             return Task.CompletedTask;
         }
 
-        [Fact]
-        public async Task Create_metering_point_flow_should_succeed()
+        [Theory]
+        [InlineData("TestFiles/Cim/CreateMeteringPointConsumption.xml")]
+        public async Task Create_metering_point_flow_should_succeed(string testFileXml)
         {
             // Arrange
-            var xml = TestFileLoader.ReadFile("TestFiles/Cim/CreateMeteringPoint.xml")
+            var xml = TestFileLoader.ReadFile(testFileXml)
                 .Replace("{{transactionId}}", "1", StringComparison.OrdinalIgnoreCase)
-                .Replace("{{gsrn}}", "571313140733089609", StringComparison.OrdinalIgnoreCase);
+                .Replace("{{gsrn}}", TestDataCreator.CreateGsrn(), StringComparison.OrdinalIgnoreCase);
             using var request = new HttpRequestMessage(HttpMethod.Post, "api/MeteringPoint");
-
-            request.Headers.Add("Authorization", @"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY3RvcklkIjoiYjE5NTE5NjUtYTQ5ZC00ODBmLTliYWEtYzdhZjJkYjcwMmU0IiwiaWRlbnRpZmllclR5cGUiOiJnbG4iLCJpZGVudGlmaWVyIjoiODIwMDAwMDAwNTcxMSIsInJvbGVzIjpbInNvbWVyb2xlIl19.HfhMutQgCt6hbrFjz_sT3Bsx06W6WybDMGV68omqKa0");
+            request.AddDefaultJwtToken();
             request.Content = new StringContent(xml, Encoding.UTF8, "application/xml");
 
             // Act
@@ -86,11 +89,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
             await AssertFunctionExecuted(Fixture.OutboxHostManager, "OutboxWatcher").ConfigureAwait(false);
 
             // MessageHub
-            await Fixture.MessageHubSimulator.WaitForNotificationsInDataAvailableQueueAsync(correlationId)
+            await Fixture.MessageHubSimulator
+                .WaitForNotificationsInDataAvailableQueueAsync(correlationId)
                 .ConfigureAwait(false);
 
-            // MessageHub
-            // TODO: Check content for accept?
             var peekSimulationResponseDto = await Fixture.MessageHubSimulator.PeekAsync().ConfigureAwait(false);
 
             // Local MessageHub
@@ -102,6 +104,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
             // Local MessageHub
             await AssertFunctionExecuted(Fixture.LocalMessageHubHostManager, "BundleDequeuedQueueSubscriber").ConfigureAwait(false);
 
+            AssertConfirmMessages();
             AssertNoExceptionsThrown();
         }
 
@@ -116,6 +119,21 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
                     waitTimespan)
                 .ConfigureAwait(false);
             functionExecuted.Should().BeTrue($"{functionName} was expected to run.");
+        }
+
+        private void AssertConfirmMessages()
+        {
+            using (new AssertionScope())
+            {
+                foreach (var notificationDto in Fixture.MessageHubSimulator.Notifications)
+                {
+                    // TODO: Do actual check for confirmed or maybe put the expected type in the InlineData.
+                    notificationDto.MessageType.Value.Should().StartWith("Confirm");
+                }
+
+                // Clear available messages in simulator between runs.
+                Fixture.MessageHubSimulator.Clear();
+            }
         }
 
         private void AssertNoExceptionsThrown()

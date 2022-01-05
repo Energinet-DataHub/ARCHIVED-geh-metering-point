@@ -12,21 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Xml.Linq;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class XmlElementInfo
+    public class SettlementMethodIsRequiredErrorConverter : ErrorConverter<SettlementMethodIsRequired>
     {
-        public XmlElementInfo(string sourceValue, IEnumerable<XAttribute> attributes)
+        protected override ErrorMessage Convert(SettlementMethodIsRequired validationError)
         {
-            SourceValue = sourceValue;
-            Attributes = attributes;
+            return new ErrorMessage("D02", "Settlement method is required.");
         }
-
-        public string SourceValue { get; }
-
-        public IEnumerable<XAttribute> Attributes { get; }
     }
 }

@@ -13,17 +13,14 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Create
+namespace Energinet.DataHub.MeteringPoints.Application.Queries
 {
-    public class SettlementMethodRequiredErrorConverter : ErrorConverter<SettlementMethodRequiredValidationError>
-    {
-        protected override ErrorMessage Convert(SettlementMethodRequiredValidationError validationError)
-        {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-
-            return new("D02", $"Settlement method is missing (type E17) or not allowed (other types)");
-        }
-    }
+    public record MeteringPointSimpleDto(
+        Guid MeteringPointId,
+        string GsrnNumber,
+        string PhysicalState,
+        string MeteringPointType,
+        Instant EffectiveDate);
 }
