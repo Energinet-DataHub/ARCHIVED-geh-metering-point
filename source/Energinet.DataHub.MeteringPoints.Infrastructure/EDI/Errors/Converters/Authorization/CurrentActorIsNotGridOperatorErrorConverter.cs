@@ -17,12 +17,12 @@ using Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperatorPol
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Authorization
 {
-    public class GridOperatorIsNotOwnerOfMeteringPointErrorConverter : ErrorConverter<GridOperatorIsNotOwnerOfMeteringPoint>
+    public class CurrentActorIsNotGridOperatorErrorConverter : ErrorConverter<CurrentActorIsNotGridOperator>
     {
-        protected override ErrorMessage Convert(GridOperatorIsNotOwnerOfMeteringPoint validationError)
+        protected override ErrorMessage Convert(CurrentActorIsNotGridOperator validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-            return new ErrorMessage("E10", "The specified metering point is owned by another grid operator.");
+            return new ErrorMessage("E0I", $"Grid operator {validationError.ActorIdentifier} is not an authorized market party for this Grid area {validationError.GridAreaGsrn}");
         }
     }
 }
