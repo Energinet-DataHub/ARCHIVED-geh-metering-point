@@ -148,7 +148,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             AssertPersistedMeteringPoint
                 .Initialize(SampleData.GsrnNumber, GetService<IDbConnectionFactory>())
                 .HasConnectionState(PhysicalState.Connected);
-            AssertConfirmMessage(DocumentType.AcceptConnectMeteringPoint);
+            AssertConfirmMessage(DocumentType.ConfirmConnectMeteringPoint);
             Assert.NotNull(FindIntegrationEvent<MeteringPointConnectedIntegrationEvent>());
         }
 

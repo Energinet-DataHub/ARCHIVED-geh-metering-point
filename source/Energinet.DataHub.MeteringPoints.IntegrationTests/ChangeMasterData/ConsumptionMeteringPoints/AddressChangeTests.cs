@@ -60,7 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
 
             await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
 
-            AssertConfirmMessage(DocumentType.AcceptChangeMasterData);
+            AssertConfirmMessage(DocumentType.ConfirmChangeMasterData);
         }
 
         [Fact]
@@ -77,7 +77,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
 
             await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
 
-            AssertConfirmMessage(DocumentType.AcceptChangeMasterData);
+            AssertConfirmMessage(DocumentType.ConfirmChangeMasterData);
         }
 
         [Fact]
