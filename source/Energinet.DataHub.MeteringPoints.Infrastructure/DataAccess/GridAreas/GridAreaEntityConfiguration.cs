@@ -79,8 +79,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas
                             fromDbValue => new GridAreaId(fromDbValue));
                 });
 
-            builder.Property<ActorId>("_actorId")
-                .HasColumnName("ActorId")
+            builder.Property(x => x.ActorId)
                 .HasConversion(
                     toDbValue => toDbValue.Value,
                     fromDbValue => new ActorId(fromDbValue));
