@@ -90,19 +90,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("D31", DocumentType.RejectCreateMeteringPoint);
         }
 
-        [Theory]
-        [InlineData("01")]
-        [InlineData("01A")]
-        [InlineData("0S1")]
-        [InlineData("1404")]
-        [InlineData("1D404")]
-        [InlineData("0101D")]
-        public async Task Should_reject_if_scheduled_meter_reading_date_format_is_wrong(string scheduledMeterReadingDate)
+        [Fact]
+        public async Task Should_reject_if_scheduled_meter_reading_date_format_is_wrong()
         {
             var request = CreateCommand()
                 with
                 {
-                    ScheduledMeterReadingDate = scheduledMeterReadingDate,
+                    ScheduledMeterReadingDate = "01",
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
