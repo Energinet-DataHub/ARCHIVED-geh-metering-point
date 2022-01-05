@@ -42,7 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             },
             {
                 MeteringPointType.Analysis.Name,
-                new SpecialMeteringPointValidator()
+                new AnalysisValidator()
             },
             {
                 MeteringPointType.ElectricalHeating.Name,
