@@ -26,6 +26,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         [InlineData("12311", true)]
         [InlineData("0031", true)]
         [InlineData("0631", true)]
+        [InlineData("01", true)]
+        [InlineData("01A", true)]
+        [InlineData("0S1", true)]
+        [InlineData("1404", true)]
+        [InlineData("1D404", true)]
+        [InlineData("0101D", true)]
         [InlineData("0630", false)]
         public void Should_return_validation_error_when_month_day_is_invalid(string monthAndDay, bool expectError)
         {

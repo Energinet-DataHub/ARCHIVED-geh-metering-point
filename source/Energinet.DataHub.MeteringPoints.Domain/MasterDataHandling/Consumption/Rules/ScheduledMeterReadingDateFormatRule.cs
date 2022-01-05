@@ -33,7 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
 
         private static bool IsValid(string monthAndDay)
         {
-            if (monthAndDay.Length > 4)
+            if (monthAndDay.Length != 4)
             {
                 return false;
             }
