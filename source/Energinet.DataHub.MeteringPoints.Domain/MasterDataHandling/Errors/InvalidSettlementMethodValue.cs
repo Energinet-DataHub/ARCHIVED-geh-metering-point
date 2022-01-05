@@ -12,23 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
-    /// <summary>
-    /// XML converter
-    /// </summary>
-    public interface IXmlConverter
+    public class InvalidSettlementMethodValue : ValidationError
     {
-        /// <summary>
-        /// Deserializes an EDI message in XML format to a generic collection
-        /// </summary>
-        /// <param name="body"></param>
-        /// <returns>A generic collection</returns>
-        public Task<IEnumerable<IInternalMarketDocument>> DeserializeAsync(Stream body);
+        public InvalidSettlementMethodValue(string providedValue)
+        {
+            ProvidedValue = providedValue;
+        }
+
+        public string ProvidedValue { get; }
     }
 }

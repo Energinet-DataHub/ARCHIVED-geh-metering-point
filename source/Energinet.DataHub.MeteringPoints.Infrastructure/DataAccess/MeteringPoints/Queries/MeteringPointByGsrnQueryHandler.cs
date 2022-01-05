@@ -14,13 +14,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -51,75 +51,88 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            string sql = $@"{MeteringPointDtoQueryHelper.Sql}
+            var sql = $@"{MeteringPointDtoQueryHelper.Sql}
                             WHERE GsrnNumber = @GsrnNumber";
 
-            var result = await _connectionFactory
+            var meteringPointDto = await _connectionFactory
                 .GetOpenConnection()
                 .QuerySingleOrDefaultAsync<MeteringPointDto>(sql, new { request.GsrnNumber })
                 .ConfigureAwait(false);
 
-            return result != null
-                ? MapToCimDto(result)
-                : null;
+            if (meteringPointDto == null)
+                return null;
+
+            MeteringPointSimpleCimDto? parentMeteringPoint = null;
+            var childMeteringPoints = new List<MeteringPointSimpleCimDto>();
+
+            if (meteringPointDto.ParentMeteringPointId.HasValue)
+            {
+                parentMeteringPoint = await GetParentMeteringPointAsync(meteringPointDto.ParentMeteringPointId.Value).ConfigureAwait(false);
+            }
+            else
+            {
+                childMeteringPoints = await GetChildMeteringPointsAsync(meteringPointDto.MeteringPointId).ConfigureAwait(false);
+            }
+
+            return MapToCimDto(meteringPointDto, parentMeteringPoint, childMeteringPoints);
         }
 
-        private static MeteringPointCimDto MapToCimDto(MeteringPointDto meteringPointDto)
+        private static MeteringPointCimDto MapToCimDto(MeteringPointDto meteringPoint, MeteringPointSimpleCimDto? parentMeteringPoint, IEnumerable<MeteringPointSimpleCimDto> childMeteringPoints)
         {
-            var meteringPointSubType = ConvertEnumerationTypeToEnum<MeteringMethod,  Domain.MasterDataHandling.Components.MeteringDetails.MeteringMethod>(meteringPointDto.MeteringPointSubType);
-            var connectionState = ConvertEnumerationTypeToEnum<ConnectionState, PhysicalState>(meteringPointDto.PhysicalState);
-            var meteringPointType = ConvertEnumerationTypeToEnum<MeteringPointType, Domain.MeteringPoints.MeteringPointType>(meteringPointDto.MeteringPointType);
-            var unitType = ConvertEnumerationTypeToEnum<Unit, MeasurementUnitType>(meteringPointDto.UnitType);
-            var assetType = ConvertNullableEnumerationTypeToEnum<AssetType, Domain.MasterDataHandling.Components.AssetType>(meteringPointDto.AssetType);
-            var settlementMethod = ConvertNullableEnumerationTypeToEnum<SettlementMethod, Domain.MasterDataHandling.Components.SettlementMethod>(meteringPointDto.SettlementMethod);
-            var netSettlementGroup = ConvertNullableEnumerationTypeToEnum<NetSettlementGroup, Domain.MasterDataHandling.Components.NetSettlementGroup>(meteringPointDto.NetSettlementGroup);
-            var connectionType = ConvertNullableEnumerationTypeToEnum<ConnectionType, Domain.MasterDataHandling.Components.ConnectionType>(meteringPointDto.ConnectionType);
-            var disconnectionType = ConvertNullableEnumerationTypeToEnum<DisconnectionType, Domain.MasterDataHandling.Components.DisconnectionType>(meteringPointDto.DisconnectionType);
-            var readingOccurrence = ConvertEnumerationTypeToEnum<ReadingOccurrence, Domain.MasterDataHandling.Components.ReadingOccurrence>(meteringPointDto.ReadingOccurrence);
-            var productId = ConvertEnumerationTypeToEnum<ProductId, Domain.MasterDataHandling.Components.ProductType>(meteringPointDto.Product);
+            var meteringPointSubType = ConvertEnumerationTypeToEnum<MeteringMethod,  Domain.MasterDataHandling.Components.MeteringDetails.MeteringMethod>(meteringPoint.MeteringPointSubType);
+            var connectionState = ConvertEnumerationTypeToEnum<ConnectionState, PhysicalState>(meteringPoint.PhysicalState);
+            var meteringPointType = ConvertEnumerationTypeToEnum<MeteringPointType, Domain.MeteringPoints.MeteringPointType>(meteringPoint.MeteringPointType);
+            var unitType = ConvertEnumerationTypeToEnum<Unit, MeasurementUnitType>(meteringPoint.UnitType);
+            var assetType = ConvertNullableEnumerationTypeToEnum<AssetType, Domain.MasterDataHandling.Components.AssetType>(meteringPoint.AssetType);
+            var settlementMethod = ConvertNullableEnumerationTypeToEnum<SettlementMethod, Domain.MasterDataHandling.Components.SettlementMethod>(meteringPoint.SettlementMethod);
+            var netSettlementGroup = ConvertNullableEnumerationTypeToEnum<NetSettlementGroup, Domain.MasterDataHandling.Components.NetSettlementGroup>(meteringPoint.NetSettlementGroup);
+            var connectionType = ConvertNullableEnumerationTypeToEnum<ConnectionType, Domain.MasterDataHandling.Components.ConnectionType>(meteringPoint.ConnectionType);
+            var disconnectionType = ConvertNullableEnumerationTypeToEnum<DisconnectionType, Domain.MasterDataHandling.Components.DisconnectionType>(meteringPoint.DisconnectionType);
+            var readingOccurrence = ConvertEnumerationTypeToEnum<ReadingOccurrence, Domain.MasterDataHandling.Components.ReadingOccurrence>(meteringPoint.ReadingOccurrence);
+            var productId = ConvertEnumerationTypeToEnum<ProductId, Domain.MasterDataHandling.Components.ProductType>(meteringPoint.Product);
 
             return new MeteringPointCimDto(
-                meteringPointDto.MeteringPointId,
-                meteringPointDto.GsrnNumber,
-                meteringPointDto.StreetName,
-                meteringPointDto.PostCode,
-                meteringPointDto.CityName,
-                meteringPointDto.CountryCode,
+                meteringPoint.MeteringPointId,
+                meteringPoint.GsrnNumber,
+                meteringPoint.StreetName,
+                meteringPoint.PostCode,
+                meteringPoint.CityName,
+                meteringPoint.CountryCode,
                 connectionState,
                 meteringPointSubType,
                 readingOccurrence,
                 meteringPointType,
-                meteringPointDto.MaximumCurrent,
-                meteringPointDto.MaximumPower,
-                meteringPointDto.GridAreaName,
-                meteringPointDto.GridAreaCode,
-                meteringPointDto.PowerPlantGsrnNumber,
-                meteringPointDto.LocationDescription,
+                meteringPoint.MaximumCurrent,
+                meteringPoint.MaximumPower,
+                meteringPoint.GridAreaName,
+                meteringPoint.GridAreaCode,
+                meteringPoint.PowerPlantGsrnNumber,
+                meteringPoint.LocationDescription,
                 productId,
                 unitType,
-                meteringPointDto.EffectiveDate.ToDateTimeUtc(),
-                meteringPointDto.MeterNumber,
-                meteringPointDto.StreetCode,
-                meteringPointDto.CitySubDivisionName,
-                meteringPointDto.Floor,
-                meteringPointDto.Suite,
-                meteringPointDto.BuildingNumber,
-                meteringPointDto.MunicipalityCode,
-                meteringPointDto.IsActualAddress,
-                meteringPointDto.GeoInfoReference,
-                meteringPointDto.Capacity,
+                meteringPoint.EffectiveDate.ToDateTimeUtc(),
+                meteringPoint.MeterNumber,
+                meteringPoint.StreetCode,
+                meteringPoint.CitySubDivisionName,
+                meteringPoint.Floor,
+                meteringPoint.Suite,
+                meteringPoint.BuildingNumber,
+                meteringPoint.MunicipalityCode,
+                meteringPoint.IsActualAddress,
+                meteringPoint.GeoInfoReference,
+                meteringPoint.Capacity,
                 assetType,
                 settlementMethod,
-                meteringPointDto.ToGridAreaCode,
-                meteringPointDto.FromGridAreaCode,
+                meteringPoint.FromGridAreaCode,
+                meteringPoint.ToGridAreaCode,
                 netSettlementGroup,
-                meteringPointDto.SupplyStart,
+                meteringPoint.SupplyStart,
                 connectionType,
                 disconnectionType,
-                meteringPointDto.ProductionObligation,
-                new List<MeteringPointSimpleCimDto>(),
-                null,
-                meteringPointDto.PowerPlantGsrnNumber);
+                meteringPoint.ProductionObligation,
+                childMeteringPoints,
+                parentMeteringPoint,
+                meteringPoint.PowerPlantGsrnNumber);
         }
 
         private static TEnum ConvertEnumerationTypeToEnum<TEnum, TEnumerationType>(string enumerationTypeName)
@@ -137,6 +150,45 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
         {
             if (string.IsNullOrEmpty(enumerationTypeName)) return null;
             return ConvertEnumerationTypeToEnum<TEnum, TEnumerationType>(enumerationTypeName);
+        }
+
+        private static List<MeteringPointSimpleCimDto> MapToSimpleCimDtoList(IEnumerable<MeteringPointSimpleDto> result)
+        {
+            return result.Select(MapToSimpleCimDto).ToList();
+        }
+
+        private static MeteringPointSimpleCimDto MapToSimpleCimDto(MeteringPointSimpleDto dto)
+        {
+            var connectionState = ConvertEnumerationTypeToEnum<ConnectionState, PhysicalState>(dto.PhysicalState);
+            var meteringPointType = ConvertEnumerationTypeToEnum<MeteringPointType, Domain.MeteringPoints.MeteringPointType>(dto.MeteringPointType);
+
+            return new MeteringPointSimpleCimDto(dto.MeteringPointId, dto.GsrnNumber, connectionState, meteringPointType, dto.EffectiveDate.ToDateTimeUtc());
+        }
+
+        private async Task<List<MeteringPointSimpleCimDto>> GetChildMeteringPointsAsync(Guid meteringPointId)
+        {
+            var sql = $@"{MeteringPointSimpleDtoQueryHelper.Sql}
+                            WHERE ParentRelatedMeteringPoint = @MeteringPointId";
+
+            var result = await _connectionFactory
+                .GetOpenConnection()
+                .QueryAsync<MeteringPointSimpleDto>(sql, new { MeteringPointId = meteringPointId })
+                .ConfigureAwait(false);
+
+            return result != null ? MapToSimpleCimDtoList(result) : new List<MeteringPointSimpleCimDto>();
+        }
+
+        private async Task<MeteringPointSimpleCimDto?> GetParentMeteringPointAsync(Guid meteringPointId)
+        {
+            var sql = $@"{MeteringPointSimpleDtoQueryHelper.Sql}
+                            WHERE Id = @MeteringPointId";
+
+            var result = await _connectionFactory
+                .GetOpenConnection()
+                .QuerySingleOrDefaultAsync<MeteringPointSimpleDto>(sql, new { MeteringPointId = meteringPointId })
+                .ConfigureAwait(false);
+
+            return result != null ? MapToSimpleCimDto(result) : null;
         }
     }
 }

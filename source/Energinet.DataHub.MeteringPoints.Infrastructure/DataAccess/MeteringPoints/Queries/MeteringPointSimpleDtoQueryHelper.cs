@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints.Queries
 {
-    public class SettlementMethodRequiredValidationError : ValidationError
+    public static class MeteringPointSimpleDtoQueryHelper
     {
-        public SettlementMethodRequiredValidationError()
-        {
-        }
+        public const string Sql = @"SELECT [Id] AS MeteringPointId
+                                ,[GsrnNumber]
+                                ,[ConnectionState_PhysicalState] AS PhysicalState
+                                ,[TypeOfMeteringPoint] AS MeteringPointType
+                                ,[EffectiveDate]
+                          FROM  [dbo].[MeteringPoints]";
     }
 }

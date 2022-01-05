@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Create
 {
-    public class SettlementMethodMissingRequiredDomainValuesValidationError : ValidationError
+    public class InvalidSettlementMethodValueErrorConverter : ErrorConverter<InvalidSettlementMethodValue>
     {
-        public SettlementMethodMissingRequiredDomainValuesValidationError(string settlementMethod)
+        protected override ErrorMessage Convert(InvalidSettlementMethodValue validationError)
         {
-            SettlementMethod = settlementMethod;
-        }
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-        public string SettlementMethod { get; }
+            return new("D15", $"Settlement method {validationError.ProvidedValue} has wrong value (outside domain)");
+        }
     }
 }

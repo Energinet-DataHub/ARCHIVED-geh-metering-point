@@ -122,20 +122,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
         }
 
         [Fact]
-        public async Task Reject_when_settlement_method_is_invalid()
-        {
-            var request = TestUtils.CreateRequest()
-                with
-                {
-                    SettlementMethod = "Invalid_Method_Name",
-                };
-
-            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("D15");
-        }
-
-        [Fact]
         public async Task Meter_is_required_when_physical()
         {
             var timeProvider = GetService<ISystemDateTimeProvider>() as SystemDateTimeProviderStub;
