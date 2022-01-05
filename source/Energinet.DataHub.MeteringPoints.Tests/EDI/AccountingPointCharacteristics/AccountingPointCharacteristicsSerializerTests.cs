@@ -159,7 +159,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.AccountingPointCharacterist
                 DateTimeOffset.Parse("2019-02-12T00:00:00Z", CultureInfo.InvariantCulture).Date,
                 "D01",
                 "D01",
-                false);
+                false,
+                null);
             var createdDate = DateTimeOffset.Parse("2021-12-17T09:30:47Z", CultureInfo.InvariantCulture).ToInstant();
             var supplyStartDate = DateTimeOffset.Parse("2019-02-12T00:00:00Z", CultureInfo.InvariantCulture).ToInstant();
             var energySupplier = new EnergySupplierDto("5799999933318", supplyStartDate);
