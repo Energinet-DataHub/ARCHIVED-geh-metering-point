@@ -16,7 +16,7 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
-    public class InvalidUnitType : ValidationError
+    public class UnitTypeIsNotValidForMeteringPointType : ValidationError
     {
     }
 }

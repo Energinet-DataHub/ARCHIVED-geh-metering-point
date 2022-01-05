@@ -12,21 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class UnitTypeMustBeKwh : IBusinessRule
+    public class UnitTypeIsNotValidForMeteringPointTypeConverter : ErrorConverter<UnitTypeIsNotValidForMeteringPointType>
     {
-        public UnitTypeMustBeKwh(MeasurementUnitType unitType)
+        protected override ErrorMessage Convert(UnitTypeIsNotValidForMeteringPointType validationError)
         {
-            IsBroken = unitType != MeasurementUnitType.KWh;
+            return new ErrorMessage("E73", "Unit type is not allowed for this type of metering point.");
         }
-
-        public bool IsBroken { get; }
-
-        public ValidationError ValidationError => new UnitTypeIsNotValidForMeteringPointType();
     }
 }

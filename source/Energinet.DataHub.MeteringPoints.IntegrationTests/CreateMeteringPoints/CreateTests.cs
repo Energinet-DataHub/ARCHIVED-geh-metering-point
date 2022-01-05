@@ -360,6 +360,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
+        public async Task Reject_when_unit_type_is_not_allowed_for_the_metering_point_type()
+        {
+            var request = Scenarios.CreateConsumptionMeteringPointCommand()
+                with
+                {
+                    UnitType = MeasurementUnitType.Ampere.Name,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E73");
+        }
+
+        [Fact]
         public async Task Should_reject_when_geo_info_reference_is_invalid()
         {
             var invalidGeoInfoReference = "xxxxxxx";

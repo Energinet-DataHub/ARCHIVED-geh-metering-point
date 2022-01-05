@@ -16,13 +16,13 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.ExchangeReactiveEnergy.Rules
 {
-    public class UnitTypeMustBeKwh : IBusinessRule
+    public class UnitTypeMustBeKVArh : IBusinessRule
     {
-        public UnitTypeMustBeKwh(MeasurementUnitType unitType)
+        public UnitTypeMustBeKVArh(MeasurementUnitType unitType)
         {
-            IsBroken = unitType != MeasurementUnitType.KWh;
+            IsBroken = unitType != MeasurementUnitType.KVArh;
         }
 
         public bool IsBroken { get; }

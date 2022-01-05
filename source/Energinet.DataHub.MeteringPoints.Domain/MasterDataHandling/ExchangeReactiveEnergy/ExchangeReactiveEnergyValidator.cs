@@ -30,6 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.ExchangeRea
                 new StreetNameIsRequiredRule(masterData.Address),
                 new MeterReadingOccurrenceRule(masterData.ReadingOccurrence),
                 new ProductTypeMustBeEnergyReactive(masterData.ProductType),
+                new UnitTypeMustBeKVArh(masterData.UnitType),
             });
         }
     }

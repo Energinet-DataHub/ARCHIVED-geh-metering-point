@@ -30,6 +30,18 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class ExchangeReactiveEnergyValidationTests : TestBase
     {
         [Theory]
+        [InlineData(nameof(MeasurementUnitType.KVArh), false)]
+        [InlineData(nameof(MeasurementUnitType.Ampere), true)]
+        public void Unit_type_must_be_KVArh(string measurementUnitType, bool expectError)
+        {
+            var masterData = Builder()
+                .WithMeasurementUnitType(measurementUnitType)
+                .Build();
+
+            AssertError<UnitTypeIsNotValidForMeteringPointType>(CheckRules(masterData), expectError);
+        }
+
+        [Theory]
         [InlineData(nameof(ProductType.EnergyReactive), false)]
         [InlineData(nameof(ProductType.FuelQuantity), true)]
         public void Product_type_must_be_correct(string productType, bool expectError)

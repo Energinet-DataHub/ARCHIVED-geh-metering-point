@@ -118,6 +118,15 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 UnitType: MeasurementUnitType.KWh.Name);
         }
 
+        internal static CreateMeteringPoint CreateExchangeReactiveEnergy()
+        {
+            return CreateCommand(MeteringPointType.ExchangeReactiveEnergy)
+                with
+                {
+                    UnitType = MeasurementUnitType.KVArh.Name,
+                };
+        }
+
         internal static MasterDataDocument CreateDocument()
         {
             return new(
