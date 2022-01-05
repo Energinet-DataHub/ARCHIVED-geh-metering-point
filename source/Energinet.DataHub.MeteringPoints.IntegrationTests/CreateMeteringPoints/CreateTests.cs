@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Create;
@@ -416,6 +417,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError("E86");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_current_actor_is_not_grid_operator_for_applied_grid_area()
+        {
+            SetCurrentAuthenticatedActor(Guid.NewGuid());
+            var request = Scenarios.CreateDocument();
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+            AssertValidationError("E123"); // TODO: fix expected code when right code has been applied to 'CurrentActorIsNotGridOperatorErrorConverter'
         }
 
         private static CreateMeteringPoint CreateCommand()
