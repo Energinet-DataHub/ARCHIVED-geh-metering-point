@@ -70,7 +70,7 @@ limitations under the License.
                 </cim:streetDetail>
                 <cim:townDetail>
                     <cim:code>12</cim:code>
-                    <cim:section>String</cim:section>
+                    <cim:section></cim:section>
                     <cim:name>Test city</cim:name>
                     <cim:stateOrProvince>String</cim:stateOrProvince>
                     <cim:country>DK</cim:country>
