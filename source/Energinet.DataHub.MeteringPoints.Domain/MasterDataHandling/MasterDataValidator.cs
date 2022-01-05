@@ -50,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             },
             {
                 MeteringPointType.InternalUse.Name,
-                new SpecialMeteringPointValidator()
+                new InternalUseValidator()
             },
             {
                 MeteringPointType.NetConsumption.Name,
