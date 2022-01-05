@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Core.XmlConversion.XmlConverter;
+using Energinet.DataHub.Core.XmlConversion.XmlConverter.Configuration;
+
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappings
 {
     public class ConnectMeteringPointXmlMappingConfiguration : XmlMappingConfigurationBase
