@@ -56,5 +56,5 @@ namespace Energinet.DataHub.MeteringPoints.Application.Queries
         string ConnectionType,
         string DisconnectionType,
         bool? ProductionObligation,
-        string? ParentMeteringPointId);
+        Guid? ParentMeteringPointId);
 }
