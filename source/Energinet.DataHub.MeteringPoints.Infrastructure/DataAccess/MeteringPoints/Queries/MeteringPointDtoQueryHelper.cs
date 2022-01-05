@@ -54,6 +54,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                                 ,MP.[ConnectionType]
                                 ,MP.[DisconnectionType]
                                 ,MP.[ProductionObligation]
+                                ,MP.[ParentRelatedMeteringPoint] AS ParentMeteringPointId
                           FROM  [dbo].[MeteringPoints] MP";
     }
 }

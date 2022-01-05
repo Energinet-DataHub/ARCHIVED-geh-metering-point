@@ -55,5 +55,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Queries
         DateTime? SupplyStart,
         string ConnectionType,
         string DisconnectionType,
-        bool? ProductionObligation);
+        bool? ProductionObligation,
+        string? ParentMeteringPointId);
 }

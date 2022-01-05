@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
@@ -48,7 +49,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
         public async Task<MeteringPointCimDto?> Handle(MeteringPointByGsrnQuery request, CancellationToken cancellationToken)
         {
-            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
 
             string sql = $@"{MeteringPointDtoQueryHelper.Sql}
                             WHERE GsrnNumber = @GsrnNumber";
@@ -58,14 +60,30 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 .QuerySingleOrDefaultAsync<MeteringPointDto>(sql, new { request.GsrnNumber })
                 .ConfigureAwait(false);
 
+            string parentSql = $@"{MeteringPointDtoQueryHelper.Sql}
+                                  WHERE Id = @meteringPointId";
+
+            var parent = await _connectionFactory
+                .GetOpenConnection()
+                .QuerySingleOrDefaultAsync<MeteringPointDto>(parentSql, new { meteringPointId = result.ParentMeteringPointId })
+                .ConfigureAwait(false);
+
+            string childrenSql = $@"{MeteringPointDtoQueryHelper.Sql}
+                                    WHERE ParentRelatedMeteringPoint = @meteringPointId";
+
+            var children = await _connectionFactory
+                .GetOpenConnection()
+                .QueryAsync<MeteringPointDto>(childrenSql, new { result.MeteringPointId })
+                .ConfigureAwait(false);
+
             return result != null
-                ? MapToCimDto(result)
+                ? MapToCimDto(result, parent, children)
                 : null;
         }
 
-        private static MeteringPointCimDto MapToCimDto(MeteringPointDto meteringPointDto)
+        private static MeteringPointCimDto MapToCimDto(MeteringPointDto meteringPointDto, MeteringPointDto? parent, IEnumerable<MeteringPointDto>? children)
         {
-            var meteringPointSubType = ConvertEnumerationTypeToEnum<MeteringMethod,  Domain.MasterDataHandling.Components.MeteringDetails.MeteringMethod>(meteringPointDto.MeteringPointSubType);
+            var meteringPointSubType = ConvertEnumerationTypeToEnum<MeteringMethod, Domain.MasterDataHandling.Components.MeteringDetails.MeteringMethod>(meteringPointDto.MeteringPointSubType);
             var connectionState = ConvertEnumerationTypeToEnum<ConnectionState, PhysicalState>(meteringPointDto.PhysicalState);
             var meteringPointType = ConvertEnumerationTypeToEnum<MeteringPointType, Domain.MeteringPoints.MeteringPointType>(meteringPointDto.MeteringPointType);
             var unitType = ConvertEnumerationTypeToEnum<Unit, MeasurementUnitType>(meteringPointDto.UnitType);
@@ -76,6 +94,24 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             var disconnectionType = ConvertNullableEnumerationTypeToEnum<DisconnectionType, Domain.MasterDataHandling.Components.DisconnectionType>(meteringPointDto.DisconnectionType);
             var readingOccurrence = ConvertEnumerationTypeToEnum<ReadingOccurrence, Domain.MasterDataHandling.Components.ReadingOccurrence>(meteringPointDto.ReadingOccurrence);
             var productId = ConvertEnumerationTypeToEnum<ProductId, Domain.MasterDataHandling.Components.ProductType>(meteringPointDto.Product);
+
+            var childrenList = children?.Select(x =>
+                    new MeteringPointSimpleCimDto(
+                    x.MeteringPointId,
+                    x.GsrnNumber,
+                    ConvertEnumerationTypeToEnum<ConnectionState, PhysicalState>(x.PhysicalState),
+                    ConvertEnumerationTypeToEnum<MeteringPointType, Domain.MeteringPoints.MeteringPointType>(
+                        x.MeteringPointType),
+                    x.EffectiveDate.ToDateTimeUtc()));
+
+            var parentMeteringPoint = parent != null
+                ? new MeteringPointSimpleCimDto(
+                    parent.MeteringPointId,
+                    parent.GsrnNumber,
+                    ConvertEnumerationTypeToEnum<ConnectionState, PhysicalState>(parent.PhysicalState),
+                    ConvertEnumerationTypeToEnum<MeteringPointType, Domain.MeteringPoints.MeteringPointType>(
+                        parent.MeteringPointType),
+                    parent.EffectiveDate.ToDateTimeUtc()) : null;
 
             return new MeteringPointCimDto(
                 meteringPointDto.MeteringPointId,
@@ -116,8 +152,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 connectionType,
                 disconnectionType,
                 meteringPointDto.ProductionObligation,
-                new List<MeteringPointSimpleCimDto>(),
-                null,
+                childrenList,
+                parentMeteringPoint,
                 meteringPointDto.PowerPlantGsrnNumber);
         }
 
@@ -134,7 +170,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             where TEnum : struct, Enum
             where TEnumerationType : EnumerationType
         {
-            if (string.IsNullOrEmpty(enumerationTypeName)) return null;
+            if (string.IsNullOrEmpty(enumerationTypeName))
+                return null;
             return ConvertEnumerationTypeToEnum<TEnum, TEnumerationType>(enumerationTypeName);
         }
     }
