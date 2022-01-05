@@ -13,6 +13,9 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint
@@ -24,27 +27,27 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         {
             return @event.MeteringPointType switch
             {
-                "Consumption" => MeteringPointCreated.Types.MeteringPointType.MptConsumption,
-                "Production" => MeteringPointCreated.Types.MeteringPointType.MptProduction,
-                "Exchange" => MeteringPointCreated.Types.MeteringPointType.MptExchange,
-                "GridLossCorrection" => MeteringPointCreated.Types.MeteringPointType.MptGridLossCorrection,
-                "Analysis" => MeteringPointCreated.Types.MeteringPointType.MptAnalysis,
-                "VEProduction" => MeteringPointCreated.Types.MeteringPointType.MptVeproduction,
-                "ExchangeReactiveEnergy" => MeteringPointCreated.Types.MeteringPointType.MptExchangeReactiveEnergy,
-                "InternalUse" => MeteringPointCreated.Types.MeteringPointType.MptInternalUse,
-                "SurplusProductionGroup" => MeteringPointCreated.Types.MeteringPointType.MptSurplusProductionGroup,
-                "NetProduction" => MeteringPointCreated.Types.MeteringPointType.MptNetProduction,
-                "SupplyToGrid" => MeteringPointCreated.Types.MeteringPointType.MptSupplyToGrid,
-                "ConsumptionFromGrid" => MeteringPointCreated.Types.MeteringPointType.MptConsumptionFromGrid,
-                "WholesaleServices" => MeteringPointCreated.Types.MeteringPointType.MptWholesaleServices,
-                "OwnProduction" => MeteringPointCreated.Types.MeteringPointType.MptOwnProduction,
-                "NetFromGrid" => MeteringPointCreated.Types.MeteringPointType.MptNetFromGrid,
-                "NetToGrid" => MeteringPointCreated.Types.MeteringPointType.MptNetToGrid,
-                "TotalConsumption" => MeteringPointCreated.Types.MeteringPointType.MptTotalConsumption,
-                "ElectricalHeating" => MeteringPointCreated.Types.MeteringPointType.MptElectricalHeating,
-                "NetConsumption" => MeteringPointCreated.Types.MeteringPointType.MptNetConsumption,
-                "OtherConsumption" => MeteringPointCreated.Types.MeteringPointType.MptOtherConsumption,
-                "OtherProduction" => MeteringPointCreated.Types.MeteringPointType.MptOtherProduction,
+                nameof(MeteringPointType.Consumption) => MeteringPointCreated.Types.MeteringPointType.MptConsumption,
+                nameof(MeteringPointType.Production) => MeteringPointCreated.Types.MeteringPointType.MptProduction,
+                nameof(MeteringPointType.Exchange) => MeteringPointCreated.Types.MeteringPointType.MptExchange,
+                nameof(MeteringPointType.GridLossCorrection) => MeteringPointCreated.Types.MeteringPointType.MptGridLossCorrection,
+                nameof(MeteringPointType.Analysis) => MeteringPointCreated.Types.MeteringPointType.MptAnalysis,
+                nameof(MeteringPointType.VEProduction) => MeteringPointCreated.Types.MeteringPointType.MptVeproduction,
+                nameof(MeteringPointType.ExchangeReactiveEnergy) => MeteringPointCreated.Types.MeteringPointType.MptExchangeReactiveEnergy,
+                nameof(MeteringPointType.InternalUse) => MeteringPointCreated.Types.MeteringPointType.MptInternalUse,
+                nameof(MeteringPointType.SurplusProductionGroup) => MeteringPointCreated.Types.MeteringPointType.MptSurplusProductionGroup,
+                nameof(MeteringPointType.NetProduction) => MeteringPointCreated.Types.MeteringPointType.MptNetProduction,
+                nameof(MeteringPointType.SupplyToGrid) => MeteringPointCreated.Types.MeteringPointType.MptSupplyToGrid,
+                nameof(MeteringPointType.ConsumptionFromGrid) => MeteringPointCreated.Types.MeteringPointType.MptConsumptionFromGrid,
+                nameof(MeteringPointType.WholesaleServices) => MeteringPointCreated.Types.MeteringPointType.MptWholesaleServices,
+                nameof(MeteringPointType.OwnProduction) => MeteringPointCreated.Types.MeteringPointType.MptOwnProduction,
+                nameof(MeteringPointType.NetFromGrid) => MeteringPointCreated.Types.MeteringPointType.MptNetFromGrid,
+                nameof(MeteringPointType.NetToGrid) => MeteringPointCreated.Types.MeteringPointType.MptNetToGrid,
+                nameof(MeteringPointType.TotalConsumption) => MeteringPointCreated.Types.MeteringPointType.MptTotalConsumption,
+                nameof(MeteringPointType.ElectricalHeating) => MeteringPointCreated.Types.MeteringPointType.MptElectricalHeating,
+                nameof(MeteringPointType.NetConsumption) => MeteringPointCreated.Types.MeteringPointType.MptNetConsumption,
+                nameof(MeteringPointType.OtherConsumption) => MeteringPointCreated.Types.MeteringPointType.MptOtherConsumption,
+                nameof(MeteringPointType.OtherProduction) => MeteringPointCreated.Types.MeteringPointType.MptOtherProduction,
                 _ => MeteringPointCreated.Types.MeteringPointType.MptUnknown,
             };
         }
@@ -54,9 +57,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         {
             return @event.SettlementMethod switch
             {
-                "Flex" => MeteringPointCreated.Types.SettlementMethod.SmFlex,
-                "NonProfiled" => MeteringPointCreated.Types.SettlementMethod.SmNonprofiled,
-                "Profiled" => MeteringPointCreated.Types.SettlementMethod.SmProfiled,
+                nameof(SettlementMethod.Flex) => MeteringPointCreated.Types.SettlementMethod.SmFlex,
+                nameof(SettlementMethod.NonProfiled) => MeteringPointCreated.Types.SettlementMethod.SmNonprofiled,
+                nameof(SettlementMethod.Profiled) => MeteringPointCreated.Types.SettlementMethod.SmProfiled,
                 _ => MeteringPointCreated.Types.SettlementMethod.SmUnknown,
             };
         }
@@ -66,12 +69,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         {
             return @event.NetSettlementGroup switch
             {
-                "Zero" => MeteringPointCreated.Types.NetSettlementGroup.NsgZero,
-                "One" => MeteringPointCreated.Types.NetSettlementGroup.NsgOne,
-                "Two" => MeteringPointCreated.Types.NetSettlementGroup.NsgTwo,
-                "Three" => MeteringPointCreated.Types.NetSettlementGroup.NsgThree,
-                "Six" => MeteringPointCreated.Types.NetSettlementGroup.NsgSix,
-                "Ninetynine" => MeteringPointCreated.Types.NetSettlementGroup.NsgNinetynine,
+                nameof(NetSettlementGroup.Zero) => MeteringPointCreated.Types.NetSettlementGroup.NsgZero,
+                nameof(NetSettlementGroup.One) => MeteringPointCreated.Types.NetSettlementGroup.NsgOne,
+                nameof(NetSettlementGroup.Two) => MeteringPointCreated.Types.NetSettlementGroup.NsgTwo,
+                nameof(NetSettlementGroup.Three) => MeteringPointCreated.Types.NetSettlementGroup.NsgThree,
+                nameof(NetSettlementGroup.Six) => MeteringPointCreated.Types.NetSettlementGroup.NsgSix,
+                nameof(NetSettlementGroup.Ninetynine) => MeteringPointCreated.Types.NetSettlementGroup.NsgNinetynine,
                 _ => MeteringPointCreated.Types.NetSettlementGroup.NsgUnknown,
             };
         }
@@ -81,12 +84,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         {
             return @event.Product switch
             {
-                "Tariff" => MeteringPointCreated.Types.ProductType.PtTariff,
-                "FuelQuantity" => MeteringPointCreated.Types.ProductType.PtFuelquantity,
-                "PowerActive" => MeteringPointCreated.Types.ProductType.PtPoweractive,
-                "PowerReactive" => MeteringPointCreated.Types.ProductType.PtPowerreactive,
-                "EnergyActive" => MeteringPointCreated.Types.ProductType.PtEnergyactive,
-                "EnergyReactive" => MeteringPointCreated.Types.ProductType.PtEnergyreactive,
+                nameof(ProductType.Tariff) => MeteringPointCreated.Types.ProductType.PtTariff,
+                nameof(ProductType.FuelQuantity) => MeteringPointCreated.Types.ProductType.PtFuelquantity,
+                nameof(ProductType.PowerActive) => MeteringPointCreated.Types.ProductType.PtPoweractive,
+                nameof(ProductType.PowerReactive) => MeteringPointCreated.Types.ProductType.PtPowerreactive,
+                nameof(ProductType.EnergyActive) => MeteringPointCreated.Types.ProductType.PtEnergyactive,
+                nameof(ProductType.EnergyReactive) => MeteringPointCreated.Types.ProductType.PtEnergyreactive,
                 _ => MeteringPointCreated.Types.ProductType.PtUnknown,
             };
         }
@@ -96,9 +99,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         {
             return @event.MeteringMethod switch
             {
-                "Physical" => MeteringPointCreated.Types.MeteringMethod.MmPhysical,
-                "Virtual" => MeteringPointCreated.Types.MeteringMethod.MmVirtual,
-                "Calculated" => MeteringPointCreated.Types.MeteringMethod.MmCalculated,
+                nameof(MeteringMethod.Physical) => MeteringPointCreated.Types.MeteringMethod.MmPhysical,
+                nameof(MeteringMethod.Virtual) => MeteringPointCreated.Types.MeteringMethod.MmVirtual,
+                nameof(MeteringMethod.Calculated) => MeteringPointCreated.Types.MeteringMethod.MmCalculated,
                 _ => MeteringPointCreated.Types.MeteringMethod.MmUnknown,
             };
         }
@@ -108,8 +111,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         {
             return @event.MeterReadingPeriodicity switch
             {
-                "Hourly" => MeteringPointCreated.Types.MeterReadingPeriodicity.MrpHourly,
-                "Quarterly" => MeteringPointCreated.Types.MeterReadingPeriodicity.MrpQuarterly,
+                nameof(ReadingOccurrence.Hourly) => MeteringPointCreated.Types.MeterReadingPeriodicity.MrpHourly,
+                nameof(ReadingOccurrence.Quarterly) => MeteringPointCreated.Types.MeterReadingPeriodicity.MrpQuarterly,
                 _ => MeteringPointCreated.Types.MeterReadingPeriodicity.MrpUnknown,
             };
         }
@@ -119,7 +122,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         {
             return @event.ConnectionState switch
             {
-                "New" => MeteringPointCreated.Types.ConnectionState.CsNew,
+                nameof(ConnectionState.New) => MeteringPointCreated.Types.ConnectionState.CsNew,
                 _ => MeteringPointCreated.Types.ConnectionState.CsUnknown,
             };
         }
@@ -129,10 +132,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         {
             return @event.UnitType switch
             {
-                "Wh" => MeteringPointCreated.Types.UnitType.UtWh,
-                "KWh" => MeteringPointCreated.Types.UnitType.UtKwh,
-                "MWh" => MeteringPointCreated.Types.UnitType.UtMwh,
-                "GWh" => MeteringPointCreated.Types.UnitType.UtGwh,
+                nameof(MeasurementUnitType.Wh) => MeteringPointCreated.Types.UnitType.UtWh,
+                nameof(MeasurementUnitType.KWh) => MeteringPointCreated.Types.UnitType.UtKwh,
+                nameof(MeasurementUnitType.MWh) => MeteringPointCreated.Types.UnitType.UtMwh,
+                nameof(MeasurementUnitType.GWh) => MeteringPointCreated.Types.UnitType.UtGwh,
                 _ => MeteringPointCreated.Types.UnitType.UtUnknown,
             };
         }
