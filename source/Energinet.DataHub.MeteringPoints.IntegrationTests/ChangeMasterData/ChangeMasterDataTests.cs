@@ -41,6 +41,24 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData
         }
 
         [Fact]
+        public async Task Master_data_is_updated()
+        {
+            await CreatePhysicalConsumptionMeteringPoint().ConfigureAwait(false);
+            var updateMasterDataRequest = new MasterDataDocument()
+            {
+                EffectiveDate = _timeProvider.Now().ToString(),
+                TransactionId = SampleData.Transaction,
+                GsrnNumber = SampleData.GsrnNumber,
+                ProcessType = BusinessProcessType.ChangeMasterData.Name,
+                ProductType = ProductType.PowerReactive.Name,
+            };
+
+            await SendCommandAsync(updateMasterDataRequest).ConfigureAwait(false);
+
+            AssertConfirmMessage(DocumentType.AcceptChangeMasterData);
+        }
+
+        [Fact]
         public async Task Metering_method_is_changed_from_physical_to_virtual()
         {
             await CreatePhysicalConsumptionMeteringPoint().ConfigureAwait(false);

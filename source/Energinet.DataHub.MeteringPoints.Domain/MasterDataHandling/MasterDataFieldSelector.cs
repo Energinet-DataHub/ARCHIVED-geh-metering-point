@@ -42,7 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 {
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
                     new(nameof(MasterData.ScheduledMeterReadingDate), Applicability.NotAllowed),
-                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
+                    new(nameof(MasterData.ProductType), Applicability.Required, true, ProductType.EnergyActive),
                     new(nameof(MasterData.UnitType), Applicability.Required, true, MeasurementUnitType.KWh),
                     new(nameof(MasterData.NetSettlementGroup), Applicability.Required),
                 }
@@ -50,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             {
                 MeteringPointType.Exchange.Name, new List<MasterDataField>()
                 {
-                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
+                    new(nameof(MasterData.ProductType), Applicability.Required, true, ProductType.EnergyActive),
                     new(nameof(MasterData.UnitType), Applicability.Required, true, MeasurementUnitType.KWh),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
                 }
@@ -58,7 +58,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             {
                 MeteringPointType.VEProduction.Name, new List<MasterDataField>()
                 {
-                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
+                    new(nameof(MasterData.ProductType), Applicability.Required, true, ProductType.EnergyActive),
                     new(nameof(MasterData.UnitType), Applicability.Required, true, MeasurementUnitType.KVArh),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
                 }

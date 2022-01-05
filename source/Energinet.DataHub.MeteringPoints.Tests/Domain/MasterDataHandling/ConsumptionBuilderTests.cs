@@ -26,9 +26,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class ConsumptionBuilderTests
     {
         [Theory]
-        [InlineData(nameof(MeteringPointType.Consumption), nameof(ProductType.EnergyActive))]
-        [InlineData(nameof(MeteringPointType.Production), nameof(ProductType.EnergyActive))]
-        [InlineData(nameof(MeteringPointType.Exchange), nameof(ProductType.EnergyActive))]
         [InlineData(nameof(MeteringPointType.ElectricalHeating), nameof(ProductType.EnergyActive))]
         [InlineData(nameof(MeteringPointType.NetConsumption), nameof(ProductType.EnergyActive))]
         [InlineData(nameof(MeteringPointType.NetProduction), nameof(ProductType.EnergyActive))]

@@ -32,6 +32,18 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class ConsumptionMeteringPointValidationTests : TestBase
     {
         [Theory]
+        [InlineData(nameof(ProductType.EnergyActive), false)]
+        [InlineData(nameof(ProductType.FuelQuantity), true)]
+        public void Product_type_must_be_correct(string productType, bool expectError)
+        {
+            var masterData = Builder()
+                .WithProductType(productType)
+                .Build();
+
+            AssertError<InvalidProductType>(CheckRules(masterData), expectError);
+        }
+
+        [Theory]
         [InlineData("Zero", "Physical", false)]
         [InlineData("One", "Physical", true)]
         [InlineData("One", "Virtual", false)]
