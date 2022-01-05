@@ -143,7 +143,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             {
                 MeteringPointType.ExchangeReactiveEnergy.Name, new List<MasterDataField>()
                 {
-                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyReactive),
+                    new(nameof(MasterData.ProductType), Applicability.Required, true, ProductType.EnergyReactive),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
                 }
             },
