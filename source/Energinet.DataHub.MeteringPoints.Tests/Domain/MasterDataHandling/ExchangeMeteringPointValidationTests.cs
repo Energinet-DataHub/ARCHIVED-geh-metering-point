@@ -27,6 +27,18 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     [UnitTest]
     public class ExchangeMeteringPointValidationTests : TestBase
     {
+        [Theory]
+        [InlineData(nameof(MeasurementUnitType.KWh), false)]
+        [InlineData(nameof(MeasurementUnitType.Ampere), true)]
+        public void Unit_type_must_be_kwh(string measurementUnitType, bool expectError)
+        {
+            var masterData = Builder()
+                .WithMeasurementUnitType(measurementUnitType)
+                .Build();
+
+            AssertError<InvalidUnitType>(CheckRules(masterData), expectError);
+        }
+
         [Fact]
         public void Street_name_is_required()
         {

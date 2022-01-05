@@ -29,6 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exchange
                 new GeoInfoReferenceRequirementRule(masterData.Address),
                 new MeterReadingOccurrenceRule(masterData.ReadingOccurrence),
                 new ProductTypeMustBeEnergyActiveRule(masterData.ProductType),
+                new UnitTypeMustBeKwh(masterData.UnitType),
             });
         }
     }
