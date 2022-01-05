@@ -36,15 +36,18 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly IGridAreaRepository _gridAreaRepository;
         private readonly IMediator _mediator;
+        private readonly CreateMeteringPointAuthorizer _authorizer;
 
         public CreateMeteringPointHandler(
             IMeteringPointRepository meteringPointRepository,
             IGridAreaRepository gridAreaRepository,
-            IMediator mediator)
+            IMediator mediator,
+            CreateMeteringPointAuthorizer authorizer)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _gridAreaRepository = gridAreaRepository;
             _mediator = mediator;
+            _authorizer = authorizer;
         }
 
         public async Task<BusinessProcessResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
@@ -60,6 +63,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             if (gridArea is null)
             {
                 return Failure(request, new GridAreaMustExistRuleError());
+            }
+
+            var authorizationResult = await _authorizer.AuthorizeAsync(gridArea).ConfigureAwait(false);
+            if (authorizationResult.Success == false)
+            {
+                return new BusinessProcessResult(request.TransactionId, authorizationResult.Errors);
             }
 
             var meteringPointType = EnumerationType.FromName<MeteringPointType>(request.MeteringPointType);

@@ -13,22 +13,17 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using Dapper;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
-using ConnectionState = System.Data.ConnectionState;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.ConsumptionMeteringPoints
 {
@@ -113,9 +108,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.Con
         [Fact]
         public async Task Grid_operator_is_the_owner_of_the_metering_point()
         {
-            SetGridOperatorAsAuthenticatedUser("820000000140x"); // This is not the owner of this metering point
             await CreateMeteringPointAsync().ConfigureAwait(false);
 
+            SetGridOperatorAsAuthenticatedUser("820000000140x"); // This is not the owner of this metering point
             await InvokeBusinessProcessAsync(TestUtils.CreateRequest()).ConfigureAwait(false);
 
             AssertValidationError("E10");
