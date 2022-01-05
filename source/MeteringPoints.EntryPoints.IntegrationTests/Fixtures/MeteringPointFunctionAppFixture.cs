@@ -134,7 +134,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             ingestionHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
             processingHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
             localMessageHubHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
-            internalCommandDispatcherHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
+            internalCommandDispatcherHostSettings.ProcessEnvironmentVariables.Add("PROCESSING_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
 
             var meteringPointQueue = await ServiceBusResourceProvider
                 .BuildQueue("sbq-meteringpoint")
@@ -143,7 +143,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
                     ingestionHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_TOPIC_NAME", p.Name);
                     processingHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_TOPIC_NAME", p.Name);
                     localMessageHubHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_TOPIC_NAME", p.Name);
-                    internalCommandDispatcherHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_TOPIC_NAME", p.Name);
+                    internalCommandDispatcherHostSettings.ProcessEnvironmentVariables.Add("PROCESSING_QUEUE_NAME", p.Name);
                 })
                 .CreateAsync().ConfigureAwait(false);
 
@@ -217,7 +217,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             processingHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
             outboxHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
             localMessageHubHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
-            internalCommandDispatcherHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
+            internalCommandDispatcherHostSettings.ProcessEnvironmentVariables.Add("DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
 
             IngestionHostManager = new FunctionAppHostManager(ingestionHostSettings, TestLogger);
             ProcessingHostManager = new FunctionAppHostManager(processingHostSettings, TestLogger);
