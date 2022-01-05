@@ -66,77 +66,77 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             {
                 MeteringPointType.Analysis.Name, new List<MasterDataField>()
                 {
-                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
+                    new(nameof(MasterData.ProductType), Applicability.Required, true, ProductType.EnergyActive),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
                 }
             },
             {
                 MeteringPointType.ElectricalHeating.Name, new List<MasterDataField>()
                 {
-                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
+                    new(nameof(MasterData.ProductType), Applicability.Required, true, ProductType.EnergyActive),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
                 }
             },
             {
                 MeteringPointType.InternalUse.Name, new List<MasterDataField>()
                 {
-                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
+                    new(nameof(MasterData.ProductType), Applicability.Required, true, ProductType.EnergyActive),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
                 }
             },
             {
                 MeteringPointType.NetConsumption.Name, new List<MasterDataField>()
                 {
-                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
+                    new(nameof(MasterData.ProductType), Applicability.Required, true, ProductType.EnergyActive),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
                 }
             },
             {
                 MeteringPointType.NetProduction.Name, new List<MasterDataField>()
                 {
-                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
+                    new(nameof(MasterData.ProductType), Applicability.Required, true, ProductType.EnergyActive),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
                 }
             },
             {
                 MeteringPointType.OtherConsumption.Name, new List<MasterDataField>()
                 {
-                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
+                    new(nameof(MasterData.ProductType), Applicability.Required, true, ProductType.EnergyActive),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
                 }
             },
             {
                 MeteringPointType.OtherProduction.Name, new List<MasterDataField>()
                 {
-                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
+                    new(nameof(MasterData.ProductType), Applicability.Required, true, ProductType.EnergyActive),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
                 }
             },
             {
                 MeteringPointType.OwnProduction.Name, new List<MasterDataField>()
                 {
-                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
+                    new(nameof(MasterData.ProductType), Applicability.Required, true, ProductType.EnergyActive),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
                 }
             },
             {
                 MeteringPointType.TotalConsumption.Name, new List<MasterDataField>()
                 {
-                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
+                    new(nameof(MasterData.ProductType), Applicability.Required, true, ProductType.EnergyActive),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
                 }
             },
             {
                 MeteringPointType.WholesaleServices.Name, new List<MasterDataField>()
                 {
-                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
+                    new(nameof(MasterData.ProductType), Applicability.Required, true, ProductType.EnergyActive),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
                 }
             },
             {
                 MeteringPointType.ConsumptionFromGrid.Name, new List<MasterDataField>()
                 {
-                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
+                    new(nameof(MasterData.ProductType), Applicability.Required, true, ProductType.EnergyActive),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
                 }
             },
@@ -150,35 +150,35 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             {
                 MeteringPointType.GridLossCorrection.Name, new List<MasterDataField>()
                 {
-                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
+                    new(nameof(MasterData.ProductType), Applicability.Required, true, ProductType.EnergyActive),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
                 }
             },
             {
                 MeteringPointType.NetFromGrid.Name, new List<MasterDataField>()
                 {
-                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
+                    new(nameof(MasterData.ProductType), Applicability.Required, true, ProductType.EnergyActive),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
                 }
             },
             {
                 MeteringPointType.NetToGrid.Name, new List<MasterDataField>()
                 {
-                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
+                    new(nameof(MasterData.ProductType), Applicability.Required, true, ProductType.EnergyActive),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
                 }
             },
             {
                 MeteringPointType.SupplyToGrid.Name, new List<MasterDataField>()
                 {
-                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
+                    new(nameof(MasterData.ProductType), Applicability.Required, true, ProductType.EnergyActive),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
                 }
             },
             {
                 MeteringPointType.SurplusProductionGroup.Name, new List<MasterDataField>()
                 {
-                    new(nameof(MasterData.ProductType), Applicability.Required, false, ProductType.EnergyActive),
+                    new(nameof(MasterData.ProductType), Applicability.Required, true, ProductType.EnergyActive),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
                 }
             },
