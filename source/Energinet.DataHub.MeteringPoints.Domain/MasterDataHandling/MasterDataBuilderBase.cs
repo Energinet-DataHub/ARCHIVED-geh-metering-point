@@ -74,7 +74,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         protected void SetValue<T>(string name, T? value)
         {
             var valueItem = GetMasterValueItem<T>(name);
-            if (valueItem.CanBeChanged && valueItem.Applicability != Applicability.NotAllowed)
+            if (valueItem.Applicability != Applicability.NotAllowed)
             {
                 valueItem.SetValue(value);
             }
