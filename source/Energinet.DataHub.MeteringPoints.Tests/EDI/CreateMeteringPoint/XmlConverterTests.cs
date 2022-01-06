@@ -66,7 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
 
             command.TypeOfMeteringPoint.Should().Be(nameof(MeteringPointType.Consumption));
             command.GsrnNumber.Should().Be("571234567891234605");
-            command.MaximumPower.Should().Be(2000);
+            command.MaximumPower.Should().Be(0);
             command.MeasureUnitType.ToUpperInvariant().Should().Be(nameof(MeasurementUnitType.KWh).ToUpperInvariant());
             command.PowerPlant.Should().Be("571234567891234636");
             command.SettlementMethod.Should().Be(nameof(SettlementMethod.Flex));
@@ -87,9 +87,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
             command.TransactionId.Should().Be("1234");
             command.PostCode.Should().Be("8000");
             command.StreetName.Should().Be("Test street name");
-            command.CityName.Should().Be("12");
+            command.CityName.Should().Be("Test city");
             command.CountryCode.Should().Be("DK");
-            command.CitySubDivisionName.Should().Be("Test city");
+            command.CitySubDivisionName.Should().BeEmpty();
             command.MunicipalityCode.Should().Be("12");
 
             command.FromGrid.Should().Be("869");
