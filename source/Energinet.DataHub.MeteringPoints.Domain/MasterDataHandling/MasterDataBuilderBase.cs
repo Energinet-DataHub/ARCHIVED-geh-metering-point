@@ -47,7 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         protected MasterDataBuilderBase(IEnumerable<MasterDataField> masterDataFields)
         {
-            masterDataFields.ToList().ForEach(field => ConfigureValue(field.Name, field.Applicability, field.DefaultValue, field.CanBeChanged));
+            masterDataFields.ToList().ForEach(field => ConfigureApplicability(field.Name, field.Applicability));
         }
 
         public MasterData Build()
@@ -95,16 +95,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return _values.SelectMany(value => value.ValidationErrors).AsEnumerable();
         }
 
-        private void ConfigureValue<T>(string name, Applicability applicability, T? defaultValue = default(T), bool canBeChanged = true)
+        private void ConfigureApplicability(string name, Applicability applicability)
         {
-            var value = GetMasterValueItem<T>(name);
-
-            if (canBeChanged == false)
-            {
-                value.CanNotBeChanged();
-            }
-
-            value.SetValue(defaultValue);
+            var value = _values.First(value => value.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
             value.SetApplicability(applicability);
         }
     }
