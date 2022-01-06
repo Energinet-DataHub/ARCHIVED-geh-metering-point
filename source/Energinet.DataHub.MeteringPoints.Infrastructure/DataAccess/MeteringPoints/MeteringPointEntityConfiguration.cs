@@ -75,9 +75,15 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 mapper.OwnsOne(x => x.PowerLimit, y =>
                 {
                     y.Property(x => x.Ampere)
-                        .HasColumnName("MaximumCurrent");
+                        .HasColumnName("MaximumCurrent")
+                        .HasConversion(
+                            toDbValue => toDbValue,
+                            fromDbValue => fromDbValue);
                     y.Property(x => x.Kwh)
-                        .HasColumnName("MaximumPower");
+                        .HasColumnName("MaximumPower")
+                        .HasConversion(
+                            toDbValue => toDbValue,
+                            fromDbValue => fromDbValue);
                 });
                 mapper.Property(x => x.PowerPlantGsrnNumber)
                     .HasColumnName("PowerPlant")

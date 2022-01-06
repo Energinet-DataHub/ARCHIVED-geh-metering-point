@@ -357,6 +357,49 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("E86");
         }
 
+        [Fact]
+        public async Task Should_create_when_maximum_power_is_null()
+        {
+            var document = Scenarios.CreateDocument()
+                with
+                {
+                    MaximumPower = null,
+                };
+
+            await SendCommandAsync(document).ConfigureAwait(false);
+
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConfirmCreateMeteringPoint);
+        }
+
+        [Fact]
+        public async Task Should_create_when_maximum_current_is_null()
+        {
+            var document = Scenarios.CreateDocument()
+                with
+                {
+                    MaximumCurrent = null,
+                };
+
+            await SendCommandAsync(document).ConfigureAwait(false);
+
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConfirmCreateMeteringPoint);
+        }
+
+        [Fact]
+        public async Task Should_create_when_maximum_current_and_maximum_power_is_null()
+        {
+            var document = Scenarios.CreateDocument()
+                with
+                {
+                    MaximumCurrent = null,
+                    MaximumPower = null,
+                };
+
+            await SendCommandAsync(document).ConfigureAwait(false);
+
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConfirmCreateMeteringPoint);
+        }
+
         [Theory]
         [InlineData(null)]
         [InlineData("invalid_value")]

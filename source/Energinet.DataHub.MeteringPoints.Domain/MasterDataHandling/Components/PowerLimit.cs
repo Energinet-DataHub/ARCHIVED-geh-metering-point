@@ -20,15 +20,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components
 {
     public class PowerLimit : ValueObject
     {
-        public PowerLimit(int kwh, int ampere)
+        public PowerLimit(int? kwh, int? ampere)
         {
             Kwh = kwh;
             Ampere = ampere;
         }
 
-        public int Kwh { get; }
+        public int? Kwh { get; }
 
-        public int Ampere { get; }
+        public int? Ampere { get; }
 
         public static PowerLimit Create(int kwh, int ampere)
         {
@@ -40,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components
             return new PowerLimit(kwh, ampere);
         }
 
-        public static BusinessRulesValidationResult CheckRules(int kwh, int ampere)
+        public static BusinessRulesValidationResult CheckRules(int? kwh, int? ampere)
         {
            var rules = new Collection<IBusinessRule>()
            {
