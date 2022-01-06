@@ -67,6 +67,9 @@ limitations under the License.
     <None Update="TestFiles\Cim\CreateMeteringPointExchange.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="TestFiles\Cim\ConnectMeteringPoint.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
