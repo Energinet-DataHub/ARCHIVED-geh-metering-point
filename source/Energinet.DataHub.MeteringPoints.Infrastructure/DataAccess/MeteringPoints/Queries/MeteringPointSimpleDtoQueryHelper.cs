@@ -12,21 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Xml.Linq;
-
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints.Queries
 {
-    public class XmlElementInfo
+    public static class MeteringPointSimpleDtoQueryHelper
     {
-        public XmlElementInfo(string sourceValue, IEnumerable<XAttribute> attributes)
-        {
-            SourceValue = sourceValue;
-            Attributes = attributes;
-        }
-
-        public string SourceValue { get; }
-
-        public IEnumerable<XAttribute> Attributes { get; }
+        public const string Sql = @"SELECT [Id] AS MeteringPointId
+                                ,[GsrnNumber]
+                                ,[ConnectionState_PhysicalState] AS PhysicalState
+                                ,[TypeOfMeteringPoint] AS MeteringPointType
+                                ,[EffectiveDate]
+                          FROM  [dbo].[MeteringPoints]";
     }
 }

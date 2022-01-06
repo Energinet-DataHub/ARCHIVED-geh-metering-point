@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Create;
@@ -88,6 +89,19 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError("D31", DocumentType.RejectCreateMeteringPoint);
+        }
+
+        [Fact]
+        public async Task Should_reject_if_scheduled_meter_reading_date_format_is_wrong()
+        {
+            var request = CreateCommand()
+                with
+                {
+                    ScheduledMeterReadingDate = "01",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+            AssertValidationError("E86", DocumentType.RejectCreateMeteringPoint);
         }
 
         [Fact]
@@ -444,6 +458,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError("E86");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_current_actor_is_not_grid_operator_for_applied_grid_area()
+        {
+            SetCurrentAuthenticatedActor(Guid.NewGuid());
+            var request = Scenarios.CreateDocument();
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+            AssertValidationError("E0I");
         }
 
         private static CreateMeteringPoint CreateCommand()

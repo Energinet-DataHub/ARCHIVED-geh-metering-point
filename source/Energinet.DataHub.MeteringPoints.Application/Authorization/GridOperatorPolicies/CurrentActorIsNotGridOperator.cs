@@ -12,7 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+
+namespace Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperatorPolicies
 {
-    public record XmlHeaderData(string Mrid, string Type, string ProcessType);
+    public class CurrentActorIsNotGridOperator : ValidationError
+    {
+        public CurrentActorIsNotGridOperator(string actorIdentifier, string gridAreaGsrn)
+        {
+            ActorIdentifier = actorIdentifier;
+            GridAreaGsrn = gridAreaGsrn;
+        }
+
+        public string ActorIdentifier { get; }
+
+        public string GridAreaGsrn { get; }
+    }
 }

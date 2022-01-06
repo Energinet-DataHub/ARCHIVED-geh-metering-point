@@ -12,18 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using MediatR;
+using System;
+using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Common
+namespace Energinet.DataHub.MeteringPoints.Application.Queries
 {
-    /// <summary>
-    /// Internal representation of an actor document
-    /// </summary>
-    public interface IInternalMarketDocument : IRequest<BusinessProcessResult>
-    {
-        /// <summary>
-        /// Process type
-        /// </summary>
-        string ProcessType { get; }
-    }
+    public record MeteringPointSimpleDto(
+        Guid MeteringPointId,
+        string GsrnNumber,
+        string PhysicalState,
+        string MeteringPointType,
+        Instant EffectiveDate);
 }
