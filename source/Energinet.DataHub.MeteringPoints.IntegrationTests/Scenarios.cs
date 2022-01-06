@@ -77,7 +77,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 "0",
                 SampleData.GeoInfoReference,
                 "0101",
-                UnitType: MeasurementUnitType.KWh.Name);
+                UnitType: MeasurementUnitType.KWh.Name,
+                ProductType: ProductType.EnergyActive.Name);
         }
 
         internal static CreateMeteringPoint CreateCommand(MeteringPointType meteringPointType)
@@ -115,7 +116,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 SampleData.GeoInfoReference,
                 "0101",
                 new ExchangeDetails(SampleData.MeteringGridArea, SampleData.MeteringGridArea),
-                UnitType: MeasurementUnitType.KWh.Name);
+                UnitType: MeasurementUnitType.KWh.Name,
+                ProductType: ProductType.EnergyActive.Name);
         }
 
         internal static CreateMeteringPoint CreateExchangeReactiveEnergy()
@@ -124,6 +126,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 with
                 {
                     UnitType = MeasurementUnitType.KVArh.Name,
+                    ProductType = ProductType.EnergyReactive.Name,
                 };
         }
 

@@ -21,7 +21,6 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -165,12 +164,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
 
         private static MeteringPoint CreateMeteringPoint()
         {
-            return CreateMeteringPoint(MeteringPointType.Consumption);
+            return CreateMeteringPoint(MeteringPointType.Consumption, MasterDataBuilderForConsumption());
         }
 
         private static MeteringPoint CreatePhysical()
         {
-            var builder = MasterDataBuilder(MeteringPointType.Consumption)
+            var builder = MasterDataBuilderForConsumption()
                 .WithNetSettlementGroup(NetSettlementGroup.Zero.Name)
                 .WithConnectionType(null)
                 .WithMeteringConfiguration(MeteringMethod.Physical.Name, "1");

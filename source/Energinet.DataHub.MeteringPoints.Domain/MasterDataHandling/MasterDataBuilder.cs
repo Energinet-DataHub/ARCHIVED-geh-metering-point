@@ -156,9 +156,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public IMasterDataBuilder WithProductType(string productType)
+        public IMasterDataBuilder WithProductType(string? productType)
         {
-            SetValue(nameof(MasterData.ProductType), EnumerationType.FromName<ProductType>(productType));
+            SetValue(nameof(MasterData.ProductType),  productType is null ? null : EnumerationType.FromName<ProductType>(productType));
             return this;
         }
 
@@ -179,6 +179,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             _validationErrors.Clear();
             _validationErrors.AddRange(AllValueValidationErrors());
 
+            AddValidationErrorIfRequiredFieldIsMissing<ProductType>(nameof(MasterData.ProductType), new ProductTypeIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence), new MeterReadingPeriodicityIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<MeasurementUnitType>(nameof(MasterData.UnitType), new UnitTypeIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup), new NetSettlementGroupIsRequired());

@@ -62,6 +62,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
             var capacity = Capacity.Create(SampleData.Capacity);
 
             var masterData = MasterDataBuilder(MeteringPointType.Consumption)
+                .WithMeasurementUnitType(MeasurementUnitType.KWh.Name)
+                .WithProductType(ProductType.EnergyActive.Name)
                 .WithCapacity(capacity.Kw)
                 .WithAddress(address.StreetName, address.StreetCode, address.BuildingNumber, address.City, address.CitySubDivision, address.PostCode, address.CountryCode, address.Floor, address.Room, address.MunicipalityCode, address.IsActual, address.GeoInfoReference, address.LocationDescription)
                 .WithNetSettlementGroup(netSettlementGroup.Name)
