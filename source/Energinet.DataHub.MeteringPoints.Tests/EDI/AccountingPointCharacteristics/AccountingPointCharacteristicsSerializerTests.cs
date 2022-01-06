@@ -156,7 +156,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.AccountingPointCharacterist
                 "031",
                 "151",
                 "6",
-                DateTimeOffset.Parse("2019-02-12T00:00:00Z", CultureInfo.InvariantCulture).Date,
+                Instant.FromDateTimeUtc(new DateTime(2019, 02, 12, 00, 00, 00, DateTimeKind.Utc)),
                 "D01",
                 "D01",
                 false,

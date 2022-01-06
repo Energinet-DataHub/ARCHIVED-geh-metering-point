@@ -30,7 +30,7 @@ limitations under the License.
         <cim:validityStart_DateAndOrTime.dateTime>2022-01-04T22:00:00Z</cim:validityStart_DateAndOrTime.dateTime> --> Husk at ændre dato ved indsendelse
         <cim:snapshot_DateAndOrTime.dateTime>2001-12-17T09:30:47Z</cim:snapshot_DateAndOrTime.dateTime>
         <cim:MarketEvaluationPoint>
-            <cim:mRID codingScheme="NBA">571313180400013469</cim:mRID>
+            <cim:mRID codingScheme="NBA">574569691038426852</cim:mRID>
             <cim:meteringPointResponsible_MarketParticipant.mRID codingScheme="NDE"></cim:meteringPointResponsible_MarketParticipant.mRID>
             <cim:type>E17</cim:type>
             <cim:settlementMethod>E02</cim:settlementMethod>

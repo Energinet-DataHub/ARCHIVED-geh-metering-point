@@ -126,7 +126,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 meteringPoint.FromGridAreaCode,
                 meteringPoint.ToGridAreaCode,
                 netSettlementGroup,
-                meteringPoint.SupplyStart,
+                meteringPoint.SupplyStart?.ToDateTimeUtc(),
                 connectionType,
                 disconnectionType,
                 meteringPoint.ProductionObligation,

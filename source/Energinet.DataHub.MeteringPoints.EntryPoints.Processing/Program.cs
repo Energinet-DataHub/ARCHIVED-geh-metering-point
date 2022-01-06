@@ -205,6 +205,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     typeof(BusinessProcessResultBehavior<,>),
                 });
 
+            Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
+
             container.ReceiveProtobuf<MeteringPointEnvelope>(
                 config => config
                     .FromOneOf(envelope => envelope.MeteringPointMessagesCase)
