@@ -12,22 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Xml.Linq;
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using System;
+using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
+namespace Energinet.DataHub.MeteringPoints.Application.Queries
 {
-    /// <summary>
-    /// XML converter
-    /// </summary>
-    public interface IXmlConverter
-    {
-        /// <summary>
-        /// Deserializes an EDI message in XML format to a generic collection
-        /// </summary>
-        /// <param name="rootElement"></param>
-        /// <returns>A generic collection</returns>
-        public IEnumerable<IInternalMarketDocument> Deserialize(XElement rootElement);
-    }
+    public record MeteringPointSimpleDto(
+        Guid MeteringPointId,
+        string GsrnNumber,
+        string PhysicalState,
+        string MeteringPointType,
+        Instant EffectiveDate);
 }

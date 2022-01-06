@@ -20,10 +20,9 @@ using System.Xml.Linq;
 using Energinet.DataHub.Core.Schemas;
 using Energinet.DataHub.Core.SchemaValidation;
 using Energinet.DataHub.Core.SchemaValidation.Extensions;
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.Core.XmlConversion.XmlConverter.Abstractions;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -36,18 +35,21 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
         private readonly ILogger _logger;
         private readonly ICorrelationContext _correlationContext;
         private readonly MessageDispatcher _dispatcher;
-        private readonly IXmlConverter _xmlConverter;
+        private readonly IXmlDeserializer _xmlDeserializer;
+        private readonly XmlSenderValidator _xmlSenderValidator;
 
         public MeteringPointHttpTrigger(
             ILogger logger,
             ICorrelationContext correlationContext,
             MessageDispatcher dispatcher,
-            IXmlConverter xmlConverter)
+            IXmlDeserializer xmlDeserializer,
+            XmlSenderValidator xmlSenderValidator)
         {
             _logger = logger;
             _correlationContext = correlationContext;
             _dispatcher = dispatcher;
-            _xmlConverter = xmlConverter;
+            _xmlDeserializer = xmlDeserializer;
+            _xmlSenderValidator = xmlSenderValidator;
         }
 
         [Function("MeteringPoint")]
@@ -59,15 +61,20 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
 
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var (succeeded, response, element) = await DeserializeAsync(request).ConfigureAwait(false);
-
-            if (!succeeded) return response;
-
             IEnumerable<IInternalMarketDocument> commands;
-
             try
             {
-                commands = _xmlConverter.Deserialize(element!);
+                var (succeeded, errorResponse, element) = await ValidateAndReadXmlAsync(request).ConfigureAwait(false);
+
+                if (!succeeded) return errorResponse ?? request.CreateResponse(HttpStatusCode.BadRequest);
+
+                var result = _xmlDeserializer.Deserialize(element!);
+                var senderValidationResult = _xmlSenderValidator.ValidateSender(result.HeaderData.Sender);
+
+                if (!senderValidationResult.IsValid)
+                    return await CreateForbiddenResponseAsync(request, senderValidationResult.ErrorMessage).ConfigureAwait(false);
+
+                commands = result.Documents;
             }
             #pragma warning disable CA1031 // TODO: We'll allow catching Exception in the entrypoint, I guess?
             catch (Exception exception)
@@ -81,29 +88,31 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
             return await CreateOkResponseAsync(request).ConfigureAwait(false);
         }
 
-        private async Task<(bool Succeeded, HttpResponseData Response, XElement? Element)> DeserializeAsync(HttpRequestData request)
+        private static async Task<HttpResponseData> CreateForbiddenResponseAsync(HttpRequestData request, string errorMessage)
         {
-            var reader = new SchemaValidatingReader(request.Body, Schemas.CimXml.StructureAccountingPointCharacteristics);
+            var response = request.CreateResponse(HttpStatusCode.Forbidden);
+            await response.WriteStringAsync(errorMessage).ConfigureAwait(false);
+            return response;
+        }
 
-            HttpResponseData response;
+        private static async Task<(bool Succeeded, HttpResponseData? ErrorResponse, XElement? Element)> ValidateAndReadXmlAsync(HttpRequestData request)
+        {
+            var reader = new SchemaValidatingReader(request.Body, Schemas.CimXml.StructureRequestChangeAccountingPointCharacteristics);
+
+            HttpResponseData? response = null;
             var isSucceeded = true;
 
             var xmlElement = await reader.AsXElementAsync().ConfigureAwait(false);
 
-            if (reader.HasErrors)
-            {
-                isSucceeded = false;
-                response = request.CreateResponse(HttpStatusCode.BadRequest);
+            if (!reader.HasErrors) return (isSucceeded, response, xmlElement);
 
-                await reader
-                    .CreateErrorResponse()
-                    .WriteAsXmlAsync(response.Body)
-                    .ConfigureAwait(false);
-            }
-            else
-            {
-                response = await CreateOkResponseAsync(request).ConfigureAwait(false);
-            }
+            isSucceeded = false;
+            response = request.CreateResponse(HttpStatusCode.BadRequest);
+
+            await reader
+                .CreateErrorResponse()
+                .WriteAsXmlAsync(response.Body)
+                .ConfigureAwait(false);
 
             return (isSucceeded, response, xmlElement);
         }

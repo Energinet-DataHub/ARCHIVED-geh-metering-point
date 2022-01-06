@@ -27,7 +27,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
         private readonly PriceAreaCode _priceAreaCode;
         private readonly FullFlexFromDate? _fullFlexFromDate;
         private readonly List<GridAreaLink> _gridAreaLinks = new();
-        private readonly ActorId _actorId;
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind complex types in constructor
         private GridArea() { }
@@ -46,7 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
             _name = name;
             _priceAreaCode = priceAreaCode;
             _fullFlexFromDate = fullFlexFromDate;
-            _actorId = actorId;
+            ActorId = actorId;
 
             AddDefaultLink();
         }
@@ -54,6 +53,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
         public GridAreaCode Code { get; }
 
         public GridAreaId Id { get; }
+
+        public ActorId ActorId { get; }
 
         public GridAreaLink DefaultLink => _gridAreaLinks.First(); // TODO: Add metering points via Grid Area instead
 

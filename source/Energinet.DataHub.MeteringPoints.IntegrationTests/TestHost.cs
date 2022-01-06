@@ -41,6 +41,7 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
+using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Authorization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
 using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
@@ -176,8 +177,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));
 
             _container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
-
-            _container.Register<IAuthorizer, ChangeMeteringPointAuthorizer>();
+            _container.AddBusinessProcessAuthorizers();
             _container.AddValidationErrorConversion(
                 validateRegistrations: true,
                 typeof(MasterDataDocument).Assembly, // Application

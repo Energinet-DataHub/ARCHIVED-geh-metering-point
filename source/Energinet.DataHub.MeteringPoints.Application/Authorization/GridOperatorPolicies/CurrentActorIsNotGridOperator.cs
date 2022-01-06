@@ -12,18 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using MediatR;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Common
+namespace Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperatorPolicies
 {
-    /// <summary>
-    /// Internal representation of an actor document
-    /// </summary>
-    public interface IInternalMarketDocument : IRequest<BusinessProcessResult>
+    public class CurrentActorIsNotGridOperator : ValidationError
     {
-        /// <summary>
-        /// Process type
-        /// </summary>
-        string ProcessType { get; }
+        public CurrentActorIsNotGridOperator(string actorIdentifier, string gridAreaGsrn)
+        {
+            ActorIdentifier = actorIdentifier;
+            GridAreaGsrn = gridAreaGsrn;
+        }
+
+        public string ActorIdentifier { get; }
+
+        public string GridAreaGsrn { get; }
     }
 }

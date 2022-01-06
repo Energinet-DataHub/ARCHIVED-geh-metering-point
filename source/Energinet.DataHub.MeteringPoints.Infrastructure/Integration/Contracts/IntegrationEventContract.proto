@@ -31,73 +31,81 @@ option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEventCont
  
 message MeteringPointCreated {
   enum NetSettlementGroup {
-    NSG_ZERO = 0;
-    NSG_ONE = 1;
-    NSG_TWO = 2;
-    NSG_THREE = 3;
-    NSG_SIX = 4;
-    NSG_NINETYNINE = 5;
+    NSG_UNKNOWN = 0;
+    NSG_ZERO = 1;
+    NSG_ONE = 2;
+    NSG_TWO = 3;
+    NSG_THREE = 4;
+    NSG_SIX = 5;
+    NSG_NINETYNINE = 6;
   }
   
   enum ProductType {
-    PT_TARIFF = 0;
-    PT_FUELQUANTITY = 1;
-    PT_POWERACTIVE = 2;
-    PT_POWERREACTIVE = 3;
-    PT_ENERGYACTIVE = 4;
-    PT_ENERGYREACTIVE = 5;
+    PT_UNKNOWN = 0;
+    PT_TARIFF = 1;
+    PT_FUELQUANTITY = 2;
+    PT_POWERACTIVE = 3;
+    PT_POWERREACTIVE = 4;
+    PT_ENERGYACTIVE = 5;
+    PT_ENERGYREACTIVE = 6;
   }
   
   enum SettlementMethod {
-    SM_FLEX = 0;
-    SM_PROFILED = 1;
-    SM_NONPROFILED = 2;  
+    SM_UNKNOWN = 0;
+    SM_FLEX = 1;
+    SM_PROFILED = 2;
+    SM_NONPROFILED = 3;  
   }
   
   enum MeteringMethod {
-    MM_PHYSICAL = 0;
-    MM_VIRTUAL = 1;
-    MM_CALCULATED =2;
+    MM_UNKNOWN = 0;
+    MM_PHYSICAL = 1;
+    MM_VIRTUAL = 2;
+    MM_CALCULATED = 3;
   }
   
   enum MeterReadingPeriodicity {
-    MRP_HOURLY = 0;
-    MRP_QUARTERLY = 1;
+    MRP_UNKNOWN = 0;
+    MRP_HOURLY = 1;
+    MRP_QUARTERLY = 2;
   }
   
   enum ConnectionState {
-    CS_NEW = 0; // Always created with connection state new
+    CS_UNKNOWN = 0;
+    CS_NEW = 1; // Always created with connection state new
   }
     
   enum UnitType {
-    UT_WH = 0; // Watt per hour
-    UT_KWH = 1; // Kilowatt per hour
-    UT_MWH = 2; // Megawatt per hour
-    UT_GWH = 3; // Gigawatt per hour
+    UT_UNKNOWN = 0;
+    UT_WH = 1; // Watt per hour
+    UT_KWH = 2; // Kilowatt per hour
+    UT_MWH = 3; // Megawatt per hour
+    UT_GWH = 4; // Gigawatt per hour
    }
    
   enum MeteringPointType {
-    MPT_Consumption = 0;
-    MPT_Production = 1;
-    MPT_Exchange = 2;
-    MPT_GridLossCorrection = 3;
-    MPT_Analysis = 4;
-    MPT_VEProduction = 5;
-    MPT_ExchangeReactiveEnergy = 6;
-    MPT_InternalUse = 7;
-    MPT_SurplusProductionGroup = 8;
-    MPT_NetProduction = 9;
-    MPT_SupplyToGrid = 10;
-    MPT_ConsumptionFromGrid = 11;
-    MPT_WholesaleServices = 12;
-    MPT_OwnProduction = 13;
-    MPT_NetFromGrid = 14;
-    MPT_NetToGrid = 15;
-    MPT_TotalConsumption = 16;
-    MPT_ElectricalHeating = 17;
-    MPT_NetConsumption = 18;
-    MPT_OtherConsumption = 19;
-    MPT_OtherProduction = 20;
+    MPT_UNKNOWN = 0;
+    MPT_Consumption = 1;
+    MPT_Production = 2;
+    MPT_Exchange = 3;
+    MPT_GridLossCorrection = 4;
+    MPT_Analysis = 5;
+    MPT_VEProduction = 6;
+    MPT_ExchangeReactiveEnergy = 7;
+    MPT_InternalUse = 8;
+    MPT_SurplusProductionGroup = 9;
+    MPT_NetProduction = 10;
+    MPT_SupplyToGrid = 11;
+    MPT_ConsumptionFromGrid = 12;
+    MPT_WholesaleServices = 13;
+    MPT_OwnProduction = 14;
+    MPT_NetFromGrid = 15;
+    MPT_NetToGrid = 16;
+    MPT_TotalConsumption = 17;
+    MPT_ElectricalHeating = 18;
+    MPT_NetConsumption = 19;
+    MPT_OtherConsumption = 20;
+    MPT_OtherProduction = 21;
   }
   
   string metering_point_id = 1; // Unique identification for metering point

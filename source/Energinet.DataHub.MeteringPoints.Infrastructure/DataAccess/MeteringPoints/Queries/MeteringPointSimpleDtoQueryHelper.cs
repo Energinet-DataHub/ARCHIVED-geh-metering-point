@@ -12,7 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints.Queries
 {
-    public record XmlHeaderData(string Mrid, string Type, string ProcessType);
+    public static class MeteringPointSimpleDtoQueryHelper
+    {
+        public const string Sql = @"SELECT [Id] AS MeteringPointId
+                                ,[GsrnNumber]
+                                ,[ConnectionState_PhysicalState] AS PhysicalState
+                                ,[TypeOfMeteringPoint] AS MeteringPointType
+                                ,[EffectiveDate]
+                          FROM  [dbo].[MeteringPoints]";
+    }
 }

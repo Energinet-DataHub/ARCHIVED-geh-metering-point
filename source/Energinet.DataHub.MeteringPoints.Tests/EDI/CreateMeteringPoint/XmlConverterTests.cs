@@ -22,11 +22,13 @@ using System.Xml.Linq;
 using Energinet.DataHub.Core.Schemas;
 using Energinet.DataHub.Core.SchemaValidation;
 using Energinet.DataHub.Core.SchemaValidation.Extensions;
+using Energinet.DataHub.Core.XmlConversion.XmlConverter;
+using Energinet.DataHub.Core.XmlConversion.XmlConverter.Configuration;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
+using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappings;
 using FluentAssertions;
 using Xunit;
@@ -40,23 +42,26 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
         [Fact]
         public void AssertConfigurationsValid()
         {
-            Action assertConfigurationValid = ConverterMapperConfigurations.AssertConfigurationValid;
+            Action assertConfigurationValid = () => ConverterMapperConfigurations.AssertConfigurationValid(typeof(MasterDataDocument), typeof(MasterDataDocumentXmlMappingConfiguration).Assembly);
             assertConfigurationValid.Should().NotThrow();
         }
 
         [Fact]
         public async Task ValidateValuesFromEachElementTest()
         {
-            var xmlMapper = new XmlMapper((processType, type) => new MasterDataDocumentXmlMappingConfiguration());
-
+            var xmlMapper = new XmlMapper((type) => new MasterDataDocumentXmlMappingConfiguration(), (processType) => BusinessProcessType.CreateMeteringPoint.Name);
             var xmlConverter = new XmlDeserializer(xmlMapper);
-            var (errors, element) = await PerformSchemaValidation().ConfigureAwait(false);
+
+            var (errors, element) = await ValidateAndReadXml().ConfigureAwait(false);
 
             errors.Should().BeEmpty();
             element.Should().NotBeNull();
 
-            var commandsRaw = xmlConverter.Deserialize(element!);
-            var commands = commandsRaw.Cast<MasterDataDocument>();
+            var deserializationResult = xmlConverter.Deserialize(element!);
+
+            deserializationResult.HeaderData.Sender.Id.Should().Be("afsender");
+
+            var commands = deserializationResult.Documents.Cast<MasterDataDocument>();
 
             var command = commands.First();
 
@@ -97,16 +102,17 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
         [Fact]
         public async Task ValidateTranslationOfCimXmlValuesToDomainSpecificValuesTest()
         {
-            var xmlMapper = new XmlMapper((processType, type) => new MasterDataDocumentXmlMappingConfiguration());
+            var xmlMapper = new XmlMapper((type) => new MasterDataDocumentXmlMappingConfiguration(), (processType) => BusinessProcessType.CreateMeteringPoint.Name);
 
             var xmlConverter = new XmlDeserializer(xmlMapper);
-            var (errors, element) = await PerformSchemaValidation().ConfigureAwait(false);
+
+            var (errors, element) = await ValidateAndReadXml().ConfigureAwait(false);
 
             errors.Should().BeEmpty();
             element.Should().NotBeNull();
 
-            var commandsRaw = xmlConverter.Deserialize(element!);
-            var commands = commandsRaw.Cast<MasterDataDocument>();
+            var deserializationResult = xmlConverter.Deserialize(element!);
+            var commands = deserializationResult.Documents.Cast<MasterDataDocument>();
 
             var command = commands.First();
 
@@ -127,13 +133,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
 
             var resourceName = resourcePath.Replace(@"/", ".", StringComparison.Ordinal);
             var resource = resourceNames.FirstOrDefault(r => r.Contains(resourceName, StringComparison.Ordinal))
-                           ?? throw new FileNotFoundException("Resource not found");
+                ?? throw new FileNotFoundException("Resource not found");
 
             return assembly.GetManifestResourceStream(resource)
                    ?? throw new InvalidOperationException($"Couldn't get requested resource: {resourcePath}");
         }
 
-        private static async Task<(List<string> Errors, XElement? Element)> PerformSchemaValidation()
+        private static async Task<(List<string> Errors, XElement? Element)> ValidateAndReadXml()
         {
             var reader = new SchemaValidatingReader(
                 GetResourceStream("CreateMeteringPointCimXml.xml"),

@@ -58,7 +58,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas
 
             builder.Property<FullFlexFromDate>("_fullFlexFromDate")
                 .HasColumnName("FullFlexFromDate")
-                .HasConversion<DateTime>(toDbValue => toDbValue.DateInUtc.ToDateTimeUtc(), fromDbValue => FullFlexFromDate.Create(fromDbValue));
+                .HasConversion(toDbValue => toDbValue.DateInUtc.ToDateTimeUtc(), fromDbValue => FullFlexFromDate.Create(fromDbValue));
 
             builder
                 .OwnsMany<GridAreaLink>("_gridAreaLinks", area =>
@@ -79,8 +79,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas
                             fromDbValue => new GridAreaId(fromDbValue));
                 });
 
-            builder.Property<ActorId>("_actorId")
-                .HasColumnName("ActorId")
+            builder.Property(x => x.ActorId)
                 .HasConversion(
                     toDbValue => toDbValue.Value,
                     fromDbValue => new ActorId(fromDbValue));
