@@ -76,7 +76,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 {
                     y.Property(x => x.Ampere)
                         .HasColumnName("MaximumCurrent");
-
                     y.Property(x => x.Kwh)
                         .HasColumnName("MaximumPower");
                 });
