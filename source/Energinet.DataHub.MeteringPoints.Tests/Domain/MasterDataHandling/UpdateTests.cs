@@ -69,7 +69,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         [Theory]
         [InlineData(null)]
-        [InlineData("")]
         public void Product_type_is_unchanged_if_a_null_value_is_provided(string? providedProductType)
         {
             var currentMasterData = Builder().Build();
@@ -121,27 +120,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
     public class MasterDataUpdater : MasterDataBuilderBase, IMasterDataBuilder
     {
-        private string? _productType;
-        private readonly List<MasterDataValue> _values = new()
-        {
-            new MasterDataValue(nameof(MasterData.ProductType), typeof(ProductType), Applicability.Optional),
-            new MasterDataValue(nameof(MasterData.UnitType), typeof(MeasurementUnitType), Applicability.Optional),
-            new MasterDataValue(nameof(MasterData.AssetType), typeof(AssetType), Applicability.Optional),
-            new MasterDataValue(nameof(MasterData.SettlementMethod), typeof(SettlementMethod), Applicability.Optional),
-            new MasterDataValue(nameof(MasterData.ScheduledMeterReadingDate), typeof(ScheduledMeterReadingDate), Applicability.Optional),
-            new MasterDataValue(nameof(MasterData.MeteringConfiguration), typeof(MeteringConfiguration), Applicability.Required),
-            new MasterDataValue(nameof(MasterData.ReadingOccurrence), typeof(ReadingOccurrence), Applicability.Required),
-            new MasterDataValue(nameof(MasterData.NetSettlementGroup), typeof(NetSettlementGroup), Applicability.Optional),
-            new MasterDataValue(nameof(MasterData.PowerLimit), typeof(PowerLimit), Applicability.Optional),
-            new MasterDataValue(nameof(MasterData.PowerPlantGsrnNumber), typeof(GsrnNumber), Applicability.Optional),
-            new MasterDataValue(nameof(MasterData.DisconnectionType), typeof(DisconnectionType), Applicability.Optional),
-            new MasterDataValue(nameof(MasterData.ConnectionType), typeof(ConnectionType), Applicability.Optional),
-            new MasterDataValue(nameof(MasterData.EffectiveDate), typeof(EffectiveDate), Applicability.Required),
-            new MasterDataValue(nameof(MasterData.Capacity), typeof(Capacity), Applicability.Optional),
-            new MasterDataValue(nameof(MasterData.Address), typeof(Address), Applicability.Optional),
-            new MasterDataValue(nameof(MasterData.ProductionObligation), typeof(bool), Applicability.Optional),
-        };
-
         public MasterDataUpdater(IEnumerable<MasterDataField> fields, MasterData currentMasterData)
             :base(fields)
         {
@@ -153,18 +131,18 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             throw new NotImplementedException();
         }
 
+        private void RemoveValueIfNotApplicable<T>(string valueName, Func<bool> rule)
+        {
+            if (rule())
+            {
+                SetValue<T>(valueName, default(T));
+            }
+        }
+
         public MasterData Build()
         {
-            if (string.IsNullOrEmpty(_productType) == false)
-            {
-                SetValue(nameof(MasterData.ProductType), EnumerationType.FromName<ProductType>(_productType));
-            }
-
-            var netSettlementGroup = _values.Find(value => value.Name.Equals(nameof(MasterData.NetSettlementGroup))).Value as NetSettlementGroup;
-            if (netSettlementGroup != NetSettlementGroup.Six)
-            {
-                 SetValue<ScheduledMeterReadingDate>(nameof(MasterData.ScheduledMeterReadingDate), null);
-            }
+            RemoveValueIfNotApplicable<ScheduledMeterReadingDate>(nameof(MasterData.ScheduledMeterReadingDate),
+                () => GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)) != NetSettlementGroup.Six);
 
             return new MasterData(
                 productType: GetValue<ProductType>(nameof(MasterData.ProductType)),
@@ -188,7 +166,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         public IMasterDataBuilder WithNetSettlementGroup(string netSettlementGroup)
         {
             SetValueIfValid(
-                nameof(MasterData.SettlementMethod),
+                nameof(MasterData.NetSettlementGroup),
                 () =>
                 {
                     return EnumerationType.GetAll<NetSettlementGroup>()
@@ -264,7 +242,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithProductType(string? productType)
         {
-            _productType = productType;
+            if (productType is null)
+            {
+                return this;
+            }
+
+            SetValueIfValid(nameof(MasterData.ProductType),
+                BusinessRulesValidationResult.Valid,
+                () => EnumerationType.FromName<ProductType>(productType));
+
             return this;
         }
 
@@ -280,7 +266,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         private void SetValueIfValid<T>(string valueName, Func<BusinessRulesValidationResult> validator, Func<T> creator)
         {
-            var valueItem = _values.Find(value => value.Name.Equals(valueName));
+            var valueItem = GetMasterValueItem<T>(valueName);
             valueItem.SetValue(validator, creator);
         }
     }
