@@ -37,8 +37,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public object? Value { get; private set; }
 
-        public bool CanBeChanged { get; private set; } = true;
-
         public IReadOnlyList<ValidationError> ValidationErrors => _validationErrors.AsReadOnly();
 
         public void SetValue<T>(T value)
@@ -50,7 +48,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         {
             if (validator == null) throw new ArgumentNullException(nameof(validator));
             if (creator == null) throw new ArgumentNullException(nameof(creator));
-            if (CanBeChanged == false || Applicability == Applicability.NotAllowed)
+            if (Applicability == Applicability.NotAllowed)
             {
                 return;
             }
@@ -69,11 +67,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         public void SetApplicability(Applicability applicability)
         {
             Applicability = applicability;
-        }
-
-        public void CanNotBeChanged()
-        {
-            CanBeChanged = false;
         }
 
         public bool HasRequiredValue()

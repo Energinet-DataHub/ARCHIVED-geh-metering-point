@@ -13,7 +13,6 @@
 // limitations under the License.
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using StreetNameIsRequiredRule = Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules.StreetNameIsRequiredRule;
 
@@ -27,6 +26,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             {
                 new StreetNameIsRequiredRule(masterData.Address),
                 new MeterReadingOccurrenceRule(masterData.ReadingOccurrence),
+                new ProductTypeMustBeEnergyActiveRule(masterData.ProductType),
+                new UnitTypeMustBeKwh(masterData.UnitType),
             });
         }
     }

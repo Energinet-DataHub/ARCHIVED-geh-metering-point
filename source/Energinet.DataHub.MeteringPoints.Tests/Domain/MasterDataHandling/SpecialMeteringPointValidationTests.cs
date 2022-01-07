@@ -15,6 +15,7 @@
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -28,9 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class SpecialMeteringPointValidationTests : TestBase
     {
         [Theory]
-        [InlineData(nameof(MeteringPointType.Analysis))]
         [InlineData(nameof(MeteringPointType.ElectricalHeating))]
-        [InlineData(nameof(MeteringPointType.InternalUse))]
         [InlineData(nameof(MeteringPointType.NetConsumption))]
         [InlineData(nameof(MeteringPointType.NetProduction))]
         [InlineData(nameof(MeteringPointType.OtherConsumption))]
@@ -39,7 +38,78 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [InlineData(nameof(MeteringPointType.TotalConsumption))]
         [InlineData(nameof(MeteringPointType.WholesaleServices))]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
-        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy))]
+        [InlineData(nameof(MeteringPointType.GridLossCorrection))]
+        [InlineData(nameof(MeteringPointType.NetFromGrid))]
+        [InlineData(nameof(MeteringPointType.NetToGrid))]
+        [InlineData(nameof(MeteringPointType.SupplyToGrid))]
+        [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
+        public void Unit_type_must_be_kwh(string meteringPointType)
+        {
+            var masterData = BuilderFor(meteringPointType)
+                .WithMeasurementUnitType(MeasurementUnitType.Ampere.Name)
+                .Build();
+
+            AssertError<UnitTypeIsNotValidForMeteringPointType>(CheckRules(masterData, From(meteringPointType)), true);
+        }
+
+        [Theory]
+        [InlineData(nameof(MeteringPointType.ElectricalHeating))]
+        [InlineData(nameof(MeteringPointType.NetConsumption))]
+        [InlineData(nameof(MeteringPointType.NetProduction))]
+        [InlineData(nameof(MeteringPointType.OtherConsumption))]
+        [InlineData(nameof(MeteringPointType.OtherProduction))]
+        [InlineData(nameof(MeteringPointType.OwnProduction))]
+        [InlineData(nameof(MeteringPointType.TotalConsumption))]
+        [InlineData(nameof(MeteringPointType.WholesaleServices))]
+        [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
+        [InlineData(nameof(MeteringPointType.GridLossCorrection))]
+        [InlineData(nameof(MeteringPointType.NetFromGrid))]
+        [InlineData(nameof(MeteringPointType.NetToGrid))]
+        [InlineData(nameof(MeteringPointType.SupplyToGrid))]
+        [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
+        public void Unit_type_valid(string meteringPointType)
+        {
+            var masterData = BuilderFor(meteringPointType)
+                .WithMeasurementUnitType(MeasurementUnitType.KWh.Name)
+                .Build();
+
+            AssertDoesNotContainValidationError<UnitTypeIsNotValidForMeteringPointType>(CheckRules(masterData, From(meteringPointType)));
+        }
+
+        [Theory]
+        [InlineData(nameof(MeteringPointType.ElectricalHeating))]
+        [InlineData(nameof(MeteringPointType.NetConsumption))]
+        [InlineData(nameof(MeteringPointType.NetProduction))]
+        [InlineData(nameof(MeteringPointType.OtherConsumption))]
+        [InlineData(nameof(MeteringPointType.OtherProduction))]
+        [InlineData(nameof(MeteringPointType.OwnProduction))]
+        [InlineData(nameof(MeteringPointType.TotalConsumption))]
+        [InlineData(nameof(MeteringPointType.WholesaleServices))]
+        [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
+        [InlineData(nameof(MeteringPointType.GridLossCorrection))]
+        [InlineData(nameof(MeteringPointType.NetFromGrid))]
+        [InlineData(nameof(MeteringPointType.NetToGrid))]
+        [InlineData(nameof(MeteringPointType.SupplyToGrid))]
+        [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
+        public void Product_type_must_be_energy_active(string meteringPointType)
+        {
+            var masterData = BuilderFor(meteringPointType)
+                .WithProductType(ProductType.Tariff.Name)
+                .Build();
+
+            AssertError<InvalidProductType>(CheckRules(masterData, From(meteringPointType)), true);
+        }
+
+        [Theory]
+        [InlineData(nameof(MeteringPointType.ElectricalHeating))]
+        [InlineData(nameof(MeteringPointType.NetConsumption))]
+        [InlineData(nameof(MeteringPointType.NetProduction))]
+        [InlineData(nameof(MeteringPointType.OtherConsumption))]
+        [InlineData(nameof(MeteringPointType.OtherProduction))]
+        [InlineData(nameof(MeteringPointType.OwnProduction))]
+        [InlineData(nameof(MeteringPointType.TotalConsumption))]
+        [InlineData(nameof(MeteringPointType.WholesaleServices))]
+        [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
         [InlineData(nameof(MeteringPointType.GridLossCorrection))]
         [InlineData(nameof(MeteringPointType.NetFromGrid))]
         [InlineData(nameof(MeteringPointType.NetToGrid))]
@@ -56,9 +126,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Theory]
-        [InlineData(nameof(MeteringPointType.Analysis))]
         [InlineData(nameof(MeteringPointType.ElectricalHeating))]
-        [InlineData(nameof(MeteringPointType.InternalUse))]
         [InlineData(nameof(MeteringPointType.NetConsumption))]
         [InlineData(nameof(MeteringPointType.NetProduction))]
         [InlineData(nameof(MeteringPointType.OtherConsumption))]
@@ -67,7 +135,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [InlineData(nameof(MeteringPointType.TotalConsumption))]
         [InlineData(nameof(MeteringPointType.WholesaleServices))]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
-        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy))]
         [InlineData(nameof(MeteringPointType.GridLossCorrection))]
         [InlineData(nameof(MeteringPointType.NetFromGrid))]
         [InlineData(nameof(MeteringPointType.NetToGrid))]
@@ -84,17 +151,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Theory]
-        [InlineData(nameof(MeteringPointType.Analysis), nameof(ReadingOccurrence.Hourly), false)]
-        [InlineData(nameof(MeteringPointType.Analysis), nameof(ReadingOccurrence.Quarterly), false)]
-        [InlineData(nameof(MeteringPointType.Analysis), nameof(ReadingOccurrence.Yearly), true)]
-
         [InlineData(nameof(MeteringPointType.ElectricalHeating), nameof(ReadingOccurrence.Hourly), false)]
         [InlineData(nameof(MeteringPointType.ElectricalHeating), nameof(ReadingOccurrence.Quarterly), false)]
         [InlineData(nameof(MeteringPointType.ElectricalHeating), nameof(ReadingOccurrence.Yearly), true)]
-
-        [InlineData(nameof(MeteringPointType.InternalUse), nameof(ReadingOccurrence.Hourly), false)]
-        [InlineData(nameof(MeteringPointType.InternalUse), nameof(ReadingOccurrence.Quarterly), false)]
-        [InlineData(nameof(MeteringPointType.InternalUse), nameof(ReadingOccurrence.Yearly), true)]
 
         [InlineData(nameof(MeteringPointType.NetConsumption), nameof(ReadingOccurrence.Hourly), false)]
         [InlineData(nameof(MeteringPointType.NetConsumption), nameof(ReadingOccurrence.Quarterly), false)]
@@ -127,10 +186,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid), nameof(ReadingOccurrence.Hourly), false)]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid), nameof(ReadingOccurrence.Quarterly), false)]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid), nameof(ReadingOccurrence.Yearly), true)]
-
-        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), nameof(ReadingOccurrence.Hourly), false)]
-        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), nameof(ReadingOccurrence.Quarterly), false)]
-        [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), nameof(ReadingOccurrence.Yearly), true)]
 
         [InlineData(nameof(MeteringPointType.GridLossCorrection), nameof(ReadingOccurrence.Hourly), false)]
         [InlineData(nameof(MeteringPointType.GridLossCorrection), nameof(ReadingOccurrence.Quarterly), false)]

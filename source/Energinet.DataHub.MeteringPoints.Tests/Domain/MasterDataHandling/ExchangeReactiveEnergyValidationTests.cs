@@ -15,6 +15,7 @@
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
@@ -26,10 +27,22 @@ using Xunit.Categories;
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 {
     [UnitTest]
-    public class VEProductionMeteringPointValidationTests : TestBase
+    public class ExchangeReactiveEnergyValidationTests : TestBase
     {
         [Theory]
-        [InlineData(nameof(ProductType.EnergyActive), false)]
+        [InlineData(nameof(MeasurementUnitType.KVArh), false)]
+        [InlineData(nameof(MeasurementUnitType.Ampere), true)]
+        public void Unit_type_must_be_KVArh(string measurementUnitType, bool expectError)
+        {
+            var masterData = Builder()
+                .WithMeasurementUnitType(measurementUnitType)
+                .Build();
+
+            AssertError<UnitTypeIsNotValidForMeteringPointType>(CheckRules(masterData), expectError);
+        }
+
+        [Theory]
+        [InlineData(nameof(ProductType.EnergyReactive), false)]
         [InlineData(nameof(ProductType.FuelQuantity), true)]
         public void Product_type_must_be_correct(string productType, bool expectError)
         {
@@ -60,28 +73,26 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             AssertContainsValidationError<StreetNameIsRequiredRuleError>(CheckRules(masterData));
         }
 
-        [Theory]
-        [InlineData(nameof(ReadingOccurrence.Hourly), false)]
-        [InlineData(nameof(ReadingOccurrence.Quarterly), false)]
-        [InlineData(nameof(ReadingOccurrence.Monthly), false)]
-        [InlineData(nameof(ReadingOccurrence.Yearly), true)]
-        public void Meter_reading_periodicity_is_hourly_or_quarterly_or_monthly(string readingOccurrence, bool expectError)
+        [Fact]
+        public void Meter_reading_periodicity_is_hourly_or_quaterly()
         {
             var masterData = Builder()
-                .WithReadingPeriodicity(readingOccurrence)
+                .WithReadingPeriodicity(ReadingOccurrence.Yearly.Name)
                 .Build();
 
-            AssertError<InvalidMeterReadingOccurrenceRuleError>(CheckRules(masterData), expectError);
+            AssertError<InvalidMeterReadingOccurrenceRuleError>(CheckRules(masterData), true);
         }
 
         private static IMasterDataBuilder Builder() =>
-            new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.VEProduction))
+            new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.ExchangeReactiveEnergy))
+                .WithReadingPeriodicity(ReadingOccurrence.Quarterly.Name)
                 .WithAddress(streetName: "Test Street", countryCode: CountryCode.DK)
-                .WithReadingPeriodicity(ReadingOccurrence.Yearly.Name);
+                .WithNetSettlementGroup(NetSettlementGroup.Two.Name)
+                .WithMeteringConfiguration(MeteringMethod.Virtual.Name, string.Empty);
 
         private static BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
-            return new MasterDataValidator().CheckRulesFor(MeteringPointType.VEProduction, masterData);
+            return new MasterDataValidator().CheckRulesFor(MeteringPointType.ExchangeReactiveEnergy, masterData);
         }
     }
 }
