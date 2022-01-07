@@ -12,20 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using NodaTime;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bundling;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.MarketRoles;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Application.EDI
+namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.Generic
 {
-    /// <summary>
-    /// Create business documents.
-    /// TODO: Should be moved to market roles at a later point in time.
-    /// </summary>
-    public interface IMarketRolesBusinessDocumentFactory
+    public class GenericNotificationBundleHandler : BundleHandler<GenericNotificationMessage>
     {
-        /// <summary>
-        /// RSM 004
-        /// </summary>
-        Task CreateMoveInMessageAsync(string gsrn, Instant startDate);
+        public GenericNotificationBundleHandler(IJsonSerializer jsonSerializer, IDocumentSerializer<GenericNotificationMessage> documentSerializer)
+            : base(jsonSerializer, documentSerializer)
+        {
+        }
     }
 }
