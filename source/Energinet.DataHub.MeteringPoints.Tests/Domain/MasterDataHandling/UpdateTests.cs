@@ -34,6 +34,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Connection_type_is_removed_if_optional()
+        {
+            var masterData = Builder()
+                .WithConnectionType(ConnectionType.Direct.Name)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithConnectionType(string.Empty)
+                .Build();
+
+            Assert.Equal(null, updatedMasterData.ConnectionType);
+        }
+
+        [Fact]
         public void Connection_type_is_changed()
         {
             var masterData = Builder()
@@ -290,7 +304,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithConnectionType(string? connectionType)
         {
-            SetValueIfValid(nameof(MasterData.ConnectionType), BusinessRulesValidationResult.Valid, () => EnumerationType.FromName<ConnectionType>(connectionType));
+            if (connectionType == string.Empty)
+            {
+                SetValue<ConnectionType>(nameof(MasterData.ConnectionType), null);
+            }
+            else
+            {
+                SetValueIfValid(nameof(MasterData.ConnectionType), BusinessRulesValidationResult.Valid,
+                    () => EnumerationType.FromName<ConnectionType>(connectionType));
+            }
+
             return this;
         }
 
