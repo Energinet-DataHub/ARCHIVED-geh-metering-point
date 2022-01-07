@@ -50,7 +50,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             string? ScheduledMeterReadingDate = "",
             ExchangeDetails? ExchangeDetails = null,
             string? ParentRelatedMeteringPoint = null,
-            string? UnitType = null)
+            string? UnitType = null,
+            string? ProductType = null)
         : ICreateMeteringPointRequest,
             IOutboundMessage,
             IInboundMessage;

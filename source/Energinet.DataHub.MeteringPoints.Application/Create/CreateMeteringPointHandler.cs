@@ -104,6 +104,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                     new MasterDataFieldSelector().GetMasterDataFieldsFor(meteringPointType));
 
             masterDataBuilder
+                .WithProductType(request.ProductType)
                 .WithMeasurementUnitType(request.UnitType)
                 .WithAssetType(request.AssetType)
                 .WithConnectionType(request.ConnectionType)

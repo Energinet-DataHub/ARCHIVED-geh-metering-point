@@ -41,27 +41,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public MasterData Build()
-        {
-            return new MasterData(
-                productType: GetValue<ProductType>(nameof(MasterData.ProductType)),
-                unitType: GetValue<MeasurementUnitType>(nameof(MasterData.UnitType)),
-                assetType: GetValue<AssetType>(nameof(MasterData.AssetType)),
-                readingOccurrence: GetValue<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence)),
-                powerLimit: GetValue<PowerLimit>(nameof(MasterData.PowerLimit)),
-                powerPlantGsrnNumber: GetValue<GsrnNumber>(nameof(MasterData.PowerPlantGsrnNumber)),
-                effectiveDate: GetValue<EffectiveDate>(nameof(MasterData.EffectiveDate)),
-                capacity: GetValue<Capacity>(nameof(MasterData.Capacity)),
-                address: GetValue<Address>(nameof(MasterData.Address)),
-                meteringConfiguration: GetValue<MeteringConfiguration>(nameof(MasterData.MeteringConfiguration)),
-                settlementMethod: GetValue<SettlementMethod>(nameof(MasterData.SettlementMethod)),
-                scheduledMeterReadingDate: GetValue<ScheduledMeterReadingDate>(nameof(MasterData.ScheduledMeterReadingDate)),
-                connectionType: GetValue<ConnectionType>(nameof(MasterData.ConnectionType)),
-                disconnectionType: GetValue<DisconnectionType>(nameof(MasterData.DisconnectionType)),
-                netSettlementGroup: GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)),
-                productionObligation: GetValue<bool?>(nameof(MasterData.ProductionObligation)));
-        }
-
         public IMasterDataBuilder WithMeteringConfiguration(string method, string? meterNumber)
         {
             var meter = string.IsNullOrEmpty(meterNumber) ? MeterId.Empty() : MeterId.Create(meterNumber);
@@ -179,9 +158,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public IMasterDataBuilder WithProductType(string productType)
+        public IMasterDataBuilder WithProductType(string? productType)
         {
-            SetValue(nameof(MasterData.ProductType), EnumerationType.FromName<ProductType>(productType));
+            SetValue(nameof(MasterData.ProductType),  productType is null ? null : EnumerationType.FromName<ProductType>(productType));
             return this;
         }
 
@@ -202,6 +181,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             _validationErrors.Clear();
             _validationErrors.AddRange(AllValueValidationErrors());
 
+            AddValidationErrorIfRequiredFieldIsMissing<ProductType>(nameof(MasterData.ProductType), new ProductTypeIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence), new MeterReadingPeriodicityIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<MeasurementUnitType>(nameof(MasterData.UnitType), new UnitTypeIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup), new NetSettlementGroupIsRequired());

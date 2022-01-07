@@ -56,7 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData
 
             await SendCommandAsync(message).ConfigureAwait(false);
 
-            AssertConfirmMessage(DocumentType.AcceptChangeMasterData);
+            AssertConfirmMessage(DocumentType.ConfirmChangeMasterData);
             var integrationEvent = FindIntegrationEvent<MeteringConfigurationChangedIntegrationEvent>();
             Assert.NotNull(integrationEvent);
             Assert.NotEmpty(integrationEvent?.MeteringPointId);
@@ -82,7 +82,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData
 
             await SendCommandAsync(message).ConfigureAwait(false);
 
-            AssertConfirmMessage(DocumentType.AcceptChangeMasterData);
+            AssertConfirmMessage(DocumentType.ConfirmChangeMasterData);
             var integrationEvent = FindIntegrationEvent<MeteringConfigurationChangedIntegrationEvent>();
             Assert.NotNull(integrationEvent);
             Assert.NotEmpty(integrationEvent?.MeteringPointId);
@@ -127,7 +127,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData
 
             await SendCommandAsync(message).ConfigureAwait(false);
 
-            AssertConfirmMessage(DocumentType.AcceptChangeMasterData);
+            AssertConfirmMessage(DocumentType.ConfirmChangeMasterData);
             var integrationEvent = FindIntegrationEvent<MeteringConfigurationChangedIntegrationEvent>();
             Assert.NotNull(integrationEvent);
             Assert.NotEmpty(integrationEvent?.MeteringPointId);

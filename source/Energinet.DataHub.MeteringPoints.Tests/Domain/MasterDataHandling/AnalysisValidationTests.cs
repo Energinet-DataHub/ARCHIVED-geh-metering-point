@@ -26,18 +26,16 @@ using Xunit.Categories;
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 {
     [UnitTest]
-    public class VEProductionMeteringPointValidationTests : TestBase
+    public class AnalysisValidationTests : TestBase
     {
-        [Theory]
-        [InlineData(nameof(ProductType.EnergyActive), false)]
-        [InlineData(nameof(ProductType.FuelQuantity), true)]
-        public void Product_type_must_be_correct(string productType, bool expectError)
+        [Fact]
+        public void Product_type_must_be_energy_active()
         {
             var masterData = Builder()
-                .WithProductType(productType)
+                .WithProductType(ProductType.Tariff.Name)
                 .Build();
 
-            AssertError<InvalidProductType>(CheckRules(masterData), expectError);
+            AssertError<InvalidProductType>(CheckRules(masterData), true);
         }
 
         [Fact]
@@ -63,9 +61,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [Theory]
         [InlineData(nameof(ReadingOccurrence.Hourly), false)]
         [InlineData(nameof(ReadingOccurrence.Quarterly), false)]
-        [InlineData(nameof(ReadingOccurrence.Monthly), false)]
         [InlineData(nameof(ReadingOccurrence.Yearly), true)]
-        public void Meter_reading_periodicity_is_hourly_or_quarterly_or_monthly(string readingOccurrence, bool expectError)
+        public void Meter_reading_periodicity_is_hourly_or_quaterly(string readingOccurrence, bool expectError)
         {
             var masterData = Builder()
                 .WithReadingPeriodicity(readingOccurrence)
@@ -75,13 +72,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         private static IMasterDataBuilder Builder() =>
-            new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.VEProduction))
-                .WithAddress(streetName: "Test Street", countryCode: CountryCode.DK)
-                .WithReadingPeriodicity(ReadingOccurrence.Yearly.Name);
+            new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Analysis))
+                .WithReadingPeriodicity(ReadingOccurrence.Quarterly.Name)
+                .WithAddress(streetName: "Test street", countryCode: CountryCode.DK);
 
         private static BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
-            return new MasterDataValidator().CheckRulesFor(MeteringPointType.VEProduction, masterData);
+            return new MasterDataValidator().CheckRulesFor(MeteringPointType.Analysis, masterData);
         }
     }
 }

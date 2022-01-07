@@ -75,6 +75,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher
                 () => new ServiceBusClient(connectionString).CreateSender(queueName),
                 Lifestyle.Singleton);
 
+            Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
+
             container.SendProtobuf<SetEnergySupplierInfo>();
         }
     }

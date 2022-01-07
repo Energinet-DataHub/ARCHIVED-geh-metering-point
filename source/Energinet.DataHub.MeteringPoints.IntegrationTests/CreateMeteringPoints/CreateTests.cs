@@ -240,6 +240,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
+        public async Task Reject_when_product_type_is_not_allowed_for_the_metering_point_type()
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    ProductType = ProductType.Tariff.Name,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
+        [Fact]
         public async Task Should_reject_if_capacity_is_invalid()
         {
             var request = Scenarios.CreateDocument()
@@ -414,6 +428,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError("D02");
+        }
+
+        [Fact]
+        public async Task Reject_when_unit_type_is_not_allowed_for_the_metering_point_type()
+        {
+            var request = Scenarios.CreateConsumptionMeteringPointCommand()
+                with
+                {
+                    UnitType = MeasurementUnitType.Ampere.Name,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E73");
         }
 
         [Fact]

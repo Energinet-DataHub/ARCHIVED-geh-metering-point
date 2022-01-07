@@ -96,6 +96,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         internal EnergySupplierDetails? EnergySupplierDetails { get; private set; }
 
+        internal MasterData MasterData => _masterData;
+
         public static BusinessRulesValidationResult CanCreate(MeteringPointType type, MasterData masterData, MasterDataValidator validator)
         {
             if (type is null) throw new ArgumentNullException(nameof(type));

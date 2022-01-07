@@ -102,6 +102,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
                 ExchangeDetails = new ExchangeDetails(document.FromGrid, document.ToGrid),
                 ParentRelatedMeteringPoint = document.ParentRelatedMeteringPoint,
                 UnitType = document.MeasureUnitType,
+                ProductType = document.ProductType,
             };
         }
     }
