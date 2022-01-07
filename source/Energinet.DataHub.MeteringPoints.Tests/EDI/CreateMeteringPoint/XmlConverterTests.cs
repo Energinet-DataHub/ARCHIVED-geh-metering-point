@@ -58,7 +58,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
 
             var deserializationResult = await xmlConverter.DeserializeAsync(_xmlStream).ConfigureAwait(false);
 
-            deserializationResult.HeaderData.Sender.Id.Should().Be("afsender");
+            deserializationResult.HeaderData.Sender.Id.Should().Be("12345678");
 
             var commands = deserializationResult.Documents.Cast<MasterDataDocument>();
 
@@ -66,7 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
 
             command.TypeOfMeteringPoint.Should().Be(nameof(MeteringPointType.Consumption));
             command.GsrnNumber.Should().Be("571234567891234605");
-            command.MaximumPower.Should().Be(0);
+            command.MaximumPower.Should().BeNull();
             command.MeasureUnitType.ToUpperInvariant().Should().Be(nameof(MeasurementUnitType.KWh).ToUpperInvariant());
             command.PowerPlant.Should().Be("571234567891234636");
             command.SettlementMethod.Should().Be(nameof(SettlementMethod.Flex));
