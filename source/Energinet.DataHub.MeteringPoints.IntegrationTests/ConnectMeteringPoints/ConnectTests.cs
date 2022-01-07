@@ -66,7 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
         [Fact]
         public async Task Must_be_coupled_to_parent_to_be_connected()
         {
-            await SendCommandAsync(Scenarios.CreateCommand(MeteringPointType.ExchangeReactiveEnergy)
+            await SendCommandAsync(Scenarios.CreateExchangeReactiveEnergy()
                 with
                 {
                     MeteringMethod = MeteringMethod.Physical.Name,

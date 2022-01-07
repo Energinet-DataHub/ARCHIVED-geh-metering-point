@@ -11,25 +11,22 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using StreetNameIsRequiredRule = Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules.StreetNameIsRequiredRule;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exchange
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 {
-    internal class ExchangeMeteringPointValidator : IMasterDataValidatorStrategy
+    internal class InternalUseValidator : IMasterDataValidatorStrategy
     {
         public BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
             return new BusinessRulesValidationResult(new List<IBusinessRule>()
             {
                 new StreetNameIsRequiredRule(masterData.Address),
-                new GeoInfoReferenceRequirementRule(masterData.Address),
                 new MeterReadingOccurrenceRule(masterData.ReadingOccurrence),
                 new ProductTypeMustBeEnergyActiveRule(masterData.ProductType),
-                new UnitTypeMustBeKwh(masterData.UnitType),
             });
         }
     }

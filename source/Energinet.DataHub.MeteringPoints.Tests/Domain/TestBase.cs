@@ -74,19 +74,25 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 .EffectiveOn(SampleData.EffectiveDate)
                 .WithDisconnectionType(DisconnectionType.Manual.Name)
                 .WithConnectionType(ConnectionType.Installation.Name)
-                .WithMeteringConfiguration(MeteringMethod.Virtual.Name, string.Empty);
+                .WithMeteringConfiguration(MeteringMethod.Virtual.Name, string.Empty)
+                .WithProductType(ProductType.EnergyActive.Name)
+                .WithMeasurementUnitType(MeasurementUnitType.KWh.Name);
 
             return builder;
         }
 
         protected static IMasterDataBuilder MasterDataBuilderForSpecial()
         {
-            return MasterDataBuilder(MeteringPointType.VEProduction);
+            return MasterDataBuilder(MeteringPointType.VEProduction)
+                .WithMeasurementUnitType(MeasurementUnitType.KWh.Name)
+                .WithProductType(ProductType.EnergyActive.Name);
         }
 
         protected static IMasterDataBuilder MasterDataBuilderForProduction()
         {
             var builder = new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Production))
+                .WithMeasurementUnitType(MeasurementUnitType.KWh.Name)
+                .WithProductType(ProductType.EnergyActive.Name)
                 .WithNetSettlementGroup(NetSettlementGroup.One.Name)
                 .WithSettlementMethod(SettlementMethod.Flex.Name)
                 .WithScheduledMeterReadingDate("0101")
@@ -119,7 +125,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
 
         protected static IMasterDataBuilder MasterDataBuilderForExchange()
         {
-            return MasterDataBuilder(MeteringPointType.Exchange);
+            return MasterDataBuilder(MeteringPointType.Exchange)
+                .WithMeasurementUnitType(MeasurementUnitType.KWh.Name)
+                .WithProductType(ProductType.EnergyActive.Name);
+        }
+
+        protected static IMasterDataBuilder MasterDataBuilderForConsumption()
+        {
+            return MasterDataBuilder(MeteringPointType.Consumption)
+                .WithMeasurementUnitType(MeasurementUnitType.KWh.Name)
+                .WithProductType(ProductType.EnergyActive.Name);
         }
 
         protected static Address CreateAddress()
