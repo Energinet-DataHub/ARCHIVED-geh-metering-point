@@ -67,7 +67,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             var message = _actorMessageFactory.ConnectMeteringPointConfirmation(request.GsrnNumber, request.EffectiveDate, request.TransactionId, _actorProvider.DataHub, _actorProvider.CurrentActor);
-            await _messageHubDispatcher.DispatchAsync(message, DocumentType.AcceptConnectMeteringPoint, request.GsrnNumber).ConfigureAwait(false);
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.ConfirmConnectMeteringPoint, request.GsrnNumber).ConfigureAwait(false);
 
             var command = new SendAccountingPointCharacteristicsMessage(
                 _pipelineContext.MeteringPointId,
