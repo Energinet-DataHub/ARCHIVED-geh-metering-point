@@ -32,6 +32,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Connection_type_is_removed_when_changing_net_settlement_group_to_0()
+        {
+            var masterData = Builder()
+                .WithNetSettlementGroup(NetSettlementGroup.One.Name)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithNetSettlementGroup(NetSettlementGroup.Zero.Name)
+                .Build();
+
+            Assert.Equal(null, updatedMasterData.ConnectionType);
+        }
+
+        [Fact]
         public void Scheduled_meter_reading_date_is_removed_when_changing_net_settlement_group_6_to_0()
         {
             var masterData = Builder()
@@ -124,6 +138,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             :base(fields)
         {
             SetValue(nameof(MasterData.ProductType), currentMasterData.ProductType);
+            SetValue(nameof(MasterData.NetSettlementGroup), currentMasterData.NetSettlementGroup);
+            SetValue(nameof(MasterData.ConnectionType), currentMasterData.ConnectionType);
         }
 
         public BusinessRulesValidationResult Validate()
@@ -143,6 +159,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         {
             RemoveValueIfNotApplicable<ScheduledMeterReadingDate>(nameof(MasterData.ScheduledMeterReadingDate),
                 () => GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)) != NetSettlementGroup.Six);
+            RemoveValueIfNotApplicable<ConnectionType>(nameof(MasterData.ConnectionType),
+                () => GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)) == NetSettlementGroup.Zero);
 
             return new MasterData(
                 productType: GetValue<ProductType>(nameof(MasterData.ProductType)),
