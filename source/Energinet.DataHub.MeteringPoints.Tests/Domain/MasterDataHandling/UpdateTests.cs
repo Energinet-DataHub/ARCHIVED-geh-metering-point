@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
 using Xunit.Categories;
@@ -31,13 +31,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [Fact]
         public void Product_type_is_changed()
         {
-            var meteringPoint = CreateAnalysisMeteringPoint();
-
-            var updatedMasterData =
-                new MasterDataUpdater(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Analysis),
-                        meteringPoint.MasterData)
-                    .WithProductType(ProductType.Tariff.Name)
-                    .Build();
+            var updatedMasterData = UpdateBuilder(Builder().Build())
+                .WithProductType(ProductType.Tariff.Name)
+                .Build();
 
             Assert.Equal(ProductType.Tariff, updatedMasterData.ProductType);
         }
@@ -45,14 +41,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [Fact]
         public void Product_type_is_unchanged_if_no_value_is_provided()
         {
-            var meteringPoint = CreateAnalysisMeteringPoint();
+            var currentMasterData = Builder().Build();
 
-            var updatedMasterData =
-                new MasterDataUpdater(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Analysis),
-                        meteringPoint.MasterData)
+            var updatedMasterData = UpdateBuilder(currentMasterData)
                     .Build();
 
-            Assert.Equal(meteringPoint.MasterData.ProductType, updatedMasterData.ProductType);
+            Assert.Equal(currentMasterData.ProductType, updatedMasterData.ProductType);
         }
 
         [Theory]
@@ -60,20 +54,50 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [InlineData("")]
         public void Product_type_is_unchanged_if_a_null_value_is_provided(string? providedProductType)
         {
-            var meteringPoint = CreateAnalysisMeteringPoint();
-
-            var updatedMasterData =
-                new MasterDataUpdater(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Analysis),
-                        meteringPoint.MasterData)
+            var currentMasterData = Builder().Build();
+            var updatedMasterData = UpdateBuilder(currentMasterData)
                     .WithProductType(providedProductType)
                     .Build();
 
-            Assert.Equal(meteringPoint.MasterData.ProductType, updatedMasterData.ProductType);
+            Assert.Equal(currentMasterData.ProductType, updatedMasterData.ProductType);
         }
 
-        private static MeteringPoint CreateAnalysisMeteringPoint()
+        private IMasterDataBuilder Builder(IEnumerable<MasterDataField> fieldConfiguration = null)
         {
-            return CreateMeteringPoint(MeteringPointType.Analysis);
+            return new MasterDataBuilder(fieldConfiguration ?? new List<MasterDataField>())
+                .WithNetSettlementGroup(NetSettlementGroup.One.Name)
+                .WithSettlementMethod(SettlementMethod.Flex.Name)
+                .WithScheduledMeterReadingDate("0101")
+                .WithCapacity(1)
+                .WithAddress(
+                    SampleData.StreetName,
+                    SampleData.StreetCode,
+                    string.Empty,
+                    SampleData.CityName,
+                    string.Empty,
+                    SampleData.PostCode,
+                    CountryCode.DK,
+                    string.Empty,
+                    string.Empty,
+                    default,
+                    isActual: true,
+                    geoInfoReference: Guid.NewGuid(),
+                    null)
+                .WithAssetType(AssetType.GasTurbine.Name)
+                .WithPowerPlant(SampleData.PowerPlant)
+                .WithReadingPeriodicity(ReadingOccurrence.Hourly.Name)
+                .WithPowerLimit(0, 0)
+                .EffectiveOn(SampleData.EffectiveDate)
+                .WithDisconnectionType(DisconnectionType.Manual.Name)
+                .WithConnectionType(ConnectionType.Installation.Name)
+                .WithMeteringConfiguration(MeteringMethod.Virtual.Name, string.Empty)
+                .WithProductType(ProductType.EnergyActive.Name)
+                .WithMeasurementUnitType(MeasurementUnitType.KWh.Name);
+        }
+
+        private MasterDataUpdater UpdateBuilder(MasterData current, IEnumerable<MasterDataField> fieldConfiguration = null)
+        {
+            return new MasterDataUpdater(fieldConfiguration ?? new List<MasterDataField>(), current);
         }
     }
 
