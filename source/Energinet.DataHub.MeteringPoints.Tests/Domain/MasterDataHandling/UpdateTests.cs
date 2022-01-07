@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
@@ -22,6 +23,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Mete
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using FluentAssertions.Specialized;
 using Xunit;
 using Xunit.Categories;
 
@@ -31,6 +33,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     [UnitTest]
     public class UpdateTests : TestBase
     {
+        [Fact]
+        public void Connection_type_is_changed()
+        {
+            var masterData = Builder()
+                .WithConnectionType(ConnectionType.Direct.Name)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithConnectionType(ConnectionType.Installation.Name)
+                .Build();
+
+            Assert.Equal(ConnectionType.Installation, updatedMasterData.ConnectionType);
+        }
+
         [Fact]
         public void Connection_type_is_removed_when_changing_net_settlement_group_to_0()
         {
@@ -274,7 +290,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithConnectionType(string? connectionType)
         {
-            throw new NotImplementedException();
+            SetValueIfValid(nameof(MasterData.ConnectionType), BusinessRulesValidationResult.Valid, () => EnumerationType.FromName<ConnectionType>(connectionType));
+            return this;
         }
 
         public IMasterDataBuilder WithProductionObligation(bool? productionObligation)
