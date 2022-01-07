@@ -50,27 +50,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             masterDataFields.ToList().ForEach(field => ConfigureApplicability(field.Name, field.Applicability));
         }
 
-        public MasterData Build()
-        {
-            return new MasterData(
-                productType: GetValue<ProductType>(nameof(MasterData.ProductType)),
-                unitType: GetValue<MeasurementUnitType>(nameof(MasterData.UnitType)),
-                assetType: GetValue<AssetType>(nameof(MasterData.AssetType)),
-                readingOccurrence: GetValue<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence)),
-                powerLimit: GetValue<PowerLimit>(nameof(MasterData.PowerLimit)),
-                powerPlantGsrnNumber: GetValue<GsrnNumber>(nameof(MasterData.PowerPlantGsrnNumber)),
-                effectiveDate: GetValue<EffectiveDate>(nameof(MasterData.EffectiveDate)),
-                capacity: GetValue<Capacity>(nameof(MasterData.Capacity)),
-                address: GetValue<Address>(nameof(MasterData.Address)),
-                meteringConfiguration: GetValue<MeteringConfiguration>(nameof(MasterData.MeteringConfiguration)),
-                settlementMethod: GetValue<SettlementMethod>(nameof(MasterData.SettlementMethod)),
-                scheduledMeterReadingDate: GetValue<ScheduledMeterReadingDate>(nameof(MasterData.ScheduledMeterReadingDate)),
-                connectionType: GetValue<ConnectionType>(nameof(MasterData.ConnectionType)),
-                disconnectionType: GetValue<DisconnectionType>(nameof(MasterData.DisconnectionType)),
-                netSettlementGroup: GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)),
-                productionObligation: GetValue<bool?>(nameof(MasterData.ProductionObligation)));
-        }
-
         protected void SetValue<T>(string name, T? value)
         {
             var valueItem = GetMasterValueItem<T>(name);
