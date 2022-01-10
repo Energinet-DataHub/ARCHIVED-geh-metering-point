@@ -12,23 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
-using Energinet.DataHub.MeteringPoints.Application.Queries;
+using System.Xml.Linq;
+using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Xml;
 
-namespace Energinet.DataHub.MeteringPoints.Application.EDI
+namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.AccountingPointCharacteristics
 {
-    /// <summary>
-    /// Create business documents.
-    /// </summary>
-    public interface IBusinessDocumentFactory
+    public class AccountingPointCharacteristicsXmlDeclaration : XmlDeclaration
     {
-        /// <summary>
-        /// RSM 22
-        /// </summary>
-        void CreateAccountingPointCharacteristicsMessage(
-            string transactionId,
-            string businessReasonCode,
-            MeteringPointDto meteringPoint,
-            EnergySupplierDto energySupplier);
+        public override string XmlNamespaceText => "urn:ediel.org:structure:accountingpointcharacteristics:0:1";
+
+        public override string SchemaLocationText => "urn-ediel-org-structure-accountingpointcharacteristics-0-1.xsd";
+
+        public override XNamespace XmlNamespace => XmlNamespaceText;
     }
 }

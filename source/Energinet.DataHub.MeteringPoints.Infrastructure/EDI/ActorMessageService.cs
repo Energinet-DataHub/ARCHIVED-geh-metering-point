@@ -17,8 +17,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
+using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
+using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
@@ -145,6 +148,29 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
 
             await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectConnectMeteringPoint, gsrn).ConfigureAwait(false);
+        }
+
+        public async Task SendAccountingPointCharacteristicsMessageAsync(
+            string transactionId,
+            string businessReasonCode,
+            MeteringPointDto meteringPoint,
+            EnergySupplierDto energySupplier)
+        {
+            if (meteringPoint == null) throw new ArgumentNullException(nameof(meteringPoint));
+            if (energySupplier == null) throw new ArgumentNullException(nameof(energySupplier));
+
+            var message = AccountingPointCharacteristicsMessageFactory.Create(
+                transactionId,
+                businessReasonCode,
+                meteringPoint,
+                sender: Map(_actorProvider.DataHub),
+                receiver: new MarketRoleParticipant(energySupplier.GlnNumber, "A10", "DDQ"), // TODO: Re-visit
+                energySupplier,
+                _dateTimeProvider.Now());
+
+            await _messageHubDispatcher
+                .DispatchAsync(message, DocumentType.AccountingPointCharacteristicsMessage, meteringPoint.GsrnNumber)
+                .ConfigureAwait(false);
         }
 
         private static MarketRoleParticipant Map(Actor actor)

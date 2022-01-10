@@ -14,84 +14,52 @@
 
 using System;
 using System.Globalization;
-using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Domain.Extensions;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common.Address;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics
 {
-    public class BusinessDocumentFactory : IBusinessDocumentFactory
+    public static class AccountingPointCharacteristicsMessageFactory
     {
-        private readonly IOutbox _outbox;
-        private readonly IOutboxMessageFactory _outboxMessageFactory;
-        private readonly IJsonSerializer _jsonSerializer;
-        private readonly ICorrelationContext _correlationContext;
-        private readonly ISystemDateTimeProvider _dateTimeProvider;
-
-        public BusinessDocumentFactory(
-            IOutbox outbox,
-            IOutboxMessageFactory outboxMessageFactory,
-            IJsonSerializer jsonSerializer,
-            ICorrelationContext correlationContext,
-            ISystemDateTimeProvider dateTimeProvider)
-        {
-            _outbox = outbox;
-            _outboxMessageFactory = outboxMessageFactory;
-            _jsonSerializer = jsonSerializer;
-            _correlationContext = correlationContext;
-            _dateTimeProvider = dateTimeProvider;
-        }
-
-        public static AccountingPointCharacteristicsMessage MapAccountingPointCharacteristicsMessage(
-            string id,
-            string requestTransactionId,
+        public static AccountingPointCharacteristicsMessage Create(
+            string transactionId,
             string businessReasonCode,
             MeteringPointDto meteringPoint,
+            MarketRoleParticipant sender,
+            MarketRoleParticipant receiver,
             EnergySupplierDto energySupplier,
             Instant createdDate)
         {
-            if (requestTransactionId == null) throw new ArgumentNullException(nameof(requestTransactionId));
             if (meteringPoint == null) throw new ArgumentNullException(nameof(meteringPoint));
             if (energySupplier == null) throw new ArgumentNullException(nameof(energySupplier));
 
             var accountingPointCharacteristicsMessage = new AccountingPointCharacteristicsMessage(
-                Id: id,
+                Id: Guid.NewGuid().ToString(),
                 Type: "E07",
                 ProcessType: businessReasonCode,
                 BusinessSectorType: "23",
-                Sender: new MarketRoleParticipant(
-                    Id: "5790001330552", // TODO: Fix hardcoded Energinet GLN, Actor register?
-                    CodingScheme: "A10", // TODO: A10 = GLN, A01 = EIC, Actor register
-                    Role: "DDZ"), // TODO: Actor register? DDZ is correct for now for this document.
-                Receiver: new MarketRoleParticipant(
-                    Id: energySupplier.GlnNumber,
-                    CodingScheme: "A10", // TODO: A10 = GLN, A01 = EIC, Actor register
-                    Role: "DDQ"), // TODO: Actor register, this will differ for other RSM22 scenarios
+                Sender: sender,
+                Receiver: receiver,
                 CreatedDateTime: createdDate,
                 MarketActivityRecord: new MarketActivityRecord(
                     Id: Guid.NewGuid().ToString(),
                     ValidityStartDateAndOrTime: meteringPoint.EffectiveDate.ToDateTimeUtc().ToUtcString(),
-                    OriginalTransaction: requestTransactionId,
+                    OriginalTransaction: transactionId,
                     MarketEvaluationPoint: new MarketEvaluationPoint(
                         Id: new Mrid(meteringPoint.GsrnNumber, "A10"),
                         MeteringPointResponsibleMarketRoleParticipant: new MarketParticipant(
-                            "GLN number of grid operator", "A10"), // TODO: Update when grid operators are a thing. And codingScheme from Actor Register
+                            "12345678", "A10"), // TODO: Update when grid operators are a thing. And codingScheme from Actor Register
                         Type: meteringPoint.MeteringPointType,
                         SettlementMethod: meteringPoint.SettlementMethod,
                         MeteringMethod: meteringPoint.MeteringPointSubType,
                         ConnectionState: meteringPoint.PhysicalState,
                         ReadCycle: meteringPoint.ReadingOccurrence,
                         NetSettlementGroup: meteringPoint.NetSettlementGroup,
-                        NextReadingDate: "N/A", // TODO: Only for netsettlement group 6, format: "MMdd"
+                        NextReadingDate: "--01-01", // TODO: Only for netsettlement group 6, format: "MMdd"
                         MeteringGridAreaDomainId: new Mrid(meteringPoint.GridAreaCode, "NDK"),
                         InMeteringGridAreaDomainId: meteringPoint.FromGridAreaCode != null ? new Mrid(meteringPoint.FromGridAreaCode!, "NDK") : null!,
                         OutMeteringGridAreaDomainId: meteringPoint.ToGridAreaCode != null ? new Mrid(meteringPoint.ToGridAreaCode!, "NDK") : null!,
@@ -145,39 +113,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                             Description: "D06")))); // TODO: Hardcoded, not implemented yet
 
             return accountingPointCharacteristicsMessage;
-        }
-
-        public void CreateAccountingPointCharacteristicsMessage(
-            string transactionId,
-            string businessReasonCode,
-            MeteringPointDto meteringPoint,
-            EnergySupplierDto energySupplier)
-        {
-            var accountingPointCharacteristicsMessage = MapAccountingPointCharacteristicsMessage(
-                Guid.NewGuid().ToString(),
-                transactionId,
-                businessReasonCode,
-                meteringPoint,
-                energySupplier,
-                _dateTimeProvider.Now());
-
-            var serializedMessage = AccountingPointCharacteristicsXmlSerializer
-                .Serialize(accountingPointCharacteristicsMessage);
-
-            var messageHubEnvelope = new MessageHubEnvelope(
-                string.Empty,
-                _jsonSerializer.Serialize(serializedMessage),
-                DocumentType.AccountingPointCharacteristicsMessage,
-                _correlationContext.Id,
-                meteringPoint.GsrnNumber);
-
-            AddToOutbox(messageHubEnvelope);
-        }
-
-        private void AddToOutbox<TEdiMessage>(TEdiMessage ediMessage)
-        {
-            var outboxMessage = _outboxMessageFactory.CreateFrom(ediMessage, OutboxMessageCategory.ActorMessage);
-            _outbox.Add(outboxMessage);
         }
     }
 }

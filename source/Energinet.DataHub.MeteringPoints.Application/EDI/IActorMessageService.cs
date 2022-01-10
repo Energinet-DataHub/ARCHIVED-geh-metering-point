@@ -14,6 +14,8 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
+using Energinet.DataHub.MeteringPoints.Application.Queries;
 using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Application.EDI
@@ -75,5 +77,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.EDI
             string transactionId,
             string gsrn,
             IEnumerable<ErrorMessage> errors);
+
+        /// <summary>
+        /// Send accounting point characteristics message.
+        /// </summary>
+        Task SendAccountingPointCharacteristicsMessageAsync(
+            string transactionId,
+            string businessReasonCode,
+            MeteringPointDto meteringPoint,
+            EnergySupplierDto energySupplier);
     }
 }
