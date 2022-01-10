@@ -32,6 +32,21 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Meter_number_is_ignored_if_not_applicable_according_to_metering_method()
+        {
+            var masterData = Builder()
+                .WithMeteringConfiguration(MeteringMethod.Virtual.Name, null)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithMeteringConfiguration(MeteringMethod.Calculated.Name, "2")
+                .Build();
+
+            Assert.Equal(MeteringMethod.Calculated, updatedMasterData.MeteringConfiguration.Method);
+            Assert.Equal("", updatedMasterData.MeteringConfiguration.Meter.Value);
+        }
+
+        [Fact]
         public void Meter_number_is_changed()
         {
             var masterData = Builder()
