@@ -29,7 +29,7 @@ jobs:
   dotnet_solution_ci:
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@2.7.0
     with:
-      SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
+      SOLUTION_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.sln'
       DOTNET_VERSION: '5.0'
       USE_AZURITE: true
       USE_AZURE_FUNCTIONS_CORE_TOOLS: true
@@ -47,14 +47,46 @@ jobs:
       TERRAFORM_VERSION: '1.0.10'
 
   # Create function host articfact for deployment
-  functionhost_ci:
+  ingestion_ci:
     # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
     needs: [ci_base, terraform_validate, dotnet_solution_ci]
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
     with:
-      CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.FunctionHost/GreenEnergyHub.Charges.FunctionHost.csproj'
+      CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion/Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.csproj'
       DOTNET_VERSION: '5.0.202'
       ARTIFACT_NAME: functionhost
+
+   outbox_ci:
+    needs: [ci_base, terraform_validate, dotnet_solution_ci]
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
+    with:
+      CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.Outbox/Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.csproj'
+      DOTNET_VERSION: '5.0.202'
+      ARTIFACT_NAME: outbox
+
+  processing_ci:
+    needs: [ci_base, terraform_validate, dotnet_solution_ci]
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
+    with:
+      CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.Processing/Energinet.DataHub.MeteringPoints.EntryPoints.Processing.csproj'
+      DOTNET_VERSION: '5.0.202'
+      ARTIFACT_NAME: processing
+
+  localmessagehub_ci:
+    needs: [ci_base, terraform_validate, dotnet_solution_ci]
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
+    with:
+      CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub/Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub.csproj'
+      DOTNET_VERSION: '5.0.202'
+      ARTIFACT_NAME: localmessagehub
+
+  internalcommanddispatcher_ci:
+    needs: [ci_base, terraform_validate, dotnet_solution_ci]
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
+    with:
+      CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher/Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher.csproj'
+      DOTNET_VERSION: '5.0.202'
+      ARTIFACT_NAME: internalcommanddispatcher
 
   # Create web API articfact for deployment
   webapi_ci:
@@ -62,7 +94,7 @@ jobs:
     needs: [ci_base, terraform_validate, dotnet_solution_ci]
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-webapi-artifact.yml@2.7.0
     with:
-      CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.WebApi/GreenEnergyHub.Charges.WebApi.csproj'
+      CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.WebApi/Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.csproj'
       DOTNET_VERSION: '5.0.202'
       ARTIFACT_NAME: webapi
 
@@ -72,19 +104,23 @@ jobs:
     needs: [ci_base, terraform_validate, dotnet_solution_ci]
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
     with:
-      CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp/GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj'
+      CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp/Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.csproj'
       DOTNET_VERSION: '5.0.202'
       ARTIFACT_NAME: databasemigration
 
   # Create pre-release that might eventually be deployed in CD pipeline
   create_prerelease:
     needs: [
-      functionhost_ci,
+      ingestion_ci,
+      outbox_ci,
+      processing_ci,
       webapi_ci,
+      localmessagehub_ci,
+      internalcommanddispatcher_ci,
       database_migration_ci
     ]
     uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@2.7.0
     with:
-      CALLER_REPOSITORY_PATH: Energinet-DataHub/geh-charges
+      CALLER_REPOSITORY_PATH: Energinet-DataHub/metering-point
     secrets:
       PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
