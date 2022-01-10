@@ -13,24 +13,43 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bundling;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.MarketRoles;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.MarketRoles
+namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.Generic
 {
     // TODO: This is a hack used during the test period and should be removed as soon as the business processes from Market roles are included
-    public static class GenericNotificationMessageXmlSerializer
+    public class GenericNotificationMessageXmlSerializer : IDocumentSerializer<GenericNotificationMessage>
     {
         private static readonly XNamespace _xmlNamespace = "urn:ediel.org:structure:genericnotification:0:1";
 
-        public static string Serialize(GenericNotificationMessage message)
+        public string Serialize(GenericNotificationMessage message)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
 
             var document = CreateDocumentWithHeader(message);
             document
-                .Element(_xmlNamespace + message.DocumentName)
+                ?.Element(_xmlNamespace + message.DocumentName)
                 ?.Add(CreateMarketActivityRecord(message));
+
+            return Serialize(document!);
+        }
+
+        public string Serialize(IList<GenericNotificationMessage> messages)
+        {
+            if (messages == null) throw new ArgumentNullException(nameof(messages));
+
+            var document = CreateDocumentWithHeader(messages.First());
+            foreach (var message in messages)
+            {
+                document
+                    ?.Element(_xmlNamespace + message.DocumentName)
+                    ?.Add(CreateMarketActivityRecord(message));
+            }
 
             return Serialize(document!);
         }

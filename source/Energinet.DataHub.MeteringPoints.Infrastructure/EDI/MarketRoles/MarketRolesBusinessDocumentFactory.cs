@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -31,42 +32,29 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.MarketRoles
     {
         private readonly IOutbox _outbox;
         private readonly IOutboxMessageFactory _outboxMessageFactory;
-        private readonly IJsonSerializer _jsonSerializer;
-        private readonly ICorrelationContext _correlationContext;
         private readonly ISystemDateTimeProvider _dateTimeProvider;
         private readonly ActorProvider _actorProvider;
+        private readonly IMessageHubDispatcher _messageHubDispatcher;
 
         public MarketRolesBusinessDocumentFactory(
             IOutbox outbox,
             IOutboxMessageFactory outboxMessageFactory,
-            IJsonSerializer jsonSerializer,
-            ICorrelationContext correlationContext,
             ISystemDateTimeProvider dateTimeProvider,
-            ActorProvider actorProvider)
+            ActorProvider actorProvider,
+            IMessageHubDispatcher messageHubDispatcher)
         {
             _outbox = outbox;
             _outboxMessageFactory = outboxMessageFactory;
-            _jsonSerializer = jsonSerializer;
-            _correlationContext = correlationContext;
             _dateTimeProvider = dateTimeProvider;
             _actorProvider = actorProvider;
+            _messageHubDispatcher = messageHubDispatcher;
         }
 
-        public void CreateMoveInMessage(string gsrn, Instant startDate)
+        public async Task CreateMoveInMessageAsync(string gsrn, Instant startDate)
         {
-            var moveInMessage = MapMoveInMessage(gsrn, startDate);
+            var message = MapMoveInMessage(gsrn, startDate);
 
-            var serializedMessage = GenericNotificationMessageXmlSerializer
-                .Serialize(moveInMessage);
-
-            var messageHubEnvelope = new MessageHubEnvelope(
-                string.Empty,
-                _jsonSerializer.Serialize(serializedMessage),
-                DocumentType.GenericNotification,
-                _correlationContext.Id,
-                gsrn);
-
-            AddToOutbox(messageHubEnvelope);
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.GenericNotification, gsrn).ConfigureAwait(false);
         }
 
         protected GenericNotificationMessage MapMoveInMessage(string gsrn, Instant startDate)

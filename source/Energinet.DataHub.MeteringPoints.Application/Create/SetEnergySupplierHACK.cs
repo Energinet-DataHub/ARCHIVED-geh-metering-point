@@ -48,7 +48,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                     notification.GsrnNumber,
                     notification.EffectiveDate)).ConfigureAwait(false);
 
-                _marketRolesBusinessDocumentFactory.CreateMoveInMessage(notification.GsrnNumber, notification.EffectiveDate);
+                await _marketRolesBusinessDocumentFactory
+                    .CreateMoveInMessageAsync(notification.GsrnNumber, notification.EffectiveDate)
+                    .ConfigureAwait(false);
             }
         }
     }
