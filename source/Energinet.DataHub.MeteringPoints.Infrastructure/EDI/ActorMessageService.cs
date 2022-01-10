@@ -22,7 +22,6 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GenericNotification;
 using NodaTime;
 using Actor = Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors.Actor;
@@ -88,6 +87,35 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
 
             await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectCreateMeteringPoint, gsrn).ConfigureAwait(false);
+        }
+
+        public async Task SendUpdateMeteringPointConfirmAsync(string transactionId, string gsrn)
+        {
+            var message = ConfirmMessageFactory.CreateMeteringPoint(
+                sender: Map(_actorProvider.DataHub),
+                receiver: Map(_actorProvider.CurrentActor),
+                createdDateTime: _dateTimeProvider.Now(),
+                marketActivityRecord: new Acknowledgements.MarketActivityRecord(
+                    Id: Guid.NewGuid().ToString(),
+                    MarketEvaluationPoint: gsrn,
+                    OriginalTransaction: transactionId));
+
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.ConfirmChangeMasterData, gsrn).ConfigureAwait(false);
+        }
+
+        public async Task SendUpdateMeteringPointRejectAsync(string transactionId, string gsrn, IEnumerable<ErrorMessage> errors)
+        {
+            var message = RejectMessageFactory.ConnectMeteringPoint(
+                sender: Map(_actorProvider.DataHub),
+                receiver: Map(_actorProvider.CurrentActor),
+                createdDateTime: _dateTimeProvider.Now(),
+                marketActivityRecord: new MarketActivityRecordWithReasons(
+                    Id: Guid.NewGuid().ToString(),
+                    MarketEvaluationPoint: gsrn,
+                    OriginalTransaction: transactionId,
+                    Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
+
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectChangeMasterData, gsrn).ConfigureAwait(false);
         }
 
         public async Task SendConnectMeteringPointConfirmAsync(string transactionId, string gsrn)

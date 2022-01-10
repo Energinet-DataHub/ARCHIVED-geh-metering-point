@@ -47,6 +47,21 @@ namespace Energinet.DataHub.MeteringPoints.Application.EDI
             IEnumerable<ErrorMessage> errors);
 
         /// <summary>
+        /// Confirmation of update metering point.
+        /// </summary>
+        Task SendUpdateMeteringPointConfirmAsync(
+            string transactionId,
+            string gsrn);
+
+        /// <summary>
+        /// Rejection of update metering point.
+        /// </summary>
+        Task SendUpdateMeteringPointRejectAsync(
+            string transactionId,
+            string gsrn,
+            IEnumerable<ErrorMessage> errors);
+
+        /// <summary>
         /// Confirmation of connect metering point.
         /// </summary>
         Task SendConnectMeteringPointConfirmAsync(
