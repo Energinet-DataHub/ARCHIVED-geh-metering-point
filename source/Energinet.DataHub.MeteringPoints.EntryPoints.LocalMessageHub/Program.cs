@@ -30,6 +30,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bundling;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.MarketRoles;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency;
@@ -40,6 +41,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integra
 using Energinet.DataHub.MeteringPoints.Messaging;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Confirm;
+using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Generic;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Reject;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using MediatR;
@@ -112,6 +114,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub
             // TODO: register with assembly scan once assemblies have been split.
             container.Register<IRequestHandler<BundleRequest<ConfirmMessage>, string>, ConfirmMessageBundleHandler>(Lifestyle.Scoped);
             container.Register<IRequestHandler<BundleRequest<RejectMessage>, string>, RejectMessageBundleHandler>(Lifestyle.Scoped);
+            container.Register<IRequestHandler<BundleRequest<GenericNotificationMessage>, string>, GenericNotificationBundleHandler>(Lifestyle.Scoped);
 
             var messageHubStorageConnectionString = Environment.GetEnvironmentVariable("MESSAGEHUB_STORAGE_CONNECTION_STRING") ?? throw new InvalidOperationException("MessageHub storage connection string not found.");
             var messageHubStorageContainerName = Environment.GetEnvironmentVariable("MESSAGEHUB_STORAGE_CONTAINER_NAME") ?? throw new InvalidOperationException("MessageHub storage container name not found.");
