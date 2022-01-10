@@ -50,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         [Fact]
         public void Should_create()
         {
-            var monthAndDay = "--02-01";
+            var monthAndDay = "0201";
             var scheduledMeterReadingDate = ScheduledMeterReadingDate.Create(monthAndDay);
 
             Assert.Equal(monthAndDay, scheduledMeterReadingDate.MonthAndDay);
