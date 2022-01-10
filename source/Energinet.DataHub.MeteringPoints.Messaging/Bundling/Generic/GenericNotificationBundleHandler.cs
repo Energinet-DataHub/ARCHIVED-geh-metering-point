@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bundling;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.MarketRoles;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GenericNotification;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 
 namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.Generic

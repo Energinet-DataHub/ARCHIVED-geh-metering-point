@@ -16,7 +16,7 @@ using System;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.MarketRoles;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GenericNotification;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
 {

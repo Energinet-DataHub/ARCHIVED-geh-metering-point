@@ -58,7 +58,6 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.MarketRoles;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
@@ -166,10 +165,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageXmlSerializer>(Lifestyle.Singleton);
             _container.Register<IDocumentSerializer<RejectMessage>, RejectMessageXmlSerializer>(Lifestyle.Singleton);
 
-            _container.Register<IActorMessageFactory, ActorMessageFactory>(Lifestyle.Scoped);
             _container.Register<IMessageHubDispatcher, MessageHubDispatcher>(Lifestyle.Scoped);
             _container.Register<IBusinessDocumentFactory, BusinessDocumentFactory>(Lifestyle.Scoped);
-            _container.Register<IMarketRolesBusinessDocumentFactory, MarketRolesBusinessDocumentFactory>(Lifestyle.Scoped);
+            _container.Register<IActorMessageService, ActorMessageService>(Lifestyle.Scoped);
 
             _container.Register<ChangeMasterDataSettings>(() => new ChangeMasterDataSettings(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1));
             _container.Register<ConnectSettings>(() => new ConnectSettings(

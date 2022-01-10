@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint

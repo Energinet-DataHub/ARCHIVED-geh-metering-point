@@ -246,7 +246,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             await ServiceBusResourceProvider.DisposeAsync().ConfigureAwait(false);
 
             // => Database
-            await DatabaseManager.DeleteDatabaseAsync().ConfigureAwait(false);
+            // await DatabaseManager.DeleteDatabaseAsync().ConfigureAwait(false);
         }
 
         /// <summary>

@@ -56,7 +56,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.MarketRoles;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GenericNotification;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notifications;
@@ -161,7 +161,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
             container.Register<INotificationReceiver, NotificationReceiver>(Lifestyle.Scoped);
             container.Register<IBusinessDocumentFactory, BusinessDocumentFactory>(Lifestyle.Scoped);
-            container.Register<IMarketRolesBusinessDocumentFactory, MarketRolesBusinessDocumentFactory>(Lifestyle.Scoped);
+            container.Register<IActorMessageService, ActorMessageService>(Lifestyle.Scoped);
             container.Register<MeteringPointPipelineContext>(Lifestyle.Scoped);
             container.Register<ActorProvider>(Lifestyle.Scoped);
 
@@ -173,7 +173,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IDocumentSerializer<RejectMessage>, RejectMessageXmlSerializer>(Lifestyle.Singleton);
             container.Register<IDocumentSerializer<GenericNotificationMessage>, GenericNotificationMessageXmlSerializer>(Lifestyle.Singleton);
 
-            container.Register<IActorMessageFactory, ActorMessageFactory>(Lifestyle.Scoped);
             container.Register<IMessageHubDispatcher, MessageHubDispatcher>(Lifestyle.Scoped);
 
             container.Register<ChangeMasterDataSettings>(() => new ChangeMasterDataSettings(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1));
