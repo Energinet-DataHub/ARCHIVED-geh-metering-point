@@ -32,6 +32,21 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Meter_number_is_changed()
+        {
+            var masterData = Builder()
+                .WithMeteringConfiguration(MeteringMethod.Physical.Name, "1")
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithMeteringConfiguration(null, "2")
+                .Build();
+
+            Assert.Equal(masterData.MeteringConfiguration.Method, updatedMasterData.MeteringConfiguration.Method);
+            Assert.Equal("2", updatedMasterData.MeteringConfiguration.Meter.Value);
+        }
+
+        [Fact]
         public void Connection_type_is_removed_if_field_is_not_allowed()
         {
             var masterData = Builder()
@@ -215,6 +230,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             SetValue(nameof(MasterData.ProductType), currentMasterData.ProductType);
             SetValue(nameof(MasterData.NetSettlementGroup), currentMasterData.NetSettlementGroup);
             SetValue(nameof(MasterData.ConnectionType), currentMasterData.ConnectionType);
+            SetValue(nameof(MasterData.MeteringConfiguration), currentMasterData.MeteringConfiguration);
         }
 
         public BusinessRulesValidationResult Validate()
@@ -273,9 +289,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             return this;
         }
 
-        public IMasterDataBuilder WithMeteringConfiguration(string method, string? meterNumber)
+        public IMasterDataBuilder WithMeteringConfiguration(string? method, string? meterNumber)
         {
-            throw new NotImplementedException();
+            SetValueIfValid(
+                nameof(MasterData.MeteringConfiguration),
+                BusinessRulesValidationResult.Valid,
+                () => MeteringConfiguration.Create(GetValue<MeteringConfiguration>(nameof(MasterData.MeteringConfiguration)).Method, MeterId.Create(meterNumber)));
+            return this;
         }
 
         public IMasterDataBuilder WithAddress(string? streetName = null, string? streetCode = null, string? buildingNumber = null,
