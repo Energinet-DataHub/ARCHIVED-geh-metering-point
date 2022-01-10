@@ -19,57 +19,59 @@ limitations under the License.
     <cim:businessSector.type>23</cim:businessSector.type>
     <cim:sender_MarketParticipant.mRID codingScheme="A10">5799999933318</cim:sender_MarketParticipant.mRID>
     <cim:sender_MarketParticipant.marketRole.type>DDM</cim:sender_MarketParticipant.marketRole.type>
-    <cim:receiver_MarketParticipant.mRID codingScheme="A01">5790001330552</cim:receiver_MarketParticipant.mRID>
+    <cim:receiver_MarketParticipant.mRID codingScheme="A10">5790001330552</cim:receiver_MarketParticipant.mRID>
     <cim:receiver_MarketParticipant.marketRole.type>DDZ</cim:receiver_MarketParticipant.marketRole.type>
     <cim:createdDateTime>2021-12-17T09:30:47Z</cim:createdDateTime>
     <cim:MktActivityRecord>
         <cim:mRID>25361487</cim:mRID>
+        <cim:businessProcessReference_MktActivityRecord.mRID>String</cim:businessProcessReference_MktActivityRecord.mRID>
         <cim:validityStart_DateAndOrTime.dateTime>2021-12-17T23:00:00Z</cim:validityStart_DateAndOrTime.dateTime>
         <cim:MarketEvaluationPoint>
             <cim:mRID codingScheme="A10">579999993331812345</cim:mRID>
             <cim:type>E17</cim:type>
             <cim:settlementMethod>E02</cim:settlementMethod>
-            <cim:meteringMethod>D01</cim:meteringMethod> <!-- målepunktsart -->
-            <cim:connectionState>D03</cim:connectionState> <!-- tilslutningsstatus -->
-            <cim:readCycle>PT1H</cim:readCycle> <!-- Aflæsningsfrekvens -->
+            <cim:meteringMethod>D01</cim:meteringMethod>
+            <cim:connectionState>D03</cim:connectionState>
+            <cim:readCycle>PT1H</cim:readCycle>
             <cim:netSettlementGroup>6</cim:netSettlementGroup>
-            <cim:nextReadingDate>--12-01</cim:nextReadingDate> <!-- Medsendes kun for nettoafregningsgruppe 6, format: MM01 -->
+            <cim:nextReadingDate>--12-01</cim:nextReadingDate>
             <cim:meteringGridArea_Domain.mRID codingScheme="NDK">244</cim:meteringGridArea_Domain.mRID>
-            <cim:inMeteringGridArea_Domain.mRID codingScheme="NDK">031</cim:inMeteringGridArea_Domain.mRID> <!-- Kun udvekslingsmålepunkt -->
-            <cim:outMeteringGridArea_Domain.mRID codingScheme="NDK">244</cim:outMeteringGridArea_Domain.mRID> <!-- Kun udvekslingsmålepunkt -->
-            <cim:linked_MarketEvaluationPoint.mRID>579999993331812327</cim:linked_MarketEvaluationPoint.mRID> <!-- Værks-GSRN -->
-            <cim:physicalConnectionCapacity unit="KWT">6000</cim:physicalConnectionCapacity> <!-- Anlægskapacitet -->
-            <cim:mPConnectionType>D01</cim:mPConnectionType> <!-- Tilslutningstype -->
-            <cim:disconnectionMethod>D01</cim:disconnectionMethod>  <!-- Afbrydelsesart -->
-            <cim:asset_MktPSRType.psrType>D12</cim:asset_MktPSRType.psrType> <!-- målepunktsteknologi -->
-            <cim:productionObligation>false</cim:productionObligation> <!-- Aftagepligt - kan kun sættes af Energinet DataHub -->
-            <cim:contractedConnectionCapacity unit="KWT">230</cim:contractedConnectionCapacity> <!-- Effektgrænse effekt -->
-            <cim:ratedCurrent unit="AMP">32</cim:ratedCurrent> <!-- Effektgrænse Ampere -->
-            <cim:meter.mRID>2536258974</cim:meter.mRID>	<!--	måler nummer -->
+            <cim:inMeteringGridArea_Domain.mRID codingScheme="NDK">031</cim:inMeteringGridArea_Domain.mRID>
+            <cim:outMeteringGridArea_Domain.mRID codingScheme="NDK">244</cim:outMeteringGridArea_Domain.mRID>
+            <cim:linked_MarketEvaluationPoint.mRID codingScheme="A10">579999993331812327</cim:linked_MarketEvaluationPoint.mRID>
+            <cim:physicalConnectionCapacity unit="KWT">6000</cim:physicalConnectionCapacity>
+            <cim:mPConnectionType>D01</cim:mPConnectionType>
+            <cim:disconnectionMethod>D01</cim:disconnectionMethod>
+            <cim:asset_MktPSRType.psrType>D12</cim:asset_MktPSRType.psrType>
+            <cim:productionObligation>false</cim:productionObligation>
+            <cim:contractedConnectionCapacity unit="KWT">230</cim:contractedConnectionCapacity>
+            <cim:ratedCurrent unit="AMP">32</cim:ratedCurrent>
+            <cim:meter.mRID>2536258974</cim:meter.mRID>
             <cim:Series>
-                <cim:product>8716867000030</cim:product> <!-- Produkt kode -->
-                <cim:quantity_Measure_Unit.name>KWH</cim:quantity_Measure_Unit.name> <!-- Enhed -->
+                <cim:product>8716867000030</cim:product>
+                <cim:estimatedAnnualVolume_Quantity.quantity>0</cim:estimatedAnnualVolume_Quantity.quantity>
+                <cim:quantity_Measure_Unit.name>KWH</cim:quantity_Measure_Unit.name>
             </cim:Series>
-            <cim:description>3. bygning til venstre</cim:description> <!-- Målepunktskommentar -->
-            <cim:usagePointLocation.geoInfoReference>0a3f50b9-b942-32b8-e044-0003ba298018</cim:usagePointLocation.geoInfoReference> <!-- DAR reference -->
-            <cim:usagePointLocation.actualAddressIndicator>true</cim:usagePointLocation.actualAddressIndicator> <!-- Faktisk målepunktsadresse (tidligere vaskbar) -->
+            <cim:description>3. bygning til venstre</cim:description>
+            <cim:usagePointLocation.geoInfoReference>0a3f50b9-b942-32b8-e044-0003ba298018</cim:usagePointLocation.geoInfoReference>
             <cim:usagePointLocation.mainAddress>
                 <cim:streetDetail>
-                    <cim:code>0405</cim:code> <!-- Vejkode -->
-                    <cim:name>Vestergade</cim:name> <!-- Vejnavn -->
-                    <cim:number>10</cim:number> <!-- Husnummer -->
-                    <cim:floorIdentification>1</cim:floorIdentification> <!-- etage -->
-                    <cim:suiteNumber>12</cim:suiteNumber> <!-- dør -->
+                    <cim:code>0405</cim:code>
+                    <cim:name>Vestergade</cim:name>
+                    <cim:number>10</cim:number>
+                    <cim:floorIdentification>1</cim:floorIdentification>
+                    <cim:suiteNumber>12</cim:suiteNumber>
                 </cim:streetDetail>
                 <cim:townDetail>
-                    <cim:code>0625</cim:code> <!-- Kommunekode -->
-                    <cim:name>Middelfart</cim:name> <!-- Postdistrikt -->
-                    <cim:section>Strib</cim:section>  <!-- Supplerende bynavn -->
-                    <cim:country>DK</cim:country> <!-- Målepunktskommentar -->
+                    <cim:code>0625</cim:code>
+                    <cim:name>Middelfart</cim:name>
+                    <cim:section>Strib</cim:section>
+                    <cim:country>DK</cim:country>
                 </cim:townDetail>
-                <cim:postalCode>5500</cim:postalCode> <!-- Postnummer -->
+                <cim:postalCode>5500</cim:postalCode>
             </cim:usagePointLocation.mainAddress>
-            <cim:parent_MarketEvaluationPoint.mRID>579999993331812345</cim:parent_MarketEvaluationPoint.mRID> <!-- Parent målepunkt -->
+            <cim:usagePointLocation.actualAddressIndicator>true</cim:usagePointLocation.actualAddressIndicator>
+            <cim:parent_MarketEvaluationPoint.mRID codingScheme="A10">579999993331812345</cim:parent_MarketEvaluationPoint.mRID>
         </cim:MarketEvaluationPoint>
     </cim:MktActivityRecord>
 </cim:RequestChangeAccountingPointCharacteristics_MarketDocument>

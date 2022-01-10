@@ -77,8 +77,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
 
             // Assert
             // Ingestion
-            ingestionResponse.StatusCode.Should().Be(HttpStatusCode.OK);
             Fixture.TestLogger.WriteLine(ingestionResponseBody);
+            ingestionResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
             // Processing
             await AssertFunctionExecuted(Fixture.ProcessingHostManager, "QueueSubscriber").ConfigureAwait(false);
