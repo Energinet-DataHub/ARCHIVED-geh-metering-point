@@ -47,6 +47,21 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Fact]
+        public void Meter_number_is_removed_if_changing_method_from_physical()
+        {
+            var masterData = Builder()
+                .WithMeteringConfiguration(MeteringMethod.Physical.Name, "1")
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithMeteringConfiguration(MeteringMethod.Calculated.Name, null)
+                .Build();
+
+            Assert.Equal(MeteringMethod.Calculated, updatedMasterData.MeteringConfiguration.Method);
+            Assert.Equal(string.Empty, updatedMasterData.MeteringConfiguration.Meter.Value);
+        }
+
+        [Fact]
         public void Connection_type_is_removed_if_field_is_not_allowed()
         {
             var masterData = Builder()
@@ -291,10 +306,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithMeteringConfiguration(string? method, string? meterNumber)
         {
+            var currentMeterConfiguration = GetValue<MeteringConfiguration>(nameof(MasterData.MeteringConfiguration));
+            var meteringMethod = string.IsNullOrEmpty(method) ? GetValue<MeteringConfiguration>(nameof(MasterData.MeteringConfiguration)).Method : EnumerationType.FromName<MeteringMethod>(method);
+            var meterId = meteringMethod == MeteringMethod.Physical ? string.IsNullOrEmpty(meterNumber)
+                    ? currentMeterConfiguration.Meter : MeterId.Create(meterNumber) : MeterId.Empty();
+
             SetValueIfValid(
                 nameof(MasterData.MeteringConfiguration),
                 BusinessRulesValidationResult.Valid,
-                () => MeteringConfiguration.Create(GetValue<MeteringConfiguration>(nameof(MasterData.MeteringConfiguration)).Method, MeterId.Create(meterNumber)));
+                () => MeteringConfiguration.Create(meteringMethod, meterId));
             return this;
         }
 
