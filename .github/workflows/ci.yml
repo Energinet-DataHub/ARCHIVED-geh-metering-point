@@ -52,7 +52,7 @@ jobs:
       DOTNET_VERSION: '5.0.202'
       ARTIFACT_NAME: functionhost
 
-   outbox_ci:
+  outbox_ci:
     needs: [ci_base, terraform_validate, dotnet_solution_ci]
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
     with:
