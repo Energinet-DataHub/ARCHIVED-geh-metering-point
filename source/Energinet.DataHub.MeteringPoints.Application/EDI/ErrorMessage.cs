@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors
+namespace Energinet.DataHub.MeteringPoints.Application.EDI
 {
     public record ErrorMessage(string Code, string Description);
 }
