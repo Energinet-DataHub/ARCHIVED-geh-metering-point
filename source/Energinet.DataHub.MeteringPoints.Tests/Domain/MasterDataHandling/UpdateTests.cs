@@ -32,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
-        public void Connnection_type_is_removed_if_field_is_not_allowed()
+        public void Connection_type_is_removed_if_field_is_not_allowed()
         {
             var masterData = Builder()
                 .WithConnectionType(ConnectionType.Direct.Name)
