@@ -127,7 +127,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             };
             await SendCommandAsync(createParentCommand).ConfigureAwait(false);
 
-            var createChildCommand = Scenarios.CreateCommand(MeteringPointType.ExchangeReactiveEnergy)
+            var createChildCommand = Scenarios.CreateExchangeReactiveEnergy()
                 with
                 {
                     ParentRelatedMeteringPoint = createParentCommand.GsrnNumber,

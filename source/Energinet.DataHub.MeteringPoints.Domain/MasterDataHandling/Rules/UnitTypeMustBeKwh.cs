@@ -12,19 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Application.EDI;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
-    public class ProductTypeMandatoryErrorConverter : ErrorConverter<ProductTypeMandatoryValidationError>
+    public class UnitTypeMustBeKwh : IBusinessRule
     {
-        protected override ErrorMessage Convert(ProductTypeMandatoryValidationError validationError)
+        public UnitTypeMustBeKwh(MeasurementUnitType unitType)
         {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-
-            return new ErrorMessage("D02", $"Product type is missing");
+            IsBroken = unitType != MeasurementUnitType.KWh;
         }
+
+        public bool IsBroken { get; }
+
+        public ValidationError ValidationError => new UnitTypeIsNotValidForMeteringPointType();
     }
 }
