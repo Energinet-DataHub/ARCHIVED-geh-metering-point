@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
@@ -33,6 +34,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     [UnitTest]
     public class UpdateTests : TestBase
     {
+        [Fact]
+        public void Connection_type_input_value_must_be_valid()
+        {
+            var masterData = Builder()
+                .WithConnectionType(ConnectionType.Direct.Name)
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData)
+                .WithConnectionType("invalid value")
+                .Validate();
+
+            AssertError<InvalidConnectionTypeValue>(validationResult, true);
+        }
+
         [Fact]
         public void Connection_type_is_unchanged()
         {
@@ -178,6 +193,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
     public class MasterDataUpdater : MasterDataBuilderBase, IMasterDataBuilder
     {
+        private readonly List<ValidationError> _validationErrors = new();
+
         public MasterDataUpdater(IEnumerable<MasterDataField> fields, MasterData currentMasterData)
             :base(fields)
         {
@@ -188,7 +205,10 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         public BusinessRulesValidationResult Validate()
         {
-            throw new NotImplementedException();
+            _validationErrors.Clear();
+            _validationErrors.AddRange(AllValueValidationErrors());
+
+            return new BusinessRulesValidationResult(_validationErrors);
         }
 
         private void RemoveValueIfNotApplicable<T>(string valueName, Func<bool> rule)
@@ -319,17 +339,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         public IMasterDataBuilder WithConnectionType(string? connectionType)
         {
             if (connectionType is null) return this;
-
-            if (connectionType == string.Empty)
-            {
-                SetValue<ConnectionType>(nameof(MasterData.ConnectionType), null);
-            }
-            else
-            {
-                SetValueIfValid(nameof(MasterData.ConnectionType), BusinessRulesValidationResult.Valid,
-                    () => EnumerationType.FromName<ConnectionType>(connectionType));
-            }
-
+            if (connectionType == string.Empty) SetValue<ConnectionType>(nameof(MasterData.ConnectionType), null);
+            if (connectionType != string.Empty) SetValueIfValid(nameof(MasterData.ConnectionType),
+                () =>
+                {
+                    return EnumerationType.GetAll<ConnectionType>()
+                        .Select(item => item.Name)
+                        .Contains(connectionType) == false ? BusinessRulesValidationResult.Failure(new InvalidConnectionTypeValue(connectionType)) : BusinessRulesValidationResult.Valid();
+                },
+                () => EnumerationType.FromName<ConnectionType>(connectionType));
             return this;
 
         }
