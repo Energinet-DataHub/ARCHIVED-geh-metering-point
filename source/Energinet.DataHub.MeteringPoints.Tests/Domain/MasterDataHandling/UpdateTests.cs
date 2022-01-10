@@ -15,8 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.PortableExecutable;
-using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
@@ -24,7 +22,6 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Mete
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using FluentAssertions.Specialized;
 using Xunit;
 using Xunit.Categories;
 
@@ -34,6 +31,23 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     [UnitTest]
     public class UpdateTests : TestBase
     {
+        [Fact]
+        public void Connnection_type_is_removed_if_field_is_not_allowed()
+        {
+            var masterData = Builder()
+                .WithConnectionType(ConnectionType.Direct.Name)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData, new List<MasterDataField>()
+                {
+                    new MasterDataField(nameof(MasterData.ConnectionType), Applicability.NotAllowed),
+                })
+                .WithConnectionType(ConnectionType.Installation.Name)
+                .Build();
+
+            Assert.Equal(null, updatedMasterData.ConnectionType);
+        }
+
         [Fact]
         public void Connection_type_input_value_must_be_valid()
         {
