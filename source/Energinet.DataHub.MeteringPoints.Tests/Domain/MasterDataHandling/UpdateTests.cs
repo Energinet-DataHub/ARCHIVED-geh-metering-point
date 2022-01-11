@@ -44,7 +44,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Fact]
-        public void Reading_periodicity_cannot_be_changed()
+        public void Reading_periodicity_cannot_be_removed()
         {
             var masterData = Builder()
                 .WithReadingPeriodicity(ReadingOccurrence.Hourly.Name)
