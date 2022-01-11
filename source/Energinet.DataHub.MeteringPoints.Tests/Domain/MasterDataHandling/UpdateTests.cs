@@ -30,6 +30,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Unit_type_is_unchanged_if_no_value_is_provided()
+        {
+            var masterData = Builder()
+                .WithMeasurementUnitType(MeasurementUnitType.Ampere.Name)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithMeasurementUnitType(null)
+                .Build();
+
+            Assert.Equal(masterData.UnitType, updatedMasterData.UnitType);
+        }
+
+        [Fact]
         public void Unit_type_is_changed()
         {
             var masterData = Builder()

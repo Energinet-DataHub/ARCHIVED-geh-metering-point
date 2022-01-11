@@ -37,6 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             SetValue(nameof(MasterData.ConnectionType), currentMasterData.ConnectionType);
             SetValue(nameof(MasterData.MeteringConfiguration), currentMasterData.MeteringConfiguration);
             SetValue(nameof(MasterData.Address), currentMasterData.Address);
+            SetValue(nameof(MasterData.UnitType), currentMasterData.UnitType);
         }
 
         public BusinessRulesValidationResult Validate()
@@ -150,6 +151,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithMeasurementUnitType(string? measurementUnitType)
         {
+            if (measurementUnitType is null) return this;
             SetValueIfValid(
                 nameof(MasterData.UnitType),
                 BusinessRulesValidationResult.Valid,
