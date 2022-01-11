@@ -173,7 +173,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithPowerPlant(string? gsrnNumber)
         {
-            throw new NotImplementedException();
+            SetValueIfValid(
+                nameof(MasterData.PowerPlantGsrnNumber),
+                BusinessRulesValidationResult.Valid,
+                () => GsrnNumber.Create(gsrnNumber!));
+            return this;
         }
 
         public IMasterDataBuilder WithReadingPeriodicity(string? readingPeriodicity)

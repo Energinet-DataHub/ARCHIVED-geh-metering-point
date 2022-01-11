@@ -30,6 +30,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Power_plant_is_changed()
+        {
+            var masterData = Builder()
+                .WithPowerPlant("571234567891234568")
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithPowerPlant("570851247381952311")
+                .Build();
+
+            Assert.Equal("570851247381952311", updatedMasterData.PowerPlantGsrnNumber?.Value);
+        }
+
+        [Fact]
         public void Unit_type_input_value_must_valid()
         {
             var masterData = Builder()
