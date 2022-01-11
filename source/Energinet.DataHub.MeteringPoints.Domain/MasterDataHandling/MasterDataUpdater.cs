@@ -161,14 +161,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 nameof(MasterData.UnitType),
                 () =>
                 {
-                    if (EnumerationType.GetAll<MeasurementUnitType>()
+                    return EnumerationType.GetAll<MeasurementUnitType>()
                         .Select(item => item.Name)
-                        .Contains(measurementUnitType) == false)
-                    {
-                        return BusinessRulesValidationResult.Failure(new InvalidUnitTypeValue(measurementUnitType));
-                    }
-
-                    return BusinessRulesValidationResult.Valid();
+                        .Contains(measurementUnitType) == false ? BusinessRulesValidationResult.Failure(new InvalidUnitTypeValue(measurementUnitType)) : BusinessRulesValidationResult.Valid();
                 },
                 () => EnumerationType.FromName<MeasurementUnitType>(measurementUnitType));
             }
