@@ -33,6 +33,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Metering_configuration_must_be_valid()
+        {
+            var masterData = Builder()
+                .WithMeteringConfiguration(MeteringMethod.Physical.Name, "1")
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData)
+                .WithMeteringConfiguration(null, "")
+                .Validate();
+
+            Assert.False(validationResult.Success);
+        }
+
+        [Fact]
         public void Metering_method_input_value_must_be_Valid()
         {
             var masterData = Builder()
@@ -350,6 +364,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithMeteringConfiguration(string? method, string? meterNumber)
         {
+            var currentMeterConfiguration = GetValue<MeteringConfiguration>(nameof(MasterData.MeteringConfiguration));
             SetValueIfValid(
                 nameof(MasterData.MeteringConfiguration),
                 () =>
@@ -364,7 +379,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                         }
                     }
 
-                    if (meterNumber is not null)
+                    if (string.IsNullOrWhiteSpace(meterNumber) == false)
                     {
                         var meterValidationResult = MeterId.CheckRules(meterNumber);
                         if (meterValidationResult.Success == false)
@@ -373,11 +388,28 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                         }
                     }
 
+                    var meteringMethod = method is null
+                        ? currentMeterConfiguration.Method
+                        : EnumerationType.FromName<MeteringMethod>(method);
+                    BusinessRulesValidationResult validationResult;
+                    if (meteringMethod == MeteringMethod.Physical)
+                    {
+                        validationResult = MeteringConfiguration.CheckRules(meteringMethod, string.IsNullOrEmpty(meterNumber) ? MeterId.Empty() : MeterId.Create(meterNumber));
+                    }
+                    else
+                    {
+                        validationResult = MeteringConfiguration.CheckRules(meteringMethod, MeterId.Empty());
+                    }
+
+                    if (validationResult.Success == false)
+                    {
+                        return BusinessRulesValidationResult.Failure(validationResult.Errors.ToArray());
+                    }
+
                     return BusinessRulesValidationResult.Valid();
                 },
                 () =>
                 {
-                    var currentMeterConfiguration = GetValue<MeteringConfiguration>(nameof(MasterData.MeteringConfiguration));
                     var meteringMethod = string.IsNullOrEmpty(method) ? currentMeterConfiguration.Method : EnumerationType.FromName<MeteringMethod>(method);
                     var meterId = meteringMethod == MeteringMethod.Physical ? string.IsNullOrEmpty(meterNumber)
                         ? currentMeterConfiguration.Meter : MeterId.Create(meterNumber) : MeterId.Empty();
