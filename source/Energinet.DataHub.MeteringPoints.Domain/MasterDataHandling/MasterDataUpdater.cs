@@ -36,6 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             SetValue(nameof(MasterData.NetSettlementGroup), currentMasterData.NetSettlementGroup);
             SetValue(nameof(MasterData.ConnectionType), currentMasterData.ConnectionType);
             SetValue(nameof(MasterData.MeteringConfiguration), currentMasterData.MeteringConfiguration);
+            SetValue(nameof(MasterData.Address), currentMasterData.Address);
         }
 
         public BusinessRulesValidationResult Validate()
@@ -134,7 +135,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithAddress(string? streetName = null, string? streetCode = null, string? buildingNumber = null, string? city = null, string? citySubDivision = null, string? postCode = null, CountryCode? countryCode = null, string? floor = null, string? room = null, int? municipalityCode = null, bool? isActual = null, Guid? geoInfoReference = null, string? locationDescription = null)
         {
-            throw new NotImplementedException();
+            var currentAddress = GetValue<Address>(nameof(MasterData.Address));
+            var address = Address.Create(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, isActual, geoInfoReference, locationDescription);
+            SetValue(nameof(MasterData.Address), currentAddress.MergeFrom(address));
+            return this;
         }
 
         public IMasterDataBuilder WithMeasurementUnitType(string? measurementUnitType)
