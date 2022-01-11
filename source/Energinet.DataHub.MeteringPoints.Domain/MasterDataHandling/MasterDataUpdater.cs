@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -48,6 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
             AddValidationErrorIfRequiredFieldIsMissing<MeasurementUnitType>(nameof(MasterData.UnitType), new UnitTypeIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<GsrnNumber>(nameof(MasterData.PowerPlantGsrnNumber), new PowerPlantIsRequired());
+            AddValidationErrorIfRequiredFieldIsMissing<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence), new MeterReadingPeriodicityIsRequired());
 
             return new BusinessRulesValidationResult(_validationErrors);
         }
@@ -190,10 +192,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithReadingPeriodicity(string? readingPeriodicity)
         {
-            SetValueIfValid(
+            if (readingPeriodicity?.Length == 0) SetValue<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence), null);
+            if (readingPeriodicity?.Length > 0)
+            {
+                SetValueIfValid(
                 nameof(MasterData.ReadingOccurrence),
                 BusinessRulesValidationResult.Valid,
                 () => EnumerationType.FromName<ReadingOccurrence>(readingPeriodicity!));
+            }
+
             return this;
         }
 
