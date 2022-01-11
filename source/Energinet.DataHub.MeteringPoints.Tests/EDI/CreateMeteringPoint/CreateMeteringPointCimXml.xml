@@ -34,7 +34,7 @@ limitations under the License.
             <cim:connectionState>D03</cim:connectionState>
             <cim:readCycle>PT1H</cim:readCycle>
             <cim:netSettlementGroup>6</cim:netSettlementGroup>
-            <cim:nextReadingDate>--12-01</cim:nextReadingDate>
+            <cim:nextReadingDate>--01-01</cim:nextReadingDate>
             <cim:meteringGridArea_Domain.mRID codingScheme="NDK">244</cim:meteringGridArea_Domain.mRID>
             <cim:inMeteringGridArea_Domain.mRID codingScheme="NDK">031</cim:inMeteringGridArea_Domain.mRID>
             <cim:outMeteringGridArea_Domain.mRID codingScheme="NDK">244</cim:outMeteringGridArea_Domain.mRID>

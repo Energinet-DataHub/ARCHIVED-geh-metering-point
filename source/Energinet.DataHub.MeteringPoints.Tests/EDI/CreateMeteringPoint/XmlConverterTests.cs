@@ -77,6 +77,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
             command.AssetType.Should().Be(nameof(AssetType.WindTurbines));
             command.DisconnectionType.Should().Be(nameof(DisconnectionType.Remote));
             command.MeterReadingOccurrence.Should().Be(nameof(ReadingOccurrence.Hourly));
+            command.ScheduledMeterReadingDate.Should().Be("0101");
 
             command.LocationDescription.Should().Be("3. bygning til venstre");
             command.MeterNumber.Should().Be("2536258974");
