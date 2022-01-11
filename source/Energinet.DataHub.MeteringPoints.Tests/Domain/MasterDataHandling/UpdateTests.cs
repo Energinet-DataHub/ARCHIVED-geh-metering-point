@@ -30,6 +30,24 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Power_plant_is_not_changed_if_field_is_not_allowed()
+        {
+            var fields = new List<MasterDataField>()
+            {
+                new MasterDataField(nameof(MasterData.PowerPlantGsrnNumber), Applicability.NotAllowed),
+            };
+
+            var masterData = Builder(fields)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData, fields)
+                .WithPowerPlant("570851247381952311")
+                .Build();
+
+            Assert.Equal(masterData.PowerPlantGsrnNumber, updatedMasterData.PowerPlantGsrnNumber);
+        }
+
+        [Fact]
         public void Power_plant_is_unchanged_if_no_value_is_provided()
         {
             var masterData = Builder()
