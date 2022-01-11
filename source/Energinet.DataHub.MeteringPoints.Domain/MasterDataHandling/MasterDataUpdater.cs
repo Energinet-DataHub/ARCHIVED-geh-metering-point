@@ -159,8 +159,18 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             {
                 SetValueIfValid(
                 nameof(MasterData.UnitType),
-                BusinessRulesValidationResult.Valid,
-                () => EnumerationType.FromName<MeasurementUnitType>(measurementUnitType!));
+                () =>
+                {
+                    if (EnumerationType.GetAll<MeasurementUnitType>()
+                        .Select(item => item.Name)
+                        .Contains(measurementUnitType) == false)
+                    {
+                        return BusinessRulesValidationResult.Failure(new InvalidUnitTypeValue(measurementUnitType));
+                    }
+
+                    return BusinessRulesValidationResult.Valid();
+                },
+                () => EnumerationType.FromName<MeasurementUnitType>(measurementUnitType));
             }
 
             return this;
