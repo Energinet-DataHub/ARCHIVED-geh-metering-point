@@ -175,10 +175,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         public IMasterDataBuilder WithPowerPlant(string? gsrnNumber)
         {
             if (gsrnNumber is null) return this;
-            SetValueIfValid(
+            if (gsrnNumber.Length == 0) SetValue<GsrnNumber>(nameof(MasterData.PowerPlantGsrnNumber), null);
+            if (gsrnNumber.Length > 0)
+            {
+                SetValueIfValid(
                 nameof(MasterData.PowerPlantGsrnNumber),
                 BusinessRulesValidationResult.Valid,
-                () => GsrnNumber.Create(gsrnNumber!));
+                () => GsrnNumber.Create(gsrnNumber));
+            }
+
             return this;
         }
 
