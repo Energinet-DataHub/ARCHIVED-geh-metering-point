@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using BenchmarkDotNet.Reports;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
@@ -28,6 +29,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     [UnitTest]
     public class UpdateTests : TestBase
     {
+        [Fact]
+        public void Unit_type_is_changed()
+        {
+            var masterData = Builder()
+                .WithMeasurementUnitType(MeasurementUnitType.Ampere.Name)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithMeasurementUnitType(MeasurementUnitType.KWh.Name)
+                .Build();
+
+            Assert.Equal(MeasurementUnitType.KWh, updatedMasterData.UnitType);
+        }
+
         [Fact]
         public void Address_must_be_valid()
         {

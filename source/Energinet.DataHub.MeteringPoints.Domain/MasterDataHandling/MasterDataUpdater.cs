@@ -150,7 +150,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithMeasurementUnitType(string? measurementUnitType)
         {
-            throw new NotImplementedException();
+            SetValueIfValid(
+                nameof(MasterData.UnitType),
+                BusinessRulesValidationResult.Valid,
+                () => EnumerationType.FromName<MeasurementUnitType>(measurementUnitType!));
+            return this;
         }
 
         public IMasterDataBuilder WithPowerPlant(string? gsrnNumber)
