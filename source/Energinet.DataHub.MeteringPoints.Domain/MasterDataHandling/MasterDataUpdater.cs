@@ -190,7 +190,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithReadingPeriodicity(string? readingPeriodicity)
         {
-            throw new NotImplementedException();
+            SetValueIfValid(
+                nameof(MasterData.ReadingOccurrence),
+                BusinessRulesValidationResult.Valid,
+                () => EnumerationType.FromName<ReadingOccurrence>(readingPeriodicity!));
+            return this;
         }
 
         public IMasterDataBuilder WithPowerLimit(int kwh, int ampere)
