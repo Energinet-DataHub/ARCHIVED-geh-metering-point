@@ -51,7 +51,7 @@ jobs:
     with:
       CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion/Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.csproj'
       DOTNET_VERSION: '5.0.202'      
-      ARTIFACT_NAME: functionhost
+      ARTIFACT_NAME: ingestion
 
   outbox_ci:
     needs: [ci_base, terraform_validate, dotnet_solution_ci]
