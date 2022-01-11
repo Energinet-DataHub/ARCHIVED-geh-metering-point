@@ -15,6 +15,7 @@
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -27,6 +28,18 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     [UnitTest]
     public class VEProductionMeteringPointValidationTests : TestBase
     {
+        [Theory]
+        [InlineData(nameof(ProductType.EnergyActive), false)]
+        [InlineData(nameof(ProductType.FuelQuantity), true)]
+        public void Product_type_must_be_correct(string productType, bool expectError)
+        {
+            var masterData = Builder()
+                .WithProductType(productType)
+                .Build();
+
+            AssertError<InvalidProductType>(CheckRules(masterData), expectError);
+        }
+
         [Fact]
         public void Power_plant_should_not_be_required()
         {

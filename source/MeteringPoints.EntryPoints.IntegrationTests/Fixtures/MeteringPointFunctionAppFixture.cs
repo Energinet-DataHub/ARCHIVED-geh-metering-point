@@ -116,6 +116,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
 
             // Use "0 0 8 1 1 *", to do: 8:00 1. January ~ we must set this setting, but we do not want the trigger to run automatically, we want to trigger it manually
             outboxHostSettings.ProcessEnvironmentVariables.Add("ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER", "*/1 * * * * *");
+            internalCommandDispatcherHostSettings.ProcessEnvironmentVariables.Add("DISPATCH_TRIGGER_TIMER", "*/2 * * * * *");
 
             ingestionHostSettings.ProcessEnvironmentVariables.Add("AzureWebJobsStorage", "UseDevelopmentStorage=true");
             processingHostSettings.ProcessEnvironmentVariables.Add("AzureWebJobsStorage", "UseDevelopmentStorage=true");
@@ -133,7 +134,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             ingestionHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
             processingHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
             localMessageHubHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
-            internalCommandDispatcherHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
+            internalCommandDispatcherHostSettings.ProcessEnvironmentVariables.Add("PROCESSING_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
 
             var meteringPointQueue = await ServiceBusResourceProvider
                 .BuildQueue("sbq-meteringpoint")
@@ -142,7 +143,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
                     ingestionHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_TOPIC_NAME", p.Name);
                     processingHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_TOPIC_NAME", p.Name);
                     localMessageHubHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_TOPIC_NAME", p.Name);
-                    internalCommandDispatcherHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_TOPIC_NAME", p.Name);
+                    internalCommandDispatcherHostSettings.ProcessEnvironmentVariables.Add("PROCESSING_QUEUE_NAME", p.Name);
                 })
                 .CreateAsync().ConfigureAwait(false);
 
@@ -216,7 +217,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             processingHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
             outboxHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
             localMessageHubHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
-            internalCommandDispatcherHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
+            internalCommandDispatcherHostSettings.ProcessEnvironmentVariables.Add("DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
 
             IngestionHostManager = new FunctionAppHostManager(ingestionHostSettings, TestLogger);
             ProcessingHostManager = new FunctionAppHostManager(processingHostSettings, TestLogger);
@@ -228,6 +229,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             StartHost(ProcessingHostManager);
             StartHost(OutboxHostManager);
             StartHost(LocalMessageHubHostManager);
+            StartHost(InternalCommandDispatcherHostManager);
         }
 
         public async Task DisposeAsync()
@@ -236,6 +238,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             ProcessingHostManager.Dispose();
             OutboxHostManager.Dispose();
             LocalMessageHubHostManager.Dispose();
+            InternalCommandDispatcherHostManager.Dispose();
 
             AzuriteManager.Dispose();
 

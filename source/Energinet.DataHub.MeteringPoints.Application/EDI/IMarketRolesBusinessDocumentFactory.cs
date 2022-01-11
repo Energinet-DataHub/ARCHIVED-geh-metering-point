@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
-using Energinet.DataHub.MeteringPoints.Application.Queries;
+using System.Threading.Tasks;
 using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Application.EDI
@@ -27,6 +26,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.EDI
         /// <summary>
         /// RSM 004
         /// </summary>
-        void CreateMoveInMessage(string gsrn, Instant startDate);
+        Task CreateMoveInMessageAsync(string gsrn, Instant startDate);
     }
 }

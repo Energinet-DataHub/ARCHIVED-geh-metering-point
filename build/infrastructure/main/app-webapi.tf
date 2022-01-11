@@ -64,3 +64,13 @@ module "plan_webapi" {
 
   tags                = azurerm_resource_group.this.tags
 }
+
+module "kvs_app_metering_point_webapi_base_url" {
+  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/key-vault-secret?ref=5.1.0"
+
+  name          = "app-metering-point-webapi-base-url"
+  value         = "https://${azurerm_app_service.webapi.default_site_hostname}"
+  key_vault_id  = data.azurerm_key_vault.kv_shared_resources.id
+
+  tags          = azurerm_resource_group.this.tags
+}
