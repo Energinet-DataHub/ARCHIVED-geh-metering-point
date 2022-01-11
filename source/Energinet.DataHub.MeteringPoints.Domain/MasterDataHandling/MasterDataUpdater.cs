@@ -38,6 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             SetValue(nameof(MasterData.MeteringConfiguration), currentMasterData.MeteringConfiguration);
             SetValue(nameof(MasterData.Address), currentMasterData.Address);
             SetValue(nameof(MasterData.UnitType), currentMasterData.UnitType);
+            SetValue(nameof(MasterData.PowerPlantGsrnNumber), currentMasterData.PowerPlantGsrnNumber);
         }
 
         public BusinessRulesValidationResult Validate()
@@ -173,6 +174,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithPowerPlant(string? gsrnNumber)
         {
+            if (gsrnNumber is null) return this;
             SetValueIfValid(
                 nameof(MasterData.PowerPlantGsrnNumber),
                 BusinessRulesValidationResult.Valid,
