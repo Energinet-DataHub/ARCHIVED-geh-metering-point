@@ -31,6 +31,7 @@ jobs:
       DOTNET_VERSION: '5.0'
       USE_AZURITE: true
       USE_AZURE_FUNCTIONS_CORE_TOOLS: true
+      USE_SQLLOCALDB_2019: true
     secrets:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -98,7 +99,6 @@ jobs:
     with:
       CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp/Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.csproj'
       DOTNET_VERSION: '5.0.202'
-      USE_SQLLOCALDB_2019: true
       ARTIFACT_NAME: databasemigration
 
   create_prerelease:
