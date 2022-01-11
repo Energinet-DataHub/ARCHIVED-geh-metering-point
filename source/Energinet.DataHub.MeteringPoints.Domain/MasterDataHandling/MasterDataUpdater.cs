@@ -47,6 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             _validationErrors.AddRange(AllValueValidationErrors());
 
             AddValidationErrorIfRequiredFieldIsMissing<MeasurementUnitType>(nameof(MasterData.UnitType), new UnitTypeIsRequired());
+            AddValidationErrorIfRequiredFieldIsMissing<GsrnNumber>(nameof(MasterData.PowerPlantGsrnNumber), new PowerPlantIsRequired());
 
             return new BusinessRulesValidationResult(_validationErrors);
         }

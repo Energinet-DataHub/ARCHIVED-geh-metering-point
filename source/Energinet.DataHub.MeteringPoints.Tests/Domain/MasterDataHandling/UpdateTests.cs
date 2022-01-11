@@ -30,6 +30,25 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Power_plant_cannot_be_removed_if_field_is_required()
+        {
+            var fields = new List<MasterDataField>()
+            {
+                new MasterDataField(nameof(MasterData.PowerPlantGsrnNumber), Applicability.Required),
+            };
+
+            var masterData = Builder(fields)
+                .WithPowerPlant("571234567891234568")
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData, fields)
+                .WithPowerPlant(string.Empty)
+                .Validate();
+
+            AssertContainsValidationError<PowerPlantIsRequired>(validationResult);
+        }
+
+        [Fact]
         public void Power_plant_can_be_removed_if_field_is_optional()
         {
             var fields = new List<MasterDataField>()
