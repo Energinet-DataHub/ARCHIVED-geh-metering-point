@@ -39,6 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             SetValue(nameof(MasterData.Address), currentMasterData.Address);
             SetValue(nameof(MasterData.UnitType), currentMasterData.UnitType);
             SetValue(nameof(MasterData.PowerPlantGsrnNumber), currentMasterData.PowerPlantGsrnNumber);
+            SetValue(nameof(MasterData.ReadingOccurrence), currentMasterData.ReadingOccurrence);
         }
 
         public BusinessRulesValidationResult Validate()
@@ -190,6 +191,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithReadingPeriodicity(string? readingPeriodicity)
         {
+            if (readingPeriodicity is null) return this;
             SetValueIfValid(
                 nameof(MasterData.ReadingOccurrence),
                 BusinessRulesValidationResult.Valid,

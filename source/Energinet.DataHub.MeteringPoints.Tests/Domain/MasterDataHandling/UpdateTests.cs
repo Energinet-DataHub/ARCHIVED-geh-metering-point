@@ -31,6 +31,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Reading_periodicity_is_unchanged_if_no_value_is_provided()
+        {
+            var masterData = Builder()
+                .WithReadingPeriodicity(ReadingOccurrence.Hourly.Name)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithReadingPeriodicity(null)
+                .Build();
+
+            Assert.Equal(masterData.ReadingOccurrence, updatedMasterData.ReadingOccurrence);
+        }
+
+        [Fact]
         public void Reading_periodicity_is_changed()
         {
             var masterData = Builder()
