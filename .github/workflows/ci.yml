@@ -49,7 +49,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
     with:
       CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion/Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.csproj'
-      DOTNET_VERSION: '5.0.202'
+      DOTNET_VERSION: '5.0.202'      
       ARTIFACT_NAME: functionhost
 
   outbox_ci:
@@ -98,6 +98,7 @@ jobs:
     with:
       CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp/Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.csproj'
       DOTNET_VERSION: '5.0.202'
+      USE_SQLLOCALDB_2019: true
       ARTIFACT_NAME: databasemigration
 
   create_prerelease:
