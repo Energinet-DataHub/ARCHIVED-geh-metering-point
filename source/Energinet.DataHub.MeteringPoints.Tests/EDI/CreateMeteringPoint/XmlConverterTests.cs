@@ -87,9 +87,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
             command.TransactionId.Should().Be("25361487");
             command.PostCode.Should().Be("5500");
             command.StreetName.Should().Be("Vestergade");
-            command.CityName.Should().Be("0625");
+            command.CityName.Should().Be("Middelfart");
             command.CountryCode.Should().Be("DK");
-            command.CitySubDivisionName.Should().Be("Middelfart");
+            command.CitySubDivisionName.Should().Be("Strib");
             command.MunicipalityCode.Should().Be("0625");
 
             command.FromGrid.Should().Be("031");
