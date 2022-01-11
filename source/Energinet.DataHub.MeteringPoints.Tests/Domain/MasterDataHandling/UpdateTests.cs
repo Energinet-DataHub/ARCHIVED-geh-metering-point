@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using BenchmarkDotNet.Reports;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
@@ -22,7 +21,6 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Mete
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Xunit;
 using Xunit.Categories;
 
@@ -31,6 +29,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     [UnitTest]
     public class UpdateTests : TestBase
     {
+        [Fact]
+        public void Reading_periodicity_is_unchanged_if_no_value_is_provided()
+        {
+            var masterData = Builder()
+                .WithReadingPeriodicity(ReadingOccurrence.Hourly.Name)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithReadingPeriodicity(null)
+                .Build();
+
+            Assert.Equal(masterData.ReadingOccurrence, updatedMasterData.ReadingOccurrence);
+        }
+
         [Fact]
         public void Reading_periodicity_cannot_be_changed()
         {
