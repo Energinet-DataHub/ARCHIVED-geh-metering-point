@@ -21,11 +21,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
 {
     public class ScheduledMeterReadingDateFormatRule : IBusinessRule
     {
-        private Regex _inputFormat;
-
         public ScheduledMeterReadingDateFormatRule(string monthAndDay)
         {
-            _inputFormat = new Regex(@"(^(--))(\d{2})(-)(\d{2})");
             if (monthAndDay == null) throw new ArgumentNullException(nameof(monthAndDay));
 
             IsBroken = !IsValid(monthAndDay);
