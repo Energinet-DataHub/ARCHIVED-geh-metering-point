@@ -135,9 +135,16 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithAddress(string? streetName = null, string? streetCode = null, string? buildingNumber = null, string? city = null, string? citySubDivision = null, string? postCode = null, CountryCode? countryCode = null, string? floor = null, string? room = null, int? municipalityCode = null, bool? isActual = null, Guid? geoInfoReference = null, string? locationDescription = null)
         {
-            var currentAddress = GetValue<Address>(nameof(MasterData.Address));
-            var address = Address.Create(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, isActual, geoInfoReference, locationDescription);
-            SetValue(nameof(MasterData.Address), currentAddress.MergeFrom(address));
+            SetValueIfValid(
+                nameof(MasterData.Address),
+                () => Address.CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, locationDescription),
+                () =>
+                {
+                    var currentAddress = GetValue<Address>(nameof(MasterData.Address));
+                    var address = Address.Create(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, isActual, geoInfoReference, locationDescription);
+                    return currentAddress.MergeFrom(address);
+                });
+
             return this;
         }
 

@@ -29,6 +29,33 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Address_must_be_valid()
+        {
+            var masterData = Builder()
+                .WithAddress(
+                    streetName: "test street",
+                    streetCode: "5",
+                    buildingNumber: "5",
+                    city: "Test City",
+                    citySubDivision: "test",
+                    postCode: "8000",
+                    CountryCode.DK,
+                    floor: "1",
+                    room: "1",
+                    municipalityCode: 500,
+                    isActual: true,
+                    geoInfoReference: Guid.NewGuid(),
+                    locationDescription: "Test location")
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData)
+                .WithAddress(streetCode: "Invalid street code")
+                .Validate();
+
+            Assert.False(validationResult.Success);
+        }
+
+        [Fact]
         public void Address_is_changed()
         {
             var masterData = Builder()
