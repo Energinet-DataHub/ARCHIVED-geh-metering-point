@@ -29,6 +29,24 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     [UnitTest]
     public class UpdateTests : TestBase
     {
+
+        [Fact]
+        public void Unit_type_cannot_be_removed()
+        {
+            var masterData = Builder()
+                .WithMeasurementUnitType(MeasurementUnitType.Ampere.Name)
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData, new List<MasterDataField>()
+                {
+                    new MasterDataField(nameof(MasterData.UnitType), Applicability.Required),
+                })
+                .WithMeasurementUnitType(string.Empty)
+                .Validate();
+
+            AssertContainsValidationError<UnitTypeIsRequired>(validationResult);
+        }
+
         [Fact]
         public void Unit_type_is_unchanged_if_no_value_is_provided()
         {

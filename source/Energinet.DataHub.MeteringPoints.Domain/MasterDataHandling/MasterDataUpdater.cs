@@ -45,6 +45,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             _validationErrors.Clear();
             _validationErrors.AddRange(AllValueValidationErrors());
 
+            AddValidationErrorIfRequiredFieldIsMissing<MeasurementUnitType>(nameof(MasterData.UnitType), new UnitTypeIsRequired());
+
             return new BusinessRulesValidationResult(_validationErrors);
         }
 
@@ -152,10 +154,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         public IMasterDataBuilder WithMeasurementUnitType(string? measurementUnitType)
         {
             if (measurementUnitType is null) return this;
-            SetValueIfValid(
+            if (measurementUnitType.Length == 0) SetValue<MeasurementUnitType>(nameof(MasterData.UnitType), null);
+            if (measurementUnitType.Length > 0)
+            {
+                SetValueIfValid(
                 nameof(MasterData.UnitType),
                 BusinessRulesValidationResult.Valid,
                 () => EnumerationType.FromName<MeasurementUnitType>(measurementUnitType!));
+            }
+
             return this;
         }
 
@@ -256,6 +263,17 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             {
                 SetValue<T>(valueName, default(T));
             }
+        }
+
+        private void AddValidationErrorIfRequiredFieldIsMissing<T>(string valueName, ValidationError validationError)
+        {
+            var valueItem = GetMasterValueItem<T>(valueName);
+            if (valueItem.HasErrors())
+            {
+                return;
+            }
+
+            if (valueItem.HasRequiredValue() == false) _validationErrors.Add(validationError);
         }
     }
 }
