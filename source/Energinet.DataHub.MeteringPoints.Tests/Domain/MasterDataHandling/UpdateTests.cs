@@ -25,7 +25,6 @@ using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 {
-    #pragma warning disable
     [UnitTest]
     public class UpdateTests : TestBase
     {
@@ -37,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .Build();
 
             var validationResult = UpdateBuilder(masterData)
-                .WithMeteringConfiguration(null, "")
+                .WithMeteringConfiguration(null, string.Empty)
                 .Validate();
 
             Assert.False(validationResult.Success);
@@ -83,7 +82,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .Build();
 
             Assert.Equal(MeteringMethod.Calculated, updatedMasterData.MeteringConfiguration.Method);
-            Assert.Equal("", updatedMasterData.MeteringConfiguration.Meter.Value);
+            Assert.Equal(string.Empty, updatedMasterData.MeteringConfiguration.Meter.Value);
         }
 
         [Fact]
@@ -130,7 +129,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithConnectionType(ConnectionType.Installation.Name)
                 .Build();
 
-            Assert.Equal(null, updatedMasterData.ConnectionType);
+            Assert.Null(updatedMasterData.ConnectionType);
         }
 
         [Fact]
@@ -172,7 +171,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithConnectionType(string.Empty)
                 .Build();
 
-            Assert.Equal(null, updatedMasterData.ConnectionType);
+            Assert.Null(updatedMasterData.ConnectionType);
         }
 
         [Fact]
@@ -200,7 +199,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithNetSettlementGroup(NetSettlementGroup.Zero.Name)
                 .Build();
 
-            Assert.Equal(null, updatedMasterData.ConnectionType);
+            Assert.Null(updatedMasterData.ConnectionType);
         }
 
         [Fact]
@@ -215,7 +214,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithNetSettlementGroup(NetSettlementGroup.Zero.Name)
                 .Build();
 
-            Assert.Equal(null, updatedMasterData.ScheduledMeterReadingDate);
+            Assert.Null(updatedMasterData.ScheduledMeterReadingDate);
         }
 
         [Fact]
@@ -251,7 +250,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             Assert.Equal(currentMasterData.ProductType, updatedMasterData.ProductType);
         }
 
-        private IMasterDataBuilder Builder(IEnumerable<MasterDataField> fieldConfiguration = null)
+        private static IMasterDataBuilder Builder(IEnumerable<MasterDataField>? fieldConfiguration = null)
         {
             return new MasterDataBuilder(fieldConfiguration ?? new List<MasterDataField>())
                 .WithNetSettlementGroup(NetSettlementGroup.One.Name)
@@ -284,7 +283,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithMeasurementUnitType(MeasurementUnitType.KWh.Name);
         }
 
-        private MasterDataUpdater UpdateBuilder(MasterData current, IEnumerable<MasterDataField> fieldConfiguration = null)
+        private static MasterDataUpdater UpdateBuilder(MasterData current, IEnumerable<MasterDataField>? fieldConfiguration = null)
         {
             return new MasterDataUpdater(fieldConfiguration ?? new List<MasterDataField>(), current);
         }
