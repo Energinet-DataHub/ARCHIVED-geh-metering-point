@@ -65,7 +65,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
             // Arrange
             var xml = TestFileLoader.ReadFile(testFileXml)
                 .Replace("{{transactionId}}", "1", StringComparison.OrdinalIgnoreCase)
-                .Replace("{{gsrn}}", TestDataCreator.CreateGsrn(), StringComparison.OrdinalIgnoreCase);
+                .Replace("{{gsrn}}", TestDataCreator.CreateGsrn(), StringComparison.OrdinalIgnoreCase)
+                .Replace("{{today}}", TestDataCreator.Today(), StringComparison.OrdinalIgnoreCase);
             using var request = new HttpRequestMessage(HttpMethod.Post, "api/MeteringPoint");
             request.AddDefaultJwtToken();
             request.Content = new StringContent(xml, Encoding.UTF8, "application/xml");
