@@ -181,7 +181,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             {
                 SetValueIfValid(
                 nameof(MasterData.PowerPlantGsrnNumber),
-                BusinessRulesValidationResult.Valid,
+                () => GsrnNumber.CheckRules(gsrnNumber),
                 () => GsrnNumber.Create(gsrnNumber));
             }
 

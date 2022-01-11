@@ -21,6 +21,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addr
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Xunit;
 using Xunit.Categories;
 
@@ -29,6 +30,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     [UnitTest]
     public class UpdateTests : TestBase
     {
+        [Fact]
+        public void Power_plant_input_value_must_be_valid()
+        {
+            var masterData = Builder()
+                .WithPowerPlant("571234567891234568")
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData)
+                .WithPowerPlant("invalid gsrn number string")
+                .Validate();
+
+            Assert.False(validationResult.Success);
+        }
+
         [Fact]
         public void Power_plant_cannot_be_removed_if_field_is_required()
         {
