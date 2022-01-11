@@ -20,6 +20,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
@@ -43,6 +44,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .Validate();
 
             AssertContainsValidationError<InvalidMeteringMethodValue>(validationResult);
+        }
+
+        [Fact]
+        public void Meter_number_input_value_must_be_Valid()
+        {
+            var masterData = Builder()
+                .WithMeteringConfiguration(MeteringMethod.Physical.Name, "1")
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData)
+                .WithMeteringConfiguration(null, "12345678901234567890")
+                .Validate();
+
+            AssertContainsValidationError<InvalidMeterIdRuleError>(validationResult);
         }
 
         [Fact]
@@ -339,16 +354,23 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 nameof(MasterData.MeteringConfiguration),
                 () =>
                 {
-                    if (method is null)
+                    if (method is not null)
                     {
-                        return BusinessRulesValidationResult.Valid();
+                        if (EnumerationType.GetAll<MeteringMethod>()
+                            .Select(item => item.Name)
+                            .Contains(method) == false)
+                        {
+                            return BusinessRulesValidationResult.Failure(new InvalidMeteringMethodValue(method));
+                        }
                     }
 
-                    if (EnumerationType.GetAll<MeteringMethod>()
-                        .Select(item => item.Name)
-                        .Contains(method) == false)
+                    if (meterNumber is not null)
                     {
-                        return BusinessRulesValidationResult.Failure(new InvalidMeteringMethodValue(method));
+                        var meterValidationResult = MeterId.CheckRules(meterNumber);
+                        if (meterValidationResult.Success == false)
+                        {
+                            return BusinessRulesValidationResult.Failure(meterValidationResult.Errors.ToArray());
+                        }
                     }
 
                     return BusinessRulesValidationResult.Valid();
