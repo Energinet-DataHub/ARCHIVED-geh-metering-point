@@ -118,21 +118,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                         ? currentMeterConfiguration.Method
                         : EnumerationType.FromName<MeteringMethod>(method);
                     BusinessRulesValidationResult validationResult;
-                    if (meteringMethod == MeteringMethod.Physical)
-                    {
-                        validationResult = MeteringConfiguration.CheckRules(meteringMethod, string.IsNullOrEmpty(meterNumber) ? MeterId.Empty() : MeterId.Create(meterNumber));
-                    }
-                    else
-                    {
-                        validationResult = MeteringConfiguration.CheckRules(meteringMethod, MeterId.Empty());
-                    }
+                    validationResult = meteringMethod == MeteringMethod.Physical ? MeteringConfiguration.CheckRules(meteringMethod, string.IsNullOrEmpty(meterNumber) ? MeterId.Empty() : MeterId.Create(meterNumber)) : MeteringConfiguration.CheckRules(meteringMethod, MeterId.Empty());
 
-                    if (validationResult.Success == false)
-                    {
-                        return BusinessRulesValidationResult.Failure(validationResult.Errors.ToArray());
-                    }
-
-                    return BusinessRulesValidationResult.Valid();
+                    return validationResult.Success == false ? BusinessRulesValidationResult.Failure(validationResult.Errors.ToArray()) : BusinessRulesValidationResult.Valid();
                 },
                 () =>
                 {
