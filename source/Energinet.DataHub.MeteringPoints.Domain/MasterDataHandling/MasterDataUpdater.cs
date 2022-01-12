@@ -41,6 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             SetValue(nameof(MasterData.UnitType), currentMasterData.UnitType);
             SetValue(nameof(MasterData.PowerPlantGsrnNumber), currentMasterData.PowerPlantGsrnNumber);
             SetValue(nameof(MasterData.ReadingOccurrence), currentMasterData.ReadingOccurrence);
+            SetValue(nameof(MasterData.SettlementMethod), currentMasterData.SettlementMethod);
         }
 
         public BusinessRulesValidationResult Validate()
@@ -51,6 +52,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             AddValidationErrorIfRequiredFieldIsMissing<MeasurementUnitType>(nameof(MasterData.UnitType), new UnitTypeIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<GsrnNumber>(nameof(MasterData.PowerPlantGsrnNumber), new PowerPlantIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence), new MeterReadingPeriodicityIsRequired());
+            AddValidationErrorIfRequiredFieldIsMissing<SettlementMethod>(nameof(MasterData.SettlementMethod), new SettlementMethodIsRequired());
 
             return new BusinessRulesValidationResult(_validationErrors);
         }
@@ -227,7 +229,24 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithSettlementMethod(string? settlementMethod)
         {
-            throw new NotImplementedException();
+            if (settlementMethod is null) return this;
+            if (settlementMethod.Length == 0) SetValue<SettlementMethod>(nameof(MasterData.SettlementMethod), null);
+            if (settlementMethod.Length > 0)
+            {
+                SetValueIfValid(
+                    nameof(MasterData.SettlementMethod),
+                    () =>
+                    {
+                        return EnumerationType.GetAll<SettlementMethod>()
+                            .Select(item => item.Name)
+                            .Contains(settlementMethod) == false
+                            ? BusinessRulesValidationResult.Failure(new InvalidSettlementMethod(settlementMethod))
+                            : BusinessRulesValidationResult.Valid();
+                    },
+                    () => EnumerationType.FromName<SettlementMethod>(settlementMethod));
+            }
+
+            return this;
         }
 
         public IMasterDataBuilder WithDisconnectionType(string? disconnectionType)

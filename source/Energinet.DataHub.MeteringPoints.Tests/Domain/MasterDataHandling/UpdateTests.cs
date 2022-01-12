@@ -30,6 +30,72 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Settlement_method_cannot_be_removed_if_field_is_required()
+        {
+            var fields = new List<MasterDataField>()
+            {
+                new MasterDataField(nameof(MasterData.SettlementMethod), Applicability.Required),
+            };
+
+            var masterData = Builder(fields)
+                .WithSettlementMethod(SettlementMethod.Flex.Name)
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData, fields)
+                .WithSettlementMethod(string.Empty)
+                .Validate();
+
+            AssertContainsValidationError<SettlementMethodIsRequired>(validationResult);
+        }
+
+        [Fact]
+        public void Settlement_method_can_be_changed_if_field_is_optional()
+        {
+            var fields = new List<MasterDataField>()
+            {
+                new MasterDataField(nameof(MasterData.SettlementMethod), Applicability.Optional),
+            };
+
+            var masterData = Builder(fields)
+                .WithSettlementMethod(SettlementMethod.Flex.Name)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData, fields)
+                .WithSettlementMethod(string.Empty)
+                .Build();
+
+            Assert.Null(updatedMasterData.SettlementMethod);
+        }
+
+        [Fact]
+        public void Settlement_method_is_unchanged_if_no_value_is_provided()
+        {
+            var masterData = Builder()
+                .WithSettlementMethod(SettlementMethod.Flex.Name)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithSettlementMethod(null)
+                .Build();
+
+            Assert.Equal(masterData.SettlementMethod, updatedMasterData.SettlementMethod);
+        }
+
+        [Fact]
+        public void Settlement_method_is_changed()
+        {
+            var masterData = Builder()
+                .WithSettlementMethod(SettlementMethod.Flex.Name)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithSettlementMethod(SettlementMethod.Profiled.Name)
+                .Build();
+
+            Assert.Equal(SettlementMethod.Profiled.Name, updatedMasterData.SettlementMethod?.Name);
+        }
+
+        [Fact]
         public void Power_limit_is_changed()
         {
             var masterData = Builder()
