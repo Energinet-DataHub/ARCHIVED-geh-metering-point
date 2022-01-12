@@ -55,6 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             AddValidationErrorIfRequiredFieldIsMissing<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence), new MeterReadingPeriodicityIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<SettlementMethod>(nameof(MasterData.SettlementMethod), new SettlementMethodIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<DisconnectionType>(nameof(MasterData.DisconnectionType), new DisconnectionTypeIsRequired());
+            AddValidationErrorIfRequiredFieldIsMissing<ConnectionType>(nameof(MasterData.ConnectionType), new ConnectionTypeIsRequired());
 
             return new BusinessRulesValidationResult(_validationErrors);
         }

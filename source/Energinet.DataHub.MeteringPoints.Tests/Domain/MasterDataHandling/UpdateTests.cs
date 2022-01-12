@@ -558,6 +558,23 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Fact]
+        public void Connection_type_cannot_be_removed_if_field_is_required()
+        {
+            var masterData = Builder()
+                .WithConnectionType(ConnectionType.Direct.Name)
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData, new List<MasterDataField>()
+                {
+                    new MasterDataField(nameof(MasterData.ConnectionType), Applicability.Required),
+                })
+                .WithConnectionType(string.Empty)
+                .Validate();
+
+            AssertContainsValidationError<ConnectionTypeIsRequired>(validationResult);
+        }
+
+        [Fact]
         public void Connection_type_is_removed_if_field_is_not_allowed()
         {
             var masterData = Builder()
