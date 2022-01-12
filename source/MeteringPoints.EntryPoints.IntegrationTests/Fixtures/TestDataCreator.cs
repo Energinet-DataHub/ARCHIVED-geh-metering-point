@@ -29,6 +29,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             return gsrn;
         }
 
+        public static string Today()
+        {
+            return DateTime.Today.AddDays(-1).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) + "T22:00:00Z";
+        }
+
         private static int Parse(string input)
         {
             return int.Parse(input, NumberStyles.Integer, NumberFormatInfo.InvariantInfo);
