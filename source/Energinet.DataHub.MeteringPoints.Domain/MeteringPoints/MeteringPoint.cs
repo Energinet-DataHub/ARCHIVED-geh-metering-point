@@ -333,7 +333,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             if (validator == null) throw new ArgumentNullException(nameof(validator));
 
             var errors = new List<ValidationError>();
-            if (ConnectionState.PhysicalState == PhysicalState.ClosedDown)
+            if (IsClosedDown())
             {
                 errors.Add(new ClosedDownMeteringPointCannotBeChangedError());
             }
@@ -363,6 +363,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 _parentMeteringPoint = parentId;
                 AddDomainEvent(new CoupledToParent(Id.Value, parentId.Value));
             }
+        }
+
+        private bool IsClosedDown()
+        {
+            return ConnectionState.PhysicalState == PhysicalState.ClosedDown;
         }
 
         private void ThrowIfClosedDown()
