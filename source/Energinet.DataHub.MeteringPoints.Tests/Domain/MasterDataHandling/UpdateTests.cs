@@ -30,6 +30,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Disconnection_type_input_value_must_be_valid()
+        {
+            var masterData = Builder()
+                .WithDisconnectionType(DisconnectionType.Manual.Name)
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData)
+                .WithDisconnectionType("Invalid value")
+                .Validate();
+
+            AssertContainsValidationError<InvalidDisconnectionTypeValue>(validationResult);
+        }
+
+        [Fact]
         public void Disconnection_type_is_removed_if_field_is_not_allowed()
         {
             var masterData = Builder()

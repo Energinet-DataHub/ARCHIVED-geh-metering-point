@@ -258,8 +258,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             {
                 SetValueIfValid(
                     nameof(MasterData.DisconnectionType),
-                    BusinessRulesValidationResult.Valid,
-                    () => EnumerationType.FromName<DisconnectionType>(disconnectionType!));
+                    () =>
+                    {
+                        return EnumerationType
+                            .GetAll<DisconnectionType>()
+                            .Select(item => item.Name)
+                            .Contains(disconnectionType) == false ? BusinessRulesValidationResult.Failure(new InvalidDisconnectionTypeValue(disconnectionType)) : BusinessRulesValidationResult.Valid();
+                    },
+                    () => EnumerationType.FromName<DisconnectionType>(disconnectionType));
             }
 
             return this;
