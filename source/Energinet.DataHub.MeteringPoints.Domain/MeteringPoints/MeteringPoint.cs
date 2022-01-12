@@ -327,6 +327,42 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
 
+        public void UpdateMasterData(MasterData updatedMasterData)
+        {
+            _masterData = updatedMasterData ?? throw new ArgumentNullException(nameof(updatedMasterData));
+            AddDomainEvent(new MasterDataWasUpdated(
+                _masterData.Address.StreetName,
+                _masterData.Address.StreetCode,
+                _masterData.Address.City,
+                _masterData.Address.Floor,
+                _masterData.Address.Room,
+                _masterData.Address.BuildingNumber,
+                _masterData.Address.CountryCode?.Name,
+                _masterData.Address.IsActual,
+                _masterData.Address.LocationDescription,
+                _masterData.Address.MunicipalityCode,
+                _masterData.Address.PostCode,
+                _masterData.Address.CitySubDivision,
+                _masterData.Address.GeoInfoReference,
+                _masterData.Capacity?.Kw,
+                _masterData.AssetType?.Name,
+                _masterData.ConnectionType?.Name,
+                _masterData.DisconnectionType?.Name,
+                _masterData.EffectiveDate?.DateInUtc.ToString(),
+                _masterData.MeteringConfiguration.Meter.Value,
+                _masterData.MeteringConfiguration.Method.Name,
+                _masterData.PowerLimit?.Ampere,
+                _masterData.PowerLimit?.Kwh,
+                _masterData.ProductionObligation,
+                _masterData.ProductType.Name,
+                _masterData.ReadingOccurrence.Name,
+                _masterData.SettlementMethod?.Name,
+                _masterData.UnitType.Name,
+                _masterData.NetSettlementGroup?.Name,
+                _masterData.PowerPlantGsrnNumber?.Value,
+                _masterData.ScheduledMeterReadingDate?.MonthAndDay));
+        }
+
         internal void SetParent(MeteringPointId? parentId)
         {
             if (parentId is not null)
