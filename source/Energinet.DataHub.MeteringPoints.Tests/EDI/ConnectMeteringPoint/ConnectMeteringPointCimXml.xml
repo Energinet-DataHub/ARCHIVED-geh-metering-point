@@ -42,7 +42,7 @@ limitations under the License.
             <cim:connectionState>E22</cim:connectionState>
             <cim:readCycle>PT1H</cim:readCycle>
             <cim:netSettlementGroup>0</cim:netSettlementGroup>
-            <cim:nextReadingDate>2021-12-17</cim:nextReadingDate>
+            <cim:nextReadingDate>--01-01</cim:nextReadingDate>
             <cim:meteringGridArea_Domain.mRID codingScheme="NIE">870</cim:meteringGridArea_Domain.mRID>
             <cim:inMeteringGridArea_Domain.mRID codingScheme="NLI">869</cim:inMeteringGridArea_Domain.mRID>
             <cim:outMeteringGridArea_Domain.mRID codingScheme="NGB">871</cim:outMeteringGridArea_Domain.mRID>
