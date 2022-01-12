@@ -18,9 +18,8 @@ using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
 using Energinet.DataHub.Core.FunctionApp.Common.Identity;
 using Energinet.DataHub.Core.FunctionApp.Common.Middleware;
-using Energinet.DataHub.Core.XmlConversion.XmlConverter;
-using Energinet.DataHub.Core.XmlConversion.XmlConverter.Abstractions;
 using Energinet.DataHub.Core.XmlConversion.XmlConverter.Configuration;
+using Energinet.DataHub.Core.XmlConversion.XmlConverter.SimpleInjector.Extensions;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
@@ -78,8 +77,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             container.Register<IChannelResiliencePolicy>(() => new RetryNTimesPolicy(policyRetryCount), Lifestyle.Scoped);
             container.RegisterDecorator<Channel, ChannelResilienceDecorator>(Lifestyle.Scoped);
 
-            container.Register(() => new XmlMapper(XmlMappingConfiguration, TranslateProcessType), Lifestyle.Singleton);
-            container.Register<IXmlDeserializer, XmlDeserializer>(Lifestyle.Singleton);
+            container.AddXmlDeserialization(XmlMappingConfiguration, TranslateProcessType);
 
             var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING");
             var topic = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME");
