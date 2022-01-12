@@ -29,14 +29,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
     public class SetEnergySupplierHACK : INotificationHandler<MeteringPointCreated>
     {
         private readonly ICommandScheduler _commandScheduler;
-        private readonly IMarketRolesBusinessDocumentFactory _marketRolesBusinessDocumentFactory;
+        private readonly IActorMessageService _actorMessageService;
 
         public SetEnergySupplierHACK(
             ICommandScheduler commandScheduler,
-            IMarketRolesBusinessDocumentFactory marketRolesBusinessDocumentFactory)
+            IActorMessageService actorMessageService)
         {
             _commandScheduler = commandScheduler ?? throw new ArgumentNullException(nameof(commandScheduler));
-            _marketRolesBusinessDocumentFactory = marketRolesBusinessDocumentFactory;
+            _actorMessageService = actorMessageService;
         }
 
         public async Task Handle(MeteringPointCreated notification, CancellationToken cancellationToken)
@@ -48,8 +48,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                     notification.GsrnNumber,
                     notification.EffectiveDate)).ConfigureAwait(false);
 
-                await _marketRolesBusinessDocumentFactory
-                    .CreateMoveInMessageAsync(notification.GsrnNumber, notification.EffectiveDate)
+                await _actorMessageService
+                    .SendGenericNotificationMessageAsync(
+                        Guid.NewGuid().ToString(),
+                        notification.GsrnNumber,
+                        notification.EffectiveDate)
                     .ConfigureAwait(false);
             }
         }

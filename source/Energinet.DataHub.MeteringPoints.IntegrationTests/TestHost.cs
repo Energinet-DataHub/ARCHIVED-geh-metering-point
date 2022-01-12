@@ -52,13 +52,14 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bund
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.MarketRoles;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GenericNotification;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
@@ -68,7 +69,9 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
+using Energinet.DataHub.MeteringPoints.Messaging.Bundling.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Confirm;
+using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Generic;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Reject;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentAssertions;
@@ -165,11 +168,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             // TODO: remove this when infrastructure and application has been split into more assemblies.
             _container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageXmlSerializer>(Lifestyle.Singleton);
             _container.Register<IDocumentSerializer<RejectMessage>, RejectMessageXmlSerializer>(Lifestyle.Singleton);
+            _container.Register<IDocumentSerializer<GenericNotificationMessage>, GenericNotificationMessageXmlSerializer>(Lifestyle.Singleton);
+            _container.Register<IDocumentSerializer<AccountingPointCharacteristicsMessage>, AccountingPointCharacteristicsMessageXmlSerializer>(Lifestyle.Singleton);
 
-            _container.Register<IActorMessageFactory, ActorMessageFactory>(Lifestyle.Scoped);
             _container.Register<IMessageHubDispatcher, MessageHubDispatcher>(Lifestyle.Scoped);
-            _container.Register<IBusinessDocumentFactory, BusinessDocumentFactory>(Lifestyle.Scoped);
-            _container.Register<IMarketRolesBusinessDocumentFactory, MarketRolesBusinessDocumentFactory>(Lifestyle.Scoped);
+            _container.Register<IActorMessageService, ActorMessageService>(Lifestyle.Scoped);
 
             _container.Register<ChangeMasterDataSettings>(() => new ChangeMasterDataSettings(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1));
             _container.Register<ConnectSettings>(() => new ConnectSettings(
