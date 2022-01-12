@@ -327,8 +327,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
 
-        public void UpdateMasterData(MasterData updatedMasterData)
+        public void UpdateMasterData(MasterData updatedMasterData, MasterDataValidator validator)
         {
+            if (validator == null) throw new ArgumentNullException(nameof(validator));
+            var validationResult = validator.CheckRulesFor(MeteringPointType, updatedMasterData);
+            if (validationResult.Success == false)
+            {
+                throw new MasterDataChangeException(validationResult.Errors);
+            }
+
             _masterData = updatedMasterData ?? throw new ArgumentNullException(nameof(updatedMasterData));
             AddDomainEvent(new MasterDataWasUpdated(
                 _masterData.Address.StreetName,
