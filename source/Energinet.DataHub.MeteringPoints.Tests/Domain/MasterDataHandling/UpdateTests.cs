@@ -30,6 +30,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Disconnection_type_is_unchanged_if_no_value_is_provided()
+        {
+            var masterData = Builder()
+                .WithDisconnectionType(DisconnectionType.Manual.Name)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithDisconnectionType(null)
+                .Build();
+
+            Assert.Equal(DisconnectionType.Manual, updatedMasterData.DisconnectionType);
+        }
+
+        [Fact]
         public void Disconnection_type_can_be_removed_if_optional()
         {
             var masterData = Builder()

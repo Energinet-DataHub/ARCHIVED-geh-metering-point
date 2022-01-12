@@ -42,6 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             SetValue(nameof(MasterData.PowerPlantGsrnNumber), currentMasterData.PowerPlantGsrnNumber);
             SetValue(nameof(MasterData.ReadingOccurrence), currentMasterData.ReadingOccurrence);
             SetValue(nameof(MasterData.SettlementMethod), currentMasterData.SettlementMethod);
+            SetValue(nameof(MasterData.DisconnectionType), currentMasterData.DisconnectionType);
         }
 
         public BusinessRulesValidationResult Validate()
