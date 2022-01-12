@@ -14,6 +14,7 @@
 
 using System;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption.Rules
