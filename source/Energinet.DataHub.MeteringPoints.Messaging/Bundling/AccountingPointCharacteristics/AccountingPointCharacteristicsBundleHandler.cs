@@ -13,14 +13,14 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bundling;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GenericNotification;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.Generic
+namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.AccountingPointCharacteristics
 {
-    public class GenericNotificationBundleHandler : BundleHandler<GenericNotificationMessage>
+    public class AccountingPointCharacteristicsBundleHandler : BundleHandler<AccountingPointCharacteristicsMessage>
     {
-        public GenericNotificationBundleHandler(IJsonSerializer jsonSerializer, IDocumentSerializer<GenericNotificationMessage> documentSerializer)
+        public AccountingPointCharacteristicsBundleHandler(IJsonSerializer jsonSerializer, IDocumentSerializer<AccountingPointCharacteristicsMessage> documentSerializer)
             : base(jsonSerializer, documentSerializer)
         {
         }

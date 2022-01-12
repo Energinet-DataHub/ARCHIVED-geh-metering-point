@@ -23,17 +23,18 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
-    public class SendAccountingPointCharacteristicsMessageHandler : ICommandHandler<SendAccountingPointCharacteristicsMessage>
+    public class
+        SendAccountingPointCharacteristicsMessageHandler : ICommandHandler<SendAccountingPointCharacteristicsMessage>
     {
         private readonly IMediator _mediator;
-        private readonly IBusinessDocumentFactory _businessDocumentFactory;
+        private readonly IActorMessageService _actorMessageService;
 
         public SendAccountingPointCharacteristicsMessageHandler(
             IMediator mediator,
-            IBusinessDocumentFactory businessDocumentFactory)
+            IActorMessageService actorMessageService)
         {
             _mediator = mediator;
-            _businessDocumentFactory = businessDocumentFactory;
+            _actorMessageService = actorMessageService;
         }
 
         public async Task<Unit> Handle(
@@ -53,7 +54,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
 
             foreach (var energySupplier in energySuppliers)
             {
-                _businessDocumentFactory.CreateAccountingPointCharacteristicsMessage(request.TransactionId, request.Reason, meteringPointDto, energySupplier);
+                await _actorMessageService
+                    .SendAccountingPointCharacteristicsMessageAsync(request.TransactionId, request.Reason, meteringPointDto, energySupplier)
+                    .ConfigureAwait(false);
             }
 
             return Unit.Value;
