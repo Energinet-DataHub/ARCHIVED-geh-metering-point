@@ -331,7 +331,16 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             if (updatedMasterData == null) throw new ArgumentNullException(nameof(updatedMasterData));
             if (validator == null) throw new ArgumentNullException(nameof(validator));
-            return validator.CheckRulesFor(MeteringPointType, updatedMasterData);
+
+            var errors = new List<ValidationError>();
+            if (ConnectionState.PhysicalState == PhysicalState.ClosedDown)
+            {
+                errors.Add(new ClosedDownMeteringPointCannotBeChangedError());
+            }
+
+            errors.AddRange(validator.CheckRulesFor(MeteringPointType, updatedMasterData).Errors);
+
+            return new BusinessRulesValidationResult(errors);
         }
 
         public void UpdateMasterData(MasterData updatedMasterData, MasterDataValidator validator)

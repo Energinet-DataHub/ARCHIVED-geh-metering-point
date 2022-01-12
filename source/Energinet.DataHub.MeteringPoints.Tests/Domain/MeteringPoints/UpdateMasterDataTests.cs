@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addr
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Xunit;
 using Xunit.Categories;
 
@@ -27,6 +28,17 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
     [UnitTest]
     public class UpdateMasterDataTests : TestBase
     {
+        [Fact]
+        public void Cannot_updated_master_data_when_metering_point_is_closed_down()
+        {
+            var meteringPoint = CreateMeteringPoint(MeteringPointType.Consumption, MasterDataBuilderForConsumption());
+            meteringPoint.CloseDown();
+
+            var validationResult = meteringPoint.CanUpdateMasterData(UpdatedMasterData(meteringPoint.MasterData), new MasterDataValidator());
+
+            AssertContainsValidationError<ClosedDownMeteringPointCannotBeChangedError>(validationResult);
+        }
+
         [Fact]
         public void Master_data_is_updated()
         {
