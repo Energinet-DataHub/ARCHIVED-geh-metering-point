@@ -251,7 +251,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithDisconnectionType(string? disconnectionType)
         {
-            throw new NotImplementedException();
+            SetValueIfValid(
+                nameof(MasterData.DisconnectionType),
+                BusinessRulesValidationResult.Valid,
+                () => EnumerationType.FromName<DisconnectionType>(disconnectionType!));
+            return this;
         }
 
         public IMasterDataBuilder WithAssetType(string? assetType)
