@@ -78,6 +78,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             Assert.Throws<MasterDataChangeException>(() => meteringPoint.UpdateMasterData(masterDataWithInvalidValues, new MasterDataValidator()));
         }
 
+        [Fact]
+        public void Can_detect_invalid_master_data_values()
+        {
+            var meteringPoint = CreateMeteringPoint(MeteringPointType.Consumption);
+            var masterDataWithInvalidValues = InvalidForConsumptionMeteringPoints(meteringPoint.MasterData);
+
+            var validationResult =
+                meteringPoint.CanUpdateMasterData(masterDataWithInvalidValues, new MasterDataValidator());
+        }
+
         private static MasterData UpdatedMasterData(MasterData currentMasterData)
         {
             var updatedAddress = Address.Create(
