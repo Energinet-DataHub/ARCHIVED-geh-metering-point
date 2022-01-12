@@ -17,6 +17,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Create;
+using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
@@ -27,21 +28,15 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
         IBusinessProcessResultHandler<TMeteringPoint>
         where TMeteringPoint : ICreateMeteringPointRequest
     {
-        private readonly IActorMessageFactory _actorMessageFactory;
-        private readonly IMessageHubDispatcher _messageHubDispatcher;
         private readonly ErrorMessageFactory _errorMessageFactory;
-        private readonly ActorProvider _actorProvider;
+        private readonly IActorMessageService _actorMessageService;
 
         public CreateMeteringPointResultHandler(
-            IActorMessageFactory actorMessageFactory,
-            IMessageHubDispatcher messageHubDispatcher,
             ErrorMessageFactory errorMessageFactory,
-            ActorProvider actorProvider)
+            IActorMessageService actorMessageService)
         {
-            _actorMessageFactory = actorMessageFactory;
-            _messageHubDispatcher = messageHubDispatcher;
             _errorMessageFactory = errorMessageFactory;
-            _actorProvider = actorProvider;
+            _actorMessageService = actorMessageService;
         }
 
         public Task HandleAsync(TMeteringPoint request, BusinessProcessResult result)
@@ -50,32 +45,26 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
             if (result == null) throw new ArgumentNullException(nameof(result));
 
             return result.Success
-                ? CreateAcceptMessageAsync(request.GsrnNumber, request.EffectiveDate, request.TransactionId)
-                : CreateRejectResponseAsync(request.GsrnNumber, request.EffectiveDate, request.TransactionId, result);
+                ? CreateAcceptMessageAsync(request.GsrnNumber, request.TransactionId)
+                : CreateRejectResponseAsync(request.GsrnNumber, request.TransactionId, result);
         }
 
-        private Task CreateAcceptMessageAsync(string gsrnNumber, string effectiveDate, string transactionId)
+        private async Task CreateAcceptMessageAsync(string gsrnNumber, string transactionId)
         {
-            // TODO: Maybe the whole "Actor" object is available on the context?
-            var receiver = _actorProvider.CurrentActor;
-            var sender = _actorProvider.DataHub;
-
-            var message = _actorMessageFactory.CreateNewMeteringPointConfirmation(gsrnNumber, effectiveDate, transactionId, sender, receiver);
-            return _messageHubDispatcher.DispatchAsync(message, DocumentType.ConfirmCreateMeteringPoint, gsrnNumber);
+            await _actorMessageService
+                .SendCreateMeteringPointConfirmAsync(transactionId, gsrnNumber)
+                .ConfigureAwait(false);
         }
 
-        private Task CreateRejectResponseAsync(string gsrnNumber, string effectiveDate, string transactionId, BusinessProcessResult result)
+        private async Task CreateRejectResponseAsync(string gsrnNumber, string transactionId, BusinessProcessResult result)
         {
-            // TODO: Maybe the whole "Actor" object is available on the context?
-            var receiver = _actorProvider.CurrentActor;
-            var sender = _actorProvider.DataHub;
-
             var errors = result.ValidationErrors
                 .Select(error => _errorMessageFactory.GetErrorMessage(error))
                 .AsEnumerable();
 
-            var message = _actorMessageFactory.CreateNewMeteringPointReject(gsrnNumber, effectiveDate, transactionId, errors, sender, receiver);
-            return _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectCreateMeteringPoint, gsrnNumber);
+            await _actorMessageService
+                .SendCreateMeteringPointRejectAsync(transactionId, gsrnNumber, errors)
+                .ConfigureAwait(false);
         }
     }
 }
