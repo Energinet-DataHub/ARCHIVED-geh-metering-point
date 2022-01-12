@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Application.EDI;
+
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
     public class GsrnNumberMustBeValidDomainErrorConverter : ErrorConverter<Domain.MeteringPoints.Rules.GsrnNumberMustBeValidRuleError>
