@@ -164,7 +164,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                 businessReasonCode,
                 meteringPoint,
                 sender: Map(_actorProvider.DataHub),
-                receiver: new MarketRoleParticipant(energySupplier.GlnNumber, "A10", "DDQ"), // TODO: Re-visit
+                receiver: new MarketRoleParticipant(energySupplier.GlnNumber, "A10", "DDQ"), // TODO: Re-visit when we should send out AccountingPointCharacteristics updates.
                 energySupplier,
                 _dateTimeProvider.Now());
 
