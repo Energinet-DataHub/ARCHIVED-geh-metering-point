@@ -198,7 +198,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             {
                 SetValueIfValid(
                     nameof(MasterData.ReadingOccurrence),
-                    BusinessRulesValidationResult.Valid,
+                    () =>
+                    {
+                        return EnumerationType.GetAll<ReadingOccurrence>()
+                            .Select(item => item.Name)
+                            .Contains(readingPeriodicity) == false ? BusinessRulesValidationResult
+                            .Failure(new InvalidReadingPeriodicityType(readingPeriodicity)) : BusinessRulesValidationResult.Valid();
+                    },
                     () => EnumerationType.FromName<ReadingOccurrence>(readingPeriodicity!));
             }
 
@@ -207,7 +213,16 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithPowerLimit(int kwh, int ampere)
         {
-            throw new NotImplementedException();
+            SetValueIfValid(
+                nameof(MasterData.PowerLimit),
+                () => PowerLimit.CheckRules(kwh, ampere),
+                () =>
+                {
+                    var updatedKwh = kwh;
+                    var updatedAmpere = ampere;
+                    return PowerLimit.Create(updatedKwh, updatedAmpere);
+                });
+            return this;
         }
 
         public IMasterDataBuilder WithSettlementMethod(string? settlementMethod)
