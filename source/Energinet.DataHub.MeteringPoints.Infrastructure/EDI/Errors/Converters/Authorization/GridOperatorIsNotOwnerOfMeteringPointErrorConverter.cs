@@ -14,6 +14,7 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperatorPolicies;
+using Energinet.DataHub.MeteringPoints.Application.EDI;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Authorization
 {

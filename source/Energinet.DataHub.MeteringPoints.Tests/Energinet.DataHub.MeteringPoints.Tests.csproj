@@ -24,10 +24,10 @@ limitations under the License.
   <ItemGroup>
     <PackageReference Include="AutoFixture" Version="4.17.0" />
     <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
-    <PackageReference Include="Energinet.DataHub.Core.Schemas" Version="1.0.3" />
-    <PackageReference Include="Energinet.DataHub.Core.SchemaValidation" Version="1.0.3" />
-    <PackageReference Include="Energinet.DataHub.Core.XmlConversion.XmlConverter" Version="1.0.1" />
-    <PackageReference Include="Energinet.DataHub.Core.XmlConversion.XmlConverter.Abstractions" Version="1.0.1" />
+    <PackageReference Include="Energinet.DataHub.Core.Schemas" Version="1.0.7" />
+    <PackageReference Include="Energinet.DataHub.Core.SchemaValidation" Version="1.0.5" />
+    <PackageReference Include="Energinet.DataHub.Core.XmlConversion.XmlConverter" Version="1.0.4" />
+    <PackageReference Include="Energinet.DataHub.Core.XmlConversion.XmlConverter.Abstractions" Version="1.0.4" />
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.7" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />

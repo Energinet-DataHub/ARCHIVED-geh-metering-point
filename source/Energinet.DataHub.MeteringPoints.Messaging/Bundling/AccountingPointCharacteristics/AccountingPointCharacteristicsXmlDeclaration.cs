@@ -12,12 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint
-{
-    public record ConnectMeteringPointAccepted(
-        string TransactionId,
-        string Status, // TODO: Is status implicit in Accepted from type?
-        string GsrnNumber);
+using System.Xml.Linq;
+using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Xml;
 
-    // TODO: Reference to original document?
+namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.AccountingPointCharacteristics
+{
+    public class AccountingPointCharacteristicsXmlDeclaration : XmlDeclaration
+    {
+        public override string XmlNamespaceText => "urn:ediel.org:structure:accountingpointcharacteristics:0:1";
+
+        public override string SchemaLocationText => "urn-ediel-org-structure-accountingpointcharacteristics-0-1.xsd";
+
+        public override XNamespace XmlNamespace => XmlNamespaceText;
+    }
 }

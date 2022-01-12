@@ -16,6 +16,10 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using Energinet.DataHub.Core.Schemas;
+using Energinet.DataHub.Core.SchemaValidation;
+using Energinet.DataHub.Core.SchemaValidation.Extensions;
 using Energinet.DataHub.Core.XmlConversion.XmlConverter.Abstractions;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
@@ -60,8 +64,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
             IEnumerable<IInternalMarketDocument> commands;
             try
             {
-                var result = await _xmlDeserializer.DeserializeAsync(request.Body).ConfigureAwait(false);
+                var (succeeded, errorResponse, element) = await ValidateAndReadXmlAsync(request).ConfigureAwait(false);
 
+                if (!succeeded) return errorResponse ?? request.CreateResponse(HttpStatusCode.BadRequest);
+
+                var result = _xmlDeserializer.Deserialize(element!);
                 var senderValidationResult = _xmlSenderValidator.ValidateSender(result.HeaderData.Sender);
 
                 if (!senderValidationResult.IsValid)
@@ -84,11 +91,30 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
         private static async Task<HttpResponseData> CreateForbiddenResponseAsync(HttpRequestData request, string errorMessage)
         {
             var response = request.CreateResponse(HttpStatusCode.Forbidden);
-
-            response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
-
             await response.WriteStringAsync(errorMessage).ConfigureAwait(false);
             return response;
+        }
+
+        private static async Task<(bool Succeeded, HttpResponseData? ErrorResponse, XElement? Element)> ValidateAndReadXmlAsync(HttpRequestData request)
+        {
+            var reader = new SchemaValidatingReader(request.Body, Schemas.CimXml.StructureRequestChangeAccountingPointCharacteristics);
+
+            HttpResponseData? response = null;
+            var isSucceeded = true;
+
+            var xmlElement = await reader.AsXElementAsync().ConfigureAwait(false);
+
+            if (!reader.HasErrors) return (isSucceeded, response, xmlElement);
+
+            isSucceeded = false;
+            response = request.CreateResponse(HttpStatusCode.BadRequest);
+
+            await reader
+                .CreateErrorResponse()
+                .WriteAsXmlAsync(response.Body)
+                .ConfigureAwait(false);
+
+            return (isSucceeded, response, xmlElement);
         }
 
         private async Task<HttpResponseData> CreateOkResponseAsync(HttpRequestData request)
