@@ -30,7 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components
 
         public int? Ampere { get; }
 
-        public static PowerLimit Create(int kwh, int ampere)
+        public static PowerLimit Create(int? kwh, int? ampere)
         {
             if (!CheckRules(kwh, ampere).Success)
             {

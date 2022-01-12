@@ -49,11 +49,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             AssertError<InvalidAmperePowerLimitRuleError>(checkResult, expectError);
         }
 
-        [Fact]
-        public void Should_create()
+        [Theory]
+        [InlineData(999999, 999999)]
+        [InlineData(null, 999999)]
+        [InlineData(999999, null)]
+        [InlineData(null, null)]
+        public void Should_create(int? kwh, int? ampere)
         {
-            var kwh = 999999;
-            var ampere = 999999;
             var powerLimit = PowerLimit.Create(kwh, ampere);
 
             Assert.NotNull(powerLimit);

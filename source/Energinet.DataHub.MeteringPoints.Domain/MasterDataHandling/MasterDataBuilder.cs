@@ -97,7 +97,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         {
             SetValue(
                 nameof(MasterData.PowerLimit),
-                kwh is null || ampere is null ? null : PowerLimit.Create(kwh.GetValueOrDefault(), ampere.GetValueOrDefault()));
+                PowerLimit.Create(kwh.GetValueOrDefault(), ampere.GetValueOrDefault()));
             return this;
         }
 
