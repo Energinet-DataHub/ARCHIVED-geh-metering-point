@@ -188,7 +188,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                         .WithAssetType(_masterData.AssetType?.Name)
                         .WithConnectionType(_masterData.ConnectionType?.Name)
                         .WithDisconnectionType(_masterData.DisconnectionType?.Name)
-                        .WithPowerLimit(_masterData.PowerLimit.Kwh, _masterData.PowerLimit.Ampere)
+                        .WithPowerLimit(_masterData.PowerLimit?.Kwh, _masterData.PowerLimit?.Ampere)
                         .WithPowerPlant(_masterData.PowerPlantGsrnNumber?.Value)
                         .WithProductType(_masterData.ProductType.Name)
                         .WithSettlementMethod(_masterData.SettlementMethod?.Name)
@@ -249,7 +249,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                     .WithAssetType(_masterData.AssetType?.Name)
                     .WithConnectionType(_masterData.ConnectionType?.Name)
                     .WithDisconnectionType(_masterData.DisconnectionType?.Name)
-                    .WithPowerLimit(_masterData.PowerLimit.Kwh, _masterData.PowerLimit.Ampere)
+                    .WithPowerLimit(_masterData.PowerLimit?.Kwh, _masterData.PowerLimit?.Ampere)
                     .WithPowerPlant(_masterData.PowerPlantGsrnNumber?.Value)
                     .WithProductType(_masterData.ProductType.Name)
                     .WithSettlementMethod(_masterData.SettlementMethod?.Name)
@@ -407,8 +407,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 _masterData.PowerPlantGsrnNumber?.Value,
                 _masterData.Address.LocationDescription,
                 MeteringConfiguration.Meter?.Value,
-                _masterData.PowerLimit.Ampere,
-                _masterData.PowerLimit.Kwh,
+                _masterData.PowerLimit?.Ampere,
+                _masterData.PowerLimit?.Kwh,
                 _effectiveDate.DateInUtc,
                 _masterData.DisconnectionType?.Name!,
                 _masterData.ConnectionType?.Name,

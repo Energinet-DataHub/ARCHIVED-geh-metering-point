@@ -46,8 +46,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events
             string? powerPlantGsrnNumber,
             string? locationDescription,
             string? meterNumber,
-            int maximumCurrent,
-            int maximumPower,
+            int? maximumCurrent,
+            int? maximumPower,
             Instant effectiveDate,
             string disconnectionType,
             string? connectionType,
@@ -144,9 +144,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events
 
         public string? MeterNumber { get; }
 
-        public int MaximumCurrent { get; }
+        public int? MaximumCurrent { get; }
 
-        public int MaximumPower { get; }
+        public int? MaximumPower { get; }
 
         public Instant EffectiveDate { get; }
 

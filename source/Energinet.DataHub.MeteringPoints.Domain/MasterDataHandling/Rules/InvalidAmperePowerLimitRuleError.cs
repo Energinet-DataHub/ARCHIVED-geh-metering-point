@@ -18,11 +18,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
     public class InvalidAmperePowerLimitRuleError : ValidationError
     {
-        public InvalidAmperePowerLimitRuleError(int ampere)
+        public InvalidAmperePowerLimitRuleError(int? ampere)
         {
             Ampere = ampere;
         }
 
-        public int Ampere { get; }
+        public int? Ampere { get; }
     }
 }
