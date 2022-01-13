@@ -174,9 +174,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithMeasurementUnitType(string? measurementUnitType)
         {
-            if (measurementUnitType is null) return this;
-            if (measurementUnitType.Length == 0) SetValue<MeasurementUnitType>(nameof(MasterData.UnitType), null);
-            if (measurementUnitType.Length > 0)
+            if (measurementUnitType?.Length == 0) SetValue<MeasurementUnitType>(nameof(MasterData.UnitType), null);
+            if (measurementUnitType?.Length > 0)
             {
                 SetValueIfValid(
                 nameof(MasterData.UnitType),
@@ -194,9 +193,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithPowerPlant(string? gsrnNumber)
         {
-            if (gsrnNumber is null) return this;
-            if (gsrnNumber.Length == 0) SetValue<GsrnNumber>(nameof(MasterData.PowerPlantGsrnNumber), null);
-            if (gsrnNumber.Length > 0)
+            if (gsrnNumber?.Length == 0) SetValue<GsrnNumber>(nameof(MasterData.PowerPlantGsrnNumber), null);
+            if (gsrnNumber?.Length > 0)
             {
                 SetValueIfValid(
                 nameof(MasterData.PowerPlantGsrnNumber),
@@ -243,9 +241,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithSettlementMethod(string? settlementMethod)
         {
-            if (settlementMethod is null) return this;
-            if (settlementMethod.Length == 0) SetValue<SettlementMethod>(nameof(MasterData.SettlementMethod), null);
-            if (settlementMethod.Length > 0)
+            if (settlementMethod?.Length == 0) SetValue<SettlementMethod>(nameof(MasterData.SettlementMethod), null);
+            if (settlementMethod?.Length > 0)
             {
                 SetValueIfValid(
                     nameof(MasterData.SettlementMethod),
@@ -341,24 +338,21 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithProductType(string? productType)
         {
-            if (productType is null)
+            if (productType?.Length > 0)
             {
-                return this;
+                SetValueIfValid(
+                    nameof(MasterData.ProductType),
+                    BusinessRulesValidationResult.Valid,
+                    () => EnumerationType.FromName<ProductType>(productType));
             }
-
-            SetValueIfValid(
-                nameof(MasterData.ProductType),
-                BusinessRulesValidationResult.Valid,
-                () => EnumerationType.FromName<ProductType>(productType));
 
             return this;
         }
 
         public IMasterDataBuilder WithConnectionType(string? connectionType)
         {
-            if (connectionType is null) return this;
-            if (connectionType.Length == 0) SetValue<ConnectionType>(nameof(MasterData.ConnectionType), null);
-            if (connectionType.Length != 0)
+            if (connectionType?.Length == 0) SetValue<ConnectionType>(nameof(MasterData.ConnectionType), null);
+            if (connectionType?.Length > 0)
             {
                 SetValueIfValid(
                 nameof(MasterData.ConnectionType),
