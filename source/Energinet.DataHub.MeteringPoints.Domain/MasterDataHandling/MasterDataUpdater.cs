@@ -65,6 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             AddValidationErrorIfRequiredFieldIsMissing<ScheduledMeterReadingDate>(nameof(MasterData.ScheduledMeterReadingDate), new ScheduledMeterReadingDateIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<Capacity>(nameof(MasterData.Capacity), new CapacityIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<EffectiveDate>(nameof(MasterData.EffectiveDate), new EffectiveDateIsRequired());
+            AddValidationErrorIfRequiredFieldIsMissing<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup), new NetSettlementGroupIsRequired());
 
             return new BusinessRulesValidationResult(_validationErrors);
         }
@@ -76,17 +77,22 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return CreateMasterData();
         }
 
-        public IMasterDataBuilder WithNetSettlementGroup(string netSettlementGroup)
+        public IMasterDataBuilder WithNetSettlementGroup(string? netSettlementGroup)
         {
-            SetValueIfValid(
-                nameof(MasterData.NetSettlementGroup),
-                () =>
-                {
-                    return EnumerationType.GetAll<NetSettlementGroup>()
-                        .Select(item => item.Name)
-                        .Contains(netSettlementGroup) == false ? BusinessRulesValidationResult.Failure(new InvalidSettlementGroupValue(netSettlementGroup)) : BusinessRulesValidationResult.Valid();
-                },
-                () => EnumerationType.FromName<NetSettlementGroup>(netSettlementGroup));
+            if (netSettlementGroup?.Length == 0) SetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup), null);
+            if (netSettlementGroup?.Length > 0)
+            {
+                SetValueIfValid(
+                    nameof(MasterData.NetSettlementGroup),
+                    () =>
+                    {
+                        return EnumerationType.GetAll<NetSettlementGroup>()
+                            .Select(item => item.Name)
+                            .Contains(netSettlementGroup) == false ? BusinessRulesValidationResult.Failure(new InvalidSettlementGroupValue(netSettlementGroup)) : BusinessRulesValidationResult.Valid();
+                    },
+                    () => EnumerationType.FromName<NetSettlementGroup>(netSettlementGroup));
+            }
+
             return this;
         }
 

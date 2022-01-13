@@ -32,6 +32,23 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Net_settlement_group_cannot_be_removed_if_field_is_required()
+        {
+            var masterData = Builder()
+                .WithNetSettlementGroup(NetSettlementGroup.Ninetynine.Name)
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData, new List<MasterDataField>()
+                {
+                    new MasterDataField(nameof(MasterData.NetSettlementGroup), Applicability.Required),
+                })
+                .WithNetSettlementGroup(string.Empty)
+                .Validate();
+
+            AssertContainsValidationError<NetSettlementGroupIsRequired>(validationResult);
+        }
+
+        [Fact]
         public void Net_settlement_group_is_changed()
         {
             var masterData = Builder()
