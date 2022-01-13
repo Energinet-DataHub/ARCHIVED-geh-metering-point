@@ -32,6 +32,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Net_settlement_group_input_value_must_be_valid()
+        {
+            var masterData = Builder()
+                .WithNetSettlementGroup(NetSettlementGroup.Ninetynine.Name)
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData)
+                .WithNetSettlementGroup("invalid value")
+                .Validate();
+
+            AssertContainsValidationError<InvalidNetSettlementGroupValue>(validationResult);
+        }
+
+        [Fact]
         public void Net_settlement_group_is_removed_if_field_is_not_allowed()
         {
             var masterData = Builder()

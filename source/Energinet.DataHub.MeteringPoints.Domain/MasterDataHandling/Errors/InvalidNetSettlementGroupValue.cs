@@ -16,9 +16,9 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
-    public class InvalidSettlementGroupValue : ValidationError
+    public class InvalidNetSettlementGroupValue : ValidationError
     {
-        public InvalidSettlementGroupValue(string? providedValue)
+        public InvalidNetSettlementGroupValue(string? providedValue)
         {
             ProvidedValue = providedValue;
         }
