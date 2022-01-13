@@ -30,6 +30,24 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Scheduled_meter_reading_date_can_be_removed_if_field_is_optional()
+        {
+            var masterData = Builder()
+                .WithNetSettlementGroup(NetSettlementGroup.Six.Name)
+                .WithScheduledMeterReadingDate("0101")
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData, new List<MasterDataField>()
+                {
+                    new MasterDataField(nameof(MasterData.ScheduledMeterReadingDate), Applicability.Optional),
+                })
+                .WithScheduledMeterReadingDate(string.Empty)
+                .Build();
+
+            Assert.Null(updatedMasterData.ScheduledMeterReadingDate);
+        }
+
+        [Fact]
         public void Scheduled_meter_reading_date_is_unchanged_if_no_value_is_provided()
         {
             var masterData = Builder()

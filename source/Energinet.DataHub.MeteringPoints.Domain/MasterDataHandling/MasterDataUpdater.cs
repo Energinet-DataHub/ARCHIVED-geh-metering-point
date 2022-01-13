@@ -297,6 +297,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithScheduledMeterReadingDate(string? scheduledMeterReadingDate)
         {
+            if (scheduledMeterReadingDate?.Length == 0) SetValue<ScheduledMeterReadingDate>(nameof(MasterData.ScheduledMeterReadingDate), null);
             if (scheduledMeterReadingDate?.Length > 0)
             {
                 SetValueIfValid(
