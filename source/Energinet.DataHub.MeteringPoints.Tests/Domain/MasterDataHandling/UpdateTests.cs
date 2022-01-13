@@ -31,6 +31,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Capacity_input_value_must_be_valid()
+        {
+            var masterData = Builder()
+                .WithCapacity("100")
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData)
+                .WithCapacity("invalid value")
+                .Validate();
+
+            Assert.False(validationResult.Success);
+        }
+
+        [Fact]
         public void Capacity_is_removed_if_field_is_not_allowed()
         {
             var masterData = Builder()

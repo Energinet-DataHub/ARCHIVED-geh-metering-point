@@ -319,7 +319,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             {
                 SetValueIfValid(
                     nameof(MasterData.Capacity),
-                    BusinessRulesValidationResult.Valid,
+                    () => Capacity.CheckRules(capacity),
                     () => Capacity.Create(capacity));
             }
 
