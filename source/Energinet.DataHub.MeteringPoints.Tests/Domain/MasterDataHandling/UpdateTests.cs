@@ -31,6 +31,21 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Effective_date_must_be_set_if_required()
+        {
+            var masterData = Builder()
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData, new List<MasterDataField>()
+                {
+                    new MasterDataField(nameof(MasterData.EffectiveDate), Applicability.Required),
+                })
+                .Validate();
+
+            AssertContainsValidationError<EffectiveDateIsRequired>(validationResult);
+        }
+
+        [Fact]
         public void Effective_date_must_be_valid()
         {
             var masterData = Builder()
