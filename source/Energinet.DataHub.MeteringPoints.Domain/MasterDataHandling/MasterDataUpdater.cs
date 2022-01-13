@@ -274,7 +274,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithAssetType(string? assetType)
         {
-            throw new NotImplementedException();
+            SetValueIfValid(
+                nameof(MasterData.AssetType),
+                BusinessRulesValidationResult.Valid,
+                () => EnumerationType.FromName<AssetType>(assetType!));
+            return this;
         }
 
         public IMasterDataBuilder WithScheduledMeterReadingDate(string? scheduledMeterReadingDate)

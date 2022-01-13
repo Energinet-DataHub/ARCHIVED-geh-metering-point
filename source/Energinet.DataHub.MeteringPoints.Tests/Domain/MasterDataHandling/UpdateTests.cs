@@ -30,6 +30,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Asset_type_is_changed()
+        {
+            var masterData = Builder()
+                .WithAssetType(AssetType.Boiler.Name)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithAssetType(AssetType.CombinedCycle.Name)
+                .Build();
+
+            Assert.Equal(AssetType.CombinedCycle, updatedMasterData.AssetType);
+        }
+
+        [Fact]
         public void Disconnection_type_input_value_must_be_valid()
         {
             var masterData = Builder()
