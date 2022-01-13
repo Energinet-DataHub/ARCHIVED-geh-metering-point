@@ -31,6 +31,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Capacity_is_changed()
+        {
+            var masterData = Builder()
+                .WithCapacity(100)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithCapacity(1000)
+                .Build();
+
+            Assert.Equal(1000, updatedMasterData.Capacity?.Kw);
+        }
+
+        [Fact]
         public void Scheduled_meter_reading_date_input_value_must_be_valid()
         {
             var masterData = Builder()

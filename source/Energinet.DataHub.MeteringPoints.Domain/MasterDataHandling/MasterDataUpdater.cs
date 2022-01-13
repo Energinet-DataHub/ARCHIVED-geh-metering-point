@@ -312,7 +312,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithCapacity(double? capacity)
         {
-            throw new NotImplementedException();
+            SetValueIfValid(
+                nameof(MasterData.Capacity),
+                BusinessRulesValidationResult.Valid,
+                () => Capacity.Create(capacity.GetValueOrDefault()));
+
+            return this;
         }
 
         public IMasterDataBuilder EffectiveOn(string? effectiveDate)
