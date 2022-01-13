@@ -296,7 +296,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithScheduledMeterReadingDate(string? scheduledMeterReadingDate)
         {
-            throw new NotImplementedException();
+            SetValueIfValid(
+                nameof(MasterData.ScheduledMeterReadingDate),
+                BusinessRulesValidationResult.Valid,
+                () => ScheduledMeterReadingDate.Create(scheduledMeterReadingDate!));
+
+            return this;
         }
 
         public IMasterDataBuilder WithCapacity(double? capacity)

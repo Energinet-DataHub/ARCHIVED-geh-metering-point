@@ -30,6 +30,21 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Scheduled_meter_reading_date_is_changed()
+        {
+            var masterData = Builder()
+                .WithNetSettlementGroup(NetSettlementGroup.Six.Name)
+                .WithScheduledMeterReadingDate("0101")
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithScheduledMeterReadingDate("0102")
+                .Build();
+
+            Assert.Equal("0102", updatedMasterData.ScheduledMeterReadingDate?.MonthAndDay);
+        }
+
+        [Fact]
         public void Asset_type_input_value_must_be_valid()
         {
             var masterData = Builder()
