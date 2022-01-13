@@ -66,6 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             AddValidationErrorIfRequiredFieldIsMissing<Capacity>(nameof(MasterData.Capacity), new CapacityIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<EffectiveDate>(nameof(MasterData.EffectiveDate), new EffectiveDateIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup), new NetSettlementGroupIsRequired());
+            AddValidationErrorIfRequiredFieldIsMissing<ProductType>(nameof(MasterData.ProductType), new ProductTypeIsRequired());
 
             return new BusinessRulesValidationResult(_validationErrors);
         }
@@ -321,6 +322,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithProductType(string? productType)
         {
+            if (productType?.Length == 0) SetValue<ProductType>(nameof(MasterData.ProductType), null);
             if (productType?.Length > 0)
             {
                 SetValueIfValid(
