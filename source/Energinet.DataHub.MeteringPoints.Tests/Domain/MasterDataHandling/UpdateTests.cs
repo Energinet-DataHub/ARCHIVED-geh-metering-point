@@ -1084,6 +1084,23 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Fact]
+        public void Product_type_is_removed_if_field_is_not_allowed()
+        {
+            var masterData = Builder()
+                .WithProductType(ProductType.Tariff.Name)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData, new List<MasterDataField>()
+                {
+                    new MasterDataField(nameof(MasterData.ProductType), Applicability.NotAllowed),
+                })
+                .WithProductType(ProductType.EnergyActive.Name)
+                .Build();
+
+            Assert.Null(updatedMasterData.ProductType);
+        }
+
+        [Fact]
         public void Product_type_can_be_removed_if_field_is_optional()
         {
             var masterData = Builder()
