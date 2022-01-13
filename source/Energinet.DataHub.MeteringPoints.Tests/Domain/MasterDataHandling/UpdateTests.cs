@@ -32,6 +32,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Net_settlement_group_is_changed()
+        {
+            var masterData = Builder()
+                .WithNetSettlementGroup(NetSettlementGroup.Ninetynine.Name)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithNetSettlementGroup(NetSettlementGroup.One.Name)
+                .Build();
+
+            Assert.Equal(NetSettlementGroup.One, updatedMasterData.NetSettlementGroup);
+        }
+
+        [Fact]
         public void Cannot_build_if_validation_error_exists()
         {
             var masterData = Builder()
