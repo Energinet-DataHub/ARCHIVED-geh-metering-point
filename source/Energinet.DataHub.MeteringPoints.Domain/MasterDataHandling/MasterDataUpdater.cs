@@ -360,7 +360,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithProductionObligation(bool? productionObligation)
         {
-            throw new NotImplementedException();
+            SetValue(nameof(MasterData.ProductionObligation), productionObligation.GetValueOrDefault());
+            return this;
         }
 
         private void SetValueIfValid<T>(string valueName, Func<BusinessRulesValidationResult> validator, Func<T> creator)

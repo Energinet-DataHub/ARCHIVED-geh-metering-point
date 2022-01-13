@@ -32,6 +32,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Production_obligation_is_changed()
+        {
+            var masterData = Builder()
+                .WithProductionObligation(true)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithProductionObligation(false)
+                .Build();
+
+            Assert.False(updatedMasterData.ProductionObligation);
+        }
+
+        [Fact]
         public void Net_settlement_group_input_value_must_be_valid()
         {
             var masterData = Builder()
