@@ -31,10 +31,27 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Capacity_can_be_removed_if_field_is_optional()
+        {
+            var masterData = Builder()
+                .WithCapacity("100")
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData, new List<MasterDataField>()
+                {
+                    new MasterDataField(nameof(MasterData.Capacity), Applicability.Optional),
+                })
+                .WithCapacity(string.Empty)
+                .Build();
+
+            Assert.Null(updatedMasterData.Capacity);
+        }
+
+        [Fact]
         public void Capacity_is_unchanged_if_no_value_is_provided()
         {
             var masterData = Builder()
-                .WithCapacity(100)
+                .WithCapacity("100")
                 .Build();
 
             var updatedMasterData = UpdateBuilder(masterData)
@@ -48,11 +65,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         public void Capacity_is_changed()
         {
             var masterData = Builder()
-                .WithCapacity(100)
+                .WithCapacity("100")
                 .Build();
 
             var updatedMasterData = UpdateBuilder(masterData)
-                .WithCapacity(1000)
+                .WithCapacity("1000")
                 .Build();
 
             Assert.Equal(1000, updatedMasterData.Capacity?.Kw);
@@ -901,7 +918,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithNetSettlementGroup(NetSettlementGroup.One.Name)
                 .WithSettlementMethod(SettlementMethod.Flex.Name)
                 .WithScheduledMeterReadingDate("0101")
-                .WithCapacity(1)
+                .WithCapacity("1")
                 .WithAddress(
                     SampleData.StreetName,
                     SampleData.StreetCode,

@@ -117,9 +117,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 .WithReadingPeriodicity(request.MeterReadingOccurrence)
                 .WithPowerLimit(request.MaximumPower, request.MaximumCurrent)
                 .WithPowerPlant(request.PowerPlant)
-                .WithCapacity(string.IsNullOrWhiteSpace(request.PhysicalConnectionCapacity)
-                    ? null
-                    : double.Parse(request.PhysicalConnectionCapacity, NumberStyles.Number, new NumberFormatInfo()))
+                .WithCapacity(request.PhysicalConnectionCapacity)
                 .WithAddress(
                     request.StreetName,
                     request.StreetCode,

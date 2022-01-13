@@ -167,7 +167,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 var builder =
                     new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType))
                         .WithNetSettlementGroup(_masterData.NetSettlementGroup?.Name)
-                        .WithCapacity(_masterData.Capacity?.Kw)
+                        .WithCapacity(_masterData.Capacity?.ToString())
                         .WithMeteringConfiguration(_masterData.MeteringConfiguration.Method.Name, _masterData.MeteringConfiguration.Meter.Value)
                         .WithReadingPeriodicity(_masterData.ReadingOccurrence.Name)
                         .WithScheduledMeterReadingDate(_masterData.ScheduledMeterReadingDate?.MonthAndDay)
@@ -228,7 +228,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             var builder =
                 new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType))
                     .WithNetSettlementGroup(_masterData.NetSettlementGroup?.Name)
-                    .WithCapacity(_masterData.Capacity?.Kw)
+                    .WithCapacity(_masterData.Capacity?.ToString())
                     .WithMeteringConfiguration(configuration.Method.Name, configuration.Meter.Value)
                     .WithReadingPeriodicity(_masterData.ReadingOccurrence.Name)
                     .WithScheduledMeterReadingDate(_masterData.ScheduledMeterReadingDate?.MonthAndDay)

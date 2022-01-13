@@ -131,7 +131,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         /// </summary>
         /// <param name="capacity"></param>
         /// <returns><see cref="IMasterDataBuilder"/></returns>
-        IMasterDataBuilder WithCapacity(double? capacity);
+        IMasterDataBuilder WithCapacity(string? capacity);
 
         /// <summary>
         /// Configures effective date

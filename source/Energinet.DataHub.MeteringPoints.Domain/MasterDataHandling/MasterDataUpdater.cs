@@ -311,14 +311,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public IMasterDataBuilder WithCapacity(double? capacity)
+        public IMasterDataBuilder WithCapacity(string? capacity)
         {
-            if (capacity.HasValue)
+            if (capacity?.Length == 0) SetValue<Capacity>(nameof(MasterData.Capacity), null);
+            if (capacity?.Length > 0)
             {
                 SetValueIfValid(
                     nameof(MasterData.Capacity),
                     BusinessRulesValidationResult.Valid,
-                    () => Capacity.Create(capacity.GetValueOrDefault()));
+                    () => Capacity.Create(capacity));
             }
 
             return this;

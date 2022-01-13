@@ -52,7 +52,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 .WithNetSettlementGroup(NetSettlementGroup.One.Name)
                 .WithSettlementMethod(SettlementMethod.Flex.Name)
                 .WithScheduledMeterReadingDate("0101")
-                .WithCapacity(1)
+                .WithCapacity("1")
                 .WithAddress(
                     SampleData.StreetName,
                     SampleData.StreetCode,
@@ -96,7 +96,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 .WithNetSettlementGroup(NetSettlementGroup.One.Name)
                 .WithSettlementMethod(SettlementMethod.Flex.Name)
                 .WithScheduledMeterReadingDate("0101")
-                .WithCapacity(1)
+                .WithCapacity("1")
                 .WithAddress(
                     SampleData.StreetName,
                     SampleData.StreetCode,
