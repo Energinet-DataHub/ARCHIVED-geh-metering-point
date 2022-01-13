@@ -328,7 +328,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder EffectiveOn(string? effectiveDate)
         {
-            throw new NotImplementedException();
+            SetValueIfValid(
+                nameof(MasterData.EffectiveDate),
+                () => EffectiveDate.CheckRules(effectiveDate!),
+                () => EffectiveDate.Create(effectiveDate!));
+            return this;
         }
 
         public IMasterDataBuilder WithProductType(string? productType)

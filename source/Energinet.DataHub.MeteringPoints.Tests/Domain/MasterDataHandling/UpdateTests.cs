@@ -31,6 +31,34 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Effective_date_must_be_valid()
+        {
+            var masterData = Builder()
+                .Build();
+
+            var effectiveDate = "invalid effective date";
+            var validationResult = UpdateBuilder(masterData)
+                .EffectiveOn(effectiveDate)
+                .Validate();
+
+            Assert.False(validationResult.Success);
+        }
+
+        [Fact]
+        public void Effective_date_is_set()
+        {
+            var masterData = Builder()
+                .Build();
+
+            var effectiveDate = "2022-01-01T22:00:00Z";
+            var updatedMasterData = UpdateBuilder(masterData)
+                .EffectiveOn(effectiveDate)
+                .Build();
+
+            Assert.Equal(effectiveDate, updatedMasterData.EffectiveDate?.DateInUtc.ToString());
+        }
+
+        [Fact]
         public void Capacity_input_value_must_be_valid()
         {
             var masterData = Builder()
