@@ -223,7 +223,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public IMasterDataBuilder WithPowerLimit(int kwh, int ampere)
+        public IMasterDataBuilder WithPowerLimit(int? kwh, int? ampere)
         {
             SetValueIfValid(
                 nameof(MasterData.PowerLimit),
