@@ -32,6 +32,37 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Production_obligation_is_unchanged_if_no_value_is_provided()
+        {
+            var masterData = Builder()
+                .WithProductionObligation(true)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithProductionObligation(null)
+                .Build();
+
+            Assert.Equal(masterData.ProductionObligation, updatedMasterData.ProductionObligation);
+        }
+
+        [Fact]
+        public void Production_obligation_is_removed_if_field_is_not_allowed()
+        {
+            var masterData = Builder()
+                .WithProductionObligation(true)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData, new List<MasterDataField>
+                {
+                 new MasterDataField(nameof(MasterData.ProductionObligation), Applicability.NotAllowed),
+                })
+                .WithProductionObligation(false)
+                .Build();
+
+            Assert.Null(updatedMasterData.ProductionObligation);
+        }
+
+        [Fact]
         public void Production_obligation_is_changed()
         {
             var masterData = Builder()

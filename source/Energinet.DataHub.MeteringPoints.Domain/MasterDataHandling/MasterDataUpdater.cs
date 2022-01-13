@@ -48,6 +48,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             SetValue(nameof(MasterData.AssetType), currentMasterData.AssetType);
             SetValue(nameof(MasterData.ScheduledMeterReadingDate), currentMasterData.ScheduledMeterReadingDate);
             SetValue(nameof(MasterData.Capacity), currentMasterData.Capacity);
+            SetValue(nameof(MasterData.ProductionObligation), currentMasterData.ProductionObligation);
         }
 
         public BusinessRulesValidationResult Validate()
@@ -360,7 +361,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithProductionObligation(bool? productionObligation)
         {
-            SetValue(nameof(MasterData.ProductionObligation), productionObligation.GetValueOrDefault());
+            if (productionObligation.HasValue == true)
+            {
+                SetValue(nameof(MasterData.ProductionObligation), productionObligation.GetValueOrDefault());
+            }
+
             return this;
         }
 
