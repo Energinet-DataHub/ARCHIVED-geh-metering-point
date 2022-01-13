@@ -71,14 +71,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public MasterData Build()
         {
+            ThrowIfAnyValidationErrors();
+
             RemoveValueIfNotApplicable<ScheduledMeterReadingDate>(
                 nameof(MasterData.ScheduledMeterReadingDate),
                 () => GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)) != NetSettlementGroup.Six);
             RemoveValueIfNotApplicable<ConnectionType>(
                 nameof(MasterData.ConnectionType),
                 () => GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)) == NetSettlementGroup.Zero);
-
-            ThrowIfAnyValidationErrors();
 
             return new MasterData(
                 productType: GetValue<ProductType>(nameof(MasterData.ProductType)),
