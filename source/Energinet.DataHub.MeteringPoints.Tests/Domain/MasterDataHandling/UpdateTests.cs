@@ -20,6 +20,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addr
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Xunit;
@@ -30,6 +31,22 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     [UnitTest]
     public class UpdateTests : TestBase
     {
+        [Fact]
+        public void Cannot_build_if_validation_error_exists()
+        {
+            var masterData = Builder()
+                .Build();
+
+            var updater = UpdateBuilder(
+                masterData,
+                new List<MasterDataField>()
+                {
+                    new MasterDataField(nameof(MasterData.EffectiveDate), Applicability.Required),
+                });
+
+            Assert.Throws<MasterDataChangeException>(() => updater.Build());
+        }
+
         [Fact]
         public void Effective_date_must_be_set_if_required()
         {

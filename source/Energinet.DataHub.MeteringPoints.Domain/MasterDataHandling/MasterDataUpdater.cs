@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -76,6 +77,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             RemoveValueIfNotApplicable<ConnectionType>(
                 nameof(MasterData.ConnectionType),
                 () => GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)) == NetSettlementGroup.Zero);
+
+            var validationResult = Validate();
+            if (validationResult.Success == false)
+            {
+                throw new MasterDataChangeException(validationResult.Errors);
+            }
 
             return new MasterData(
                 productType: GetValue<ProductType>(nameof(MasterData.ProductType)),

@@ -39,7 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             new MasterDataValue(nameof(MasterData.PowerPlantGsrnNumber), typeof(GsrnNumber), Applicability.Optional),
             new MasterDataValue(nameof(MasterData.DisconnectionType), typeof(DisconnectionType), Applicability.Optional),
             new MasterDataValue(nameof(MasterData.ConnectionType), typeof(ConnectionType), Applicability.Optional),
-            new MasterDataValue(nameof(MasterData.EffectiveDate), typeof(EffectiveDate), Applicability.Required),
+            new MasterDataValue(nameof(MasterData.EffectiveDate), typeof(EffectiveDate), Applicability.Optional),
             new MasterDataValue(nameof(MasterData.Capacity), typeof(Capacity), Applicability.Optional),
             new MasterDataValue(nameof(MasterData.Address), typeof(Address), Applicability.Optional),
             new MasterDataValue(nameof(MasterData.ProductionObligation), typeof(bool), Applicability.Optional),
