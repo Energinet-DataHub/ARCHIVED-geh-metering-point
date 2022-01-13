@@ -18,6 +18,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
@@ -29,6 +30,39 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     [UnitTest]
     public class UpdateTests : TestBase
     {
+        [Fact]
+        public void Scheduled_meter_reading_date_input_value_must_be_valid()
+        {
+            var masterData = Builder()
+                .WithNetSettlementGroup(NetSettlementGroup.Six.Name)
+                .WithScheduledMeterReadingDate("0101")
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData)
+                .WithScheduledMeterReadingDate("invalid value")
+                .Validate();
+
+            AssertContainsValidationError<InvalidScheduledMeterReadingDateRuleError>(validationResult);
+        }
+
+        [Fact]
+        public void Scheduled_meter_reading_date_cannot_be_removed_if_field_is_required()
+        {
+            var masterData = Builder()
+                .WithNetSettlementGroup(NetSettlementGroup.Six.Name)
+                .WithScheduledMeterReadingDate("0101")
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData, new List<MasterDataField>()
+                {
+                    new MasterDataField(nameof(MasterData.ScheduledMeterReadingDate), Applicability.Required),
+                })
+                .WithScheduledMeterReadingDate(string.Empty)
+                .Validate();
+
+            AssertContainsValidationError<ScheduledMeterReadingDateIsRequired>(validationResult);
+        }
+
         [Fact]
         public void Scheduled_meter_reading_date_can_be_removed_if_field_is_optional()
         {

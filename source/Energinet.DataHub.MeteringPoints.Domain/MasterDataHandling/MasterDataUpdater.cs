@@ -60,6 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             AddValidationErrorIfRequiredFieldIsMissing<DisconnectionType>(nameof(MasterData.DisconnectionType), new DisconnectionTypeIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<ConnectionType>(nameof(MasterData.ConnectionType), new ConnectionTypeIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<AssetType>(nameof(MasterData.AssetType), new AssetTypeIsRequired());
+            AddValidationErrorIfRequiredFieldIsMissing<ScheduledMeterReadingDate>(nameof(MasterData.ScheduledMeterReadingDate), new ScheduledMeterReadingDateIsRequired());
 
             return new BusinessRulesValidationResult(_validationErrors);
         }
@@ -302,7 +303,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             {
                 SetValueIfValid(
                     nameof(MasterData.ScheduledMeterReadingDate),
-                    BusinessRulesValidationResult.Valid,
+                    () => ScheduledMeterReadingDate.CheckRules(scheduledMeterReadingDate),
                     () => ScheduledMeterReadingDate.Create(scheduledMeterReadingDate!));
             }
 
