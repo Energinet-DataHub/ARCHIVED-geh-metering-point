@@ -222,6 +222,23 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Fact]
+        public void Asset_type_is_removed_if_field_is_not_allowed()
+        {
+            var masterData = Builder()
+                .WithAssetType(AssetType.Boiler.Name)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData, new List<MasterDataField>()
+                {
+                    new MasterDataField(nameof(MasterData.AssetType), Applicability.NotAllowed),
+                })
+                .WithAssetType(AssetType.CombinedCycle.Name)
+                .Build();
+
+            Assert.Null(updatedMasterData.AssetType);
+        }
+
+        [Fact]
         public void Asset_type_can_be_removed_if_field_is_optional()
         {
             var masterData = Builder()
