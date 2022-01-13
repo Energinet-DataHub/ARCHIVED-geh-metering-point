@@ -46,6 +46,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             SetValue(nameof(MasterData.DisconnectionType), currentMasterData.DisconnectionType);
             SetValue(nameof(MasterData.AssetType), currentMasterData.AssetType);
             SetValue(nameof(MasterData.ScheduledMeterReadingDate), currentMasterData.ScheduledMeterReadingDate);
+            SetValue(nameof(MasterData.Capacity), currentMasterData.Capacity);
         }
 
         public BusinessRulesValidationResult Validate()
@@ -312,10 +313,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithCapacity(double? capacity)
         {
-            SetValueIfValid(
-                nameof(MasterData.Capacity),
-                BusinessRulesValidationResult.Valid,
-                () => Capacity.Create(capacity.GetValueOrDefault()));
+            if (capacity.HasValue)
+            {
+                SetValueIfValid(
+                    nameof(MasterData.Capacity),
+                    BusinessRulesValidationResult.Valid,
+                    () => Capacity.Create(capacity.GetValueOrDefault()));
+            }
 
             return this;
         }

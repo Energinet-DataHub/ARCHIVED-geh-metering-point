@@ -31,6 +31,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Capacity_is_unchanged_if_no_value_is_provided()
+        {
+            var masterData = Builder()
+                .WithCapacity(100)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithCapacity(null)
+                .Build();
+
+            Assert.Equal(masterData.Capacity, updatedMasterData.Capacity);
+        }
+
+        [Fact]
         public void Capacity_is_changed()
         {
             var masterData = Builder()
