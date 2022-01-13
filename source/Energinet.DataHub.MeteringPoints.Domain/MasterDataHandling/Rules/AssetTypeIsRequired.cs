@@ -16,7 +16,7 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
-    public class AssetTypeIsRequiredRuleError : ValidationError
+    public class AssetTypeIsRequired : ValidationError
     {
     }
 }

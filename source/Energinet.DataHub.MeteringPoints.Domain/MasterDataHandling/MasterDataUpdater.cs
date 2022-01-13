@@ -20,6 +20,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addr
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -57,6 +58,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             AddValidationErrorIfRequiredFieldIsMissing<SettlementMethod>(nameof(MasterData.SettlementMethod), new SettlementMethodIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<DisconnectionType>(nameof(MasterData.DisconnectionType), new DisconnectionTypeIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<ConnectionType>(nameof(MasterData.ConnectionType), new ConnectionTypeIsRequired());
+            AddValidationErrorIfRequiredFieldIsMissing<AssetType>(nameof(MasterData.AssetType), new AssetTypeIsRequired());
 
             return new BusinessRulesValidationResult(_validationErrors);
         }
