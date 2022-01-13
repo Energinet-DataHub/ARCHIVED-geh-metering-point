@@ -50,13 +50,14 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bund
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.MarketRoles;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GenericNotification;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notifications;
@@ -67,7 +68,9 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Providers.MeteringPointOwn
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
+using Energinet.DataHub.MeteringPoints.Messaging.Bundling.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Confirm;
+using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Generic;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Reject;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentValidation;
@@ -159,8 +162,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IProtobufMessageFactory, ProtobufMessageFactory>(Lifestyle.Singleton);
             container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
             container.Register<INotificationReceiver, NotificationReceiver>(Lifestyle.Scoped);
-            container.Register<IBusinessDocumentFactory, BusinessDocumentFactory>(Lifestyle.Scoped);
-            container.Register<IMarketRolesBusinessDocumentFactory, MarketRolesBusinessDocumentFactory>(Lifestyle.Scoped);
+            container.Register<IActorMessageService, ActorMessageService>(Lifestyle.Scoped);
             container.Register<MeteringPointPipelineContext>(Lifestyle.Scoped);
             container.Register<ActorProvider>(Lifestyle.Scoped);
 
@@ -170,8 +172,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             // TODO: remove this when infrastructure and application has been split into more assemblies.
             container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageXmlSerializer>(Lifestyle.Singleton);
             container.Register<IDocumentSerializer<RejectMessage>, RejectMessageXmlSerializer>(Lifestyle.Singleton);
+            container.Register<IDocumentSerializer<GenericNotificationMessage>, GenericNotificationMessageXmlSerializer>(Lifestyle.Singleton);
+            container.Register<IDocumentSerializer<AccountingPointCharacteristicsMessage>, AccountingPointCharacteristicsMessageXmlSerializer>(Lifestyle.Singleton);
 
-            container.Register<IActorMessageFactory, ActorMessageFactory>(Lifestyle.Scoped);
             container.Register<IMessageHubDispatcher, MessageHubDispatcher>(Lifestyle.Scoped);
 
             container.Register<ChangeMasterDataSettings>(() => new ChangeMasterDataSettings(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1));
@@ -204,6 +207,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     typeof(InternalCommandHandlingBehaviour<,>),
                     typeof(BusinessProcessResultBehavior<,>),
                 });
+
+            Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
 
             container.ReceiveProtobuf<MeteringPointEnvelope>(
                 config => config

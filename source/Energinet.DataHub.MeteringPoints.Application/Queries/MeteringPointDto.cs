@@ -52,7 +52,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Queries
         string? ToGridAreaCode,
         string? FromGridAreaCode,
         string? NetSettlementGroup,
-        DateTime? SupplyStart,
+        Instant? SupplyStart,
         string ConnectionType,
         string DisconnectionType,
         bool? ProductionObligation,

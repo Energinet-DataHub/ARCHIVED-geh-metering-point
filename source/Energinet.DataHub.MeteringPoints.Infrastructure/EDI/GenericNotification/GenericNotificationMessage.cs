@@ -12,14 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
 using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.MarketRoles
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GenericNotification
 {
     // TODO: This is a hack used during the test period and should be removed as soon as the business processes from Market roles are included
-    public record MarketActivityRecord(
+    public record GenericNotificationMessage(
+        string DocumentName,
         string Id,
-        string MarketEvaluationPoint,
-        string OriginalTransaction,
-        Instant StartDateAndOrTime);
+        string Type,
+        string ProcessType,
+        string BusinessSectorType,
+        MarketRoleParticipant Sender,
+        MarketRoleParticipant Receiver,
+        Instant CreatedDateTime,
+        MarketActivityRecord MarketActivityRecord);
 }

@@ -18,11 +18,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
     public class InvalidKwhPowerLimitRuleError : ValidationError
     {
-        public InvalidKwhPowerLimitRuleError(int kwh)
+        public InvalidKwhPowerLimitRuleError(int? kwh)
         {
             Kwh = kwh;
         }
 
-        public int Kwh { get; }
+        public int? Kwh { get; }
     }
 }

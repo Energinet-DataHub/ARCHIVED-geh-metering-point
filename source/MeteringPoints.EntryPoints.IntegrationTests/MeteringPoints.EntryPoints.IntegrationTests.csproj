@@ -58,15 +58,25 @@ limitations under the License.
     <None Update="integrationtest.local.settings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\Cim\CreateMeteringPointConsumption.xml">
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="TestFiles\Cim\CreateMeteringPointConsumption.xml" />
+    <EmbeddedResource Include="TestFiles\Cim\CreateMeteringPointConsumption.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="TestFiles\Cim\CreateMeteringPointProduction.xml">
+    </EmbeddedResource>
+    <None Remove="TestFiles\Cim\CreateMeteringPointExchange.xml" />
+    <EmbeddedResource Include="TestFiles\Cim\CreateMeteringPointExchange.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="TestFiles\Cim\CreateMeteringPointExchange.xml">
+    </EmbeddedResource>
+    <None Remove="TestFiles\Cim\CreateMeteringPointProduction.xml" />
+    <EmbeddedResource Include="TestFiles\Cim\CreateMeteringPointProduction.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </EmbeddedResource>
+    <None Remove="TestFiles\Cim\ConnectMeteringPoint.xml" />
+    <EmbeddedResource Include="TestFiles\Cim\ConnectMeteringPoint.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

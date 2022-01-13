@@ -96,7 +96,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         /// <param name="kwh"></param>
         /// <param name="ampere"></param>
         /// <returns><see cref="IMasterDataBuilder"/></returns>
-        IMasterDataBuilder WithPowerLimit(int kwh, int ampere);
+        IMasterDataBuilder WithPowerLimit(int? kwh, int? ampere);
 
         /// <summary>
         /// Configures settlement method

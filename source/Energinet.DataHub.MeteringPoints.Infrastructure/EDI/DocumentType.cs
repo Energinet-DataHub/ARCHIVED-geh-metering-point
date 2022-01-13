@@ -16,7 +16,7 @@ using System;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.MarketRoles;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GenericNotification;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
 {
@@ -24,12 +24,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
     {
         public static readonly DocumentType ConfirmCreateMeteringPoint = new(1, nameof(ConfirmCreateMeteringPoint), typeof(ConfirmMessage));
         public static readonly DocumentType RejectCreateMeteringPoint = new(2, nameof(RejectCreateMeteringPoint), typeof(RejectMessage));
-        public static readonly DocumentType AcceptConnectMeteringPoint = new(3, nameof(AcceptConnectMeteringPoint), typeof(ConfirmMessage));
+        public static readonly DocumentType ConfirmConnectMeteringPoint = new(3, nameof(ConfirmConnectMeteringPoint), typeof(ConfirmMessage));
         public static readonly DocumentType RejectConnectMeteringPoint = new(4, nameof(RejectConnectMeteringPoint), typeof(RejectMessage));
         public static readonly DocumentType AccountingPointCharacteristicsMessage = new(5, nameof(AccountingPointCharacteristicsMessage), typeof(AccountingPointCharacteristicsMessage));
-        public static readonly DocumentType AcceptChangeMasterData = new(6, nameof(AcceptChangeMasterData), typeof(ConfirmMessage));
+        public static readonly DocumentType ConfirmChangeMasterData = new(6, nameof(ConfirmChangeMasterData), typeof(ConfirmMessage));
         public static readonly DocumentType RejectChangeMasterData = new(7, nameof(RejectChangeMasterData), typeof(RejectMessage));
-        // TODO: This is a hack used during the test period and should be removed as soon as the business processes from Market roles are included
         public static readonly DocumentType GenericNotification = new(8, nameof(GenericNotification), typeof(GenericNotificationMessage));
 
         public DocumentType(int id, string name)

@@ -13,14 +13,12 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using Energinet.DataHub.Core.TestCommon;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Extensions;
 using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures;
 using FluentAssertions;
@@ -59,12 +57,16 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
 
         [Theory]
         [InlineData("TestFiles/Cim/CreateMeteringPointConsumption.xml")]
-        public async Task Create_metering_point_flow_should_succeed(string testFileXml)
+        [InlineData("TestFiles/Cim/CreateMeteringPointProduction.xml")]
+        [InlineData("TestFiles/Cim/CreateMeteringPointExchange.xml")]
+        [InlineData("TestFiles/Cim/ConnectMeteringPoint.xml")]
+        public async Task Metering_point_flow_should_succeed(string testFileXml)
         {
             // Arrange
             var xml = TestFileLoader.ReadFile(testFileXml)
                 .Replace("{{transactionId}}", "1", StringComparison.OrdinalIgnoreCase)
-                .Replace("{{gsrn}}", TestDataCreator.CreateGsrn(), StringComparison.OrdinalIgnoreCase);
+                .Replace("{{gsrn}}", TestDataCreator.CreateGsrn(), StringComparison.OrdinalIgnoreCase)
+                .Replace("{{today}}", TestDataCreator.Today(), StringComparison.OrdinalIgnoreCase);
             using var request = new HttpRequestMessage(HttpMethod.Post, "api/MeteringPoint");
             request.AddDefaultJwtToken();
             request.Content = new StringContent(xml, Encoding.UTF8, "application/xml");
@@ -79,14 +81,17 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
 
             // Assert
             // Ingestion
-            ingestionResponse.StatusCode.Should().Be(HttpStatusCode.OK);
             Fixture.TestLogger.WriteLine(ingestionResponseBody);
+            ingestionResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
             // Processing
             await AssertFunctionExecuted(Fixture.ProcessingHostManager, "QueueSubscriber").ConfigureAwait(false);
 
             // Outbox
             await AssertFunctionExecuted(Fixture.OutboxHostManager, "OutboxWatcher").ConfigureAwait(false);
+
+            // InternalCommands
+            await AssertFunctionExecuted(Fixture.InternalCommandDispatcherHostManager, "Dispatcher").ConfigureAwait(false);
 
             // MessageHub
             await Fixture.MessageHubSimulator

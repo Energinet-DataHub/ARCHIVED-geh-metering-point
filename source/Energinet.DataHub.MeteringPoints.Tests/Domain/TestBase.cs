@@ -134,6 +134,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
         {
             return MasterDataBuilder(MeteringPointType.Consumption)
                 .WithMeasurementUnitType(MeasurementUnitType.KWh.Name)
+                .WithScheduledMeterReadingDate(null)
                 .WithProductType(ProductType.EnergyActive.Name);
         }
 

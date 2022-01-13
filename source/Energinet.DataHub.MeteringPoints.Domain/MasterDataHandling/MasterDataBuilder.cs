@@ -114,9 +114,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public IMasterDataBuilder WithPowerLimit(int kwh, int ampere)
+        public IMasterDataBuilder WithPowerLimit(int? kwh, int? ampere)
         {
-            SetValue(nameof(MasterData.PowerLimit), PowerLimit.Create(kwh, ampere));
+            SetValue(
+                nameof(MasterData.PowerLimit),
+                PowerLimit.Create(kwh.GetValueOrDefault(), ampere.GetValueOrDefault()));
             return this;
         }
 

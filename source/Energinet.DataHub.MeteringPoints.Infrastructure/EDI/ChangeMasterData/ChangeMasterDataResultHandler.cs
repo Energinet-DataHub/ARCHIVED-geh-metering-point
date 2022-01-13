@@ -17,30 +17,23 @@ using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData
 {
     public class ChangeMasterDataResultHandler : IBusinessProcessResultHandler<ChangeMasterDataRequest>
     {
-        private readonly IActorMessageFactory _actorMessageFactory;
-        private readonly IMessageHubDispatcher _messageHubDispatcher;
         private readonly ErrorMessageFactory _errorMessageFactory;
-        private readonly ActorProvider _actorProvider;
+        private readonly IActorMessageService _actorMessageService;
 
         public ChangeMasterDataResultHandler(
-            IActorMessageFactory actorMessageFactory,
-            IMessageHubDispatcher messageHubDispatcher,
             ErrorMessageFactory errorMessageFactory,
-            ActorProvider actorProvider)
+            IActorMessageService actorMessageService)
         {
-            _actorMessageFactory = actorMessageFactory ?? throw new ArgumentNullException(nameof(actorMessageFactory));
-            _messageHubDispatcher =
-                messageHubDispatcher ?? throw new ArgumentNullException(nameof(messageHubDispatcher));
             _errorMessageFactory = errorMessageFactory ?? throw new ArgumentNullException(nameof(errorMessageFactory));
-            _actorProvider = actorProvider;
+            _actorMessageService = actorMessageService;
         }
 
         public Task HandleAsync(ChangeMasterDataRequest request, BusinessProcessResult result)
@@ -53,28 +46,24 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData
                 : CreateRejectResponseAsync(request, result);
         }
 
-        private Task CreateAcceptMessageAsync(ChangeMasterDataRequest request)
+        private async Task CreateAcceptMessageAsync(ChangeMasterDataRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var receiver = _actorProvider.CurrentActor;
-            var sender = _actorProvider.DataHub;
-
-            var message = _actorMessageFactory.CreateNewMeteringPointConfirmation(request.GsrnNumber, request.EffectiveDate, request.TransactionId, sender, receiver);
-            return _messageHubDispatcher.DispatchAsync(message, DocumentType.AcceptChangeMasterData, request.GsrnNumber);
+            await _actorMessageService
+                .SendUpdateMeteringPointConfirmAsync(request.TransactionId, request.GsrnNumber)
+                .ConfigureAwait(false);
         }
 
-        private Task CreateRejectResponseAsync(ChangeMasterDataRequest request, BusinessProcessResult result)
+        private async Task CreateRejectResponseAsync(ChangeMasterDataRequest request, BusinessProcessResult result)
         {
-            var receiver = _actorProvider.CurrentActor;
-            var sender = _actorProvider.DataHub;
-
             var errors = result.ValidationErrors
                 .Select(error => _errorMessageFactory.GetErrorMessage(error))
                 .AsEnumerable();
 
-            var message = _actorMessageFactory.CreateNewMeteringPointReject(request.GsrnNumber, request.EffectiveDate, request.TransactionId, errors, sender, receiver);
-            return _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectChangeMasterData, request.GsrnNumber);
+            await _actorMessageService
+                .SendUpdateMeteringPointRejectAsync(request.TransactionId, request.GsrnNumber, errors)
+                .ConfigureAwait(false);
         }
     }
 }

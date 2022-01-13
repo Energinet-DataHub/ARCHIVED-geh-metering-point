@@ -63,6 +63,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
                 .ConfigureAwait(false);
 
             // Assert
+            var responseMessage = await actualResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+            Fixture.TestLogger.WriteLine(responseMessage);
             actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         }
     }

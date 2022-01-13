@@ -18,6 +18,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using Energinet.DataHub.Core.Schemas;
+using Energinet.DataHub.Core.SchemaValidation;
+using Energinet.DataHub.Core.SchemaValidation.Extensions;
 using Energinet.DataHub.Core.XmlConversion.XmlConverter;
 using Energinet.DataHub.Core.XmlConversion.XmlConverter.Configuration;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
@@ -35,13 +39,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
     [UnitTest]
     public class XmlConverterTests
     {
-        private Stream _xmlStream;
-
-        public XmlConverterTests()
-        {
-            _xmlStream = GetResourceStream("CreateMeteringPointCimXml.xml");
-        }
-
         [Fact]
         public void AssertConfigurationsValid()
         {
@@ -53,23 +50,26 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
         public async Task ValidateValuesFromEachElementTest()
         {
             var xmlMapper = new XmlMapper((type) => new MasterDataDocumentXmlMappingConfiguration(), (processType) => BusinessProcessType.CreateMeteringPoint.Name);
-
             var xmlConverter = new XmlDeserializer(xmlMapper);
 
-            var deserializationResult = await xmlConverter.DeserializeAsync(_xmlStream).ConfigureAwait(false);
+            var (errors, element) = await ValidateAndReadXml().ConfigureAwait(false);
 
-            deserializationResult.HeaderData.Sender.Id.Should().Be("afsender");
+            errors.Should().BeEmpty();
+            element.Should().NotBeNull();
+
+            var deserializationResult = xmlConverter.Deserialize(element!);
+            deserializationResult.HeaderData.Sender.Id.Should().Be("5799999933318");
 
             var commands = deserializationResult.Documents.Cast<MasterDataDocument>();
 
             var command = commands.First();
 
             command.TypeOfMeteringPoint.Should().Be(nameof(MeteringPointType.Consumption));
-            command.GsrnNumber.Should().Be("571234567891234605");
-            command.MaximumPower.Should().Be(2000);
+            command.GsrnNumber.Should().Be("579999993331812345");
+            command.MaximumPower.Should().Be(230);
             command.MeasureUnitType.ToUpperInvariant().Should().Be(nameof(MeasurementUnitType.KWh).ToUpperInvariant());
-            command.PowerPlant.Should().Be("571234567891234636");
-            command.SettlementMethod.Should().Be(nameof(SettlementMethod.Flex));
+            command.PowerPlant.Should().Be("579999993331812327");
+            command.SettlementMethod.Should().Be(nameof(SettlementMethod.NonProfiled));
             command.TypeOfMeteringPoint.Should().Be(nameof(MeteringPointType.Consumption));
             command.MeteringMethod.Should().Be(nameof(MeteringMethod.Physical));
             command.PhysicalStatusOfMeteringPoint.Should().Be(nameof(PhysicalState.New));
@@ -77,25 +77,26 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
             command.AssetType.Should().Be(nameof(AssetType.WindTurbines));
             command.DisconnectionType.Should().Be(nameof(DisconnectionType.Remote));
             command.MeterReadingOccurrence.Should().Be(nameof(ReadingOccurrence.Hourly));
+            command.ScheduledMeterReadingDate.Should().Be("0101");
 
-            command.LocationDescription.Should().Be("String");
-            command.MeterNumber.Should().Be("123456789");
-            command.EffectiveDate.Should().Be("2021-07-13T22:00:00Z");
-            command.MeteringGridArea.Should().Be("870");
-            command.NetSettlementGroup.Should().Be("Zero");
-            command.MaximumCurrent.Should().Be(5000);
-            command.TransactionId.Should().Be("1234");
-            command.PostCode.Should().Be("8000");
-            command.StreetName.Should().Be("Test street name");
-            command.CityName.Should().Be("12");
+            command.LocationDescription.Should().Be("3. bygning til venstre");
+            command.MeterNumber.Should().Be("2536258974");
+            command.EffectiveDate.Should().Be("2021-12-17T23:00:00Z");
+            command.MeteringGridArea.Should().Be("244");
+            command.NetSettlementGroup.Should().Be("Six");
+            command.MaximumCurrent.Should().Be(32);
+            command.TransactionId.Should().Be("25361487");
+            command.PostCode.Should().Be("5500");
+            command.StreetName.Should().Be("Vestergade");
+            command.CityName.Should().Be("Middelfart");
             command.CountryCode.Should().Be("DK");
-            command.CitySubDivisionName.Should().Be("Test city");
-            command.MunicipalityCode.Should().Be("12");
+            command.CitySubDivisionName.Should().Be("Strib");
+            command.MunicipalityCode.Should().Be("0625");
 
-            command.FromGrid.Should().Be("869");
-            command.ToGrid.Should().Be("871");
-            command.IsActualAddress.Should().BeNull();
-            Assert.Null(command.ParentRelatedMeteringPoint);
+            command.FromGrid.Should().Be("031");
+            command.ToGrid.Should().Be("244");
+            command.IsActualAddress.Should().BeTrue();
+            command.ParentRelatedMeteringPoint.Should().Be("579999993331812345");
         }
 
         [Fact]
@@ -104,12 +105,18 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
             var xmlMapper = new XmlMapper((type) => new MasterDataDocumentXmlMappingConfiguration(), (processType) => BusinessProcessType.CreateMeteringPoint.Name);
 
             var xmlConverter = new XmlDeserializer(xmlMapper);
-            var deserializationResult = await xmlConverter.DeserializeAsync(_xmlStream).ConfigureAwait(false);
+
+            var (errors, element) = await ValidateAndReadXml().ConfigureAwait(false);
+
+            errors.Should().BeEmpty();
+            element.Should().NotBeNull();
+
+            var deserializationResult = xmlConverter.Deserialize(element!);
             var commands = deserializationResult.Documents.Cast<MasterDataDocument>();
 
             var command = commands.First();
 
-            command.SettlementMethod.Should().Be(nameof(SettlementMethod.Flex));
+            command.SettlementMethod.Should().Be(nameof(SettlementMethod.NonProfiled));
             command.TypeOfMeteringPoint.Should().Be(nameof(MeteringPointType.Consumption));
             command.MeteringMethod.Should().Be(nameof(MeteringMethod.Physical));
             command.PhysicalStatusOfMeteringPoint.Should().Be(nameof(PhysicalState.New));
@@ -130,6 +137,17 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
 
             return assembly.GetManifestResourceStream(resource)
                    ?? throw new InvalidOperationException($"Couldn't get requested resource: {resourcePath}");
+        }
+
+        private static async Task<(List<string> Errors, XElement? Element)> ValidateAndReadXml()
+        {
+            var reader = new SchemaValidatingReader(
+                GetResourceStream("CreateMeteringPointCimXml.xml"),
+                Schemas.CimXml.StructureRequestChangeAccountingPointCharacteristics);
+
+            var element = await reader.AsXElementAsync().ConfigureAwait(false);
+
+            return (reader.Errors.Select(x => $"{x.Description}:{x.LineNumber}-{x.LinePosition}").ToList(), element);
         }
     }
 }

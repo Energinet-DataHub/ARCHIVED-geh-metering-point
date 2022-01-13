@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.Core.XmlConversion.XmlConverter;
 using Energinet.DataHub.Core.XmlConversion.XmlConverter.Configuration;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
@@ -45,8 +46,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 .AddProperty(x => x.NetSettlementGroup, TranslateNetSettlementGroup, "MarketEvaluationPoint", "netSettlementGroup")
                 .AddProperty(x => x.ConnectionType, TranslateConnectionType, "MarketEvaluationPoint", "mPConnectionType")
                 .AddProperty(x => x.StreetName, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "streetDetail", "name")
-                .AddProperty(x => x.CityName, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "townDetail", "code")
-                .AddProperty(x => x.CitySubDivisionName, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "townDetail", "name")
+                .AddProperty(x => x.CityName, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "townDetail", "name")
+                .AddProperty(x => x.CitySubDivisionName, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "townDetail", "section")
                 .AddProperty(x => x.MunicipalityCode, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "townDetail", "code")
                 .AddProperty(x => x.PostCode, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "postalCode")
                 .AddProperty(x => x.StreetCode, "MarketEvaluationPoint", "usagePointLocation.mainAddress", "streetDetail", "code")
@@ -62,7 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 .AddProperty(x => x.IsActualAddress, ActualAddressIndicator, "MarketEvaluationPoint", "usagePointLocation.actualAddressIndicator")
                 .AddProperty(x => x.GeoInfoReference, "MarketEvaluationPoint", "usagePointLocation.geoInfoReference")
                 .AddProperty(x => x.MeasureUnitType, TranslateMeasureUnitType, "MarketEvaluationPoint", "Series", "quantity_Measure_Unit.name")
-                .AddProperty(x => x.ScheduledMeterReadingDate, "MarketEvaluationPoint", "nextReadingDate"));
+                .AddProperty(x => x.ScheduledMeterReadingDate, TranslateScheduledMeterReadingDate, "MarketEvaluationPoint", "nextReadingDate"));
         }
 
         private static bool? ActualAddressIndicator(XmlElementInfo element)
@@ -73,6 +74,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
             }
 
             return null;
+        }
+
+        private static string TranslateScheduledMeterReadingDate(XmlElementInfo element)
+        {
+            return element.SourceValue.Replace('-'.ToString(), string.Empty, StringComparison.Ordinal);
         }
 
         private static string TranslateSettlementMethod(XmlElementInfo element)
