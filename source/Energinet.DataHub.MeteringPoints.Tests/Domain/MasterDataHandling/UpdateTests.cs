@@ -1084,6 +1084,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Fact]
+        public void Product_type_input_value_must_valid()
+        {
+            var masterData = Builder()
+                .WithProductType(ProductType.Tariff.Name)
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData)
+                .WithProductType("invalid value")
+                .Validate();
+
+            AssertContainsValidationError<InvalidProductType>(validationResult);
+        }
+
+        [Fact]
         public void Product_type_is_removed_if_field_is_not_allowed()
         {
             var masterData = Builder()

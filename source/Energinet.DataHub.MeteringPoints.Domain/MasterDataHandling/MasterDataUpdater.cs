@@ -327,7 +327,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             {
                 SetValueIfValid(
                     nameof(MasterData.ProductType),
-                    BusinessRulesValidationResult.Valid,
+                    () =>
+                    {
+                        return EnumerationType.GetAll<ProductType>()
+                            .Select(item => item.Name)
+                            .Contains(productType) == false ? BusinessRulesValidationResult.Failure(new InvalidProductType()) : BusinessRulesValidationResult.Valid();
+                    },
                     () => EnumerationType.FromName<ProductType>(productType));
             }
 
