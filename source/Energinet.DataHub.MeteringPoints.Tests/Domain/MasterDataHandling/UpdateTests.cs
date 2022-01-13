@@ -30,6 +30,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Asset_type_input_value_must_be_valid()
+        {
+            var masterData = Builder()
+                .WithAssetType(AssetType.Boiler.Name)
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData)
+                .WithAssetType("invalid value")
+                .Validate();
+
+            AssertContainsValidationError<InvalidAssetTypeValue>(validationResult);
+        }
+
+        [Fact]
         public void Asset_type_cannot_be_removed_if_field_is_required()
         {
             var masterData = Builder()

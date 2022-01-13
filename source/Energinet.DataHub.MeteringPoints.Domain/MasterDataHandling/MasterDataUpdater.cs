@@ -282,7 +282,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             {
                 SetValueIfValid(
                     nameof(MasterData.AssetType),
-                    BusinessRulesValidationResult.Valid,
+                    () =>
+                    {
+                        return EnumerationType.GetAll<AssetType>()
+                            .Select(item => item.Name)
+                            .Contains(assetType) == false ? BusinessRulesValidationResult.Failure(new InvalidAssetTypeValue(assetType)) : BusinessRulesValidationResult.Valid();
+                    },
                     () => EnumerationType.FromName<AssetType>(assetType!));
             }
 
