@@ -30,6 +30,37 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Asset_type_can_be_removed_if_field_is_optional()
+        {
+            var masterData = Builder()
+                .WithAssetType(AssetType.Boiler.Name)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData, new List<MasterDataField>()
+                {
+                    new MasterDataField(nameof(MasterData.AssetType), Applicability.Optional),
+                })
+                .WithAssetType(string.Empty)
+                .Build();
+
+            Assert.Null(updatedMasterData.AssetType);
+        }
+
+        [Fact]
+        public void Asset_is_unchanged_if_no_value_is_provided()
+        {
+            var masterData = Builder()
+                .WithAssetType(AssetType.Boiler.Name)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithAssetType(null)
+                .Build();
+
+            Assert.Equal(AssetType.Boiler, updatedMasterData.AssetType);
+        }
+
+        [Fact]
         public void Asset_type_is_changed()
         {
             var masterData = Builder()

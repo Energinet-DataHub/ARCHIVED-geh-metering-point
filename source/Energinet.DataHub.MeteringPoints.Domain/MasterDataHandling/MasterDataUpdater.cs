@@ -43,6 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             SetValue(nameof(MasterData.ReadingOccurrence), currentMasterData.ReadingOccurrence);
             SetValue(nameof(MasterData.SettlementMethod), currentMasterData.SettlementMethod);
             SetValue(nameof(MasterData.DisconnectionType), currentMasterData.DisconnectionType);
+            SetValue(nameof(MasterData.AssetType), currentMasterData.AssetType);
         }
 
         public BusinessRulesValidationResult Validate()
@@ -274,10 +275,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithAssetType(string? assetType)
         {
-            SetValueIfValid(
-                nameof(MasterData.AssetType),
-                BusinessRulesValidationResult.Valid,
-                () => EnumerationType.FromName<AssetType>(assetType!));
+            if (assetType?.Length == 0) SetValue<AssetType>(nameof(MasterData.AssetType), null);
+            if (assetType?.Length > 0)
+            {
+                SetValueIfValid(
+                    nameof(MasterData.AssetType),
+                    BusinessRulesValidationResult.Valid,
+                    () => EnumerationType.FromName<AssetType>(assetType!));
+            }
+
             return this;
         }
 
