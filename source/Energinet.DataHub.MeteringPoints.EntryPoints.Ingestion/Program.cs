@@ -18,6 +18,7 @@ using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
 using Energinet.DataHub.Core.FunctionApp.Common.Identity;
 using Energinet.DataHub.Core.FunctionApp.Common.Middleware;
+using Energinet.DataHub.Core.Logging.RequestResponseMiddleware;
 using Energinet.DataHub.Core.XmlConversion.XmlConverter.Configuration;
 using Energinet.DataHub.Core.XmlConversion.XmlConverter.SimpleInjector.Extensions;
 using Energinet.DataHub.MeteringPoints.Contracts;
@@ -54,6 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             options.UseMiddleware<JwtTokenMiddleware>();
             options.UseMiddleware<CorrelationIdMiddleware>();
             options.UseMiddleware<EntryPointTelemetryScopeMiddleware>();
+            options.UseMiddleware<RequestResponseLoggingMiddleware>();
         }
 
         protected override void ConfigureContainer(Container container)
@@ -69,7 +71,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             container.Register<JwtTokenMiddleware>(Lifestyle.Scoped);
             container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
             container.Register<XmlSenderValidator>(Lifestyle.Scoped);
+            container.Register<RequestResponseLoggingMiddleware>(Lifestyle.Scoped);
 
+            container.Register<IRequestResponseLogging>(() => new RequestResponseLoggingBlobStorage(
+                  Environment.GetEnvironmentVariable("REQUEST_RESPONSE_LOGGING_CONNECTION_STRING") ?? throw new InvalidOperationException(),
+                  Environment.GetEnvironmentVariable("REQUEST_RESPONSE_LOGGING_CONTAINER_NAME") ?? throw new InvalidOperationException()));
             container.Register<MessageDispatcher, InternalDispatcher>(Lifestyle.Scoped);
             container.Register<Channel, InternalServiceBus>(Lifestyle.Scoped);
 

@@ -115,7 +115,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
 
         private static async Task AssertFunctionExecuted(FunctionAppHostManager hostManager, string functionName)
         {
-            var waitTimespan = TimeSpan.FromSeconds(10);
+            var waitTimespan = TimeSpan.FromSeconds(1000);
 
             var functionExecuted = await Awaiter
                 .TryWaitUntilConditionAsync(

@@ -34,6 +34,9 @@ module "func_ingestion" {
     METERINGPOINT_QUEUE_CONNECTION_STRING = module.sb_meteringpoint.primary_connection_strings["send"]
     METERINGPOINT_QUEUE_TOPIC_NAME        = module.sbq_meteringpoint.name
     INTERNAL_SERVICEBUS_RETRY_COUNT       = 3
+     # Shared resources logging
+    REQUEST_RESPONSE_LOGGING_CONNECTION_STRING   = data.azurerm_key_vault_secret.st_market_operator_logs_primary_connection_string.value
+    REQUEST_RESPONSE_LOGGING_CONTAINER_NAME      = data.azurerm_key_vault_secret.st_market_operator_logs_container_name.value
   }
 
   tags                                    = azurerm_resource_group.this.tags
