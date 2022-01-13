@@ -62,6 +62,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             AddValidationErrorIfRequiredFieldIsMissing<ConnectionType>(nameof(MasterData.ConnectionType), new ConnectionTypeIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<AssetType>(nameof(MasterData.AssetType), new AssetTypeIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<ScheduledMeterReadingDate>(nameof(MasterData.ScheduledMeterReadingDate), new ScheduledMeterReadingDateIsRequired());
+            AddValidationErrorIfRequiredFieldIsMissing<Capacity>(nameof(MasterData.Capacity), new CapacityIsRequired());
 
             return new BusinessRulesValidationResult(_validationErrors);
         }

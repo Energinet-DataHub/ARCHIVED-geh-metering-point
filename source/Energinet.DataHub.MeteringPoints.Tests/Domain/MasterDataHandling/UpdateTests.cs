@@ -31,6 +31,23 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Capacity_cannot_be_removed_if_field_is_required()
+        {
+            var masterData = Builder()
+                .WithCapacity("100")
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData, new List<MasterDataField>()
+                {
+                    new MasterDataField(nameof(MasterData.Capacity), Applicability.Required),
+                })
+                .WithCapacity(string.Empty)
+                .Validate();
+
+            AssertContainsValidationError<CapacityIsRequired>(validationResult);
+        }
+
+        [Fact]
         public void Capacity_can_be_removed_if_field_is_optional()
         {
             var masterData = Builder()
