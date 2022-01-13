@@ -73,12 +73,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         {
             ThrowIfAnyValidationErrors();
 
-            RemoveValueIfNotApplicable<ScheduledMeterReadingDate>(
-                nameof(MasterData.ScheduledMeterReadingDate),
-                () => GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)) != NetSettlementGroup.Six);
-            RemoveValueIfNotApplicable<ConnectionType>(
-                nameof(MasterData.ConnectionType),
-                () => GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)) == NetSettlementGroup.Zero);
+            RemoveConflictingValues();
 
             return new MasterData(
                 productType: GetValue<ProductType>(nameof(MasterData.ProductType)),
@@ -405,6 +400,16 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             {
                 throw new MasterDataChangeException(validationResult.Errors);
             }
+        }
+
+        private void RemoveConflictingValues()
+        {
+            RemoveValueIfNotApplicable<ScheduledMeterReadingDate>(
+                nameof(MasterData.ScheduledMeterReadingDate),
+                () => GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)) != NetSettlementGroup.Six);
+            RemoveValueIfNotApplicable<ConnectionType>(
+                nameof(MasterData.ConnectionType),
+                () => GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)) == NetSettlementGroup.Zero);
         }
     }
 }
