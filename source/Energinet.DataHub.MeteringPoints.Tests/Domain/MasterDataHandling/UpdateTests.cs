@@ -30,6 +30,21 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class UpdateTests : TestBase
     {
         [Fact]
+        public void Scheduled_meter_reading_date_is_unchanged_if_no_value_is_provided()
+        {
+            var masterData = Builder()
+                .WithNetSettlementGroup(NetSettlementGroup.Six.Name)
+                .WithScheduledMeterReadingDate("0101")
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithScheduledMeterReadingDate(null)
+                .Build();
+
+            Assert.Equal(masterData.ScheduledMeterReadingDate, updatedMasterData.ScheduledMeterReadingDate);
+        }
+
+        [Fact]
         public void Scheduled_meter_reading_date_is_changed()
         {
             var masterData = Builder()
@@ -93,7 +108,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Fact]
-        public void Asset_is_unchanged_if_no_value_is_provided()
+        public void Asset_type_is_unchanged_if_no_value_is_provided()
         {
             var masterData = Builder()
                 .WithAssetType(AssetType.Boiler.Name)

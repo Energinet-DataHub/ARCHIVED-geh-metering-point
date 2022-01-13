@@ -45,6 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             SetValue(nameof(MasterData.SettlementMethod), currentMasterData.SettlementMethod);
             SetValue(nameof(MasterData.DisconnectionType), currentMasterData.DisconnectionType);
             SetValue(nameof(MasterData.AssetType), currentMasterData.AssetType);
+            SetValue(nameof(MasterData.ScheduledMeterReadingDate), currentMasterData.ScheduledMeterReadingDate);
         }
 
         public BusinessRulesValidationResult Validate()
@@ -296,10 +297,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithScheduledMeterReadingDate(string? scheduledMeterReadingDate)
         {
-            SetValueIfValid(
-                nameof(MasterData.ScheduledMeterReadingDate),
-                BusinessRulesValidationResult.Valid,
-                () => ScheduledMeterReadingDate.Create(scheduledMeterReadingDate!));
+            if (scheduledMeterReadingDate?.Length > 0)
+            {
+                SetValueIfValid(
+                    nameof(MasterData.ScheduledMeterReadingDate),
+                    BusinessRulesValidationResult.Valid,
+                    () => ScheduledMeterReadingDate.Create(scheduledMeterReadingDate!));
+            }
 
             return this;
         }
