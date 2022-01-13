@@ -78,11 +78,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 nameof(MasterData.ConnectionType),
                 () => GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)) == NetSettlementGroup.Zero);
 
-            var validationResult = Validate();
-            if (validationResult.Success == false)
-            {
-                throw new MasterDataChangeException(validationResult.Errors);
-            }
+            ThrowIfAnyValidationErrors();
 
             return new MasterData(
                 productType: GetValue<ProductType>(nameof(MasterData.ProductType)),
@@ -406,6 +402,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             }
 
             if (valueItem.HasRequiredValue() == false) _validationErrors.Add(validationError);
+        }
+
+        private void ThrowIfAnyValidationErrors()
+        {
+            var validationResult = Validate();
+            if (validationResult.Success == false)
+            {
+                throw new MasterDataChangeException(validationResult.Errors);
+            }
         }
     }
 }
