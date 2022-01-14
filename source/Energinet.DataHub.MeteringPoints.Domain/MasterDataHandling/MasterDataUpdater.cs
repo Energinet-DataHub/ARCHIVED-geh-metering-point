@@ -20,6 +20,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -49,6 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             SetValue(nameof(MasterData.ScheduledMeterReadingDate), currentMasterData.ScheduledMeterReadingDate);
             SetValue(nameof(MasterData.Capacity), currentMasterData.Capacity);
             SetValue(nameof(MasterData.PowerLimit), currentMasterData.PowerLimit);
+            PopulateValuesFrom(currentMasterData);
         }
 
         public BusinessRulesValidationResult Validate()
@@ -65,49 +67,36 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             AddValidationErrorIfRequiredFieldIsMissing<AssetType>(nameof(MasterData.AssetType), new AssetTypeIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<ScheduledMeterReadingDate>(nameof(MasterData.ScheduledMeterReadingDate), new ScheduledMeterReadingDateIsRequired());
             AddValidationErrorIfRequiredFieldIsMissing<Capacity>(nameof(MasterData.Capacity), new CapacityIsRequired());
+            AddValidationErrorIfRequiredFieldIsMissing<EffectiveDate>(nameof(MasterData.EffectiveDate), new EffectiveDateIsRequired());
+            AddValidationErrorIfRequiredFieldIsMissing<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup), new NetSettlementGroupIsRequired());
+            AddValidationErrorIfRequiredFieldIsMissing<ProductType>(nameof(MasterData.ProductType), new ProductTypeIsRequired());
 
             return new BusinessRulesValidationResult(_validationErrors);
         }
 
         public MasterData Build()
         {
-            RemoveValueIfNotApplicable<ScheduledMeterReadingDate>(
-                nameof(MasterData.ScheduledMeterReadingDate),
-                () => GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)) != NetSettlementGroup.Six);
-            RemoveValueIfNotApplicable<ConnectionType>(
-                nameof(MasterData.ConnectionType),
-                () => GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)) == NetSettlementGroup.Zero);
-
-            return new MasterData(
-                productType: GetValue<ProductType>(nameof(MasterData.ProductType)),
-                unitType: GetValue<MeasurementUnitType>(nameof(MasterData.UnitType)),
-                assetType: GetValue<AssetType>(nameof(MasterData.AssetType)),
-                readingOccurrence: GetValue<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence)),
-                powerLimit: GetValue<PowerLimit>(nameof(MasterData.PowerLimit)),
-                powerPlantGsrnNumber: GetValue<GsrnNumber>(nameof(MasterData.PowerPlantGsrnNumber)),
-                effectiveDate: GetValue<EffectiveDate>(nameof(MasterData.EffectiveDate)),
-                capacity: GetValue<Capacity>(nameof(MasterData.Capacity)),
-                address: GetValue<Address>(nameof(MasterData.Address)),
-                meteringConfiguration: GetValue<MeteringConfiguration>(nameof(MasterData.MeteringConfiguration)),
-                settlementMethod: GetValue<SettlementMethod>(nameof(MasterData.SettlementMethod)),
-                scheduledMeterReadingDate: GetValue<ScheduledMeterReadingDate>(nameof(MasterData.ScheduledMeterReadingDate)),
-                connectionType: GetValue<ConnectionType>(nameof(MasterData.ConnectionType)),
-                disconnectionType: GetValue<DisconnectionType>(nameof(MasterData.DisconnectionType)),
-                netSettlementGroup: GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)),
-                productionObligation: GetValue<bool?>(nameof(MasterData.ProductionObligation)));
+            ThrowIfAnyValidationErrors();
+            RemoveConflictingValues();
+            return CreateMasterData();
         }
 
-        public IMasterDataBuilder WithNetSettlementGroup(string netSettlementGroup)
+        public IMasterDataBuilder WithNetSettlementGroup(string? netSettlementGroup)
         {
-            SetValueIfValid(
-                nameof(MasterData.NetSettlementGroup),
-                () =>
-                {
-                    return EnumerationType.GetAll<NetSettlementGroup>()
-                        .Select(item => item.Name)
-                        .Contains(netSettlementGroup) == false ? BusinessRulesValidationResult.Failure(new InvalidSettlementGroupValue(netSettlementGroup)) : BusinessRulesValidationResult.Valid();
-                },
-                () => EnumerationType.FromName<NetSettlementGroup>(netSettlementGroup));
+            if (netSettlementGroup?.Length == 0) SetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup), null);
+            if (netSettlementGroup?.Length > 0)
+            {
+                SetValueIfValid(
+                    nameof(MasterData.NetSettlementGroup),
+                    () =>
+                    {
+                        return EnumerationType.GetAll<NetSettlementGroup>()
+                            .Select(item => item.Name)
+                            .Contains(netSettlementGroup) == false ? BusinessRulesValidationResult.Failure(new InvalidNetSettlementGroupValue(netSettlementGroup)) : BusinessRulesValidationResult.Valid();
+                    },
+                    () => EnumerationType.FromName<NetSettlementGroup>(netSettlementGroup));
+            }
+
             return this;
         }
 
@@ -172,9 +161,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithMeasurementUnitType(string? measurementUnitType)
         {
-            if (measurementUnitType is null) return this;
-            if (measurementUnitType.Length == 0) SetValue<MeasurementUnitType>(nameof(MasterData.UnitType), null);
-            if (measurementUnitType.Length > 0)
+            if (measurementUnitType?.Length == 0) SetValue<MeasurementUnitType>(nameof(MasterData.UnitType), null);
+            if (measurementUnitType?.Length > 0)
             {
                 SetValueIfValid(
                 nameof(MasterData.UnitType),
@@ -192,9 +180,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithPowerPlant(string? gsrnNumber)
         {
-            if (gsrnNumber is null) return this;
-            if (gsrnNumber.Length == 0) SetValue<GsrnNumber>(nameof(MasterData.PowerPlantGsrnNumber), null);
-            if (gsrnNumber.Length > 0)
+            if (gsrnNumber?.Length == 0) SetValue<GsrnNumber>(nameof(MasterData.PowerPlantGsrnNumber), null);
+            if (gsrnNumber?.Length > 0)
             {
                 SetValueIfValid(
                 nameof(MasterData.PowerPlantGsrnNumber),
@@ -247,9 +234,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithSettlementMethod(string? settlementMethod)
         {
-            if (settlementMethod is null) return this;
-            if (settlementMethod.Length == 0) SetValue<SettlementMethod>(nameof(MasterData.SettlementMethod), null);
-            if (settlementMethod.Length > 0)
+            if (settlementMethod?.Length == 0) SetValue<SettlementMethod>(nameof(MasterData.SettlementMethod), null);
+            if (settlementMethod?.Length > 0)
             {
                 SetValueIfValid(
                     nameof(MasterData.SettlementMethod),
@@ -336,29 +322,36 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder EffectiveOn(string? effectiveDate)
         {
-            throw new NotImplementedException();
+            SetValueIfValid(
+                nameof(MasterData.EffectiveDate),
+                () => EffectiveDate.CheckRules(effectiveDate!),
+                () => EffectiveDate.Create(effectiveDate!));
+            return this;
         }
 
         public IMasterDataBuilder WithProductType(string? productType)
         {
-            if (productType is null)
+            if (productType?.Length == 0) SetValue<ProductType>(nameof(MasterData.ProductType), null);
+            if (productType?.Length > 0)
             {
-                return this;
+                SetValueIfValid(
+                    nameof(MasterData.ProductType),
+                    () =>
+                    {
+                        return EnumerationType.GetAll<ProductType>()
+                            .Select(item => item.Name)
+                            .Contains(productType) == false ? BusinessRulesValidationResult.Failure(new InvalidProductType()) : BusinessRulesValidationResult.Valid();
+                    },
+                    () => EnumerationType.FromName<ProductType>(productType));
             }
-
-            SetValueIfValid(
-                nameof(MasterData.ProductType),
-                BusinessRulesValidationResult.Valid,
-                () => EnumerationType.FromName<ProductType>(productType));
 
             return this;
         }
 
         public IMasterDataBuilder WithConnectionType(string? connectionType)
         {
-            if (connectionType is null) return this;
-            if (connectionType.Length == 0) SetValue<ConnectionType>(nameof(MasterData.ConnectionType), null);
-            if (connectionType.Length != 0)
+            if (connectionType?.Length == 0) SetValue<ConnectionType>(nameof(MasterData.ConnectionType), null);
+            if (connectionType?.Length > 0)
             {
                 SetValueIfValid(
                 nameof(MasterData.ConnectionType),
@@ -376,7 +369,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithProductionObligation(bool? productionObligation)
         {
-            throw new NotImplementedException();
+            if (productionObligation.HasValue == true)
+            {
+                SetValue(nameof(MasterData.ProductionObligation), productionObligation.GetValueOrDefault());
+            }
+
+            return this;
         }
 
         private static string? ConvertToNullableString(string? updatedValue, int? currentValue)
@@ -409,6 +407,64 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             }
 
             if (valueItem.HasRequiredValue() == false) _validationErrors.Add(validationError);
+        }
+
+        private void ThrowIfAnyValidationErrors()
+        {
+            var validationResult = Validate();
+            if (validationResult.Success == false)
+            {
+                throw new MasterDataChangeException(validationResult.Errors);
+            }
+        }
+
+        private void PopulateValuesFrom(MasterData currentMasterData)
+        {
+            SetValue(nameof(MasterData.ProductType), currentMasterData.ProductType);
+            SetValue(nameof(MasterData.NetSettlementGroup), currentMasterData.NetSettlementGroup);
+            SetValue(nameof(MasterData.ConnectionType), currentMasterData.ConnectionType);
+            SetValue(nameof(MasterData.MeteringConfiguration), currentMasterData.MeteringConfiguration);
+            SetValue(nameof(MasterData.Address), currentMasterData.Address);
+            SetValue(nameof(MasterData.UnitType), currentMasterData.UnitType);
+            SetValue(nameof(MasterData.PowerPlantGsrnNumber), currentMasterData.PowerPlantGsrnNumber);
+            SetValue(nameof(MasterData.ReadingOccurrence), currentMasterData.ReadingOccurrence);
+            SetValue(nameof(MasterData.SettlementMethod), currentMasterData.SettlementMethod);
+            SetValue(nameof(MasterData.DisconnectionType), currentMasterData.DisconnectionType);
+            SetValue(nameof(MasterData.AssetType), currentMasterData.AssetType);
+            SetValue(nameof(MasterData.ScheduledMeterReadingDate), currentMasterData.ScheduledMeterReadingDate);
+            SetValue(nameof(MasterData.Capacity), currentMasterData.Capacity);
+            SetValue(nameof(MasterData.ProductionObligation), currentMasterData.ProductionObligation);
+        }
+
+        private void RemoveConflictingValues()
+        {
+            RemoveValueIfNotApplicable<ScheduledMeterReadingDate>(
+                nameof(MasterData.ScheduledMeterReadingDate),
+                () => GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)) != NetSettlementGroup.Six);
+            RemoveValueIfNotApplicable<ConnectionType>(
+                nameof(MasterData.ConnectionType),
+                () => GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)) == NetSettlementGroup.Zero);
+        }
+
+        private MasterData CreateMasterData()
+        {
+            return new MasterData(
+                productType: GetValue<ProductType>(nameof(MasterData.ProductType)),
+                unitType: GetValue<MeasurementUnitType>(nameof(MasterData.UnitType)),
+                assetType: GetValue<AssetType>(nameof(MasterData.AssetType)),
+                readingOccurrence: GetValue<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence)),
+                powerLimit: GetValue<PowerLimit>(nameof(MasterData.PowerLimit)),
+                powerPlantGsrnNumber: GetValue<GsrnNumber>(nameof(MasterData.PowerPlantGsrnNumber)),
+                effectiveDate: GetValue<EffectiveDate>(nameof(MasterData.EffectiveDate)),
+                capacity: GetValue<Capacity>(nameof(MasterData.Capacity)),
+                address: GetValue<Address>(nameof(MasterData.Address)),
+                meteringConfiguration: GetValue<MeteringConfiguration>(nameof(MasterData.MeteringConfiguration)),
+                settlementMethod: GetValue<SettlementMethod>(nameof(MasterData.SettlementMethod)),
+                scheduledMeterReadingDate: GetValue<ScheduledMeterReadingDate>(nameof(MasterData.ScheduledMeterReadingDate)),
+                connectionType: GetValue<ConnectionType>(nameof(MasterData.ConnectionType)),
+                disconnectionType: GetValue<DisconnectionType>(nameof(MasterData.DisconnectionType)),
+                netSettlementGroup: GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)),
+                productionObligation: GetValue<bool?>(nameof(MasterData.ProductionObligation)));
         }
     }
 }

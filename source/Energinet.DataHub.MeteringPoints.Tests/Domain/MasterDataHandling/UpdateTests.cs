@@ -20,6 +20,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addr
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Xunit;
@@ -30,6 +31,189 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     [UnitTest]
     public class UpdateTests : TestBase
     {
+        [Fact]
+        public void Production_obligation_is_unchanged_if_no_value_is_provided()
+        {
+            var masterData = Builder()
+                .WithProductionObligation(true)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithProductionObligation(null)
+                .Build();
+
+            Assert.Equal(masterData.ProductionObligation, updatedMasterData.ProductionObligation);
+        }
+
+        [Fact]
+        public void Production_obligation_is_removed_if_field_is_not_allowed()
+        {
+            var masterData = Builder()
+                .WithProductionObligation(true)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData, new List<MasterDataField>
+                {
+                 new MasterDataField(nameof(MasterData.ProductionObligation), Applicability.NotAllowed),
+                })
+                .WithProductionObligation(false)
+                .Build();
+
+            Assert.Null(updatedMasterData.ProductionObligation);
+        }
+
+        [Fact]
+        public void Production_obligation_is_changed()
+        {
+            var masterData = Builder()
+                .WithProductionObligation(true)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithProductionObligation(false)
+                .Build();
+
+            Assert.False(updatedMasterData.ProductionObligation);
+        }
+
+        [Fact]
+        public void Net_settlement_group_input_value_must_be_valid()
+        {
+            var masterData = Builder()
+                .WithNetSettlementGroup(NetSettlementGroup.Ninetynine.Name)
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData)
+                .WithNetSettlementGroup("invalid value")
+                .Validate();
+
+            AssertContainsValidationError<InvalidNetSettlementGroupValue>(validationResult);
+        }
+
+        [Fact]
+        public void Net_settlement_group_is_removed_if_field_is_not_allowed()
+        {
+            var masterData = Builder()
+                .WithNetSettlementGroup(NetSettlementGroup.Ninetynine.Name)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData, new List<MasterDataField>()
+                {
+                    new MasterDataField(nameof(MasterData.NetSettlementGroup), Applicability.NotAllowed),
+                })
+                .WithNetSettlementGroup(NetSettlementGroup.One.Name)
+                .Build();
+
+            Assert.Null(updatedMasterData.NetSettlementGroup);
+        }
+
+        [Fact]
+        public void Net_settlement_group_can_be_removed_if_field_is_optional()
+        {
+            var masterData = Builder()
+                .WithNetSettlementGroup(NetSettlementGroup.Ninetynine.Name)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData, new List<MasterDataField>()
+                {
+                    new MasterDataField(nameof(MasterData.NetSettlementGroup), Applicability.Optional),
+                })
+                .WithNetSettlementGroup(string.Empty)
+                .Build();
+
+            Assert.Null(updatedMasterData.NetSettlementGroup);
+        }
+
+        [Fact]
+        public void Net_settlement_group_cannot_be_removed_if_field_is_required()
+        {
+            var masterData = Builder()
+                .WithNetSettlementGroup(NetSettlementGroup.Ninetynine.Name)
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData, new List<MasterDataField>()
+                {
+                    new MasterDataField(nameof(MasterData.NetSettlementGroup), Applicability.Required),
+                })
+                .WithNetSettlementGroup(string.Empty)
+                .Validate();
+
+            AssertContainsValidationError<NetSettlementGroupIsRequired>(validationResult);
+        }
+
+        [Fact]
+        public void Net_settlement_group_is_changed()
+        {
+            var masterData = Builder()
+                .WithNetSettlementGroup(NetSettlementGroup.Ninetynine.Name)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithNetSettlementGroup(NetSettlementGroup.One.Name)
+                .Build();
+
+            Assert.Equal(NetSettlementGroup.One, updatedMasterData.NetSettlementGroup);
+        }
+
+        [Fact]
+        public void Cannot_build_if_validation_error_exists()
+        {
+            var masterData = Builder()
+                .Build();
+
+            var updater = UpdateBuilder(
+                masterData,
+                new List<MasterDataField>()
+                {
+                    new MasterDataField(nameof(MasterData.EffectiveDate), Applicability.Required),
+                });
+
+            Assert.Throws<MasterDataChangeException>(() => updater.Build());
+        }
+
+        [Fact]
+        public void Effective_date_must_be_set_if_required()
+        {
+            var masterData = Builder()
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData, new List<MasterDataField>()
+                {
+                    new MasterDataField(nameof(MasterData.EffectiveDate), Applicability.Required),
+                })
+                .Validate();
+
+            AssertContainsValidationError<EffectiveDateIsRequired>(validationResult);
+        }
+
+        [Fact]
+        public void Effective_date_must_be_valid()
+        {
+            var masterData = Builder()
+                .Build();
+
+            var effectiveDate = "invalid effective date";
+            var validationResult = UpdateBuilder(masterData)
+                .EffectiveOn(effectiveDate)
+                .Validate();
+
+            Assert.False(validationResult.Success);
+        }
+
+        [Fact]
+        public void Effective_date_is_set()
+        {
+            var masterData = Builder()
+                .Build();
+
+            var effectiveDate = "2022-01-01T22:00:00Z";
+            var updatedMasterData = UpdateBuilder(masterData)
+                .EffectiveOn(effectiveDate)
+                .Build();
+
+            Assert.Equal(effectiveDate, updatedMasterData.EffectiveDate?.DateInUtc.ToString());
+        }
+
         [Fact]
         public void Capacity_input_value_must_be_valid()
         {
@@ -987,6 +1171,71 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .Build();
 
             Assert.Null(updatedMasterData.ScheduledMeterReadingDate);
+        }
+
+        [Fact]
+        public void Product_type_input_value_must_valid()
+        {
+            var masterData = Builder()
+                .WithProductType(ProductType.Tariff.Name)
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData)
+                .WithProductType("invalid value")
+                .Validate();
+
+            AssertContainsValidationError<InvalidProductType>(validationResult);
+        }
+
+        [Fact]
+        public void Product_type_is_removed_if_field_is_not_allowed()
+        {
+            var masterData = Builder()
+                .WithProductType(ProductType.Tariff.Name)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData, new List<MasterDataField>()
+                {
+                    new MasterDataField(nameof(MasterData.ProductType), Applicability.NotAllowed),
+                })
+                .WithProductType(ProductType.EnergyActive.Name)
+                .Build();
+
+            Assert.Null(updatedMasterData.ProductType);
+        }
+
+        [Fact]
+        public void Product_type_can_be_removed_if_field_is_optional()
+        {
+            var masterData = Builder()
+                .WithProductType(ProductType.Tariff.Name)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData, new List<MasterDataField>()
+                {
+                    new MasterDataField(nameof(MasterData.ProductType), Applicability.Optional),
+                })
+                .WithProductType(string.Empty)
+                .Build();
+
+            Assert.Null(updatedMasterData.ProductType);
+        }
+
+        [Fact]
+        public void Product_type_cannot_be_removed_if_field_is_required()
+        {
+            var masterData = Builder()
+                .WithProductType(ProductType.Tariff.Name)
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData, new List<MasterDataField>()
+                {
+                    new MasterDataField(nameof(MasterData.ProductType), Applicability.Required),
+                })
+                .WithProductType(string.Empty)
+                .Validate();
+
+            AssertContainsValidationError<ProductTypeIsRequired>(validationResult);
         }
 
         [Fact]

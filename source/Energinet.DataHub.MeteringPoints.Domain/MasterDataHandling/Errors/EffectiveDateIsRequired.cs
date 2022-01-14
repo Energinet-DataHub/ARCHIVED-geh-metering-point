@@ -16,13 +16,7 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
-    public class InvalidSettlementGroupValue : ValidationError
+    public class EffectiveDateIsRequired : ValidationError
     {
-        public InvalidSettlementGroupValue(string? providedValue)
-        {
-            ProvidedValue = providedValue;
-        }
-
-        public string? ProvidedValue { get; }
     }
 }
