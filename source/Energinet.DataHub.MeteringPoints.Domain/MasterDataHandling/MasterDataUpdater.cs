@@ -35,20 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             : base(fields)
         {
             if (currentMasterData == null) throw new ArgumentNullException(nameof(currentMasterData));
-            SetValue(nameof(MasterData.ProductType), currentMasterData.ProductType);
-            SetValue(nameof(MasterData.NetSettlementGroup), currentMasterData.NetSettlementGroup);
-            SetValue(nameof(MasterData.ConnectionType), currentMasterData.ConnectionType);
-            SetValue(nameof(MasterData.MeteringConfiguration), currentMasterData.MeteringConfiguration);
-            SetValue(nameof(MasterData.Address), currentMasterData.Address);
-            SetValue(nameof(MasterData.UnitType), currentMasterData.UnitType);
-            SetValue(nameof(MasterData.PowerPlantGsrnNumber), currentMasterData.PowerPlantGsrnNumber);
-            SetValue(nameof(MasterData.ReadingOccurrence), currentMasterData.ReadingOccurrence);
-            SetValue(nameof(MasterData.SettlementMethod), currentMasterData.SettlementMethod);
-            SetValue(nameof(MasterData.DisconnectionType), currentMasterData.DisconnectionType);
-            SetValue(nameof(MasterData.AssetType), currentMasterData.AssetType);
-            SetValue(nameof(MasterData.ScheduledMeterReadingDate), currentMasterData.ScheduledMeterReadingDate);
-            SetValue(nameof(MasterData.Capacity), currentMasterData.Capacity);
-            SetValue(nameof(MasterData.ProductionObligation), currentMasterData.ProductionObligation);
+            PopulateValuesFrom(currentMasterData);
         }
 
         public BusinessRulesValidationResult Validate()
@@ -401,6 +388,24 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             {
                 throw new MasterDataChangeException(validationResult.Errors);
             }
+        }
+
+        private void PopulateValuesFrom(MasterData currentMasterData)
+        {
+            SetValue(nameof(MasterData.ProductType), currentMasterData.ProductType);
+            SetValue(nameof(MasterData.NetSettlementGroup), currentMasterData.NetSettlementGroup);
+            SetValue(nameof(MasterData.ConnectionType), currentMasterData.ConnectionType);
+            SetValue(nameof(MasterData.MeteringConfiguration), currentMasterData.MeteringConfiguration);
+            SetValue(nameof(MasterData.Address), currentMasterData.Address);
+            SetValue(nameof(MasterData.UnitType), currentMasterData.UnitType);
+            SetValue(nameof(MasterData.PowerPlantGsrnNumber), currentMasterData.PowerPlantGsrnNumber);
+            SetValue(nameof(MasterData.ReadingOccurrence), currentMasterData.ReadingOccurrence);
+            SetValue(nameof(MasterData.SettlementMethod), currentMasterData.SettlementMethod);
+            SetValue(nameof(MasterData.DisconnectionType), currentMasterData.DisconnectionType);
+            SetValue(nameof(MasterData.AssetType), currentMasterData.AssetType);
+            SetValue(nameof(MasterData.ScheduledMeterReadingDate), currentMasterData.ScheduledMeterReadingDate);
+            SetValue(nameof(MasterData.Capacity), currentMasterData.Capacity);
+            SetValue(nameof(MasterData.ProductionObligation), currentMasterData.ProductionObligation);
         }
 
         private void RemoveConflictingValues()
