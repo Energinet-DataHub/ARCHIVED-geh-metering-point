@@ -188,7 +188,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                         .WithAssetType(_masterData.AssetType?.Name)
                         .WithConnectionType(_masterData.ConnectionType?.Name)
                         .WithDisconnectionType(_masterData.DisconnectionType?.Name)
-                        .WithPowerLimit(_masterData.PowerLimit.Kwh, _masterData.PowerLimit.Ampere)
+                        .WithPowerLimit(_masterData.PowerLimit?.Kwh, _masterData.PowerLimit?.Ampere)
                         .WithPowerPlant(_masterData.PowerPlantGsrnNumber?.Value)
                         .WithProductType(_masterData.ProductType.Name)
                         .WithSettlementMethod(_masterData.SettlementMethod?.Name)
@@ -249,7 +249,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                     .WithAssetType(_masterData.AssetType?.Name)
                     .WithConnectionType(_masterData.ConnectionType?.Name)
                     .WithDisconnectionType(_masterData.DisconnectionType?.Name)
-                    .WithPowerLimit(_masterData.PowerLimit.Kwh, _masterData.PowerLimit.Ampere)
+                    .WithPowerLimit(_masterData.PowerLimit?.Kwh, _masterData.PowerLimit?.Ampere)
                     .WithPowerPlant(_masterData.PowerPlantGsrnNumber?.Value)
                     .WithProductType(_masterData.ProductType.Name)
                     .WithSettlementMethod(_masterData.SettlementMethod?.Name)
@@ -327,6 +327,35 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
 
+        public BusinessRulesValidationResult CanUpdateMasterData(MasterData updatedMasterData, MasterDataValidator validator)
+        {
+            if (updatedMasterData == null) throw new ArgumentNullException(nameof(updatedMasterData));
+            if (validator == null) throw new ArgumentNullException(nameof(validator));
+
+            var errors = new List<ValidationError>();
+            if (IsClosedDown())
+            {
+                errors.Add(new ClosedDownMeteringPointCannotBeChangedError());
+            }
+
+            errors.AddRange(validator.CheckRulesFor(MeteringPointType, updatedMasterData).Errors);
+
+            return new BusinessRulesValidationResult(errors);
+        }
+
+        public void UpdateMasterData(MasterData updatedMasterData, MasterDataValidator validator)
+        {
+            if (validator == null) throw new ArgumentNullException(nameof(validator));
+            var validationResult = CanUpdateMasterData(updatedMasterData, validator);
+            if (validationResult.Success == false)
+            {
+                throw new MasterDataChangeException(validationResult.Errors);
+            }
+
+            _masterData = updatedMasterData ?? throw new ArgumentNullException(nameof(updatedMasterData));
+            RaiseMasterDataWasUpdatedEvent();
+        }
+
         internal void SetParent(MeteringPointId? parentId)
         {
             if (parentId is not null)
@@ -334,6 +363,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 _parentMeteringPoint = parentId;
                 AddDomainEvent(new CoupledToParent(Id.Value, parentId.Value));
             }
+        }
+
+        private bool IsClosedDown()
+        {
+            return ConnectionState.PhysicalState == PhysicalState.ClosedDown;
         }
 
         private void ThrowIfClosedDown()
@@ -373,8 +407,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 _masterData.PowerPlantGsrnNumber?.Value,
                 _masterData.Address.LocationDescription,
                 MeteringConfiguration.Meter?.Value,
-                _masterData.PowerLimit.Ampere,
-                _masterData.PowerLimit.Kwh,
+                _masterData.PowerLimit?.Ampere,
+                _masterData.PowerLimit?.Kwh,
                 _effectiveDate.DateInUtc,
                 _masterData.DisconnectionType?.Name!,
                 _masterData.ConnectionType?.Name,
@@ -386,6 +420,41 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 _exchangeGridAreas?.TargetGridArea.Value);
 
             AddDomainEvent(@event);
+        }
+
+        private void RaiseMasterDataWasUpdatedEvent()
+        {
+            AddDomainEvent(new MasterDataWasUpdated(
+                _masterData.Address.StreetName,
+                _masterData.Address.StreetCode,
+                _masterData.Address.City,
+                _masterData.Address.Floor,
+                _masterData.Address.Room,
+                _masterData.Address.BuildingNumber,
+                _masterData.Address.CountryCode?.Name,
+                _masterData.Address.IsActual,
+                _masterData.Address.LocationDescription,
+                _masterData.Address.MunicipalityCode,
+                _masterData.Address.PostCode,
+                _masterData.Address.CitySubDivision,
+                _masterData.Address.GeoInfoReference,
+                _masterData.Capacity?.Kw,
+                _masterData.AssetType?.Name,
+                _masterData.ConnectionType?.Name,
+                _masterData.DisconnectionType?.Name,
+                _masterData.EffectiveDate?.DateInUtc.ToString(),
+                _masterData.MeteringConfiguration.Meter.Value,
+                _masterData.MeteringConfiguration.Method.Name,
+                _masterData.PowerLimit?.Ampere,
+                _masterData.PowerLimit?.Kwh,
+                _masterData.ProductionObligation,
+                _masterData.ProductType.Name,
+                _masterData.ReadingOccurrence.Name,
+                _masterData.SettlementMethod?.Name,
+                _masterData.UnitType.Name,
+                _masterData.NetSettlementGroup?.Name,
+                _masterData.PowerPlantGsrnNumber?.Value,
+                _masterData.ScheduledMeterReadingDate?.MonthAndDay));
         }
     }
 }

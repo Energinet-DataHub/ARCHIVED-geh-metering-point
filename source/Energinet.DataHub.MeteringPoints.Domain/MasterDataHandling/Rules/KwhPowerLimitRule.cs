@@ -20,7 +20,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
     {
         private const int MaxKwh = 999999;
 
-        public KwhPowerLimitRule(int kwh)
+        public KwhPowerLimitRule(int? kwh)
         {
             IsBroken = kwh > MaxKwh;
             ValidationError = new InvalidKwhPowerLimitRuleError(kwh);
