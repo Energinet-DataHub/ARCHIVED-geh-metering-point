@@ -95,3 +95,8 @@ data "azurerm_key_vault_secret" "sbq_create_link_reply_name" {
   name         = "sbq-create-link-reply-name"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
+
+data "azurerm_key_vault_secret" "vnet_shared_name" {
+  name         = "vnet-shared-name"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}

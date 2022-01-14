@@ -21,8 +21,8 @@ on:
       - main
 
 jobs:
-  # ci_base:
-  #   uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@2.7.0
+  ci_base:
+    uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@2.7.0
   
   # dotnet_solution_ci:
   #   uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@2.7.0
@@ -45,71 +45,85 @@ jobs:
       TERRAFORM_WORKING_DIR_PATH: './build/infrastructure/main'
       TERRAFORM_VERSION: '1.0.10'
 
-  # ingestion_ci:
-  #   needs: [ci_base, terraform_validate, dotnet_solution_ci]
-  #   uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
-  #   with:
-  #     CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion/Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.csproj'
-  #     DOTNET_VERSION: '5.0.202'      
-  #     ARTIFACT_NAME: ingestion
+  ingestion_ci:
+    needs: [ci_base, terraform_validate,
+    #dotnet_solution_ci
+    ]
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
+    with:
+      CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion/Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.csproj'
+      DOTNET_VERSION: '5.0.202'      
+      ARTIFACT_NAME: ingestion
 
-  # outbox_ci:
-  #   needs: [ci_base, terraform_validate, dotnet_solution_ci]
-  #   uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
-  #   with:
-  #     CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.Outbox/Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.csproj'
-  #     DOTNET_VERSION: '5.0.202'
-  #     ARTIFACT_NAME: outbox
+  outbox_ci:
+    needs: [ci_base, terraform_validate,
+    #dotnet_solution_ci
+    ]
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
+    with:
+      CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.Outbox/Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.csproj'
+      DOTNET_VERSION: '5.0.202'
+      ARTIFACT_NAME: outbox
 
-  # processing_ci:
-  #   needs: [ci_base, terraform_validate, dotnet_solution_ci]
-  #   uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
-  #   with:
-  #     CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.Processing/Energinet.DataHub.MeteringPoints.EntryPoints.Processing.csproj'
-  #     DOTNET_VERSION: '5.0.202'
-  #     ARTIFACT_NAME: processing
+  processing_ci:
+    needs: [ci_base, terraform_validate,
+    #dotnet_solution_ci
+    ]
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
+    with:
+      CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.Processing/Energinet.DataHub.MeteringPoints.EntryPoints.Processing.csproj'
+      DOTNET_VERSION: '5.0.202'
+      ARTIFACT_NAME: processing
 
-  # localmessagehub_ci:
-  #   needs: [ci_base, terraform_validate, dotnet_solution_ci]
-  #   uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
-  #   with:
-  #     CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub/Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub.csproj'
-  #     DOTNET_VERSION: '5.0.202'
-  #     ARTIFACT_NAME: localmessagehub
+  localmessagehub_ci:
+    needs: [ci_base, terraform_validate,
+    #dotnet_solution_ci
+    ]
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
+    with:
+      CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub/Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub.csproj'
+      DOTNET_VERSION: '5.0.202'
+      ARTIFACT_NAME: localmessagehub
 
-  # internalcommanddispatcher_ci:
-  #   needs: [ci_base, terraform_validate, dotnet_solution_ci]
-  #   uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
-  #   with:
-  #     CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher/Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher.csproj'
-  #     DOTNET_VERSION: '5.0.202'
-  #     ARTIFACT_NAME: internalcommanddispatcher
+  internalcommanddispatcher_ci:
+    needs: [ci_base, terraform_validate,
+    #dotnet_solution_ci
+    ]
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
+    with:
+      CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher/Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher.csproj'
+      DOTNET_VERSION: '5.0.202'
+      ARTIFACT_NAME: internalcommanddispatcher
 
-  # webapi_ci:
-  #   needs: [ci_base, terraform_validate, dotnet_solution_ci]
-  #   uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-webapi-artifact.yml@2.7.0
-  #   with:
-  #     CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.WebApi/Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.csproj'
-  #     DOTNET_VERSION: '5.0.202'
-  #     ARTIFACT_NAME: webapi
+  webapi_ci:
+    needs: [ci_base, terraform_validate,
+    #dotnet_solution_ci
+    ]
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-webapi-artifact.yml@2.7.0
+    with:
+      CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.WebApi/Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.csproj'
+      DOTNET_VERSION: '5.0.202'
+      ARTIFACT_NAME: webapi
 
-  # database_migration_ci:
-  #   needs: [ci_base, terraform_validate, dotnet_solution_ci]
-  #   uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
-  #   with:
-  #     CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp/Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.csproj'
-  #     DOTNET_VERSION: '5.0.202'
-  #     ARTIFACT_NAME: databasemigration
+  database_migration_ci:
+    needs: [ci_base, terraform_validate,
+    #dotnet_solution_ci
+    ]
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@2.7.0
+    with:
+      CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp/Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.csproj'
+      DOTNET_VERSION: '5.0.202'
+      ARTIFACT_NAME: databasemigration
 
   create_prerelease:
     needs: [
-      #ingestion_ci,
-      #outbox_ci,
-      #processing_ci,
-      #webapi_ci,
-      #localmessagehub_ci,
-      #internalcommanddispatcher_ci,
-      #database_migration_ci
+      ingestion_ci,
+      outbox_ci,
+      processing_ci,
+      webapi_ci,
+      localmessagehub_ci,
+      internalcommanddispatcher_ci,
+      database_migration_ci,
       terraform_validate
     ]
     uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@2.7.0
