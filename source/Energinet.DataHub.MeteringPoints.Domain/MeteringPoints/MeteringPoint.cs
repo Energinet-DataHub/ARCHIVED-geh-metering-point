@@ -86,17 +86,17 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public Address Address => _masterData.Address;
 
-        internal GridAreaLinkId GridAreaLinkId { get; }
+        public MeteringPointType MeteringPointType { get; }
 
-        internal MeteringPointType MeteringPointType { get; }
+        public MasterData MasterData => _masterData;
+
+        internal GridAreaLinkId GridAreaLinkId { get; }
 
         internal MeteringConfiguration MeteringConfiguration => _masterData.MeteringConfiguration;
 
         internal ConnectionState ConnectionState { get; set; } = ConnectionState.New();
 
         internal EnergySupplierDetails? EnergySupplierDetails { get; private set; }
-
-        internal MasterData MasterData => _masterData;
 
         public static BusinessRulesValidationResult CanCreate(MeteringPointType type, MasterData masterData, MasterDataValidator validator)
         {

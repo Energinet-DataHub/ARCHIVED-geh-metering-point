@@ -130,6 +130,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 };
         }
 
+        internal static CreateMeteringPoint CreateVEProduction()
+        {
+            return CreateCommand(MeteringPointType.VEProduction)
+                with
+                {
+                    UnitType = MeasurementUnitType.KVArh.Name,
+                    ProductType = ProductType.EnergyActive.Name,
+                };
+        }
+
         internal static MasterDataDocument CreateDocument()
         {
             return new(

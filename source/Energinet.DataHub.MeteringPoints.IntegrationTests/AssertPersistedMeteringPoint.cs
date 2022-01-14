@@ -14,6 +14,7 @@
 
 using System;
 using Dapper;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -127,6 +128,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         public AssertPersistedMeteringPoint HasGeoInfoReference(Guid? geoInfoReference)
         {
             Assert.Equal(geoInfoReference, _meteringPoint.GeoInfoReference);
+            return this;
+        }
+
+        public AssertPersistedMeteringPoint HasProductType(ProductType productType)
+        {
+            Assert.Equal(productType, EnumerationType.FromName<ProductType>(_meteringPoint.ProductType));
             return this;
         }
     }

@@ -41,6 +41,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             _timeProvider = GetService<ISystemDateTimeProvider>();
         }
 
+        [Fact(Skip = "Pending business rule clarification")]
+        public async Task Product_type_is_changed()
+        {
+            await InvokeBusinessProcessAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    ProductType = ProductType.Tariff.Name,
+                };
+            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+
+            AssertMasterData()
+                .HasProductType(ProductType.Tariff);
+        }
+
         [Fact]
         public async Task Address_is_updated()
         {
@@ -49,8 +65,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             var request = CreateUpdateRequest()
                 with
                 {
-                    TransactionId = SampleData.Transaction,
-                    GsrnNumber = SampleData.GsrnNumber,
                     Address = new Application.Address(
                         StreetName: "New Street Name",
                         PostCode: "6000",
@@ -69,8 +83,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
 
             AssertConfirmMessage(DocumentType.ConfirmChangeMasterData);
-            AssertPersistedMeteringPoint
-                .Initialize(SampleData.GsrnNumber, GetService<IDbConnectionFactory>())
+            AssertMasterData()
                 .HasStreetName(request.Address.StreetName)
                 .HasPostCode(request.Address.PostCode)
                 .HasCity(request.Address.City)
@@ -187,7 +200,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             await CreatePhysicalConsumptionMeteringPoint().ConfigureAwait(false);
             await CloseDownMeteringPointAsync().ConfigureAwait(false);
 
-            var request = TestUtils.CreateRequest()
+            var request = CreateUpdateRequest()
                 with
                 {
                     MeterId = "1",
@@ -241,8 +254,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             return TestUtils.CreateRequest()
                 with
                 {
+                    TransactionId = SampleData.Transaction,
+                    GsrnNumber = SampleData.GsrnNumber,
                     EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
                 };
+        }
+
+        private AssertPersistedMeteringPoint AssertMasterData()
+        {
+            return AssertPersistedMeteringPoint
+                .Initialize(SampleData.GsrnNumber, GetService<IDbConnectionFactory>());
         }
     }
 }
