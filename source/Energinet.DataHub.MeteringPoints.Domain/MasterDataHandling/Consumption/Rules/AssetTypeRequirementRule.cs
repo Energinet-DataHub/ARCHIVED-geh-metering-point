@@ -28,6 +28,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
 
         public bool IsBroken { get; }
 
-        public ValidationError ValidationError => new AssetTypeIsRequiredRuleError();
+        public ValidationError ValidationError => new AssetTypeIsRequired();
     }
 }

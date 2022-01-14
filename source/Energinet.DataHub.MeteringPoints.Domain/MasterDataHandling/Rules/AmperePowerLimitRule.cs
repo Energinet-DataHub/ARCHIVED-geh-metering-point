@@ -22,7 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 
         public AmperePowerLimitRule(int? ampere)
         {
-            IsBroken = ampere > MaxAmpere;
+            IsBroken = ampere != null && ampere > MaxAmpere;
             ValidationError = new InvalidAmperePowerLimitRuleError(ampere);
         }
 

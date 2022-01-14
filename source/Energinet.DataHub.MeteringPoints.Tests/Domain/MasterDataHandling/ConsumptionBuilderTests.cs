@@ -58,7 +58,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithDisconnectionType(DisconnectionType.Manual.Name)
                 .WithConnectionType(ConnectionType.Direct.Name)
                 .EffectiveOn(SampleData.EffectiveDate)
-                .WithCapacity(1)
+                .WithCapacity("1")
                 .Build();
 
             Assert.NotNull(masterData.ProductType);
