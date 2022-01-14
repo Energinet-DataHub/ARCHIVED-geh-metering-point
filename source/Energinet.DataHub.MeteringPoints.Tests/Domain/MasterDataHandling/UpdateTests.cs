@@ -1025,6 +1025,21 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Fact]
+        public void Meter_number_is_unchanged_if_no_value_is_provided()
+        {
+            var masterData = Builder()
+                .WithMeteringConfiguration(MeteringMethod.Physical.Name, "1")
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithMeteringConfiguration(null, null)
+                .Build();
+
+            Assert.Equal(masterData.MeteringConfiguration.Method, updatedMasterData.MeteringConfiguration.Method);
+            Assert.Equal(masterData.MeteringConfiguration.Meter.Value, updatedMasterData.MeteringConfiguration.Meter.Value);
+        }
+
+        [Fact]
         public void Meter_number_is_changed()
         {
             var masterData = Builder()
