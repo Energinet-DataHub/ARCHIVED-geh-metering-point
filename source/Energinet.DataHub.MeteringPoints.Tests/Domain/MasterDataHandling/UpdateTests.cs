@@ -673,7 +673,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         public void Power_limit_is_set_if_already_null()
         {
             var masterData = Builder()
-                .WithPowerLimit((int?)null, null)
+                .WithPowerLimit((string?)null, null)
                 .Build();
 
             var updatedMasterData = UpdateBuilder(masterData)
