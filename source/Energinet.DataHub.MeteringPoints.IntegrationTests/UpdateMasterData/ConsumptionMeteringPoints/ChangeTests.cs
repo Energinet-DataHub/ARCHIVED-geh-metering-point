@@ -25,7 +25,7 @@ using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.ConsumptionMeteringPoints
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.ConsumptionMeteringPoints
 {
     [IntegrationTest]
     public class ChangeTests : TestHost

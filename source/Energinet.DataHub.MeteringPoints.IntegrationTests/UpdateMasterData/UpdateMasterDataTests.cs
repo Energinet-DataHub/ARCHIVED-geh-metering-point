@@ -25,15 +25,15 @@ using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 {
     [IntegrationTest]
-    public class ChangeMasterDataTests
+    public class UpdateMasterDataTests
         : TestHost
     {
         private readonly SystemDateTimeProviderStub _timeProvider;
 
-        public ChangeMasterDataTests(DatabaseFixture databaseFixture)
+        public UpdateMasterDataTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
         {
             _timeProvider = (SystemDateTimeProviderStub)GetService<ISystemDateTimeProvider>();
