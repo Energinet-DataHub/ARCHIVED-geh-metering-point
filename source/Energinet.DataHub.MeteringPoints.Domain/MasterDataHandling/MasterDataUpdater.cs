@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
@@ -47,6 +48,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             SetValue(nameof(MasterData.AssetType), currentMasterData.AssetType);
             SetValue(nameof(MasterData.ScheduledMeterReadingDate), currentMasterData.ScheduledMeterReadingDate);
             SetValue(nameof(MasterData.Capacity), currentMasterData.Capacity);
+            SetValue(nameof(MasterData.PowerLimit), currentMasterData.PowerLimit);
         }
 
         public BusinessRulesValidationResult Validate()
@@ -228,12 +230,18 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             SetValueIfValid(
                 nameof(MasterData.PowerLimit),
                 () => PowerLimit.CheckRules(kwh, ampere),
-                () =>
-                {
-                    var updatedKwh = kwh;
-                    var updatedAmpere = ampere;
-                    return PowerLimit.Create(updatedKwh, updatedAmpere);
-                });
+                () => PowerLimit.Create(kwh, ampere));
+            return this;
+        }
+
+        public IMasterDataBuilder WithPowerLimit(string? kwh, string? ampere)
+        {
+            var updatedKwh = ConvertToNullableString(kwh, GetValue<PowerLimit>(nameof(MasterData.PowerLimit)).Kwh);
+            var updatedAmpere = ConvertToNullableString(ampere, GetValue<PowerLimit>(nameof(MasterData.PowerLimit)).Ampere);
+            SetValueIfValid(
+                nameof(MasterData.PowerLimit),
+                () => PowerLimit.CheckRules(updatedKwh, updatedAmpere),
+                () => PowerLimit.Create(updatedKwh, updatedAmpere));
             return this;
         }
 
@@ -369,6 +377,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         public IMasterDataBuilder WithProductionObligation(bool? productionObligation)
         {
             throw new NotImplementedException();
+        }
+
+        private static string? ConvertToNullableString(string? updatedValue, int? currentValue)
+        {
+            if (updatedValue is null) return currentValue.ToString();
+            if (updatedValue.Length == 0) return null;
+            return updatedValue;
         }
 
         private void SetValueIfValid<T>(string valueName, Func<BusinessRulesValidationResult> validator, Func<T> creator)

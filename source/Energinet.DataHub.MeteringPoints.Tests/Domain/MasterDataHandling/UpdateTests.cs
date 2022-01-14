@@ -456,6 +456,51 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Fact]
+        public void Power_limit_is_unchanged_when_no_value_is_provided()
+        {
+            var masterData = Builder()
+                .WithPowerLimit(100, 100)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithPowerLimit((string?)null, null)
+                .Build();
+
+            Assert.Equal(updatedMasterData.PowerLimit.Kwh, masterData.PowerLimit.Kwh);
+            Assert.Equal(updatedMasterData.PowerLimit.Ampere, masterData.PowerLimit.Ampere);
+        }
+
+        [Fact]
+        public void Power_limit_is_cleared_if_empty_value_is_provided()
+        {
+            var masterData = Builder()
+                .WithPowerLimit(100, 100)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithPowerLimit(string.Empty, string.Empty)
+                .Build();
+
+            Assert.Null(updatedMasterData.PowerLimit.Kwh);
+            Assert.Null(updatedMasterData.PowerLimit.Ampere);
+        }
+
+        [Fact]
+        public void Power_limit_is_set_if_already_null()
+        {
+            var masterData = Builder()
+                .WithPowerLimit((int?)null, null)
+                .Build();
+
+            var updatedMasterData = UpdateBuilder(masterData)
+                .WithPowerLimit(200, 300)
+                .Build();
+
+            Assert.Equal(200, updatedMasterData.PowerLimit.Kwh);
+            Assert.Equal(300, updatedMasterData.PowerLimit.Ampere);
+        }
+
+        [Fact]
         public void Power_limit_is_changed()
         {
             var masterData = Builder()

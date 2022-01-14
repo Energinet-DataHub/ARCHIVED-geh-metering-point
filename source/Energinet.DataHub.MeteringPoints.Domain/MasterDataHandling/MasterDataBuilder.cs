@@ -122,6 +122,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
+        public IMasterDataBuilder WithPowerLimit(string? kwh, string? ampere)
+        {
+            throw new NotImplementedException();
+        }
+
         public IMasterDataBuilder WithSettlementMethod(string? settlementMethod)
         {
             if (string.IsNullOrEmpty(settlementMethod))
