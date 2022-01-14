@@ -17,9 +17,12 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using NodaTime.Text;
 using Xunit;
@@ -36,6 +39,50 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             : base(databaseFixture)
         {
             _timeProvider = GetService<ISystemDateTimeProvider>();
+        }
+
+        [Fact]
+        public async Task Address_is_updated()
+        {
+            await CreatePhysicalConsumptionMeteringPoint().ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    TransactionId = SampleData.Transaction,
+                    GsrnNumber = SampleData.GsrnNumber,
+                    Address = new Application.Address(
+                        StreetName: "New Street Name",
+                        PostCode: "6000",
+                        City: "New City Name",
+                        StreetCode: "0500",
+                        BuildingNumber: "4",
+                        CitySubDivision: "New",
+                        CountryCode: CountryCode.DK.Name,
+                        Floor: "9",
+                        Room: "9",
+                        MunicipalityCode: 999,
+                        IsActual: true,
+                        GeoInfoReference: Guid.NewGuid()),
+                };
+
+            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+
+            AssertConfirmMessage(DocumentType.ConfirmChangeMasterData);
+            AssertPersistedMeteringPoint
+                .Initialize(SampleData.GsrnNumber, GetService<IDbConnectionFactory>())
+                .HasStreetName(request.Address.StreetName)
+                .HasPostCode(request.Address.PostCode)
+                .HasCity(request.Address.City)
+                .HasStreetCode(request.Address.StreetCode)
+                .HasBuildingNumber(request.Address.BuildingNumber)
+                .HasCitySubDivision(request.Address.CitySubDivision)
+                .HasCountryCode(CountryCode.DK)
+                .HasFloor(request.Address.Floor)
+                .HasRoom(request.Address.Room)
+                .HasMunicipalityCode(request.Address.MunicipalityCode)
+                .HasIsActualAddress(request.Address.IsActual)
+                .HasGeoInfoReference(request.Address.GeoInfoReference);
         }
 
         [Fact]
@@ -189,7 +236,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             return EffectiveDate.Create(new DateTime(today.Year, today.Month, today.Day, 22, 0, 0));
         }
 
-        private ChangeMasterDataRequest CreateChangeRequest()
+        private ChangeMasterDataRequest CreateUpdateRequest()
         {
             return TestUtils.CreateRequest()
                 with

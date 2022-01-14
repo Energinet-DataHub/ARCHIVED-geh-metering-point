@@ -14,7 +14,9 @@
 
 using System;
 using Dapper;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Xunit;
 
@@ -53,6 +55,78 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         {
             if (state is null) throw new ArgumentNullException(nameof(state));
             Assert.Equal(state.Name, _meteringPoint.ConnectionState_PhysicalState);
+            return this;
+        }
+
+        public AssertPersistedMeteringPoint HasStreetName(string? streetName)
+        {
+            Assert.Equal(streetName, _meteringPoint.StreetName);
+            return this;
+        }
+
+        public AssertPersistedMeteringPoint HasPostCode(string? postCode)
+        {
+            Assert.Equal(postCode, _meteringPoint.PostCode);
+            return this;
+        }
+
+        public AssertPersistedMeteringPoint HasCity(string? city)
+        {
+            Assert.Equal(city, _meteringPoint.CityName);
+            return this;
+        }
+
+        public AssertPersistedMeteringPoint HasStreetCode(string? streetCode)
+        {
+            Assert.Equal(streetCode, _meteringPoint.StreetCode);
+            return this;
+        }
+
+        public AssertPersistedMeteringPoint HasBuildingNumber(string? buildingNumber)
+        {
+            Assert.Equal(buildingNumber, _meteringPoint.BuildingNumber);
+            return this;
+        }
+
+        public AssertPersistedMeteringPoint HasCitySubDivision(string? citySubDivision)
+        {
+            Assert.Equal(citySubDivision, _meteringPoint.CitySubDivision);
+            return this;
+        }
+
+        public AssertPersistedMeteringPoint HasCountryCode(CountryCode countryCode)
+        {
+            Assert.Equal(countryCode, EnumerationType.FromName<CountryCode>(_meteringPoint.CountryCode));
+            return this;
+        }
+
+        public AssertPersistedMeteringPoint HasFloor(string? floor)
+        {
+            Assert.Equal(floor, _meteringPoint.Floor);
+            return this;
+        }
+
+        public AssertPersistedMeteringPoint HasRoom(string? room)
+        {
+            Assert.Equal(room, _meteringPoint.Room);
+            return this;
+        }
+
+        public AssertPersistedMeteringPoint HasMunicipalityCode(int? municipalityCode)
+        {
+            Assert.Equal(municipalityCode, _meteringPoint.MunicipalityCode);
+            return this;
+        }
+
+        public AssertPersistedMeteringPoint HasIsActualAddress(bool? isActualAddress)
+        {
+            Assert.Equal(isActualAddress, _meteringPoint.IsActualAddress);
+            return this;
+        }
+
+        public AssertPersistedMeteringPoint HasGeoInfoReference(Guid? geoInfoReference)
+        {
+            Assert.Equal(geoInfoReference, _meteringPoint.GeoInfoReference);
             return this;
         }
     }
