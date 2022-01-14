@@ -19,9 +19,9 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class AssetTypeIsRequiredRuleErrorConverter : ErrorConverter<AssetTypeIsRequiredRuleError>
+    public class AssetTypeIsRequiredRuleErrorConverter : ErrorConverter<AssetTypeIsRequired>
     {
-        protected override ErrorMessage Convert(AssetTypeIsRequiredRuleError validationError)
+        protected override ErrorMessage Convert(AssetTypeIsRequired validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
