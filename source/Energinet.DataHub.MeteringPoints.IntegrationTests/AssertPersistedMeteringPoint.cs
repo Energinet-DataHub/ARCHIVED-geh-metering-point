@@ -167,5 +167,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             Assert.Equal(powerPlantGsrnNumber, _meteringPoint.PowerPlant);
             return this;
         }
+
+        public AssertPersistedMeteringPoint HasEffectiveDate(EffectiveDate effectiveDate)
+        {
+            Assert.Equal(effectiveDate, EffectiveDate.Create(_meteringPoint.EffectiveDate));
+            return this;
+        }
     }
 }

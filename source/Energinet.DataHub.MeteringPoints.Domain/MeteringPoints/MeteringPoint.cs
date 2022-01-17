@@ -121,7 +121,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             if (exchangeGridAreas == null) throw new ArgumentNullException(nameof(exchangeGridAreas));
             if (masterData == null) throw new ArgumentNullException(nameof(masterData));
 
-            return new MeteringPoint(id, gsrnNumber, gridAreaLinkId, effectiveDate, exchangeGridAreas, masterData);
+            return new MeteringPoint(id, gsrnNumber, gridAreaLinkId, masterData.EffectiveDate, exchangeGridAreas, masterData);
         }
 
         public static MeteringPoint Create(MeteringPointId id, GsrnNumber gsrnNumber, MeteringPointType meteringPointType, GridAreaLinkId gridAreaLinkId, EffectiveDate effectiveDate, MasterData masterData)
@@ -132,7 +132,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             if (gridAreaLinkId == null) throw new ArgumentNullException(nameof(gridAreaLinkId));
             if (effectiveDate == null) throw new ArgumentNullException(nameof(effectiveDate));
             if (masterData == null) throw new ArgumentNullException(nameof(masterData));
-            return new MeteringPoint(id, gsrnNumber, meteringPointType, gridAreaLinkId, effectiveDate, masterData);
+            return new MeteringPoint(id, gsrnNumber, meteringPointType, gridAreaLinkId, masterData.EffectiveDate, masterData);
         }
 
         public BusinessRulesValidationResult CanChangeAddress(Address address)
