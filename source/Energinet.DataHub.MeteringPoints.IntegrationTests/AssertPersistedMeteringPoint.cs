@@ -161,5 +161,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             Assert.Equal(ampere, _meteringPoint.MaximumCurrent);
             return this;
         }
+
+        public AssertPersistedMeteringPoint HasPowerPlantGsrnNumber(string powerPlantGsrnNumber)
+        {
+            Assert.Equal(powerPlantGsrnNumber, _meteringPoint.PowerPlant);
+            return this;
+        }
     }
 }

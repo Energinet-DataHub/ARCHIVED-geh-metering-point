@@ -110,6 +110,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 .WithAssetType(request.AssetType)
                 .WithReadingPeriodicity(request.ReadingPeriodicity)
                 .WithPowerLimit(request.MaximumPower, request.MaximumCurrent)
+                .WithPowerPlant(request.PowerPlantGsrnNumber)
                 .WithAddress(
                     request.Address?.StreetName,
                     request.Address?.StreetCode,

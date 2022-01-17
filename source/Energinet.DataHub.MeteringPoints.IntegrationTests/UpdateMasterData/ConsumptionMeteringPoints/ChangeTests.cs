@@ -42,6 +42,23 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
+        public async Task Power_plant_is_changed()
+        {
+            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    PowerPlantGsrnNumber = SampleData.PowerPlantGsrnNumber,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertMasterData()
+                .HasPowerPlantGsrnNumber(SampleData.PowerPlantGsrnNumber);
+        }
+
+        [Fact]
         public async Task Power_limit_is_changed()
         {
             await SendCommandAsync(Scenarios.CreateVEProduction() with
