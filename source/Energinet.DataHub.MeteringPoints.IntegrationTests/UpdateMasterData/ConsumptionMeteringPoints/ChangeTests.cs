@@ -42,6 +42,23 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
+        public async Task Reading_occurrence_is_changed()
+        {
+            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    ReadingPeriodicity = ReadingOccurrence.Monthly.Name,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertMasterData()
+                .HasReadingOccurrence(ReadingOccurrence.Monthly);
+        }
+
+        [Fact]
         public async Task Asset_type_is_changed()
         {
             await InvokeBusinessProcessAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);

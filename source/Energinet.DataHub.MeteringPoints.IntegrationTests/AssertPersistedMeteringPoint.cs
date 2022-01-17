@@ -148,5 +148,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             Assert.Equal(assetType, EnumerationType.FromName<AssetType>(_meteringPoint.AssetType));
             return this;
         }
+
+        public AssertPersistedMeteringPoint HasReadingOccurrence(ReadingOccurrence readingOccurrence)
+        {
+            Assert.Equal(readingOccurrence, EnumerationType.FromName<ReadingOccurrence>(_meteringPoint.MeterReadingOccurrence));
+            return this;
+        }
     }
 }

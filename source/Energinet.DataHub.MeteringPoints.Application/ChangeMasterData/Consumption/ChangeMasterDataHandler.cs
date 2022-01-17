@@ -108,6 +108,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 .WithProductType(request.ProductType)
                 .WithMeasurementUnitType(request.UnitType)
                 .WithAssetType(request.AssetType)
+                .WithReadingPeriodicity(request.ReadingPeriodicity)
                 .WithAddress(
                     request.Address?.StreetName,
                     request.Address?.StreetCode,
