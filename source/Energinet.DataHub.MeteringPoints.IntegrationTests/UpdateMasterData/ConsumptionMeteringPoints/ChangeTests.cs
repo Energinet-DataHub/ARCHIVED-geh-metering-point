@@ -42,6 +42,23 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
+        public async Task Unit_type_is_changed()
+        {
+            await InvokeBusinessProcessAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    UnitType = MeasurementUnitType.Ampere.Name,
+                };
+
+            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+
+            AssertMasterData()
+                .HasUnitType(MeasurementUnitType.Ampere);
+        }
+
+        [Fact]
         public async Task Product_type_is_changed()
         {
             await InvokeBusinessProcessAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
