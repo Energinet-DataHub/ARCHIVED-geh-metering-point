@@ -112,6 +112,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 .WithPowerLimit(request.MaximumPower, request.MaximumCurrent)
                 .WithPowerPlant(request.PowerPlantGsrnNumber)
                 .WithCapacity(request.CapacityInKw)
+                .WithSettlementMethod(request.SettlementMethod)
                 .WithAddress(
                     request.Address?.StreetName,
                     request.Address?.StreetCode,

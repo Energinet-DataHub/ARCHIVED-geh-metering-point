@@ -42,6 +42,26 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
+        public async Task Settlement_method_is_changed()
+        {
+            await SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand() with
+            {
+                SettlementMethod = SettlementMethod.Flex.Name,
+            }).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    SettlementMethod = SettlementMethod.NonProfiled.Name,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertMasterData()
+                .HasSettlementMethod(SettlementMethod.NonProfiled);
+        }
+
+        [Fact]
         public async Task Metering_configuration_is_changed()
         {
             await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);

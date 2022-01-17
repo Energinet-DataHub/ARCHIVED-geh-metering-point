@@ -187,5 +187,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             Assert.Equal(meterNumber, _meteringPoint.MeterNumber);
             return this;
         }
+
+        public AssertPersistedMeteringPoint HasSettlementMethod(SettlementMethod settlementMethod)
+        {
+            Assert.Equal(settlementMethod, EnumerationType.FromName<SettlementMethod>(_meteringPoint.SettlementMethod));
+            return this;
+        }
     }
 }
