@@ -117,13 +117,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             return new MeteringPoint(id, gsrnNumber, gridAreaLinkId, exchangeGridAreas, masterData);
         }
 
-        public static MeteringPoint Create(MeteringPointId id, GsrnNumber gsrnNumber, MeteringPointType meteringPointType, GridAreaLinkId gridAreaLinkId, EffectiveDate effectiveDate, MasterData masterData)
+        public static MeteringPoint Create(MeteringPointId id, GsrnNumber gsrnNumber, MeteringPointType meteringPointType, GridAreaLinkId gridAreaLinkId, MasterData masterData)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
             if (gsrnNumber == null) throw new ArgumentNullException(nameof(gsrnNumber));
             if (meteringPointType is null) throw new ArgumentNullException(nameof(meteringPointType));
             if (gridAreaLinkId == null) throw new ArgumentNullException(nameof(gridAreaLinkId));
-            if (effectiveDate == null) throw new ArgumentNullException(nameof(effectiveDate));
             if (masterData == null) throw new ArgumentNullException(nameof(masterData));
             return new MeteringPoint(id, gsrnNumber, meteringPointType, gridAreaLinkId, masterData);
         }

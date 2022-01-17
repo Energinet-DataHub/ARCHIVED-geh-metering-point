@@ -68,7 +68,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 .WithAddress(address.StreetName, address.StreetCode, address.BuildingNumber, address.City, address.CitySubDivision, address.PostCode, address.CountryCode, address.Floor, address.Room, address.MunicipalityCode, address.IsActual, address.GeoInfoReference, address.LocationDescription)
                 .WithNetSettlementGroup(netSettlementGroup.Name)
                 .Build();
-            var meteringPoint = MeteringPoint.Create(meteringPointId, meteringPointGsrn, MeteringPointType.Consumption, gridAreaLinkId, effectiveDate, masterData);
+            var meteringPoint = MeteringPoint.Create(meteringPointId, meteringPointGsrn, MeteringPointType.Consumption, gridAreaLinkId, masterData);
 
             var createdEvent = meteringPoint.DomainEvents.First(e => e is MeteringPointCreated) as MeteringPointCreated;
             Assert.Equal(address.City, createdEvent!.City);
