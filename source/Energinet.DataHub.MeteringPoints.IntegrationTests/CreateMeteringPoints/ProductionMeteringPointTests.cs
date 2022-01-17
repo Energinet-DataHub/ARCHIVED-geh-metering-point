@@ -117,6 +117,48 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("D02");
         }
 
+        [Fact]
+        public async Task Should_reject_when_municipality_code_is_missing()
+        {
+            var request = CreateCommand()
+                with
+                {
+                    MunicipalityCode = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86", DocumentType.RejectCreateMeteringPoint);
+        }
+
+        [Fact]
+        public async Task Should_reject_when_street_code_is_missing()
+        {
+            var request = CreateCommand()
+                with
+                {
+                    StreetCode = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E00", DocumentType.RejectCreateMeteringPoint);
+        }
+
+        [Fact]
+        public async Task Should_reject_when_building_number_is_missing()
+        {
+            var request = CreateCommand()
+                with
+                {
+                    BuildingNumber = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86", DocumentType.RejectCreateMeteringPoint);
+        }
+
         private static CreateMeteringPoint CreateCommand()
         {
             return Scenarios.CreateCommand(MeteringPointType.Production);

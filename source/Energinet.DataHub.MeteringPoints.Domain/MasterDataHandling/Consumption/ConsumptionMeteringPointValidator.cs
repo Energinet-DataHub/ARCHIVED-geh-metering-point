@@ -31,6 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
                 new CityIsRequiredRule(masterData.Address),
                 new StreetNameIsRequiredRule(masterData.Address),
                 new PostCodeIsRequiredRule(masterData.Address),
+                new StreetCodeIsRequiredRule(masterData.Address),
                 new GeoInfoReferenceRequirementRule(masterData.Address),
                 new MeteringMethodRule(masterData.NetSettlementGroup!, masterData.MeteringConfiguration.Method),
                 new ScheduledMeterReadingDateRule(masterData.ScheduledMeterReadingDate, masterData.NetSettlementGroup!),

@@ -26,6 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exchange
             return new BusinessRulesValidationResult(new List<IBusinessRule>()
             {
                 new StreetNameIsRequiredRule(masterData.Address),
+                new StreetCodeIsRequiredRule(masterData.Address),
                 new GeoInfoReferenceRequirementRule(masterData.Address),
                 new MeterReadingOccurrenceRule(masterData.ReadingOccurrence),
                 new ProductTypeMustBeEnergyActiveRule(masterData.ProductType),
