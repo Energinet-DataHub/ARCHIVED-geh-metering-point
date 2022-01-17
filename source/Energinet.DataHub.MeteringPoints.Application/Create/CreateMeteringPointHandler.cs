@@ -207,7 +207,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                     MeteringPointId.New(),
                     GsrnNumber.Create(request.GsrnNumber),
                     gridArea.DefaultLink.Id,
-                    EffectiveDate.Create(request.EffectiveDate),
                     ExchangeGridAreas.Create(sourceGridArea!.DefaultLink.Id, targetGridArea!.DefaultLink.Id),
                     masterData));
 

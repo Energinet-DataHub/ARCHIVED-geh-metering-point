@@ -105,14 +105,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             GridAreaLinkId gridAreaLinkId,
-            EffectiveDate effectiveDate,
             ExchangeGridAreas exchangeGridAreas,
             MasterData masterData)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
             if (gsrnNumber == null) throw new ArgumentNullException(nameof(gsrnNumber));
             if (gridAreaLinkId == null) throw new ArgumentNullException(nameof(gridAreaLinkId));
-            if (effectiveDate == null) throw new ArgumentNullException(nameof(effectiveDate));
             if (exchangeGridAreas == null) throw new ArgumentNullException(nameof(exchangeGridAreas));
             if (masterData == null) throw new ArgumentNullException(nameof(masterData));
 
