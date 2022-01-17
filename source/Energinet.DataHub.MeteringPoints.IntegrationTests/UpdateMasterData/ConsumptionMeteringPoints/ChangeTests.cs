@@ -42,6 +42,24 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
+        public async Task Metering_configuration_is_changed()
+        {
+            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    MeteringMethod = MeteringMethod.Physical.Name,
+                    MeterId = "123",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertMasterData()
+                .HasMeteringConfiguration(MeteringMethod.Physical, "123");
+        }
+
+        [Fact]
         public async Task Capacity_is_changed()
         {
             await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);

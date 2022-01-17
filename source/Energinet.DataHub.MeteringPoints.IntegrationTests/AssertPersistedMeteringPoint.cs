@@ -16,6 +16,7 @@ using System;
 using Dapper;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
@@ -177,6 +178,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         public AssertPersistedMeteringPoint HasCapacity(int capacityInKw)
         {
             Assert.Equal(capacityInKw, _meteringPoint.Capacity);
+            return this;
+        }
+
+        public AssertPersistedMeteringPoint HasMeteringConfiguration(MeteringMethod meteringMethod, string meterNumber)
+        {
+            Assert.Equal(meteringMethod, EnumerationType.FromName<MeteringMethod>(_meteringPoint.MeteringPointSubType));
+            Assert.Equal(meterNumber, _meteringPoint.MeterNumber);
             return this;
         }
     }
