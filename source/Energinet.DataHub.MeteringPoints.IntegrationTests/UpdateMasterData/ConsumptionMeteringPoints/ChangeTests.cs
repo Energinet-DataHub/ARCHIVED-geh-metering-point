@@ -41,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             _timeProvider = GetService<ISystemDateTimeProvider>();
         }
 
-        [Fact(Skip = "Pending business rule clarification")]
+        [Fact]
         public async Task Product_type_is_changed()
         {
             await InvokeBusinessProcessAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
