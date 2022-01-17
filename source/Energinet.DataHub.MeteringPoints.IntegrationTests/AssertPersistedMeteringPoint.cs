@@ -199,5 +199,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             Assert.Equal(scheduledMeterReadingDate, _meteringPoint.ScheduledMeterReadingDate);
             return this;
         }
+
+        public AssertPersistedMeteringPoint HasConnectionType(ConnectionType connectionType)
+        {
+            Assert.Equal(connectionType, EnumerationType.FromName<ConnectionType>(_meteringPoint.ConnectionType));
+            return this;
+        }
     }
 }
