@@ -42,6 +42,23 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
+        public async Task Asset_type_is_changed()
+        {
+            await InvokeBusinessProcessAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    AssetType = AssetType.Boiler.Name,
+                };
+
+            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+
+            AssertMasterData()
+                .HasAssetType(AssetType.Boiler);
+        }
+
+        [Fact]
         public async Task Unit_type_is_changed()
         {
             await InvokeBusinessProcessAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);

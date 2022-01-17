@@ -107,6 +107,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 .WithMeteringConfiguration(request.MeteringMethod, request.MeterId)
                 .WithProductType(request.ProductType)
                 .WithMeasurementUnitType(request.UnitType)
+                .WithAssetType(request.AssetType)
                 .WithAddress(
                     request.Address?.StreetName,
                     request.Address?.StreetCode,

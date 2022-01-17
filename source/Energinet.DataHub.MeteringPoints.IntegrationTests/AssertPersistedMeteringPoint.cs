@@ -142,5 +142,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             Assert.Equal(measurementUnitType, EnumerationType.FromName<MeasurementUnitType>(_meteringPoint.UnitType));
             return this;
         }
+
+        public AssertPersistedMeteringPoint HasAssetType(AssetType assetType)
+        {
+            Assert.Equal(assetType, EnumerationType.FromName<AssetType>(_meteringPoint.AssetType));
+            return this;
+        }
     }
 }
