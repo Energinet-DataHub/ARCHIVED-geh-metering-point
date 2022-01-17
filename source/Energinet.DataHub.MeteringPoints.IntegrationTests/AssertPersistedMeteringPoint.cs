@@ -154,5 +154,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             Assert.Equal(readingOccurrence, EnumerationType.FromName<ReadingOccurrence>(_meteringPoint.MeterReadingOccurrence));
             return this;
         }
+
+        public AssertPersistedMeteringPoint HasPowerLimit(int? kwh, int? ampere)
+        {
+            Assert.Equal(kwh, _meteringPoint.MaximumPower);
+            Assert.Equal(ampere, _meteringPoint.MaximumCurrent);
+            return this;
+        }
     }
 }

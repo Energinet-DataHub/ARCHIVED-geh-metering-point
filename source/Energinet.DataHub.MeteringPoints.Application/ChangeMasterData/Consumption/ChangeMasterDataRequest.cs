@@ -28,5 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
         string? ProductType = null,
         string? UnitType = null,
         string? AssetType = null,
-        string? ReadingPeriodicity = null) : IChangeMeteringPointRequest;
+        string? ReadingPeriodicity = null,
+        string? MaximumCurrent = null,
+        string? MaximumPower = null) : IChangeMeteringPointRequest;
 }
