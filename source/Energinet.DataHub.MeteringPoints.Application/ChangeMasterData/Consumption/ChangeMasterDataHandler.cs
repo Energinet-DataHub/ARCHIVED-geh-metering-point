@@ -113,6 +113,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 .WithPowerPlant(request.PowerPlantGsrnNumber)
                 .WithCapacity(request.CapacityInKw)
                 .WithSettlementMethod(request.SettlementMethod)
+                .WithScheduledMeterReadingDate(request.ScheduledMeterReadingDate)
                 .WithAddress(
                     request.Address?.StreetName,
                     request.Address?.StreetCode,

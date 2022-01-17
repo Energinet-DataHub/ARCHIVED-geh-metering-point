@@ -193,5 +193,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             Assert.Equal(settlementMethod, EnumerationType.FromName<SettlementMethod>(_meteringPoint.SettlementMethod));
             return this;
         }
+
+        public AssertPersistedMeteringPoint HasScheduledMeterReadingDate(string scheduledMeterReadingDate)
+        {
+            Assert.Equal(scheduledMeterReadingDate, _meteringPoint.ScheduledMeterReadingDate);
+            return this;
+        }
     }
 }
