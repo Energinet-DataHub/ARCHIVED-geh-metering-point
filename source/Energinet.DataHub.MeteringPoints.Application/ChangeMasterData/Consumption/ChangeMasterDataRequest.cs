@@ -31,5 +31,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
         string? ReadingPeriodicity = null,
         string? MaximumCurrent = null,
         string? MaximumPower = null,
-        string? PowerPlantGsrnNumber = null) : IChangeMeteringPointRequest;
+        string? PowerPlantGsrnNumber = null,
+        string? CapacityInKw = null) : IChangeMeteringPointRequest;
 }

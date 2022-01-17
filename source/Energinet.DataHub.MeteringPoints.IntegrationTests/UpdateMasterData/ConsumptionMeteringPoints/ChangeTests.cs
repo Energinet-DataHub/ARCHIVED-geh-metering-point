@@ -42,6 +42,23 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
+        public async Task Capacity_is_changed()
+        {
+            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    CapacityInKw = "1",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertMasterData()
+                .HasCapacity(1);
+        }
+
+        [Fact]
         public async Task Effective_date_is_stored()
         {
             await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);

@@ -173,5 +173,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             Assert.Equal(effectiveDate, EffectiveDate.Create(_meteringPoint.EffectiveDate));
             return this;
         }
+
+        public AssertPersistedMeteringPoint HasCapacity(int capacityInKw)
+        {
+            Assert.Equal(capacityInKw, _meteringPoint.Capacity);
+            return this;
+        }
     }
 }
