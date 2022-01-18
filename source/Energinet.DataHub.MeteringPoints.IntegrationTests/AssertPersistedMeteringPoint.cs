@@ -211,5 +211,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             Assert.Equal(disconnectionType, EnumerationType.FromName<DisconnectionType>(_meteringPoint.DisconnectionType));
             return this;
         }
+
+        public AssertPersistedMeteringPoint HasNetSettlementGroup(NetSettlementGroup netSettlementGroup)
+        {
+            Assert.Equal(netSettlementGroup, EnumerationType.FromName<NetSettlementGroup>(_meteringPoint.NetSettlementGroup));
+            return this;
+        }
     }
 }
