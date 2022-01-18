@@ -30,6 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production
                 new CityIsRequiredRule(masterData.Address),
                 new StreetNameIsRequiredRule(masterData.Address),
                 new StreetCodeIsRequiredRule(masterData.Address),
+                new MunicipalityCodeIsRequiredRule(masterData.Address),
                 new PostCodeIsRequiredRule(masterData.Address),
                 new GeoInfoReferenceRequirementRule(masterData.Address),
                 new MeteringMethodRule(masterData.NetSettlementGroup!, masterData.MeteringConfiguration.Method),

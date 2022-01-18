@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
@@ -32,6 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
                 new StreetNameIsRequiredRule(masterData.Address),
                 new PostCodeIsRequiredRule(masterData.Address),
                 new StreetCodeIsRequiredRule(masterData.Address),
+                new MunicipalityCodeIsRequiredRule(masterData.Address),
                 new GeoInfoReferenceRequirementRule(masterData.Address),
                 new MeteringMethodRule(masterData.NetSettlementGroup!, masterData.MeteringConfiguration.Method),
                 new ScheduledMeterReadingDateRule(masterData.ScheduledMeterReadingDate, masterData.NetSettlementGroup!),

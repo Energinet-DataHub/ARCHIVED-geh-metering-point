@@ -1,4 +1,7 @@
-﻿// you may not use this file except in compliance with the License.
+﻿// Copyright 2020 Energinet DataHub A/S
+//
+// Licensed under the Apache License, Version 2.0 (the "License2");
+// you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //     http://www.apache.org/licenses/LICENSE-2.0
@@ -15,12 +18,12 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Create
 {
-    public class StreetCodeIsRequiredRuleErrorConverter : ErrorConverter<StreetCodeIsRequiredRuleError>
+    public class MunicipalityCodeIsRequiredErrorConverter : ErrorConverter<MunicipalityCodeIsRequiredRuleError>
     {
-        protected override ErrorMessage Convert(StreetCodeIsRequiredRuleError validationError)
+        protected override ErrorMessage Convert(MunicipalityCodeIsRequiredRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-            return new ErrorMessage("E86", "Street Code is required for market metering points");
+            return new ErrorMessage("E86", "Municipality Code is required for market metering points");
         }
     }
 }
