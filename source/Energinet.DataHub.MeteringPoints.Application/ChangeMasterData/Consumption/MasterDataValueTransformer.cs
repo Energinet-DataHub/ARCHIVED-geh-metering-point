@@ -106,7 +106,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 _request.Address.Room,
                 _request.Address.MunicipalityCode,
                 _request.Address.IsActual.GetValueOrDefault(),
-                _request.Address.GeoInfoReference);
+                _request.Address.GeoInfoReference.ToString());
 
             return _targetMeteringPoint.Address.MergeFrom(address);
         }

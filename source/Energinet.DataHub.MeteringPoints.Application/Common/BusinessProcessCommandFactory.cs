@@ -54,7 +54,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
                     document.RoomIdentification,
                     string.IsNullOrWhiteSpace(document.MunicipalityCode) ? null : int.Parse(document.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()),
                     document.IsActualAddress,
-                    document.GeoInfoReference == null ? null : Guid.Parse(document.GeoInfoReference)),
+                    document.GeoInfoReference),
                 MeteringMethod: document.MeteringMethod,
                 MeterNumber: document.MeterNumber,
                 SettlementMethod: document.SettlementMethod,

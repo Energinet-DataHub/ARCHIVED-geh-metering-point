@@ -12,22 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses.Rules
 {
-    public record Address(
-        string? StreetName = null,
-        string? PostCode = null,
-        string? City = null,
-        string? StreetCode = null,
-        string? BuildingNumber = null,
-        string? CitySubDivision = null,
-        string? CountryCode = null,
-        string? Floor = null,
-        string? Room = null,
-        int? MunicipalityCode = null,
-        bool? IsActual = null,
-        string? GeoInfoReference = null,
-        string? LocationDescription = null);
+    public class InvalidGeoInfoReference : ValidationError
+    {
+        public InvalidGeoInfoReference(string? providedValue)
+        {
+            ProvidedValue = providedValue;
+        }
+
+        public string? ProvidedValue { get; }
+    }
 }

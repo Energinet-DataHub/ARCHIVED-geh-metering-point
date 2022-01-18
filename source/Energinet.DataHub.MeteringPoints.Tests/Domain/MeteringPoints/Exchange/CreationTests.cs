@@ -63,7 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
                 gridAreaLinkId,
                 ExchangeGridAreas.Create(sourceGridAreaLinkId, targetGridAreaLinkId),
                 MasterDataBuilderForExchange()
-                .WithAddress(address.StreetName, address.StreetCode, address.BuildingNumber, address.City, address.CitySubDivision, address.PostCode, address.CountryCode, address.Floor, address.Room, address.MunicipalityCode, address.IsActual, address.GeoInfoReference, address.LocationDescription)
+                .WithAddress(address.StreetName, address.StreetCode, address.BuildingNumber, address.City, address.CitySubDivision, address.PostCode, address.CountryCode, address.Floor, address.Room, address.MunicipalityCode, address.IsActual, address.GeoInfoReference.ToString(), address.LocationDescription)
                 .Build());
 
             var createdEvent = meteringPoint.DomainEvents.First(e => e is MeteringPointCreated) as MeteringPointCreated;

@@ -86,12 +86,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             string? room = null,
             int? municipalityCode = null,
             bool? isActual = null,
-            Guid? geoInfoReference = null,
+            string? geoInfoReference = null,
             string? locationDescription = null)
         {
             SetValueIfValid(
                 nameof(MasterData.Address),
-                () => Address.CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, locationDescription),
+                () => Address.CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, locationDescription, geoInfoReference),
                 () => Address.Create(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, isActual, geoInfoReference, locationDescription));
             return this;
         }

@@ -175,7 +175,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                             newAddress.Room,
                             newAddress.MunicipalityCode,
                             newAddress.IsActual,
-                            newAddress.GeoInfoReference,
+                            newAddress.GeoInfoReference.ToString(),
                             newAddress.LocationDescription)
                         .WithAssetType(_masterData.AssetType?.Name)
                         .WithConnectionType(_masterData.ConnectionType?.Name)
@@ -236,7 +236,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                         Address.Room,
                         Address.MunicipalityCode,
                         Address.IsActual,
-                        Address.GeoInfoReference,
+                        Address.GeoInfoReference.ToString(),
                         Address.LocationDescription)
                     .WithAssetType(_masterData.AssetType?.Name)
                     .WithConnectionType(_masterData.ConnectionType?.Name)

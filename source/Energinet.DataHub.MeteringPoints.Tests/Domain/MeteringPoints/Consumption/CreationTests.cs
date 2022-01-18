@@ -57,7 +57,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 room: string.Empty,
                 municipalityCode: null,
                 isActual: isActualAddress,
-                geoInfoReference: Guid.NewGuid());
+                geoInfoReference: Guid.NewGuid().ToString());
             var scheduledMeterReadingDate = ScheduledMeterReadingDate.Create("0101");
             var capacity = Capacity.Create(SampleData.Capacity);
 
@@ -65,7 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 .WithMeasurementUnitType(MeasurementUnitType.KWh.Name)
                 .WithProductType(ProductType.EnergyActive.Name)
                 .WithCapacity(capacity.ToString())
-                .WithAddress(address.StreetName, address.StreetCode, address.BuildingNumber, address.City, address.CitySubDivision, address.PostCode, address.CountryCode, address.Floor, address.Room, address.MunicipalityCode, address.IsActual, address.GeoInfoReference, address.LocationDescription)
+                .WithAddress(address.StreetName, address.StreetCode, address.BuildingNumber, address.City, address.CitySubDivision, address.PostCode, address.CountryCode, address.Floor, address.Room, address.MunicipalityCode, address.IsActual, address.GeoInfoReference.ToString(), address.LocationDescription)
                 .WithNetSettlementGroup(netSettlementGroup.Name)
                 .Build();
             var meteringPoint = MeteringPoint.Create(meteringPointId, meteringPointGsrn, MeteringPointType.Consumption, gridAreaLinkId, masterData);

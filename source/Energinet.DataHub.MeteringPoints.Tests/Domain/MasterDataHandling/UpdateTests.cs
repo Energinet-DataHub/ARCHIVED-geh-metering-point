@@ -928,7 +928,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                     room: "1",
                     municipalityCode: 500,
                     isActual: true,
-                    geoInfoReference: Guid.NewGuid(),
+                    geoInfoReference: Guid.NewGuid().ToString(),
                     locationDescription: "Test location")
                 .Build();
 
@@ -955,7 +955,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                     room: "1",
                     municipalityCode: 500,
                     isActual: true,
-                    geoInfoReference: Guid.NewGuid(),
+                    geoInfoReference: Guid.NewGuid().ToString(),
                     locationDescription: "Test location")
                 .Build();
 
@@ -1305,7 +1305,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                     string.Empty,
                     default,
                     isActual: true,
-                    geoInfoReference: Guid.NewGuid(),
+                    geoInfoReference: Guid.NewGuid().ToString(),
                     null)
                 .WithAssetType(AssetType.GasTurbine.Name)
                 .WithPowerPlant(SampleData.PowerPlant)

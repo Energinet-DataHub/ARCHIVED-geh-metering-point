@@ -60,7 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Productio
                 room: string.Empty,
                 municipalityCode: null,
                 isActual: true,
-                geoInfoReference: Guid.NewGuid(),
+                geoInfoReference: Guid.NewGuid().ToString(),
                 locationDescription: string.Empty);
             var capacity = Capacity.Create(SampleData.Capacity);
 
@@ -72,7 +72,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Productio
                 .EffectiveOn(SampleData.EffectiveDate)
                 .WithDisconnectionType(DisconnectionType.Manual.Name)
                 .WithAssetType(AssetType.GasTurbine.Name)
-                .WithAddress(address.StreetName, address.StreetCode, address.BuildingNumber, address.City, address.CitySubDivision, address.PostCode, address.CountryCode, address.Floor, address.Room, address.MunicipalityCode, address.IsActual, address.GeoInfoReference, address.LocationDescription)
+                .WithAddress(address.StreetName, address.StreetCode, address.BuildingNumber, address.City, address.CitySubDivision, address.PostCode, address.CountryCode, address.Floor, address.Room, address.MunicipalityCode, address.IsActual, address.GeoInfoReference.ToString(), address.LocationDescription)
                 .WithCapacity("1.2")
                 .Build();
 

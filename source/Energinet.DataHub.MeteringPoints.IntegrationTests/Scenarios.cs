@@ -40,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 SampleData.RoomIdentification,
                 int.Parse(SampleData.MunicipalityCode, NumberStyles.Any, new NumberFormatInfo()),
                 SampleData.IsActualAddress,
-                Guid.Parse(SampleData.GeoInfoReference));
+                SampleData.GeoInfoReference);
         }
 
         internal static CreateMeteringPoint CreateConsumptionMeteringPointCommand()

@@ -130,7 +130,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                     request.RoomIdentification,
                     string.IsNullOrWhiteSpace(request.MunicipalityCode) ? default : int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()),
                     request.IsActualAddress,
-                    string.IsNullOrWhiteSpace(request.GeoInfoReference) ? default : Guid.Parse(request.GeoInfoReference),
+                    request.GeoInfoReference,
                     request.LocationDescription);
             return masterDataBuilder;
         }
