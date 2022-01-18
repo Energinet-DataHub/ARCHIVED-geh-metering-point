@@ -57,7 +57,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
             string? PhysicalConnectionCapacity = null,
             string? GeoInfoReference = null,
             string MeasureUnitType = "",
-            string? ScheduledMeterReadingDate = "")
+            string? ScheduledMeterReadingDate = "",
+            bool? ProductionObligation = null)
         : IInternalMarketDocument,
             IOutboundMessage,
             IInboundMessage,
