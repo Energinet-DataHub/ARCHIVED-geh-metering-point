@@ -110,7 +110,21 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithReadingPeriodicity(string? readingPeriodicity)
         {
-            SetValue(nameof(MasterData.ReadingOccurrence),  readingPeriodicity is null ? null : EnumerationType.FromName<ReadingOccurrence>(readingPeriodicity));
+            //if (readingPeriodicity?.Length == 0) SetValue<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence), null);
+            if (readingPeriodicity?.Length > 0)
+            {
+                SetValueIfValid(
+                    nameof(MasterData.ReadingOccurrence),
+                    () =>
+                    {
+                        return EnumerationType.GetAll<ReadingOccurrence>()
+                            .Select(item => item.Name)
+                            .Contains(readingPeriodicity) == false ? BusinessRulesValidationResult
+                            .Failure(new InvalidReadingPeriodicityType(readingPeriodicity)) : BusinessRulesValidationResult.Valid();
+                    },
+                    () => EnumerationType.FromName<ReadingOccurrence>(readingPeriodicity!));
+            }
+
             return this;
         }
 
