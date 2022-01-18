@@ -26,11 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
             When(message => message.ProcessType.Equals(BusinessProcessType.CreateMeteringPoint.Name, StringComparison.OrdinalIgnoreCase), () =>
             {
                 RuleFor(request => request).SetValidator(new MeteringGridAreaValidRule());
-                RuleFor(request => request.ProductType).SetValidator(new ProductTypeRule());
-                RuleFor(request => request).SetValidator(new MeterReadingOccurenceRule());
-                RuleFor(request => request).SetValidator(new ActualAddressRule());
                 RuleFor(request => request).SetValidator(new PhysicalStateRule());
-                RuleFor(request => request).SetValidator(new MeasureUnitTypeRule());
             });
 
             RuleFor(request => request.TransactionId).SetValidator(new TransactionIdentificationRule());
