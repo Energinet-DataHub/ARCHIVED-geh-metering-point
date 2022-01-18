@@ -266,7 +266,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         [Fact]
         public async Task Asset_type_is_changed()
         {
-            await InvokeBusinessProcessAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
+            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
 
             var request = CreateUpdateRequest()
                 with
@@ -274,7 +274,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
                     AssetType = AssetType.Boiler.Name,
                 };
 
-            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertMasterData()
                 .HasAssetType(AssetType.Boiler);
@@ -283,7 +283,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         [Fact]
         public async Task Unit_type_is_changed()
         {
-            await InvokeBusinessProcessAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
+            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
 
             var request = CreateUpdateRequest()
                 with
@@ -291,7 +291,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
                     UnitType = MeasurementUnitType.Ampere.Name,
                 };
 
-            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertMasterData()
                 .HasUnitType(MeasurementUnitType.Ampere);
@@ -300,14 +300,14 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         [Fact]
         public async Task Product_type_is_changed()
         {
-            await InvokeBusinessProcessAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
+            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
 
             var request = CreateUpdateRequest()
                 with
                 {
                     ProductType = ProductType.Tariff.Name,
                 };
-            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertMasterData()
                 .HasProductType(ProductType.Tariff);
@@ -336,7 +336,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
                         GeoInfoReference: Guid.NewGuid()),
                 };
 
-            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertConfirmMessage(DocumentType.ConfirmChangeMasterData);
             AssertMasterData()
@@ -357,7 +357,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         [Fact]
         public async Task Transaction_id_is_required()
         {
-            await InvokeBusinessProcessAsync(TestUtils.CreateRequest()
+            await SendCommandAsync(TestUtils.CreateRequest()
                 with
                 {
                     TransactionId = string.Empty,
@@ -369,7 +369,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         [Fact]
         public async Task Metering_point_must_exist()
         {
-            await InvokeBusinessProcessAsync(TestUtils.CreateRequest()).ConfigureAwait(false);
+            await SendCommandAsync(TestUtils.CreateRequest()).ConfigureAwait(false);
 
             AssertValidationError("E10");
         }
@@ -379,7 +379,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         [InlineData("")]
         public async Task Gsrn_number_is_required(string gsrnNumber)
         {
-            await InvokeBusinessProcessAsync(TestUtils.CreateRequest()
+            await SendCommandAsync(TestUtils.CreateRequest()
                 with
                 {
                     GsrnNumber = gsrnNumber,
@@ -391,7 +391,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         [Fact]
         public async Task Effective_date_is_required()
         {
-            await InvokeBusinessProcessAsync(TestUtils.CreateRequest()
+            await SendCommandAsync(TestUtils.CreateRequest()
                 with
                 {
                     EffectiveDate = string.Empty,
@@ -412,7 +412,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
 
             await CreateMeteringPointAsync().ConfigureAwait(false);
 
-            await InvokeBusinessProcessAsync(TestUtils.CreateRequest()
+            await SendCommandAsync(TestUtils.CreateRequest()
                 with
                 {
                     EffectiveDate = effectiveDate,
@@ -427,7 +427,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             await CreateMeteringPointAsync().ConfigureAwait(false);
 
             SetGridOperatorAsAuthenticatedUser("820000000140x"); // This is not the owner of this metering point
-            await InvokeBusinessProcessAsync(TestUtils.CreateRequest()).ConfigureAwait(false);
+            await SendCommandAsync(TestUtils.CreateRequest()).ConfigureAwait(false);
 
             AssertValidationError("E10");
         }
@@ -445,7 +445,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
                 {
                     MeterNumber = string.Empty,
                 };
-            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError("D31");
         }
@@ -461,14 +461,14 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
                 {
                     MeterNumber = "1",
                 };
-            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError("D16");
         }
 
-        private Task<BusinessProcessResult> CreateMeteringPointAsync()
+        private Task CreateMeteringPointAsync()
         {
-            return InvokeBusinessProcessAsync(Scenarios.CreateConsumptionMeteringPointCommand());
+            return SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand());
         }
 
         private async Task CreatePhysicalConsumptionMeteringPoint()
@@ -482,7 +482,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
                     ConnectionType = null,
                     ScheduledMeterReadingDate = null,
                 };
-            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
         }
 
         private async Task CreateConsumptionMeteringPointInNetSettlementGroup6()
@@ -496,7 +496,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
                     ConnectionType = ConnectionType.Installation.Name,
                     ScheduledMeterReadingDate = "0101",
                 };
-            await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
+            await SendCommandAsync(request).ConfigureAwait(false);
         }
 
         private EffectiveDate CreateEffectiveDateAsOfToday()
