@@ -98,7 +98,19 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithMeasurementUnitType(string? measurementUnitType)
         {
-            SetValue(nameof(MasterData.UnitType), measurementUnitType is null ? null : EnumerationType.FromName<MeasurementUnitType>(measurementUnitType!));
+            if (measurementUnitType?.Length > 0)
+            {
+                SetValueIfValid(
+                    nameof(MasterData.UnitType),
+                    () =>
+                    {
+                        return EnumerationType.GetAll<MeasurementUnitType>()
+                            .Select(item => item.Name)
+                            .Contains(measurementUnitType) == false ? BusinessRulesValidationResult.Failure(new InvalidUnitTypeValue(measurementUnitType)) : BusinessRulesValidationResult.Valid();
+                    },
+                    () => EnumerationType.FromName<MeasurementUnitType>(measurementUnitType));
+            }
+
             return this;
         }
 
@@ -110,7 +122,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithReadingPeriodicity(string? readingPeriodicity)
         {
-            //if (readingPeriodicity?.Length == 0) SetValue<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence), null);
             if (readingPeriodicity?.Length > 0)
             {
                 SetValueIfValid(
