@@ -13,9 +13,11 @@
 // limitations under the License.
 
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
@@ -27,6 +29,7 @@ using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
+using MasterDataDocument = Energinet.DataHub.MeteringPoints.Application.MarketDocuments.MasterDataDocument;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.ConsumptionMeteringPoints
 {
@@ -49,7 +52,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             var request = CreateUpdateRequest()
                 with
                 {
-                    ProductionObligation = true,
+                     ProductionObligation = true,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
@@ -181,7 +184,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             var request = CreateUpdateRequest()
                 with
                 {
-                    CapacityInKw = "1",
+                    PhysicalConnectionCapacity = "1",
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
@@ -198,7 +201,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             var request = CreateUpdateRequest()
                 with
                 {
-                    PowerPlantGsrnNumber = SampleData.PowerPlantGsrnNumber,
+                    PowerPlant = SampleData.PowerPlantGsrnNumber,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
@@ -215,7 +218,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             var request = CreateUpdateRequest()
                 with
                 {
-                    PowerPlantGsrnNumber = SampleData.PowerPlantGsrnNumber,
+                    PowerPlant = SampleData.PowerPlantGsrnNumber,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
@@ -254,7 +257,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             var request = CreateUpdateRequest()
                 with
                 {
-                    ReadingPeriodicity = ReadingOccurrence.Monthly.Name,
+                    MeterReadingOccurrence = ReadingOccurrence.Monthly.Name,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
@@ -288,7 +291,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             var request = CreateUpdateRequest()
                 with
                 {
-                    UnitType = MeasurementUnitType.Ampere.Name,
+                    MeasureUnitType = MeasurementUnitType.Ampere.Name,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
@@ -321,37 +324,36 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             var request = CreateUpdateRequest()
                 with
                 {
-                    Address = new Application.Address(
-                        StreetName: "New Street Name",
-                        PostCode: "6000",
-                        City: "New City Name",
-                        StreetCode: "0500",
-                        BuildingNumber: "4",
-                        CitySubDivision: "New",
-                        CountryCode: CountryCode.DK.Name,
-                        Floor: "9",
-                        Room: "9",
-                        MunicipalityCode: 999,
-                        IsActual: true,
-                        GeoInfoReference: Guid.NewGuid()),
+                    StreetName = "New Street Name",
+                        PostCode = "6000",
+                        CityName = "New City Name",
+                        StreetCode = "0500",
+                        BuildingNumber = "4",
+                        CitySubDivisionName = "New",
+                        CountryCode = CountryCode.DK.Name,
+                        FloorIdentification = "9",
+                        RoomIdentification = "9",
+                        MunicipalityCode = "999",
+                        IsActualAddress = true,
+                        GeoInfoReference = Guid.NewGuid().ToString(),
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertConfirmMessage(DocumentType.ConfirmChangeMasterData);
             AssertMasterData()
-                .HasStreetName(request.Address.StreetName)
-                .HasPostCode(request.Address.PostCode)
-                .HasCity(request.Address.City)
-                .HasStreetCode(request.Address.StreetCode)
-                .HasBuildingNumber(request.Address.BuildingNumber)
-                .HasCitySubDivision(request.Address.CitySubDivision)
+                .HasStreetName(request.StreetName)
+                .HasPostCode(request.PostCode)
+                .HasCity(request.CityName)
+                .HasStreetCode(request.StreetCode)
+                .HasBuildingNumber(request.BuildingNumber)
+                .HasCitySubDivision(request.CitySubDivisionName)
                 .HasCountryCode(CountryCode.DK)
-                .HasFloor(request.Address.Floor)
-                .HasRoom(request.Address.Room)
-                .HasMunicipalityCode(request.Address.MunicipalityCode)
-                .HasIsActualAddress(request.Address.IsActual)
-                .HasGeoInfoReference(request.Address.GeoInfoReference);
+                .HasFloor(request.FloorIdentification)
+                .HasRoom(request.RoomIdentification)
+                .HasMunicipalityCode(int.Parse(request.MunicipalityCode, CultureInfo.InvariantCulture))
+                .HasIsActualAddress(request.IsActualAddress)
+                .HasGeoInfoReference(Guid.Parse(request.GeoInfoReference));
         }
 
         [Fact]
@@ -505,7 +507,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             return EffectiveDate.Create(new DateTime(today.Year, today.Month, today.Day, 22, 0, 0));
         }
 
-        private ChangeMasterDataRequest CreateUpdateRequest()
+        private MasterDataDocument CreateUpdateRequest()
         {
             return TestUtils.CreateRequest()
                 with
