@@ -104,7 +104,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
 
             masterDataUpdater
                 .EffectiveOn(request.EffectiveDate)
-                .WithMeteringConfiguration(request.MeteringMethod, request.MeterId)
+                .WithMeteringConfiguration(request.MeteringMethod, request.MeterNumber)
                 .WithProductType(request.ProductType)
                 .WithMeasurementUnitType(request.UnitType)
                 .WithAssetType(request.AssetType)

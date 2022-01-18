@@ -164,7 +164,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
                 with
                 {
                     MeteringMethod = MeteringMethod.Physical.Name,
-                    MeterId = "123",
+                    MeterNumber = "123",
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
@@ -443,7 +443,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             var request = TestUtils.CreateRequest()
                 with
                 {
-                    MeterId = string.Empty,
+                    MeterNumber = string.Empty,
                 };
             await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
 
@@ -459,7 +459,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             var request = CreateUpdateRequest()
                 with
                 {
-                    MeterId = "1",
+                    MeterNumber = "1",
                 };
             await InvokeBusinessProcessAsync(request).ConfigureAwait(false);
 
