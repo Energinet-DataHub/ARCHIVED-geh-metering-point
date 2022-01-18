@@ -80,7 +80,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.
             string? geoInfoReference = null,
             string? locationDescription = null)
         {
-            var result = CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, locationDescription, geoInfoReference);
+            var result = CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, locationDescription, geoInfoReference, isActual);
             if (result.Success == false)
             {
                 throw new InvalidAddressException(result.Errors);
@@ -102,7 +102,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.
                 locationDescription: locationDescription);
         }
 
-        public static BusinessRulesValidationResult CheckRules(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode, string? locationDescription, string? geoInfoReference)
+        #pragma warning disable
+        public static BusinessRulesValidationResult CheckRules(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode, string? locationDescription, string? geoInfoReference, bool? isActualAddress)
         {
             return new(new Collection<IBusinessRule>()
             {
@@ -117,6 +118,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.
                 new MunicipalityCodeRule(municipalityCode),
                 new LocationDescriptionLengthRule(locationDescription),
                 new GeoInfoReferenceFormatRule(geoInfoReference),
+                new ActualAddressRequirementRule(geoInfoReference, isActualAddress),
             });
         }
 

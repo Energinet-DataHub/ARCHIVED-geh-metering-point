@@ -134,7 +134,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         {
             SetValueIfValid(
                 nameof(MasterData.Address),
-                () => Address.CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, locationDescription, geoInfoReference),
+                () => Address.CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, locationDescription, geoInfoReference, isActual),
                 () =>
                 {
                     var currentAddress = GetValue<Address>(nameof(MasterData.Address));

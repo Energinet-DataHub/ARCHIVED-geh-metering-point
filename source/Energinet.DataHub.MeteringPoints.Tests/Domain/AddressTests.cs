@@ -14,14 +14,9 @@
 
 using System;
 using System.Linq;
-using System.Text;
-using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using Microsoft.Diagnostics.Tracing.Parsers.MicrosoftWindowsTCPIP;
 using Xunit;
 using Xunit.Categories;
 
@@ -30,6 +25,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
     [UnitTest]
     public class AddressTests
     {
+        [Fact]
+        public void Actual_address_must_be_set_when_geo_info_reference_is_set()
+        {
+            var result = CheckRules(geoInfoReference: Guid.NewGuid().ToString(), isActualAddress: null);
+
+            AssertError<ActualAddressIsRequired>(result, true);
+        }
+
         [Theory]
         [InlineData("invalid", true)]
         [InlineData("{25F02B43-317A-40B1-8B4E-4E863676A699}", false)]
@@ -380,7 +383,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                locationDescription: locationDescription);
         }
 
-        private static BusinessRulesValidationResult CheckRules(string? streetName = "", string? streetCode = "", string? buildingNumber = "", string? city = "", string? citySubDivision = "", string? postCode = "", CountryCode? countryCode = null, string? floor = "", string room = "", int municipalityCode = default(int), string locationDescription = "", string geoInfoReference = "")
+        private static BusinessRulesValidationResult CheckRules(string? streetName = "", string? streetCode = "", string? buildingNumber = "", string? city = "", string? citySubDivision = "", string? postCode = "", CountryCode? countryCode = null, string? floor = "", string room = "", int municipalityCode = default(int), string locationDescription = "", string geoInfoReference = "", bool? isActualAddress = null)
         {
             return Address.CheckRules(
                 streetName: streetName,
@@ -394,7 +397,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 room: room,
                 municipalityCode: municipalityCode,
                 locationDescription: locationDescription,
-                geoInfoReference: geoInfoReference);
+                geoInfoReference: geoInfoReference,
+                isActualAddress: isActualAddress);
         }
 
         private static void AssertError<TRuleError>(BusinessRulesValidationResult rulesValidationResult, bool errorExpected)
