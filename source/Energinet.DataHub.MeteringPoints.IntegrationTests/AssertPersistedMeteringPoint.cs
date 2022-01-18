@@ -205,5 +205,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             Assert.Equal(connectionType, EnumerationType.FromName<ConnectionType>(_meteringPoint.ConnectionType));
             return this;
         }
+
+        public AssertPersistedMeteringPoint HasDisconnectionType(DisconnectionType disconnectionType)
+        {
+            Assert.Equal(disconnectionType, EnumerationType.FromName<DisconnectionType>(_meteringPoint.DisconnectionType));
+            return this;
+        }
     }
 }

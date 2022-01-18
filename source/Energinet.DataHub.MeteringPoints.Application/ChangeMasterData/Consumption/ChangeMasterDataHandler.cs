@@ -115,6 +115,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 .WithSettlementMethod(request.SettlementMethod)
                 .WithScheduledMeterReadingDate(request.ScheduledMeterReadingDate)
                 .WithConnectionType(request.ConnectionType)
+                .WithDisconnectionType(request.DisconnectionType)
                 .WithAddress(
                     request.Address?.StreetName,
                     request.Address?.StreetCode,
