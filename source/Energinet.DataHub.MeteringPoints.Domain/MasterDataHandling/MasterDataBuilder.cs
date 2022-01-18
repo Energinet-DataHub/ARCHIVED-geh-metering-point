@@ -122,6 +122,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithReadingPeriodicity(string? readingPeriodicity)
         {
+            if (readingPeriodicity?.Length == 0) SetValue<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence), null);
             if (readingPeriodicity?.Length > 0)
             {
                 SetValueIfValid(
@@ -215,7 +216,19 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithProductType(string? productType)
         {
-            SetValue(nameof(MasterData.ProductType),  productType is null ? null : EnumerationType.FromName<ProductType>(productType));
+            if (productType?.Length > 0)
+            {
+                SetValueIfValid(
+                    nameof(MasterData.ProductType),
+                    () =>
+                    {
+                        return EnumerationType.GetAll<ProductType>()
+                            .Select(item => item.Name)
+                            .Contains(productType) == false ? BusinessRulesValidationResult.Failure(new InvalidProductTypeValue(productType)) : BusinessRulesValidationResult.Valid();
+                    },
+                    () => EnumerationType.FromName<ProductType>(productType));
+            }
+
             return this;
         }
 

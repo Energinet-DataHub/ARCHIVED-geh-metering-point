@@ -1199,7 +1199,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithProductType("invalid value")
                 .Validate();
 
-            AssertContainsValidationError<InvalidProductType>(validationResult);
+            AssertContainsValidationError<InvalidProductTypeValue>(validationResult);
         }
 
         [Fact]
