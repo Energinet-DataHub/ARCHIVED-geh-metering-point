@@ -41,57 +41,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         }
 
         [Fact]
-        public async Task Metering_method_is_changed_from_physical_to_virtual()
-        {
-            await CreatePhysicalConsumptionMeteringPoint().ConfigureAwait(false);
-            var message = new MasterDataDocument()
-                with
-                {
-                    EffectiveDate = _timeProvider.Now().ToString(),
-                    TransactionId = SampleData.Transaction,
-                    GsrnNumber = SampleData.GsrnNumber,
-                    ProcessType = BusinessProcessType.ChangeMasterData.Name,
-                    MeteringMethod = MeteringMethod.Virtual.Name,
-                };
-
-            await SendCommandAsync(message).ConfigureAwait(false);
-
-            AssertConfirmMessage(DocumentType.ConfirmChangeMasterData);
-            var integrationEvent = FindIntegrationEvent<MeteringConfigurationChangedIntegrationEvent>();
-            Assert.NotNull(integrationEvent);
-            Assert.NotEmpty(integrationEvent?.MeteringPointId);
-            Assert.Equal(SampleData.GsrnNumber, integrationEvent?.GsrnNumber);
-            Assert.Equal(MeteringMethod.Virtual.Name, integrationEvent?.Method);
-            Assert.Empty(integrationEvent!.Meter);
-        }
-
-        [Fact]
-        public async Task Metering_method_is_changed_from_virtual_to_physical()
-        {
-            await CreateVirtualConsumptionMeteringPoint().ConfigureAwait(false);
-            var message = new MasterDataDocument()
-                with
-                {
-                    EffectiveDate = _timeProvider.Now().ToString(),
-                    TransactionId = SampleData.Transaction,
-                    GsrnNumber = SampleData.GsrnNumber,
-                    ProcessType = BusinessProcessType.ChangeMasterData.Name,
-                    MeteringMethod = MeteringMethod.Physical.Name,
-                    MeterNumber = "000001",
-                };
-
-            await SendCommandAsync(message).ConfigureAwait(false);
-
-            AssertConfirmMessage(DocumentType.ConfirmChangeMasterData);
-            var integrationEvent = FindIntegrationEvent<MeteringConfigurationChangedIntegrationEvent>();
-            Assert.NotNull(integrationEvent);
-            Assert.NotEmpty(integrationEvent?.MeteringPointId);
-            Assert.Equal(SampleData.GsrnNumber, integrationEvent?.GsrnNumber);
-            Assert.Equal(MeteringMethod.Physical.Name, integrationEvent?.Method);
-            Assert.Equal(message.MeterNumber, integrationEvent?.Meter);
-        }
-
-        [Fact]
         public async Task Meter_is_required_when_changing_method_to_physical()
         {
             await CreateVirtualConsumptionMeteringPoint().ConfigureAwait(false);
@@ -109,31 +58,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
             await SendCommandAsync(message).ConfigureAwait(false);
 
             AssertValidationError("D31");
-        }
-
-        [Fact]
-        public async Task Meter_is_changed()
-        {
-            await CreatePhysicalConsumptionMeteringPoint().ConfigureAwait(false);
-            var message = new MasterDataDocument()
-                with
-                {
-                    EffectiveDate = _timeProvider.Now().ToString(),
-                    TransactionId = SampleData.Transaction,
-                    GsrnNumber = SampleData.GsrnNumber,
-                    ProcessType = BusinessProcessType.ChangeMasterData.Name,
-                    MeterNumber = "000002",
-                };
-
-            await SendCommandAsync(message).ConfigureAwait(false);
-
-            AssertConfirmMessage(DocumentType.ConfirmChangeMasterData);
-            var integrationEvent = FindIntegrationEvent<MeteringConfigurationChangedIntegrationEvent>();
-            Assert.NotNull(integrationEvent);
-            Assert.NotEmpty(integrationEvent?.MeteringPointId);
-            Assert.Equal(SampleData.GsrnNumber, integrationEvent?.GsrnNumber);
-            Assert.Equal(MeteringMethod.Physical.Name, integrationEvent?.Method);
-            Assert.Equal(message.MeterNumber, integrationEvent?.Meter);
         }
 
         private async Task CreatePhysicalConsumptionMeteringPoint()
