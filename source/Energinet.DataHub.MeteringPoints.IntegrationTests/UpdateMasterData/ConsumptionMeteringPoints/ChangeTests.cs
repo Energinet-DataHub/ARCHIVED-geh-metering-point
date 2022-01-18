@@ -229,8 +229,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         {
             await SendCommandAsync(Scenarios.CreateVEProduction() with
             {
-                MaximumCurrent = 1,
-                MaximumPower = 1,
+                MaximumCurrent = "1",
+                MaximumPower = "1",
             }).ConfigureAwait(false);
 
             var request = CreateUpdateRequest()

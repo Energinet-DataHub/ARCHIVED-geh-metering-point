@@ -66,7 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
 
             command.TypeOfMeteringPoint.Should().Be(nameof(MeteringPointType.Consumption));
             command.GsrnNumber.Should().Be("579999993331812345");
-            command.MaximumPower.Should().Be(230);
+            command.MaximumPower.Should().Be("230");
             command.MeasureUnitType.ToUpperInvariant().Should().Be(nameof(MeasurementUnitType.KWh).ToUpperInvariant());
             command.PowerPlant.Should().Be("579999993331812327");
             command.SettlementMethod.Should().Be(nameof(SettlementMethod.NonProfiled));
@@ -84,7 +84,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.CreateMeteringPoint
             command.EffectiveDate.Should().Be("2021-12-17T23:00:00Z");
             command.MeteringGridArea.Should().Be("244");
             command.NetSettlementGroup.Should().Be("Six");
-            command.MaximumCurrent.Should().Be(32);
+            command.MaximumCurrent.Should().Be("32");
             command.TransactionId.Should().Be("25361487");
             command.PostCode.Should().Be("5500");
             command.StreetName.Should().Be("Vestergade");

@@ -40,8 +40,8 @@ message MasterDataDocument {
   string typeOfMeteringPoint = 2;
   google.protobuf.StringValue subTypeOfMeteringPoint = 3;
   string meterReadingOccurrence = 4;
-  google.protobuf.Int32Value maximumCurrent = 5;
-  google.protobuf.Int32Value maximumPower = 6;
+  google.protobuf.StringValue maximumCurrent = 5;
+  google.protobuf.StringValue maximumPower = 6;
   string meteringGridArea = 7;
   google.protobuf.StringValue powerPlant = 8;
   google.protobuf.StringValue locationDescription = 9;

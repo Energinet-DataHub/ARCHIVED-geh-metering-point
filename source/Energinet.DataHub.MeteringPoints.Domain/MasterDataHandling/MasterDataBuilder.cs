@@ -124,12 +124,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithPowerLimit(string? kwh, string? ampere)
         {
-            var updatedKwh = ConvertToNullableString(kwh, GetValue<PowerLimit>(nameof(MasterData.PowerLimit)).Kwh);
-            var updatedAmpere = ConvertToNullableString(ampere, GetValue<PowerLimit>(nameof(MasterData.PowerLimit)).Ampere);
             SetValueIfValid(
                 nameof(MasterData.PowerLimit),
-                () => PowerLimit.CheckRules(updatedKwh, updatedAmpere),
-                () => PowerLimit.Create(updatedKwh, updatedAmpere));
+                () => PowerLimit.CheckRules(kwh, ampere),
+                () => PowerLimit.Create(kwh, ampere));
             return this;
         }
 
@@ -220,13 +218,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             AddValidationErrorIfRequiredFieldIsMissing<SettlementMethod>(nameof(MasterData.SettlementMethod), new SettlementMethodIsRequired());
 
             return new BusinessRulesValidationResult(_validationErrors);
-        }
-
-        private static string? ConvertToNullableString(string? updatedValue, int? currentValue)
-        {
-            if (updatedValue is null) return currentValue.ToString();
-            if (updatedValue.Length == 0) return null;
-            return updatedValue;
         }
 
         private void AddValidationErrorIfRequiredFieldIsMissing<T>(string valueName, ValidationError validationError)
