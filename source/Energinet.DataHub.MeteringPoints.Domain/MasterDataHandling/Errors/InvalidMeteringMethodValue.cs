@@ -14,9 +14,15 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
-    public class AssetTypeIsRequiredRuleError : ValidationError
+    public class InvalidMeteringMethodValue : ValidationError
     {
+        public InvalidMeteringMethodValue(string providedValue)
+        {
+            ProvidedValue = providedValue;
+        }
+
+        public string ProvidedValue { get; }
     }
 }

@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -20,7 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components
 {
     public class PowerLimit : ValueObject
     {
-        public PowerLimit(int? kwh, int? ampere)
+        private PowerLimit(int? kwh, int? ampere)
         {
             Kwh = kwh;
             Ampere = ampere;
@@ -32,12 +34,21 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components
 
         public static PowerLimit Create(int? kwh, int? ampere)
         {
-            if (!CheckRules(kwh, ampere).Success)
+            var kwhAsString = ConvertNullableInt(kwh);
+            var ampereAsString = ConvertNullableInt(ampere);
+            return Create(kwhAsString, ampereAsString);
+        }
+
+        public static PowerLimit Create(string? kwh, string? ampere)
+        {
+            var kwhAsInt = ConvertNullableString(kwh);
+            var ampereAsInt = ConvertNullableString(ampere);
+            if (!CheckRules(kwhAsInt, ampereAsInt).Success)
             {
                 throw new InvalidPowerLimitException();
             }
 
-            return new PowerLimit(kwh, ampere);
+            return new PowerLimit(kwhAsInt, ampereAsInt);
         }
 
         public static BusinessRulesValidationResult CheckRules(int? kwh, int? ampere)
@@ -49,6 +60,25 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components
            };
 
            return new BusinessRulesValidationResult(rules);
+        }
+
+        public static BusinessRulesValidationResult CheckRules(string? kwh, string? ampere)
+        {
+            var kwhAsInt = ConvertNullableString(kwh);
+            var ampereAsInt = ConvertNullableString(ampere);
+            return CheckRules(kwhAsInt, ampereAsInt);
+        }
+
+        private static string? ConvertNullableInt(int? input)
+        {
+            if (input is null) return null;
+            return Convert.ToString(input, CultureInfo.InvariantCulture);
+        }
+
+        private static int? ConvertNullableString(string? input)
+        {
+            if (input is null) return null;
+            return Convert.ToInt32(input, CultureInfo.InvariantCulture);
         }
     }
 }

@@ -54,5 +54,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components
 
             return new BusinessRulesValidationResult(rules);
         }
+
+        public override string ToString()
+        {
+            return Kw.ToString(CultureInfo.InvariantCulture);
+        }
     }
 }

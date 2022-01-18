@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
-    public class MasterDataField
+    public class InvalidSettlementMethod : ValidationError
     {
-        public MasterDataField(string name, Applicability applicability)
+        public InvalidSettlementMethod(string providedValue)
         {
-            Name = name;
-            Applicability = applicability;
+            ProvidedValue = providedValue;
         }
 
-        public string Name { get; }
-
-        public Applicability Applicability { get; }
+        public string ProvidedValue { get; }
     }
 }

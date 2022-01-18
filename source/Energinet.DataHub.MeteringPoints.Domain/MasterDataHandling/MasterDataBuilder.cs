@@ -35,6 +35,27 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         {
         }
 
+        public MasterData Build()
+        {
+            return new MasterData(
+                productType: GetValue<ProductType>(nameof(MasterData.ProductType)),
+                unitType: GetValue<MeasurementUnitType>(nameof(MasterData.UnitType)),
+                assetType: GetValue<AssetType>(nameof(MasterData.AssetType)),
+                readingOccurrence: GetValue<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence)),
+                powerLimit: GetValue<PowerLimit>(nameof(MasterData.PowerLimit)),
+                powerPlantGsrnNumber: GetValue<GsrnNumber>(nameof(MasterData.PowerPlantGsrnNumber)),
+                effectiveDate: GetValue<EffectiveDate>(nameof(MasterData.EffectiveDate)),
+                capacity: GetValue<Capacity>(nameof(MasterData.Capacity)),
+                address: GetValue<Address>(nameof(MasterData.Address)),
+                meteringConfiguration: GetValue<MeteringConfiguration>(nameof(MasterData.MeteringConfiguration)),
+                settlementMethod: GetValue<SettlementMethod>(nameof(MasterData.SettlementMethod)),
+                scheduledMeterReadingDate: GetValue<ScheduledMeterReadingDate>(nameof(MasterData.ScheduledMeterReadingDate)),
+                connectionType: GetValue<ConnectionType>(nameof(MasterData.ConnectionType)),
+                disconnectionType: GetValue<DisconnectionType>(nameof(MasterData.DisconnectionType)),
+                netSettlementGroup: GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)),
+                productionObligation: GetValue<bool?>(nameof(MasterData.ProductionObligation)));
+        }
+
         public IMasterDataBuilder WithNetSettlementGroup(string? netSettlementGroup)
         {
             SetValue(nameof(MasterData.NetSettlementGroup), string.IsNullOrEmpty(netSettlementGroup) ? null : EnumerationType.FromName<NetSettlementGroup>(netSettlementGroup));
@@ -101,6 +122,17 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
+        public IMasterDataBuilder WithPowerLimit(string? kwh, string? ampere)
+        {
+            var updatedKwh = ConvertToNullableString(kwh, GetValue<PowerLimit>(nameof(MasterData.PowerLimit)).Kwh);
+            var updatedAmpere = ConvertToNullableString(ampere, GetValue<PowerLimit>(nameof(MasterData.PowerLimit)).Ampere);
+            SetValueIfValid(
+                nameof(MasterData.PowerLimit),
+                () => PowerLimit.CheckRules(updatedKwh, updatedAmpere),
+                () => PowerLimit.Create(updatedKwh, updatedAmpere));
+            return this;
+        }
+
         public IMasterDataBuilder WithSettlementMethod(string? settlementMethod)
         {
             if (string.IsNullOrEmpty(settlementMethod))
@@ -146,9 +178,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public IMasterDataBuilder WithCapacity(double? capacity)
+        public IMasterDataBuilder WithCapacity(string? capacity)
         {
-            SetValue(nameof(MasterData.Capacity), capacity is null ? null : Capacity.Create(capacity.Value));
+            SetValue(nameof(MasterData.Capacity), capacity is null ? null : Capacity.Create(capacity));
             return this;
         }
 
@@ -188,6 +220,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             AddValidationErrorIfRequiredFieldIsMissing<SettlementMethod>(nameof(MasterData.SettlementMethod), new SettlementMethodIsRequired());
 
             return new BusinessRulesValidationResult(_validationErrors);
+        }
+
+        private static string? ConvertToNullableString(string? updatedValue, int? currentValue)
+        {
+            if (updatedValue is null) return currentValue.ToString();
+            if (updatedValue.Length == 0) return null;
+            return updatedValue;
         }
 
         private void AddValidationErrorIfRequiredFieldIsMissing<T>(string valueName, ValidationError validationError)
