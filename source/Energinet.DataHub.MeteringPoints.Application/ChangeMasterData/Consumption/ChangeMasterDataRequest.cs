@@ -35,5 +35,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
         string? CapacityInKw = null,
         string? ScheduledMeterReadingDate = null,
         string? DisconnectionType = null,
-        string? NetSettlementGroup = null) : IChangeMeteringPointRequest;
+        string? NetSettlementGroup = null,
+        bool? ProductionObligation = null) : IChangeMeteringPointRequest;
 }

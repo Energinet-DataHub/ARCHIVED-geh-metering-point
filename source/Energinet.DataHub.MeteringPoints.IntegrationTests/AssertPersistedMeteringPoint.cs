@@ -217,5 +217,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             Assert.Equal(netSettlementGroup, EnumerationType.FromName<NetSettlementGroup>(_meteringPoint.NetSettlementGroup));
             return this;
         }
+
+        public AssertPersistedMeteringPoint HasProductionObligation(bool productionObligation)
+        {
+            Assert.Equal(productionObligation, _meteringPoint.ProductionObligation);
+            return this;
+        }
     }
 }

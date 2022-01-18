@@ -81,6 +81,44 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 ProductType: ProductType.EnergyActive.Name);
         }
 
+        internal static CreateMeteringPoint CreateProductionMeteringPointCommand()
+        {
+            return new CreateMeteringPoint(
+                MeteringPointType: MeteringPointType.Production.Name,
+                SampleData.StreetName,
+                SampleData.BuildingNumber,
+                SampleData.PostCode,
+                SampleData.CityName,
+                SampleData.CitySubDivisionName,
+                SampleData.MunicipalityCode,
+                SampleData.CountryCode,
+                SampleData.StreetCode,
+                SampleData.FloorIdentification,
+                SampleData.RoomIdentification,
+                SampleData.IsActualAddress,
+                SampleData.GsrnNumber,
+                MeteringMethod.Calculated.Name,
+                SampleData.ReadingOccurrence,
+                0,
+                0,
+                SampleData.MeteringGridArea,
+                SampleData.PowerPlantGsrnNumber,
+                string.Empty,
+                SampleData.SettlementMethod,
+                SampleData.DisconnectionType,
+                SampleData.EffectiveDate,
+                string.Empty,
+                Guid.NewGuid().ToString(),
+                NetSettlementGroup.Six.Name,
+                ConnectionType.Installation.Name,
+                SampleData.AssetType,
+                "0",
+                SampleData.GeoInfoReference,
+                "0101",
+                UnitType: MeasurementUnitType.KWh.Name,
+                ProductType: ProductType.EnergyActive.Name);
+        }
+
         internal static CreateMeteringPoint CreateCommand(MeteringPointType meteringPointType)
         {
             return new CreateMeteringPoint(

@@ -42,6 +42,23 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
+        public async Task Production_obligation_is_changed()
+        {
+            await SendCommandAsync(Scenarios.CreateProductionMeteringPointCommand()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    ProductionObligation = true,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertMasterData()
+                .HasProductionObligation(true);
+        }
+
+        [Fact]
         public async Task Net_settlement_group_is_changed()
         {
             await SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand()).ConfigureAwait(false);
