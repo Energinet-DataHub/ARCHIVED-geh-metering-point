@@ -64,6 +64,7 @@ message MasterDataDocument {
   google.protobuf.StringValue physicalConnectionCapacity = 26;
   google.protobuf.StringValue scheduledMeterReadingDate = 27;
   string processType = 28;
+  google.protobuf.BoolValue productionObligation = 29;
 }
 
 message SetEnergySupplierInfo {
