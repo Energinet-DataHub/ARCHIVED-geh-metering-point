@@ -80,11 +80,5 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 
             AssertValidationError("D65");
         }
-
-        private AssertPersistedMeteringPoint AssertMasterData()
-        {
-            return AssertPersistedMeteringPoint
-                .Initialize(SampleData.GsrnNumber, GetService<IDbConnectionFactory>());
-        }
     }
 }
