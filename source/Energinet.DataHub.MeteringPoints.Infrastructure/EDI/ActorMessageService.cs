@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
@@ -23,11 +24,11 @@ using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GenericNotification;
 using NodaTime;
-using Actor = Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors.Actor;
+using Actor = Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor.Actor;
+using IdentificationType = Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor.IdentificationType;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
 {
@@ -35,23 +36,23 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
     {
         private readonly ISystemDateTimeProvider _dateTimeProvider;
         private readonly IMessageHubDispatcher _messageHubDispatcher;
-        private readonly ActorProvider _actorProvider;
+        private readonly IActorContext _actorContext;
 
         public ActorMessageService(
             ISystemDateTimeProvider dateTimeProvider,
             IMessageHubDispatcher messageHubDispatcher,
-            ActorProvider actorProvider)
+            IActorContext actorContext)
         {
             _dateTimeProvider = dateTimeProvider;
             _messageHubDispatcher = messageHubDispatcher;
-            _actorProvider = actorProvider;
+            _actorContext = actorContext;
         }
 
         public async Task SendGenericNotificationMessageAsync(string transactionId, string gsrn, Instant startDateAndOrTime)
         {
             var message = GenericNotificationMessageFactory.GenericNotification(
-                sender: Map(_actorProvider.DataHub),
-                receiver: Map(_actorProvider.CurrentActor),
+                sender: Map(_actorContext.DataHub),
+                receiver: Map(_actorContext.CurrentActor),
                 createdDateTime: _dateTimeProvider.Now(),
                 gsrn,
                 startDateAndOrTime,
@@ -63,8 +64,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
         public async Task SendCreateMeteringPointConfirmAsync(string transactionId, string gsrn)
         {
             var message = ConfirmMessageFactory.CreateMeteringPoint(
-                sender: Map(_actorProvider.DataHub),
-                receiver: Map(_actorProvider.CurrentActor),
+                sender: Map(_actorContext.DataHub),
+                receiver: Map(_actorContext.CurrentActor),
                 createdDateTime: _dateTimeProvider.Now(),
                 marketActivityRecord: new Acknowledgements.MarketActivityRecord(
                     Id: Guid.NewGuid().ToString(),
@@ -80,8 +81,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
             IEnumerable<ErrorMessage> errors)
         {
             var message = RejectMessageFactory.ConnectMeteringPoint(
-                sender: Map(_actorProvider.DataHub),
-                receiver: Map(_actorProvider.CurrentActor),
+                sender: Map(_actorContext.DataHub),
+                receiver: Map(_actorContext.CurrentActor),
                 createdDateTime: _dateTimeProvider.Now(),
                 marketActivityRecord: new MarketActivityRecordWithReasons(
                     Id: Guid.NewGuid().ToString(),
@@ -95,8 +96,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
         public async Task SendUpdateMeteringPointConfirmAsync(string transactionId, string gsrn)
         {
             var message = ConfirmMessageFactory.CreateMeteringPoint(
-                sender: Map(_actorProvider.DataHub),
-                receiver: Map(_actorProvider.CurrentActor),
+                sender: Map(_actorContext.DataHub),
+                receiver: Map(_actorContext.CurrentActor),
                 createdDateTime: _dateTimeProvider.Now(),
                 marketActivityRecord: new Acknowledgements.MarketActivityRecord(
                     Id: Guid.NewGuid().ToString(),
@@ -109,8 +110,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
         public async Task SendUpdateMeteringPointRejectAsync(string transactionId, string gsrn, IEnumerable<ErrorMessage> errors)
         {
             var message = RejectMessageFactory.ConnectMeteringPoint(
-                sender: Map(_actorProvider.DataHub),
-                receiver: Map(_actorProvider.CurrentActor),
+                sender: Map(_actorContext.DataHub),
+                receiver: Map(_actorContext.CurrentActor),
                 createdDateTime: _dateTimeProvider.Now(),
                 marketActivityRecord: new MarketActivityRecordWithReasons(
                     Id: Guid.NewGuid().ToString(),
@@ -124,8 +125,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
         public async Task SendConnectMeteringPointConfirmAsync(string transactionId, string gsrn)
         {
             var message = ConfirmMessageFactory.ConnectMeteringPoint(
-                sender: Map(_actorProvider.DataHub),
-                receiver: Map(_actorProvider.CurrentActor),
+                sender: Map(_actorContext.DataHub),
+                receiver: Map(_actorContext.CurrentActor),
                 createdDateTime: _dateTimeProvider.Now(),
                 marketActivityRecord: new Acknowledgements.MarketActivityRecord(
                     Id: Guid.NewGuid().ToString(),
@@ -138,8 +139,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
         public async Task SendConnectMeteringPointRejectAsync(string transactionId, string gsrn, IEnumerable<ErrorMessage> errors)
         {
             var message = RejectMessageFactory.ConnectMeteringPoint(
-                sender: Map(_actorProvider.DataHub),
-                receiver: Map(_actorProvider.CurrentActor),
+                sender: Map(_actorContext.DataHub),
+                receiver: Map(_actorContext.CurrentActor),
                 createdDateTime: _dateTimeProvider.Now(),
                 marketActivityRecord: new MarketActivityRecordWithReasons(
                     Id: Guid.NewGuid().ToString(),
@@ -163,7 +164,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                 transactionId,
                 businessReasonCode,
                 meteringPoint,
-                sender: Map(_actorProvider.DataHub),
+                sender: Map(_actorContext.DataHub),
                 receiver: new MarketRoleParticipant(energySupplier.GlnNumber, "A10", "DDQ"), // TODO: Re-visit when we should send out AccountingPointCharacteristics updates.
                 energySupplier,
                 _dateTimeProvider.Now());
@@ -175,21 +176,21 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
 
         private static MarketRoleParticipant Map(Actor actor)
         {
-            var codingScheme = actor.IdentificationType switch
+            var codingScheme = actor.IdentificationType.ToUpperInvariant() switch
             {
                 nameof(IdentificationType.GLN) => "A10",
                 nameof(IdentificationType.EIC) => "A01",
                 _ => throw new InvalidOperationException("Unknown party identifier type"),
             };
 
-            var role = actor.Role switch
+            var role = actor.Roles switch
             {
                 nameof(Role.MeteringPointAdministrator) => "DDZ",
                 nameof(Role.GridAccessProvider) => "DDM",
                 _ => throw new InvalidOperationException("Unknown party role"),
             };
 
-            return new MarketRoleParticipant(actor.IdentificationNumber, codingScheme, role);
+            return new MarketRoleParticipant(actor.Identifier, codingScheme, role);
         }
     }
 }

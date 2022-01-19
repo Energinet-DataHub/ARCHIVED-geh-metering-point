@@ -15,6 +15,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
@@ -30,14 +31,21 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
         private readonly MessageSerializer _serializer;
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
         private readonly ICorrelationContext _correlationContext;
+        private readonly IActorContext _actorContext;
 
-        public CommandScheduler(MeteringPointContext context, MessageSerializer serializer, ISystemDateTimeProvider systemDateTimeProvider, ICorrelationContext correlationContext)
+        public CommandScheduler(
+            MeteringPointContext context,
+            MessageSerializer serializer,
+            ISystemDateTimeProvider systemDateTimeProvider,
+            ICorrelationContext correlationContext,
+            IActorContext actorContext)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
             _systemDateTimeProvider =
                 systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
             _correlationContext = correlationContext ?? throw new ArgumentNullException(nameof(correlationContext));
+            _actorContext = actorContext;
         }
 
         public async Task EnqueueAsync<TCommand>(TCommand command, Instant? scheduleDate = null)
@@ -47,7 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
 
             var data = await _serializer.ToBytesAsync(command, CancellationToken.None).ConfigureAwait(false);
             var type = command.GetType().FullName;
-            var queuedCommand = new QueuedInternalCommand(command.Id, type!, data, _systemDateTimeProvider.Now(), scheduleDate!, _correlationContext.Id);
+            var queuedCommand = new QueuedInternalCommand(command.Id, type!, data, _systemDateTimeProvider.Now(), scheduleDate!, _correlationContext.Id, _actorContext.CurrentActor.AsString());
             await _context.QueuedInternalCommands.AddAsync(queuedCommand).ConfigureAwait(false);
         }
     }

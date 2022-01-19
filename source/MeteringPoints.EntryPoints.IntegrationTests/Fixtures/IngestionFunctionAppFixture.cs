@@ -21,6 +21,7 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon.Azurite;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ResourceProvider;
+using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Microsoft.Extensions.Configuration;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
@@ -30,11 +31,17 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
         public IngestionFunctionAppFixture()
         {
             AzuriteManager = new AzuriteManager();
+            DatabaseManager = new MeteringPointDatabaseManager();
             IntegrationTestConfiguration = new IntegrationTestConfiguration();
+            AuthorizationConfiguration = new AuthorizationConfiguration();
             ServiceBusResourceProvider = new ServiceBusResourceProvider(IntegrationTestConfiguration.ServiceBusConnectionString, TestLogger);
         }
 
+        public AuthorizationConfiguration AuthorizationConfiguration { get; }
+
         private AzuriteManager AzuriteManager { get; }
+
+        private MeteringPointDatabaseManager DatabaseManager { get; }
 
         private IntegrationTestConfiguration IntegrationTestConfiguration { get; }
 
@@ -56,12 +63,16 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             Environment.SetEnvironmentVariable("AzureWebJobsStorage", "UseDevelopmentStorage=true");
             Environment.SetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
             Environment.SetEnvironmentVariable("INTERNAL_SERVICEBUS_RETRY_COUNT", "3");
+            Environment.SetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
         }
 
         /// <inheritdoc/>
         protected override async Task OnInitializeFunctionAppDependenciesAsync(IConfiguration localSettingsSnapshot)
         {
             AzuriteManager.StartAzurite();
+
+            // => Database
+            await DatabaseManager.CreateDatabaseAsync().ConfigureAwait(false);
 
             // => Service Bus
             // Overwrite service bus related settings, so the function app uses the names we have control of in the test

@@ -41,6 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             AzuriteManager = new AzuriteManager();
             DatabaseManager = new MeteringPointDatabaseManager();
             IntegrationTestConfiguration = new IntegrationTestConfiguration();
+            AuthorizationConfiguration = new AuthorizationConfiguration();
             ServiceBusResourceProvider = new ServiceBusResourceProvider(IntegrationTestConfiguration.ServiceBusConnectionString, TestLogger);
 
             HostConfigurationBuilder = new FunctionAppHostConfigurationBuilder();
@@ -67,6 +68,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
         public MessageHubSimulation? MessageHubSimulator { get; private set; }
 
         public MeteringPointDatabaseManager DatabaseManager { get; }
+
+        public AuthorizationConfiguration AuthorizationConfiguration { get; }
 
         private AzuriteManager AzuriteManager { get; }
 
@@ -214,6 +217,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             // => Database
             await DatabaseManager.CreateDatabaseAsync().ConfigureAwait(false);
 
+            ingestionHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
             processingHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
             outboxHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
             localMessageHubHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);

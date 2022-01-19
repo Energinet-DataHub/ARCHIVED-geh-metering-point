@@ -19,7 +19,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
 {
     public class QueuedInternalCommand
     {
-        public QueuedInternalCommand(Guid id, string type, byte[] data, Instant creationDate, Instant? scheduleDate, string correlationId)
+        public QueuedInternalCommand(Guid id, string type, byte[] data, Instant creationDate, Instant? scheduleDate, string correlationId, string currentActor)
         {
             Id = id;
             Type = type;
@@ -27,6 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
             CreationDate = creationDate;
             ScheduleDate = scheduleDate;
             CorrelationId = correlationId;
+            CurrentActor = currentActor;
         }
 
         public Guid Id { get; }
@@ -47,6 +48,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
         public long SequenceId { get; private set; }
 
         public string CorrelationId { get; }
+
+        public string CurrentActor { get; }
 
         public void SetProcessed(Instant now)
         {
