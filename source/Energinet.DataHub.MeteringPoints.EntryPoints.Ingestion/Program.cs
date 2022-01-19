@@ -75,9 +75,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             container.Register<JwtTokenMiddleware>(Lifestyle.Scoped);
             container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
             container.Register<XmlSenderValidator>(Lifestyle.Scoped);
-            container.Register<RequestResponseLoggingMiddleware>(Lifestyle.Scoped);
 
-            container.Register<IRequestResponseLogging>(
+            container.RegisterSingleton<IRequestResponseLogging>(
                 () =>
             {
                 var logger = container.GetService<ILogger<RequestResponseLoggingBlobStorage>>();
@@ -86,8 +85,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
                     Environment.GetEnvironmentVariable("REQUEST_RESPONSE_LOGGING_CONTAINER_NAME") ?? throw new InvalidOperationException(),
                     logger ?? throw new InvalidOperationException());
                 return storage;
-            },
-                Lifestyle.Scoped);
+            });
+            container.Register<RequestResponseLoggingMiddleware>(Lifestyle.Scoped);
 
             container.Register<MessageDispatcher, InternalDispatcher>(Lifestyle.Scoped);
             container.Register<Channel, InternalServiceBus>(Lifestyle.Scoped);
