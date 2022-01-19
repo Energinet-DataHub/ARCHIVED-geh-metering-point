@@ -17,7 +17,6 @@ using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.Common;
 using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
-using Energinet.DataHub.Core.FunctionApp.Common.SimpleInjector;
 using Energinet.DataHub.MessageHub.Client;
 using Energinet.DataHub.MessageHub.Client.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Contracts;
@@ -110,7 +109,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub
             container.SendProtobuf<MeteringPointEnvelope>();
             container.Register<IMessageDispatcher, InternalDispatcher>(Lifestyle.Scoped);
             container.Register<Channel, InternalServiceBus>(Lifestyle.Scoped);
-            container.AddActorContext<ActorProvider>();
+            container.Register<IActorContext, ActorContext>(Lifestyle.Scoped);
             container.BuildMinimalMediator(typeof(BundleHandler<>).Assembly, Array.Empty<Type>());
 
             // TODO: register with assembly scan once assemblies have been split.
