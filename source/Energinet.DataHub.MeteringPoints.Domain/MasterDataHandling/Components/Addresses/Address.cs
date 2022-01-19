@@ -102,7 +102,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.
                 locationDescription: locationDescription);
         }
 
-        #pragma warning disable
         public static BusinessRulesValidationResult CheckRules(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode, string? locationDescription, string? geoInfoReference, bool? isActualAddress)
         {
             return new(new Collection<IBusinessRule>()
