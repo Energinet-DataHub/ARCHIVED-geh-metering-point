@@ -69,13 +69,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
 
         private MeteringConfiguration? TryCreateMeteringConfiguration()
         {
-            if (_request.MeterId is null && _request.MeteringMethod is null) return null;
+            if (_request.MeterNumber is null && _request.MeteringMethod is null) return null;
 
             var currentConfiguration = _targetMeteringPoint.GetMeteringConfiguration();
             var meteringMethod = _request.MeteringMethod is null ? currentConfiguration.Method : EnumerationType.FromName<MeteringMethod>(_request.MeteringMethod);
-            var meterId = _request.MeterId is null
+            var meterId = _request.MeterNumber is null
                 ? currentConfiguration.Meter
-                : meteringMethod == MeteringMethod.Physical ? MeterId.Create(_request.MeterId) : MeterId.Empty();
+                : meteringMethod == MeteringMethod.Physical ? MeterId.Create(_request.MeterNumber) : MeterId.Empty();
 
             var checkResult = MeteringConfiguration.CheckRules(meteringMethod, meterId);
             if (checkResult.Success)
@@ -106,7 +106,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 _request.Address.Room,
                 _request.Address.MunicipalityCode,
                 _request.Address.IsActual.GetValueOrDefault(),
-                _request.Address.GeoInfoReference);
+                _request.Address.GeoInfoReference.ToString());
 
             return _targetMeteringPoint.Address.MergeFrom(address);
         }
