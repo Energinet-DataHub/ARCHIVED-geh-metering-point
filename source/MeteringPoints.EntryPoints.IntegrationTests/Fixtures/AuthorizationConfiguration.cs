@@ -39,6 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             var backendAppId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "backend-app-id"));
             BackendAppScope = new[] { $"{backendAppId}/.default" };
 
+            BackendAppId = SecretsConfiguration.GetValue<string>(BuildB2CBackendAppId(Environment));
             var teamClientId = SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, "batman", "client-id"));
             var teamClientSecret = SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, "batman", "client-secret"));
 
@@ -46,6 +47,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
 
             ApiManagementBaseAddress = SecretsConfiguration.GetValue<Uri>(BuildApiManagementEnvironmentSecretName(Environment, "host-url"));
         }
+
+        /// <summary>
+        /// Backend application ID
+        /// </summary>
+        public string BackendAppId { get; }
 
         public IConfigurationRoot RootConfiguration { get; }
 
@@ -114,6 +120,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
         private static string BuildApiManagementEnvironmentSecretName(string environment, string secret)
         {
             return $"APIM-{environment}-{secret}";
+        }
+
+        private static string BuildB2CBackendAppId(string environment)
+        {
+            return $"B2C-{environment}-backend-app-id";
         }
 
         private static string BuildB2CTeamSecretName(string environment, string team, string secret)

@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Azurite;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
@@ -222,6 +223,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             outboxHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
             localMessageHubHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
             internalCommandDispatcherHostSettings.ProcessEnvironmentVariables.Add("DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
+
+            ingestionHostSettings.ProcessEnvironmentVariables.Add("B2C_TENANT_ID", AuthorizationConfiguration.B2cTenantId);
+            ingestionHostSettings.ProcessEnvironmentVariables.Add("BACKEND_SERVICE_APP_ID", AuthorizationConfiguration.BackendAppId);
 
             IngestionHostManager = new FunctionAppHostManager(ingestionHostSettings, TestLogger);
             ProcessingHostManager = new FunctionAppHostManager(processingHostSettings, TestLogger);

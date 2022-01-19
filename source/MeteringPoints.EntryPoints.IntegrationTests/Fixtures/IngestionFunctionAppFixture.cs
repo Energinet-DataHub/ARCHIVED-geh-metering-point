@@ -78,6 +78,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             // Overwrite service bus related settings, so the function app uses the names we have control of in the test
             Environment.SetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
 
+            Environment.SetEnvironmentVariable("B2C_TENANT_ID", AuthorizationConfiguration.B2cTenantId);
+            Environment.SetEnvironmentVariable("BACKEND_SERVICE_APP_ID", AuthorizationConfiguration.BackendAppId);
+
             var meteringPointQueue = await ServiceBusResourceProvider
                 .BuildQueue("queue").SetEnvironmentVariableToQueueName("METERINGPOINT_QUEUE_TOPIC_NAME")
                 .CreateAsync().ConfigureAwait(false);
