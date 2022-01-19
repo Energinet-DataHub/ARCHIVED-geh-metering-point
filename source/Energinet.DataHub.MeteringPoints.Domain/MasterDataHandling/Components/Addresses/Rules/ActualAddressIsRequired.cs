@@ -12,21 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.VEProduction
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses.Rules
 {
-    internal class VEProductionMeteringPointValidator : IMasterDataValidatorStrategy
+    public class ActualAddressIsRequired : ValidationError
     {
-        public BusinessRulesValidationResult CheckRules(MasterData masterData)
-        {
-            return new BusinessRulesValidationResult(new List<IBusinessRule>()
-            {
-                new StreetNameIsRequiredRule(masterData.Address),
-                new MasterDataHandling.VEProduction.Rules.MeterReadingOccurrenceRule(masterData.ReadingOccurrence),
-            });
-        }
     }
 }

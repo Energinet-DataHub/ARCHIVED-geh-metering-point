@@ -66,7 +66,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 type,
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
-                EffectiveDate.Create(SampleData.EffectiveDate),
                 MasterDataBuilder(type).Build());
         }
     }
