@@ -76,17 +76,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
             container.Register<XmlSenderValidator>(Lifestyle.Scoped);
             container.Register<RequestResponseLoggingMiddleware>(Lifestyle.Scoped);
-
             container.Register<IRequestResponseLogging>(
-                () =>
-            {
-                var logger = container.GetService<ILogger<RequestResponseLoggingBlobStorage>>();
-                var storage = new RequestResponseLoggingBlobStorage(
+                () => new RequestResponseLoggingBlobStorage(
                     Environment.GetEnvironmentVariable("REQUEST_RESPONSE_LOGGING_CONNECTION_STRING") ?? throw new InvalidOperationException(),
                     Environment.GetEnvironmentVariable("REQUEST_RESPONSE_LOGGING_CONTAINER_NAME") ?? throw new InvalidOperationException(),
-                    logger ?? throw new InvalidOperationException());
-                return storage;
-            },
+                    container.GetService<ILogger<RequestResponseLoggingBlobStorage>>() ?? throw new InvalidOperationException()),
                 Lifestyle.Scoped);
 
             container.Register<MessageDispatcher, InternalDispatcher>(Lifestyle.Scoped);
