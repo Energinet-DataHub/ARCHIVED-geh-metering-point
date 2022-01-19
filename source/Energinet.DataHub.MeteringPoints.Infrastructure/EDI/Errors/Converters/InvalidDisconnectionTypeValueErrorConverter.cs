@@ -14,17 +14,17 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class DisconnectionTypeWrongValueErrorConverter : ErrorConverter<DisconnectionTypeWrongValueValidationError>
+    public class InvalidDisconnectionTypeValueErrorConverter : ErrorConverter<InvalidDisconnectionTypeValue>
     {
-        protected override ErrorMessage Convert(DisconnectionTypeWrongValueValidationError validationError)
+        protected override ErrorMessage Convert(InvalidDisconnectionTypeValue validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D02", $"Disconnection type {validationError.DisconnectionType} has wrong value (outside domain)");
+            return new("D65", $"Disconnection type {validationError.ProvidedValue} has wrong value (outside domain).");
         }
     }
 }
