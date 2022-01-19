@@ -18,6 +18,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Xunit;
@@ -28,6 +29,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     [UnitTest]
     public class ProductionBuilderTests : TestBase
     {
+        [Fact]
+        public void Production_obligation_is_optional()
+        {
+            var masterData = Builder()
+                .WithProductionObligation(true)
+                .Build();
+
+            Assert.True(masterData.ProductionObligation);
+        }
+
         [Fact]
         public void Settlement_method_is_not_allowed()
         {
