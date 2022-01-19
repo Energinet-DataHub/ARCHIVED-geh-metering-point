@@ -17,9 +17,11 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
+using Xunit.Categories;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 {
+    [IntegrationTest]
     public class DisconnectionTypeTests : TestHost
     {
         public DisconnectionTypeTests(DatabaseFixture databaseFixture)
@@ -45,6 +47,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 
             AssertMasterData()
                 .HasDisconnectionType(DisconnectionType.Remote);
+        }
+
+        [Fact]
+        public async Task Reject_if_value_is_invalid()
+        {
+            await SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    DisconnectionType = "Invalid value",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D65");
         }
 
         private AssertPersistedMeteringPoint AssertMasterData()
