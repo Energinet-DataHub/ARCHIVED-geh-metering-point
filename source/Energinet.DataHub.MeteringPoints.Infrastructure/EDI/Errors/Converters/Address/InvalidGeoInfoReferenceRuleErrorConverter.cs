@@ -14,17 +14,17 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Address
 {
-    public class InvalidGeoInfoReferenceRuleErrorConverter : ErrorConverter<InvalidGeoInfoReferenceRuleError>
+    public class InvalidGeoInfoReferenceRuleErrorConverter : ErrorConverter<InvalidGeoInfoReference>
     {
-        protected override ErrorMessage Convert(InvalidGeoInfoReferenceRuleError validationError)
+        protected override ErrorMessage Convert(InvalidGeoInfoReference validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("E86", $"The format of the metering point DAR reference {validationError.GeoInfoReference} must comply with the generic UUID format");
+            return new("E86", $"The format of the metering point DAR reference {validationError.ProvidedValue} must comply with the generic UUID format");
         }
     }
 }
