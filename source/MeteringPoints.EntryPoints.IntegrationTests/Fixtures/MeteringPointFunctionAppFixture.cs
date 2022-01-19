@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using Azure.Storage.Blobs;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Azurite;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
@@ -138,6 +139,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
 
             ingestionHostSettings.ProcessEnvironmentVariables.Add("REQUEST_RESPONSE_LOGGING_CONNECTION_STRING", "UseDevelopmentStorage=true");
             ingestionHostSettings.ProcessEnvironmentVariables.Add("REQUEST_RESPONSE_LOGGING_CONTAINER_NAME", "marketoplogs");
+
+            // => Logging
+            var storage = new BlobContainerClient("UseDevelopmentStorage=true", "marketoplogs");
+            await storage.CreateIfNotExistsAsync().ConfigureAwait(false);
 
             var meteringPointQueue = await ServiceBusResourceProvider
                 .BuildQueue("sbq-meteringpoint")
