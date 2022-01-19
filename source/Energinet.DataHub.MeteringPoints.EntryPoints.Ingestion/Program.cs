@@ -69,11 +69,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             container.Register<MeteringPointHttpTrigger>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
             container.Register<CorrelationIdMiddleware>(Lifestyle.Scoped);
-            // container.Register<ActorMiddleware>(Lifestyle.Scoped);
             container.Register<EntryPointTelemetryScopeMiddleware>(Lifestyle.Scoped);
             container.AddJwtTokenSecurity("https://login.microsoftonline.com/240beb65-9291-4330-89a3-459d027df97c/v2.0/.well-known/openid-configuration", "c5a9e624-9687-47a7-8f3b-ad74fcf1fb5c");
-            // container.Register<IActorContext, ActorContext>(Lifestyle.Scoped);
-            // container.Register<IActorProvider, ActorProvider>(Lifestyle.Scoped);
             container.AddActorContext<ActorProvider>();
             var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")
                                    ?? throw new InvalidOperationException(
