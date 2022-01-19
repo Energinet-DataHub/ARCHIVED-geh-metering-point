@@ -15,20 +15,15 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exceptions;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using StreetNameIsRequiredRule = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.StreetNameIsRequiredRule;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
@@ -79,15 +74,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public GsrnNumber GsrnNumber { get; }
 
-        public Address Address => _masterData.Address;
-
         public MeteringPointType MeteringPointType { get; }
 
         public MasterData MasterData => _masterData;
 
         internal GridAreaLinkId GridAreaLinkId { get; }
-
-        internal MeteringConfiguration MeteringConfiguration => _masterData.MeteringConfiguration;
 
         internal ConnectionState ConnectionState { get; set; } = ConnectionState.New();
 
@@ -125,154 +116,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             if (gridAreaLinkId == null) throw new ArgumentNullException(nameof(gridAreaLinkId));
             if (masterData == null) throw new ArgumentNullException(nameof(masterData));
             return new MeteringPoint(id, gsrnNumber, meteringPointType, gridAreaLinkId, masterData);
-        }
-
-        public BusinessRulesValidationResult CanChangeAddress(Address address)
-        {
-            var canBeChangedCheck = CanBeChanged();
-            if (canBeChangedCheck.Success == false)
-            {
-                return canBeChangedCheck;
-            }
-
-            var rules = new List<IBusinessRule>()
-            {
-                new StreetNameIsRequiredRule(GsrnNumber, address),
-                new PostCodeIsRequiredRule(address),
-                new CityIsRequiredRule(address),
-            };
-            return new BusinessRulesValidationResult(rules);
-        }
-
-        public void ChangeAddress(Address newAddress)
-        {
-            if (newAddress == null) throw new ArgumentNullException(nameof(newAddress));
-            ThrowIfClosedDown();
-            var checkResult = CanChangeAddress(newAddress);
-            if (checkResult.Success == false)
-            {
-                throw new MasterDataChangeException(checkResult.Errors.ToList());
-            }
-
-            if (newAddress.Equals(Address) == false)
-            {
-                var builder =
-                    new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType))
-                        .WithNetSettlementGroup(_masterData.NetSettlementGroup?.Name)
-                        .WithCapacity(_masterData.Capacity?.ToString())
-                        .WithMeteringConfiguration(_masterData.MeteringConfiguration.Method.Name, _masterData.MeteringConfiguration.Meter.Value)
-                        .WithReadingPeriodicity(_masterData.ReadingOccurrence.Name)
-                        .WithScheduledMeterReadingDate(_masterData.ScheduledMeterReadingDate?.MonthAndDay)
-                        .WithAddress(
-                            newAddress.StreetName,
-                            newAddress.StreetCode,
-                            newAddress.BuildingNumber,
-                            newAddress.City,
-                            newAddress.CitySubDivision,
-                            newAddress.PostCode,
-                            newAddress.CountryCode,
-                            newAddress.Floor,
-                            newAddress.Room,
-                            newAddress.MunicipalityCode,
-                            newAddress.IsActual,
-                            newAddress.GeoInfoReference.ToString(),
-                            newAddress.LocationDescription)
-                        .WithAssetType(_masterData.AssetType?.Name)
-                        .WithConnectionType(_masterData.ConnectionType?.Name)
-                        .WithDisconnectionType(_masterData.DisconnectionType?.Name)
-                        .WithPowerLimit(_masterData.PowerLimit?.Kwh, _masterData.PowerLimit?.Ampere)
-                        .WithPowerPlant(_masterData.PowerPlantGsrnNumber?.Value)
-                        .WithProductType(_masterData.ProductType.Name)
-                        .WithSettlementMethod(_masterData.SettlementMethod?.Name)
-                        .WithMeasurementUnitType(_masterData.UnitType?.Name)
-                        .EffectiveOn(_masterData.EffectiveDate?.ToString());
-
-                _masterData = builder.Build();
-
-                AddDomainEvent(new AddressChanged(
-                    Address.StreetName,
-                    Address.PostCode,
-                    Address.City,
-                    Address.StreetCode,
-                    Address.BuildingNumber,
-                    Address.CitySubDivision,
-                    Address.CountryCode?.Name,
-                    Address.Floor,
-                    Address.Room,
-                    Address.MunicipalityCode.GetValueOrDefault(),
-                    Address.IsActual.GetValueOrDefault(),
-                    Address.GeoInfoReference.GetValueOrDefault()));
-            }
-        }
-
-        public void ChangeMeteringConfiguration(MeteringConfiguration configuration, EffectiveDate effectiveDate)
-        {
-            if (effectiveDate == null) throw new ArgumentNullException(nameof(effectiveDate));
-            if (configuration == null) throw new ArgumentNullException(nameof(configuration));
-
-            ThrowIfClosedDown();
-
-            if (MeteringConfiguration.Equals(configuration))
-            {
-                return;
-            }
-
-            var builder =
-                new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType))
-                    .WithNetSettlementGroup(_masterData.NetSettlementGroup?.Name)
-                    .WithCapacity(_masterData.Capacity?.ToString())
-                    .WithMeteringConfiguration(configuration.Method.Name, configuration.Meter.Value)
-                    .WithReadingPeriodicity(_masterData.ReadingOccurrence.Name)
-                    .WithScheduledMeterReadingDate(_masterData.ScheduledMeterReadingDate?.MonthAndDay)
-                    .WithAddress(
-                        Address.StreetName,
-                        Address.StreetCode,
-                        Address.BuildingNumber,
-                        Address.City,
-                        Address.CitySubDivision,
-                        Address.PostCode,
-                        Address.CountryCode,
-                        Address.Floor,
-                        Address.Room,
-                        Address.MunicipalityCode,
-                        Address.IsActual,
-                        Address.GeoInfoReference.ToString(),
-                        Address.LocationDescription)
-                    .WithAssetType(_masterData.AssetType?.Name)
-                    .WithConnectionType(_masterData.ConnectionType?.Name)
-                    .WithDisconnectionType(_masterData.DisconnectionType?.Name)
-                    .WithPowerLimit(_masterData.PowerLimit?.Kwh, _masterData.PowerLimit?.Ampere)
-                    .WithPowerPlant(_masterData.PowerPlantGsrnNumber?.Value)
-                    .WithProductType(_masterData.ProductType.Name)
-                    .WithSettlementMethod(_masterData.SettlementMethod?.Name)
-                    .WithMeasurementUnitType(_masterData.UnitType?.Name);
-
-            _masterData = builder.Build();
-
-            AddDomainEvent(new MeteringConfigurationChanged(
-                Id.Value.ToString(),
-                GsrnNumber.Value,
-                MeteringConfiguration.Meter.Value,
-                MeteringConfiguration.Method.Name,
-                effectiveDate.ToString()));
-        }
-
-        #pragma warning disable CA1024 // Use properties where appropriate
-        public MeteringConfiguration GetMeteringConfiguration()
-        {
-            return MeteringConfiguration;
-        }
-        #pragma warning restore
-
-        public BusinessRulesValidationResult CanBeChanged()
-        {
-            var errors = new List<ValidationError>();
-            if (ConnectionState.PhysicalState == PhysicalState.ClosedDown)
-            {
-                errors.Add(new ClosedDownMeteringPointCannotBeChangedError());
-            }
-
-            return new BusinessRulesValidationResult(errors);
         }
 
         public void CloseDown()
@@ -362,15 +205,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             return ConnectionState.PhysicalState == PhysicalState.ClosedDown;
         }
 
-        private void ThrowIfClosedDown()
-        {
-            var checkResult = CanBeChanged();
-            if (checkResult.Success == false)
-            {
-                throw new MeteringPointClosedForChangesException(checkResult.Errors);
-            }
-        }
-
         private void RaiseMeteringPointCreated()
         {
             var @event = new Events.MeteringPointCreated(
@@ -378,7 +212,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 Id.Value,
                 GsrnNumber.Value,
                 GridAreaLinkId.Value,
-                MeteringConfiguration.Method.Name,
+                _masterData.MeteringConfiguration.Method.Name,
                 _masterData.ProductType.Name,
                 _masterData.ReadingOccurrence.Name,
                 _masterData.UnitType?.Name!,
@@ -398,7 +232,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 _masterData.Address.GeoInfoReference,
                 _masterData.PowerPlantGsrnNumber?.Value,
                 _masterData.Address.LocationDescription,
-                MeteringConfiguration.Meter?.Value,
+                _masterData.MeteringConfiguration.Meter?.Value,
                 _masterData.PowerLimit?.Ampere,
                 _masterData.PowerLimit?.Kwh,
                 _masterData.EffectiveDate.DateInUtc,
