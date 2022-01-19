@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
         {
             RuleFor(inputValue => inputValue)
                 .Must(IsAllowedDisconnectionType)
-                .WithState(inputValue => new DisconnectionTypeWrongValueValidationError(inputValue));
+                .WithState(inputValue => new InvalidDisconnectionTypeValue(inputValue));
         }
 
         private static bool IsAllowedDisconnectionType(string disconnectionType)
