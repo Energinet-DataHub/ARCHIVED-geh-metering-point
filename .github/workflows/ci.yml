@@ -25,7 +25,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@3.0.2
   
   dotnet_solution_ci:
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@3.0.2
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@xtban/add_environment_info
     with:
       SOLUTION_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.sln'
       DOTNET_VERSION: '5.0'
