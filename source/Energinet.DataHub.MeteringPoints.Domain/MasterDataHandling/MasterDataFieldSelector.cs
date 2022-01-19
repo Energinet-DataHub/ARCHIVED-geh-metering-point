@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
@@ -35,6 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                     new(nameof(MasterData.NetSettlementGroup), Applicability.Required),
                     new(nameof(MasterData.DisconnectionType), Applicability.Required),
                     new(nameof(MasterData.ConnectionType), Applicability.Optional),
+                    new(nameof(MasterData.ProductionObligation), Applicability.NotAllowed),
                 }
             },
             {
@@ -45,6 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                     new(nameof(MasterData.ProductType), Applicability.Required),
                     new(nameof(MasterData.UnitType), Applicability.Required),
                     new(nameof(MasterData.NetSettlementGroup), Applicability.Required),
+                    new(nameof(MasterData.ProductionObligation), Applicability.Required),
                 }
             },
             {
@@ -53,6 +54,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                     new(nameof(MasterData.ProductType), Applicability.Required),
                     new(nameof(MasterData.UnitType), Applicability.Required),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
+                    new(nameof(MasterData.ProductionObligation), Applicability.NotAllowed),
                 }
             },
             {
@@ -61,6 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                     new(nameof(MasterData.ProductType), Applicability.Required),
                     new(nameof(MasterData.UnitType), Applicability.Required),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
+                    new(nameof(MasterData.ProductionObligation), Applicability.NotAllowed),
                 }
             },
             {
@@ -68,6 +71,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 {
                     new(nameof(MasterData.ProductType), Applicability.Required),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
+                    new(nameof(MasterData.ProductionObligation), Applicability.NotAllowed),
                 }
             },
             {
@@ -75,6 +79,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 {
                     new(nameof(MasterData.ProductType), Applicability.Required),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
+                    new(nameof(MasterData.ProductionObligation), Applicability.NotAllowed),
                 }
             },
             {
@@ -82,6 +87,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 {
                     new(nameof(MasterData.ProductType), Applicability.Required),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
+                    new(nameof(MasterData.ProductionObligation), Applicability.NotAllowed),
                 }
             },
             {
@@ -89,6 +95,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 {
                     new(nameof(MasterData.ProductType), Applicability.Required),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
+                    new(nameof(MasterData.ProductionObligation), Applicability.NotAllowed),
                 }
             },
             {
@@ -96,6 +103,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 {
                     new(nameof(MasterData.ProductType), Applicability.Required),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
+                    new(nameof(MasterData.ProductionObligation), Applicability.NotAllowed),
                 }
             },
             {
@@ -103,6 +111,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 {
                     new(nameof(MasterData.ProductType), Applicability.Required),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
+                    new(nameof(MasterData.ProductionObligation), Applicability.NotAllowed),
                 }
             },
             {
@@ -110,6 +119,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 {
                     new(nameof(MasterData.ProductType), Applicability.Required),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
+                    new(nameof(MasterData.ProductionObligation), Applicability.NotAllowed),
                 }
             },
             {
@@ -117,6 +127,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 {
                     new(nameof(MasterData.ProductType), Applicability.Required),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
+                    new(nameof(MasterData.ProductionObligation), Applicability.NotAllowed),
                 }
             },
             {
@@ -124,6 +135,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 {
                     new(nameof(MasterData.ProductType), Applicability.Required),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
+                    new(nameof(MasterData.ProductionObligation), Applicability.NotAllowed),
                 }
             },
             {
@@ -131,6 +143,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 {
                     new(nameof(MasterData.ProductType), Applicability.Required),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
+                    new(nameof(MasterData.ProductionObligation), Applicability.NotAllowed),
                 }
             },
             {
@@ -138,6 +151,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 {
                     new(nameof(MasterData.ProductType), Applicability.Required),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
+                    new(nameof(MasterData.ProductionObligation), Applicability.NotAllowed),
                 }
             },
             {
@@ -145,6 +159,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 {
                     new(nameof(MasterData.ProductType), Applicability.Required),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
+                    new(nameof(MasterData.ProductionObligation), Applicability.NotAllowed),
                 }
             },
             {
@@ -152,6 +167,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 {
                     new(nameof(MasterData.ProductType), Applicability.Required),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
+                    new(nameof(MasterData.ProductionObligation), Applicability.NotAllowed),
                 }
             },
             {
@@ -159,6 +175,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 {
                     new(nameof(MasterData.ProductType), Applicability.Required),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
+                    new(nameof(MasterData.ProductionObligation), Applicability.NotAllowed),
                 }
             },
             {
@@ -166,6 +183,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 {
                     new(nameof(MasterData.ProductType), Applicability.Required),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
+                    new(nameof(MasterData.ProductionObligation), Applicability.NotAllowed),
                 }
             },
             {
@@ -173,6 +191,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 {
                     new(nameof(MasterData.ProductType), Applicability.Required),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
+                    new(nameof(MasterData.ProductionObligation), Applicability.NotAllowed),
                 }
             },
             {
@@ -180,6 +199,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 {
                     new(nameof(MasterData.ProductType), Applicability.Required),
                     new(nameof(MasterData.SettlementMethod), Applicability.NotAllowed),
+                    new(nameof(MasterData.ProductionObligation), Applicability.NotAllowed),
                 }
             },
         };

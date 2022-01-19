@@ -43,6 +43,30 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [InlineData(nameof(MeteringPointType.NetToGrid))]
         [InlineData(nameof(MeteringPointType.SupplyToGrid))]
         [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
+        public void Production_obligation_is_ignored(string meteringPointType)
+        {
+            var masterData = BuilderFor(meteringPointType)
+                .WithProductionObligation(true)
+                .Build();
+
+            Assert.Null(masterData.ProductionObligation);
+        }
+
+        [Theory]
+        [InlineData(nameof(MeteringPointType.ElectricalHeating))]
+        [InlineData(nameof(MeteringPointType.NetConsumption))]
+        [InlineData(nameof(MeteringPointType.NetProduction))]
+        [InlineData(nameof(MeteringPointType.OtherConsumption))]
+        [InlineData(nameof(MeteringPointType.OtherProduction))]
+        [InlineData(nameof(MeteringPointType.OwnProduction))]
+        [InlineData(nameof(MeteringPointType.TotalConsumption))]
+        [InlineData(nameof(MeteringPointType.WholesaleServices))]
+        [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
+        [InlineData(nameof(MeteringPointType.GridLossCorrection))]
+        [InlineData(nameof(MeteringPointType.NetFromGrid))]
+        [InlineData(nameof(MeteringPointType.NetToGrid))]
+        [InlineData(nameof(MeteringPointType.SupplyToGrid))]
+        [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
         public void Unit_type_must_be_kwh(string meteringPointType)
         {
             var masterData = BuilderFor(meteringPointType)
