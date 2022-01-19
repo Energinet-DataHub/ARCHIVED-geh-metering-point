@@ -30,9 +30,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
         private readonly IActorContext _authenticatedUserContext;
         private readonly IMeteringPointOwnershipProvider _ownershipProvider;
 
-        public ChangeMeteringPointAuthorizer(IActorContext authenticatedUserContext, IMeteringPointOwnershipProvider ownershipProvider)
+        public ChangeMeteringPointAuthorizer(IActorContext actorContext, IMeteringPointOwnershipProvider ownershipProvider)
         {
-            _authenticatedUserContext = authenticatedUserContext ?? throw new ArgumentNullException(nameof(authenticatedUserContext));
+            _authenticatedUserContext = actorContext ?? throw new ArgumentNullException(nameof(actorContext));
             _ownershipProvider = ownershipProvider ?? throw new ArgumentNullException(nameof(ownershipProvider));
         }
 
