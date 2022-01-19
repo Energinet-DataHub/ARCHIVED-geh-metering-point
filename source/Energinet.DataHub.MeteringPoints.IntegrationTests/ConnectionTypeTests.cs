@@ -48,5 +48,24 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             AssertMasterData()
                 .HasConnectionType(ConnectionType.Direct);
         }
+
+        [Fact]
+        public async Task Reject_if_value_is_invalid()
+        {
+            await SendCommandAsync(Scenarios.CreateVEProduction() with
+            {
+                ConnectionType = ConnectionType.Installation.Name,
+            }).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    ConnectionType = "invalid value",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D66");
+        }
     }
 }
