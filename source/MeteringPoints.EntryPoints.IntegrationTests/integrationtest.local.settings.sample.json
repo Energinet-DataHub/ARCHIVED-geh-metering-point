@@ -1,6 +1,4 @@
 ﻿{
   "AZURE_KEYVAULT_URL": "<Integration test key vault url>",
-  "AZURE_SECRETS_KEYVAULT_URL": "<Key vault with secrets url>",
-  "ENVIRONMENT_SHORT": "<short name of environment; e.g. 'u'>",
-  "ENVIRONMENT_INSTANCE": "<instance number of environment; e.g. '001'>"
+  "AZURE_SECRETS_KEYVAULT_URL": "<Key vault with secrets url>"
 }

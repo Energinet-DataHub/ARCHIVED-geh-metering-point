@@ -33,7 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
         public AuthorizationConfiguration()
         {
             RootConfiguration = BuildKeyVaultConfigurationRoot();
-            Environment = $"{RootConfiguration.GetValue<string>("ENVIRONMENT_SHORT")}{RootConfiguration.GetValue<string>("ENVIRONMENT_INSTANCE")}";
+            Environment = "u002";
             SecretsConfiguration = BuildSecretsKeyVaultConfiguration(RootConfiguration.GetValue<string>("AZURE_SECRETS_KEYVAULT_URL"));
             B2cTenantId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "tenant-id"));
             var backendAppId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "backend-app-id"));
