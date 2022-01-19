@@ -64,7 +64,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcess
                 MeasureUnitType = obj.MeasureUnitType,
                 PhysicalConnectionCapacity = obj.PhysicalConnectionCapacity,
                 ScheduledMeterReadingDate = obj.ScheduledMeterReadingDate,
-                ProductionObligation = obj.ProductionObligation,
             };
         }
     }

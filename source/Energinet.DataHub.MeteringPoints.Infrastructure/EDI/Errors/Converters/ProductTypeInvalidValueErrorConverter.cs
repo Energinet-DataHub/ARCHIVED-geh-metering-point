@@ -14,17 +14,18 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class ProductTypeInvalidValueErrorConverter : ErrorConverter<InvalidProductTypeValue>
+    public class ProductTypeInvalidValueErrorConverter : ErrorConverter<ProductTypeInvalidValueValidationError>
     {
-        protected override ErrorMessage Convert(InvalidProductTypeValue validationError)
+        protected override ErrorMessage Convert(ProductTypeInvalidValueValidationError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new ErrorMessage("D02", $"Product {validationError.ProvidedValue} has wrong value (outside domain)");
+            return new ErrorMessage("D02", $"Product {validationError.ProductType} has wrong value (outside domain)");
         }
     }
 }

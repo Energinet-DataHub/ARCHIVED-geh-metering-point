@@ -42,6 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 type,
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
+                EffectiveDate.Create(SampleData.EffectiveDate),
                 builder.Build());
         }
 
@@ -64,7 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                     string.Empty,
                     default,
                     isActual: true,
-                    geoInfoReference: Guid.NewGuid().ToString(),
+                    geoInfoReference: Guid.NewGuid(),
                     null)
                 .WithAssetType(AssetType.GasTurbine.Name)
                 .WithPowerPlant(SampleData.PowerPlant)
@@ -108,7 +109,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                     string.Empty,
                     default,
                     isActual: true,
-                    geoInfoReference: Guid.NewGuid().ToString(),
+                    geoInfoReference: Guid.NewGuid(),
                     null)
                 .WithAssetType(AssetType.GasTurbine.Name)
                 .WithPowerPlant(SampleData.PowerPlant)
@@ -151,7 +152,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 string.Empty,
                 default,
                 isActual: true,
-                geoInfoReference: Guid.NewGuid().ToString());
+                geoInfoReference: Guid.NewGuid());
         }
 
         protected static void AssertContainsValidationError<TValidationError>(BusinessRulesValidationResult result)

@@ -86,31 +86,19 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             string? room = null,
             int? municipalityCode = null,
             bool? isActual = null,
-            string? geoInfoReference = null,
+            Guid? geoInfoReference = null,
             string? locationDescription = null)
         {
             SetValueIfValid(
                 nameof(MasterData.Address),
-                () => Address.CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, locationDescription, geoInfoReference, isActual),
+                () => Address.CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, locationDescription),
                 () => Address.Create(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, isActual, geoInfoReference, locationDescription));
             return this;
         }
 
         public IMasterDataBuilder WithMeasurementUnitType(string? measurementUnitType)
         {
-            if (measurementUnitType?.Length > 0)
-            {
-                SetValueIfValid(
-                    nameof(MasterData.UnitType),
-                    () =>
-                    {
-                        return EnumerationType.GetAll<MeasurementUnitType>()
-                            .Select(item => item.Name)
-                            .Contains(measurementUnitType) == false ? BusinessRulesValidationResult.Failure(new InvalidUnitTypeValue(measurementUnitType)) : BusinessRulesValidationResult.Valid();
-                    },
-                    () => EnumerationType.FromName<MeasurementUnitType>(measurementUnitType));
-            }
-
+            SetValue(nameof(MasterData.UnitType), measurementUnitType is null ? null : EnumerationType.FromName<MeasurementUnitType>(measurementUnitType!));
             return this;
         }
 
@@ -122,21 +110,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithReadingPeriodicity(string? readingPeriodicity)
         {
-            if (readingPeriodicity?.Length == 0) SetValue<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence), null);
-            if (readingPeriodicity?.Length > 0)
-            {
-                SetValueIfValid(
-                    nameof(MasterData.ReadingOccurrence),
-                    () =>
-                    {
-                        return EnumerationType.GetAll<ReadingOccurrence>()
-                            .Select(item => item.Name)
-                            .Contains(readingPeriodicity) == false ? BusinessRulesValidationResult
-                            .Failure(new InvalidReadingPeriodicityType(readingPeriodicity)) : BusinessRulesValidationResult.Valid();
-                    },
-                    () => EnumerationType.FromName<ReadingOccurrence>(readingPeriodicity!));
-            }
-
+            SetValue(nameof(MasterData.ReadingOccurrence),  readingPeriodicity is null ? null : EnumerationType.FromName<ReadingOccurrence>(readingPeriodicity));
             return this;
         }
 
@@ -150,10 +124,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithPowerLimit(string? kwh, string? ampere)
         {
+            var updatedKwh = ConvertToNullableString(kwh, GetValue<PowerLimit>(nameof(MasterData.PowerLimit)).Kwh);
+            var updatedAmpere = ConvertToNullableString(ampere, GetValue<PowerLimit>(nameof(MasterData.PowerLimit)).Ampere);
             SetValueIfValid(
                 nameof(MasterData.PowerLimit),
-                () => PowerLimit.CheckRules(kwh, ampere),
-                () => PowerLimit.Create(kwh, ampere));
+                () => PowerLimit.CheckRules(updatedKwh, updatedAmpere),
+                () => PowerLimit.Create(updatedKwh, updatedAmpere));
             return this;
         }
 
@@ -216,19 +192,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithProductType(string? productType)
         {
-            if (productType?.Length > 0)
-            {
-                SetValueIfValid(
-                    nameof(MasterData.ProductType),
-                    () =>
-                    {
-                        return EnumerationType.GetAll<ProductType>()
-                            .Select(item => item.Name)
-                            .Contains(productType) == false ? BusinessRulesValidationResult.Failure(new InvalidProductTypeValue(productType)) : BusinessRulesValidationResult.Valid();
-                    },
-                    () => EnumerationType.FromName<ProductType>(productType));
-            }
-
+            SetValue(nameof(MasterData.ProductType),  productType is null ? null : EnumerationType.FromName<ProductType>(productType));
             return this;
         }
 
@@ -256,6 +220,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             AddValidationErrorIfRequiredFieldIsMissing<SettlementMethod>(nameof(MasterData.SettlementMethod), new SettlementMethodIsRequired());
 
             return new BusinessRulesValidationResult(_validationErrors);
+        }
+
+        private static string? ConvertToNullableString(string? updatedValue, int? currentValue)
+        {
+            if (updatedValue is null) return currentValue.ToString();
+            if (updatedValue.Length == 0) return null;
+            return updatedValue;
         }
 
         private void AddValidationErrorIfRequiredFieldIsMissing<T>(string valueName, ValidationError validationError)

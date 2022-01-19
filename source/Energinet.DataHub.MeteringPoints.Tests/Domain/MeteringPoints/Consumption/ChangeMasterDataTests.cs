@@ -120,7 +120,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
                 room: "9",
                 municipalityCode: 999,
                 isActual: true,
-                geoInfoReference: Guid.NewGuid().ToString());
+                geoInfoReference: Guid.NewGuid());
 
             meteringPoint.ChangeAddress(address);
 

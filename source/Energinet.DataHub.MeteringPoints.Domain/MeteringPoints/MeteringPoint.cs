@@ -35,6 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
     public class MeteringPoint : AggregateRootBase
     {
         private readonly ExchangeGridAreas? _exchangeGridAreas;
+        private readonly EffectiveDate _effectiveDate;
         private MasterData _masterData;
         private MeteringPointId? _parentMeteringPoint;
 
@@ -47,12 +48,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GsrnNumber gsrnNumber,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
+            EffectiveDate effectiveDate,
             MasterData masterData)
         {
             Id = id;
             GsrnNumber = gsrnNumber;
             MeteringPointType = meteringPointType;
             GridAreaLinkId = gridAreaLinkId;
+            _effectiveDate = effectiveDate;
             _masterData = masterData;
 
             RaiseMeteringPointCreated();
@@ -62,6 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             GridAreaLinkId gridAreaLinkId,
+            EffectiveDate effectiveDate,
             ExchangeGridAreas exchangeGridAreas,
             MasterData masterData)
         {
@@ -69,6 +73,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GsrnNumber = gsrnNumber;
             MeteringPointType = MeteringPointType.Exchange;
             GridAreaLinkId = gridAreaLinkId;
+            _effectiveDate = effectiveDate;
             _exchangeGridAreas = exchangeGridAreas ?? throw new ArgumentNullException(nameof(exchangeGridAreas));
             _masterData = masterData;
 
@@ -81,17 +86,17 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public Address Address => _masterData.Address;
 
-        public MeteringPointType MeteringPointType { get; }
-
-        public MasterData MasterData => _masterData;
-
         internal GridAreaLinkId GridAreaLinkId { get; }
+
+        internal MeteringPointType MeteringPointType { get; }
 
         internal MeteringConfiguration MeteringConfiguration => _masterData.MeteringConfiguration;
 
         internal ConnectionState ConnectionState { get; set; } = ConnectionState.New();
 
         internal EnergySupplierDetails? EnergySupplierDetails { get; private set; }
+
+        internal MasterData MasterData => _masterData;
 
         public static BusinessRulesValidationResult CanCreate(MeteringPointType type, MasterData masterData, MasterDataValidator validator)
         {
@@ -105,26 +110,29 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointId id,
             GsrnNumber gsrnNumber,
             GridAreaLinkId gridAreaLinkId,
+            EffectiveDate effectiveDate,
             ExchangeGridAreas exchangeGridAreas,
             MasterData masterData)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
             if (gsrnNumber == null) throw new ArgumentNullException(nameof(gsrnNumber));
             if (gridAreaLinkId == null) throw new ArgumentNullException(nameof(gridAreaLinkId));
+            if (effectiveDate == null) throw new ArgumentNullException(nameof(effectiveDate));
             if (exchangeGridAreas == null) throw new ArgumentNullException(nameof(exchangeGridAreas));
             if (masterData == null) throw new ArgumentNullException(nameof(masterData));
 
-            return new MeteringPoint(id, gsrnNumber, gridAreaLinkId, exchangeGridAreas, masterData);
+            return new MeteringPoint(id, gsrnNumber, gridAreaLinkId, effectiveDate, exchangeGridAreas, masterData);
         }
 
-        public static MeteringPoint Create(MeteringPointId id, GsrnNumber gsrnNumber, MeteringPointType meteringPointType, GridAreaLinkId gridAreaLinkId, MasterData masterData)
+        public static MeteringPoint Create(MeteringPointId id, GsrnNumber gsrnNumber, MeteringPointType meteringPointType, GridAreaLinkId gridAreaLinkId, EffectiveDate effectiveDate, MasterData masterData)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
             if (gsrnNumber == null) throw new ArgumentNullException(nameof(gsrnNumber));
             if (meteringPointType is null) throw new ArgumentNullException(nameof(meteringPointType));
             if (gridAreaLinkId == null) throw new ArgumentNullException(nameof(gridAreaLinkId));
+            if (effectiveDate == null) throw new ArgumentNullException(nameof(effectiveDate));
             if (masterData == null) throw new ArgumentNullException(nameof(masterData));
-            return new MeteringPoint(id, gsrnNumber, meteringPointType, gridAreaLinkId, masterData);
+            return new MeteringPoint(id, gsrnNumber, meteringPointType, gridAreaLinkId, effectiveDate, masterData);
         }
 
         public BusinessRulesValidationResult CanChangeAddress(Address address)
@@ -175,7 +183,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                             newAddress.Room,
                             newAddress.MunicipalityCode,
                             newAddress.IsActual,
-                            newAddress.GeoInfoReference.ToString(),
+                            newAddress.GeoInfoReference,
                             newAddress.LocationDescription)
                         .WithAssetType(_masterData.AssetType?.Name)
                         .WithConnectionType(_masterData.ConnectionType?.Name)
@@ -236,7 +244,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                         Address.Room,
                         Address.MunicipalityCode,
                         Address.IsActual,
-                        Address.GeoInfoReference.ToString(),
+                        Address.GeoInfoReference,
                         Address.LocationDescription)
                     .WithAssetType(_masterData.AssetType?.Name)
                     .WithConnectionType(_masterData.ConnectionType?.Name)
@@ -401,7 +409,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 MeteringConfiguration.Meter?.Value,
                 _masterData.PowerLimit?.Ampere,
                 _masterData.PowerLimit?.Kwh,
-                _masterData.EffectiveDate.DateInUtc,
+                _effectiveDate.DateInUtc,
                 _masterData.DisconnectionType?.Name!,
                 _masterData.ConnectionType?.Name,
                 _masterData.AssetType?.Name,

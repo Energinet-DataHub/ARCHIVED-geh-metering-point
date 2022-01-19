@@ -27,7 +27,7 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 {
-    public class MasterDataUpdater : MasterDataBuilderBase
+    public class MasterDataUpdater : MasterDataBuilderBase, IMasterDataBuilder
     {
         private readonly List<ValidationError> _validationErrors = new();
 
@@ -66,7 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return CreateMasterData();
         }
 
-        public MasterDataUpdater WithNetSettlementGroup(string? netSettlementGroup)
+        public IMasterDataBuilder WithNetSettlementGroup(string? netSettlementGroup)
         {
             if (netSettlementGroup?.Length == 0) SetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup), null);
             if (netSettlementGroup?.Length > 0)
@@ -85,7 +85,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public MasterDataUpdater WithMeteringConfiguration(string? method, string? meterNumber)
+        public IMasterDataBuilder WithMeteringConfiguration(string? method, string? meterNumber)
         {
             var currentMeterConfiguration = GetValue<MeteringConfiguration>(nameof(MasterData.MeteringConfiguration));
             SetValueIfValid(
@@ -111,13 +111,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                         }
                     }
 
-                    var updatedMeteringMethod = method is null
+                    var meteringMethod = method is null
                         ? currentMeterConfiguration.Method
                         : EnumerationType.FromName<MeteringMethod>(method);
+                    BusinessRulesValidationResult validationResult;
+                    validationResult = meteringMethod == MeteringMethod.Physical ? MeteringConfiguration.CheckRules(meteringMethod, string.IsNullOrEmpty(meterNumber) ? MeterId.Empty() : MeterId.Create(meterNumber)) : MeteringConfiguration.CheckRules(meteringMethod, MeterId.Empty());
 
-                    var updatedMeterNumber = GetUpdatedMeterNumber(meterNumber, updatedMeteringMethod, currentMeterConfiguration);
-
-                    var validationResult = MeteringConfiguration.CheckRules(updatedMeteringMethod, updatedMeterNumber);
                     return validationResult.Success == false ? BusinessRulesValidationResult.Failure(validationResult.Errors.ToArray()) : BusinessRulesValidationResult.Valid();
                 },
                 () =>
@@ -130,11 +129,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public MasterDataUpdater WithAddress(string? streetName = null, string? streetCode = null, string? buildingNumber = null, string? city = null, string? citySubDivision = null, string? postCode = null, CountryCode? countryCode = null, string? floor = null, string? room = null, int? municipalityCode = null, bool? isActual = null, string? geoInfoReference = null, string? locationDescription = null)
+        public IMasterDataBuilder WithAddress(string? streetName = null, string? streetCode = null, string? buildingNumber = null, string? city = null, string? citySubDivision = null, string? postCode = null, CountryCode? countryCode = null, string? floor = null, string? room = null, int? municipalityCode = null, bool? isActual = null, Guid? geoInfoReference = null, string? locationDescription = null)
         {
             SetValueIfValid(
                 nameof(MasterData.Address),
-                () => Address.CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, locationDescription, geoInfoReference, isActual),
+                () => Address.CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, locationDescription),
                 () =>
                 {
                     var currentAddress = GetValue<Address>(nameof(MasterData.Address));
@@ -145,7 +144,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public MasterDataUpdater WithMeasurementUnitType(string? measurementUnitType)
+        public IMasterDataBuilder WithMeasurementUnitType(string? measurementUnitType)
         {
             if (measurementUnitType?.Length == 0) SetValue<MeasurementUnitType>(nameof(MasterData.UnitType), null);
             if (measurementUnitType?.Length > 0)
@@ -164,7 +163,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public MasterDataUpdater WithPowerPlant(string? gsrnNumber)
+        public IMasterDataBuilder WithPowerPlant(string? gsrnNumber)
         {
             if (gsrnNumber?.Length == 0) SetValue<GsrnNumber>(nameof(MasterData.PowerPlantGsrnNumber), null);
             if (gsrnNumber?.Length > 0)
@@ -178,7 +177,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public MasterDataUpdater WithReadingPeriodicity(string? readingPeriodicity)
+        public IMasterDataBuilder WithReadingPeriodicity(string? readingPeriodicity)
         {
             if (readingPeriodicity?.Length == 0) SetValue<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence), null);
             if (readingPeriodicity?.Length > 0)
@@ -198,7 +197,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public MasterDataUpdater WithPowerLimit(int? kwh, int? ampere)
+        public IMasterDataBuilder WithPowerLimit(int? kwh, int? ampere)
         {
             SetValueIfValid(
                 nameof(MasterData.PowerLimit),
@@ -207,7 +206,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public MasterDataUpdater WithPowerLimit(string? kwh, string? ampere)
+        public IMasterDataBuilder WithPowerLimit(string? kwh, string? ampere)
         {
             var updatedKwh = ConvertToNullableString(kwh, GetValue<PowerLimit>(nameof(MasterData.PowerLimit)).Kwh);
             var updatedAmpere = ConvertToNullableString(ampere, GetValue<PowerLimit>(nameof(MasterData.PowerLimit)).Ampere);
@@ -218,7 +217,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public MasterDataUpdater WithSettlementMethod(string? settlementMethod)
+        public IMasterDataBuilder WithSettlementMethod(string? settlementMethod)
         {
             if (settlementMethod?.Length == 0) SetValue<SettlementMethod>(nameof(MasterData.SettlementMethod), null);
             if (settlementMethod?.Length > 0)
@@ -239,7 +238,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public MasterDataUpdater WithDisconnectionType(string? disconnectionType)
+        public IMasterDataBuilder WithDisconnectionType(string? disconnectionType)
         {
             if (disconnectionType?.Length == 0) SetValue<DisconnectionType>(nameof(MasterData.DisconnectionType), null);
             if (disconnectionType?.Length > 0)
@@ -259,7 +258,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public MasterDataUpdater WithAssetType(string? assetType)
+        public IMasterDataBuilder WithAssetType(string? assetType)
         {
             if (assetType?.Length == 0) SetValue<AssetType>(nameof(MasterData.AssetType), null);
             if (assetType?.Length > 0)
@@ -278,7 +277,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public MasterDataUpdater WithScheduledMeterReadingDate(string? scheduledMeterReadingDate)
+        public IMasterDataBuilder WithScheduledMeterReadingDate(string? scheduledMeterReadingDate)
         {
             if (scheduledMeterReadingDate?.Length == 0) SetValue<ScheduledMeterReadingDate>(nameof(MasterData.ScheduledMeterReadingDate), null);
             if (scheduledMeterReadingDate?.Length > 0)
@@ -292,7 +291,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public MasterDataUpdater WithCapacity(string? capacity)
+        public IMasterDataBuilder WithCapacity(string? capacity)
         {
             if (capacity?.Length == 0) SetValue<Capacity>(nameof(MasterData.Capacity), null);
             if (capacity?.Length > 0)
@@ -306,7 +305,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public MasterDataUpdater EffectiveOn(string? effectiveDate)
+        public IMasterDataBuilder EffectiveOn(string? effectiveDate)
         {
             SetValueIfValid(
                 nameof(MasterData.EffectiveDate),
@@ -315,7 +314,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public MasterDataUpdater WithProductType(string? productType)
+        public IMasterDataBuilder WithProductType(string? productType)
         {
             if (productType?.Length == 0) SetValue<ProductType>(nameof(MasterData.ProductType), null);
             if (productType?.Length > 0)
@@ -326,7 +325,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                     {
                         return EnumerationType.GetAll<ProductType>()
                             .Select(item => item.Name)
-                            .Contains(productType) == false ? BusinessRulesValidationResult.Failure(new InvalidProductTypeValue(productType)) : BusinessRulesValidationResult.Valid();
+                            .Contains(productType) == false ? BusinessRulesValidationResult.Failure(new InvalidProductType()) : BusinessRulesValidationResult.Valid();
                     },
                     () => EnumerationType.FromName<ProductType>(productType));
             }
@@ -334,7 +333,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public MasterDataUpdater WithConnectionType(string? connectionType)
+        public IMasterDataBuilder WithConnectionType(string? connectionType)
         {
             if (connectionType?.Length == 0) SetValue<ConnectionType>(nameof(MasterData.ConnectionType), null);
             if (connectionType?.Length > 0)
@@ -353,7 +352,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public MasterDataUpdater WithProductionObligation(bool? productionObligation)
+        public IMasterDataBuilder WithProductionObligation(bool? productionObligation)
         {
             if (productionObligation.HasValue == true)
             {
@@ -368,21 +367,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             if (updatedValue is null) return currentValue.ToString();
             if (updatedValue.Length == 0) return null;
             return updatedValue;
-        }
-
-        private static MeterId GetUpdatedMeterNumber(string? meterNumber, MeteringMethod meteringMethod, MeteringConfiguration currentMeterConfiguration)
-        {
-            if (meteringMethod != MeteringMethod.Physical)
-            {
-                return MeterId.Empty();
-            }
-
-            if (meterNumber?.Length > 0)
-            {
-                return MeterId.Create(meterNumber);
-            }
-
-            return meterNumber is null ? currentMeterConfiguration.Meter : MeterId.Empty();
         }
 
         private void SetValueIfValid<T>(string valueName, Func<BusinessRulesValidationResult> validator, Func<T> creator)

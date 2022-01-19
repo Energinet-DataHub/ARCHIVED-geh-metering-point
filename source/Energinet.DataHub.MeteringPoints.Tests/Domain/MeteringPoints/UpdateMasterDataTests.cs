@@ -114,7 +114,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 string.Empty,
                 default,
                 isActual: true,
-                geoInfoReference: Guid.NewGuid().ToString(),
+                geoInfoReference: Guid.NewGuid(),
                 null);
 
             return new MasterData(
@@ -150,7 +150,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 string.Empty,
                 default,
                 isActual: true,
-                geoInfoReference: Guid.NewGuid().ToString(),
+                geoInfoReference: Guid.NewGuid(),
                 null);
 
             return new MasterData(

@@ -28,13 +28,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     [UnitTest]
     public class VEProductionMeteringPointValidationTests : TestBase
     {
-        [Fact]
-        public void Product_type_is_required()
+        [Theory]
+        [InlineData(nameof(ProductType.EnergyActive), false)]
+        [InlineData(nameof(ProductType.FuelQuantity), true)]
+        public void Product_type_must_be_correct(string productType, bool expectError)
         {
-            var validationResult = Builder()
-                .Validate();
+            var masterData = Builder()
+                .WithProductType(productType)
+                .Build();
 
-            AssertContainsValidationError<ProductTypeIsRequired>(validationResult);
+            AssertError<InvalidProductType>(CheckRules(masterData), expectError);
         }
 
         [Fact]

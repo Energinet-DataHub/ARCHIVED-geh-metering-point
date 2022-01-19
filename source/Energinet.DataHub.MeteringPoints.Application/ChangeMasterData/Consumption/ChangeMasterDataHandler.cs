@@ -19,8 +19,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.Policies;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -65,74 +63,34 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 return new BusinessProcessResult(request.TransactionId, authorizationResult.Errors);
             }
 
-            var masterDataUpdater = CreateMasterDataUpdater(request, targetMeteringPoint);
-
-            var valueValidation = masterDataUpdater.Validate();
-            if (valueValidation.Success == false)
+            var preCheckResult = targetMeteringPoint.CanBeChanged();
+            if (preCheckResult.Success == false)
             {
-                return new BusinessProcessResult(request.TransactionId, valueValidation.Errors);
+                return new BusinessProcessResult(request.TransactionId, preCheckResult.Errors);
             }
 
-            var updatedMasterData = masterDataUpdater.Build();
+            var valueTransformer = new MasterDataValueTransformer(request, targetMeteringPoint);
+            if (valueTransformer.HasError)
+            {
+                return new BusinessProcessResult(request.TransactionId, valueTransformer.Errors);
+            }
 
-            var policyCheckResult = await CheckPoliciesAsync(updatedMasterData).ConfigureAwait(false);
+            var updatedValues = valueTransformer.UpdatedValues();
+
+            var policyCheckResult = await CheckPoliciesAsync(updatedValues).ConfigureAwait(false);
             if (policyCheckResult.Success == false)
             {
                 return new BusinessProcessResult(request.TransactionId, policyCheckResult.Errors);
             }
 
-            var validationResult = targetMeteringPoint.CanUpdateMasterData(updatedMasterData, GetMasterValidator());
-            if (validationResult.Success != true)
+            var masterDataUpdater = new MasterDataValueUpdater(updatedValues, targetMeteringPoint);
+            if (masterDataUpdater.CanUpdate != true)
             {
-                return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
+                return new BusinessProcessResult(request.TransactionId, masterDataUpdater.Errors);
             }
 
-            targetMeteringPoint.UpdateMasterData(updatedMasterData, GetMasterValidator());
+            masterDataUpdater.Update();
             return BusinessProcessResult.Ok(request.TransactionId);
-        }
-
-        private static MasterDataValidator GetMasterValidator()
-        {
-            return new MasterDataValidator();
-        }
-
-        private static MasterDataUpdater CreateMasterDataUpdater(ChangeMasterDataRequest request, MeteringPoint targetMeteringPoint)
-        {
-            var masterDataUpdater = new MasterDataUpdater(
-                new MasterDataFieldSelector().GetMasterDataFieldsFor(targetMeteringPoint.MeteringPointType),
-                targetMeteringPoint.MasterData);
-
-            masterDataUpdater
-                .EffectiveOn(request.EffectiveDate)
-                .WithMeteringConfiguration(request.MeteringMethod, request.MeterNumber)
-                .WithProductType(request.ProductType)
-                .WithMeasurementUnitType(request.UnitType)
-                .WithAssetType(request.AssetType)
-                .WithReadingPeriodicity(request.ReadingPeriodicity)
-                .WithPowerLimit(request.MaximumPower, request.MaximumCurrent)
-                .WithPowerPlant(request.PowerPlantGsrnNumber)
-                .WithCapacity(request.CapacityInKw)
-                .WithSettlementMethod(request.SettlementMethod)
-                .WithScheduledMeterReadingDate(request.ScheduledMeterReadingDate)
-                .WithConnectionType(request.ConnectionType)
-                .WithDisconnectionType(request.DisconnectionType)
-                .WithNetSettlementGroup(request.NetSettlementGroup)
-                .WithProductionObligation(request.ProductionObligation)
-                .WithAddress(
-                    request.Address?.StreetName,
-                    request.Address?.StreetCode,
-                    request.Address?.BuildingNumber,
-                    request.Address?.City,
-                    request.Address?.CitySubDivision,
-                    request.Address?.PostCode,
-                    string.IsNullOrEmpty(request.Address?.CountryCode) ? null : EnumerationType.FromName<CountryCode>(request.Address.CountryCode),
-                    request.Address?.Floor,
-                    request.Address?.Room,
-                    request.Address?.MunicipalityCode,
-                    request.Address?.IsActual,
-                    request.Address?.GeoInfoReference,
-                    request.Address?.LocationDescription);
-            return masterDataUpdater;
         }
 
         private async Task<MeteringPoint?> FetchTargetMeteringPointAsync(ChangeMasterDataRequest request)
@@ -142,12 +100,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumpt
                 .ConfigureAwait(false);
         }
 
-        private Task<BusinessRulesValidationResult> CheckPoliciesAsync(MasterData masterData)
+        private Task<BusinessRulesValidationResult> CheckPoliciesAsync(MasterDataDetails masterDataDetails)
         {
-            if (masterData == null) throw new ArgumentNullException(nameof(masterData));
+            if (masterDataDetails == null) throw new ArgumentNullException(nameof(masterDataDetails));
             var validationResults = new List<BusinessRulesValidationResult>()
             {
-                new EffectiveDatePolicy(_settings.NumberOfDaysEffectiveDateIsAllowedToBeforeToday).Check(_systemDateTimeProvider.Now(), masterData.EffectiveDate!),
+                new EffectiveDatePolicy(_settings.NumberOfDaysEffectiveDateIsAllowedToBeforeToday).Check(_systemDateTimeProvider.Now(), masterDataDetails.EffectiveDate),
             };
 
             var validationErrors = validationResults.SelectMany(results => results.Errors).ToList();

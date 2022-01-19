@@ -50,10 +50,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             builder.OwnsOne<MasterData>("_masterData", mapper =>
             {
-                mapper.Property<EffectiveDate>(x => x.EffectiveDate)
-                    .HasColumnName("EffectiveDate")
-                    .HasConversion<DateTime>(toDbValue => toDbValue.DateInUtc.ToDateTimeUtc(), fromDbValue => EffectiveDate.Create(fromDbValue));
-
                 mapper.Property(x => x.ProductType)
                     .HasColumnName("ProductType")
                     .HasConversion(
@@ -158,8 +154,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     .HasConversion(
                         toDbValue => toDbValue! == null! ? null : toDbValue.Name,
                         fromDbValue => string.IsNullOrEmpty(fromDbValue) ? null : EnumerationType.FromName<ConnectionType>(fromDbValue));
-               // mapper.Ignore(x => x.ConnectionType);
-               // mapper.Ignore(x => x.EffectiveDate);
+                mapper.Ignore(x => x.ConnectionType);
+                mapper.Ignore(x => x.EffectiveDate);
             });
 
             builder.OwnsOne<ConnectionState>("ConnectionState", config =>
@@ -184,6 +180,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                 .HasConversion(
                     toDbValue => toDbValue.Value,
                     fromDbValue => new GridAreaLinkId(fromDbValue));
+
+            builder.Property<EffectiveDate>("_effectiveDate")
+                .HasColumnName("EffectiveDate")
+                .HasConversion<DateTime>(toDbValue => toDbValue.DateInUtc.ToDateTimeUtc(), fromDbValue => EffectiveDate.Create(fromDbValue));
 
             builder.OwnsOne<EnergySupplierDetails>("EnergySupplierDetails", config =>
             {

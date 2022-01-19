@@ -14,17 +14,17 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class MeasureUnitTypeInvalidValueErrorConverter : ErrorConverter<InvalidUnitTypeValue>
+    public class MeasureUnitTypeInvalidValueErrorConverter : ErrorConverter<MeasureUnitTypeInvalidValueValidationError>
     {
-        protected override ErrorMessage Convert(InvalidUnitTypeValue validationError)
+        protected override ErrorMessage Convert(MeasureUnitTypeInvalidValueValidationError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new ErrorMessage("D02", $"Energy time series measure unit {validationError.ProvidedValue} has wrong value (outside domain)");
+            return new ErrorMessage("D02", $"Energy time series measure unit {validationError.MeasureUnitType} for metering point {validationError.GsrnNumber} has wrong value (outside domain)");
         }
     }
 }

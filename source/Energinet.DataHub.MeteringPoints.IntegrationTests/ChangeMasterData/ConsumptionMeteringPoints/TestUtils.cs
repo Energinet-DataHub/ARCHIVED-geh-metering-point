@@ -12,22 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
-using Energinet.DataHub.MeteringPoints.Domain;
+using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.ConsumptionMeteringPoints
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ChangeMasterData.ConsumptionMeteringPoints
 {
     public static class TestUtils
     {
-        internal static MasterDataDocument CreateRequest()
+        internal static ChangeMasterDataRequest CreateRequest()
         {
-            return new MasterDataDocument()
+            return new ChangeMasterDataRequest()
                 with
                 {
-                    ProcessType = BusinessProcessType.ChangeMasterData.Name,
                     EffectiveDate = SampleData.EffectiveDate,
                     TransactionId = SampleData.Transaction,
                     GsrnNumber = SampleData.GsrnNumber,
+                    Address = Scenarios.CreateAddress(),
+                    SettlementMethod = SampleData.SettlementMethod,
                 };
         }
     }

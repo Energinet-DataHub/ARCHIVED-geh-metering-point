@@ -14,9 +14,14 @@
 
 using System;
 using System.Linq;
+using System.Text;
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Microsoft.Diagnostics.Tracing.Parsers.MicrosoftWindowsTCPIP;
 using Xunit;
 using Xunit.Categories;
 
@@ -25,24 +30,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
     [UnitTest]
     public class AddressTests
     {
-        [Fact]
-        public void Actual_address_must_be_set_when_geo_info_reference_is_set()
-        {
-            var result = CheckRules(geoInfoReference: Guid.NewGuid().ToString(), isActualAddress: null);
-
-            AssertError<ActualAddressIsRequired>(result, true);
-        }
-
-        [Theory]
-        [InlineData("invalid", true)]
-        [InlineData("{25F02B43-317A-40B1-8B4E-4E863676A699}", false)]
-        public void Geo_info_reference_must_be_valid(string geoInfoReference, bool expectError)
-        {
-            var checkResult = CheckRules(geoInfoReference: geoInfoReference);
-
-            AssertError<InvalidGeoInfoReference>(checkResult, expectError);
-        }
-
         [Theory]
         [InlineData("0001", false)]
         [InlineData("0", true)]
@@ -273,7 +260,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             var room = "tv";
             var municipalityCode = 100;
             var isActual = true;
-            var geoInfoReference = Guid.Parse("5B736036-7612-4350-A73D-058560350E32").ToString();
+            var geoInfoReference = Guid.Parse("5B736036-7612-4350-A73D-058560350E32");
             var locationDescription = "Test location";
 
             var address = Create(
@@ -301,7 +288,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             Assert.Equal(floor, address.Floor);
             Assert.Equal(room, address.Room);
             Assert.Equal(municipalityCode, address.MunicipalityCode);
-            Assert.Equal(geoInfoReference, address.GeoInfoReference.ToString());
+            Assert.Equal(geoInfoReference, address.GeoInfoReference);
             Assert.Equal(locationDescription, address.LocationDescription);
         }
 
@@ -364,7 +351,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             string room = "",
             int municipalityCode = default(int),
             bool isActual = false,
-            string? geoInfoReference = null,
+            Guid? geoInfoReference = null,
             string? locationDescription = null)
         {
             return Address.Create(
@@ -383,7 +370,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                locationDescription: locationDescription);
         }
 
-        private static BusinessRulesValidationResult CheckRules(string? streetName = "", string? streetCode = "", string? buildingNumber = "", string? city = "", string? citySubDivision = "", string? postCode = "", CountryCode? countryCode = null, string? floor = "", string room = "", int municipalityCode = default(int), string locationDescription = "", string geoInfoReference = "", bool? isActualAddress = null)
+        private static BusinessRulesValidationResult CheckRules(string? streetName = "", string? streetCode = "", string? buildingNumber = "", string? city = "", string? citySubDivision = "", string? postCode = "", CountryCode? countryCode = null, string? floor = "", string room = "", int municipalityCode = default(int), string locationDescription = "")
         {
             return Address.CheckRules(
                 streetName: streetName,
@@ -396,9 +383,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 floor: floor,
                 room: room,
                 municipalityCode: municipalityCode,
-                locationDescription: locationDescription,
-                geoInfoReference: geoInfoReference,
-                isActualAddress: isActualAddress);
+                locationDescription: locationDescription);
         }
 
         private static void AssertError<TRuleError>(BusinessRulesValidationResult rulesValidationResult, bool errorExpected)

@@ -47,6 +47,29 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         }
 
         [Theory]
+        [InlineData(nameof(MeteringPointType.Consumption), "", typeof(MeterReadingOccurenceMandatoryValidationError), true)]
+        [InlineData(nameof(MeteringPointType.VEProduction), nameof(ReadingOccurrence.Yearly), typeof(MeterReadingOccurenceInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.VEProduction), nameof(ReadingOccurrence.Monthly), typeof(MeterReadingOccurenceInvalidValueValidationError), false)]
+        [InlineData(nameof(MeteringPointType.Analysis), nameof(ReadingOccurrence.Monthly), typeof(MeterReadingOccurenceInvalidValueValidationError), false)]
+        [InlineData(nameof(MeteringPointType.NetConsumption), nameof(ReadingOccurrence.Monthly), typeof(MeterReadingOccurenceInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.NetConsumption), nameof(ReadingOccurrence.Quarterly), typeof(MeterReadingOccurenceInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.NetConsumption), nameof(ReadingOccurrence.Hourly), typeof(MeterReadingOccurenceInvalidValueValidationError), false)]
+        [InlineData(nameof(MeteringPointType.SurplusProductionGroup), nameof(ReadingOccurrence.Monthly), typeof(MeterReadingOccurenceInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.SurplusProductionGroup), nameof(ReadingOccurrence.Quarterly), typeof(MeterReadingOccurenceInvalidValueValidationError), true)]
+        [InlineData(nameof(MeteringPointType.SurplusProductionGroup), nameof(ReadingOccurrence.Hourly), typeof(MeterReadingOccurenceInvalidValueValidationError), false)]
+        public void Validate_MeterReadingOccurence(string meteringPointType, string meterReadingOccurence, System.Type validationError, bool expectedError)
+        {
+            var businessRequest = CreateRequest() with
+            {
+                ProcessType = BusinessProcessType.CreateMeteringPoint.Name,
+                MeterReadingOccurrence = meterReadingOccurence,
+                TypeOfMeteringPoint = meteringPointType,
+            };
+
+            ValidateCreateMeteringPoint(businessRequest, validationError, expectedError);
+        }
+
+        [Theory]
         [InlineData(nameof(MeteringPointType.Consumption), "gridArea", typeof(SourceMeteringGridAreaNotAllowedValidationError), false)]
         [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), "gridArea", typeof(SourceMeteringGridAreaNotAllowedValidationError), true)]
         [InlineData(nameof(MeteringPointType.ExchangeReactiveEnergy), "", typeof(SourceMeteringGridAreaNotAllowedValidationError), false)]

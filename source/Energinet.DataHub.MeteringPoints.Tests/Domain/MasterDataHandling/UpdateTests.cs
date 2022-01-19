@@ -928,7 +928,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                     room: "1",
                     municipalityCode: 500,
                     isActual: true,
-                    geoInfoReference: Guid.NewGuid().ToString(),
+                    geoInfoReference: Guid.NewGuid(),
                     locationDescription: "Test location")
                 .Build();
 
@@ -955,7 +955,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                     room: "1",
                     municipalityCode: 500,
                     isActual: true,
-                    geoInfoReference: Guid.NewGuid().ToString(),
+                    geoInfoReference: Guid.NewGuid(),
                     locationDescription: "Test location")
                 .Build();
 
@@ -1022,21 +1022,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
             Assert.Equal(MeteringMethod.Calculated, updatedMasterData.MeteringConfiguration.Method);
             Assert.Equal(string.Empty, updatedMasterData.MeteringConfiguration.Meter.Value);
-        }
-
-        [Fact]
-        public void Meter_number_is_unchanged_if_no_value_is_provided()
-        {
-            var masterData = Builder()
-                .WithMeteringConfiguration(MeteringMethod.Physical.Name, "1")
-                .Build();
-
-            var updatedMasterData = UpdateBuilder(masterData)
-                .WithMeteringConfiguration(null, null)
-                .Build();
-
-            Assert.Equal(masterData.MeteringConfiguration.Method, updatedMasterData.MeteringConfiguration.Method);
-            Assert.Equal(masterData.MeteringConfiguration.Meter.Value, updatedMasterData.MeteringConfiguration.Meter.Value);
         }
 
         [Fact]
@@ -1199,7 +1184,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithProductType("invalid value")
                 .Validate();
 
-            AssertContainsValidationError<InvalidProductTypeValue>(validationResult);
+            AssertContainsValidationError<InvalidProductType>(validationResult);
         }
 
         [Fact]
@@ -1305,7 +1290,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                     string.Empty,
                     default,
                     isActual: true,
-                    geoInfoReference: Guid.NewGuid().ToString(),
+                    geoInfoReference: Guid.NewGuid(),
                     null)
                 .WithAssetType(AssetType.GasTurbine.Name)
                 .WithPowerPlant(SampleData.PowerPlant)
