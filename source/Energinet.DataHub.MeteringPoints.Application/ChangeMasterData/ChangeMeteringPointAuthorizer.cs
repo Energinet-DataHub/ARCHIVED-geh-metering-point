@@ -27,19 +27,19 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
 {
     public class ChangeMeteringPointAuthorizer
     {
-        private readonly IActorContext _authenticatedUserContext;
+        private readonly IActorContext _actorContext;
         private readonly IMeteringPointOwnershipProvider _ownershipProvider;
 
         public ChangeMeteringPointAuthorizer(IActorContext actorContext, IMeteringPointOwnershipProvider ownershipProvider)
         {
-            _authenticatedUserContext = actorContext ?? throw new ArgumentNullException(nameof(actorContext));
+            _actorContext = actorContext ?? throw new ArgumentNullException(nameof(actorContext));
             _ownershipProvider = ownershipProvider ?? throw new ArgumentNullException(nameof(ownershipProvider));
         }
 
         public Task<AuthorizationResult> AuthorizeAsync(MeteringPoint meteringPoint)
         {
             if (meteringPoint == null) throw new ArgumentNullException(nameof(meteringPoint));
-            if (_authenticatedUserContext.CurrentActor is null)
+            if (_actorContext.CurrentActor is null)
             {
                 throw new AuthenticationException("No authenticated user");
             }
@@ -57,7 +57,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
         {
             return new List<Task<AuthorizationResult>>
             {
-                new GridOperatorIsOwnerPolicy(_ownershipProvider, _authenticatedUserContext).AuthorizeAsync(request),
+                new GridOperatorIsOwnerPolicy(_ownershipProvider, _actorContext).AuthorizeAsync(request),
             };
         }
     }
