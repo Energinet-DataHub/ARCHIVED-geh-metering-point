@@ -37,7 +37,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
                         address?.Floor,
                         address?.Room,
                         address?.MunicipalityCode,
-                        address?.LocationDescription));
+                        address?.LocationDescription,
+                        address?.GeoInfoReference,
+                        address?.IsActual));
             });
         }
     }

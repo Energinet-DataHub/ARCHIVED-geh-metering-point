@@ -14,17 +14,17 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class ActualAddressIsMandatoryWhenGeoInfoReferenceIsPresentErrorConverter : ErrorConverter<ActualAddressIsMandatoryWhenGeoInfoReferenceIsPresentValidationError>
+    public class ActualAddressIsMandatoryWhenGeoInfoReferenceIsPresentErrorConverter : ErrorConverter<ActualAddressIsRequired>
     {
-        protected override ErrorMessage Convert(ActualAddressIsMandatoryWhenGeoInfoReferenceIsPresentValidationError validationError)
+        protected override ErrorMessage Convert(ActualAddressIsRequired validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D63", $"The actual address indicator is  not correct.");
+            return new("D63", $"The actual address indicator is required when geo info reference is defined.");
         }
     }
 }

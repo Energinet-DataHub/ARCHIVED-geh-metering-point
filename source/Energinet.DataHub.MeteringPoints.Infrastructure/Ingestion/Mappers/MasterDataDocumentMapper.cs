@@ -50,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
                         FloorIdentification = obj.FloorIdentification,
                         RoomIdentification = obj.RoomIdentification,
                         BuildingNumber = obj.BuildingNumber,
-                        MunicipalityCode = obj.MunicipalityCode.ToString()!,
+                        MunicipalityCode = obj.MunicipalityCode,
                         CityNameSubDivision = obj.CitySubDivisionName,
                         GeoInfoReference = obj.GeoInfoReference,
                     },
@@ -70,6 +70,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers
                     MeasureUnitType = obj.MeasureUnitType,
                     PhysicalConnectionCapacity = obj.PhysicalConnectionCapacity,
                     ScheduledMeterReadingDate = obj.ScheduledMeterReadingDate,
+                    ProductionObligation = obj.ProductionObligation,
                 },
             };
         }
