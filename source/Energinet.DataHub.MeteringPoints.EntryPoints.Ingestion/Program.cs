@@ -47,7 +47,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             var program = new Program();
 
             var host = program.ConfigureApplication();
-            program.AssertConfiguration();
+
+            // program.AssertConfiguration();
             await program.ExecuteApplicationAsync(host).ConfigureAwait(false);
         }
 
@@ -76,18 +77,17 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             container.Register<XmlSenderValidator>(Lifestyle.Scoped);
             container.Register<RequestResponseLoggingMiddleware>(Lifestyle.Scoped);
 
-            container.Register<IRequestResponseLogging>(
-                () =>
-            {
-                var logger = container.GetService<ILogger<RequestResponseLoggingBlobStorage>>();
-                var storage = new RequestResponseLoggingBlobStorage(
-                    Environment.GetEnvironmentVariable("REQUEST_RESPONSE_LOGGING_CONNECTION_STRING") ?? throw new InvalidOperationException(),
-                    Environment.GetEnvironmentVariable("REQUEST_RESPONSE_LOGGING_CONTAINER_NAME") ?? throw new InvalidOperationException(),
-                    logger ?? throw new InvalidOperationException());
-                return storage;
-            },
-                Lifestyle.Scoped);
-
+            // container.Register<IRequestResponseLogging>(
+            //     () =>
+            // {
+            //     var logger = container.GetService<ILogger<RequestResponseLoggingBlobStorage>>();
+            //     var storage = new RequestResponseLoggingBlobStorage(
+            //         Environment.GetEnvironmentVariable("REQUEST_RESPONSE_LOGGING_CONNECTION_STRING") ?? throw new InvalidOperationException(),
+            //         Environment.GetEnvironmentVariable("REQUEST_RESPONSE_LOGGING_CONTAINER_NAME") ?? throw new InvalidOperationException(),
+            //         logger ?? throw new InvalidOperationException());
+            //     return storage;
+            // },
+            //     Lifestyle.Scoped);
             container.Register<MessageDispatcher, InternalDispatcher>(Lifestyle.Scoped);
             container.Register<Channel, InternalServiceBus>(Lifestyle.Scoped);
 
@@ -102,6 +102,18 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             container.Register(() => new ServiceBusClient(connectionString).CreateSender(topic), Lifestyle.Singleton);
 
             container.SendProtobuf<MeteringPointEnvelope>();
+
+            container.Register<IRequestResponseLogging>(
+                () =>
+                {
+                    var logger = container.GetService<ILogger<RequestResponseLoggingBlobStorage>>();
+                    var storage = new RequestResponseLoggingBlobStorage(
+                        Environment.GetEnvironmentVariable("REQUEST_RESPONSE_LOGGING_CONNECTION_STRING") ?? throw new InvalidOperationException(),
+                        Environment.GetEnvironmentVariable("REQUEST_RESPONSE_LOGGING_CONTAINER_NAME") ?? throw new InvalidOperationException(),
+                        logger ?? throw new InvalidOperationException());
+                    return storage;
+                },
+                Lifestyle.Scoped);
         }
 
         private static XmlMappingConfigurationBase XmlMappingConfiguration(string documentType)
