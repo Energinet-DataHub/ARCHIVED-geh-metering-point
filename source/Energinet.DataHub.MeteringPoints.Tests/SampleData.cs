@@ -73,9 +73,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 
         public static string Floor => string.Empty;
 
-        public static string StreetCode => string.Empty;
+        public static string StreetCode => "0650";
 
-        public static string BuildingNumber => string.Empty;
+        public static string BuildingNumber => "20";
 
         public static string Room => string.Empty;
 
