@@ -54,23 +54,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
                 .HasProductionObligation(true);
         }
 
-        private EffectiveDate CreateEffectiveDateAsOfToday()
-        {
-            var today = _timeProvider.Now().ToDateTimeUtc();
-            return EffectiveDate.Create(new DateTime(today.Year, today.Month, today.Day, 22, 0, 0));
-        }
-
-        private MasterDataDocument CreateUpdateRequest()
-        {
-            return TestUtils.CreateRequest()
-                with
-                {
-                    TransactionId = SampleData.Transaction,
-                    GsrnNumber = SampleData.GsrnNumber,
-                    EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
-                };
-        }
-
         private AssertPersistedMeteringPoint AssertMasterData()
         {
             return AssertPersistedMeteringPoint

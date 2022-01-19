@@ -302,7 +302,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         [Fact]
         public async Task Address_is_updated()
         {
-            await CreatePhysicalConsumptionMeteringPoint().ConfigureAwait(false);
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
 
             var request = CreateUpdateRequest()
                 with
@@ -423,7 +423,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             var timeProvider = GetService<ISystemDateTimeProvider>() as SystemDateTimeProviderStub;
             timeProvider!.SetNow(InstantPattern.General.Parse(SampleData.EffectiveDate).Value);
 
-            await CreatePhysicalConsumptionMeteringPoint().ConfigureAwait(false);
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
 
             var request = TestUtils.CreateRequest()
                 with
@@ -438,7 +438,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         [Fact]
         public async Task Can_not_change_when_metering_point_is_closed_down()
         {
-            await CreatePhysicalConsumptionMeteringPoint().ConfigureAwait(false);
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
             await CloseDownMeteringPointAsync().ConfigureAwait(false);
 
             var request = CreateUpdateRequest()
@@ -454,51 +454,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         private Task CreateMeteringPointAsync()
         {
             return SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand());
-        }
-
-        private async Task CreatePhysicalConsumptionMeteringPoint()
-        {
-            var request = Scenarios.CreateConsumptionMeteringPointCommand()
-                with
-                {
-                    MeteringMethod = MeteringMethod.Physical.Name,
-                    MeterNumber = "1",
-                    NetSettlementGroup = NetSettlementGroup.Zero.Name,
-                    ConnectionType = null,
-                    ScheduledMeterReadingDate = null,
-                };
-            await SendCommandAsync(request).ConfigureAwait(false);
-        }
-
-        private async Task CreateConsumptionMeteringPointInNetSettlementGroup6()
-        {
-            var request = Scenarios.CreateConsumptionMeteringPointCommand()
-                with
-                {
-                    EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
-                    MeteringMethod = MeteringMethod.Virtual.Name,
-                    NetSettlementGroup = NetSettlementGroup.Six.Name,
-                    ConnectionType = ConnectionType.Installation.Name,
-                    ScheduledMeterReadingDate = "0101",
-                };
-            await SendCommandAsync(request).ConfigureAwait(false);
-        }
-
-        private EffectiveDate CreateEffectiveDateAsOfToday()
-        {
-            var today = _timeProvider.Now().ToDateTimeUtc();
-            return EffectiveDate.Create(new DateTime(today.Year, today.Month, today.Day, 22, 0, 0));
-        }
-
-        private MasterDataDocument CreateUpdateRequest()
-        {
-            return TestUtils.CreateRequest()
-                with
-                {
-                    TransactionId = SampleData.Transaction,
-                    GsrnNumber = SampleData.GsrnNumber,
-                    EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
-                };
         }
 
         private AssertPersistedMeteringPoint AssertMasterData()
