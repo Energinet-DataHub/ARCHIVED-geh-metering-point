@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -55,7 +56,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
 
         public DbSet<EnergySupplier> EnergySuppliers { get; private set; }
 
-        // public DbSet<Actor> Actors { get; private set; }
+        public DbSet<Actor> Actors { get; private set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             if (modelBuilder == null) throw new ArgumentNullException(nameof(modelBuilder));
