@@ -35,6 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                     new(nameof(MasterData.NetSettlementGroup), Applicability.Required),
                     new(nameof(MasterData.DisconnectionType), Applicability.Required),
                     new(nameof(MasterData.ConnectionType), Applicability.Optional),
+                    new(nameof(MasterData.ProductionObligation), Applicability.NotAllowed),
                 }
             },
             {
