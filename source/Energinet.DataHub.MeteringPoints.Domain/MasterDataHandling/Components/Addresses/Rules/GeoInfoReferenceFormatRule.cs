@@ -12,21 +12,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
+using System;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.VEProduction
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses.Rules
 {
-    internal class VEProductionMeteringPointValidator : IMasterDataValidatorStrategy
+    public class GeoInfoReferenceFormatRule : IBusinessRule
     {
-        public BusinessRulesValidationResult CheckRules(MasterData masterData)
+        public GeoInfoReferenceFormatRule(string? providedValue)
         {
-            return new BusinessRulesValidationResult(new List<IBusinessRule>()
+            ValidationError = new InvalidGeoInfoReference(providedValue);
+            if (providedValue is null) return;
+            if (IsGuid(providedValue))
             {
-                new StreetNameIsRequiredRule(masterData.Address),
-                new MasterDataHandling.VEProduction.Rules.MeterReadingOccurrenceRule(masterData.ReadingOccurrence),
-            });
+                IsBroken = true;
+            }
+        }
+
+        public bool IsBroken { get; }
+
+        public ValidationError ValidationError { get; }
+
+        private static bool IsGuid(string providedValue)
+        {
+            return Guid.TryParse(providedValue, out _) == false;
         }
     }
 }

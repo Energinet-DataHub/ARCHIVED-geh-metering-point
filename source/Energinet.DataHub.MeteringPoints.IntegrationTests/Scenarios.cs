@@ -40,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 SampleData.RoomIdentification,
                 int.Parse(SampleData.MunicipalityCode, NumberStyles.Any, new NumberFormatInfo()),
                 SampleData.IsActualAddress,
-                Guid.Parse(SampleData.GeoInfoReference));
+                SampleData.GeoInfoReference);
         }
 
         internal static CreateMeteringPoint CreateConsumptionMeteringPointCommand()
@@ -61,8 +61,46 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 SampleData.GsrnNumber,
                 MeteringMethod.Calculated.Name,
                 SampleData.ReadingOccurrence,
-                0,
-                0,
+                "0",
+                "0",
+                SampleData.MeteringGridArea,
+                SampleData.PowerPlantGsrnNumber,
+                string.Empty,
+                SampleData.SettlementMethod,
+                SampleData.DisconnectionType,
+                SampleData.EffectiveDate,
+                string.Empty,
+                Guid.NewGuid().ToString(),
+                NetSettlementGroup.Six.Name,
+                ConnectionType.Installation.Name,
+                SampleData.AssetType,
+                "0",
+                SampleData.GeoInfoReference,
+                "0101",
+                UnitType: MeasurementUnitType.KWh.Name,
+                ProductType: ProductType.EnergyActive.Name);
+        }
+
+        internal static CreateMeteringPoint CreateProductionMeteringPointCommand()
+        {
+            return new CreateMeteringPoint(
+                MeteringPointType: MeteringPointType.Production.Name,
+                SampleData.StreetName,
+                SampleData.BuildingNumber,
+                SampleData.PostCode,
+                SampleData.CityName,
+                SampleData.CitySubDivisionName,
+                SampleData.MunicipalityCode,
+                SampleData.CountryCode,
+                SampleData.StreetCode,
+                SampleData.FloorIdentification,
+                SampleData.RoomIdentification,
+                SampleData.IsActualAddress,
+                SampleData.GsrnNumber,
+                MeteringMethod.Calculated.Name,
+                SampleData.ReadingOccurrence,
+                "0",
+                "0",
                 SampleData.MeteringGridArea,
                 SampleData.PowerPlantGsrnNumber,
                 string.Empty,
@@ -99,8 +137,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 SampleData.GsrnNumber,
                 MeteringMethod.Calculated.Name,
                 SampleData.ReadingOccurrence,
-                0,
-                0,
+                "0",
+                "0",
                 SampleData.MeteringGridArea,
                 SampleData.PowerPlantGsrnNumber,
                 string.Empty,
@@ -130,6 +168,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 };
         }
 
+        internal static CreateMeteringPoint CreateVEProduction()
+        {
+            return CreateCommand(MeteringPointType.VEProduction)
+                with
+                {
+                    UnitType = MeasurementUnitType.KVArh.Name,
+                    ProductType = ProductType.EnergyActive.Name,
+                };
+        }
+
         internal static MasterDataDocument CreateDocument()
         {
             return new(
@@ -149,8 +197,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 SampleData.TypeOfMeteringPoint,
                 SampleData.SubTypeOfMeteringPoint,
                 SampleData.ReadingOccurrence,
-                0,
-                0,
+                "0",
+                "0",
                 SampleData.MeteringGridArea,
                 SampleData.PowerPlantGsrnNumber,
                 string.Empty,

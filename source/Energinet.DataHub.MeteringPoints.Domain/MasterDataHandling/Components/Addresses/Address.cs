@@ -77,10 +77,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.
             string? room = null,
             int? municipalityCode = null,
             bool? isActual = null,
-            Guid? geoInfoReference = null,
+            string? geoInfoReference = null,
             string? locationDescription = null)
         {
-            var result = CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, locationDescription);
+            var result = CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, locationDescription, geoInfoReference, isActual);
             if (result.Success == false)
             {
                 throw new InvalidAddressException(result.Errors);
@@ -98,11 +98,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.
                 room: room,
                 municipalityCode: municipalityCode,
                 isActual: isActual,
-                geoInfoReference: geoInfoReference,
+                geoInfoReference: geoInfoReference is not null ? Guid.Parse(geoInfoReference) : null,
                 locationDescription: locationDescription);
         }
 
-        public static BusinessRulesValidationResult CheckRules(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode, string? locationDescription)
+        public static BusinessRulesValidationResult CheckRules(string? streetName, string? streetCode, string? buildingNumber, string? city, string? citySubDivision, string? postCode, CountryCode? countryCode, string? floor, string? room, int? municipalityCode, string? locationDescription, string? geoInfoReference, bool? isActualAddress)
         {
             return new(new Collection<IBusinessRule>()
             {
@@ -116,6 +116,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.
                 new CitySubdivisionRule(citySubDivision),
                 new MunicipalityCodeRule(municipalityCode),
                 new LocationDescriptionLengthRule(locationDescription),
+                new GeoInfoReferenceFormatRule(geoInfoReference),
+                new ActualAddressRequirementRule(geoInfoReference, isActualAddress),
             });
         }
 
@@ -134,7 +136,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.
                 address.Room ?? Room,
                 address.MunicipalityCode ?? MunicipalityCode,
                 address.IsActual ?? IsActual,
-                address.GeoInfoReference ?? GeoInfoReference,
+                address.GeoInfoReference?.ToString() ?? GeoInfoReference?.ToString(),
                 address.LocationDescription ?? LocationDescription);
         }
     }
