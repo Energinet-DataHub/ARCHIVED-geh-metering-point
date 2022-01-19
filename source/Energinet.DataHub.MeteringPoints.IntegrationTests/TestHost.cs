@@ -35,6 +35,8 @@ using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
@@ -68,6 +70,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
+using Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.ConsumptionMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Confirm;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Generic;
@@ -410,12 +413,57 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             ((ActorContext)GetService<IActorContext>()).CurrentActor = new Actor(actorId, "GLN", "FakeIdentifier", "GridAccessProvider");
         }
 
+        protected EffectiveDate CreateEffectiveDateAsOfToday()
+        {
+            var today = GetService<ISystemDateTimeProvider>().Now().ToDateTimeUtc();
+            return EffectiveDate.Create(new DateTime(today.Year, today.Month, today.Day, 22, 0, 0));
+        }
+
+        protected async Task CreatePhysicalConsumptionMeteringPointAsync()
+        {
+            var request = Scenarios.CreateConsumptionMeteringPointCommand()
+                with
+                {
+                    MeteringMethod = MeteringMethod.Physical.Name,
+                    MeterNumber = "1",
+                    NetSettlementGroup = NetSettlementGroup.Zero.Name,
+                    ConnectionType = null,
+                    ScheduledMeterReadingDate = null,
+                };
+            await SendCommandAsync(request).ConfigureAwait(false);
+        }
+
         protected async Task CloseDownMeteringPointAsync()
         {
             var context = GetService<MeteringPointContext>();
             var meteringPoint = context.MeteringPoints.First(meteringPoint => meteringPoint.GsrnNumber.Equals(GsrnNumber.Create(SampleData.GsrnNumber)));
             meteringPoint?.CloseDown();
             await context.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        protected MasterDataDocument CreateUpdateRequest()
+        {
+            return TestUtils.CreateRequest()
+                with
+                {
+                    TransactionId = SampleData.Transaction,
+                    GsrnNumber = SampleData.GsrnNumber,
+                    EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
+                };
+        }
+
+        protected async Task CreateConsumptionMeteringPointInNetSettlementGroup6Async()
+        {
+            var request = Scenarios.CreateConsumptionMeteringPointCommand()
+                with
+                {
+                    EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
+                    MeteringMethod = MeteringMethod.Virtual.Name,
+                    NetSettlementGroup = NetSettlementGroup.Six.Name,
+                    ConnectionType = ConnectionType.Installation.Name,
+                    ScheduledMeterReadingDate = "0101",
+                };
+            await SendCommandAsync(request).ConfigureAwait(false);
         }
 
         private void CleanupDatabase()
