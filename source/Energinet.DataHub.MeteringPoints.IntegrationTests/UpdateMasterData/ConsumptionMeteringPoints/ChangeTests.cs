@@ -62,26 +62,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
-        public async Task Disconnection_type_is_changed()
-        {
-            await SendCommandAsync(Scenarios.CreateVEProduction() with
-            {
-                DisconnectionType = DisconnectionType.Manual.Name,
-            }).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    DisconnectionType = DisconnectionType.Remote.Name,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasDisconnectionType(DisconnectionType.Remote);
-        }
-
-        [Fact]
         public async Task Connection_type_is_changed()
         {
             await SendCommandAsync(Scenarios.CreateVEProduction() with
