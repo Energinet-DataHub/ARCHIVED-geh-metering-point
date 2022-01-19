@@ -12,14 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
-using Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.ConsumptionMeteringPoints;
 using Xunit;
 using Xunit.Categories;
 
@@ -29,12 +24,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
     public class ProductionObligationTests
         : TestHost
     {
-        private readonly ISystemDateTimeProvider _timeProvider;
-
         public ProductionObligationTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
         {
-            _timeProvider = GetService<ISystemDateTimeProvider>();
         }
 
         [Fact]
