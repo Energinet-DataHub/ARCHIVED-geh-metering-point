@@ -39,6 +39,8 @@ jobs:
       AZURE_SPN_SECRET: ${{ secrets.AZURE_SPN_SECRET }}
       AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
       AZURE_SECRETS_KEYVAULT_URL: ${{ secrets.AZURE_SECRETS_KEYVAULT_URL }}
+      ENVIRONMENT_SHORT: 'u'
+      ENVIRONMENT_INSTANCE: '002'
 
   terraform_validate:
     uses: Energinet-DataHub/.github/.github/workflows/terraform-validate.yml@3.0.2
