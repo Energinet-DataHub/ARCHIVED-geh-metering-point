@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
