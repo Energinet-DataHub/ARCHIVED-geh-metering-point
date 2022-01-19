@@ -74,6 +74,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             container.Register<JwtTokenMiddleware>(Lifestyle.Scoped);
             container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
             container.Register<XmlSenderValidator>(Lifestyle.Scoped);
+            container.Register<RequestResponseLoggingMiddleware>(Lifestyle.Scoped);
 
             container.Register<IRequestResponseLogging>(
                 () =>
@@ -87,7 +88,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             },
                 Lifestyle.Scoped);
 
-            container.Register<RequestResponseLoggingMiddleware>(Lifestyle.Scoped);
             container.Register<MessageDispatcher, InternalDispatcher>(Lifestyle.Scoped);
             container.Register<Channel, InternalServiceBus>(Lifestyle.Scoped);
 
