@@ -29,6 +29,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests
             Environment.SetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusConnectionString);
             Environment.SetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME", SomeString);
             Environment.SetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", SomeString);
+            Environment.SetEnvironmentVariable("REQUEST_RESPONSE_LOGGING_CONTAINER_NAME", SomeString);
+            Environment.SetEnvironmentVariable("REQUEST_RESPONSE_LOGGING_CONNECTION_STRING", SomeString);
             var program = new EntryPoints.Ingestion.Program();
 
             program.ConfigureApplication();

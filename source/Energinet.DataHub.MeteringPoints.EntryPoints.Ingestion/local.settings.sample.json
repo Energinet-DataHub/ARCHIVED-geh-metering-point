@@ -6,6 +6,8 @@
         "APPINSIGHTS_INSTRUMENTATIONKEY": "<App insights instrumentation key>",
         "INTERNAL_SERVICEBUS_RETRY_COUNT": 3,
         "METERINGPOINT_QUEUE_CONNECTION_STRING": "<Azure Service Bus namespace connection>",
-        "METERINGPOINT_QUEUE_TOPIC_NAME": "<Name of Azure Service Bus queue>"
+        "METERINGPOINT_QUEUE_TOPIC_NAME": "<Name of Azure Service Bus queue>",
+        "REQUEST_RESPONSE_LOGGING_CONTAINER_NAME": "<Name of storage container>",
+        "REQUEST_RESPONSE_LOGGING_CONNECTION_STRING": "<connection string for logging request and response to storage>"
     }
 }
