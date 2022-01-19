@@ -67,7 +67,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         /// <param name="geoInfoReference"></param>
         /// <param name="locationDescription"></param>
         /// <returns><see cref="IMasterDataBuilder"/></returns>
-        IMasterDataBuilder WithAddress(string? streetName = null, string? streetCode = null, string? buildingNumber = null, string? city = null, string? citySubDivision = null, string? postCode = null, CountryCode? countryCode = null, string? floor = null, string? room = null, int? municipalityCode = null, bool? isActual = null, Guid? geoInfoReference = null, string? locationDescription = null);
+        IMasterDataBuilder WithAddress(string? streetName = null, string? streetCode = null, string? buildingNumber = null, string? city = null, string? citySubDivision = null, string? postCode = null, CountryCode? countryCode = null, string? floor = null, string? room = null, int? municipalityCode = null, bool? isActual = null, string? geoInfoReference = null, string? locationDescription = null);
 
         /// <summary>
         /// Configures measurement unit type

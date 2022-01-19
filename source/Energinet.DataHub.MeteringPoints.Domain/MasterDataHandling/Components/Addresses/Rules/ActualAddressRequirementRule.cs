@@ -12,15 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses.Rules
 {
-    public record MasterDataDetails(
-        EffectiveDate EffectiveDate,
-        Domain.MasterDataHandling.Components.Addresses.Address? Address = null,
-        MeteringConfiguration? MeteringConfiguration = null,
-        ConnectionType? ConnectionType = null);
+    public class ActualAddressRequirementRule : IBusinessRule
+    {
+        public ActualAddressRequirementRule(string? geoInfoReference, bool? isActualAddress)
+        {
+            IsBroken = geoInfoReference is not null && isActualAddress is null;
+        }
+
+        public bool IsBroken { get; }
+
+        public ValidationError ValidationError => new ActualAddressIsRequired();
+    }
 }
