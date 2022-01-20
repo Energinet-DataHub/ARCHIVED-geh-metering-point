@@ -45,11 +45,5 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
             AssertMasterData()
                 .HasProductionObligation(true);
         }
-
-        private AssertPersistedMeteringPoint AssertMasterData()
-        {
-            return AssertPersistedMeteringPoint
-                .Initialize(SampleData.GsrnNumber, GetService<IDbConnectionFactory>());
-        }
     }
 }
