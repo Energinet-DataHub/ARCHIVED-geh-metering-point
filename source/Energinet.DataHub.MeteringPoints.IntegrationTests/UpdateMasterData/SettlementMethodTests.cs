@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
@@ -57,6 +58,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
                 with
                 {
                     SettlementMethod = "invalid value",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D15");
+        }
+
+        [Fact]
+        public async Task Cannot_remove_settlement_method_if_required()
+        {
+            await SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    SettlementMethod = string.Empty,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
