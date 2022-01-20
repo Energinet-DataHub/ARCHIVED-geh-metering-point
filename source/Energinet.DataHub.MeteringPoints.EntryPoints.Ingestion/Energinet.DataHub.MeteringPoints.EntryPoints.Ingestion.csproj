@@ -26,8 +26,8 @@ limitations under the License.
     <PackageReference Include="Energinet.DataHub.Core.FunctionApp.Common" Version="1.0.1" />
     <PackageReference Include="Energinet.DataHub.Core.FunctionApp.Common.Abstractions" Version="1.0.1" />
     <PackageReference Include="Energinet.DataHub.Core.Logging" Version="1.0.5" />
-    <PackageReference Include="Energinet.DataHub.Core.Schemas" Version="1.0.7" />
-    <PackageReference Include="Energinet.DataHub.Core.SchemaValidation" Version="1.0.4" />
+    <PackageReference Include="Energinet.DataHub.Core.Schemas" Version="1.0.8" />
+    <PackageReference Include="Energinet.DataHub.Core.SchemaValidation" Version="1.0.7" />
     <PackageReference Include="Energinet.DataHub.Core.XmlConversion.XmlConverter" Version="1.0.4" />
     <PackageReference Include="Energinet.DataHub.Core.XmlConversion.XmlConverter.Abstractions" Version="1.0.4" />
     <PackageReference Include="Energinet.DataHub.Core.XmlConversion.XmlConverter.SimpleInjector" Version="1.0.4" />
