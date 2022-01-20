@@ -14,7 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Application.Common;
 
-namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
+namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
 {
     public record ChangeMasterDataRequest(
         string TransactionId = "",
