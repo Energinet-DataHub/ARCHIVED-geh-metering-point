@@ -83,5 +83,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 
             AssertValidationError("D66");
         }
+
+        [Fact]
+        public async Task Reject_if_configuration_is_invalid()
+        {
+            await CreateConsumptionMeteringPointInNetSettlementGroup6Async().ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    ConnectionType = ConnectionType.Direct.Name,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D55");
+        }
     }
 }
