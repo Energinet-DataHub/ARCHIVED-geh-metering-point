@@ -18,7 +18,7 @@ using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
 using Xunit.Categories;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 {
     [IntegrationTest]
     public class ConnectionTypeTests
@@ -66,6 +66,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError("D66");
+        }
+
+        [Fact]
+        public async Task Cannot_be_removed_if_required()
+        {
+            await SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    ConnectionType = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
         }
     }
 }
