@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
                 return;
             }
 
-            if (netSettlementGroup == NetSettlementGroup.Six && connectionType! != ConnectionType.Installation)
+            if ((netSettlementGroup == NetSettlementGroup.Six || netSettlementGroup == NetSettlementGroup.Three) && connectionType! != ConnectionType.Installation)
             {
                 IsBroken = true;
                 ValidationError = new ConnectionTypeDoesNotMatchNetSettlementGroupRuleError(connectionType?.Name!, netSettlementGroup.Id.ToString(CultureInfo.InvariantCulture));

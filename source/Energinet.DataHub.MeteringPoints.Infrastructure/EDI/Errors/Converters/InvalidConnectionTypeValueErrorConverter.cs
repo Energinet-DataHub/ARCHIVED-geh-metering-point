@@ -14,17 +14,17 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class ConnectionTypeIsRequiredRuleErrorConverter : ErrorConverter<ConnectionTypeIsRequiredRuleError>
+    public class InvalidConnectionTypeValueErrorConverter : ErrorConverter<InvalidConnectionTypeValue>
     {
-        protected override ErrorMessage Convert(ConnectionTypeIsRequiredRuleError validationError)
+        protected override ErrorMessage Convert(InvalidConnectionTypeValue validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D66", $"Connection type is required for net settlement groups other than 0 for type Consumption/Production).");
+            return new("D66", $"Connection type {validationError.ProvidedValue} has wrong value (outside domain).");
         }
     }
 }
