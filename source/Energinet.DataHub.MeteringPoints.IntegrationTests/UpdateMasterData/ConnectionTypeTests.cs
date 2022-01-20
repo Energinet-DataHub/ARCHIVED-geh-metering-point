@@ -81,7 +81,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("D02");
+            AssertValidationError("D66");
         }
     }
 }
