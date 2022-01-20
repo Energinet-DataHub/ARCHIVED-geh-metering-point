@@ -62,7 +62,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                     CountryCode.DK,
                     string.Empty,
                     string.Empty,
-                    default,
+                    101,
                     isActual: true,
                     geoInfoReference: Guid.NewGuid().ToString(),
                     null)

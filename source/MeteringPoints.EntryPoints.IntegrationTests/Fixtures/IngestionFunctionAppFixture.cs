@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Azure.Storage.Blobs;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Azurite;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
@@ -56,6 +57,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             Environment.SetEnvironmentVariable("AzureWebJobsStorage", "UseDevelopmentStorage=true");
             Environment.SetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
             Environment.SetEnvironmentVariable("INTERNAL_SERVICEBUS_RETRY_COUNT", "3");
+            Environment.SetEnvironmentVariable("REQUEST_RESPONSE_LOGGING_CONNECTION_STRING", "UseDevelopmentStorage=true");
+            Environment.SetEnvironmentVariable("REQUEST_RESPONSE_LOGGING_CONTAINER_NAME", "marketoplogs");
         }
 
         /// <inheritdoc/>
@@ -70,6 +73,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             var meteringPointQueue = await ServiceBusResourceProvider
                 .BuildQueue("queue").SetEnvironmentVariableToQueueName("METERINGPOINT_QUEUE_TOPIC_NAME")
                 .CreateAsync().ConfigureAwait(false);
+
+            // Shared logging blob storage container
+            var storage = new BlobContainerClient("UseDevelopmentStorage=true", "marketoplogs");
+            await storage.CreateIfNotExistsAsync().ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
