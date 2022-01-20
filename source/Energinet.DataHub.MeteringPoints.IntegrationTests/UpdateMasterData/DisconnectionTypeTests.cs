@@ -65,10 +65,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
             AssertValidationError("D65");
         }
 
-        private AssertPersistedMeteringPoint AssertMasterData()
+        [Fact]
+        public async Task Cannot_be_removed_if_required()
         {
-            return AssertPersistedMeteringPoint
-                .Initialize(SampleData.GsrnNumber, GetService<IDbConnectionFactory>());
+            await SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    DisconnectionType = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D65");
         }
     }
 }

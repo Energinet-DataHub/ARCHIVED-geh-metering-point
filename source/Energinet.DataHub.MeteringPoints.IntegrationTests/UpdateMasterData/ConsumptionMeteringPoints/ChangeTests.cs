@@ -435,11 +435,5 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         {
             return SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand());
         }
-
-        private AssertPersistedMeteringPoint AssertMasterData()
-        {
-            return AssertPersistedMeteringPoint
-                .Initialize(SampleData.GsrnNumber, GetService<IDbConnectionFactory>());
-        }
     }
 }
