@@ -14,17 +14,17 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class NetSettlementGroupMandatoryErrorConverter : ErrorConverter<NetSettlementGroupIsRequired>
+    public class InvalidConnectionTypeValueErrorConverter : ErrorConverter<InvalidConnectionTypeValue>
     {
-        protected override ErrorMessage Convert(NetSettlementGroupIsRequired validationError)
+        protected override ErrorMessage Convert(InvalidConnectionTypeValue validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D62", $"Net settlement group is missing (type E17/E18)");
+            return new("D66", $"Connection type {validationError.ProvidedValue} has wrong value (outside domain).");
         }
     }
 }
