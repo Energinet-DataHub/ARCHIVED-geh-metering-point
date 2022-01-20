@@ -230,7 +230,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                         return EnumerationType.GetAll<SettlementMethod>()
                             .Select(item => item.Name)
                             .Contains(settlementMethod) == false
-                            ? BusinessRulesValidationResult.Failure(new InvalidSettlementMethod(settlementMethod))
+                            ? BusinessRulesValidationResult.Failure(new InvalidSettlementMethodValue(settlementMethod))
                             : BusinessRulesValidationResult.Valid();
                     },
                     () => EnumerationType.FromName<SettlementMethod>(settlementMethod));
