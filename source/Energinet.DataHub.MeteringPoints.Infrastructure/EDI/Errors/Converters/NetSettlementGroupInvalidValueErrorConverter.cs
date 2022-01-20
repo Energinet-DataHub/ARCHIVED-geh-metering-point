@@ -15,16 +15,17 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class NetSettlementGroupInvalidValueErrorConverter : ErrorConverter<NetSettlementGroupInvalidValueValidationError>
+    public class NetSettlementGroupInvalidValueErrorConverter : ErrorConverter<InvalidNetSettlementGroupValue>
     {
-        protected override ErrorMessage Convert(NetSettlementGroupInvalidValueValidationError validationError)
+        protected override ErrorMessage Convert(InvalidNetSettlementGroupValue validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new ErrorMessage("D02", $"Net settlement group has wrong value (outside domain)");
+            return new ErrorMessage("D62", $"Net settlement group has wrong value (outside domain)");
         }
     }
 }
