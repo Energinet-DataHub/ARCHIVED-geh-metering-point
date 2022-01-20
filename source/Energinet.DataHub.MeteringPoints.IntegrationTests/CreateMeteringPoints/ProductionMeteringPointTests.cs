@@ -100,7 +100,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("D02", DocumentType.RejectCreateMeteringPoint);
+            AssertValidationError("D62", DocumentType.RejectCreateMeteringPoint);
         }
 
         [Fact]
