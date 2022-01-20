@@ -43,6 +43,17 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 SampleData.GeoInfoReference);
         }
 
+        internal static CreateMeteringPoint CreateVirtualConsumptionMeteringPoint()
+        {
+            return CreateConsumptionMeteringPointCommand() with
+            {
+                MeteringMethod = MeteringMethod.Virtual.Name,
+                NetSettlementGroup = NetSettlementGroup.Zero.Name,
+                ConnectionType = null,
+                ScheduledMeterReadingDate = null,
+            };
+        }
+
         internal static CreateMeteringPoint CreateConsumptionMeteringPointCommand()
         {
             return new CreateMeteringPoint(
@@ -163,8 +174,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             return CreateCommand(MeteringPointType.ExchangeReactiveEnergy)
                 with
                 {
-                    UnitType = MeasurementUnitType.KVArh.Name,
-                    ProductType = ProductType.EnergyReactive.Name,
+                    UnitType = MeasurementUnitType.KVArh.Name, ProductType = ProductType.EnergyReactive.Name,
                 };
         }
 
@@ -173,8 +183,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             return CreateCommand(MeteringPointType.VEProduction)
                 with
                 {
-                    UnitType = MeasurementUnitType.KVArh.Name,
-                    ProductType = ProductType.EnergyActive.Name,
+                    UnitType = MeasurementUnitType.KVArh.Name, ProductType = ProductType.EnergyActive.Name,
                 };
         }
 

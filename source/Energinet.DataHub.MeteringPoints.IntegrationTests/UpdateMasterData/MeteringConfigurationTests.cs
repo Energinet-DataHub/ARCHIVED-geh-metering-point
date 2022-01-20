@@ -45,5 +45,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
             AssertMasterData()
                 .HasMeteringConfiguration(MeteringMethod.Physical, "123");
         }
+
+        [Fact]
+        public async Task Meter_is_required_when_changing_method_to_physical()
+        {
+            await SendCommandAsync(Scenarios.CreateVirtualConsumptionMeteringPoint()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    MeteringMethod = MeteringMethod.Physical.Name, MeterNumber = null,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D31");
+        }
     }
 }
