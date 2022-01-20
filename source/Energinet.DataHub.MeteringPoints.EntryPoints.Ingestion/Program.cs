@@ -15,10 +15,10 @@
 using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.Core.FunctionApp.Common;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.FunctionApp.Common.Middleware;
 using Energinet.DataHub.Core.FunctionApp.Common.SimpleInjector;
+using Energinet.DataHub.Core.Logging.RequestResponseMiddleware;
+using Energinet.DataHub.Core.Logging.RequestResponseMiddleware.Storage;
 using Energinet.DataHub.Core.XmlConversion.XmlConverter.Configuration;
 using Energinet.DataHub.Core.XmlConversion.XmlConverter.SimpleInjector.Extensions;
 using Energinet.DataHub.MeteringPoints.Contracts;
@@ -34,7 +34,9 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Resilience;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using SimpleInjector;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
@@ -58,6 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             options.UseMiddleware<ActorMiddleware>();
             options.UseMiddleware<CorrelationIdMiddleware>();
             options.UseMiddleware<EntryPointTelemetryScopeMiddleware>();
+            options.UseMiddleware<RequestResponseLoggingMiddleware>();
         }
 
         protected override void ConfigureContainer(Container container)
@@ -88,6 +91,18 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 
             container.Register<MessageDispatcher, InternalDispatcher>(Lifestyle.Scoped);
             container.Register<Channel, InternalServiceBus>(Lifestyle.Scoped);
+
+            container.RegisterSingleton<IRequestResponseLogging>(
+                () =>
+                {
+                    var logger = container.GetService<ILogger<RequestResponseLoggingBlobStorage>>();
+                    var storage = new RequestResponseLoggingBlobStorage(
+                        Environment.GetEnvironmentVariable("REQUEST_RESPONSE_LOGGING_CONNECTION_STRING") ?? throw new InvalidOperationException(),
+                        Environment.GetEnvironmentVariable("REQUEST_RESPONSE_LOGGING_CONTAINER_NAME") ?? throw new InvalidOperationException(),
+                        logger ?? throw new InvalidOperationException());
+                    return storage;
+                });
+            container.Register<RequestResponseLoggingMiddleware>(Lifestyle.Scoped);
 
             var policyRetryCount = int.TryParse(Environment.GetEnvironmentVariable("INTERNAL_SERVICEBUS_RETRY_COUNT"), out var parsedRetryCount) ? parsedRetryCount : 0;
             container.Register<IChannelResiliencePolicy>(() => new RetryNTimesPolicy(policyRetryCount), Lifestyle.Scoped);
