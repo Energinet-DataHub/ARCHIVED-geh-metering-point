@@ -212,11 +212,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             AssertContainsValidationError<ConnectionTypeIsRequiredRuleError>(CheckRules(masterData));
         }
 
-        [Fact]
-        public void Connection_type_must_match_net_settlement_group()
+        [Theory]
+        [InlineData(nameof(NetSettlementGroup.Six))]
+        [InlineData(nameof(NetSettlementGroup.Three))]
+        public void Connection_type_must_be_installation(string netSettlementGroup)
         {
             var masterData = Builder()
-                .WithNetSettlementGroup(NetSettlementGroup.Six.Name)
+                .WithNetSettlementGroup(netSettlementGroup)
                 .WithConnectionType(ConnectionType.Direct.Name)
                 .Build();
 

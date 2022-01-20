@@ -15,15 +15,16 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class MeterReadingOccurenceInvalidValueErrorConverter : ErrorConverter<MeterReadingOccurenceInvalidValueValidationError>
+    public class MeterReadingOccurenceInvalidValueErrorConverter : ErrorConverter<InvalidReadingPeriodicityType>
     {
-        protected override ErrorMessage Convert(MeterReadingOccurenceInvalidValueValidationError validationError)
+        protected override ErrorMessage Convert(InvalidReadingPeriodicityType validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-            return new ErrorMessage("D02", $"Meter reading occurrence {validationError.MeterReadingOccurrence} has wrong value (outside domain)");
+            return new ErrorMessage("D02", $"Meter reading occurrence {validationError.ProvidedValue} has wrong value (outside domain)");
         }
     }
 }

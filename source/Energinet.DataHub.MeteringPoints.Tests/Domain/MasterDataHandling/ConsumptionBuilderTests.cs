@@ -14,6 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -25,6 +26,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     [UnitTest]
     public class ConsumptionBuilderTests
     {
+        [Fact]
+        public void Production_obligation_is_ignored()
+        {
+            var masterData = Builder()
+                .WithProductionObligation(true)
+                .Build();
+
+            Assert.Null(masterData.ProductionObligation);
+        }
+
         [Theory]
         [InlineData(nameof(MeteringPointType.Consumption), nameof(MeasurementUnitType.KWh))]
         [InlineData(nameof(MeteringPointType.Production), nameof(MeasurementUnitType.KWh))]
@@ -76,5 +87,10 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             Assert.NotNull(masterData.Capacity);
             Assert.NotNull(masterData.Address);
         }
+
+        private static IMasterDataBuilder Builder() =>
+            new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Consumption))
+                .WithReadingPeriodicity(ReadingOccurrence.Quarterly.Name)
+                .WithAddress(streetName: "Test street", countryCode: CountryCode.DK);
     }
 }

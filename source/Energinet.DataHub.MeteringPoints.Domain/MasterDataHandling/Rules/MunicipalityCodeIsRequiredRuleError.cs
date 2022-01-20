@@ -12,17 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
-    public record ChangeMasterDataRequest(
-        string TransactionId = "",
-        string GsrnNumber = "",
-        string EffectiveDate = "",
-        string SettlementMethod = "",
-        string? MeterId = null,
-        string? MeteringMethod = null,
-        Address? Address = null,
-        string? ConnectionType = null) : IChangeMeteringPointRequest;
+    public class MunicipalityCodeIsRequiredRuleError : ValidationError
+    {
+    }
 }

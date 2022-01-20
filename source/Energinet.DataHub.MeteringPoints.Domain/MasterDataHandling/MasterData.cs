@@ -42,15 +42,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             ProductionObligation = productionObligation;
         }
 
+        #pragma warning disable CS8618 // Required for EF core
         private MasterData()
         {
-            ProductType = ProductType.EnergyActive;
-            UnitType = MeasurementUnitType.KWh;
-            ReadingOccurrence = ReadingOccurrence.Quarterly;
-            PowerLimit = PowerLimit.Create(0, 0);
-            Address = Address.Create();
-            MeteringConfiguration = MeteringConfiguration.Create(MeteringMethod.Virtual, MeterId.Empty());
-            DisconnectionType = DisconnectionType.Manual;
         }
 
         public ProductType ProductType { get; }
@@ -65,7 +59,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public GsrnNumber? PowerPlantGsrnNumber { get; }
 
-        public EffectiveDate? EffectiveDate { get; }
+        public EffectiveDate EffectiveDate { get; }
 
         public Capacity? Capacity { get; }
 

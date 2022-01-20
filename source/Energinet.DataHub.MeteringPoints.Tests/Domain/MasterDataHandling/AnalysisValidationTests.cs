@@ -29,6 +29,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class AnalysisValidationTests : TestBase
     {
         [Fact]
+        public void Production_obligation_is_ignored()
+        {
+            var masterData = Builder()
+                .WithProductionObligation(true)
+                .Build();
+
+            Assert.Null(masterData.ProductionObligation);
+        }
+
+        [Fact]
         public void Product_type_must_be_energy_active()
         {
             var masterData = Builder()

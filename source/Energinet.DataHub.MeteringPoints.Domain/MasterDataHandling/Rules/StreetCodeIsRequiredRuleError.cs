@@ -14,15 +14,9 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
-    public class DisconnectionTypeWrongValueValidationError : ValidationError
+    public class StreetCodeIsRequiredRuleError : ValidationError
     {
-        public DisconnectionTypeWrongValueValidationError(string disconnectionType)
-        {
-            DisconnectionType = disconnectionType;
-        }
-
-        public string DisconnectionType { get; }
     }
 }

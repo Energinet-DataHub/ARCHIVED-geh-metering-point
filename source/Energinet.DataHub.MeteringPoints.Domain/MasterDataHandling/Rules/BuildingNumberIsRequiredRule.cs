@@ -13,18 +13,21 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.EDI;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Create
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
-    public class InvalidSettlementMethodValueErrorConverter : ErrorConverter<InvalidSettlementMethodValue>
+    public class BuildingNumberIsRequiredRule : IBusinessRule
     {
-        protected override ErrorMessage Convert(InvalidSettlementMethodValue validationError)
+        public BuildingNumberIsRequiredRule(Address address)
         {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-
-            return new("D15", $"Settlement method {validationError.ProvidedValue} has wrong value (outside domain)");
+            if (address == null) throw new ArgumentNullException(nameof(address));
+            IsBroken = string.IsNullOrWhiteSpace(address.BuildingNumber);
         }
+
+        public bool IsBroken { get; }
+
+        public ValidationError ValidationError => new BuildingNumberIsRequiredRuleError();
     }
 }
