@@ -16,7 +16,7 @@ using System;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Create
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
     public class InvalidSettlementMethodValueErrorConverter : ErrorConverter<InvalidSettlementMethodValue>
     {
