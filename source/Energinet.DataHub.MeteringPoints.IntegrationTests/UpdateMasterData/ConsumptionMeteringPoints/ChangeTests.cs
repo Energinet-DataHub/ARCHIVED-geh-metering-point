@@ -45,23 +45,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
-        public async Task Net_settlement_group_is_changed()
-        {
-            await SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand()).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    NetSettlementGroup = NetSettlementGroup.Zero.Name,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasNetSettlementGroup(NetSettlementGroup.Zero);
-        }
-
-        [Fact]
         public async Task Connection_type_is_changed()
         {
             await SendCommandAsync(Scenarios.CreateVEProduction() with

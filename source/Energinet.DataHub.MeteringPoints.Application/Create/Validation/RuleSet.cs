@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
@@ -71,7 +72,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Validation
                 .Must(value => EnumerationType.GetAll<NetSettlementGroup>()
                     .Select(item => item.Name)
                     .Contains(value, StringComparer.OrdinalIgnoreCase))
-                .WithState(createMeteringPoint => new NetSettlementGroupInvalidValueValidationError())
+                .WithState(createMeteringPoint => new InvalidNetSettlementGroupValue(createMeteringPoint.NetSettlementGroup))
                 .Unless(request => string.IsNullOrEmpty(request.NetSettlementGroup));
 
             RuleFor(request => request.MeterReadingOccurrence)
