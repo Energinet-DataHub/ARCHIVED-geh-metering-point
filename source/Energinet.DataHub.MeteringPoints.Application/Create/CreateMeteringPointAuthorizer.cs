@@ -26,17 +26,17 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
 {
     public class CreateMeteringPointAuthorizer
     {
-        private readonly IActorContext _authenticatedUserContext;
+        private readonly IActorContext _actorContext;
 
-        public CreateMeteringPointAuthorizer(IActorContext authenticatedUserContext)
+        public CreateMeteringPointAuthorizer(IActorContext actorContext)
         {
-            _authenticatedUserContext = authenticatedUserContext ?? throw new ArgumentNullException(nameof(authenticatedUserContext));
+            _actorContext = actorContext ?? throw new ArgumentNullException(nameof(actorContext));
         }
 
         public Task<AuthorizationResult> AuthorizeAsync(GridArea gridArea)
         {
             if (gridArea == null) throw new ArgumentNullException(nameof(gridArea));
-            if (_authenticatedUserContext.CurrentActor is null)
+            if (_actorContext.CurrentActor is null)
             {
                 throw new AuthenticationException("No authenticated user");
             }
@@ -54,7 +54,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
         {
             return new List<Task<AuthorizationResult>>
             {
-                new CurrentActorIsGridOperatorPolicy(_authenticatedUserContext).AuthorizeAsync(gridArea),
+                new CurrentActorIsGridOperatorPolicy(_actorContext).AuthorizeAsync(gridArea),
             };
         }
     }

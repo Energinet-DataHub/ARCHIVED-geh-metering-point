@@ -23,26 +23,26 @@ namespace Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperato
 {
     public class CurrentActorIsGridOperatorPolicy
     {
-        private readonly IActorContext _userContext;
+        private readonly IActorContext _actorContext;
 
-        public CurrentActorIsGridOperatorPolicy(IActorContext userContext)
+        public CurrentActorIsGridOperatorPolicy(IActorContext actorContext)
         {
-            _userContext = userContext;
+            _actorContext = actorContext;
         }
 
         public Task<AuthorizationResult> AuthorizeAsync(GridArea gridArea)
         {
             if (gridArea == null) throw new ArgumentNullException(nameof(gridArea));
-            if (_userContext.CurrentActor == null) throw new InvalidOperationException("No current user found");
+            if (_actorContext.CurrentActor == null) throw new InvalidOperationException("No current user found");
 
-            if (gridArea.ActorId.Value == _userContext.CurrentActor.ActorId)
+            if (gridArea.ActorId.Value == _actorContext.CurrentActor.ActorId)
             {
                 return Task.FromResult(AuthorizationResult.Ok());
             }
 
             return Task.FromResult(new AuthorizationResult(new List<ValidationError>()
             {
-                new CurrentActorIsNotGridOperator(_userContext.CurrentActor.Identifier, gridArea.Code.Value),
+                new CurrentActorIsNotGridOperator(_actorContext.CurrentActor.Identifier, gridArea.Code.Value),
             }));
         }
     }

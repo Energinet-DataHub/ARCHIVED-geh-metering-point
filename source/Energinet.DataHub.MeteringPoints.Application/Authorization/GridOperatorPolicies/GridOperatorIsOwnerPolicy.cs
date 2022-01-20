@@ -25,12 +25,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperato
     public class GridOperatorIsOwnerPolicy
     {
         private readonly IMeteringPointOwnershipProvider _ownershipProvider;
-        private readonly IActorContext _userContext;
+        private readonly IActorContext _actorContext;
 
-        public GridOperatorIsOwnerPolicy(IMeteringPointOwnershipProvider ownershipProvider, IActorContext userContext)
+        public GridOperatorIsOwnerPolicy(IMeteringPointOwnershipProvider ownershipProvider, IActorContext actorContext)
         {
             _ownershipProvider = ownershipProvider ?? throw new ArgumentNullException(nameof(ownershipProvider));
-            _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
+            _actorContext = actorContext ?? throw new ArgumentNullException(nameof(actorContext));
         }
 
         public async Task<AuthorizationResult> AuthorizeAsync(MeteringPoint meteringPoint)
@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperato
             if (meteringPoint == null) throw new ArgumentNullException(nameof(meteringPoint));
 
             var ownerOfMeteringPoint = await _ownershipProvider.GetOwnerAsync(meteringPoint).ConfigureAwait(false);
-            if (ownerOfMeteringPoint.ActorId == _userContext.CurrentActor?.ActorId)
+            if (ownerOfMeteringPoint.ActorId == _actorContext.CurrentActor?.ActorId)
             {
                 return AuthorizationResult.Ok();
             }
