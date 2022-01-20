@@ -15,21 +15,16 @@
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Consumption;
-using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
-using MasterDataDocument = Energinet.DataHub.MeteringPoints.Application.MarketDocuments.MasterDataDocument;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.ConsumptionMeteringPoints
 {
@@ -42,26 +37,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             : base(databaseFixture)
         {
             _timeProvider = GetService<ISystemDateTimeProvider>();
-        }
-
-        [Fact]
-        public async Task Connection_type_is_changed()
-        {
-            await SendCommandAsync(Scenarios.CreateVEProduction() with
-            {
-                ConnectionType = ConnectionType.Installation.Name,
-            }).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    ConnectionType = ConnectionType.Direct.Name,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasConnectionType(ConnectionType.Direct);
         }
 
         [Fact]
