@@ -49,16 +49,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Fact]
-        public void Unit_type_valid()
-        {
-            var masterData = Builder()
-                .WithMeasurementUnitType(MeasurementUnitType.KWh.Name)
-                .Build();
-
-            AssertDoesNotContainValidationError<UnitTypeIsNotValidForMeteringPointType>(CheckRules(masterData));
-        }
-
-        [Fact]
         public void Product_type_must_be_energy_active()
         {
             var masterData = Builder()
