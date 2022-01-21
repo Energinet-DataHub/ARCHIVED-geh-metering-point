@@ -44,15 +44,17 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
                 .HasCapacity(1);
         }
 
-        [Fact]
-        public async Task Capacity_must_be_rejected_if_format_is_incorrect()
+        [Theory]
+        [InlineData("1234567891011")]
+        [InlineData("12345678A")]
+        public async Task Capacity_must_be_rejected_if_format_is_incorrect(string capacity)
         {
             await SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand()).ConfigureAwait(false);
 
             var request = CreateUpdateRequest()
                 with
                 {
-                    PhysicalConnectionCapacity = "1234567891011",
+                    PhysicalConnectionCapacity = capacity,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
