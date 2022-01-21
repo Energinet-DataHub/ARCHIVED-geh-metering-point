@@ -26,7 +26,7 @@ using Xunit.Categories;
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 {
     [UnitTest]
-    public class TotalComsumptionTests : TestBase
+    public class TotalConsumptionTests : TestBase
     {
         [Fact]
         public void Production_obligation_is_ignored()
