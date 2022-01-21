@@ -61,5 +61,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 
             AssertValidationError("D31");
         }
+
+        [Fact]
+        public async Task Metering_method_value_must_be_valid()
+        {
+            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    MeteringMethod = "invalid value",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
+        }
     }
 }
