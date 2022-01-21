@@ -15,6 +15,7 @@
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
@@ -28,6 +29,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     [UnitTest]
     public class TotalConsumptionTests : TestBase
     {
+        [Fact]
+        public void Metering_method_must_be_virtual_or_calculated()
+        {
+            var masterData = Builder()
+                .WithMeteringConfiguration(MeteringMethod.Physical.Name, "123455")
+                .Build();
+
+            AssertError<MeteringMethodIsNotApplicable>(CheckRules(masterData));
+        }
+
         [Fact]
         public void Production_obligation_is_ignored()
         {
@@ -94,6 +105,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         private static IMasterDataBuilder Builder() =>
             new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.TotalConsumption))
                 .WithReadingPeriodicity(ReadingOccurrence.Hourly.Name)
+                .WithProductType(ProductType.EnergyActive.Name)
+                .WithMeasurementUnitType(MeasurementUnitType.KWh.Name)
+                .WithMeteringConfiguration(MeteringMethod.Virtual.Name, null)
                 .WithAddress(streetName: "Test street", countryCode: CountryCode.DK);
 
         private static BusinessRulesValidationResult CheckRules(MasterData masterData)

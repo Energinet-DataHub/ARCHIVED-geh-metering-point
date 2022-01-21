@@ -15,11 +15,12 @@
 using System;
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.TotalConsumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.TotalConsumption
 {
-    public class Validator : IMasterDataValidatorStrategy
+    internal class Validator : IMasterDataValidatorStrategy
     {
         public BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
@@ -30,6 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.TotalConsum
                 new MeterReadingOccurrenceRule(masterData.ReadingOccurrence),
                 new ProductTypeMustBeEnergyActiveRule(masterData.ProductType),
                 new UnitTypeMustBeKwh(masterData.UnitType),
+                new MeteringMethodMustBeVirtualOrCalculated(masterData.MeteringConfiguration.Method),
             });
         }
     }

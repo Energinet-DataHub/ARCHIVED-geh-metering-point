@@ -187,6 +187,15 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 };
         }
 
+        internal static object CreateTotalComsumptionMeteringPoint()
+        {
+            return CreateCommand(MeteringPointType.TotalConsumption)
+                with
+                {
+                    MeteringMethod = MeteringMethod.Calculated.Name,
+                };
+        }
+
         internal static MasterDataDocument CreateDocument()
         {
             return new(

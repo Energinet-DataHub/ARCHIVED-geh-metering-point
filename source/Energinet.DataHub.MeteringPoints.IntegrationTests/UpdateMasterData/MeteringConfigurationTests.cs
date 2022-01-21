@@ -98,5 +98,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 
             AssertValidationError("E86");
         }
+
+        [Fact]
+        public async Task Reject_if_metering_configuration_is_invalid()
+        {
+            await SendCommandAsync(Scenarios.CreateTotalComsumptionMeteringPoint()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    MeteringMethod = MeteringMethod.Physical.Name,
+                    MeterNumber = "123456789",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D37");
+        }
     }
 }
