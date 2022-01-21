@@ -59,5 +59,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 
             AssertValidationError("E86");
         }
+
+        [Fact]
+        public async Task Capacity_is_mandatory_if_net_settlement_group_is_not_zero()
+        {
+            await SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    PhysicalConnectionCapacity = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D56");
+        }
     }
 }
