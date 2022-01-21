@@ -40,26 +40,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
-        public async Task Scheduled_meter_reading_date_is_changed()
-        {
-            await SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand() with
-            {
-                ScheduledMeterReadingDate = "0101",
-            }).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    ScheduledMeterReadingDate = "0201",
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasScheduledMeterReadingDate("0201");
-        }
-
-        [Fact]
         public async Task Settlement_method_is_changed()
         {
             await SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand() with
@@ -95,23 +75,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
 
             AssertMasterData()
                 .HasMeteringConfiguration(MeteringMethod.Physical, "123");
-        }
-
-        [Fact]
-        public async Task Effective_date_is_stored()
-        {
-            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    PowerPlant = SampleData.PowerPlantGsrnNumber,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasEffectiveDate(EffectiveDate.Create(request.EffectiveDate));
         }
 
         [Fact]
