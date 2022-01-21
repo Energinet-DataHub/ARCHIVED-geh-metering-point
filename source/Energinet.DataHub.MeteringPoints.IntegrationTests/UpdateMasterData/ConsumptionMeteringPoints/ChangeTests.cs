@@ -318,24 +318,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
-        public async Task Meter_is_required_when_physical()
-        {
-            var timeProvider = GetService<ISystemDateTimeProvider>() as SystemDateTimeProviderStub;
-            timeProvider!.SetNow(InstantPattern.General.Parse(SampleData.EffectiveDate).Value);
-
-            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
-
-            var request = TestUtils.CreateRequest()
-                with
-                {
-                    MeterNumber = string.Empty,
-                };
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("D31");
-        }
-
-        [Fact]
         public async Task Can_not_change_when_metering_point_is_closed_down()
         {
             await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
