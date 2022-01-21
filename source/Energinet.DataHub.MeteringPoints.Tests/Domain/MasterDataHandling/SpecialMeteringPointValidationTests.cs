@@ -193,10 +193,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [InlineData(nameof(MeteringPointType.OwnProduction), nameof(ReadingOccurrence.Quarterly), false)]
         [InlineData(nameof(MeteringPointType.OwnProduction), nameof(ReadingOccurrence.Yearly), true)]
 
-        [InlineData(nameof(MeteringPointType.TotalConsumption), nameof(ReadingOccurrence.Hourly), false)]
-        [InlineData(nameof(MeteringPointType.TotalConsumption), nameof(ReadingOccurrence.Quarterly), false)]
-        [InlineData(nameof(MeteringPointType.TotalConsumption), nameof(ReadingOccurrence.Yearly), true)]
-
         [InlineData(nameof(MeteringPointType.WholesaleServices), nameof(ReadingOccurrence.Hourly), false)]
         [InlineData(nameof(MeteringPointType.WholesaleServices), nameof(ReadingOccurrence.Quarterly), false)]
         [InlineData(nameof(MeteringPointType.WholesaleServices), nameof(ReadingOccurrence.Yearly), true)]
