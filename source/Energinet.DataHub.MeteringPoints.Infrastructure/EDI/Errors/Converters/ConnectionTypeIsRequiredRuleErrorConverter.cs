@@ -14,7 +14,6 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
@@ -25,7 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D02", $"Connection type is required for net settlement groups other than 0 for type Consumption/Production).");
+            return new("D66", $"Connection type is required for net settlement groups other than 0 for type Consumption/Production).");
         }
     }
 }

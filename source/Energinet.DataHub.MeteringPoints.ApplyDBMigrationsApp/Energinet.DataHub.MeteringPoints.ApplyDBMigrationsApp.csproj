@@ -66,9 +66,11 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Model\202201041930 Delete consumption metering point table.sql" />
     <EmbeddedResource Include="Scripts\Model\202201041935 Change parent metering point data type.sql" />
     <EmbeddedResource Include="Scripts\Model\202201061535 Change Maximum Current and Power to null.sql" />
+    <EmbeddedResource Include="Scripts\Seed\202201171400 Distribute grid areas to actors.sql" />
     <EmbeddedResource Include="Scripts\Seed\202112142130 Create Grid Area seed data.sql" />
     <EmbeddedResource Include="Scripts\Seed\202112141430 Actor seed data.sql" />
     <EmbeddedResource Include="Scripts\Seed\202201131240 More Actor seed data.sql" />
+    <EmbeddedResource Include="Scripts\Seed\202201201330 Add grid access provider test data continued.sql" />
     <EmbeddedResource Include="Scripts\Test\202109232129 Clean database.sql" />
     <EmbeddedResource Include="Scripts\Model\202109271100 Add IsOfficialAddress.sql" />
     <EmbeddedResource Include="Scripts\Model\202109271400 Add GeoInfoReference.sql" />
@@ -78,6 +80,7 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Test\202112141430 Actor test data.sql" />
     <EmbeddedResource Include="Scripts\Test\202112142130 Create Grid Area test data.sql" />
     <EmbeddedResource Include="Scripts\Test\202201061300 Create Metering Point test data.sql" />
+    <EmbeddedResource Include="Scripts\Seed\202201191330 Add grid access provider test data.sql" />
     <None Remove="Scripts\Model\202111041429 Add energy supplier table.sql" />
     <EmbeddedResource Include="Scripts\Model\202111041429 Add energy supplier table.sql" />
   </ItemGroup>

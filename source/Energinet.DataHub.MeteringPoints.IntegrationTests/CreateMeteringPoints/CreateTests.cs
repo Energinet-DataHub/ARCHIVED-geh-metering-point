@@ -208,7 +208,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("D02");
+            AssertValidationError("D65");
         }
 
         [Fact]
@@ -359,7 +359,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task Should_reject_when_maximum_power_is_invalid()
         {
-            var invalidPowerLimit = 12345567;
+            var invalidPowerLimit = "12345567";
             var document = Scenarios.CreateDocument()
                 with
                 {
@@ -491,7 +491,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task Should_reject_when_maximum_current_is_invalid()
         {
-            var invalidCurrent = 12345567;
+            var invalidCurrent = "12345567";
             var request = Scenarios.CreateDocument()
                 with
                 {

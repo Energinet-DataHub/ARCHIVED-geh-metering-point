@@ -42,7 +42,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 type,
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
-                EffectiveDate.Create(SampleData.EffectiveDate),
                 builder.Build());
         }
 
@@ -52,7 +51,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 .WithNetSettlementGroup(NetSettlementGroup.One.Name)
                 .WithSettlementMethod(SettlementMethod.Flex.Name)
                 .WithScheduledMeterReadingDate("0101")
-                .WithCapacity(1)
+                .WithCapacity("1")
                 .WithAddress(
                     SampleData.StreetName,
                     SampleData.StreetCode,
@@ -63,9 +62,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                     CountryCode.DK,
                     string.Empty,
                     string.Empty,
-                    default,
+                    101,
                     isActual: true,
-                    geoInfoReference: Guid.NewGuid(),
+                    geoInfoReference: Guid.NewGuid().ToString(),
                     null)
                 .WithAssetType(AssetType.GasTurbine.Name)
                 .WithPowerPlant(SampleData.PowerPlant)
@@ -96,7 +95,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 .WithNetSettlementGroup(NetSettlementGroup.One.Name)
                 .WithSettlementMethod(SettlementMethod.Flex.Name)
                 .WithScheduledMeterReadingDate("0101")
-                .WithCapacity(1)
+                .WithCapacity("1")
                 .WithAddress(
                     SampleData.StreetName,
                     SampleData.StreetCode,
@@ -109,7 +108,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                     string.Empty,
                     default,
                     isActual: true,
-                    geoInfoReference: Guid.NewGuid(),
+                    geoInfoReference: Guid.NewGuid().ToString(),
                     null)
                 .WithAssetType(AssetType.GasTurbine.Name)
                 .WithPowerPlant(SampleData.PowerPlant)
@@ -152,7 +151,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 string.Empty,
                 default,
                 isActual: true,
-                geoInfoReference: Guid.NewGuid());
+                geoInfoReference: Guid.NewGuid().ToString());
         }
 
         protected static void AssertContainsValidationError<TValidationError>(BusinessRulesValidationResult result)

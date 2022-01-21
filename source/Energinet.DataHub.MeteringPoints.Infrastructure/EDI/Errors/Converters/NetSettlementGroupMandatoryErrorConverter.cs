@@ -24,7 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D02", $"Net settlement group is missing (type E17/E18)");
+            return new("D62", $"Net settlement group is missing (type E17/E18)");
         }
     }
 }

@@ -35,6 +35,27 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
         {
         }
 
+        public MasterData Build()
+        {
+            return new MasterData(
+                productType: GetValue<ProductType>(nameof(MasterData.ProductType)),
+                unitType: GetValue<MeasurementUnitType>(nameof(MasterData.UnitType)),
+                assetType: GetValue<AssetType>(nameof(MasterData.AssetType)),
+                readingOccurrence: GetValue<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence)),
+                powerLimit: GetValue<PowerLimit>(nameof(MasterData.PowerLimit)),
+                powerPlantGsrnNumber: GetValue<GsrnNumber>(nameof(MasterData.PowerPlantGsrnNumber)),
+                effectiveDate: GetValue<EffectiveDate>(nameof(MasterData.EffectiveDate)),
+                capacity: GetValue<Capacity>(nameof(MasterData.Capacity)),
+                address: GetValue<Address>(nameof(MasterData.Address)),
+                meteringConfiguration: GetValue<MeteringConfiguration>(nameof(MasterData.MeteringConfiguration)),
+                settlementMethod: GetValue<SettlementMethod>(nameof(MasterData.SettlementMethod)),
+                scheduledMeterReadingDate: GetValue<ScheduledMeterReadingDate>(nameof(MasterData.ScheduledMeterReadingDate)),
+                connectionType: GetValue<ConnectionType>(nameof(MasterData.ConnectionType)),
+                disconnectionType: GetValue<DisconnectionType>(nameof(MasterData.DisconnectionType)),
+                netSettlementGroup: GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)),
+                productionObligation: GetValue<bool?>(nameof(MasterData.ProductionObligation)));
+        }
+
         public IMasterDataBuilder WithNetSettlementGroup(string? netSettlementGroup)
         {
             SetValue(nameof(MasterData.NetSettlementGroup), string.IsNullOrEmpty(netSettlementGroup) ? null : EnumerationType.FromName<NetSettlementGroup>(netSettlementGroup));
@@ -65,19 +86,31 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             string? room = null,
             int? municipalityCode = null,
             bool? isActual = null,
-            Guid? geoInfoReference = null,
+            string? geoInfoReference = null,
             string? locationDescription = null)
         {
             SetValueIfValid(
                 nameof(MasterData.Address),
-                () => Address.CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, locationDescription),
+                () => Address.CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, locationDescription, geoInfoReference, isActual),
                 () => Address.Create(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, isActual, geoInfoReference, locationDescription));
             return this;
         }
 
         public IMasterDataBuilder WithMeasurementUnitType(string? measurementUnitType)
         {
-            SetValue(nameof(MasterData.UnitType), measurementUnitType is null ? null : EnumerationType.FromName<MeasurementUnitType>(measurementUnitType!));
+            if (measurementUnitType?.Length > 0)
+            {
+                SetValueIfValid(
+                    nameof(MasterData.UnitType),
+                    () =>
+                    {
+                        return EnumerationType.GetAll<MeasurementUnitType>()
+                            .Select(item => item.Name)
+                            .Contains(measurementUnitType) == false ? BusinessRulesValidationResult.Failure(new InvalidUnitTypeValue(measurementUnitType)) : BusinessRulesValidationResult.Valid();
+                    },
+                    () => EnumerationType.FromName<MeasurementUnitType>(measurementUnitType));
+            }
+
             return this;
         }
 
@@ -89,7 +122,21 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithReadingPeriodicity(string? readingPeriodicity)
         {
-            SetValue(nameof(MasterData.ReadingOccurrence),  readingPeriodicity is null ? null : EnumerationType.FromName<ReadingOccurrence>(readingPeriodicity));
+            if (readingPeriodicity?.Length == 0) SetValue<ReadingOccurrence>(nameof(MasterData.ReadingOccurrence), null);
+            if (readingPeriodicity?.Length > 0)
+            {
+                SetValueIfValid(
+                    nameof(MasterData.ReadingOccurrence),
+                    () =>
+                    {
+                        return EnumerationType.GetAll<ReadingOccurrence>()
+                            .Select(item => item.Name)
+                            .Contains(readingPeriodicity) == false ? BusinessRulesValidationResult
+                            .Failure(new InvalidReadingPeriodicityType(readingPeriodicity)) : BusinessRulesValidationResult.Valid();
+                    },
+                    () => EnumerationType.FromName<ReadingOccurrence>(readingPeriodicity!));
+            }
+
             return this;
         }
 
@@ -98,6 +145,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             SetValue(
                 nameof(MasterData.PowerLimit),
                 PowerLimit.Create(kwh.GetValueOrDefault(), ampere.GetValueOrDefault()));
+            return this;
+        }
+
+        public IMasterDataBuilder WithPowerLimit(string? kwh, string? ampere)
+        {
+            SetValueIfValid(
+                nameof(MasterData.PowerLimit),
+                () => PowerLimit.CheckRules(kwh, ampere),
+                () => PowerLimit.Create(kwh, ampere));
             return this;
         }
 
@@ -146,9 +202,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public IMasterDataBuilder WithCapacity(double? capacity)
+        public IMasterDataBuilder WithCapacity(string? capacity)
         {
-            SetValue(nameof(MasterData.Capacity), capacity is null ? null : Capacity.Create(capacity.Value));
+            SetValue(nameof(MasterData.Capacity), capacity is null ? null : Capacity.Create(capacity));
             return this;
         }
 
@@ -160,7 +216,19 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithProductType(string? productType)
         {
-            SetValue(nameof(MasterData.ProductType),  productType is null ? null : EnumerationType.FromName<ProductType>(productType));
+            if (productType?.Length > 0)
+            {
+                SetValueIfValid(
+                    nameof(MasterData.ProductType),
+                    () =>
+                    {
+                        return EnumerationType.GetAll<ProductType>()
+                            .Select(item => item.Name)
+                            .Contains(productType) == false ? BusinessRulesValidationResult.Failure(new InvalidProductTypeValue(productType)) : BusinessRulesValidationResult.Valid();
+                    },
+                    () => EnumerationType.FromName<ProductType>(productType));
+            }
+
             return this;
         }
 

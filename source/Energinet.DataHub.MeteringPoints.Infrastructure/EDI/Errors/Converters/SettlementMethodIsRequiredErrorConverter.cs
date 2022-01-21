@@ -21,7 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
     {
         protected override ErrorMessage Convert(SettlementMethodIsRequired validationError)
         {
-            return new ErrorMessage("D02", "Settlement method is required.");
+            return new ErrorMessage("D15", "Settlement method is required.");
         }
     }
 }

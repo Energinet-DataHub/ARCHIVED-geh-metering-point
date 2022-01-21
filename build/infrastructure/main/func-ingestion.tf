@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 module "func_ingestion" {
-  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=5.1.0"
+  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=6.0.0"
 
   name                                      = "ingestion"
   project_name                              = var.domain_name_short
@@ -22,6 +22,7 @@ module "func_ingestion" {
   location                                  = azurerm_resource_group.this.location
   app_service_plan_id                       = module.plan_shared.id
   application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_instrumentation_key.value
+  vnet_integration_subnet_id                = module.snet_internal_vnet_integrations.id
   always_on                                 = true
   app_settings                              = {
     # Region: Default Values
@@ -34,6 +35,9 @@ module "func_ingestion" {
     METERINGPOINT_QUEUE_CONNECTION_STRING = module.sb_meteringpoint.primary_connection_strings["send"]
     METERINGPOINT_QUEUE_TOPIC_NAME        = module.sbq_meteringpoint.name
     INTERNAL_SERVICEBUS_RETRY_COUNT       = 3
+    # Shared resources logging
+    REQUEST_RESPONSE_LOGGING_CONNECTION_STRING   = data.azurerm_key_vault_secret.st_market_operator_logs_primary_connection_string.value
+    REQUEST_RESPONSE_LOGGING_CONTAINER_NAME      = data.azurerm_key_vault_secret.st_market_operator_logs_container_name.value
   }
 
   tags                                    = azurerm_resource_group.this.tags

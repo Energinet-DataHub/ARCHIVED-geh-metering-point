@@ -26,7 +26,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.VEProductio
             {
                 new StreetNameIsRequiredRule(masterData.Address),
                 new MasterDataHandling.VEProduction.Rules.MeterReadingOccurrenceRule(masterData.ReadingOccurrence),
-                new ProductTypeMustBeEnergyActiveRule(masterData.ProductType),
             });
         }
     }

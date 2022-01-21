@@ -29,6 +29,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     [UnitTest]
     public class ExchangeReactiveEnergyValidationTests : TestBase
     {
+        [Fact]
+        public void Production_obligation_is_ignored()
+        {
+            var masterData = Builder()
+                .WithProductionObligation(true)
+                .Build();
+
+            Assert.Null(masterData.ProductionObligation);
+        }
+
         [Theory]
         [InlineData(nameof(MeasurementUnitType.KVArh), false)]
         [InlineData(nameof(MeasurementUnitType.Ampere), true)]

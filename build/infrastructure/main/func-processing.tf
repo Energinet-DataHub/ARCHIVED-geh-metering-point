@@ -22,6 +22,7 @@ module "func_processing" {
   location                                  = azurerm_resource_group.this.location
   app_service_plan_id                       = module.plan_shared.id
   application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_instrumentation_key.value
+  vnet_integration_subnet_id                = module.snet_internal_vnet_integrations.id
   always_on                                 = true
   app_settings                              = {
     # Region: Default Values

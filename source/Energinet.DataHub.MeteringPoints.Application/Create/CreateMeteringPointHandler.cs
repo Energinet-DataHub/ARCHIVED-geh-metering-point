@@ -117,9 +117,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 .WithReadingPeriodicity(request.MeterReadingOccurrence)
                 .WithPowerLimit(request.MaximumPower, request.MaximumCurrent)
                 .WithPowerPlant(request.PowerPlant)
-                .WithCapacity(string.IsNullOrWhiteSpace(request.PhysicalConnectionCapacity)
-                    ? null
-                    : double.Parse(request.PhysicalConnectionCapacity, NumberStyles.Number, new NumberFormatInfo()))
+                .WithCapacity(request.PhysicalConnectionCapacity)
                 .WithAddress(
                     request.StreetName,
                     request.StreetCode,
@@ -132,7 +130,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                     request.RoomIdentification,
                     string.IsNullOrWhiteSpace(request.MunicipalityCode) ? default : int.Parse(request.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()),
                     request.IsActualAddress,
-                    string.IsNullOrWhiteSpace(request.GeoInfoReference) ? default : Guid.Parse(request.GeoInfoReference),
+                    request.GeoInfoReference,
                     request.LocationDescription);
             return masterDataBuilder;
         }
@@ -149,7 +147,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 GsrnNumber.Create(request.GsrnNumber),
                 meteringPointType,
                 gridArea.DefaultLink.Id,
-                EffectiveDate.Create(request.EffectiveDate),
                 masterData);
 
             _meteringPointRepository.Add(
@@ -209,7 +206,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                     MeteringPointId.New(),
                     GsrnNumber.Create(request.GsrnNumber),
                     gridArea.DefaultLink.Id,
-                    EffectiveDate.Create(request.EffectiveDate),
                     ExchangeGridAreas.Create(sourceGridArea!.DefaultLink.Id, targetGridArea!.DefaultLink.Id),
                     masterData));
 

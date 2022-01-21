@@ -105,16 +105,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             var updatedAddress = Address.Create(
                 streetName: "Updated street name",
                 SampleData.StreetCode,
-                string.Empty,
+                "30",
                 SampleData.CityName,
                 string.Empty,
                 SampleData.PostCode,
                 CountryCode.DK,
                 string.Empty,
                 string.Empty,
-                default,
+                800,
                 isActual: true,
-                geoInfoReference: Guid.NewGuid(),
+                geoInfoReference: Guid.NewGuid().ToString(),
                 null);
 
             return new MasterData(
@@ -150,7 +150,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 string.Empty,
                 default,
                 isActual: true,
-                geoInfoReference: Guid.NewGuid(),
+                geoInfoReference: Guid.NewGuid().ToString(),
                 null);
 
             return new MasterData(

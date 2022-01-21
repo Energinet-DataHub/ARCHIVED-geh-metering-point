@@ -16,20 +16,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 {
     public class MasterDataField
     {
-        public MasterDataField(string name, Applicability applicability, bool canBeChanged = true, object? defaultValue = null)
+        public MasterDataField(string name, Applicability applicability)
         {
             Name = name;
             Applicability = applicability;
-            CanBeChanged = canBeChanged;
-            DefaultValue = defaultValue;
         }
 
         public string Name { get; }
 
         public Applicability Applicability { get; }
-
-        public bool CanBeChanged { get; }
-
-        public object? DefaultValue { get; }
     }
 }
