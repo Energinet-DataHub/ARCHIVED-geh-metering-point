@@ -58,5 +58,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 
             AssertValidationError("E29");
         }
+
+        [Fact]
+        public async Task Reject_if_configuration_is_not_valid()
+        {
+            await SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    ProductType = ProductType.PowerActive.Name,
+                };
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E29");
+        }
     }
 }
