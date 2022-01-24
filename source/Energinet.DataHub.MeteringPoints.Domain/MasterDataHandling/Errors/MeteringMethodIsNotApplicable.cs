@@ -14,15 +14,9 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
-    public class InvalidMeteringMethodRuleError : ValidationError
+    public class MeteringMethodIsNotApplicable : ValidationError
     {
-        public InvalidMeteringMethodRuleError(string meteringMethod)
-        {
-            MeteringMethod = meteringMethod;
-        }
-
-        public string MeteringMethod { get; }
     }
 }

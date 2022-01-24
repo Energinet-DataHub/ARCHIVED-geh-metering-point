@@ -12,23 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.TotalConsumption.Rules
 {
-    public class MeteringMethodMustBeValidRule : AbstractValidator<string>
+    public class MeteringMethodMustBeVirtualOrCalculated : IBusinessRule
     {
-        public MeteringMethodMustBeValidRule()
+        public MeteringMethodMustBeVirtualOrCalculated(MeteringMethod meteringMethod)
         {
-            RuleFor(value => value)
-                .Must(value => EnumerationType.GetAll<MeteringMethod>().Select(item => item.Name)
-                    .Contains(value, StringComparer.OrdinalIgnoreCase))
-                .WithState(value => new InvalidMeteringMethodValue(value));
+            IsBroken = !(meteringMethod == MeteringMethod.Calculated || meteringMethod == MeteringMethod.Virtual);
         }
+
+        public bool IsBroken { get; }
+
+        public ValidationError ValidationError => new MeteringMethodIsNotApplicable();
     }
 }

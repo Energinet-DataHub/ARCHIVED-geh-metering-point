@@ -27,7 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
 {
     public abstract class TestBase
     {
-        protected static void AssertError<TRuleError>(BusinessRulesValidationResult rulesValidationResult, bool errorExpected)
+        protected static void AssertError<TRuleError>(BusinessRulesValidationResult rulesValidationResult, bool errorExpected = true)
         {
             if (rulesValidationResult == null) throw new ArgumentNullException(nameof(rulesValidationResult));
             var hasError = rulesValidationResult.Errors.Any(error => error is TRuleError);
