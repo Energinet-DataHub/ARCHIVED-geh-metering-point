@@ -118,5 +118,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 
             AssertValidationError("E86");
         }
+
+        [Fact]
+        public async Task Reject_if_building_number_is_invalid()
+        {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    BuildingNumber = "ABC1234",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
     }
 }
