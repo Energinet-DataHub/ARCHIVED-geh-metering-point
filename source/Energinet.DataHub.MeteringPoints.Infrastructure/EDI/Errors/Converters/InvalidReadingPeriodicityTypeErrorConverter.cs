@@ -18,13 +18,12 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class MeasureUnitTypeInvalidValueErrorConverter : ErrorConverter<InvalidUnitTypeValue>
+    public class InvalidReadingPeriodicityTypeErrorConverter : ErrorConverter<InvalidReadingPeriodicityType>
     {
-        protected override ErrorMessage Convert(InvalidUnitTypeValue validationError)
+        protected override ErrorMessage Convert(InvalidReadingPeriodicityType validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-
-            return new ErrorMessage("D02", $"Energy time series measure unit {validationError.ProvidedValue} has wrong value (outside domain)");
+            return new ErrorMessage("D53", $"Meter reading occurrence {validationError.ProvidedValue} has wrong value (outside domain)");
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new ErrorMessage("D02", $"Energy time series measure unit is required.");
+            return new ErrorMessage("E73", $"Energy time series measure unit is required.");
         }
     }
 }

@@ -20,6 +20,7 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
@@ -77,7 +78,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Validation
 
             RuleFor(request => request.MeterReadingOccurrence)
                 .NotEmpty()
-                .WithState(createMeteringPoint => new MeterReadingOccurenceMandatoryValidationError());
+                .WithState(createMeteringPoint => new MeterReadingPeriodicityIsRequired());
             RuleFor(createMeteringPoint => createMeteringPoint.DisconnectionType)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
