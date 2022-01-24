@@ -141,7 +141,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithPowerPlant(null!)
                 .Build();
 
-            AssertDoesNotContainValidationError<PowerPlantRequirementRuleError>(CheckRules(masterData, From(meteringPointType)));
+            AssertDoesNotContainValidationError<PowerPlantIsRequired>(CheckRules(masterData, From(meteringPointType)));
         }
 
         [Theory]
