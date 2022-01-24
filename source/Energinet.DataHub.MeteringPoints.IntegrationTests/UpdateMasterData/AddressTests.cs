@@ -230,5 +230,37 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 
             AssertValidationError("E86");
         }
+
+        [Fact]
+        public async Task Reject_if_city_sub_division_is_too_long()
+        {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    CitySubDivisionName = "AbcdefghijAbcdefghijAbcdefghijAbcde",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
+        [Fact]
+        public async Task Reject_if_municipality_code_is_invalid()
+        {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    MunicipalityCode = "1234",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
     }
 }
