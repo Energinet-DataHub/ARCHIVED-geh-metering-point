@@ -29,7 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         }
 
         [Fact]
-        public async Task Reading_occurrence_is_changed()
+        public async Task Meter_Reading_periodicity_is_changed()
         {
             await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
 
