@@ -60,23 +60,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
-        public async Task Capacity_is_changed()
-        {
-            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    PhysicalConnectionCapacity = "1",
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasCapacity(1);
-        }
-
-        [Fact]
         public async Task Effective_date_is_stored()
         {
             await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
@@ -125,23 +108,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
 
             AssertMasterData()
                 .HasReadingOccurrence(ReadingOccurrence.Monthly);
-        }
-
-        [Fact]
-        public async Task Unit_type_is_changed()
-        {
-            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    MeasureUnitType = MeasurementUnitType.Ampere.Name,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasUnitType(MeasurementUnitType.Ampere);
         }
 
         [Fact]
