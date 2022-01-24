@@ -14,8 +14,8 @@
 
 using System;
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 
@@ -28,7 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             RuleFor(value => value)
                 .Must(value => EnumerationType.GetAll<MeteringMethod>().Select(item => item.Name)
                     .Contains(value, StringComparer.OrdinalIgnoreCase))
-                .WithState(value => new InvalidMeteringMethodRuleError(value));
+                .WithState(value => new InvalidMeteringMethodValue(value));
         }
     }
 }

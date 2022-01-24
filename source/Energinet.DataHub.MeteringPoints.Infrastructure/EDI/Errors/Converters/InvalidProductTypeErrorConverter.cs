@@ -21,7 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
     {
         protected override ErrorMessage Convert(InvalidProductType validationError)
         {
-            return new ErrorMessage("E86", "Product type is not allowed for this type of metering point.");
+            return new ErrorMessage("E29", "Product type is not allowed for this type of metering point.");
         }
     }
 }

@@ -12,20 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class InvalidAssetTypeValueValidationErrorConverter : ErrorConverter<InvalidAssetTypeValue>
+    public class MeteringMethodIsNotApplicableErrorConverter : ErrorConverter<MeteringMethodIsNotApplicable>
     {
-        protected override ErrorMessage Convert(InvalidAssetTypeValue validationError)
+        protected override ErrorMessage Convert(MeteringMethodIsNotApplicable validationError)
         {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-
-            return new ErrorMessage("D59", $"AssetType {validationError.ProvidedValue} has wrong value (outside domain).");
+            return new ErrorMessage("D37", "The metering method is not valid for this type of metering point.");
         }
     }
 }

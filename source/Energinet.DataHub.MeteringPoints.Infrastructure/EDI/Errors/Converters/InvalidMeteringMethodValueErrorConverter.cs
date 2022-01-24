@@ -14,17 +14,17 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class InvalidMeteringMethodRuleErrorConverter : ErrorConverter<InvalidMeteringMethodRuleError>
+    public class InvalidMeteringMethodValueErrorConverter : ErrorConverter<InvalidMeteringMethodValue>
     {
-        protected override ErrorMessage Convert(InvalidMeteringMethodRuleError validationError)
+        protected override ErrorMessage Convert(InvalidMeteringMethodValue validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D02", $"Metering method {validationError.MeteringMethod} has wrong value (outside domain)");
+            return new("D02", $"Metering method {validationError.ProvidedValue} has wrong value (outside domain)");
         }
     }
 }

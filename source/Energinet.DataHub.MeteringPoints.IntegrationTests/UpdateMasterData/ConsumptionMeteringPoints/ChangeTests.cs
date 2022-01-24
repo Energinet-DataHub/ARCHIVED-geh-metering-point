@@ -60,24 +60,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
-        public async Task Metering_configuration_is_changed()
-        {
-            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    MeteringMethod = MeteringMethod.Physical.Name,
-                    MeterNumber = "123",
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasMeteringConfiguration(MeteringMethod.Physical, "123");
-        }
-
-        [Fact]
         public async Task Capacity_is_changed()
         {
             await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
@@ -129,28 +111,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
-        public async Task Power_limit_is_changed()
-        {
-            await SendCommandAsync(Scenarios.CreateVEProduction() with
-            {
-                MaximumCurrent = "1",
-                MaximumPower = "1",
-            }).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    MaximumCurrent = "2",
-                    MaximumPower = string.Empty,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasPowerLimit(null, 2);
-        }
-
-        [Fact]
         public async Task Reading_occurrence_is_changed()
         {
             await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
@@ -168,23 +128,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
-        public async Task Asset_type_is_changed()
-        {
-            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    AssetType = AssetType.Boiler.Name,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasAssetType(AssetType.Boiler);
-        }
-
-        [Fact]
         public async Task Unit_type_is_changed()
         {
             await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
@@ -199,22 +142,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
 
             AssertMasterData()
                 .HasUnitType(MeasurementUnitType.Ampere);
-        }
-
-        [Fact]
-        public async Task Product_type_is_changed()
-        {
-            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    ProductType = ProductType.Tariff.Name,
-                };
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasProductType(ProductType.Tariff);
         }
 
         [Fact]
@@ -333,24 +260,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             await SendCommandAsync(TestUtils.CreateRequest()).ConfigureAwait(false);
 
             AssertValidationError("E10");
-        }
-
-        [Fact]
-        public async Task Meter_is_required_when_physical()
-        {
-            var timeProvider = GetService<ISystemDateTimeProvider>() as SystemDateTimeProviderStub;
-            timeProvider!.SetNow(InstantPattern.General.Parse(SampleData.EffectiveDate).Value);
-
-            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
-
-            var request = TestUtils.CreateRequest()
-                with
-                {
-                    MeterNumber = string.Empty,
-                };
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("D31");
         }
 
         [Fact]
