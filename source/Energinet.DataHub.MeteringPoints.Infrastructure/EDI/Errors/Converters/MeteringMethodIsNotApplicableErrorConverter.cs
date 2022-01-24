@@ -21,7 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
     {
         protected override ErrorMessage Convert(MeteringMethodIsNotApplicable validationError)
         {
-            return new ErrorMessage("D37", "The metering method is valid for this type of metering point.");
+            return new ErrorMessage("D37", "The metering method is not valid for this type of metering point.");
         }
     }
 }
