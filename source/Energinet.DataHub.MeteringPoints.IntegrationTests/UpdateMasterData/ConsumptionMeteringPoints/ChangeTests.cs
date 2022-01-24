@@ -167,23 +167,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
-        public async Task Unit_type_is_changed()
-        {
-            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    MeasureUnitType = MeasurementUnitType.Ampere.Name,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasUnitType(MeasurementUnitType.Ampere);
-        }
-
-        [Fact]
         public async Task Address_is_updated()
         {
             await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
