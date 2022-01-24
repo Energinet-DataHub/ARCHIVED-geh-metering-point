@@ -14,7 +14,6 @@
 
 using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
@@ -23,20 +22,17 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
 {
     public class MessageHubDispatcher : IMessageHubDispatcher
     {
-        private readonly IActorContext _actorContext;
         private readonly ICorrelationContext _correlationContext;
         private readonly IJsonSerializer _jsonSerializer;
         private readonly IOutboxMessageFactory _outboxMessageFactory;
         private readonly IOutbox _outbox;
 
         public MessageHubDispatcher(
-            IActorContext actorContext,
             ICorrelationContext correlationContext,
             IJsonSerializer jsonSerializer,
             IOutboxMessageFactory outboxMessageFactory,
             IOutbox outbox)
         {
-            _actorContext = actorContext ?? throw new ArgumentNullException(nameof(actorContext));
             _correlationContext = correlationContext ?? throw new ArgumentNullException(nameof(correlationContext));
             _jsonSerializer = jsonSerializer ?? throw new ArgumentNullException(nameof(jsonSerializer));
             _outboxMessageFactory = outboxMessageFactory ?? throw new ArgumentNullException(nameof(outboxMessageFactory));
