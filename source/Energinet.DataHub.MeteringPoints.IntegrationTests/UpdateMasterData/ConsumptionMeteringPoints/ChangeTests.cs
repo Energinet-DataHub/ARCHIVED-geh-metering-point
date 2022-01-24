@@ -94,23 +94,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
-        public async Task Power_plant_is_changed()
-        {
-            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    PowerPlant = SampleData.PowerPlantGsrnNumber,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasPowerPlantGsrnNumber(SampleData.PowerPlantGsrnNumber);
-        }
-
-        [Fact]
         public async Task Reading_occurrence_is_changed()
         {
             await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
@@ -215,7 +198,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
                     GsrnNumber = gsrnNumber,
                 }).ConfigureAwait(false);
 
-            AssertValidationError("E10");
+            AssertValidationError("D57");
         }
 
         [Fact]

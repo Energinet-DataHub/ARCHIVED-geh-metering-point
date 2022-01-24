@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -26,6 +27,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production.
 
         public bool IsBroken { get; }
 
-        public ValidationError ValidationError => new PowerPlantRequirementRuleError();
+        public ValidationError ValidationError => new PowerPlantIsRequired();
     }
 }
