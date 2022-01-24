@@ -44,5 +44,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
             AssertMasterData()
                 .HasAssetType(AssetType.Boiler);
         }
+
+        [Fact]
+        public async Task Reject_if_asset_type_value_is_invalid()
+        {
+            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    AssetType = "invalid value",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D59");
+        }
     }
 }
