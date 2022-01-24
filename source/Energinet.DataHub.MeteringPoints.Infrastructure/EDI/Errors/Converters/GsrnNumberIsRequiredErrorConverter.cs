@@ -12,14 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Application.EDI;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production.Rules
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class PowerPlantRequirementRuleError : ValidationError
+    public class GsrnNumberIsRequiredErrorConverter : ErrorConverter<GsrnNumberIsRequired>
     {
-        public PowerPlantRequirementRuleError()
+        protected override ErrorMessage Convert(GsrnNumberIsRequired validationError)
         {
+            return new ErrorMessage("D57", "GSRN number is required");
         }
     }
 }
