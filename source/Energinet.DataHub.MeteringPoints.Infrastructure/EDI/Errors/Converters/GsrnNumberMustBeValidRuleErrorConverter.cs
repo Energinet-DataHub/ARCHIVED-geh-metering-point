@@ -16,11 +16,11 @@ using Energinet.DataHub.MeteringPoints.Application.EDI;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class GsrnNumberMustBeValidDomainErrorConverter : ErrorConverter<Domain.MeteringPoints.Rules.GsrnNumberMustBeValidRuleError>
+    public class GsrnNumberMustBeValidRuleErrorConverter : ErrorConverter<Domain.MeteringPoints.Rules.GsrnNumberMustBeValidRuleError>
     {
         protected override ErrorMessage Convert(Domain.MeteringPoints.Rules.GsrnNumberMustBeValidRuleError validationError)
         {
-            return new("E10", $"A metering point cannot be registered in GEH without a valid identification");
+            return new("D57", $"Invalid GSRN number");
         }
     }
 }

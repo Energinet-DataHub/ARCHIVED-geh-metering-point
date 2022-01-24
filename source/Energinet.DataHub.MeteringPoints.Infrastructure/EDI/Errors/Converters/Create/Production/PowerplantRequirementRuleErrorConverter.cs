@@ -14,13 +14,14 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Create.Production
 {
-    public class PowerplantRequirementRuleErrorConverter : ErrorConverter<PowerPlantRequirementRuleError>
+    public class PowerplantRequirementRuleErrorConverter : ErrorConverter<PowerPlantIsRequired>
     {
-        protected override ErrorMessage Convert(PowerPlantRequirementRuleError validationError)
+        protected override ErrorMessage Convert(PowerPlantIsRequired validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
             return new("D57", $"Power plant for Production (E18) metering point is missing.");
