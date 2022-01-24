@@ -184,6 +184,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         }
 
         [Fact]
+        public async Task Reject_if_city_name_is_too_long()
+        {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    CityName = "AbcdefghijAbcdefghijAbcdef",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
+        [Fact]
         public async Task Reject_if_post_code_is_empty()
         {
             await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
@@ -192,6 +208,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
                 with
                 {
                     PostCode = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
+        [Fact]
+        public async Task Reject_if_post_code_is_invalid()
+        {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    PostCode = "Invalid post code value",
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
