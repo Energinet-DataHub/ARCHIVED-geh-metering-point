@@ -18,13 +18,13 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class ProductTypeInvalidValueErrorConverter : ErrorConverter<InvalidProductTypeValue>
+    public class InvalidProductTypeValueErrorConverter : ErrorConverter<InvalidProductTypeValue>
     {
         protected override ErrorMessage Convert(InvalidProductTypeValue validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new ErrorMessage("D02", $"Product {validationError.ProvidedValue} has wrong value (outside domain)");
+            return new ErrorMessage("E29", $"Product {validationError.ProvidedValue} has wrong value (outside domain)");
         }
     }
 }

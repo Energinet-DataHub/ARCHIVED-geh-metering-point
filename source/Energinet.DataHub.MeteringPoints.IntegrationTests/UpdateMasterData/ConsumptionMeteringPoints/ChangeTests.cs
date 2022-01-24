@@ -184,22 +184,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
-        public async Task Product_type_is_changed()
-        {
-            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    ProductType = ProductType.Tariff.Name,
-                };
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasProductType(ProductType.Tariff);
-        }
-
-        [Fact]
         public async Task Address_is_updated()
         {
             await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
