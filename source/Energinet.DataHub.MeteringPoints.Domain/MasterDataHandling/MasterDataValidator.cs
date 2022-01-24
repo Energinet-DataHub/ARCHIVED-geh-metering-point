@@ -74,7 +74,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             },
             {
                 MeteringPointType.TotalConsumption.Name,
-                new SpecialMeteringPointValidator()
+                new TotalConsumption.Validator()
             },
             {
                 MeteringPointType.WholesaleServices.Name,

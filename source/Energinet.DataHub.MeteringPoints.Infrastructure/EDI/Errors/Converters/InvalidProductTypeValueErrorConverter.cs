@@ -12,16 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class InvalidProductTypeErrorConverter : ErrorConverter<InvalidProductType>
+    public class InvalidProductTypeValueErrorConverter : ErrorConverter<InvalidProductTypeValue>
     {
-        protected override ErrorMessage Convert(InvalidProductType validationError)
+        protected override ErrorMessage Convert(InvalidProductTypeValue validationError)
         {
-            return new ErrorMessage("E29", "Product type is not allowed for this type of metering point.");
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+
+            return new ErrorMessage("E29", $"Product {validationError.ProvidedValue} has wrong value (outside domain)");
         }
     }
 }

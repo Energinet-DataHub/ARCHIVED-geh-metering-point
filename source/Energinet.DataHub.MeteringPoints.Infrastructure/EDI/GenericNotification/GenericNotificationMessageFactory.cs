@@ -31,9 +31,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GenericNotificatio
             return new GenericNotificationMessage(
                 DocumentName: "GenericNotification_MarketDocument",
                 Id: Guid.NewGuid().ToString(),
-                Type: "414",
+                Type: "E44",
                 ProcessType: "E65",
-                BusinessSectorType: "E21",
+                BusinessSectorType: "E23",
                 Sender: sender,
                 Receiver: receiver,
                 CreatedDateTime: createdDateTime,

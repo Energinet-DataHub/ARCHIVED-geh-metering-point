@@ -40,41 +40,57 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
-        public async Task Settlement_method_is_changed()
+        public async Task Scheduled_meter_reading_date_is_changed()
         {
             await SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand() with
             {
-                SettlementMethod = SettlementMethod.Flex.Name,
+                ScheduledMeterReadingDate = "0101",
             }).ConfigureAwait(false);
 
             var request = CreateUpdateRequest()
                 with
                 {
-                    SettlementMethod = SettlementMethod.NonProfiled.Name,
+                    ScheduledMeterReadingDate = "0201",
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertMasterData()
-                .HasSettlementMethod(SettlementMethod.NonProfiled);
+                .HasScheduledMeterReadingDate("0201");
         }
 
         [Fact]
-        public async Task Metering_configuration_is_changed()
+        public async Task Capacity_is_changed()
         {
             await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
 
             var request = CreateUpdateRequest()
                 with
                 {
-                    MeteringMethod = MeteringMethod.Physical.Name,
-                    MeterNumber = "123",
+                    PhysicalConnectionCapacity = "1",
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertMasterData()
-                .HasMeteringConfiguration(MeteringMethod.Physical, "123");
+                .HasCapacity(1);
+        }
+
+        [Fact]
+        public async Task Effective_date_is_stored()
+        {
+            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    PowerPlant = SampleData.PowerPlantGsrnNumber,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertMasterData()
+                .HasEffectiveDate(EffectiveDate.Create(request.EffectiveDate));
         }
 
         [Fact]
@@ -126,22 +142,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
 
             AssertMasterData()
                 .HasUnitType(MeasurementUnitType.Ampere);
-        }
-
-        [Fact]
-        public async Task Product_type_is_changed()
-        {
-            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    ProductType = ProductType.Tariff.Name,
-                };
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasProductType(ProductType.Tariff);
         }
 
         [Fact]
@@ -260,24 +260,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             await SendCommandAsync(TestUtils.CreateRequest()).ConfigureAwait(false);
 
             AssertValidationError("E10");
-        }
-
-        [Fact]
-        public async Task Meter_is_required_when_physical()
-        {
-            var timeProvider = GetService<ISystemDateTimeProvider>() as SystemDateTimeProviderStub;
-            timeProvider!.SetNow(InstantPattern.General.Parse(SampleData.EffectiveDate).Value);
-
-            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
-
-            var request = TestUtils.CreateRequest()
-                with
-                {
-                    MeterNumber = string.Empty,
-                };
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("D31");
         }
 
         [Fact]

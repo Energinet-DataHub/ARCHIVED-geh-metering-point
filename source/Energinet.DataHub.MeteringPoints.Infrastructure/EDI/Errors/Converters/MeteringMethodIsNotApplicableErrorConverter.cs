@@ -17,11 +17,11 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class InvalidProductTypeErrorConverter : ErrorConverter<InvalidProductType>
+    public class MeteringMethodIsNotApplicableErrorConverter : ErrorConverter<MeteringMethodIsNotApplicable>
     {
-        protected override ErrorMessage Convert(InvalidProductType validationError)
+        protected override ErrorMessage Convert(MeteringMethodIsNotApplicable validationError)
         {
-            return new ErrorMessage("E29", "Product type is not allowed for this type of metering point.");
+            return new ErrorMessage("D37", "The metering method is not valid for this type of metering point.");
         }
     }
 }
