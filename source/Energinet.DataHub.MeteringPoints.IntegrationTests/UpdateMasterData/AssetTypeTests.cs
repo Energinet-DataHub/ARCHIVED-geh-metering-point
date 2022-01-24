@@ -60,5 +60,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 
             AssertValidationError("D59");
         }
+
+        [Fact]
+        public async Task Asset_type_cannot_be_removed_if_required()
+        {
+            await SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    AssetType = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D59");
+        }
     }
 }

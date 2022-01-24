@@ -15,6 +15,7 @@
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
@@ -28,7 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             RuleFor(value => value)
                 .Must(value => EnumerationType.GetAll<AssetType>().Select(item => item.Name).Contains(value))
                 .WithState(value =>
-                    new InvalidAssetTypeValueValidationError(value!));
+                    new InvalidAssetTypeValue(value!));
         }
     }
 }
