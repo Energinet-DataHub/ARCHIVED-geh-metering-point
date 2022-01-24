@@ -62,5 +62,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 
             AssertValidationError("E86");
         }
+
+        [Fact]
+        public async Task Cannot_be_removed_if_required()
+        {
+            await CreateConsumptionMeteringPointInNetSettlementGroup6Async().ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    ScheduledMeterReadingDate = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E0H");
+        }
     }
 }
