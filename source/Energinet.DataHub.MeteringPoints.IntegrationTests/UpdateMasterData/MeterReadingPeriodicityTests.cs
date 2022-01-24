@@ -59,5 +59,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 
             AssertValidationError("D53");
         }
+
+        [Fact]
+        public async Task Cannot_be_removed_if_required()
+        {
+            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    MeterReadingOccurrence = string.Empty,
+                };
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D53");
+        }
     }
 }
