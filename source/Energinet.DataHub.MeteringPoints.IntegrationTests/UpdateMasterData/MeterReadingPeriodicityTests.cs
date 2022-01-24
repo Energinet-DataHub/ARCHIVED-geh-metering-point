@@ -44,5 +44,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
             AssertMasterData()
                 .HasReadingOccurrence(ReadingOccurrence.Monthly);
         }
+
+        [Fact]
+        public async Task Input_value_must_be_valid()
+        {
+            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    MeterReadingOccurrence = "invalid value",
+                };
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D53");
+        }
     }
 }
