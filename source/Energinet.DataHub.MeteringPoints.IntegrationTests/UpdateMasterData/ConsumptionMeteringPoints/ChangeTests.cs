@@ -111,28 +111,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
-        public async Task Power_limit_is_changed()
-        {
-            await SendCommandAsync(Scenarios.CreateVEProduction() with
-            {
-                MaximumCurrent = "1",
-                MaximumPower = "1",
-            }).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    MaximumCurrent = "2",
-                    MaximumPower = string.Empty,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasPowerLimit(null, 2);
-        }
-
-        [Fact]
         public async Task Reading_occurrence_is_changed()
         {
             await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
@@ -164,6 +142,23 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
 
             AssertMasterData()
                 .HasAssetType(AssetType.Boiler);
+        }
+
+        [Fact]
+        public async Task Unit_type_is_changed()
+        {
+            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    MeasureUnitType = MeasurementUnitType.Ampere.Name,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertMasterData()
+                .HasUnitType(MeasurementUnitType.Ampere);
         }
 
         [Fact]
