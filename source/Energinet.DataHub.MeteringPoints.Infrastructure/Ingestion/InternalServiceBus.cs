@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
@@ -40,6 +41,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion
 
         public override async Task WriteAsync(byte[] data, CancellationToken cancellationToken = default)
         {
+            if (_actorContext.CurrentActor is null)
+                throw new InvalidOperationException("Can't send message when current actor is not set (null)");
+
             var message = new ServiceBusMessage(data);
             message.CorrelationId = _correlationContext.Id;
             message.ApplicationProperties.Add(Constants.ServiceBusIdentityKey, _actorContext.CurrentActor.AsString());

@@ -42,7 +42,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
                 .HasColumnName("ScheduleDate");
             builder.Property(x => x.CorrelationId)
                 .HasColumnName("CorrelationId");
-            builder.Property(x => x.CurrentActor);
         }
     }
 }

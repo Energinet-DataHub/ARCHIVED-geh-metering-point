@@ -58,7 +58,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                         Guid.NewGuid().ToString(),
                         notification.GsrnNumber,
                         notification.EffectiveDate,
-                        _actorContext.CurrentActor.Identifier)
+                        _actorContext.CurrentActor!.Identifier)
                     .ConfigureAwait(false);
             }
         }

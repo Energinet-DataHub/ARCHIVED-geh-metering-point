@@ -43,10 +43,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
             _outbox = outbox ?? throw new ArgumentNullException(nameof(outbox));
         }
 
-        public Task DispatchAsync<TMessage>(TMessage message, DocumentType documentType, string gsrnNumber)
+        public Task DispatchAsync<TMessage>(TMessage message, DocumentType documentType, string recipient, string gsrnNumber)
         {
             var envelope = CreateMessageHubEnvelope(
-                recipient: _actorContext.CurrentActor.Identifier,
+                recipient: recipient,
                 cimContent: _jsonSerializer.Serialize(message),
                 messageType: documentType,
                 gsrnNumber: gsrnNumber);

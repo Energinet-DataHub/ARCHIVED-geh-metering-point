@@ -15,7 +15,6 @@
 using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.ServiceBus;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
 {
@@ -49,7 +48,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
             message.ContentType = "application/octet-stream";
             message.MessageId = queuedInternalCommand.Id.ToString();
             message.CorrelationId = queuedInternalCommand.CorrelationId;
-            message.ApplicationProperties.Add(Constants.ServiceBusIdentityKey, queuedInternalCommand.CurrentActor);
 
             return message;
         }

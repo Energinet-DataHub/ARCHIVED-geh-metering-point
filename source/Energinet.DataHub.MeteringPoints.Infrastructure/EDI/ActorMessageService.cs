@@ -21,7 +21,6 @@ using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Domain.Actors;
-using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
@@ -59,11 +58,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                 startDateAndOrTime,
                 transactionId);
 
-            await _messageHubDispatcher.DispatchAsync(message, DocumentType.GenericNotification, gsrn).ConfigureAwait(false);
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.GenericNotification, receiverGln, gsrn).ConfigureAwait(false);
         }
 
         public async Task SendCreateMeteringPointConfirmAsync(string transactionId, string gsrn)
         {
+            if (_actorContext.CurrentActor is null)
+                throw new InvalidOperationException("Can't create message when current actor is not set (null)");
+
             var message = ConfirmMessageFactory.CreateMeteringPoint(
                 sender: Map(_actorContext.DataHub),
                 receiver: Map(_actorContext.CurrentActor),
@@ -73,7 +75,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     MarketEvaluationPoint: gsrn,
                     OriginalTransaction: transactionId));
 
-            await _messageHubDispatcher.DispatchAsync(message, DocumentType.ConfirmCreateMeteringPoint, gsrn).ConfigureAwait(false);
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.ConfirmCreateMeteringPoint, _actorContext.CurrentActor.Identifier, gsrn).ConfigureAwait(false);
         }
 
         public async Task SendCreateMeteringPointRejectAsync(
@@ -81,6 +83,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
             string gsrn,
             IEnumerable<ErrorMessage> errors)
         {
+            if (_actorContext.CurrentActor is null)
+                throw new InvalidOperationException("Can't create message when current actor is not set (null)");
+
             var message = RejectMessageFactory.ConnectMeteringPoint(
                 sender: Map(_actorContext.DataHub),
                 receiver: Map(_actorContext.CurrentActor),
@@ -91,11 +96,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     OriginalTransaction: transactionId,
                     Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
 
-            await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectCreateMeteringPoint, gsrn).ConfigureAwait(false);
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectCreateMeteringPoint, _actorContext.CurrentActor.Identifier, gsrn).ConfigureAwait(false);
         }
 
         public async Task SendUpdateMeteringPointConfirmAsync(string transactionId, string gsrn)
         {
+            if (_actorContext.CurrentActor is null)
+                throw new InvalidOperationException("Can't create message when current actor is not set (null)");
+
             var message = ConfirmMessageFactory.CreateMeteringPoint(
                 sender: Map(_actorContext.DataHub),
                 receiver: Map(_actorContext.CurrentActor),
@@ -105,11 +113,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     MarketEvaluationPoint: gsrn,
                     OriginalTransaction: transactionId));
 
-            await _messageHubDispatcher.DispatchAsync(message, DocumentType.ConfirmChangeMasterData, gsrn).ConfigureAwait(false);
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.ConfirmChangeMasterData, _actorContext.CurrentActor.Identifier, gsrn).ConfigureAwait(false);
         }
 
         public async Task SendUpdateMeteringPointRejectAsync(string transactionId, string gsrn, IEnumerable<ErrorMessage> errors)
         {
+            if (_actorContext.CurrentActor is null)
+                throw new InvalidOperationException("Can't create message when current actor is not set (null)");
+
             var message = RejectMessageFactory.ConnectMeteringPoint(
                 sender: Map(_actorContext.DataHub),
                 receiver: Map(_actorContext.CurrentActor),
@@ -120,11 +131,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     OriginalTransaction: transactionId,
                     Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
 
-            await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectChangeMasterData, gsrn).ConfigureAwait(false);
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectChangeMasterData, _actorContext.CurrentActor.Identifier, gsrn).ConfigureAwait(false);
         }
 
         public async Task SendConnectMeteringPointConfirmAsync(string transactionId, string gsrn)
         {
+            if (_actorContext.CurrentActor is null)
+                throw new InvalidOperationException("Can't create message when current actor is not set (null)");
+
             var message = ConfirmMessageFactory.ConnectMeteringPoint(
                 sender: Map(_actorContext.DataHub),
                 receiver: Map(_actorContext.CurrentActor),
@@ -134,11 +148,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     MarketEvaluationPoint: gsrn,
                     OriginalTransaction: transactionId));
 
-            await _messageHubDispatcher.DispatchAsync(message, DocumentType.ConfirmConnectMeteringPoint, gsrn).ConfigureAwait(false);
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.ConfirmConnectMeteringPoint, _actorContext.CurrentActor.Identifier, gsrn).ConfigureAwait(false);
         }
 
         public async Task SendConnectMeteringPointRejectAsync(string transactionId, string gsrn, IEnumerable<ErrorMessage> errors)
         {
+            if (_actorContext.CurrentActor is null)
+                throw new InvalidOperationException("Can't create message when current actor is not set (null)");
+
             var message = RejectMessageFactory.ConnectMeteringPoint(
                 sender: Map(_actorContext.DataHub),
                 receiver: Map(_actorContext.CurrentActor),
@@ -149,7 +166,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     OriginalTransaction: transactionId,
                     Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
 
-            await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectConnectMeteringPoint, gsrn).ConfigureAwait(false);
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectConnectMeteringPoint, _actorContext.CurrentActor.Identifier, gsrn).ConfigureAwait(false);
         }
 
         public async Task SendAccountingPointCharacteristicsMessageAsync(
@@ -171,7 +188,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                 _dateTimeProvider.Now());
 
             await _messageHubDispatcher
-                .DispatchAsync(message, DocumentType.AccountingPointCharacteristicsMessage, meteringPoint.GsrnNumber)
+                .DispatchAsync(message, DocumentType.AccountingPointCharacteristicsMessage, energySupplier.GlnNumber, meteringPoint.GsrnNumber)
                 .ConfigureAwait(false);
         }
 

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.XmlConversion.XmlConverter.Abstractions;
 
@@ -28,6 +29,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 
         public (bool IsValid, string ErrorMessage) ValidateSender(XmlHeaderSender? sender)
         {
+            if (_actorContext.CurrentActor is null)
+                throw new InvalidOperationException("Can't validate message when current actor is not set (null)");
+
             return sender?.Id != _actorContext.CurrentActor.Identifier
                 ? (false, "Identifier applied for sender was not equal to the identifier of the authorized actor.")
                 : (true, string.Empty);
