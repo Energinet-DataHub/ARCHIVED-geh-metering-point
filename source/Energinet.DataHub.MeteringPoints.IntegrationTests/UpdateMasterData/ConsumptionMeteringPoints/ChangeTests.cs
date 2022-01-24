@@ -60,23 +60,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
-        public async Task Effective_date_is_stored()
-        {
-            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    PowerPlant = SampleData.PowerPlantGsrnNumber,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasEffectiveDate(EffectiveDate.Create(request.EffectiveDate));
-        }
-
-        [Fact]
         public async Task Power_plant_is_changed()
         {
             await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
@@ -91,23 +74,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
 
             AssertMasterData()
                 .HasPowerPlantGsrnNumber(SampleData.PowerPlantGsrnNumber);
-        }
-
-        [Fact]
-        public async Task Reading_occurrence_is_changed()
-        {
-            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    MeterReadingOccurrence = ReadingOccurrence.Monthly.Name,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasReadingOccurrence(ReadingOccurrence.Monthly);
         }
 
         [Fact]
@@ -182,39 +148,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
                 }).ConfigureAwait(false);
 
             AssertValidationError("E10");
-        }
-
-        [Fact]
-        public async Task Effective_date_is_required()
-        {
-            await SendCommandAsync(TestUtils.CreateRequest()
-                with
-                {
-                    EffectiveDate = string.Empty,
-                }).ConfigureAwait(false);
-
-            AssertValidationError("D02");
-        }
-
-        [Theory]
-        [InlineData("2021-01-01T18:00:00Z", "2021-01-02T22:00:00Z", true)]
-        [InlineData("2021-01-01T18:00:00Z", "2020-12-30T22:00:00Z", true)]
-        [InlineData("2021-01-01T18:00:00Z", "2021-01-01T22:00:00Z", false)]
-        [InlineData("2021-01-01T18:00:00Z", "2020-12-31T22:00:00Z", false)]
-        public async Task Effective_date_is_today_or_the_day_before(string today, string effectiveDate, bool expectError)
-        {
-            var timeProvider = GetService<ISystemDateTimeProvider>() as SystemDateTimeProviderStub;
-            timeProvider!.SetNow(InstantPattern.General.Parse(today).Value);
-
-            await CreateMeteringPointAsync().ConfigureAwait(false);
-
-            await SendCommandAsync(TestUtils.CreateRequest()
-                with
-                {
-                    EffectiveDate = effectiveDate,
-                }).ConfigureAwait(false);
-
-            AssertValidationError("E17", expectError);
         }
 
         [Fact]

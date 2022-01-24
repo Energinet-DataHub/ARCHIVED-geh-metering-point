@@ -14,17 +14,17 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class MeterReadingOccurenceMandatoryErrorConverter : ErrorConverter<MeterReadingOccurenceMandatoryValidationError>
+    public class MeterReadingPeriodicityIsRequiredErrorConverter : ErrorConverter<MeterReadingPeriodicityIsRequired>
     {
-        protected override ErrorMessage Convert(MeterReadingOccurenceMandatoryValidationError validationError)
+        protected override ErrorMessage Convert(MeterReadingPeriodicityIsRequired validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("D02", $"Meter reading occurrence is missing.");
+            return new("D53", $"Meter reading periodicity is required.");
         }
     }
 }
