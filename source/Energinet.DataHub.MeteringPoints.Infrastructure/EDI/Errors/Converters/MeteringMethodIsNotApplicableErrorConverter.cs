@@ -12,23 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Linq;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
+using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class MeteringMethodMustBeValidRule : AbstractValidator<string>
+    public class MeteringMethodIsNotApplicableErrorConverter : ErrorConverter<MeteringMethodIsNotApplicable>
     {
-        public MeteringMethodMustBeValidRule()
+        protected override ErrorMessage Convert(MeteringMethodIsNotApplicable validationError)
         {
-            RuleFor(value => value)
-                .Must(value => EnumerationType.GetAll<MeteringMethod>().Select(item => item.Name)
-                    .Contains(value, StringComparer.OrdinalIgnoreCase))
-                .WithState(value => new InvalidMeteringMethodValue(value));
+            return new ErrorMessage("D37", "The metering method is not valid for this type of metering point.");
         }
     }
 }
