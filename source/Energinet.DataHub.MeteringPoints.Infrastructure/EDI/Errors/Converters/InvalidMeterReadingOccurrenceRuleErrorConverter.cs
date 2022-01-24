@@ -14,7 +14,6 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
@@ -24,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         protected override ErrorMessage Convert(InvalidMeterReadingOccurrenceRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-            return new ErrorMessage("D02", $"Meter reading occurrence {validationError.MeterReadingOccurrence} is not valid for this type of metering point.");
+            return new ErrorMessage("D53", $"Meter reading occurrence {validationError.MeterReadingOccurrence} is not valid for this type of metering point.");
         }
     }
 }
