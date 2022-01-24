@@ -118,5 +118,149 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 
             AssertValidationError("E86");
         }
+
+        [Fact]
+        public async Task Reject_if_building_number_is_invalid()
+        {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    BuildingNumber = "ABC1234",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
+        [Fact]
+        public async Task Reject_if_floor_identification_is_invalid()
+        {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    FloorIdentification = "12345",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
+        [Fact]
+        public async Task Reject_if_room_identification_is_invalid()
+        {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    RoomIdentification = "12345",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
+        [Fact]
+        public async Task Reject_if_city_name_is_empty()
+        {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    CityName = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
+        [Fact]
+        public async Task Reject_if_city_name_is_too_long()
+        {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    CityName = "AbcdefghijAbcdefghijAbcdef",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
+        [Fact]
+        public async Task Reject_if_post_code_is_empty()
+        {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    PostCode = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
+        [Fact]
+        public async Task Reject_if_post_code_is_invalid()
+        {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    PostCode = "Invalid post code value",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
+        [Fact]
+        public async Task Reject_if_city_sub_division_is_too_long()
+        {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    CitySubDivisionName = "AbcdefghijAbcdefghijAbcdefghijAbcde",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
+        [Fact]
+        public async Task Reject_if_municipality_code_is_invalid()
+        {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    MunicipalityCode = "1234",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
     }
 }
