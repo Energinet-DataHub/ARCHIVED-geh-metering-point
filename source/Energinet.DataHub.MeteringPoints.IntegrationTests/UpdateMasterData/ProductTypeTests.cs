@@ -43,5 +43,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
             AssertMasterData()
                 .HasProductType(ProductType.Tariff);
         }
+
+        [Fact]
+        public async Task Input_value_must_valid()
+        {
+            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    ProductType = "Invalid value",
+                };
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E29");
+        }
     }
 }
