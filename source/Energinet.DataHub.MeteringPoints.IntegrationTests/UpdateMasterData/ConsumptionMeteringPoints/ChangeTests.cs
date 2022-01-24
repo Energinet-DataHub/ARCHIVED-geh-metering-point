@@ -15,14 +15,10 @@
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
-using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
 
@@ -37,43 +33,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             : base(databaseFixture)
         {
             _timeProvider = GetService<ISystemDateTimeProvider>();
-        }
-
-        [Fact]
-        public async Task Scheduled_meter_reading_date_is_changed()
-        {
-            await SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand() with
-            {
-                ScheduledMeterReadingDate = "0101",
-            }).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    ScheduledMeterReadingDate = "0201",
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasScheduledMeterReadingDate("0201");
-        }
-
-        [Fact]
-        public async Task Power_plant_is_changed()
-        {
-            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    PowerPlant = SampleData.PowerPlantGsrnNumber,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasPowerPlantGsrnNumber(SampleData.PowerPlantGsrnNumber);
         }
 
         [Fact]
@@ -147,7 +106,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
                     GsrnNumber = gsrnNumber,
                 }).ConfigureAwait(false);
 
-            AssertValidationError("E10");
+            AssertValidationError("D57");
         }
 
         [Fact]

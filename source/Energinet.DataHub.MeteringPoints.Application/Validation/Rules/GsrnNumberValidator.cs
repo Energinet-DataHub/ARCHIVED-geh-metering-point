@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Application.Validation.Extensions;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
@@ -26,14 +26,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
             RuleFor(gsrnNumber => gsrnNumber)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .WithState(CreateValidationError)
-                .Must(x => GsrnNumber.CheckRules(x).Success)
-                .WithState(CreateValidationError);
-        }
-
-        private static ValidationError CreateValidationError(string gsrnNumber)
-        {
-            return new GsrnNumberMustBeValidValidationError(gsrnNumber);
+                .WithState(x => new GsrnNumberIsRequired())
+                .CheckRules(GsrnNumber.CheckRules);
         }
     }
 }

@@ -20,63 +20,60 @@ using Xunit.Categories;
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 {
     [IntegrationTest]
-    public class ScheduledMeterReadingDateTests : TestHost
+    public class PowerPlantTests : TestHost
     {
-        public ScheduledMeterReadingDateTests(DatabaseFixture databaseFixture)
-        : base(databaseFixture)
+        public PowerPlantTests(DatabaseFixture databaseFixture)
+            : base(databaseFixture)
         {
         }
 
         [Fact]
-        public async Task Scheduled_meter_reading_date_is_changed()
+        public async Task Power_plant_is_changed()
         {
-            await SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand() with
-            {
-                ScheduledMeterReadingDate = "0101",
-            }).ConfigureAwait(false);
+            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
 
             var request = CreateUpdateRequest()
                 with
                 {
-                    ScheduledMeterReadingDate = "0201",
+                    PowerPlant = SampleData.PowerPlantGsrnNumber,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertMasterData()
-                .HasScheduledMeterReadingDate("0201");
+                .HasPowerPlantGsrnNumber(SampleData.PowerPlantGsrnNumber);
         }
 
         [Fact]
-        public async Task Scheduled_meter_reading_date_is_rejected_if_format_is_incorrect()
+        public async Task Reject_if_input_is_invalid()
+        {
+            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    PowerPlant = "Invalid input",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D57");
+        }
+
+        [Fact]
+        public async Task Power_plant_is_required()
         {
             await SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand()).ConfigureAwait(false);
 
             var request = CreateUpdateRequest()
                 with
                 {
-                    ScheduledMeterReadingDate = "020122",
+                    PowerPlant = string.Empty,
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("E86");
-        }
-
-        [Fact]
-        public async Task Cannot_be_removed_if_required()
-        {
-            await CreateConsumptionMeteringPointInNetSettlementGroup6Async().ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    ScheduledMeterReadingDate = string.Empty,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("E0H");
+            AssertValidationError("D57");
         }
     }
 }

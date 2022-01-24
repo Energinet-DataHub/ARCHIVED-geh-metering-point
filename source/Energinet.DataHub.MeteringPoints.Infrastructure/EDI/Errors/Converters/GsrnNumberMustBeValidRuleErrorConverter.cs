@@ -12,19 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production.Rules;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Create.Production
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class PowerplantRequirementRuleErrorConverter : ErrorConverter<PowerPlantIsRequired>
+    public class GsrnNumberMustBeValidRuleErrorConverter : ErrorConverter<Domain.MeteringPoints.Rules.GsrnNumberMustBeValidRuleError>
     {
-        protected override ErrorMessage Convert(PowerPlantIsRequired validationError)
+        protected override ErrorMessage Convert(Domain.MeteringPoints.Rules.GsrnNumberMustBeValidRuleError validationError)
         {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-            return new("D57", $"Power plant for Production (E18) metering point is missing.");
+            return new("D57", $"Invalid GSRN number");
         }
     }
 }

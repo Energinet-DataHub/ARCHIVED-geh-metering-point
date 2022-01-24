@@ -37,8 +37,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Validation
         }
 
         [Theory]
-        [InlineData("x71234567891234568", "2021-05-05T10:10:10Z", "a9932d11-3884-4257-8c69-09d4d88302fa", typeof(GsrnNumberMustBeValidValidationError))]
-        [InlineData("", "2021-05-05T10:10:10Z", "a9932d11-3884-4257-8c69-09d4d88302fa", typeof(GsrnNumberMustBeValidValidationError))]
         [InlineData("571234567891234568", "2021205-05T10:10:10Z", "a9932d11-3884-4257-8c69-09d4d88302fa", typeof(DateFormatMustBeUTCRuleError))]
         [InlineData("571234567891234568", "2021-05-05T10:10:10.0000Z", "a9932d11-3884-4257-8c69-09d4d88302fa", typeof(DateFormatMustBeUTCRuleError))]
         [InlineData("571234567891234568", "", "a9932d11-3884-4257-8c69-09d4d88302fa", typeof(EffectiveDateRequiredValidationError))]

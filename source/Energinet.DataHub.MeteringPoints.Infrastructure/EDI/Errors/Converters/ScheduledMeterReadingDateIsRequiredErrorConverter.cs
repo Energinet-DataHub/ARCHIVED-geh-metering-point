@@ -12,15 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class GsrnNumberMustBeValidDomainErrorConverter : ErrorConverter<Domain.MeteringPoints.Rules.GsrnNumberMustBeValidRuleError>
+    public class ScheduledMeterReadingDateIsRequiredErrorConverter : ErrorConverter<ScheduledMeterReadingDateIsRequired>
     {
-        protected override ErrorMessage Convert(Domain.MeteringPoints.Rules.GsrnNumberMustBeValidRuleError validationError)
+        protected override ErrorMessage Convert(ScheduledMeterReadingDateIsRequired validationError)
         {
-            return new("E10", $"A metering point cannot be registered in GEH without a valid identification");
+            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+            return new ErrorMessage(
+                "E0H",
+                "Scheduled meter reading date is required.");
         }
     }
 }
