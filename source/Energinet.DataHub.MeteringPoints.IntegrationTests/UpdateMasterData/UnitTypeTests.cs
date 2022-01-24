@@ -44,5 +44,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
             AssertMasterData()
                 .HasUnitType(MeasurementUnitType.Ampere);
         }
+
+        [Fact]
+        public async Task Unit_type_input_value_must_be_valid()
+        {
+            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    MeasureUnitType = "invalid value",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E73");
+        }
     }
 }
