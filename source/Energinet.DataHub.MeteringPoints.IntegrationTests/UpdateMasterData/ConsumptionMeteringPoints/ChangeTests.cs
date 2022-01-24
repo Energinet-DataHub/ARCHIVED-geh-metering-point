@@ -77,23 +77,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
-        public async Task Reading_occurrence_is_changed()
-        {
-            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    MeterReadingOccurrence = ReadingOccurrence.Monthly.Name,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasReadingOccurrence(ReadingOccurrence.Monthly);
-        }
-
-        [Fact]
         public async Task Address_is_updated()
         {
             await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
