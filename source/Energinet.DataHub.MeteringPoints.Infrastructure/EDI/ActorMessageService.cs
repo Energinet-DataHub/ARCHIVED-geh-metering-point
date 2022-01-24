@@ -21,6 +21,7 @@ using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Domain.Actors;
+using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
@@ -48,11 +49,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
             _actorContext = actorContext;
         }
 
-        public async Task SendGenericNotificationMessageAsync(string transactionId, string gsrn, Instant startDateAndOrTime)
+        public async Task SendGenericNotificationMessageAsync(string transactionId, string gsrn, Instant startDateAndOrTime, string receiverGln)
         {
             var message = GenericNotificationMessageFactory.GenericNotification(
                 sender: Map(_actorContext.DataHub),
-                receiver: Map(_actorContext.CurrentActor),
+                receiver: new MarketRoleParticipant(receiverGln, "A10", "DDQ"), // TODO: Re-visit when actor context has been implemented properly
                 createdDateTime: _dateTimeProvider.Now(),
                 gsrn,
                 startDateAndOrTime,

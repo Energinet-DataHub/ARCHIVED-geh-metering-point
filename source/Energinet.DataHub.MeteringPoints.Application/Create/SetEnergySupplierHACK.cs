@@ -15,6 +15,8 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
+using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
@@ -30,13 +32,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
     {
         private readonly ICommandScheduler _commandScheduler;
         private readonly IActorMessageService _actorMessageService;
+        private readonly IActorContext _actorContext;
 
         public SetEnergySupplierHACK(
             ICommandScheduler commandScheduler,
-            IActorMessageService actorMessageService)
+            IActorMessageService actorMessageService,
+            IActorContext actorContext)
         {
             _commandScheduler = commandScheduler ?? throw new ArgumentNullException(nameof(commandScheduler));
             _actorMessageService = actorMessageService;
+            _actorContext = actorContext;
         }
 
         public async Task Handle(MeteringPointCreated notification, CancellationToken cancellationToken)
@@ -52,7 +57,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                     .SendGenericNotificationMessageAsync(
                         Guid.NewGuid().ToString(),
                         notification.GsrnNumber,
-                        notification.EffectiveDate)
+                        notification.EffectiveDate,
+                        _actorContext.CurrentActor.Identifier)
                     .ConfigureAwait(false);
             }
         }

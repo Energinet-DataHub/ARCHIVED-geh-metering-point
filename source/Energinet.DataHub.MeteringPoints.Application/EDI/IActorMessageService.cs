@@ -31,7 +31,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.EDI
         Task SendGenericNotificationMessageAsync(
             string transactionId,
             string gsrn,
-            Instant startDateAndOrTime);
+            Instant startDateAndOrTime,
+            string receiverGln);
 
         /// <summary>
         /// Confirmation of create metering point.

@@ -15,20 +15,16 @@
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
-using MasterDataDocument = Energinet.DataHub.MeteringPoints.Application.MarketDocuments.MasterDataDocument;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.ConsumptionMeteringPoints
 {
@@ -41,23 +37,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
             : base(databaseFixture)
         {
             _timeProvider = GetService<ISystemDateTimeProvider>();
-        }
-
-        [Fact]
-        public async Task Net_settlement_group_is_changed()
-        {
-            await SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand()).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    NetSettlementGroup = NetSettlementGroup.Zero.Name,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasNetSettlementGroup(NetSettlementGroup.Zero);
         }
 
         [Fact]
@@ -78,26 +57,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
 
             AssertMasterData()
                 .HasScheduledMeterReadingDate("0201");
-        }
-
-        [Fact]
-        public async Task Settlement_method_is_changed()
-        {
-            await SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand() with
-            {
-                SettlementMethod = SettlementMethod.Flex.Name,
-            }).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    SettlementMethod = SettlementMethod.NonProfiled.Name,
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasSettlementMethod(SettlementMethod.NonProfiled);
         }
 
         [Fact]
