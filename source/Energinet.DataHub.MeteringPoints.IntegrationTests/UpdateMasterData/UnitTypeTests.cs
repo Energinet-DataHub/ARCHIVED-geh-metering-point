@@ -76,5 +76,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 
             AssertValidationError("D02");
         }
+
+        [Fact]
+        public async Task Must_be_valid_according_to_metering_point_type()
+        {
+            await SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand()).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    MeasureUnitType = MeasurementUnitType.Ampere.Name,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E73");
+        }
     }
 }
