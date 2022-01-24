@@ -23,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.
         protected override ErrorMessage Convert(InvalidScheduledMeterReadingDateNetSettlementGroupRuleError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-            return new ErrorMessage("D02", "Day of scheduled meter reading date must be 01 when net settlement group is 6.");
+            return new ErrorMessage("E0H", "Day of scheduled meter reading date must be 01 when net settlement group is 6.");
         }
     }
 }

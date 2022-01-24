@@ -13,20 +13,19 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.Create.Validation;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Create.Consumption
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class ScheduledMeterReadingDateIsRequiredRuleErrorConverter : ErrorConverter<ScheduledMeterReadingDateIsRequiredRuleError>
+    public class ScheduledMeterReadingDateIsRequiredErrorConverter : ErrorConverter<ScheduledMeterReadingDateIsRequired>
     {
-        protected override ErrorMessage Convert(ScheduledMeterReadingDateIsRequiredRuleError validationError)
+        protected override ErrorMessage Convert(ScheduledMeterReadingDateIsRequired validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
             return new ErrorMessage(
-                "D02",
-                "First meter reading date for consumption metering point is missing (type E17) or not allowed (other types)");
+                "E0H",
+                "Scheduled meter reading date is required.");
         }
     }
 }
