@@ -70,7 +70,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
                 ScheduledMeterReadingDate: document.ScheduledMeterReadingDate,
                 DisconnectionType: document.DisconnectionType,
                 NetSettlementGroup: document.NetSettlementGroup,
-                ProductionObligation: document.ProductionObligation);
+                ProductionObligation: document.ProductionObligation,
+                ParentRelatedMeteringPoint: document.ParentRelatedMeteringPoint);
         }
 
         private static IBusinessRequest? CreateConnectMeteringPointCommand(MasterDataDocument document)

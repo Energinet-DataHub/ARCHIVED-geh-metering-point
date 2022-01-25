@@ -473,6 +473,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 .Initialize(SampleData.GsrnNumber, GetService<IDbConnectionFactory>());
         }
 
+        protected AssertPersistedMeteringPoint AssertMasterData(string gsrnNumber)
+        {
+            return AssertPersistedMeteringPoint
+                .Initialize(gsrnNumber, GetService<IDbConnectionFactory>());
+        }
+
         private void CleanupDatabase()
         {
             var cleanupStatement = new StringBuilder();
