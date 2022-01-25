@@ -26,31 +26,33 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
     public class AssertPersistedMeteringPoint
     {
+        private readonly IDbConnectionFactory _connectionFactory;
         private readonly dynamic _meteringPoint;
 
-        private AssertPersistedMeteringPoint(dynamic meteringPoint)
+        private AssertPersistedMeteringPoint(dynamic meteringPoint, IDbConnectionFactory connectionFactory)
         {
             if (meteringPoint == null) throw new ArgumentNullException(nameof(meteringPoint));
             Assert.NotNull(meteringPoint);
             _meteringPoint = meteringPoint;
+            _connectionFactory = connectionFactory;
         }
 
         public static AssertPersistedMeteringPoint Initialize(string gsrnNumber, IDbConnectionFactory connectionFactory)
         {
             if (connectionFactory == null) throw new ArgumentNullException(nameof(connectionFactory));
             var meteringPoint = connectionFactory.GetOpenConnection().QuerySingle(
-                $"SELECT Id, RecordId, GsrnNumber, StreetName, PostCode, CityName, CountryCode," +
-                $"MeteringPointSubType, MeterReadingOccurrence, TypeOfMeteringPoint, MaximumCurrent, MaximumPower," +
-                $"MeteringGridArea, PowerPlant, LocationDescription, ProductType, ParentRelatedMeteringPoint," +
-                $"UnitType, EffectiveDate, MeterNumber, ConnectionState_PhysicalState, ConnectionState_EffectiveDate," +
-                $"StreetCode, CitySubDivision, Floor, Room, BuildingNumber, MunicipalityCode, IsActualAddress, GeoInfoReference," +
-                $"Capacity, AssetType, SettlementMethod, ScheduledMeterReadingDate, ProductionObligation," +
-                $"NetSettlementGroup, DisconnectionType, ConnectionType, StartOfSupplyDate, ToGrid, FromGrid" +
-                $" FROM [dbo].[MeteringPoints]" +
-                $" WHERE GsrnNumber = {gsrnNumber}");
+                $"SELECT mp.Id, mp.RecordId, mp.GsrnNumber, mp.StreetName, mp.PostCode, mp.CityName, mp.CountryCode," +
+                $"mp.MeteringPointSubType, mp.MeterReadingOccurrence, mp.TypeOfMeteringPoint, mp.MaximumCurrent, mp.MaximumPower," +
+                $"mp.MeteringGridArea, mp.PowerPlant, mp.LocationDescription, mp.ProductType, mp.ParentRelatedMeteringPoint," +
+                $"mp.UnitType, mp.EffectiveDate, mp.MeterNumber, mp.ConnectionState_PhysicalState, mp.ConnectionState_EffectiveDate," +
+                $"mp.StreetCode, mp.CitySubDivision, mp.Floor, mp.Room, mp.BuildingNumber, mp.MunicipalityCode, mp.IsActualAddress, mp.GeoInfoReference," +
+                $"mp.Capacity, mp.AssetType, mp.SettlementMethod, mp.ScheduledMeterReadingDate, mp.ProductionObligation," +
+                $"mp.NetSettlementGroup, mp.DisconnectionType, mp.ConnectionType, mp.StartOfSupplyDate, mp.ToGrid, mp.FromGrid" +
+                $" FROM [dbo].[MeteringPoints] mp" +
+                $" WHERE mp.GsrnNumber = {gsrnNumber}");
 
             Assert.NotNull(meteringPoint);
-            return new AssertPersistedMeteringPoint(meteringPoint);
+            return new AssertPersistedMeteringPoint(meteringPoint, connectionFactory);
         }
 
         public AssertPersistedMeteringPoint HasConnectionState(PhysicalState state)
@@ -221,6 +223,18 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         public AssertPersistedMeteringPoint HasProductionObligation(bool productionObligation)
         {
             Assert.Equal(productionObligation, _meteringPoint.ProductionObligation);
+            return this;
+        }
+
+        public AssertPersistedMeteringPoint HasParentMeteringPoint(string gsrnNumber)
+        {
+            var parent = _connectionFactory.GetOpenConnection().QuerySingle(
+                $"SELECT pmp.GsrnNumber" +
+                $" FROM [dbo].[MeteringPoints] mp" +
+                $" JOIN [dbo].[MeteringPoints] pmp ON pmp.Id = mp.ParentRelatedMeteringPoint" +
+                $" WHERE mp.GsrnNumber = {_meteringPoint.GsrnNumber}");
+
+            Assert.Equal(gsrnNumber, parent.GsrnNumber);
             return this;
         }
     }
