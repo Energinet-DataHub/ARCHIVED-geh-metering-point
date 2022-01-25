@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -59,6 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
                 new SettlementMethodMustBeFlexOrNonProfiledRule(masterData.SettlementMethod!),
                 new ProductTypeMustBeEnergyActiveRule(masterData.ProductType),
                 new UnitTypeMustBeKwh(masterData.UnitType),
+                new CountryCodeRequiredRule(masterData.Address),
             };
         }
     }
