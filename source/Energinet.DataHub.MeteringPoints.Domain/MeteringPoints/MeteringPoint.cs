@@ -173,7 +173,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 errors.Add(new ClosedDownMeteringPointCannotBeChangedError());
             }
 
-            errors.AddRange(validator.CheckRulesFor(MeteringPointType, updatedMasterData).Errors);
+            errors.AddRange(validator.CheckRulesFor(this, updatedMasterData).Errors);
 
             return new BusinessRulesValidationResult(errors);
         }

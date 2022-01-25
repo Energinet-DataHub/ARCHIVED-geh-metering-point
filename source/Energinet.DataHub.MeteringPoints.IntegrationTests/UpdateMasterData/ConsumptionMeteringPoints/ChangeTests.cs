@@ -40,26 +40,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
-        public async Task Scheduled_meter_reading_date_is_changed()
-        {
-            await SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand() with
-            {
-                ScheduledMeterReadingDate = "0101",
-            }).ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    ScheduledMeterReadingDate = "0201",
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasScheduledMeterReadingDate("0201");
-        }
-
-        [Fact]
         public async Task Power_plant_is_changed()
         {
             await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
