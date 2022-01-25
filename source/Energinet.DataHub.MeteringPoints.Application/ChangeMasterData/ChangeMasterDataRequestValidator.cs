@@ -21,9 +21,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
     {
         public ChangeMasterDataRequestValidator()
         {
-            RuleFor(request => request.Address)
-                .SetValidator(new AddressValidator())
-                .Unless(request => request.Address is null);
             RuleFor(request => request.GsrnNumber)
                 .SetValidator(new GsrnNumberValidator());
             RuleFor(request => request.EffectiveDate)

@@ -131,7 +131,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
                     request.Address?.City,
                     request.Address?.CitySubDivision,
                     request.Address?.PostCode,
-                    string.IsNullOrEmpty(request.Address?.CountryCode) ? null : EnumerationType.FromName<CountryCode>(request.Address.CountryCode),
+                    request.Address?.CountryCode,
                     request.Address?.Floor,
                     request.Address?.Room,
                     request.Address?.MunicipalityCode,
