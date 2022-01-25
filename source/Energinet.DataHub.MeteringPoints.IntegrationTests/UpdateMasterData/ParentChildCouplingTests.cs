@@ -48,6 +48,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         }
 
         [Fact]
+        public async Task Child_is_decoupled_from_parent()
+        {
+            await CoupleChildToParent().ConfigureAwait(false);
+
+            await SendCommandAsync(CreateUpdateRequest()
+                with
+                {
+                    ParentRelatedMeteringPoint = string.Empty,
+                }).ConfigureAwait(false);
+
+            AssertMasterData(_childGsrnNumber)
+                .HasParentMeteringPoint(null);
+        }
+
+        [Fact]
         public async Task Parent_gsrn_number_must_be_valid()
         {
             await SetupScenario().ConfigureAwait(false);
@@ -70,6 +85,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
             };
             await SendCommandAsync(createParentCommand).ConfigureAwait(false);
             var createChildCommand = Scenarios.CreateCommand(MeteringPointType.ElectricalHeating);
+            await SendCommandAsync(createChildCommand).ConfigureAwait(false);
+        }
+
+        private async Task CoupleChildToParent()
+        {
+            var createParentCommand = Scenarios.CreateCommand(MeteringPointType.Production) with
+            {
+                GsrnNumber = _parentGsrnNumber,
+            };
+            await SendCommandAsync(createParentCommand).ConfigureAwait(false);
+            var createChildCommand = Scenarios.CreateCommand(MeteringPointType.ElectricalHeating)
+            with
+            {
+                ParentRelatedMeteringPoint = _parentGsrnNumber,
+            };
             await SendCommandAsync(createChildCommand).ConfigureAwait(false);
         }
     }

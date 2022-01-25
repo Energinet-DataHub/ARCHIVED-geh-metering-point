@@ -54,5 +54,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common.ChildMeteringPoint
             await childMeteringPoint.CoupleToAsync(parentMeteringPoint).ConfigureAwait(false);
             return BusinessProcessResult.Ok(transactionId);
         }
+
+        internal Task<BusinessProcessResult> DecoupleFromParentAsync(MeteringPoint child, string transactionId)
+        {
+            var childMeteringPoint = new ChildMeteringPoint(child, _gridAreaRepository);
+            childMeteringPoint.Decouple();
+            return Task.FromResult(BusinessProcessResult.Ok(transactionId));
+        }
     }
 }

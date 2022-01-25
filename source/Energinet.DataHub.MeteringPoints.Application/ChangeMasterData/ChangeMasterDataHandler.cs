@@ -162,8 +162,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
 
         private Task<BusinessProcessResult> CoupleToParentIfRequestedAsync(ChangeMasterDataRequest request, MeteringPoint meteringPoint)
         {
-            if (string.IsNullOrEmpty(request.ParentRelatedMeteringPoint))
+            if (request.ParentRelatedMeteringPoint is null)
                 return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
+
+            if (request.ParentRelatedMeteringPoint.Length == 0)
+            {
+                return _parentChildCoupling.DecoupleFromParentAsync(meteringPoint, request.TransactionId);
+            }
 
             return _parentChildCoupling.TryCoupleToParentAsync(meteringPoint, request.ParentRelatedMeteringPoint, request.TransactionId);
         }
