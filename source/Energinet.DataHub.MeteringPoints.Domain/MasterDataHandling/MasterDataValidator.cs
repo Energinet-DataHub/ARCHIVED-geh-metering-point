@@ -120,5 +120,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             if (masterData == null) throw new ArgumentNullException(nameof(masterData));
             return _validators[type.Name].CheckRules(masterData);
         }
+
+        public BusinessRulesValidationResult CheckRulesFor(MeteringPoint meteringPoint, MasterData masterData)
+        {
+            if (meteringPoint is null) throw new ArgumentNullException(nameof(meteringPoint));
+            if (masterData == null) throw new ArgumentNullException(nameof(masterData));
+            return _validators[meteringPoint.MeteringPointType.Name].CheckRules(meteringPoint, masterData);
+        }
     }
 }
