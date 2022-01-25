@@ -89,6 +89,19 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             Assert.Contains(child.DomainEvents, e => e is CoupledToParent);
         }
 
+        [Fact]
+        public async Task Decoupling_is_successful()
+        {
+            var parent = CreateMeteringPoint(MeteringPointType.Consumption);
+            var child = CreateMeteringPoint(MeteringPointType.NetConsumption);
+            var childMeteringPoint = new ChildMeteringPoint(child, _gridAreaRepository);
+            await childMeteringPoint.CoupleToAsync(parent).ConfigureAwait(false);
+
+            childMeteringPoint.Decouple();
+
+            Assert.Contains(child.DomainEvents, e => e is DecoupledFromParent);
+        }
+
         private ChildMeteringPoint CreateChildMeteringPoint(MeteringPointType type)
         {
             return new ChildMeteringPoint(CreateMeteringPoint(type), _gridAreaRepository);

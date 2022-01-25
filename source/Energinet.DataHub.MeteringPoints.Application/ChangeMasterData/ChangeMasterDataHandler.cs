@@ -21,7 +21,6 @@ using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.ChildMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.Policies;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -93,7 +92,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
 
             targetMeteringPoint.UpdateMasterData(updatedMasterData, GetMasterValidator());
 
-            var parentCouplingResult = await CoupleToParentIfRequestedAsync(request, targetMeteringPoint).ConfigureAwait(false);
+            var parentCouplingResult = await HandleParentChildCouplingAsync(request, targetMeteringPoint).ConfigureAwait(false);
             return parentCouplingResult.Success == false ? parentCouplingResult : BusinessProcessResult.Ok(request.TransactionId);
         }
 
@@ -160,10 +159,15 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
             return Task.FromResult<BusinessRulesValidationResult>(new BusinessRulesValidationResult(validationErrors));
         }
 
-        private Task<BusinessProcessResult> CoupleToParentIfRequestedAsync(ChangeMasterDataRequest request, MeteringPoint meteringPoint)
+        private Task<BusinessProcessResult> HandleParentChildCouplingAsync(ChangeMasterDataRequest request, MeteringPoint meteringPoint)
         {
-            if (string.IsNullOrEmpty(request.ParentRelatedMeteringPoint))
+            if (request.ParentRelatedMeteringPoint is null)
                 return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
+
+            if (request.ParentRelatedMeteringPoint.Length == 0)
+            {
+                return _parentChildCoupling.DecoupleFromParentAsync(meteringPoint, request.TransactionId);
+            }
 
             return _parentChildCoupling.TryCoupleToParentAsync(meteringPoint, request.ParentRelatedMeteringPoint, request.TransactionId);
         }

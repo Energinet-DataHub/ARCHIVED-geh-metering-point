@@ -200,6 +200,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             }
         }
 
+        internal void RemoveParent()
+        {
+            if (_parentMeteringPoint is null) return;
+            AddDomainEvent(new DecoupledFromParent(Id.Value, _parentMeteringPoint.Value));
+            _parentMeteringPoint = null;
+        }
+
         private bool IsClosedDown()
         {
             return ConnectionState.PhysicalState == PhysicalState.ClosedDown;

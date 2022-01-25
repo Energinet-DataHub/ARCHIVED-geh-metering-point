@@ -226,15 +226,15 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             return this;
         }
 
-        public AssertPersistedMeteringPoint HasParentMeteringPoint(string gsrnNumber)
+        public AssertPersistedMeteringPoint HasParentMeteringPoint(string? gsrnNumber)
         {
-            var parent = _connectionFactory.GetOpenConnection().QuerySingle(
+            var parent = _connectionFactory.GetOpenConnection().QuerySingleOrDefault(
                 $"SELECT pmp.GsrnNumber" +
                 $" FROM [dbo].[MeteringPoints] mp" +
                 $" JOIN [dbo].[MeteringPoints] pmp ON pmp.Id = mp.ParentRelatedMeteringPoint" +
                 $" WHERE mp.GsrnNumber = {_meteringPoint.GsrnNumber}");
 
-            Assert.Equal(gsrnNumber, parent.GsrnNumber);
+            Assert.Equal(gsrnNumber, parent?.GsrnNumber);
             return this;
         }
     }
