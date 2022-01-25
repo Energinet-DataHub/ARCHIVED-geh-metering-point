@@ -28,7 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         }
 
         [Fact]
-        public async Task Scheduled_meter_reading_date_is_changed()
+        public async Task Cannot_be_changed()
         {
             await SendCommandAsync(Scenarios.CreateConsumptionMeteringPointCommand() with
             {
@@ -43,8 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertMasterData()
-                .HasScheduledMeterReadingDate("0201");
+            AssertValidationError("D47");
         }
 
         [Fact]
