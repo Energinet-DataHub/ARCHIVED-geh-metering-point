@@ -18,13 +18,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Application.Create;
+using Energinet.DataHub.MeteringPoints.Application.Common.ChildMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild;
 using Energinet.DataHub.MeteringPoints.Domain.Policies;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -36,20 +34,20 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
         private readonly ChangeMasterDataSettings _settings;
         private readonly ChangeMeteringPointAuthorizer _authorizer;
-        private readonly IGridAreaRepository _gridAreaRepository;
+        private readonly ParentChildCoupling _parentChildCoupling;
 
         public ChangeMasterDataHandler(
             IMeteringPointRepository meteringPointRepository,
             ISystemDateTimeProvider systemDateTimeProvider,
             ChangeMasterDataSettings settings,
             ChangeMeteringPointAuthorizer authorizer,
-            IGridAreaRepository gridAreaRepository)
+            ParentChildCoupling parentChildCoupling)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
             _settings = settings;
             _authorizer = authorizer ?? throw new ArgumentNullException(nameof(authorizer));
-            _gridAreaRepository = gridAreaRepository ?? throw new ArgumentNullException(nameof(gridAreaRepository));
+            _parentChildCoupling = parentChildCoupling;
         }
 
         public async Task<BusinessProcessResult> Handle(ChangeMasterDataRequest request, CancellationToken cancellationToken)
@@ -97,12 +95,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
 
             var parentCouplingResult = await CoupleToParentIfRequestedAsync(request, targetMeteringPoint).ConfigureAwait(false);
             return parentCouplingResult.Success == false ? parentCouplingResult : BusinessProcessResult.Ok(request.TransactionId);
-        }
-
-        private static BusinessProcessResult Failure(ChangeMasterDataRequest request, params ValidationError[] validationErrors)
-        {
-            if (request == null) throw new ArgumentNullException(nameof(request));
-            return new BusinessProcessResult(request.TransactionId, validationErrors);
         }
 
         private static MasterDataValidator GetMasterValidator()
@@ -168,26 +160,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
             return Task.FromResult<BusinessRulesValidationResult>(new BusinessRulesValidationResult(validationErrors));
         }
 
-        private async Task<BusinessProcessResult> CoupleToParentIfRequestedAsync(ChangeMasterDataRequest request, MeteringPoint meteringPoint)
+        private Task<BusinessProcessResult> CoupleToParentIfRequestedAsync(ChangeMasterDataRequest request, MeteringPoint meteringPoint)
         {
             if (string.IsNullOrEmpty(request.ParentRelatedMeteringPoint))
-                return BusinessProcessResult.Ok(request.TransactionId);
+                return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
 
-            var childMeteringPoint = new ChildMeteringPoint(meteringPoint, _gridAreaRepository);
-            var parentMeteringPoint =
-                await _meteringPointRepository.GetByGsrnNumberAsync(
-                    GsrnNumber.Create(request.ParentRelatedMeteringPoint)).ConfigureAwait(false);
-            if (parentMeteringPoint is null)
-            {
-                return Failure(request, new ParentMeteringPointWasNotFound());
-            }
-
-            var parentChildValidation = await childMeteringPoint.CanCoupleToAsync(parentMeteringPoint).ConfigureAwait(false);
-            if (parentChildValidation.Success == false)
-                return Failure(request, parentChildValidation.Errors.ToArray());
-
-            await childMeteringPoint.CoupleToAsync(parentMeteringPoint).ConfigureAwait(false);
-            return BusinessProcessResult.Ok(request.TransactionId);
+            return _parentChildCoupling.TryCoupleToParentAsync(meteringPoint, request.ParentRelatedMeteringPoint, request.TransactionId);
         }
     }
 }
