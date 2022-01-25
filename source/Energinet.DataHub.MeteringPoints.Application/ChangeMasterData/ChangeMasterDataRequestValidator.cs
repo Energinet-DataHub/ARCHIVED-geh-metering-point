@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Application.Create.Validation;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
@@ -27,6 +29,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
                 .SetValidator(new EffectiveDateRule());
             RuleFor(request => request.TransactionId)
                 .SetValidator(new TransactionIdentificationRule());
+            RuleFor(request => request.ParentRelatedMeteringPoint)
+                .Must(value => GsrnNumber.CheckRules(value!).Success)
+                .WithState(request => new InvalidParentGsrnNumber())
+                .Unless(request => string.IsNullOrEmpty(request.ParentRelatedMeteringPoint));
         }
     }
 }
