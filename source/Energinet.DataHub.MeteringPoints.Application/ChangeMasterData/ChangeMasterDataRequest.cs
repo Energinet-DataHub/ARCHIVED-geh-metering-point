@@ -36,5 +36,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
         string? ScheduledMeterReadingDate = null,
         string? DisconnectionType = null,
         string? NetSettlementGroup = null,
-        bool? ProductionObligation = null) : IChangeMeteringPointRequest;
+        bool? ProductionObligation = null,
+        string? ParentRelatedMeteringPoint = null) : IChangeMeteringPointRequest;
 }
