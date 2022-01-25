@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common.ChildMeteringPoint
         {
             if (child == null) throw new ArgumentNullException(nameof(child));
 
-            var childMeteringPoint = new ChildMeteringPoint(child, _gridAreaRepository);
+            var childMeteringPoint = CreateChildMeteringPoint(child);
             var parentMeteringPoint = await _meteringPointRepository.GetByGsrnNumberAsync(GsrnNumber.Create(parentGsrnNumber)).ConfigureAwait(false);
             if (parentMeteringPoint is null)
             {
@@ -57,9 +57,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common.ChildMeteringPoint
 
         internal Task<BusinessProcessResult> DecoupleFromParentAsync(MeteringPoint child, string transactionId)
         {
-            var childMeteringPoint = new ChildMeteringPoint(child, _gridAreaRepository);
+            var childMeteringPoint = CreateChildMeteringPoint(child);
             childMeteringPoint.Decouple();
             return Task.FromResult(BusinessProcessResult.Ok(transactionId));
+        }
+
+        private ChildMeteringPoint CreateChildMeteringPoint(MeteringPoint child)
+        {
+            return new ChildMeteringPoint(child, _gridAreaRepository);
         }
     }
 }
