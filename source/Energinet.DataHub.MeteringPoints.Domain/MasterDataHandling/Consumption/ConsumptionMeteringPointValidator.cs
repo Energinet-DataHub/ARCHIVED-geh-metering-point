@@ -25,7 +25,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
     {
         public BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
-            return new BusinessRulesValidationResult(GeneralRules(masterData));
+            var rules = GeneralRules(masterData);
+            rules.Add(new ScheduledMeterReadingDateRule(masterData.ScheduledMeterReadingDate, masterData.NetSettlementGroup!));
+            return new BusinessRulesValidationResult(rules);
         }
 
         public BusinessRulesValidationResult CheckRules(MeteringPoint meteringPoint, MasterData updatedMasterData)
@@ -50,7 +52,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
                 new BuildingNumberIsRequiredRule(masterData.Address),
                 new GeoInfoReferenceRequirementRule(masterData.Address),
                 new MeteringMethodRule(masterData.NetSettlementGroup!, masterData.MeteringConfiguration.Method),
-                new ScheduledMeterReadingDateRule(masterData.ScheduledMeterReadingDate, masterData.NetSettlementGroup!),
                 new PowerPlantIsRequiredForNetSettlementGroupRule(masterData.NetSettlementGroup!, masterData.PowerPlantGsrnNumber),
                 new CapacityRequirementRule(masterData.Capacity, masterData.NetSettlementGroup!),
                 new AssetTypeRequirementRule(masterData.AssetType, masterData.NetSettlementGroup!),
