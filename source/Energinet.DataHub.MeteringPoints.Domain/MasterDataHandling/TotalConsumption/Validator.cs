@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.TotalConsumption.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.TotalConsumption
@@ -33,6 +34,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.TotalConsum
                 new UnitTypeMustBeKwh(masterData.UnitType),
                 new MeteringMethodMustBeVirtualOrCalculated(masterData.MeteringConfiguration.Method),
             });
+        }
+
+        public BusinessRulesValidationResult CheckRules(MeteringPoint meteringPoint, MasterData updatedMasterData)
+        {
+            return CheckRules(updatedMasterData);
         }
     }
 }

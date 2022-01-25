@@ -18,6 +18,7 @@ using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
@@ -29,13 +30,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 {
     public class MasterDataUpdater : MasterDataBuilderBase
     {
+        private readonly MasterData _currentMasterData;
         private readonly List<ValidationError> _validationErrors = new();
 
         public MasterDataUpdater(IEnumerable<MasterDataField> fields, MasterData currentMasterData)
             : base(fields)
         {
             if (currentMasterData == null) throw new ArgumentNullException(nameof(currentMasterData));
-            PopulateValuesFrom(currentMasterData);
+            _currentMasterData = currentMasterData;
+            PopulateValuesFrom(_currentMasterData);
         }
 
         public BusinessRulesValidationResult Validate()

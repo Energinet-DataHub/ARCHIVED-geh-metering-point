@@ -105,6 +105,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Fact]
+        public void Scheduled_meter_reading_date_cannot_be_changed()
+        {
+            var meteringPoint = CreateMeteringPoint(MeteringPointType.Consumption, MasterDataBuilderForConsumption()
+                .WithNetSettlementGroup(NetSettlementGroup.Six.Name)
+                .WithScheduledMeterReadingDate("0101"));
+
+            var updatedMasterData = Updater(meteringPoint)
+                .WithScheduledMeterReadingDate("0201")
+                .Build();
+
+            AssertError<ScheduledMeterReadingDateCannotBeChanged>(meteringPoint.CanUpdateMasterData(updatedMasterData, new MasterDataValidator()));
+        }
+
+        [Fact]
         public void Powerplant_GSRN_is_required_when_netsettlementgroup_is_other_than_0_or_99()
         {
             var masterData = Builder()
@@ -260,6 +274,10 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithAddress(streetName: "Test Street", countryCode: CountryCode.DK)
                 .WithNetSettlementGroup(NetSettlementGroup.Two.Name)
                 .WithMeteringConfiguration(MeteringMethod.Virtual.Name, string.Empty);
+
+        private static MasterDataUpdater Updater(MeteringPoint meteringPoint) => new MasterDataUpdater(
+            new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Consumption),
+            meteringPoint.MasterData);
 
         private static BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
