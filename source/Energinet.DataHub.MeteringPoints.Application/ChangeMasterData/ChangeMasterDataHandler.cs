@@ -93,7 +93,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
 
             targetMeteringPoint.UpdateMasterData(updatedMasterData, GetMasterValidator());
 
-            var parentCouplingResult = await CoupleToParentIfRequestedAsync(request, targetMeteringPoint).ConfigureAwait(false);
+            var parentCouplingResult = await HandleParentChildCouplingAsync(request, targetMeteringPoint).ConfigureAwait(false);
             return parentCouplingResult.Success == false ? parentCouplingResult : BusinessProcessResult.Ok(request.TransactionId);
         }
 
@@ -160,7 +160,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
             return Task.FromResult<BusinessRulesValidationResult>(new BusinessRulesValidationResult(validationErrors));
         }
 
-        private Task<BusinessProcessResult> CoupleToParentIfRequestedAsync(ChangeMasterDataRequest request, MeteringPoint meteringPoint)
+        private Task<BusinessProcessResult> HandleParentChildCouplingAsync(ChangeMasterDataRequest request, MeteringPoint meteringPoint)
         {
             if (request.ParentRelatedMeteringPoint is null)
                 return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
