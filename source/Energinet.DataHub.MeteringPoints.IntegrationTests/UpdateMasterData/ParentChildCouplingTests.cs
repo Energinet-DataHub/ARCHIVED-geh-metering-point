@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
@@ -23,6 +24,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
     [IntegrationTest]
     public class ParentChildCouplingTests : TestHost
     {
+        private readonly string _parentGsrnNumber = "570851247381952311";
+        private readonly string _childGsrnNumber = SampleData.GsrnNumber;
+
         public ParentChildCouplingTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
         {
@@ -31,22 +35,72 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         [Fact]
         public async Task Child_is_coupled_to_parent()
         {
-            var createParentCommand = Scenarios.CreateCommand(MeteringPointType.Production) with
-            {
-                GsrnNumber = "570851247381952311",
-            };
-            await SendCommandAsync(createParentCommand).ConfigureAwait(false);
-            var createChildCommand = Scenarios.CreateCommand(MeteringPointType.ElectricalHeating);
-            await SendCommandAsync(createChildCommand).ConfigureAwait(false);
+            await SetupScenario().ConfigureAwait(false);
 
             await SendCommandAsync(CreateUpdateRequest()
                 with
                 {
-                    ParentRelatedMeteringPoint = createParentCommand.GsrnNumber,
+                    ParentRelatedMeteringPoint = _parentGsrnNumber,
                 }).ConfigureAwait(false);
 
-            AssertMasterData(createChildCommand.GsrnNumber)
-                .HasParentMeteringPoint(createParentCommand.GsrnNumber);
+            AssertMasterData(_childGsrnNumber)
+                .HasParentMeteringPoint(_parentGsrnNumber);
+        }
+
+        [Fact]
+        public async Task Child_is_decoupled_from_parent()
+        {
+            await CoupleChildToParent().ConfigureAwait(false);
+
+            await SendCommandAsync(CreateUpdateRequest()
+                with
+                {
+                    ParentRelatedMeteringPoint = string.Empty,
+                }).ConfigureAwait(false);
+
+            AssertMasterData(_childGsrnNumber)
+                .HasParentMeteringPoint(null);
+        }
+
+        [Fact]
+        public async Task Parent_gsrn_number_must_be_valid()
+        {
+            await SetupScenario().ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    ParentRelatedMeteringPoint = "invalid gsrn number",
+                };
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E10");
+        }
+
+        private async Task SetupScenario()
+        {
+            var createParentCommand = Scenarios.CreateCommand(MeteringPointType.Production) with
+            {
+                GsrnNumber = _parentGsrnNumber,
+            };
+            await SendCommandAsync(createParentCommand).ConfigureAwait(false);
+            var createChildCommand = Scenarios.CreateCommand(MeteringPointType.ElectricalHeating);
+            await SendCommandAsync(createChildCommand).ConfigureAwait(false);
+        }
+
+        private async Task CoupleChildToParent()
+        {
+            var createParentCommand = Scenarios.CreateCommand(MeteringPointType.Production) with
+            {
+                GsrnNumber = _parentGsrnNumber,
+            };
+            await SendCommandAsync(createParentCommand).ConfigureAwait(false);
+            var createChildCommand = Scenarios.CreateCommand(MeteringPointType.ElectricalHeating)
+            with
+            {
+                ParentRelatedMeteringPoint = _parentGsrnNumber,
+            };
+            await SendCommandAsync(createChildCommand).ConfigureAwait(false);
         }
     }
 }

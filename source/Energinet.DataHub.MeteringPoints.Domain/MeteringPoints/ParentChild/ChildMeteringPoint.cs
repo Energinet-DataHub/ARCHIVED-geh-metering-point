@@ -66,6 +66,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild
             _meteringPoint.SetParent(parent.Id);
         }
 
+        public void Decouple()
+        {
+            _meteringPoint.RemoveParent();
+        }
+
         private async Task<bool> GridAreasMatchAsync(MeteringPoint parent)
         {
             if (parent == null) throw new ArgumentNullException(nameof(parent));
