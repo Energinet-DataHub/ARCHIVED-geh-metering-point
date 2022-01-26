@@ -27,52 +27,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
     [IntegrationTest]
     public class ChangeTests : TestHost
     {
-        private readonly ISystemDateTimeProvider _timeProvider;
-
         public ChangeTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
         {
-            _timeProvider = GetService<ISystemDateTimeProvider>();
-        }
-
-        [Fact]
-        public async Task Address_is_updated()
-        {
-            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
-                with
-                {
-                    StreetName = "New Street Name",
-                        PostCode = "6000",
-                        CityName = "New City Name",
-                        StreetCode = "0500",
-                        BuildingNumber = "4",
-                        CitySubDivisionName = "New",
-                        CountryCode = CountryCode.DK.Name,
-                        FloorIdentification = "9",
-                        RoomIdentification = "9",
-                        MunicipalityCode = "999",
-                        IsActualAddress = true,
-                        GeoInfoReference = Guid.NewGuid().ToString(),
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertConfirmMessage(DocumentType.ConfirmChangeMasterData);
-            AssertMasterData()
-                .HasStreetName(request.StreetName)
-                .HasPostCode(request.PostCode)
-                .HasCity(request.CityName)
-                .HasStreetCode(request.StreetCode)
-                .HasBuildingNumber(request.BuildingNumber)
-                .HasCitySubDivision(request.CitySubDivisionName)
-                .HasCountryCode(CountryCode.DK)
-                .HasFloor(request.FloorIdentification)
-                .HasRoom(request.RoomIdentification)
-                .HasMunicipalityCode(int.Parse(request.MunicipalityCode, CultureInfo.InvariantCulture))
-                .HasIsActualAddress(request.IsActualAddress)
-                .HasGeoInfoReference(Guid.Parse(request.GeoInfoReference));
         }
 
         [Fact]
