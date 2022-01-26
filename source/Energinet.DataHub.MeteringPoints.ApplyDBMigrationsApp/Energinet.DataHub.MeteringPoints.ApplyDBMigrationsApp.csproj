@@ -74,6 +74,7 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Seed\202201201330 Add grid access provider test data continued.sql" />
     <EmbeddedResource Include="Scripts\Seed\202201250948 Updates from actor registry.sql" />
     <EmbeddedResource Include="Scripts\Seed\202201251443 Test actor from message hub.sql" />
+    <EmbeddedResource Include="Scripts\Seed\202201260835 Updates from actor registry.sql" />
     <EmbeddedResource Include="Scripts\Test\202109232129 Clean database.sql" />
     <EmbeddedResource Include="Scripts\Model\202109271100 Add IsOfficialAddress.sql" />
     <EmbeddedResource Include="Scripts\Model\202109271400 Add GeoInfoReference.sql" />
