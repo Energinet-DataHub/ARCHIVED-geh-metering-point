@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
+using Microsoft.AspNetCore.Mvc;
 using Xunit;
 using Xunit.Categories;
 
@@ -99,8 +100,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
                 GsrnNumber = _parentGsrnNumber,
             };
             await SendCommandAsync(createParentCommand).ConfigureAwait(false);
-            var createChildCommand = Scenarios.CreateCommand(MeteringPointType.ElectricalHeating);
-            await SendCommandAsync(createChildCommand).ConfigureAwait(false);
+            await CreateChild().ConfigureAwait(false);
         }
 
         private async Task CreateChild()
