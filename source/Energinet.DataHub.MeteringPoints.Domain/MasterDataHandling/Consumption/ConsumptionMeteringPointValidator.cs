@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using StreetNameIsRequiredRule = Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules.StreetNameIsRequiredRule;
 
@@ -26,7 +26,23 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
     {
         public BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
-            return new BusinessRulesValidationResult(new List<IBusinessRule>()
+            var rules = GeneralRules(masterData);
+            rules.Add(new ScheduledMeterReadingDateRule(masterData.ScheduledMeterReadingDate, masterData.NetSettlementGroup!));
+            return new BusinessRulesValidationResult(rules);
+        }
+
+        public BusinessRulesValidationResult CheckRules(MeteringPoint meteringPoint, MasterData updatedMasterData)
+        {
+            var rules = GeneralRules(updatedMasterData);
+
+            rules.Add(new ScheduledMeterReadingDateCannotBeChangedRule(meteringPoint, updatedMasterData));
+
+            return new BusinessRulesValidationResult(rules);
+        }
+
+        private static List<IBusinessRule> GeneralRules(MasterData masterData)
+        {
+            return new List<IBusinessRule>()
             {
                 new MeterReadingOccurrenceRule(masterData.ReadingOccurrence),
                 new CityIsRequiredRule(masterData.Address),
@@ -37,7 +53,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
                 new BuildingNumberIsRequiredRule(masterData.Address),
                 new GeoInfoReferenceRequirementRule(masterData.Address),
                 new MeteringMethodRule(masterData.NetSettlementGroup!, masterData.MeteringConfiguration.Method),
-                new ScheduledMeterReadingDateRule(masterData.ScheduledMeterReadingDate, masterData.NetSettlementGroup!),
                 new PowerPlantIsRequiredForNetSettlementGroupRule(masterData.NetSettlementGroup!, masterData.PowerPlantGsrnNumber),
                 new CapacityRequirementRule(masterData.Capacity, masterData.NetSettlementGroup!),
                 new AssetTypeRequirementRule(masterData.AssetType, masterData.NetSettlementGroup!),
@@ -45,7 +60,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
                 new SettlementMethodMustBeFlexOrNonProfiledRule(masterData.SettlementMethod!),
                 new ProductTypeMustBeEnergyActiveRule(masterData.ProductType),
                 new UnitTypeMustBeKwh(masterData.UnitType),
-            });
+                new CountryCodeRequiredRule(masterData.Address),
+            };
         }
     }
 }

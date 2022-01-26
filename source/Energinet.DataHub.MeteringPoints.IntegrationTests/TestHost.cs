@@ -23,6 +23,7 @@ using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.ChildMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
@@ -178,6 +179,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<ConnectSettings>(() => new ConnectSettings(
                 NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 7,
                 NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));
+
+            _container.Register<ParentChildCoupling>(Lifestyle.Scoped);
 
             _container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
             _container.AddBusinessProcessAuthorizers();
@@ -469,6 +472,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         {
             return AssertPersistedMeteringPoint
                 .Initialize(SampleData.GsrnNumber, GetService<IDbConnectionFactory>());
+        }
+
+        protected AssertPersistedMeteringPoint AssertMasterData(string gsrnNumber)
+        {
+            return AssertPersistedMeteringPoint
+                .Initialize(gsrnNumber, GetService<IDbConnectionFactory>());
         }
 
         private void CleanupDatabase()

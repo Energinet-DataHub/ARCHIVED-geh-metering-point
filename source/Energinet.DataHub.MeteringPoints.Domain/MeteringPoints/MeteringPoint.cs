@@ -173,7 +173,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 errors.Add(new ClosedDownMeteringPointCannotBeChangedError());
             }
 
-            errors.AddRange(validator.CheckRulesFor(MeteringPointType, updatedMasterData).Errors);
+            errors.AddRange(validator.CheckRulesFor(this, updatedMasterData).Errors);
 
             return new BusinessRulesValidationResult(errors);
         }
@@ -198,6 +198,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 _parentMeteringPoint = parentId;
                 AddDomainEvent(new CoupledToParent(Id.Value, parentId.Value));
             }
+        }
+
+        internal void RemoveParent()
+        {
+            if (_parentMeteringPoint is null) return;
+            AddDomainEvent(new DecoupledFromParent(Id.Value, _parentMeteringPoint.Value));
+            _parentMeteringPoint = null;
         }
 
         private bool IsClosedDown()
