@@ -35,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         [Fact]
         public async Task Child_is_coupled_to_parent()
         {
-            await SetupScenario().ConfigureAwait(false);
+            await CreateParentAndChild().ConfigureAwait(false);
 
             await SendCommandAsync(CreateUpdateRequest()
                 with
@@ -65,7 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         [Fact]
         public async Task Parent_gsrn_number_must_be_valid()
         {
-            await SetupScenario().ConfigureAwait(false);
+            await CreateParentAndChild().ConfigureAwait(false);
 
             var request = CreateUpdateRequest()
                 with
@@ -92,7 +92,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
             AssertValidationError("E10");
         }
 
-        private async Task SetupScenario()
+        private async Task CreateParentAndChild()
         {
             var createParentCommand = Scenarios.CreateCommand(MeteringPointType.Production) with
             {
