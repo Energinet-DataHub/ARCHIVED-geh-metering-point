@@ -182,7 +182,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 7,
                 NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));
 
-            _container.Register<ParentChildCoupling>(Lifestyle.Scoped);
+            _container.Register<CouplingHandler>(Lifestyle.Scoped);
 
             _container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
             _container.AddBusinessProcessAuthorizers();

@@ -33,20 +33,20 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
         private readonly ChangeMasterDataSettings _settings;
         private readonly ChangeMeteringPointAuthorizer _authorizer;
-        private readonly ParentChildCoupling _parentChildCoupling;
+        private readonly CouplingHandler _couplingHandler;
 
         public ChangeMasterDataHandler(
             IMeteringPointRepository meteringPointRepository,
             ISystemDateTimeProvider systemDateTimeProvider,
             ChangeMasterDataSettings settings,
             ChangeMeteringPointAuthorizer authorizer,
-            ParentChildCoupling parentChildCoupling)
+            CouplingHandler couplingHandler)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
             _settings = settings;
             _authorizer = authorizer ?? throw new ArgumentNullException(nameof(authorizer));
-            _parentChildCoupling = parentChildCoupling;
+            _couplingHandler = couplingHandler;
         }
 
         public async Task<BusinessProcessResult> Handle(ChangeMasterDataRequest request, CancellationToken cancellationToken)
@@ -166,10 +166,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
 
             if (request.ParentRelatedMeteringPoint.Length == 0)
             {
-                return _parentChildCoupling.DecoupleFromParentAsync(meteringPoint, request.TransactionId);
+                return _couplingHandler.DecoupleFromParentAsync(meteringPoint, request.TransactionId);
             }
 
-            return _parentChildCoupling.TryCoupleToParentAsync(meteringPoint, request.ParentRelatedMeteringPoint, request.TransactionId);
+            return _couplingHandler.TryCoupleToParentAsync(meteringPoint, request.ParentRelatedMeteringPoint, request.TransactionId);
         }
     }
 }
