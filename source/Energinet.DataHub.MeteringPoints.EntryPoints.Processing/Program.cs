@@ -19,6 +19,7 @@ using Energinet.DataHub.Core.FunctionApp.Common.Identity;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.ChildMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
@@ -182,6 +183,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));
 
             container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
+            container.Register<CouplingHandler>(Lifestyle.Scoped);
 
             container.AddBusinessProcessAuthorizers();
 
