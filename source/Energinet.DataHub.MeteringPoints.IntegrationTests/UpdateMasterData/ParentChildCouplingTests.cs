@@ -34,6 +34,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         }
 
         [Fact]
+        public async Task Reject_when_parent_can_not_act_as_parent()
+        {
+            await CreateParentOf(MeteringPointType.NetConsumption).ConfigureAwait(false);
+            await CreateChildOf(MeteringPointType.NetConsumption).ConfigureAwait(false);
+
+            await SendCommandAsync(CreateUpdateRequest()
+                with
+                {
+                    ParentRelatedMeteringPoint = _parentGsrnNumber,
+                }).ConfigureAwait(false);
+
+            AssertValidationError("D18");
+        }
+
+        [Fact]
         public async Task Child_is_coupled_to_parent()
         {
             await CreateParentAndChild().ConfigureAwait(false);
@@ -81,7 +96,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         [Fact]
         public async Task Parent_must_exist()
         {
-            await CreateChild().ConfigureAwait(false);
+            await CreateChildOf(MeteringPointType.ElectricalHeating).ConfigureAwait(false);
 
             var request = CreateUpdateRequest()
                 with
@@ -95,18 +110,24 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 
         private async Task CreateParentAndChild()
         {
-            var createParentCommand = Scenarios.CreateCommand(MeteringPointType.Production) with
-            {
-                GsrnNumber = _parentGsrnNumber,
-            };
-            await SendCommandAsync(createParentCommand).ConfigureAwait(false);
-            await CreateChild().ConfigureAwait(false);
+            await CreateParentOf(MeteringPointType.Production).ConfigureAwait(false);
+            await CreateChildOf(MeteringPointType.ElectricalHeating).ConfigureAwait(false);
         }
 
-        private async Task CreateChild()
+        private async Task CreateChildOf(MeteringPointType meteringPointType)
         {
-            var createChildCommand = Scenarios.CreateCommand(MeteringPointType.ElectricalHeating);
+            var createChildCommand = Scenarios.CreateCommand(meteringPointType);
             await SendCommandAsync(createChildCommand).ConfigureAwait(false);
+        }
+
+        private async Task CreateParentOf(MeteringPointType meteringPointType)
+        {
+            var createChildCommand = Scenarios.CreateCommand(meteringPointType);
+            await SendCommandAsync(Scenarios.CreateCommand(meteringPointType)
+                with
+                {
+                    GsrnNumber = _parentGsrnNumber,
+                }).ConfigureAwait(false);
         }
 
         private async Task CoupleChildToParent()
