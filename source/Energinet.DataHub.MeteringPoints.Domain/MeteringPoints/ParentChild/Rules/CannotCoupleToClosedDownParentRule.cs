@@ -12,21 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild.Rules
 {
-    public class Actor
+    public class CannotCoupleToClosedDownParentRule : IBusinessRule
     {
-        public Actor(string identificationNumber, string identificationType, string role)
+        public CannotCoupleToClosedDownParentRule(MeteringPoint parent)
         {
-            IdentificationNumber = identificationNumber;
-            IdentificationType = identificationType;
-            Role = role;
+            if (parent == null) throw new ArgumentNullException(nameof(parent));
+            IsBroken = parent.ConnectionState.PhysicalState == PhysicalState.ClosedDown;
         }
 
-        public string IdentificationNumber { get; }
+        public bool IsBroken { get; }
 
-        public string IdentificationType { get; }
-
-        public string Role { get; }
+        public ValidationError ValidationError => new CannotCoupleToClosedDownParent();
     }
 }
