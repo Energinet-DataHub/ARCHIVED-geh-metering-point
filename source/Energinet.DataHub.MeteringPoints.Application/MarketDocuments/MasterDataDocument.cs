@@ -51,7 +51,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
             string? ConnectionType = null,
             string? AssetType = null,
             string? FromGrid = "",
-            string? ToGrid = "",
+            string? ToGrid = null,
             string? ParentRelatedMeteringPoint = null,
             string? ProductType = null,
             string? PhysicalConnectionCapacity = null,

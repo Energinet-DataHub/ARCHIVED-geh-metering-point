@@ -12,12 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Globalization;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
 using Xunit.Categories;
@@ -30,6 +25,18 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         public ChangeTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
         {
+        }
+
+        [Fact]
+        public async Task It_is_not_allowed_to_provide_to_grid()
+        {
+            await SendCommandAsync(CreateUpdateRequest()
+                with
+                {
+                    ToGrid = "871",
+                }).ConfigureAwait(false);
+
+            AssertValidationError("D46");
         }
 
         [Fact]
