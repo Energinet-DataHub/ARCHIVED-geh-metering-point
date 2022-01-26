@@ -35,6 +35,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
                 RuleFor(request => request.ToGrid)
                     .Null()
                     .WithState(_ => new ToGridIsNotAllowed());
+                RuleFor(request => request.FromGrid)
+                    .Null()
+                    .WithState(_ => new FromGridAreaIsNotAllowed());
             });
 
             RuleFor(request => request.TransactionId).SetValidator(new TransactionIdentificationRule());

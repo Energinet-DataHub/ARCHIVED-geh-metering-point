@@ -28,12 +28,24 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
         }
 
         [Fact]
-        public async Task It_is_not_allowed_to_provide_to_grid()
+        public async Task It_is_not_allowed_to_provide_to_grid_area()
         {
             await SendCommandAsync(CreateUpdateRequest()
                 with
                 {
                     ToGrid = "871",
+                }).ConfigureAwait(false);
+
+            AssertValidationError("D46");
+        }
+
+        [Fact]
+        public async Task It_is_not_allowed_to_provide_from_grid_area()
+        {
+            await SendCommandAsync(CreateUpdateRequest()
+                with
+                {
+                    FromGrid = "871",
                 }).ConfigureAwait(false);
 
             AssertValidationError("D46");
