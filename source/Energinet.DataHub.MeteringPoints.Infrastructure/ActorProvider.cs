@@ -17,16 +17,19 @@ using System.Threading.Tasks;
 using Dapper;
 using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Microsoft.Extensions.Logging;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure
 {
     public class ActorProvider : IActorProvider
     {
         private readonly IDbConnectionFactory _connectionFactory;
+        private readonly ILogger _logger;
 
-        public ActorProvider(IDbConnectionFactory connectionFactory)
+        public ActorProvider(IDbConnectionFactory connectionFactory, ILogger logger)
         {
             _connectionFactory = connectionFactory;
+            _logger = logger;
         }
 
         public async Task<Actor> GetActorAsync(Guid actorId)
@@ -38,12 +41,20 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure
                         FROM  [dbo].[Actor]
                         WHERE Id = @ActorId";
 
-            var result = await _connectionFactory
-                .GetOpenConnection()
-                .QuerySingleAsync<Actor>(sql, new { ActorId = actorId })
-                .ConfigureAwait(false);
+            try
+            {
+                var result = await _connectionFactory
+                    .GetOpenConnection()
+                    .QuerySingleAsync<Actor>(sql, new { ActorId = actorId })
+                    .ConfigureAwait(false);
 
-            return result;
+                return result;
+            }
+            catch (Exception)
+            {
+                _logger.LogInformation("GetActorAsync {actorId}", actorId);
+                throw;
+            }
         }
     }
 }
