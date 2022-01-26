@@ -16,3 +16,9 @@ output metering_point_connection_string {
   value       = local.METERING_POINT_CONNECTION_STRING
   sensitive   = true
 }
+
+output ms_metering_point_connection_string {
+  description = "Connection string of the metering point database created in the shared server"
+  value       = local.MS_METERING_POINT_CONNECTION_STRING
+  sensitive   = true
+}
