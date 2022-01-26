@@ -70,7 +70,6 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Seed\202112142130 Create Grid Area seed data.sql" />
     <EmbeddedResource Include="Scripts\Seed\202112141430 Actor seed data.sql" />
     <EmbeddedResource Include="Scripts\Seed\202201131240 More Actor seed data.sql" />
-    <EmbeddedResource Include="Scripts\Seed\202201181200 Fix actor ids.sql" />
     <EmbeddedResource Include="Scripts\Seed\202201201330 Add grid access provider test data continued.sql" />
     <EmbeddedResource Include="Scripts\Seed\202201250948 Updates from actor registry.sql" />
     <EmbeddedResource Include="Scripts\Seed\202201251443 Test actor from message hub.sql" />
