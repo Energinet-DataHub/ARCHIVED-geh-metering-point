@@ -12,21 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
 {
-    public class Actor
-    {
-        public Actor(string identificationNumber, string identificationType, string role)
-        {
-            IdentificationNumber = identificationNumber;
-            IdentificationType = identificationType;
-            Role = role;
-        }
-
-        public string IdentificationNumber { get; }
-
-        public string IdentificationType { get; }
-
-        public string Role { get; }
-    }
+    /// <summary>
+    /// Settings necessary for aquiring an access token from the B2C tenant using the client credentials flow.
+    /// </summary>
+    /// <param name="ClientId"></param>
+    /// <param name="ClientSecret"></param>
+    public record ClientCredentialsSettings(string ClientId, string ClientSecret);
 }
