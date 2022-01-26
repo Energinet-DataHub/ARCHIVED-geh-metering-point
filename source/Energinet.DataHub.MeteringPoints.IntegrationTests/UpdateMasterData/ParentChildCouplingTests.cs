@@ -13,10 +13,8 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
-using Microsoft.AspNetCore.Mvc;
 using Xunit;
 using Xunit.Categories;
 
@@ -31,6 +29,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         public ParentChildCouplingTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
         {
+        }
+
+        [Fact]
+        public async Task Parent_and_child_must_be_in_same_grid_area()
+        {
+            await CreateParentAndChildIn("870", "871").ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    ParentRelatedMeteringPoint = _parentGsrnNumber,
+                };
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D46");
         }
 
         [Fact]
@@ -114,6 +127,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
             await CreateChildOf(MeteringPointType.ElectricalHeating).ConfigureAwait(false);
         }
 
+        private async Task CreateParentAndChildIn(string parentGridArea, string childGridArea)
+        {
+            await SendCommandAsync(Scenarios.CreateCommand(MeteringPointType.Production)
+                with
+                {
+                    GsrnNumber = _parentGsrnNumber, MeteringGridArea = parentGridArea,
+                }).ConfigureAwait(false);
+            await SendCommandAsync(Scenarios.CreateCommand(MeteringPointType.ElectricalHeating)
+                with
+                {
+                    GsrnNumber = _childGsrnNumber,
+                    MeteringGridArea = childGridArea,
+                }).ConfigureAwait(false);
+        }
+
         private async Task CreateChildOf(MeteringPointType meteringPointType)
         {
             var createChildCommand = Scenarios.CreateCommand(meteringPointType);
@@ -122,7 +150,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 
         private async Task CreateParentOf(MeteringPointType meteringPointType)
         {
-            var createChildCommand = Scenarios.CreateCommand(meteringPointType);
             await SendCommandAsync(Scenarios.CreateCommand(meteringPointType)
                 with
                 {
