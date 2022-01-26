@@ -34,7 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
             {
                 RuleFor(request => request.ToGrid)
                     .Null()
-                    .WithState(_ => new ToGridIsNotAllowed());
+                    .WithState(_ => new ToGridAreaIsNotAllowed());
                 RuleFor(request => request.FromGrid)
                     .Null()
                     .WithState(_ => new FromGridAreaIsNotAllowed());

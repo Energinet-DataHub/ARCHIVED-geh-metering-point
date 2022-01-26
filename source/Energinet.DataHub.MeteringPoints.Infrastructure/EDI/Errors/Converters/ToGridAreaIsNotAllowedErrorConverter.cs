@@ -17,9 +17,9 @@ using Energinet.DataHub.MeteringPoints.Application.EDI;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public class ToGridIsNotAllowedErrorConverter : ErrorConverter<ToGridIsNotAllowed>
+    public class ToGridAreaIsNotAllowedErrorConverter : ErrorConverter<ToGridAreaIsNotAllowed>
     {
-        protected override ErrorMessage Convert(ToGridIsNotAllowed validationError)
+        protected override ErrorMessage Convert(ToGridAreaIsNotAllowed validationError)
         {
             return new ErrorMessage("D46", "Target grid area cannot be changed.");
         }

@@ -16,7 +16,7 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Validation
 {
-    public class ToGridIsNotAllowed : ValidationError
+    public class ToGridAreaIsNotAllowed : ValidationError
     {
     }
 }
