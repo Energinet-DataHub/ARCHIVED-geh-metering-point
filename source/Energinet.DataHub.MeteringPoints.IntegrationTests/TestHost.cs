@@ -182,7 +182,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 7,
                 NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));
 
-            _container.Register<ParentChildCoupling>(Lifestyle.Scoped);
+            _container.Register<CouplingHandler>(Lifestyle.Scoped);
 
             _container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
             _container.AddBusinessProcessAuthorizers();
@@ -437,10 +437,15 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             await SendCommandAsync(request).ConfigureAwait(false);
         }
 
-        protected async Task CloseDownMeteringPointAsync()
+        protected Task CloseDownMeteringPointAsync()
+        {
+            return CloseDownMeteringPointAsync(SampleData.GsrnNumber);
+        }
+
+        protected async Task CloseDownMeteringPointAsync(string gsrnNumber)
         {
             var context = GetService<MeteringPointContext>();
-            var meteringPoint = context.MeteringPoints.First(meteringPoint => meteringPoint.GsrnNumber.Equals(GsrnNumber.Create(SampleData.GsrnNumber)));
+            var meteringPoint = context.MeteringPoints.First(meteringPoint => meteringPoint.GsrnNumber.Equals(GsrnNumber.Create(gsrnNumber)));
             meteringPoint?.CloseDown();
             await context.SaveChangesAsync().ConfigureAwait(false);
         }
