@@ -38,6 +38,17 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         }
 
         [Fact]
+        public async Task Can_not_couple_to_a_parent_that_is_closed_down()
+        {
+            var parent = CreateMeteringPoint(MeteringPointType.Consumption, CreateGridArea());
+            var childMeteringPoint = CreateChildMeteringPoint(MeteringPointType.ElectricalHeating);
+            parent.CloseDown();
+
+            AssertContainsValidationError<CannotCoupleToClosedDownParent>(await childMeteringPoint.CanCoupleToAsync(parent).ConfigureAwait(false));
+            await Assert.ThrowsAsync<ParentCouplingException>(() => childMeteringPoint.CoupleToAsync(parent)).ConfigureAwait(false);
+        }
+
+        [Fact]
         public async Task Parent_and_child_metering_points_must_reside_in_the_same_grid_area()
         {
             var parent = CreateMeteringPoint(MeteringPointType.Consumption, CreateGridArea());

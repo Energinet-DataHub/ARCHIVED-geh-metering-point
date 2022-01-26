@@ -32,6 +32,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         }
 
         [Fact]
+        public async Task Reject_if_parent_is_closed_down()
+        {
+            await CreateParentAndChild().ConfigureAwait(false);
+            await CloseDownMeteringPointAsync(_parentGsrnNumber).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    ParentRelatedMeteringPoint = _parentGsrnNumber,
+                };
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D16");
+        }
+
+        [Fact]
         public async Task Parent_and_child_must_be_in_same_grid_area()
         {
             await CreateParentAndChildIn("870", "871").ConfigureAwait(false);
