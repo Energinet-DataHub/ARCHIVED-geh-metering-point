@@ -77,6 +77,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
             AssertValidationError("E10");
         }
 
+        [Fact]
+        public async Task Parent_must_exist()
+        {
+            await CreateChild().ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    ParentRelatedMeteringPoint = "570851247381952311",
+                };
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E10");
+        }
+
         private async Task SetupScenario()
         {
             var createParentCommand = Scenarios.CreateCommand(MeteringPointType.Production) with
@@ -84,6 +99,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
                 GsrnNumber = _parentGsrnNumber,
             };
             await SendCommandAsync(createParentCommand).ConfigureAwait(false);
+            var createChildCommand = Scenarios.CreateCommand(MeteringPointType.ElectricalHeating);
+            await SendCommandAsync(createChildCommand).ConfigureAwait(false);
+        }
+
+        private async Task CreateChild()
+        {
             var createChildCommand = Scenarios.CreateCommand(MeteringPointType.ElectricalHeating);
             await SendCommandAsync(createChildCommand).ConfigureAwait(false);
         }
