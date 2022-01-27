@@ -62,11 +62,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             },
             {
                 MeteringPointType.OtherConsumption.Name,
-                new SpecialMeteringPointValidator()
+                new OtherConsumptionMeteringPointValidator()
             },
             {
                 MeteringPointType.OtherProduction.Name,
-                new SpecialMeteringPointValidator()
+                new OtherProductionMeteringPointValidator()
             },
             {
                 MeteringPointType.OwnProduction.Name,
