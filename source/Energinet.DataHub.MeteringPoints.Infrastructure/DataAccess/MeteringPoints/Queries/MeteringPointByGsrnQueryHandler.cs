@@ -18,6 +18,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
+using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
+using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
@@ -51,8 +53,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var sql = $@"{MeteringPointDtoQueryHelper.Sql}
-                            WHERE GsrnNumber = @GsrnNumber";
+            var sql = $@"{MeteringPointDtoQueryHelper.Sql} mp
+                        INNER JOIN GridAreaLinks gl ON mp.MeteringGridArea = gl.GridAreaId
+                        INNER JOIN GridAreas ga ON gl.GridAreaId = ga.Id
+                        INNER JOIN UserActor ua ON ga.ActorId = ua.ActorId
+                        WHERE mp.GsrnNumber = @GsrnNumber AND ua.UserId = @UserId";
 
             var meteringPointDto = await _connectionFactory
                 .GetOpenConnection()
@@ -79,7 +84,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
         private static MeteringPointCimDto MapToCimDto(MeteringPointDto meteringPoint, MeteringPointSimpleCimDto? parentMeteringPoint, IEnumerable<MeteringPointSimpleCimDto> childMeteringPoints)
         {
-            var meteringPointSubType = ConvertEnumerationTypeToEnum<MeteringMethod,  Domain.MasterDataHandling.Components.MeteringDetails.MeteringMethod>(meteringPoint.MeteringPointSubType);
+            var meteringPointSubType = ConvertEnumerationTypeToEnum<MeteringMethod, Domain.MasterDataHandling.Components.MeteringDetails.MeteringMethod>(meteringPoint.MeteringPointSubType);
             var connectionState = ConvertEnumerationTypeToEnum<ConnectionState, PhysicalState>(meteringPoint.PhysicalState);
             var meteringPointType = ConvertEnumerationTypeToEnum<MeteringPointType, Domain.MeteringPoints.MeteringPointType>(meteringPoint.MeteringPointType);
             var unitType = ConvertEnumerationTypeToEnum<Unit, MeasurementUnitType>(meteringPoint.UnitType);
