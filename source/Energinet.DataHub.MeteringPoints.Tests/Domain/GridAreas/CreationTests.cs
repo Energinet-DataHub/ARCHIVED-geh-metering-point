@@ -42,7 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.GridAreas
                 GridAreaCode.Create(SampleData.GridAreaCode),
                 EnumerationType.FromName<PriceAreaCode>(SampleData.PriceAreaCode),
                 FullFlexFromDate.Create(DateTime.Now),
-                ActorId.Create("158725db-35b5-4740-8ba4-80c616ec9f92"));
+                ActorId.Create("90f6f4e5-8073-4842-b33e-c59e9f4a8c3f"));
         }
 
         private static void AssertContainsValidationError<TValidationError>(BusinessRulesValidationResult result)

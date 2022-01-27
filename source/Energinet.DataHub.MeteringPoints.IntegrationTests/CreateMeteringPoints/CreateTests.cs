@@ -236,7 +236,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("D02");
+            AssertValidationError("E29");
         }
 
         [Fact]
@@ -250,7 +250,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("E86");
+            AssertValidationError("E29");
         }
 
         [Fact]
@@ -427,7 +427,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("D02");
+            AssertValidationError("E73");
         }
 
         [Fact]
@@ -470,7 +470,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertValidationError("D02");
+            AssertValidationError("D53");
         }
 
         [Fact]

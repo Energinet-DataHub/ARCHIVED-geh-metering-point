@@ -54,7 +54,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
                     document.RoomIdentification,
                     string.IsNullOrWhiteSpace(document.MunicipalityCode) ? null : int.Parse(document.MunicipalityCode, NumberStyles.Integer, new NumberFormatInfo()),
                     document.IsActualAddress,
-                    document.GeoInfoReference),
+                    document.GeoInfoReference,
+                    document.LocationDescription),
                 MeteringMethod: document.MeteringMethod,
                 MeterNumber: document.MeterNumber,
                 SettlementMethod: document.SettlementMethod,
@@ -70,7 +71,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
                 ScheduledMeterReadingDate: document.ScheduledMeterReadingDate,
                 DisconnectionType: document.DisconnectionType,
                 NetSettlementGroup: document.NetSettlementGroup,
-                ProductionObligation: document.ProductionObligation);
+                ProductionObligation: document.ProductionObligation,
+                ParentRelatedMeteringPoint: document.ParentRelatedMeteringPoint);
         }
 
         private static IBusinessRequest? CreateConnectMeteringPointCommand(MasterDataDocument document)

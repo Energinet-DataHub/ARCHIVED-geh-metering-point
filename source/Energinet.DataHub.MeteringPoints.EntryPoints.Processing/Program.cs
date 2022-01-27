@@ -14,11 +14,13 @@
 
 using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
-using Energinet.DataHub.Core.FunctionApp.Common.Identity;
+using Energinet.DataHub.Core.FunctionApp.Common;
+using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
+using Energinet.DataHub.Core.FunctionApp.Common.Middleware;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.ChildMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
@@ -51,7 +53,6 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
@@ -99,7 +100,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             options.UseMiddleware<CorrelationIdMiddleware>();
             options.UseMiddleware<EntryPointTelemetryScopeMiddleware>();
-            options.UseMiddleware<ServiceBusUserContextMiddleware>();
+            options.UseMiddleware<ServiceBusActorContextMiddleware>();
             // TODO: Fix the duplicate check for ingestion messages and re-enable this https://app.zenhub.com/workspaces/batman-60a6105157304f00119be86e/issues/energinet-datahub/geh-metering-point/378
             // options.UseMiddleware<ServiceBusMessageIdempotencyMiddleware>();
         }
@@ -139,8 +140,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
             container.Register<CorrelationIdMiddleware>(Lifestyle.Scoped);
             container.Register<EntryPointTelemetryScopeMiddleware>(Lifestyle.Scoped);
-            container.Register<ServiceBusUserContextMiddleware>(Lifestyle.Scoped);
-            container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
+            container.Register<ServiceBusActorContextMiddleware>(Lifestyle.Scoped);
+            container.Register<IActorContext, ActorContext>(Lifestyle.Scoped);
             container.Register<IDomainEventPublisher, DomainEventPublisher>();
             container.Register<IUnitOfWork, UnitOfWork>();
             container.Register<IValidator<CreateMeteringPoint>, RuleSet>(Lifestyle.Scoped);
@@ -163,8 +164,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<INotificationReceiver, NotificationReceiver>(Lifestyle.Scoped);
             container.Register<IActorMessageService, ActorMessageService>(Lifestyle.Scoped);
             container.Register<MeteringPointPipelineContext>(Lifestyle.Scoped);
-            container.Register<ActorProvider>(Lifestyle.Scoped);
-
+            container.Register<IActorProvider, ActorProvider>(Lifestyle.Scoped);
             container.Register<IBusinessProcessValidationContext, BusinessProcessValidationContext>(Lifestyle.Scoped);
             container.Register<IBusinessProcessCommandFactory, BusinessProcessCommandFactory>(Lifestyle.Singleton);
 
@@ -182,6 +182,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));
 
             container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
+            container.Register<CouplingHandler>(Lifestyle.Scoped);
 
             container.AddBusinessProcessAuthorizers();
 

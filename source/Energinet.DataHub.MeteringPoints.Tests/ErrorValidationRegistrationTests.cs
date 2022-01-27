@@ -18,6 +18,7 @@ using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
@@ -38,20 +39,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests
             using var container = new Container();
             container.AddValidationErrorConversion(
                 validateRegistrations: true,
-                typeof(GsrnNumberMustBeValidErrorConverter).Assembly,
-                typeof(GsrnNumberMustBeValidValidationError).Assembly);
+                typeof(GsrnNumberMustBeValidRuleErrorConverter).Assembly,
+                typeof(GsrnNumberMustBeValidRuleError).Assembly);
             container.Verify();
             var sut = container.GetInstance<ErrorMessageFactory>();
 
             var validationErrors = new List<ValidationError>
             {
-                new GsrnNumberMustBeValidValidationError("123"),
+                new GsrnNumberMustBeValidRuleError(),
             };
 
             var validationError = validationErrors.First();
             var errorMessage = sut.GetErrorMessage(validationError);
-            errorMessage.Code.Should().Be("E10");
-            errorMessage.Description.Should().Be("A metering point cannot be registered in GEH without a valid identification");
+            errorMessage.Code.Should().Be("D57");
+            errorMessage.Description.Should().Be("Invalid GSRN number");
         }
 
         [Fact]
