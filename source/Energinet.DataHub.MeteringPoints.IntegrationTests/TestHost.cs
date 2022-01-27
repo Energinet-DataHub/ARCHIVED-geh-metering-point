@@ -18,10 +18,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
-using Energinet.DataHub.Core.FunctionApp.Common.Identity;
+using Energinet.DataHub.Core.FunctionApp.Common;
+using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
 using Energinet.DataHub.MeteringPoints.Application;
-using Energinet.DataHub.MeteringPoints.Application.Authorization;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.ChildMeteringPoints;
@@ -42,6 +41,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create;
+using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Authorization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
@@ -56,7 +56,6 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
@@ -157,10 +156,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IDomainEventPublisher, DomainEventPublisher>();
             _container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Singleton);
             _container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
-            _container.Register<IUserContext>(() => new UserContextStub { CurrentUser = new UserIdentity(SampleData.GridOperatorIdOfGrid870,  "SomeRole", "gln", "8200000001409"), }, Lifestyle.Singleton);
+            _container.Register<IActorContext>(() => new ActorContext { CurrentActor = new Actor(SampleData.GridOperatorIdOfGrid870, "GLN", "8200000001409", "GridAccessProvider") }, Lifestyle.Singleton);
             _container.Register<MeteringPointPipelineContext>(Lifestyle.Scoped);
-            _container.Register<ActorProvider>(Lifestyle.Scoped);
-
+            _container.Register<IActorProvider, ActorProvider>(Lifestyle.Scoped);
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(databaseFixture.DatabaseManager.ConnectionString), Lifestyle.Scoped);
             _container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
             Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
@@ -409,12 +407,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         protected void SetGridOperatorAsAuthenticatedUser(string glnNumber)
         {
-            ((UserContextStub)GetService<IUserContext>()).SetCurrentUser(new UserIdentity(Guid.NewGuid(), "SomeRole", "gln", glnNumber));
+            ((ActorContext)GetService<IActorContext>()).CurrentActor = new Actor(Guid.NewGuid(), "GLN", glnNumber, "GridAccessProvider");
         }
 
         protected void SetCurrentAuthenticatedActor(Guid actorId)
         {
-            ((UserContextStub)GetService<IUserContext>()).SetCurrentUser(new UserIdentity(actorId, "FakeRole", "gln", "FakeIdentifier"));
+            ((ActorContext)GetService<IActorContext>()).CurrentActor = new Actor(actorId, "GLN", "FakeIdentifier", "GridAccessProvider");
         }
 
         protected EffectiveDate CreateEffectiveDateAsOfToday()

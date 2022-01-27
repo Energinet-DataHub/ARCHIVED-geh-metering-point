@@ -31,7 +31,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
         private readonly ICorrelationContext _correlationContext;
 
-        public CommandScheduler(MeteringPointContext context, MessageSerializer serializer, ISystemDateTimeProvider systemDateTimeProvider, ICorrelationContext correlationContext)
+        public CommandScheduler(
+            MeteringPointContext context,
+            MessageSerializer serializer,
+            ISystemDateTimeProvider systemDateTimeProvider,
+            ICorrelationContext correlationContext)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));

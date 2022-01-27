@@ -18,9 +18,9 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
-using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Extensions;
 using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures;
 using FluentAssertions;
+using Microsoft.Identity.Client;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -55,7 +55,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
                 .Replace("{{transactionId}}", "1", StringComparison.OrdinalIgnoreCase)
                 .Replace("{{gsrn}}", "571234567891234567", StringComparison.OrdinalIgnoreCase);
             using var request = new HttpRequestMessage(HttpMethod.Post, "api/MeteringPoint");
-            request.AddDefaultJwtToken();
+            var confidentialClientApp = CreateConfidentialClientApp();
+            var result = await confidentialClientApp.AcquireTokenForClient(Fixture.AuthorizationConfiguration.BackendAppScope).ExecuteAsync().ConfigureAwait(false);
+            request.Headers.Add("Authorization", $"Bearer {result.AccessToken}");
             request.Content = new StringContent(xml, Encoding.UTF8, "application/xml");
 
             // Act
@@ -66,6 +68,19 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
             var responseMessage = await actualResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
             Fixture.TestLogger.WriteLine(responseMessage);
             actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
+
+        private IConfidentialClientApplication CreateConfidentialClientApp()
+        {
+            var (teamClientId, teamClientSecret) = Fixture.AuthorizationConfiguration.ClientCredentialsSettings;
+
+            var confidentialClientApp = ConfidentialClientApplicationBuilder
+                .Create(teamClientId)
+                .WithClientSecret(teamClientSecret)
+                .WithAuthority(new Uri($"https://login.microsoftonline.com/{Fixture.AuthorizationConfiguration.B2cTenantId}"))
+                .Build();
+
+            return confidentialClientApp;
         }
     }
 }
