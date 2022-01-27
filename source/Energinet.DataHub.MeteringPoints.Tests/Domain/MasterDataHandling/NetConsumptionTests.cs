@@ -17,6 +17,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
@@ -28,21 +29,95 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class NetConsumptionTests : TestBase
     {
         [Fact]
+        public void Production_obligation_is_ignored()
+        {
+            var masterData = Builder()
+                .WithProductionObligation(true)
+                .Build();
+
+            Assert.Null(masterData.ProductionObligation);
+        }
+
+        [Fact]
+        public void Unit_type_must_be_kwh()
+        {
+            var masterData = Builder()
+                .WithMeasurementUnitType(MeasurementUnitType.Ampere.Name)
+                .Build();
+
+            AssertError<UnitTypeIsNotValidForMeteringPointType>(CheckRules(masterData));
+        }
+
+        [Fact]
+        public void Unit_type_valid()
+        {
+            var masterData = Builder()
+                .WithMeasurementUnitType(MeasurementUnitType.KWh.Name)
+                .Build();
+
+            AssertDoesNotContainValidationError<UnitTypeIsNotValidForMeteringPointType>(CheckRules(masterData));
+        }
+
+        [Fact]
+        public void Product_type_must_be_energy_active()
+        {
+            var masterData = Builder()
+                .WithProductType(ProductType.Tariff.Name)
+                .Build();
+
+            AssertError<InvalidProductType>(CheckRules(masterData));
+        }
+
+        [Fact]
+        public void Power_plant_should_not_be_required()
+        {
+            var masterData = Builder()
+                .WithPowerPlant(null!)
+                .Build();
+
+            AssertDoesNotContainValidationError<PowerPlantIsRequired>(CheckRules(masterData));
+        }
+
+        [Fact]
+        public void Street_name_is_required()
+        {
+            var masterData = Builder()
+                .WithAddress(streetName: string.Empty)
+                .Build();
+
+            AssertContainsValidationError<StreetNameIsRequiredRuleError>(CheckRules(masterData));
+        }
+
+        [Theory]
+        [InlineData(nameof(ReadingOccurrence.Hourly), false)]
+        [InlineData(nameof(ReadingOccurrence.Quarterly), false)]
+        [InlineData(nameof(ReadingOccurrence.Yearly), true)]
+        public void Meter_reading_periodicity_is_hourly_or_quaterly(string readingOccurrence, bool expectError)
+        {
+            var masterData = Builder()
+                .WithReadingPeriodicity(readingOccurrence)
+                .Build();
+
+            AssertError<InvalidMeterReadingOccurrenceRuleError>(CheckRules(masterData), expectError);
+        }
+
+        [Fact]
         public void Metering_method_must_be_calculated()
         {
             var masterData = Builder()
                 .WithMeteringConfiguration(MeteringMethod.Physical.Name, "1")
                 .Build();
 
-            AssertError<MeteringMethodIsNotApplicable>(CheckMasterDataRules(masterData));
+            AssertError<MeteringMethodIsNotApplicable>(CheckRules(masterData));
         }
 
         private static IMasterDataBuilder Builder() =>
             new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.NetConsumption))
+                .WithMeteringConfiguration(MeteringMethod.Calculated.Name, null)
                 .WithReadingPeriodicity(ReadingOccurrence.Quarterly.Name)
                 .WithAddress(streetName: "Test street", countryCode: CountryCode.DK);
 
-        private static BusinessRulesValidationResult CheckMasterDataRules(MasterData masterData) =>
+        private static BusinessRulesValidationResult CheckRules(MasterData masterData) =>
             new MasterDataValidator().CheckRulesFor(MeteringPointType.NetConsumption, masterData);
     }
 }
