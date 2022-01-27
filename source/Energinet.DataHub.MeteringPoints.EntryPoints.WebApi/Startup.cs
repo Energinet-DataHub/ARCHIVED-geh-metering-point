@@ -144,10 +144,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
             _container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
 
-            var tenantId = Configuration.GetSection("Settings")["B2C_TENANT_ID"] ?? throw new InvalidOperationException(
+            var tenantId = Configuration["B2C_TENANT_ID"] ?? throw new InvalidOperationException(
                 "B2C tenant id not found.");
 
-            var audience = Configuration.GetSection("Settings")["BACKEND_SERVICE_APP_ID"] ?? throw new InvalidOperationException(
+            var audience = Configuration["BACKEND_SERVICE_APP_ID"] ?? throw new InvalidOperationException(
                 "Backend service app id not found.");
 
             _container.AddJwtTokenSecurity($"https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration", audience);
