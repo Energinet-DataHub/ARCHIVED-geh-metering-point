@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Validation;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain;
 using FluentValidation;
@@ -27,6 +28,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
             {
                 RuleFor(request => request).SetValidator(new MeteringGridAreaValidRule());
                 RuleFor(request => request).SetValidator(new PhysicalStateRule());
+            });
+
+            When(message => message.ProcessType.Equals(BusinessProcessType.ChangeMasterData.Name, StringComparison.OrdinalIgnoreCase), () =>
+            {
+                RuleFor(request => request.ToGrid)
+                    .Null()
+                    .WithState(_ => new ToGridAreaIsNotAllowed());
+                RuleFor(request => request.FromGrid)
+                    .Null()
+                    .WithState(_ => new FromGridAreaIsNotAllowed());
             });
 
             RuleFor(request => request.TransactionId).SetValidator(new TransactionIdentificationRule());
