@@ -12,12 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Globalization;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
 using Xunit.Categories;
@@ -27,52 +22,33 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.Con
     [IntegrationTest]
     public class ChangeTests : TestHost
     {
-        private readonly ISystemDateTimeProvider _timeProvider;
-
         public ChangeTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
         {
-            _timeProvider = GetService<ISystemDateTimeProvider>();
         }
 
         [Fact]
-        public async Task Address_is_updated()
+        public async Task It_is_not_allowed_to_provide_to_grid_area()
         {
-            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
-
-            var request = CreateUpdateRequest()
+            await SendCommandAsync(CreateUpdateRequest()
                 with
                 {
-                    StreetName = "New Street Name",
-                        PostCode = "6000",
-                        CityName = "New City Name",
-                        StreetCode = "0500",
-                        BuildingNumber = "4",
-                        CitySubDivisionName = "New",
-                        CountryCode = CountryCode.DK.Name,
-                        FloorIdentification = "9",
-                        RoomIdentification = "9",
-                        MunicipalityCode = "999",
-                        IsActualAddress = true,
-                        GeoInfoReference = Guid.NewGuid().ToString(),
-                };
+                    ToGrid = "871",
+                }).ConfigureAwait(false);
 
-            await SendCommandAsync(request).ConfigureAwait(false);
+            AssertValidationError("D46");
+        }
 
-            AssertConfirmMessage(DocumentType.ConfirmChangeMasterData);
-            AssertMasterData()
-                .HasStreetName(request.StreetName)
-                .HasPostCode(request.PostCode)
-                .HasCity(request.CityName)
-                .HasStreetCode(request.StreetCode)
-                .HasBuildingNumber(request.BuildingNumber)
-                .HasCitySubDivision(request.CitySubDivisionName)
-                .HasCountryCode(CountryCode.DK)
-                .HasFloor(request.FloorIdentification)
-                .HasRoom(request.RoomIdentification)
-                .HasMunicipalityCode(int.Parse(request.MunicipalityCode, CultureInfo.InvariantCulture))
-                .HasIsActualAddress(request.IsActualAddress)
-                .HasGeoInfoReference(Guid.Parse(request.GeoInfoReference));
+        [Fact]
+        public async Task It_is_not_allowed_to_provide_from_grid_area()
+        {
+            await SendCommandAsync(CreateUpdateRequest()
+                with
+                {
+                    FromGrid = "871",
+                }).ConfigureAwait(false);
+
+            AssertValidationError("D46");
         }
 
         [Fact]
