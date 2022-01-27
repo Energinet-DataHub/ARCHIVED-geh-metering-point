@@ -14,7 +14,6 @@
 
 using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
@@ -23,26 +22,27 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
 {
     public class MessageHubDispatcher : IMessageHubDispatcher
     {
-        private readonly IUserContext _userContext;
         private readonly ICorrelationContext _correlationContext;
         private readonly IJsonSerializer _jsonSerializer;
         private readonly IOutboxMessageFactory _outboxMessageFactory;
         private readonly IOutbox _outbox;
 
-        public MessageHubDispatcher(IUserContext userContext, ICorrelationContext correlationContext, IJsonSerializer jsonSerializer, IOutboxMessageFactory outboxMessageFactory, IOutbox outbox)
+        public MessageHubDispatcher(
+            ICorrelationContext correlationContext,
+            IJsonSerializer jsonSerializer,
+            IOutboxMessageFactory outboxMessageFactory,
+            IOutbox outbox)
         {
-            _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             _correlationContext = correlationContext ?? throw new ArgumentNullException(nameof(correlationContext));
             _jsonSerializer = jsonSerializer ?? throw new ArgumentNullException(nameof(jsonSerializer));
             _outboxMessageFactory = outboxMessageFactory ?? throw new ArgumentNullException(nameof(outboxMessageFactory));
             _outbox = outbox ?? throw new ArgumentNullException(nameof(outbox));
         }
 
-        public Task DispatchAsync<TMessage>(TMessage message, DocumentType documentType, string gsrnNumber)
+        public Task DispatchAsync<TMessage>(TMessage message, DocumentType documentType, string recipient, string gsrnNumber)
         {
-            var glnNumber = "8200000008842";
             var envelope = CreateMessageHubEnvelope(
-                recipient: _userContext.CurrentUser?.Identifier ?? glnNumber, // TODO: can be either GLN or EIC - is this supported in MessageHub?
+                recipient: recipient,
                 cimContent: _jsonSerializer.Serialize(message),
                 messageType: documentType,
                 gsrnNumber: gsrnNumber);
