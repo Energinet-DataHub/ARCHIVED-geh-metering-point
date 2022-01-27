@@ -53,26 +53,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.RejectCreateMeteringPoint);
         }
 
-        [Fact(Skip = "Not implemented yet")]
-        public void CreateMeteringPoint_WithUnknownActor_ShouldGenerateRejectMessageInOutbox()
-        {
-        }
-
-        [Fact(Skip = "Not implemented yet")]
-        public void CreateMeteringPoint_WithUnknownGridArea_ShouldGenerateRejectMessageInOutbox()
-        {
-        }
-
-        [Fact(Skip = "Not implemented yet")]
-        public void CreateMeteringPoint_WithGridAreaNotBelongingToGridOperator_ShouldGenerateRejectMessageInOutbox()
-        {
-        }
-
-        [Fact(Skip = "Not implemented yet")]
-        public void CreateMeteringPoint_WhenEffectiveDateIsOutOfScope_ShouldGenerateRejectMessageInOutbox()
-        {
-        }
-
         [Fact]
         public async Task Should_reject_if_metering_method_is_physical_and_meter_identification_is_undefined()
         {
