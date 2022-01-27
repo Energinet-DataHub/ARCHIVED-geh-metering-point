@@ -25,7 +25,7 @@ limitations under the License.
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Energinet.DataHub.Core.App.WebApp.SimpleInjector" Version="1.0.1-alfa-02" />
+    <PackageReference Include="Energinet.DataHub.Core.App.WebApp.SimpleInjector" Version="1.0.1" />
     <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.20.0" />
     <PackageReference Include="SimpleInjector.Integration.AspNetCore.Mvc.Core" Version="5.3.0" />
