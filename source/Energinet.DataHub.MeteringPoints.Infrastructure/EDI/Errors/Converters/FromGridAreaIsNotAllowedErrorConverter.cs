@@ -12,10 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.ServiceBus
+using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Validation;
+using Energinet.DataHub.MeteringPoints.Application.EDI;
+
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
 {
-    public static class Constants
+    public class FromGridAreaIsNotAllowedErrorConverter : ErrorConverter<FromGridAreaIsNotAllowed>
     {
-        public const string ServiceBusIdentityKey = "geh_userIdentity";
+        protected override ErrorMessage Convert(FromGridAreaIsNotAllowed validationError)
+        {
+            return new ErrorMessage("D46", "Source grid area cannot be changed.");
+        }
     }
 }

@@ -12,21 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Actors
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+
+namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Validation
 {
-    public class Actor
+    public class ToGridAreaIsNotAllowed : ValidationError
     {
-        public Actor(string identificationNumber, string identificationType, string role)
-        {
-            IdentificationNumber = identificationNumber;
-            IdentificationType = identificationType;
-            Role = role;
-        }
-
-        public string IdentificationNumber { get; }
-
-        public string IdentificationType { get; }
-
-        public string Role { get; }
     }
 }
