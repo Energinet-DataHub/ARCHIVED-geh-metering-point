@@ -16,7 +16,7 @@ using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling.WebApi
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Tooling.WebApi
 {
     public class WebApiFactory : WebApplicationFactory<EntryPoints.WebApi.Startup>
     {

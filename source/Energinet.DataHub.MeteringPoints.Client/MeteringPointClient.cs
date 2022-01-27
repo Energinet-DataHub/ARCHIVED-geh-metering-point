@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -35,6 +36,8 @@ namespace Energinet.DataHub.MeteringPoints.Client
         public async Task<MeteringPointCimDto?> GetMeteringPointByGsrnAsync(string gsrn)
         {
             var response = await _httpClient.GetAsync(new Uri($"MeteringPoint/GetMeteringPointByGsrn/?gsrn={gsrn}", UriKind.Relative)).ConfigureAwait(false);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized) throw new UnauthorizedAccessException();
 
             if (!response.IsSuccessStatusCode) return null;
 
