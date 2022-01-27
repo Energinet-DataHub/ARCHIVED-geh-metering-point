@@ -75,6 +75,12 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
+      - name: Login to use Azure resources in integration tests
+        if: ${{ env.AZURE_KEYVAULT_URL != '' && env.AZURE_SECRETS_KEYVAULT_URL != '' }}
+        run: |
+          az login --service-principal --username "${{ secrets.AZURE_SPN_ID }}" --password "${{ secrets.AZURE_SPN_SECRET }}" --tenant "${{ secrets.AZURE_TENANT_ID }}"
+          az account set --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+
       - name: Cache NuGet packages
         uses: actions/cache@v2
         id: cache-nuget
