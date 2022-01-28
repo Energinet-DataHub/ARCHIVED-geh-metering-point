@@ -28,7 +28,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class SpecialMeteringPointValidationTests : TestBase
     {
         [Theory]
-        [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
         [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
         public void Production_obligation_is_ignored(string meteringPointType)
         {
@@ -40,7 +39,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Theory]
-        [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
         [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
         public void Unit_type_must_be_kwh(string meteringPointType)
         {
@@ -52,7 +50,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Theory]
-        [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
         [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
         public void Unit_type_valid(string meteringPointType)
         {
@@ -64,7 +61,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Theory]
-        [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
         [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
         public void Product_type_must_be_energy_active(string meteringPointType)
         {
@@ -76,7 +72,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Theory]
-        [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
         [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
         [InlineData(nameof(MeteringPointType.VEProduction))]
         public void Power_plant_should_not_be_required(string meteringPointType)
@@ -89,7 +84,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Theory]
-        [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
         [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
         [InlineData(nameof(MeteringPointType.VEProduction))]
         public void Street_name_is_required(string meteringPointType)
@@ -102,10 +96,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Theory]
-        [InlineData(nameof(MeteringPointType.ConsumptionFromGrid), nameof(ReadingOccurrence.Hourly), false)]
-        [InlineData(nameof(MeteringPointType.ConsumptionFromGrid), nameof(ReadingOccurrence.Quarterly), false)]
-        [InlineData(nameof(MeteringPointType.ConsumptionFromGrid), nameof(ReadingOccurrence.Yearly), true)]
-
         [InlineData(nameof(MeteringPointType.SurplusProductionGroup), nameof(ReadingOccurrence.Hourly), false)]
         [InlineData(nameof(MeteringPointType.SurplusProductionGroup), nameof(ReadingOccurrence.Quarterly), false)]
         [InlineData(nameof(MeteringPointType.SurplusProductionGroup), nameof(ReadingOccurrence.Yearly), true)]
