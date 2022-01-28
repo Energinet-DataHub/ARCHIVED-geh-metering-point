@@ -34,19 +34,22 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
         private readonly ChangeMasterDataSettings _settings;
         private readonly ChangeMeteringPointAuthorizer _authorizer;
         private readonly CouplingHandler _couplingHandler;
+        private readonly MasterDataValidator _masterDataValidator;
 
         public ChangeMasterDataHandler(
             IMeteringPointRepository meteringPointRepository,
             ISystemDateTimeProvider systemDateTimeProvider,
             ChangeMasterDataSettings settings,
             ChangeMeteringPointAuthorizer authorizer,
-            CouplingHandler couplingHandler)
+            CouplingHandler couplingHandler,
+            MasterDataValidator masterDataValidator)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
             _settings = settings;
             _authorizer = authorizer ?? throw new ArgumentNullException(nameof(authorizer));
             _couplingHandler = couplingHandler;
+            _masterDataValidator = masterDataValidator ?? throw new ArgumentNullException(nameof(masterDataValidator));
         }
 
         public async Task<BusinessProcessResult> Handle(ChangeMasterDataRequest request, CancellationToken cancellationToken)
@@ -84,21 +87,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
                 return new BusinessProcessResult(request.TransactionId, policyCheckResult.Errors);
             }
 
-            var validationResult = targetMeteringPoint.CanUpdateMasterData(updatedMasterData, GetMasterValidator());
+            var validationResult = targetMeteringPoint.CanUpdateMasterData(updatedMasterData, _masterDataValidator);
             if (validationResult.Success != true)
             {
                 return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
             }
 
-            targetMeteringPoint.UpdateMasterData(updatedMasterData, GetMasterValidator());
+            targetMeteringPoint.UpdateMasterData(updatedMasterData, _masterDataValidator);
 
             var parentCouplingResult = await HandleParentChildCouplingAsync(request, targetMeteringPoint).ConfigureAwait(false);
             return parentCouplingResult.Success == false ? parentCouplingResult : BusinessProcessResult.Ok(request.TransactionId);
-        }
-
-        private static MasterDataValidator GetMasterValidator()
-        {
-            return new MasterDataValidator();
         }
 
         private static MasterDataUpdater CreateMasterDataUpdater(ChangeMasterDataRequest request, MeteringPoint targetMeteringPoint)

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption.Rules;
@@ -28,6 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
 
         public BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
+            if (masterData == null) throw new ArgumentNullException(nameof(masterData));
             var rules = GeneralRules(masterData);
             rules.Add(new ScheduledMeterReadingDateRule(masterData.ScheduledMeterReadingDate, masterData.NetSettlementGroup!));
             return new BusinessRulesValidationResult(rules);
@@ -35,6 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
 
         public BusinessRulesValidationResult CheckRules(MeteringPoint meteringPoint, MasterData updatedMasterData)
         {
+            if (updatedMasterData == null) throw new ArgumentNullException(nameof(updatedMasterData));
             var rules = GeneralRules(updatedMasterData);
 
             rules.Add(new ScheduledMeterReadingDateCannotBeChangedRule(meteringPoint, updatedMasterData));
