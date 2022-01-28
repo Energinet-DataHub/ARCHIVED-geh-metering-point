@@ -16,6 +16,7 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Energinet.DataHub.MeteringPoints.Client.Extensions
@@ -24,7 +25,12 @@ namespace Energinet.DataHub.MeteringPoints.Client.Extensions
     {
         public static IServiceCollection AddMeteringPointClient(this IServiceCollection services, Uri baseUrl)
         {
-            services.AddScoped<IMeteringPointClient>(x => new MeteringPointClientFactory(x.GetRequiredService<IHttpClientFactory>()).CreateClient(baseUrl));
+            services.AddHttpContextAccessor();
+            services.AddScoped<IMeteringPointClient>(x =>
+                new MeteringPointClientFactory(
+                        x.GetRequiredService<IHttpClientFactory>(),
+                        x.GetRequiredService<IHttpContextAccessor>())
+                    .CreateClient(baseUrl));
 
             if (services.Any(x => x.ServiceType == typeof(IHttpClientFactory))) return services;
 

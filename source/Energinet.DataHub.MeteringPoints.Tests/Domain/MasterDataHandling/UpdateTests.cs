@@ -23,6 +23,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Xunit;
 using Xunit.Categories;
 
@@ -996,6 +997,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Fact]
+        public void Metering_method_cannot_be_removed()
+        {
+            var masterData = Builder()
+                .WithMeteringConfiguration(MeteringMethod.Virtual.Name, null)
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData)
+                .WithMeteringConfiguration(string.Empty, "2")
+                .Validate();
+
+            AssertContainsValidationError<MeteringMethodIsRequired>(validationResult);
+        }
+
+        [Fact]
         public void Meter_number_input_value_must_be_Valid()
         {
             var masterData = Builder()
@@ -1318,6 +1333,10 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithProductType(ProductType.EnergyActive.Name)
                 .WithMeasurementUnitType(MeasurementUnitType.KWh.Name);
         }
+
+        private static IMasterDataBuilder BuilderFor(MeteringPointType meteringPointType) =>
+            new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(meteringPointType))
+                .WithMeteringConfiguration(MeteringMethod.Calculated.Name, null);
 
         private static MasterDataUpdater UpdateBuilder(MasterData current, IEnumerable<MasterDataField>? fieldConfiguration = null)
         {

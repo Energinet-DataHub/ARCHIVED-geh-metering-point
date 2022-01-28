@@ -30,7 +30,7 @@ module "func_internalcommanddispatcher" {
     WEBSITES_ENABLE_APP_SERVICE_STORAGE   = true
     FUNCTIONS_WORKER_RUNTIME              = "dotnet-isolated"
     # Endregion: Default Values
-    DB_CONNECTION_STRING                  = local.METERING_POINT_CONNECTION_STRING
+    DB_CONNECTION_STRING                  = local.MS_METERING_POINT_CONNECTION_STRING
     PROCESSING_QUEUE_NAME                 = module.sbq_meteringpoint.name
     PROCESSING_QUEUE_CONNECTION_STRING    = module.sb_meteringpoint.primary_connection_strings["send"]
     DISPATCH_TRIGGER_TIMER                = "*/10 * * * * *"

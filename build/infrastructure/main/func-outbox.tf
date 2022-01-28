@@ -30,7 +30,7 @@ module "func_outbox" {
     WEBSITES_ENABLE_APP_SERVICE_STORAGE                           = true
     FUNCTIONS_WORKER_RUNTIME                                      = "dotnet-isolated"
     # Endregion: Default Values
-    METERINGPOINT_DB_CONNECTION_STRING                            = local.METERING_POINT_CONNECTION_STRING
+    METERINGPOINT_DB_CONNECTION_STRING                            = local.MS_METERING_POINT_CONNECTION_STRING
     METERINGPOINT_QUEUE_TOPIC_NAME                                = module.sbq_meteringpoint.name
     SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING = data.azurerm_key_vault_secret.sb_domain_relay_send_connection_string.value
     METERING_POINT_CREATED_TOPIC                                  = "metering-point-created"

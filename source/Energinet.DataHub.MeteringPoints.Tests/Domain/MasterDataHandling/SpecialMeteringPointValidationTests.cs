@@ -30,8 +30,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [Theory]
         [InlineData(nameof(MeteringPointType.ElectricalHeating))]
         [InlineData(nameof(MeteringPointType.NetProduction))]
-        [InlineData(nameof(MeteringPointType.OtherConsumption))]
-        [InlineData(nameof(MeteringPointType.OtherProduction))]
         [InlineData(nameof(MeteringPointType.OwnProduction))]
         [InlineData(nameof(MeteringPointType.WholesaleServices))]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
@@ -39,7 +37,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [InlineData(nameof(MeteringPointType.NetFromGrid))]
         [InlineData(nameof(MeteringPointType.NetToGrid))]
         [InlineData(nameof(MeteringPointType.SupplyToGrid))]
-        [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
         public void Production_obligation_is_ignored(string meteringPointType)
         {
             var masterData = BuilderFor(meteringPointType)
@@ -52,8 +49,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [Theory]
         [InlineData(nameof(MeteringPointType.ElectricalHeating))]
         [InlineData(nameof(MeteringPointType.NetProduction))]
-        [InlineData(nameof(MeteringPointType.OtherConsumption))]
-        [InlineData(nameof(MeteringPointType.OtherProduction))]
         [InlineData(nameof(MeteringPointType.OwnProduction))]
         [InlineData(nameof(MeteringPointType.WholesaleServices))]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
@@ -61,7 +56,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [InlineData(nameof(MeteringPointType.NetFromGrid))]
         [InlineData(nameof(MeteringPointType.NetToGrid))]
         [InlineData(nameof(MeteringPointType.SupplyToGrid))]
-        [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
         public void Unit_type_must_be_kwh(string meteringPointType)
         {
             var masterData = BuilderFor(meteringPointType)
@@ -74,8 +68,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [Theory]
         [InlineData(nameof(MeteringPointType.ElectricalHeating))]
         [InlineData(nameof(MeteringPointType.NetProduction))]
-        [InlineData(nameof(MeteringPointType.OtherConsumption))]
-        [InlineData(nameof(MeteringPointType.OtherProduction))]
         [InlineData(nameof(MeteringPointType.OwnProduction))]
         [InlineData(nameof(MeteringPointType.WholesaleServices))]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
@@ -83,7 +75,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [InlineData(nameof(MeteringPointType.NetFromGrid))]
         [InlineData(nameof(MeteringPointType.NetToGrid))]
         [InlineData(nameof(MeteringPointType.SupplyToGrid))]
-        [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
         public void Unit_type_valid(string meteringPointType)
         {
             var masterData = BuilderFor(meteringPointType)
@@ -96,8 +87,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [Theory]
         [InlineData(nameof(MeteringPointType.ElectricalHeating))]
         [InlineData(nameof(MeteringPointType.NetProduction))]
-        [InlineData(nameof(MeteringPointType.OtherConsumption))]
-        [InlineData(nameof(MeteringPointType.OtherProduction))]
         [InlineData(nameof(MeteringPointType.OwnProduction))]
         [InlineData(nameof(MeteringPointType.WholesaleServices))]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
@@ -105,7 +94,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [InlineData(nameof(MeteringPointType.NetFromGrid))]
         [InlineData(nameof(MeteringPointType.NetToGrid))]
         [InlineData(nameof(MeteringPointType.SupplyToGrid))]
-        [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
         public void Product_type_must_be_energy_active(string meteringPointType)
         {
             var masterData = BuilderFor(meteringPointType)
@@ -118,8 +106,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [Theory]
         [InlineData(nameof(MeteringPointType.ElectricalHeating))]
         [InlineData(nameof(MeteringPointType.NetProduction))]
-        [InlineData(nameof(MeteringPointType.OtherConsumption))]
-        [InlineData(nameof(MeteringPointType.OtherProduction))]
         [InlineData(nameof(MeteringPointType.OwnProduction))]
         [InlineData(nameof(MeteringPointType.WholesaleServices))]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
@@ -127,7 +113,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [InlineData(nameof(MeteringPointType.NetFromGrid))]
         [InlineData(nameof(MeteringPointType.NetToGrid))]
         [InlineData(nameof(MeteringPointType.SupplyToGrid))]
-        [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
         [InlineData(nameof(MeteringPointType.VEProduction))]
         public void Power_plant_should_not_be_required(string meteringPointType)
         {
@@ -141,8 +126,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [Theory]
         [InlineData(nameof(MeteringPointType.ElectricalHeating))]
         [InlineData(nameof(MeteringPointType.NetProduction))]
-        [InlineData(nameof(MeteringPointType.OtherConsumption))]
-        [InlineData(nameof(MeteringPointType.OtherProduction))]
         [InlineData(nameof(MeteringPointType.OwnProduction))]
         [InlineData(nameof(MeteringPointType.WholesaleServices))]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
@@ -150,7 +133,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [InlineData(nameof(MeteringPointType.NetFromGrid))]
         [InlineData(nameof(MeteringPointType.NetToGrid))]
         [InlineData(nameof(MeteringPointType.SupplyToGrid))]
-        [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
         [InlineData(nameof(MeteringPointType.VEProduction))]
         public void Street_name_is_required(string meteringPointType)
         {
@@ -169,14 +151,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [InlineData(nameof(MeteringPointType.NetProduction), nameof(ReadingOccurrence.Hourly), false)]
         [InlineData(nameof(MeteringPointType.NetProduction), nameof(ReadingOccurrence.Quarterly), false)]
         [InlineData(nameof(MeteringPointType.NetProduction), nameof(ReadingOccurrence.Yearly), true)]
-
-        [InlineData(nameof(MeteringPointType.OtherConsumption), nameof(ReadingOccurrence.Hourly), false)]
-        [InlineData(nameof(MeteringPointType.OtherConsumption), nameof(ReadingOccurrence.Quarterly), false)]
-        [InlineData(nameof(MeteringPointType.OtherConsumption), nameof(ReadingOccurrence.Yearly), true)]
-
-        [InlineData(nameof(MeteringPointType.OtherProduction), nameof(ReadingOccurrence.Hourly), false)]
-        [InlineData(nameof(MeteringPointType.OtherProduction), nameof(ReadingOccurrence.Quarterly), false)]
-        [InlineData(nameof(MeteringPointType.OtherProduction), nameof(ReadingOccurrence.Yearly), true)]
 
         [InlineData(nameof(MeteringPointType.OwnProduction), nameof(ReadingOccurrence.Hourly), false)]
         [InlineData(nameof(MeteringPointType.OwnProduction), nameof(ReadingOccurrence.Quarterly), false)]
@@ -206,9 +180,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [InlineData(nameof(MeteringPointType.SupplyToGrid), nameof(ReadingOccurrence.Quarterly), false)]
         [InlineData(nameof(MeteringPointType.SupplyToGrid), nameof(ReadingOccurrence.Yearly), true)]
 
-        [InlineData(nameof(MeteringPointType.SurplusProductionGroup), nameof(ReadingOccurrence.Hourly), false)]
-        [InlineData(nameof(MeteringPointType.SurplusProductionGroup), nameof(ReadingOccurrence.Quarterly), false)]
-        [InlineData(nameof(MeteringPointType.SurplusProductionGroup), nameof(ReadingOccurrence.Yearly), true)]
         public void Meter_reading_periodicity_is_hourly_or_quaterly(string meteringPointType, string readingOccurrence, bool expectError)
         {
             var masterData = BuilderFor(meteringPointType)
