@@ -14,6 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Disconnect;
 using NodaTime;
 using Xunit;
 
@@ -28,9 +29,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             _systemDateTimeProvider = new SystemDateTimeProviderStub();
         }
 
-        [Fact(Skip = "Not implemented yet")]
+        [Fact]
         public void Metering_point_must_be_connected()
         {
+            var meteringPoint = CreateMeteringPoint();
+            AssertError<PhysicalStateMustBeConnectedError>(meteringPoint.DisconnectAcceptable());
         }
 
         [Fact(Skip = "Not implemented yet")]
