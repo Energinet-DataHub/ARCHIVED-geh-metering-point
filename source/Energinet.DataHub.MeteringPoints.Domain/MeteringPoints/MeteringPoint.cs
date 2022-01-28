@@ -164,24 +164,26 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
 
-        public BusinessRulesValidationResult DisconnectAcceptable()
+        public BusinessRulesValidationResult DisconnectAcceptable(ConnectionDetails connectionDetails)
         {
             var rules = new Collection<IBusinessRule>
             {
                 new PhysicalStateMustBeConnectedRule(ConnectionState),
+                new MustHaveEnergySupplierRule(this, connectionDetails),
             };
             return new BusinessRulesValidationResult(rules);
         }
 
-        public void Disconnect(Instant effectiveDate)
+        public void Disconnect(ConnectionDetails connectionDetails)
         {
-            if (!DisconnectAcceptable().Success)
+            if (connectionDetails == null) throw new ArgumentNullException(nameof(connectionDetails));
+            if (!DisconnectAcceptable(connectionDetails).Success)
             {
                 throw MeteringPointDisconnectException.Create(Id, GsrnNumber);
             }
 
-            ConnectionState = ConnectionState.Disconnected(effectiveDate);
-            AddDomainEvent(new MeteringPointDisconnected(Id.Value, GsrnNumber.Value, effectiveDate));
+            ConnectionState = ConnectionState.Disconnected(connectionDetails.EffectiveDate);
+            AddDomainEvent(new MeteringPointDisconnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
 
         public BusinessRulesValidationResult CanUpdateMasterData(MasterData updatedMasterData, MasterDataValidator validator)
