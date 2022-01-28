@@ -20,7 +20,7 @@ using StreetNameIsRequiredRule = Energinet.DataHub.MeteringPoints.Domain.MasterD
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetConsumption
 {
-    internal class NetConsumptionPointValidator : IMasterDataValidatorStrategy
+    internal class NetConsumptionValidator : IMasterDataValidatorStrategy
     {
         public MeteringPointType Target => MeteringPointType.NetConsumption;
 

@@ -16,6 +16,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
@@ -115,7 +116,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithScheduledMeterReadingDate("0201")
                 .Build();
 
-            AssertError<ScheduledMeterReadingDateCannotBeChanged>(meteringPoint.CanUpdateMasterData(updatedMasterData, new MasterDataValidator()));
+            AssertError<ScheduledMeterReadingDateCannotBeChanged>(meteringPoint.CanUpdateMasterData(updatedMasterData, CreateValidator()));
         }
 
         [Fact]
@@ -281,7 +282,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         private static BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
-            return new MasterDataValidator().CheckRulesFor(MeteringPointType.Consumption, masterData);
+            return new MasterDataValidator(new ConsumptionMeteringPointValidator()).CheckRulesFor(MeteringPointType.Consumption, masterData);
         }
+
+        private static MasterDataValidator CreateValidator() =>
+            new MasterDataValidator(
+                new ConsumptionMeteringPointValidator());
     }
 }

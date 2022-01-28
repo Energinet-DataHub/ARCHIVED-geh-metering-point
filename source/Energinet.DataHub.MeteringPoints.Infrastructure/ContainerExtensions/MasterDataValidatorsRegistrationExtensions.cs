@@ -28,7 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions
             var validatorTypes = container.GetTypesToRegister(typeof(IMasterDataValidatorStrategy), assembliesToScan).ToList();
             container.Collection.Register<IMasterDataValidatorStrategy>(validatorTypes, Lifestyle.Transient);
             container.Register<MasterDataValidator>(() =>
-                new MasterDataValidator(container.GetAllInstances<IMasterDataValidatorStrategy>()));
+                new MasterDataValidator(container.GetAllInstances<IMasterDataValidatorStrategy>().ToArray()));
         }
     }
 }
