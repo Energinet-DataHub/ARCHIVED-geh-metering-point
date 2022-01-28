@@ -23,6 +23,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Xunit;
 using Xunit.Categories;
 
@@ -1332,6 +1333,10 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithProductType(ProductType.EnergyActive.Name)
                 .WithMeasurementUnitType(MeasurementUnitType.KWh.Name);
         }
+
+        private static IMasterDataBuilder BuilderFor(MeteringPointType meteringPointType) =>
+            new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(meteringPointType))
+                .WithMeteringConfiguration(MeteringMethod.Calculated.Name, null);
 
         private static MasterDataUpdater UpdateBuilder(MasterData current, IEnumerable<MasterDataField>? fieldConfiguration = null)
         {

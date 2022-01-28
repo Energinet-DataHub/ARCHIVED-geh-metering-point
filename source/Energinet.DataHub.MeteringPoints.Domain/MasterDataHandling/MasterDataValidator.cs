@@ -106,7 +106,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             },
             {
                 MeteringPointType.SurplusProductionGroup.Name,
-                new SpecialMeteringPointValidator()
+                new SurplusProductionGroupValidator()
             },
             {
                 MeteringPointType.VEProduction.Name,
