@@ -27,6 +27,8 @@ resource "azurerm_app_service" "webapi" {
 
   app_settings = {
     "APPINSIGHTS_INSTRUMENTATIONKEY" = "${data.azurerm_key_vault_secret.appi_instrumentation_key.value}"
+    "B2C_TENANT_ID" = "${data.azurerm_key_vault_secret.b2c_tenant_id.value}"
+    "BACKEND_SERVICE_APP_ID" = "${data.azurerm_key_vault_secret.backend_service_app_id.value}"
   }
 
   connection_string {
