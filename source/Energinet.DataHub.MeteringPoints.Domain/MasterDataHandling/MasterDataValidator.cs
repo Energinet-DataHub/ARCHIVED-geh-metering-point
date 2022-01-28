@@ -21,6 +21,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetConsumption;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetProduction;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.OtherConsumption;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.OtherProduction;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.OwnProduction;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.TotalConsumption;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.VEProduction;
@@ -76,7 +77,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             },
             {
                 MeteringPointType.OwnProduction.Name,
-                new SpecialMeteringPointValidator()
+                new OwnProductionValidator()
             },
             {
                 MeteringPointType.TotalConsumption.Name,
