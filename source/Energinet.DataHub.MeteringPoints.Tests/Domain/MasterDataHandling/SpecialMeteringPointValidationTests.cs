@@ -29,7 +29,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     {
         [Theory]
         [InlineData(nameof(MeteringPointType.ElectricalHeating))]
-        [InlineData(nameof(MeteringPointType.NetProduction))]
         [InlineData(nameof(MeteringPointType.OtherConsumption))]
         [InlineData(nameof(MeteringPointType.OtherProduction))]
         [InlineData(nameof(MeteringPointType.OwnProduction))]
@@ -51,7 +50,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         [Theory]
         [InlineData(nameof(MeteringPointType.ElectricalHeating))]
-        [InlineData(nameof(MeteringPointType.NetProduction))]
         [InlineData(nameof(MeteringPointType.OtherConsumption))]
         [InlineData(nameof(MeteringPointType.OtherProduction))]
         [InlineData(nameof(MeteringPointType.OwnProduction))]
@@ -73,7 +71,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         [Theory]
         [InlineData(nameof(MeteringPointType.ElectricalHeating))]
-        [InlineData(nameof(MeteringPointType.NetProduction))]
         [InlineData(nameof(MeteringPointType.OtherConsumption))]
         [InlineData(nameof(MeteringPointType.OtherProduction))]
         [InlineData(nameof(MeteringPointType.OwnProduction))]
@@ -95,7 +92,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         [Theory]
         [InlineData(nameof(MeteringPointType.ElectricalHeating))]
-        [InlineData(nameof(MeteringPointType.NetProduction))]
         [InlineData(nameof(MeteringPointType.OtherConsumption))]
         [InlineData(nameof(MeteringPointType.OtherProduction))]
         [InlineData(nameof(MeteringPointType.OwnProduction))]
@@ -117,7 +113,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         [Theory]
         [InlineData(nameof(MeteringPointType.ElectricalHeating))]
-        [InlineData(nameof(MeteringPointType.NetProduction))]
         [InlineData(nameof(MeteringPointType.OtherConsumption))]
         [InlineData(nameof(MeteringPointType.OtherProduction))]
         [InlineData(nameof(MeteringPointType.OwnProduction))]
@@ -140,7 +135,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         [Theory]
         [InlineData(nameof(MeteringPointType.ElectricalHeating))]
-        [InlineData(nameof(MeteringPointType.NetProduction))]
         [InlineData(nameof(MeteringPointType.OtherConsumption))]
         [InlineData(nameof(MeteringPointType.OtherProduction))]
         [InlineData(nameof(MeteringPointType.OwnProduction))]
