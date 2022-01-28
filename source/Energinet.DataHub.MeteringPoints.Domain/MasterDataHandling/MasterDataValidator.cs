@@ -15,10 +15,24 @@
 using System;
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.ConsumptionFromGrid;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.ElectricalHeating;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exchange;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.ExchangeReactiveEnergy;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.GridLossCorrection;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetConsumption;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetFromGrid;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetProduction;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetToGrid;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.OtherConsumption;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.OtherProduction;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.OwnProduction;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.SupplyToGrid;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.SurplusProduction;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.TotalConsumption;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.VEProduction;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.WholesaleServices;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
