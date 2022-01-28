@@ -28,7 +28,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     public class SpecialMeteringPointValidationTests : TestBase
     {
         [Theory]
-        [InlineData(nameof(MeteringPointType.ElectricalHeating))]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
         [InlineData(nameof(MeteringPointType.GridLossCorrection))]
         [InlineData(nameof(MeteringPointType.NetFromGrid))]
@@ -45,7 +44,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Theory]
-        [InlineData(nameof(MeteringPointType.ElectricalHeating))]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
         [InlineData(nameof(MeteringPointType.GridLossCorrection))]
         [InlineData(nameof(MeteringPointType.NetFromGrid))]
@@ -62,7 +60,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Theory]
-        [InlineData(nameof(MeteringPointType.ElectricalHeating))]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
         [InlineData(nameof(MeteringPointType.GridLossCorrection))]
         [InlineData(nameof(MeteringPointType.NetFromGrid))]
@@ -79,7 +76,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Theory]
-        [InlineData(nameof(MeteringPointType.ElectricalHeating))]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
         [InlineData(nameof(MeteringPointType.GridLossCorrection))]
         [InlineData(nameof(MeteringPointType.NetFromGrid))]
@@ -96,7 +92,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Theory]
-        [InlineData(nameof(MeteringPointType.ElectricalHeating))]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
         [InlineData(nameof(MeteringPointType.GridLossCorrection))]
         [InlineData(nameof(MeteringPointType.NetFromGrid))]
@@ -114,7 +109,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Theory]
-        [InlineData(nameof(MeteringPointType.ElectricalHeating))]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
         [InlineData(nameof(MeteringPointType.GridLossCorrection))]
         [InlineData(nameof(MeteringPointType.NetFromGrid))]
@@ -132,10 +126,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Theory]
-        [InlineData(nameof(MeteringPointType.ElectricalHeating), nameof(ReadingOccurrence.Hourly), false)]
-        [InlineData(nameof(MeteringPointType.ElectricalHeating), nameof(ReadingOccurrence.Quarterly), false)]
-        [InlineData(nameof(MeteringPointType.ElectricalHeating), nameof(ReadingOccurrence.Yearly), true)]
-
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid), nameof(ReadingOccurrence.Hourly), false)]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid), nameof(ReadingOccurrence.Quarterly), false)]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid), nameof(ReadingOccurrence.Yearly), true)]

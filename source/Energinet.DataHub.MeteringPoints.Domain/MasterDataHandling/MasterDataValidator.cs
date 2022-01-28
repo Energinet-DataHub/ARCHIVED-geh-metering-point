@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.ElectricalHeating;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exchange;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.ExchangeReactiveEnergy;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetConsumption;
@@ -53,7 +54,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             },
             {
                 MeteringPointType.ElectricalHeating.Name,
-                new SpecialMeteringPointValidator()
+                new ElectricalHeatingValidator()
             },
             {
                 MeteringPointType.InternalUse.Name,
