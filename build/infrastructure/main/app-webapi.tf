@@ -34,7 +34,7 @@ resource "azurerm_app_service" "webapi" {
   connection_string {
     name  = "METERINGPOINT_DB_CONNECTION_STRING"
     type  = "SQLServer"
-    value = local.METERING_POINT_CONNECTION_STRING
+    value = local.MS_METERING_POINT_CONNECTION_STRING
   }
 
   tags              = azurerm_resource_group.this.tags
