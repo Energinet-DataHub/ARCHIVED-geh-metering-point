@@ -35,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Client
             _webApiFactory = webApiFactory;
         }
 
-        [Fact]
+        [Fact(Skip = "Manual test until possible to acquire token from authorization flow")]
         public async Task Get_metering_point_by_gsrn_should_not_be_null()
         {
             // Arrange
@@ -49,7 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Client
             response?.MeteringPointId.Should().Be("e4e88496-1bfd-456d-afcc-3aa9ddd4ef72");
         }
 
-        [Fact]
+        [Fact(Skip = "Manual test until possible to acquire token from authorization flow")]
         public async Task Get_metering_point_when_not_found_should_be_null()
         {
             // Arrange
@@ -62,7 +62,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Client
             response.Should().BeNull();
         }
 
-        [Fact]
+        [Fact(Skip = "Manual test until possible to acquire token from authorization flow")]
         public async Task Get_metering_point_without_valid_token_should_throw()
         {
             // Arrange
