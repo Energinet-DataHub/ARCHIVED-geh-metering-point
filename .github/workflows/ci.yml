@@ -51,7 +51,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@3.0.2
     with:
       CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion/Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.csproj'
-      DOTNET_VERSION: '5.0.202'      
+      DOTNET_VERSION: '5.0.404'      
       ARTIFACT_NAME: ingestion
 
   outbox_ci:
@@ -59,7 +59,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@3.0.2
     with:
       CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.Outbox/Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.csproj'
-      DOTNET_VERSION: '5.0.202'
+      DOTNET_VERSION: '5.0.404'
       ARTIFACT_NAME: outbox
 
   processing_ci:
@@ -67,7 +67,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@3.0.2
     with:
       CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.Processing/Energinet.DataHub.MeteringPoints.EntryPoints.Processing.csproj'
-      DOTNET_VERSION: '5.0.202'
+      DOTNET_VERSION: '5.0.404'
       ARTIFACT_NAME: processing
 
   localmessagehub_ci:
@@ -75,7 +75,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@3.0.2
     with:
       CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub/Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub.csproj'
-      DOTNET_VERSION: '5.0.202'
+      DOTNET_VERSION: '5.0.404'
       ARTIFACT_NAME: localmessagehub
 
   internalcommanddispatcher_ci:
@@ -83,7 +83,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@3.0.2
     with:
       CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher/Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher.csproj'
-      DOTNET_VERSION: '5.0.202'
+      DOTNET_VERSION: '5.0.404'
       ARTIFACT_NAME: internalcommanddispatcher
 
   webapi_ci:
@@ -91,7 +91,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-webapi-artifact.yml@3.0.2
     with:
       CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.WebApi/Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.csproj'
-      DOTNET_VERSION: '5.0.202'
+      DOTNET_VERSION: '5.0.404'
       ARTIFACT_NAME: webapi
 
   database_migration_ci:
@@ -99,7 +99,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@3.0.2
     with:
       CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp/Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.csproj'
-      DOTNET_VERSION: '5.0.202'
+      DOTNET_VERSION: '5.0.404'
       ARTIFACT_NAME: databasemigration
 
   create_prerelease:
