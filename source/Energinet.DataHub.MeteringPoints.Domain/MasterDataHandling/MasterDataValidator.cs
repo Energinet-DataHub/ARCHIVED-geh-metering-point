@@ -24,6 +24,8 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetConsumption;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetFromGrid;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetProduction;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetToGrid;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.OtherConsumption;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.OtherProduction;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.OwnProduction;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.SupplyToGrid;

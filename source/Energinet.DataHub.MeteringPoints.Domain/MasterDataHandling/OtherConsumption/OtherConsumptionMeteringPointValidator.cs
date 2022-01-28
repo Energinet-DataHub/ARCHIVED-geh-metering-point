@@ -16,11 +16,10 @@ using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using StreetNameIsRequiredRule = Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules.StreetNameIsRequiredRule;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.OtherProduction
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.OtherConsumption
 {
-    internal class OtherProductionValidator : IMasterDataValidatorStrategy
+    internal class OtherConsumptionMeteringPointValidator : IMasterDataValidatorStrategy
     {
         public BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
@@ -30,6 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.OtherProduc
                 new MeterReadingOccurrenceRule(masterData.ReadingOccurrence),
                 new ProductTypeMustBeEnergyActiveRule(masterData.ProductType),
                 new UnitTypeMustBeKwh(masterData.UnitType),
+                new MeteringMethodMustBePhysicalOrVirtualRule(masterData.MeteringConfiguration.Method),
             });
         }
 
