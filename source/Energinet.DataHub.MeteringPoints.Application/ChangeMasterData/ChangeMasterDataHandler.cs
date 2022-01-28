@@ -22,6 +22,7 @@ using Energinet.DataHub.MeteringPoints.Application.Common.ChildMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.Policies;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -88,6 +89,18 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
             if (validationResult.Success != true)
             {
                 return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
+            }
+
+            if (targetMeteringPoint.MeteringPointType == MeteringPointType.ExchangeReactiveEnergy && targetMeteringPoint.ParentMeteringPointId is not null)
+            {
+                var parent = await _meteringPointRepository.GetByIdAsync(targetMeteringPoint.ParentMeteringPointId).ConfigureAwait(false);
+                if (parent != null)
+                {
+                    if (parent.MasterData.ReadingOccurrence.Equals(updatedMasterData.ReadingOccurrence) == false)
+                    {
+                        return BusinessProcessResult.Fail(request.TransactionId, new List<ValidationError>() { new ReadingPeriodicityOfChildDoesNotMatchParent() });
+                    }
+                }
             }
 
             targetMeteringPoint.UpdateMasterData(updatedMasterData, GetMasterValidator());

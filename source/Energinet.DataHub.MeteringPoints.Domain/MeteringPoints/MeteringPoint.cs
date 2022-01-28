@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exceptions;
@@ -31,7 +30,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
     {
         private readonly ExchangeGridAreas? _exchangeGridAreas;
         private MasterData _masterData;
-        private MeteringPointId? _parentMeteringPoint;
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind Address in main constructor
         private MeteringPoint() { }
@@ -77,6 +75,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public MeteringPointType MeteringPointType { get; }
 
         public MasterData MasterData => _masterData;
+
+        public MeteringPointId? ParentMeteringPointId { get; private set; }
 
         internal GridAreaLinkId GridAreaLinkId { get; }
 
@@ -142,7 +142,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             var rules = new Collection<IBusinessRule>
             {
                 new MeterMustBePhysicalRule(MeteringPointType, _masterData.MeteringConfiguration),
-                new MustBeCoupledToParentRule(MeteringPointType, _parentMeteringPoint),
+                new MustBeCoupledToParentRule(MeteringPointType, ParentMeteringPointId),
                 new MeteringPointMustHavePhysicalStateNewRule(GsrnNumber, MeteringPointType, ConnectionState.PhysicalState),
                 new MustHaveEnergySupplierRule(this, connectionDetails),
             };
@@ -195,16 +195,16 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             if (parentId is not null)
             {
-                _parentMeteringPoint = parentId;
+                ParentMeteringPointId = parentId;
                 AddDomainEvent(new CoupledToParent(Id.Value, parentId.Value));
             }
         }
 
         internal void RemoveParent()
         {
-            if (_parentMeteringPoint is null) return;
-            AddDomainEvent(new DecoupledFromParent(Id.Value, _parentMeteringPoint.Value));
-            _parentMeteringPoint = null;
+            if (ParentMeteringPointId is null) return;
+            AddDomainEvent(new DecoupledFromParent(Id.Value, ParentMeteringPointId.Value));
+            ParentMeteringPointId = null;
         }
 
         private bool IsClosedDown()
