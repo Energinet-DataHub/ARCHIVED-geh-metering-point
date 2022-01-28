@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.XmlConversion.XmlConverter.Abstractions;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
