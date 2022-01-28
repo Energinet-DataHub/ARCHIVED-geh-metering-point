@@ -45,7 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure
             {
                 var result = await _connectionFactory
                     .GetOpenConnection()
-                    .QuerySingleAsync<Actor>(sql, new { ActorId = actorId.ToString().ToUpperInvariant() })
+                    .QuerySingleAsync<Actor>(sql, new { ActorId = actorId })
                     .ConfigureAwait(false);
 
                 return result;
