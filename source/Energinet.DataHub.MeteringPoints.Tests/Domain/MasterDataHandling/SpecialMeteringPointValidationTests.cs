@@ -29,7 +29,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     {
         [Theory]
         [InlineData(nameof(MeteringPointType.ElectricalHeating))]
-        [InlineData(nameof(MeteringPointType.OtherProduction))]
         [InlineData(nameof(MeteringPointType.OwnProduction))]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
         [InlineData(nameof(MeteringPointType.GridLossCorrection))]
@@ -48,7 +47,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         [Theory]
         [InlineData(nameof(MeteringPointType.ElectricalHeating))]
-        [InlineData(nameof(MeteringPointType.OtherProduction))]
         [InlineData(nameof(MeteringPointType.OwnProduction))]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
         [InlineData(nameof(MeteringPointType.GridLossCorrection))]
@@ -67,7 +65,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         [Theory]
         [InlineData(nameof(MeteringPointType.ElectricalHeating))]
-        [InlineData(nameof(MeteringPointType.OtherProduction))]
         [InlineData(nameof(MeteringPointType.OwnProduction))]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
         [InlineData(nameof(MeteringPointType.GridLossCorrection))]
@@ -86,7 +83,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         [Theory]
         [InlineData(nameof(MeteringPointType.ElectricalHeating))]
-        [InlineData(nameof(MeteringPointType.OtherProduction))]
         [InlineData(nameof(MeteringPointType.OwnProduction))]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
         [InlineData(nameof(MeteringPointType.GridLossCorrection))]
@@ -105,7 +101,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         [Theory]
         [InlineData(nameof(MeteringPointType.ElectricalHeating))]
-        [InlineData(nameof(MeteringPointType.OtherProduction))]
         [InlineData(nameof(MeteringPointType.OwnProduction))]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
         [InlineData(nameof(MeteringPointType.GridLossCorrection))]
@@ -125,7 +120,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         [Theory]
         [InlineData(nameof(MeteringPointType.ElectricalHeating))]
-        [InlineData(nameof(MeteringPointType.OtherProduction))]
         [InlineData(nameof(MeteringPointType.OwnProduction))]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
         [InlineData(nameof(MeteringPointType.GridLossCorrection))]
@@ -147,22 +141,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [InlineData(nameof(MeteringPointType.ElectricalHeating), nameof(ReadingOccurrence.Hourly), false)]
         [InlineData(nameof(MeteringPointType.ElectricalHeating), nameof(ReadingOccurrence.Quarterly), false)]
         [InlineData(nameof(MeteringPointType.ElectricalHeating), nameof(ReadingOccurrence.Yearly), true)]
-
-        [InlineData(nameof(MeteringPointType.NetConsumption), nameof(ReadingOccurrence.Hourly), false)]
-        [InlineData(nameof(MeteringPointType.NetConsumption), nameof(ReadingOccurrence.Quarterly), false)]
-        [InlineData(nameof(MeteringPointType.NetConsumption), nameof(ReadingOccurrence.Yearly), true)]
-
-        [InlineData(nameof(MeteringPointType.NetProduction), nameof(ReadingOccurrence.Hourly), false)]
-        [InlineData(nameof(MeteringPointType.NetProduction), nameof(ReadingOccurrence.Quarterly), false)]
-        [InlineData(nameof(MeteringPointType.NetProduction), nameof(ReadingOccurrence.Yearly), true)]
-
-        [InlineData(nameof(MeteringPointType.OtherConsumption), nameof(ReadingOccurrence.Hourly), false)]
-        [InlineData(nameof(MeteringPointType.OtherConsumption), nameof(ReadingOccurrence.Quarterly), false)]
-        [InlineData(nameof(MeteringPointType.OtherConsumption), nameof(ReadingOccurrence.Yearly), true)]
-
-        [InlineData(nameof(MeteringPointType.OtherProduction), nameof(ReadingOccurrence.Hourly), false)]
-        [InlineData(nameof(MeteringPointType.OtherProduction), nameof(ReadingOccurrence.Quarterly), false)]
-        [InlineData(nameof(MeteringPointType.OtherProduction), nameof(ReadingOccurrence.Yearly), true)]
 
         [InlineData(nameof(MeteringPointType.OwnProduction), nameof(ReadingOccurrence.Hourly), false)]
         [InlineData(nameof(MeteringPointType.OwnProduction), nameof(ReadingOccurrence.Quarterly), false)]
