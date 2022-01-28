@@ -21,7 +21,7 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.TotalConsumption
 {
-    internal class Validator : IMasterDataValidatorStrategy
+    internal class TotalConsumptionValidator : IMasterDataValidatorStrategy
     {
         public BusinessRulesValidationResult CheckRules(MasterData masterData)
         {

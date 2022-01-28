@@ -18,6 +18,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exchange;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.ExchangeReactiveEnergy;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.TotalConsumption;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.VEProduction;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -74,7 +75,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             },
             {
                 MeteringPointType.TotalConsumption.Name,
-                new TotalConsumption.Validator()
+                new TotalConsumptionValidator()
             },
             {
                 MeteringPointType.WholesaleServices.Name,
