@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Authentication;
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.MeteringPoints.Application.Authorization;
 using Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperatorPolicies;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
