@@ -30,6 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetConsumpt
                 new MeterReadingOccurrenceRule(masterData.ReadingOccurrence),
                 new ProductTypeMustBeEnergyActiveRule(masterData.ProductType),
                 new UnitTypeMustBeKwh(masterData.UnitType),
+                new MeteringMethodMustBeCalculated(masterData),
             });
         }
 

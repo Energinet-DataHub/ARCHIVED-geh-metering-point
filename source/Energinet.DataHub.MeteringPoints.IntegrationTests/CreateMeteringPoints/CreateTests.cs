@@ -34,6 +34,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             : base(databaseFixture) { }
 
         [Fact]
+        public async Task Reject_if_metering_method_is_not_applicable_to_metering_point_type()
+        {
+            var request = CreateCommand()
+                with
+                {
+                    MeteringPointType = MeteringPointType.NetConsumption.Name,
+                    MeteringMethod = MeteringMethod.Virtual.Name,
+                    MeterNumber = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D37");
+        }
+
+        [Fact]
         public async Task Should_reject_when_grid_area_doesnt_exist()
         {
             var request = CreateCommand() with { MeteringGridArea = "foo" };
@@ -51,26 +67,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(request, CancellationToken.None).ConfigureAwait(false);
 
             AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.RejectCreateMeteringPoint);
-        }
-
-        [Fact(Skip = "Not implemented yet")]
-        public void CreateMeteringPoint_WithUnknownActor_ShouldGenerateRejectMessageInOutbox()
-        {
-        }
-
-        [Fact(Skip = "Not implemented yet")]
-        public void CreateMeteringPoint_WithUnknownGridArea_ShouldGenerateRejectMessageInOutbox()
-        {
-        }
-
-        [Fact(Skip = "Not implemented yet")]
-        public void CreateMeteringPoint_WithGridAreaNotBelongingToGridOperator_ShouldGenerateRejectMessageInOutbox()
-        {
-        }
-
-        [Fact(Skip = "Not implemented yet")]
-        public void CreateMeteringPoint_WhenEffectiveDateIsOutOfScope_ShouldGenerateRejectMessageInOutbox()
-        {
         }
 
         [Fact]
