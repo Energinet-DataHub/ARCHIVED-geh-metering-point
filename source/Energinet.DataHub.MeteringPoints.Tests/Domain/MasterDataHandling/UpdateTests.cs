@@ -996,6 +996,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         }
 
         [Fact]
+        public void Metering_method_cannot_be_removed()
+        {
+            var masterData = Builder()
+                .WithMeteringConfiguration(MeteringMethod.Virtual.Name, null)
+                .Build();
+
+            var validationResult = UpdateBuilder(masterData)
+                .WithMeteringConfiguration(string.Empty, "2")
+                .Validate();
+
+            AssertContainsValidationError<MeteringMethodIsRequired>(validationResult);
+        }
+
+        [Fact]
         public void Meter_number_input_value_must_be_Valid()
         {
             var masterData = Builder()
