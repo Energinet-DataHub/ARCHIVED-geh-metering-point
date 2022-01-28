@@ -40,93 +40,44 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 {
     public class MasterDataValidator
     {
-        private readonly Dictionary<string, IMasterDataValidatorStrategy> _validators = new Dictionary<string, IMasterDataValidatorStrategy>()
+        private readonly Dictionary<string, IMasterDataValidatorStrategy> _validators = new();
+
+        public MasterDataValidator(IEnumerable<IMasterDataValidatorStrategy> validators)
         {
+            if (validators == null) throw new ArgumentNullException(nameof(validators));
+            foreach (var masterDataValidatorStrategy in validators)
             {
-                MeteringPointType.Consumption.Name,
-                new ConsumptionMeteringPointValidator()
-            },
+                _validators.Add(masterDataValidatorStrategy.Target.Name, masterDataValidatorStrategy);
+            }
+        }
+
+        public MasterDataValidator()
+        {
+            _validators = new Dictionary<string, IMasterDataValidatorStrategy>()
             {
-                MeteringPointType.Production.Name,
-                new ProductionMeteringPointValidator()
-            },
-            {
-                MeteringPointType.Exchange.Name,
-                new ExchangeMeteringPointValidator()
-            },
-            {
-                MeteringPointType.Analysis.Name,
-                new AnalysisValidator()
-            },
-            {
-                MeteringPointType.ElectricalHeating.Name,
-                new ElectricalHeatingValidator()
-            },
-            {
-                MeteringPointType.InternalUse.Name,
-                new InternalUseValidator()
-            },
-            {
-                MeteringPointType.NetConsumption.Name,
-                new NetConsumptionPointValidator()
-            },
-            {
-                MeteringPointType.NetProduction.Name,
-                new NetProductionValidator()
-            },
-            {
-                MeteringPointType.OtherConsumption.Name,
-                new OtherConsumptionValidator()
-            },
-            {
-                MeteringPointType.OtherProduction.Name,
-                new OtherProductionValidator()
-            },
-            {
-                MeteringPointType.OwnProduction.Name,
-                new OwnProductionValidator()
-            },
-            {
-                MeteringPointType.TotalConsumption.Name,
-                new TotalConsumptionValidator()
-            },
-            {
-                MeteringPointType.WholesaleServices.Name,
-                new WholesaleServicesValidator()
-            },
-            {
-                MeteringPointType.ConsumptionFromGrid.Name,
-                new ConsumptionFromGridValidator()
-            },
-            {
-                MeteringPointType.ExchangeReactiveEnergy.Name,
-                new ExchangeReactiveEnergyValidator()
-            },
-            {
-                MeteringPointType.GridLossCorrection.Name,
-                new GridLossCorrectionValidator()
-            },
-            {
-                MeteringPointType.NetFromGrid.Name,
-                new NetFromGridValidator()
-            },
-            {
-                MeteringPointType.NetToGrid.Name,
-                new NetToGridValidator()
-            },
-            {
-                MeteringPointType.SupplyToGrid.Name,
-                new SupplyToGridValidator()
-            },
-            {
-                MeteringPointType.SurplusProductionGroup.Name,
-                new SurplusProductionGroupValidator()
-            },
-            {
-                MeteringPointType.VEProduction.Name,
-                new VEProductionMeteringPointValidator()
-            },
-        };
+                { MeteringPointType.Consumption.Name, new ConsumptionMeteringPointValidator() },
+                { MeteringPointType.Production.Name, new ProductionMeteringPointValidator() },
+                { MeteringPointType.Exchange.Name, new ExchangeMeteringPointValidator() },
+                { MeteringPointType.Analysis.Name, new AnalysisValidator() },
+                { MeteringPointType.ElectricalHeating.Name, new ElectricalHeatingValidator() },
+                { MeteringPointType.InternalUse.Name, new InternalUseValidator() },
+                { MeteringPointType.NetConsumption.Name, new NetConsumptionPointValidator() },
+                { MeteringPointType.NetProduction.Name, new NetProductionValidator() },
+                { MeteringPointType.OtherConsumption.Name, new OtherConsumptionValidator() },
+                { MeteringPointType.OtherProduction.Name, new OtherProductionValidator() },
+                { MeteringPointType.OwnProduction.Name, new OwnProductionValidator() },
+                { MeteringPointType.TotalConsumption.Name, new TotalConsumptionValidator() },
+                { MeteringPointType.WholesaleServices.Name, new WholesaleServicesValidator() },
+                { MeteringPointType.ConsumptionFromGrid.Name, new ConsumptionFromGridValidator() },
+                { MeteringPointType.ExchangeReactiveEnergy.Name, new ExchangeReactiveEnergyValidator() },
+                { MeteringPointType.GridLossCorrection.Name, new GridLossCorrectionValidator() },
+                { MeteringPointType.NetFromGrid.Name, new NetFromGridValidator() },
+                { MeteringPointType.NetToGrid.Name, new NetToGridValidator() },
+                { MeteringPointType.SupplyToGrid.Name, new SupplyToGridValidator() },
+                { MeteringPointType.SurplusProductionGroup.Name, new SurplusProductionGroupValidator() },
+                { MeteringPointType.VEProduction.Name, new VEProductionMeteringPointValidator() },
+            };
+        }
 
         public BusinessRulesValidationResult CheckRulesFor(MeteringPointType type, MasterData masterData)
         {
