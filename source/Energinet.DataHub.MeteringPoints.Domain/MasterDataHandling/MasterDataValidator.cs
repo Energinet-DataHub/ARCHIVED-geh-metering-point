@@ -20,6 +20,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exchange;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.ExchangeReactiveEnergy;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.GridLossCorrection;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetConsumption;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetFromGrid;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetProduction;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.OtherConsumption;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.OtherProduction;
@@ -103,7 +104,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             },
             {
                 MeteringPointType.NetFromGrid.Name,
-                new SpecialMeteringPointValidator()
+                new NetFromGridValidator()
             },
             {
                 MeteringPointType.NetToGrid.Name,
