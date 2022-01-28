@@ -17,7 +17,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.SurplusProduction
 {
     internal class SurplusProductionGroupValidator : IMasterDataValidatorStrategy
     {
