@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
+using NodaTime;
 using Xunit;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
@@ -35,9 +38,36 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         {
         }
 
-        [Fact(Skip = "Not implemented yet")]
+        [Fact]
         public void Should_succeed()
         {
+            var meteringPoint = CreateMeteringPoint();
+            var connectionDetails = ConnectNow();
+            SetStartOfSupplyPriorToEffectiveDate(meteringPoint, connectionDetails.EffectiveDate);
+
+            meteringPoint.Connect(connectionDetails);
+            meteringPoint.Disconnect(connectionDetails.EffectiveDate);
+
+            Assert.Equal(meteringPoint.ConnectionState.PhysicalState, PhysicalState.Disconnected);
+            Assert.Contains(meteringPoint.DomainEvents, evt => evt is MeteringPointDisconnected);
+        }
+
+        private static MeteringPoint CreateMeteringPoint()
+        {
+            return CreateMeteringPoint(MeteringPointType.Consumption);
+        }
+
+        private static void SetStartOfSupplyPriorToEffectiveDate(MeteringPoint meteringPoint, Instant effectiveDate)
+        {
+            var startOfSupply = effectiveDate.Minus(Duration.FromDays(1));
+            var energySupplierDetails = EnergySupplierDetails.Create(startOfSupply);
+            meteringPoint.SetEnergySupplierDetails(energySupplierDetails);
+        }
+
+        private ConnectionDetails ConnectNow()
+        {
+            var effectiveDate = _systemDateTimeProvider.Now();
+            return ConnectionDetails.Create(effectiveDate);
         }
     }
 }

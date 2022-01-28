@@ -24,6 +24,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
@@ -160,6 +161,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
             ConnectionState = ConnectionState.Connected(connectionDetails.EffectiveDate);
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
+        }
+
+        public void Disconnect(Instant effectiveDate)
+        {
+            ConnectionState = ConnectionState.Disconnected(effectiveDate);
+            AddDomainEvent(new MeteringPointDisconnected(Id.Value, GsrnNumber.Value, effectiveDate));
         }
 
         public BusinessRulesValidationResult CanUpdateMasterData(MasterData updatedMasterData, MasterDataValidator validator)
