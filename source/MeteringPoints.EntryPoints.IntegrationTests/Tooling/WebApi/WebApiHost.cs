@@ -35,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Tooling.
             AuthorizationConfiguration = new AuthorizationConfiguration();
 
             Environment.SetEnvironmentVariable("B2C_TENANT_ID", AuthorizationConfiguration.B2cTenantId);
-            Environment.SetEnvironmentVariable("BACKEND_SERVICE_APP_ID", AuthorizationConfiguration.BackendAppId);
+            Environment.SetEnvironmentVariable("FRONTEND_SERVICE_APP_ID", "d91c10bb-1441-4ae5-9bf9-e6845567d018");
         }
 
         public AuthorizationConfiguration AuthorizationConfiguration { get; }

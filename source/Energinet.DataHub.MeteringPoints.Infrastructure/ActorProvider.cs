@@ -15,7 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using Dapper;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Microsoft.Extensions.Logging;
 
@@ -45,7 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure
             {
                 var result = await _connectionFactory
                     .GetOpenConnection()
-                    .QuerySingleAsync<Actor>(sql, new { ActorId = actorId })
+                    .QuerySingleAsync<Actor>(sql, new { ActorId = actorId.ToString().ToUpperInvariant() })
                     .ConfigureAwait(false);
 
                 return result;
