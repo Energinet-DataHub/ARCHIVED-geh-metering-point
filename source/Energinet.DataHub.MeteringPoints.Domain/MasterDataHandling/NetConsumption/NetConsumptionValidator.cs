@@ -22,6 +22,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetConsumpt
 {
     internal class NetConsumptionPointValidator : IMasterDataValidatorStrategy
     {
+        public MeteringPointType Target => MeteringPointType.NetConsumption;
+
         public BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
             return new BusinessRulesValidationResult(new List<IBusinessRule>()

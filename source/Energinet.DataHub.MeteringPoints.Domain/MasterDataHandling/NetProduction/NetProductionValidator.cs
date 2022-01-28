@@ -22,6 +22,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetProducti
 {
     internal class NetProductionValidator : IMasterDataValidatorStrategy
     {
+        public MeteringPointType Target => MeteringPointType.NetProduction;
+
         public BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
             return new BusinessRulesValidationResult(new List<IBusinessRule>()

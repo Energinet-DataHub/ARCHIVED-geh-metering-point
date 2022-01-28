@@ -22,6 +22,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exchange
 {
     internal class ExchangeMeteringPointValidator : IMasterDataValidatorStrategy
     {
+        public MeteringPointType Target => MeteringPointType.Exchange;
+
         public BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
             return new BusinessRulesValidationResult(new List<IBusinessRule>()
