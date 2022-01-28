@@ -29,7 +29,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     {
         [Theory]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
-        [InlineData(nameof(MeteringPointType.GridLossCorrection))]
         [InlineData(nameof(MeteringPointType.NetFromGrid))]
         [InlineData(nameof(MeteringPointType.NetToGrid))]
         [InlineData(nameof(MeteringPointType.SupplyToGrid))]
@@ -45,7 +44,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         [Theory]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
-        [InlineData(nameof(MeteringPointType.GridLossCorrection))]
         [InlineData(nameof(MeteringPointType.NetFromGrid))]
         [InlineData(nameof(MeteringPointType.NetToGrid))]
         [InlineData(nameof(MeteringPointType.SupplyToGrid))]
@@ -61,7 +59,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         [Theory]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
-        [InlineData(nameof(MeteringPointType.GridLossCorrection))]
         [InlineData(nameof(MeteringPointType.NetFromGrid))]
         [InlineData(nameof(MeteringPointType.NetToGrid))]
         [InlineData(nameof(MeteringPointType.SupplyToGrid))]
@@ -77,7 +74,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         [Theory]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
-        [InlineData(nameof(MeteringPointType.GridLossCorrection))]
         [InlineData(nameof(MeteringPointType.NetFromGrid))]
         [InlineData(nameof(MeteringPointType.NetToGrid))]
         [InlineData(nameof(MeteringPointType.SupplyToGrid))]
@@ -93,7 +89,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         [Theory]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
-        [InlineData(nameof(MeteringPointType.GridLossCorrection))]
         [InlineData(nameof(MeteringPointType.NetFromGrid))]
         [InlineData(nameof(MeteringPointType.NetToGrid))]
         [InlineData(nameof(MeteringPointType.SupplyToGrid))]
@@ -110,7 +105,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         [Theory]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
-        [InlineData(nameof(MeteringPointType.GridLossCorrection))]
         [InlineData(nameof(MeteringPointType.NetFromGrid))]
         [InlineData(nameof(MeteringPointType.NetToGrid))]
         [InlineData(nameof(MeteringPointType.SupplyToGrid))]
@@ -129,10 +123,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid), nameof(ReadingOccurrence.Hourly), false)]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid), nameof(ReadingOccurrence.Quarterly), false)]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid), nameof(ReadingOccurrence.Yearly), true)]
-
-        [InlineData(nameof(MeteringPointType.GridLossCorrection), nameof(ReadingOccurrence.Hourly), false)]
-        [InlineData(nameof(MeteringPointType.GridLossCorrection), nameof(ReadingOccurrence.Quarterly), false)]
-        [InlineData(nameof(MeteringPointType.GridLossCorrection), nameof(ReadingOccurrence.Yearly), true)]
 
         [InlineData(nameof(MeteringPointType.NetFromGrid), nameof(ReadingOccurrence.Hourly), false)]
         [InlineData(nameof(MeteringPointType.NetFromGrid), nameof(ReadingOccurrence.Quarterly), false)]

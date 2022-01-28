@@ -18,6 +18,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.ElectricalHeating;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exchange;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.ExchangeReactiveEnergy;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.GridLossCorrection;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetConsumption;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetProduction;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.OtherConsumption;
@@ -98,7 +99,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             },
             {
                 MeteringPointType.GridLossCorrection.Name,
-                new SpecialMeteringPointValidator()
+                new GridLossCorrectionValidator()
             },
             {
                 MeteringPointType.NetFromGrid.Name,
