@@ -13,21 +13,27 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Net.Http;
+using Microsoft.AspNetCore.Http;
 
 namespace Energinet.DataHub.MeteringPoints.Client
 {
     public class MeteringPointClientFactory
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public MeteringPointClientFactory(IHttpClientFactory httpClientFactory)
+        public MeteringPointClientFactory(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor)
         {
             _httpClientFactory = httpClientFactory;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public static MeteringPointClient CreateClient(HttpClient httpClient)
+        public MeteringPointClient CreateClient()
         {
+            var httpClient = _httpClientFactory.CreateClient();
+            SetAuthorizationHeader(httpClient);
             return new MeteringPointClient(httpClient);
         }
 
@@ -35,7 +41,22 @@ namespace Energinet.DataHub.MeteringPoints.Client
         {
             var httpClient = _httpClientFactory.CreateClient();
             httpClient.BaseAddress = baseUrl;
+            SetAuthorizationHeader(httpClient);
             return new MeteringPointClient(httpClient);
+        }
+
+        private string GetAuthorizationHeaderValue()
+        {
+            return _httpContextAccessor.HttpContext.Request.Headers
+                .Where(x => x.Key.Equals("Authorization", StringComparison.OrdinalIgnoreCase))
+                .Select(x => x.Value.ToString())
+                .Single();
+        }
+
+        private void SetAuthorizationHeader(HttpClient httpClient)
+        {
+            var authHeaderValue = GetAuthorizationHeaderValue();
+            httpClient.DefaultRequestHeaders.Add("Authorization", authHeaderValue);
         }
     }
 }
