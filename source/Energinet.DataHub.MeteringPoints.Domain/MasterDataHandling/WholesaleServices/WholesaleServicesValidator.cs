@@ -16,35 +16,26 @@ using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using StreetNameIsRequiredRule = Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules.StreetNameIsRequiredRule;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.WholesaleServices
 {
-    internal class SurplusProductionGroupValidator : IMasterDataValidatorStrategy
+    internal class WholesaleServicesValidator : IMasterDataValidatorStrategy
     {
         public BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
-            var rules = GeneralRules(masterData);
-            return new BusinessRulesValidationResult(rules);
-        }
-
-        public BusinessRulesValidationResult CheckRules(MeteringPoint meteringPoint, MasterData updatedMasterData)
-        {
-            var rules = GeneralRules(updatedMasterData);
-
-            rules.Add(new MeteringMethodMustRemainCalculatedRule(meteringPoint, updatedMasterData));
-
-            return new BusinessRulesValidationResult(rules);
-        }
-
-        private static List<IBusinessRule> GeneralRules(MasterData masterData)
-        {
-            return new List<IBusinessRule>()
+            return new BusinessRulesValidationResult(new List<IBusinessRule>()
             {
                 new StreetNameIsRequiredRule(masterData.Address),
                 new MeterReadingOccurrenceRule(masterData.ReadingOccurrence),
                 new ProductTypeMustBeEnergyActiveRule(masterData.ProductType),
                 new UnitTypeMustBeKwh(masterData.UnitType),
-            };
+            });
+        }
+
+        public BusinessRulesValidationResult CheckRules(MeteringPoint meteringPoint, MasterData updatedMasterData)
+        {
+            return CheckRules(updatedMasterData);
         }
     }
 }
