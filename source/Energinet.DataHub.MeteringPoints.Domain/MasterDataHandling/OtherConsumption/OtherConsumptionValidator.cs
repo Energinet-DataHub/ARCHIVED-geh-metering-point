@@ -17,9 +17,9 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.OtherProduction
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.OtherConsumption
 {
-    internal class OtherProductionMeteringPointValidator : IMasterDataValidatorStrategy
+    internal class OtherConsumptionValidator : IMasterDataValidatorStrategy
     {
         public BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
