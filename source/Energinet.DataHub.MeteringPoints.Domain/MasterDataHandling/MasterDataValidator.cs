@@ -24,8 +24,6 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetConsumption;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetFromGrid;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetProduction;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetToGrid;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.OtherConsumption;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.OtherProduction;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.OwnProduction;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.SupplyToGrid;
@@ -75,11 +73,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             },
             {
                 MeteringPointType.OtherConsumption.Name,
-                new OtherConsumptionValidator()
+                new OtherConsumptionMeteringPointValidator()
             },
             {
                 MeteringPointType.OtherProduction.Name,
-                new OtherProductionValidator()
+                new OtherProductionMeteringPointValidator()
             },
             {
                 MeteringPointType.OwnProduction.Name,
@@ -119,7 +117,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             },
             {
                 MeteringPointType.SurplusProductionGroup.Name,
-                new SpecialMeteringPointValidator()
+                new SurplusProductionGroupValidator()
             },
             {
                 MeteringPointType.VEProduction.Name,
