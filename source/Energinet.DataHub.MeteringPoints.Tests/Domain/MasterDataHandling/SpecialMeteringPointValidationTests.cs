@@ -29,7 +29,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
     {
         [Theory]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
-        [InlineData(nameof(MeteringPointType.NetToGrid))]
         [InlineData(nameof(MeteringPointType.SupplyToGrid))]
         [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
         public void Production_obligation_is_ignored(string meteringPointType)
@@ -43,7 +42,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         [Theory]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
-        [InlineData(nameof(MeteringPointType.NetToGrid))]
         [InlineData(nameof(MeteringPointType.SupplyToGrid))]
         [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
         public void Unit_type_must_be_kwh(string meteringPointType)
@@ -57,7 +55,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         [Theory]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
-        [InlineData(nameof(MeteringPointType.NetToGrid))]
         [InlineData(nameof(MeteringPointType.SupplyToGrid))]
         [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
         public void Unit_type_valid(string meteringPointType)
@@ -71,7 +68,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         [Theory]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
-        [InlineData(nameof(MeteringPointType.NetToGrid))]
         [InlineData(nameof(MeteringPointType.SupplyToGrid))]
         [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
         public void Product_type_must_be_energy_active(string meteringPointType)
@@ -85,7 +81,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         [Theory]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
-        [InlineData(nameof(MeteringPointType.NetToGrid))]
         [InlineData(nameof(MeteringPointType.SupplyToGrid))]
         [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
         [InlineData(nameof(MeteringPointType.VEProduction))]
@@ -100,7 +95,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         [Theory]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid))]
-        [InlineData(nameof(MeteringPointType.NetToGrid))]
         [InlineData(nameof(MeteringPointType.SupplyToGrid))]
         [InlineData(nameof(MeteringPointType.SurplusProductionGroup))]
         [InlineData(nameof(MeteringPointType.VEProduction))]
@@ -117,10 +111,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid), nameof(ReadingOccurrence.Hourly), false)]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid), nameof(ReadingOccurrence.Quarterly), false)]
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid), nameof(ReadingOccurrence.Yearly), true)]
-
-        [InlineData(nameof(MeteringPointType.NetToGrid), nameof(ReadingOccurrence.Hourly), false)]
-        [InlineData(nameof(MeteringPointType.NetToGrid), nameof(ReadingOccurrence.Quarterly), false)]
-        [InlineData(nameof(MeteringPointType.NetToGrid), nameof(ReadingOccurrence.Yearly), true)]
 
         [InlineData(nameof(MeteringPointType.SupplyToGrid), nameof(ReadingOccurrence.Hourly), false)]
         [InlineData(nameof(MeteringPointType.SupplyToGrid), nameof(ReadingOccurrence.Quarterly), false)]
