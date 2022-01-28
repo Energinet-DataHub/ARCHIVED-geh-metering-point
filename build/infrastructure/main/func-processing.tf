@@ -32,7 +32,7 @@ module "func_processing" {
     # Endregion: Default Values
     METERINGPOINT_QUEUE_URL                 = "${module.sb_meteringpoint.name}.servicebus.windows.net:9093"
     METERINGPOINT_QUEUE_CONNECTION_STRING   = module.sb_meteringpoint.primary_connection_strings["listen"]
-    METERINGPOINT_DB_CONNECTION_STRING      = local.METERING_POINT_CONNECTION_STRING
+    METERINGPOINT_DB_CONNECTION_STRING      = local.MS_METERING_POINT_CONNECTION_STRING
     METERINGPOINT_QUEUE_TOPIC_NAME          = module.sbq_meteringpoint.name
     INTEGRATION_EVENT_QUEUE                 = data.azurerm_key_vault_secret.metering_point_forwarded_name.value
     INTEGRATION_EVENT_QUEUE_CONNECTION      = data.azurerm_key_vault_secret.sb_domain_relay_listen_connection_string.value
