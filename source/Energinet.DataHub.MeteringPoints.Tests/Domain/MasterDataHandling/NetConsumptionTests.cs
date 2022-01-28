@@ -15,6 +15,7 @@
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetConsumption;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
@@ -101,8 +102,19 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             AssertError<InvalidMeterReadingOccurrenceRuleError>(CheckRules(masterData), expectError);
         }
 
+        [Fact]
+        public void Metering_method_must_be_calculated()
+        {
+            var masterData = Builder()
+                .WithMeteringConfiguration(MeteringMethod.Physical.Name, "1")
+                .Build();
+
+            AssertError<MeteringMethodIsNotApplicable>(CheckRules(masterData));
+        }
+
         private static IMasterDataBuilder Builder() =>
             new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.NetConsumption))
+                .WithMeteringConfiguration(MeteringMethod.Calculated.Name, null)
                 .WithReadingPeriodicity(ReadingOccurrence.Quarterly.Name)
                 .WithAddress(streetName: "Test street", countryCode: CountryCode.DK);
 
