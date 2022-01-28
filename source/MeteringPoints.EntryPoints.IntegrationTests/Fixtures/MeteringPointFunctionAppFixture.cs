@@ -227,6 +227,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             // => Database
             await DatabaseManager.CreateDatabaseAsync().ConfigureAwait(false);
 
+            ingestionHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
             processingHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
             outboxHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
             localMessageHubHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
