@@ -86,7 +86,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return _validators[type.Name].CheckRules(masterData);
         }
 
-        public BusinessRulesValidationResult CheckRulesFor(MeteringPoint meteringPoint, MasterData masterData)
+        internal BusinessRulesValidationResult CheckRulesFor(MeteringPoint meteringPoint, MasterData masterData)
         {
             if (meteringPoint is null) throw new ArgumentNullException(nameof(meteringPoint));
             if (masterData == null) throw new ArgumentNullException(nameof(masterData));
