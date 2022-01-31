@@ -27,12 +27,15 @@ resource "azurerm_app_service" "webapi" {
 
   app_settings = {
     "APPINSIGHTS_INSTRUMENTATIONKEY" = "${data.azurerm_key_vault_secret.appi_instrumentation_key.value}"
+    "B2C_TENANT_ID" = "${data.azurerm_key_vault_secret.b2c_tenant_id.value}"
+    "FRONTEND_SERVICE_APP_ID" = "d91c10bb-1441-4ae5-9bf9-e6845567d018"
+    # "FRONTEND_SERVICE_APP_ID" = "${data.azurerm_key_vault_secret.frontend_service_app_id.value}"
   }
 
   connection_string {
     name  = "METERINGPOINT_DB_CONNECTION_STRING"
     type  = "SQLServer"
-    value = local.METERING_POINT_CONNECTION_STRING
+    value = local.MS_METERING_POINT_CONNECTION_STRING
   }
 
   tags              = azurerm_resource_group.this.tags

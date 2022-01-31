@@ -16,8 +16,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.ServiceBus;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
+using Energinet.DataHub.Core.App.Common.Abstractions.ServiceBus;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 

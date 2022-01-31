@@ -117,6 +117,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             internalCommandDispatcherHostSettings.Port = ++port;
 
             ingestionHostSettings.ProcessEnvironmentVariables.Add("INTERNAL_SERVICEBUS_RETRY_COUNT", "3");
+            ingestionHostSettings.ProcessEnvironmentVariables.Add("B2C_TENANT_ID", AuthorizationConfiguration.B2cTenantId);
+            ingestionHostSettings.ProcessEnvironmentVariables.Add("BACKEND_SERVICE_APP_ID", AuthorizationConfiguration.BackendAppId);
 
             // Use "0 0 8 1 1 *", to do: 8:00 1. January ~ we must set this setting, but we do not want the trigger to run automatically, we want to trigger it manually
             outboxHostSettings.ProcessEnvironmentVariables.Add("ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER", "*/1 * * * * *");
@@ -225,6 +227,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             // => Database
             await DatabaseManager.CreateDatabaseAsync().ConfigureAwait(false);
 
+            ingestionHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
             processingHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
             outboxHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
             localMessageHubHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);

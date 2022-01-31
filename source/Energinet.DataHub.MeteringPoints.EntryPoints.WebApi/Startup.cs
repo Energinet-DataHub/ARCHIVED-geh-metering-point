@@ -14,6 +14,8 @@
 
 using System;
 using System.Text.Json.Serialization;
+using Energinet.DataHub.Core.App.WebApp.Middleware;
+using Energinet.DataHub.Core.App.WebApp.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
@@ -45,6 +47,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -78,11 +81,23 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             services.AddSwaggerGen(config =>
             {
                 config.SupportNonNullableReferenceTypes();
-                config.SwaggerDoc("v1", new OpenApiInfo
-                    {
-                        Title = "Energinet.DataHub.MeteringPoints.EntryPoints.WebApi",
-                        Version = "v1",
-                    });
+                config.SwaggerDoc("v1", new OpenApiInfo { Title = "Energinet.DataHub.MeteringPoints.EntryPoints.WebApi", Version = "v1", });
+
+                var securitySchema = new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer", },
+                };
+
+                config.AddSecurityDefinition("Bearer", securitySchema);
+
+                var securityRequirement = new OpenApiSecurityRequirement { { securitySchema, new[] { "Bearer" } }, };
+
+                config.AddSecurityRequirement(securityRequirement);
             });
 
             var connectionString = Configuration.GetConnectionString("METERINGPOINT_DB_CONNECTION_STRING") ?? throw new InvalidOperationException("Metering point db connection string not found.");
@@ -99,9 +114,12 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
                     .AddControllerActivation();
                 options.AddLogging();
             });
+
+            services.AddTransient<IMiddlewareFactory>(_ => new SimpleInjectorMiddlewareFactory(_container));
+
             services.UseSimpleInjectorAspNetRequestScoping(_container);
 
-            services.AddApplicationInsightsTelemetry(Configuration.GetSection("Settings")["APPINSIGHTS_INSTRUMENTATIONKEY"]);
+            services.AddApplicationInsightsTelemetry(Configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
             _container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
             _container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
             _container.Register<IGridAreaRepository, GridAreaRepository>(Lifestyle.Scoped);
@@ -122,6 +140,14 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
             _container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
 
+            // var tenantId = Configuration["B2C_TENANT_ID"] ?? throw new InvalidOperationException(
+            //     "B2C tenant id not found.");
+            //
+            // var audience = Configuration["FRONTEND_SERVICE_APP_ID"] ?? throw new InvalidOperationException(
+            //     "Frontend service app id not found.");
+            // TODO: below must be applied trough environment variables
+            _container.AddJwtTokenSecurity($"https://devdatahubb2c.b2clogin.com/4a7411ea-ac71-4b63-9647-b8bd4c5a20e0/B2C_1_u001_signin/v2.0/.well-known/openid-configuration", "d91c10bb-1441-4ae5-9bf9-e6845567d018");
+            _container.AddUserContext<NullUserProvider>();
             Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
 
             // TODO: Probably not needed
@@ -155,6 +181,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseMiddleware<JwtTokenMiddleware>();
+            app.UseMiddleware<UserMiddleware>();
 
             app.UseAuthorization();
 

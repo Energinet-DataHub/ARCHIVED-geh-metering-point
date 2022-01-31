@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
@@ -27,8 +27,8 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GenericNotification;
 using NodaTime;
-using Actor = Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor.Actor;
-using IdentificationType = Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor.IdentificationType;
+using Actor = Energinet.DataHub.Core.App.Common.Abstractions.Actor.Actor;
+using IdentificationType = Energinet.DataHub.Core.App.Common.Abstractions.Actor.IdentificationType;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
 {

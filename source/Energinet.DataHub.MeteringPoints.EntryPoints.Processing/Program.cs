@@ -14,9 +14,9 @@
 
 using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.FunctionApp.Common;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
-using Energinet.DataHub.Core.FunctionApp.Common.Middleware;
+using Energinet.DataHub.Core.App.Common;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Common;

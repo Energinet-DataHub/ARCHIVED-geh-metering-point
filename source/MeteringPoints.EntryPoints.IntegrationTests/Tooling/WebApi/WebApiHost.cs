@@ -13,13 +13,15 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling.WebApi
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Tooling.WebApi
 {
     [Collection("IntegrationTest")]
-    public abstract class WebApiHost : IClassFixture<WebApiFactory>
+    public abstract class WebApiHost : IClassFixture<WebApiFactory>, IClassFixture<DatabaseFixture>
     {
         protected WebApiHost(DatabaseFixture databaseFixture)
         {
@@ -29,6 +31,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling.WebApi
             Environment.SetEnvironmentVariable("CONNECTIONSTRINGS:METERINGPOINT_DB_CONNECTION_STRING", databaseFixture.DatabaseManager.ConnectionString);
 
             Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
+
+            AuthorizationConfiguration = new AuthorizationConfiguration();
+
+            Environment.SetEnvironmentVariable("B2C_TENANT_ID", AuthorizationConfiguration.B2cTenantId);
+            Environment.SetEnvironmentVariable("FRONTEND_SERVICE_APP_ID", "d91c10bb-1441-4ae5-9bf9-e6845567d018");
         }
+
+        public AuthorizationConfiguration AuthorizationConfiguration { get; }
     }
 }

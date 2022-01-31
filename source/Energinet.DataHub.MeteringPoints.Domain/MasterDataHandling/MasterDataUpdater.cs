@@ -19,7 +19,6 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
@@ -96,6 +95,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 nameof(MasterData.MeteringConfiguration),
                 () =>
                 {
+                    if (method?.Length == 0)
+                    {
+                        return BusinessRulesValidationResult.Failure(new MeteringMethodIsRequired());
+                    }
+
                     if (method is not null)
                     {
                         if (EnumerationType.GetAll<MeteringMethod>()
