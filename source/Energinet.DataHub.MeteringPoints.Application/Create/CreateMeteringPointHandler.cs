@@ -38,20 +38,20 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
         private readonly IGridAreaRepository _gridAreaRepository;
         private readonly IMediator _mediator;
         private readonly CreateMeteringPointAuthorizer _authorizer;
-        private readonly CouplingHandler _couplingHandler;
+        private readonly ParentChildCouplingHandler _parentChildCouplingHandler;
 
         public CreateMeteringPointHandler(
             IMeteringPointRepository meteringPointRepository,
             IGridAreaRepository gridAreaRepository,
             IMediator mediator,
             CreateMeteringPointAuthorizer authorizer,
-            CouplingHandler couplingHandler)
+            ParentChildCouplingHandler parentChildCouplingHandler)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _gridAreaRepository = gridAreaRepository;
             _mediator = mediator;
             _authorizer = authorizer;
-            _couplingHandler = couplingHandler ?? throw new ArgumentNullException(nameof(couplingHandler));
+            _parentChildCouplingHandler = parentChildCouplingHandler ?? throw new ArgumentNullException(nameof(parentChildCouplingHandler));
         }
 
         public async Task<BusinessProcessResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
@@ -165,7 +165,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             if (string.IsNullOrEmpty(request.ParentRelatedMeteringPoint))
                 return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
 
-            return _couplingHandler.TryCoupleToParentAsync(meteringPoint, request.ParentRelatedMeteringPoint, request.TransactionId);
+            return _parentChildCouplingHandler.TryCoupleToParentAsync(meteringPoint, request.ParentRelatedMeteringPoint, request.TransactionId);
         }
 
         private async Task<BusinessProcessResult> CreateExchangeMeteringPointAsync(CreateMeteringPoint request, GridArea gridArea, MasterData masterData)

@@ -34,20 +34,20 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
         private readonly ChangeMasterDataSettings _settings;
         private readonly ChangeMeteringPointAuthorizer _authorizer;
-        private readonly CouplingHandler _couplingHandler;
+        private readonly ParentChildCouplingHandler _parentChildCouplingHandler;
 
         public ChangeMasterDataHandler(
             IMeteringPointRepository meteringPointRepository,
             ISystemDateTimeProvider systemDateTimeProvider,
             ChangeMasterDataSettings settings,
             ChangeMeteringPointAuthorizer authorizer,
-            CouplingHandler couplingHandler)
+            ParentChildCouplingHandler parentChildCouplingHandler)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
             _settings = settings;
             _authorizer = authorizer ?? throw new ArgumentNullException(nameof(authorizer));
-            _couplingHandler = couplingHandler;
+            _parentChildCouplingHandler = parentChildCouplingHandler;
         }
 
         public async Task<BusinessProcessResult> Handle(ChangeMasterDataRequest request, CancellationToken cancellationToken)
@@ -169,10 +169,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
 
             if (request.ParentRelatedMeteringPoint.Length == 0)
             {
-                return _couplingHandler.DecoupleFromParentAsync(meteringPoint, request.TransactionId);
+                return _parentChildCouplingHandler.DecoupleFromParentAsync(meteringPoint, request.TransactionId);
             }
 
-            return _couplingHandler.TryCoupleToParentAsync(meteringPoint, request.ParentRelatedMeteringPoint, request.TransactionId);
+            return _parentChildCouplingHandler.TryCoupleToParentAsync(meteringPoint, request.ParentRelatedMeteringPoint, request.TransactionId);
         }
     }
 }
