@@ -18,8 +18,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
-using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
+using Energinet.DataHub.Core.App.Common.Abstractions.Users;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
@@ -31,7 +30,6 @@ using AssetType = Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums.Ass
 using ConnectionState = Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums.ConnectionState;
 using ConnectionType = Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums.ConnectionType;
 using DisconnectionType = Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums.DisconnectionType;
-using MeteringMethod = Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums.MeteringMethod;
 using MeteringPointType = Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums.MeteringPointType;
 using NetSettlementGroup = Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums.NetSettlementGroup;
 using ReadingOccurrence = Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums.ReadingOccurrence;
@@ -43,10 +41,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
     public class MeteringPointByGsrnQueryHandler : IRequestHandler<MeteringPointByGsrnQuery, MeteringPointCimDto?>
     {
         private readonly IDbConnectionFactory _connectionFactory;
+        private readonly IUserContext _userContext;
 
-        public MeteringPointByGsrnQueryHandler(IDbConnectionFactory connectionFactory)
+        public MeteringPointByGsrnQueryHandler(IDbConnectionFactory connectionFactory, IUserContext userContext)
         {
             _connectionFactory = connectionFactory;
+            _userContext = userContext;
         }
 
         public async Task<MeteringPointCimDto?> Handle(MeteringPointByGsrnQuery request, CancellationToken cancellationToken)
@@ -61,7 +61,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 
             var meteringPointDto = await _connectionFactory
                 .GetOpenConnection()
-                .QuerySingleOrDefaultAsync<MeteringPointDto>(sql, new { request.GsrnNumber })
+                .QuerySingleOrDefaultAsync<MeteringPointDto>(sql, new { request.GsrnNumber, _userContext.CurrentUser.UserId })
                 .ConfigureAwait(false);
 
             if (meteringPointDto == null)
@@ -94,7 +94,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             var connectionType = ConvertNullableEnumerationTypeToEnum<ConnectionType, Domain.MasterDataHandling.Components.ConnectionType>(meteringPoint.ConnectionType);
             var disconnectionType = ConvertNullableEnumerationTypeToEnum<DisconnectionType, Domain.MasterDataHandling.Components.DisconnectionType>(meteringPoint.DisconnectionType);
             var readingOccurrence = ConvertEnumerationTypeToEnum<ReadingOccurrence, Domain.MasterDataHandling.Components.ReadingOccurrence>(meteringPoint.ReadingOccurrence);
-            var productId = ConvertEnumerationTypeToEnum<ProductId, Domain.MasterDataHandling.Components.ProductType>(meteringPoint.Product);
+            var productId = ConvertEnumerationTypeToEnum<ProductId, ProductType>(meteringPoint.Product);
 
             return new MeteringPointCimDto(
                 meteringPoint.MeteringPointId,
