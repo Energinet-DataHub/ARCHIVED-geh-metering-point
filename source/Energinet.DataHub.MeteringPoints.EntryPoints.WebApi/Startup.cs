@@ -14,10 +14,6 @@
 
 using System;
 using System.Text.Json.Serialization;
-using Energinet.DataHub.Core.App.Common.Abstractions.Identity;
-using Energinet.DataHub.Core.App.Common.Abstractions.Security;
-using Energinet.DataHub.Core.App.Common.Identity;
-using Energinet.DataHub.Core.App.Common.Security;
 using Energinet.DataHub.Core.App.WebApp.Middleware;
 using Energinet.DataHub.Core.App.WebApp.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Application.Common;
@@ -123,7 +119,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
 
             services.UseSimpleInjectorAspNetRequestScoping(_container);
 
-            services.AddApplicationInsightsTelemetry(Configuration.GetSection("Settings")["APPINSIGHTS_INSTRUMENTATIONKEY"]);
+            services.AddApplicationInsightsTelemetry(Configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
             _container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
             _container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
             _container.Register<IGridAreaRepository, GridAreaRepository>(Lifestyle.Scoped);
@@ -147,10 +143,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             var tenantId = Configuration["B2C_TENANT_ID"] ?? throw new InvalidOperationException(
                 "B2C tenant id not found.");
 
-            var audience = Configuration["BACKEND_SERVICE_APP_ID"] ?? throw new InvalidOperationException(
-                "Backend service app id not found.");
+            var audience = Configuration["FRONTEND_SERVICE_APP_ID"] ?? throw new InvalidOperationException(
+                "Frontend service app id not found.");
 
             _container.AddJwtTokenSecurity($"https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration", audience);
+            _container.AddUserContext<NullUserProvider>();
             Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
 
             // TODO: Probably not needed
@@ -186,6 +183,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             app.UseRouting();
 
             app.UseMiddleware<JwtTokenMiddleware>();
+            app.UseMiddleware<UserMiddleware>();
 
             app.UseAuthorization();
 
