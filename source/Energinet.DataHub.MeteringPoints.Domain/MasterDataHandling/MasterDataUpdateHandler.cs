@@ -39,7 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             var validationErrors = new List<ValidationError>();
 
             validationErrors.AddRange(targetMeteringPoint.CanUpdateMasterData(updatedMasterData, _validator).Errors);
-            validationErrors.AddRange((await EnsureChildValuesMatchParentValuesAsync(targetMeteringPoint, updatedMasterData).ConfigureAwait(false)).Errors);
+            validationErrors.AddRange((await EnsureMeterReadingPeriodicityOfChildMatchParentAsync(targetMeteringPoint, updatedMasterData).ConfigureAwait(false)).Errors);
 
             return new BusinessRulesValidationResult(validationErrors);
         }
@@ -50,19 +50,18 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             targetMeteringPoint.UpdateMasterData(updatedMasterData, _validator);
         }
 
-        private async Task<BusinessRulesValidationResult> EnsureChildValuesMatchParentValuesAsync(MeteringPoint targetMeteringPoint, MasterData updatedMasterData)
+        private async Task<BusinessRulesValidationResult> EnsureMeterReadingPeriodicityOfChildMatchParentAsync(MeteringPoint targetMeteringPoint, MasterData updatedMasterData)
         {
             var validationErrors = new List<ValidationError>();
-            if (targetMeteringPoint.MeteringPointType == MeteringPointType.ExchangeReactiveEnergy && targetMeteringPoint.ParentMeteringPointId is not null)
+            if (targetMeteringPoint.MeteringPointType != MeteringPointType.ExchangeReactiveEnergy ||
+                targetMeteringPoint.ParentMeteringPointId is null)
+                return new BusinessRulesValidationResult(validationErrors);
+
+            var parent = await _meteringPointRepository.GetByIdAsync(targetMeteringPoint.ParentMeteringPointId).ConfigureAwait(false);
+            if (parent == null) return new BusinessRulesValidationResult(validationErrors);
+            if (parent.MasterData.ReadingOccurrence.Equals(updatedMasterData.ReadingOccurrence) == false)
             {
-                var parent = await _meteringPointRepository.GetByIdAsync(targetMeteringPoint.ParentMeteringPointId).ConfigureAwait(false);
-                if (parent != null)
-                {
-                    if (parent.MasterData.ReadingOccurrence.Equals(updatedMasterData.ReadingOccurrence) == false)
-                    {
-                        validationErrors.Add(new ReadingPeriodicityOfChildDoesNotMatchParent());
-                    }
-                }
+                validationErrors.Add(new ReadingPeriodicityOfChildDoesNotMatchParent());
             }
 
             return new BusinessRulesValidationResult(validationErrors);
