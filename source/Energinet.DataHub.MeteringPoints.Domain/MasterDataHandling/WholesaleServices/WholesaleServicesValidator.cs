@@ -22,6 +22,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.WholesaleSe
 {
     internal class WholesaleServicesValidator : IMasterDataValidatorStrategy
     {
+        public MeteringPointType Target => MeteringPointType.WholesaleServices;
+
         public BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
             return new BusinessRulesValidationResult(new List<IBusinessRule>()

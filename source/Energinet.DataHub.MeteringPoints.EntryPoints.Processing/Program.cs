@@ -33,6 +33,7 @@ using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwners
 using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
@@ -185,6 +186,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<ParentChildCouplingHandler>(Lifestyle.Scoped);
 
             container.AddBusinessProcessAuthorizers();
+            container.AddMasterDataValidators(typeof(IMasterDataValidatorStrategy).Assembly);
 
             container.AddValidationErrorConversion(
                 validateRegistrations: false,

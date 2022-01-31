@@ -22,6 +22,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.SupplyToGri
 {
     internal class SupplyToGridValidator : IMasterDataValidatorStrategy
     {
+        public MeteringPointType Target => MeteringPointType.SupplyToGrid;
+
         public BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
             return new BusinessRulesValidationResult(new List<IBusinessRule>()

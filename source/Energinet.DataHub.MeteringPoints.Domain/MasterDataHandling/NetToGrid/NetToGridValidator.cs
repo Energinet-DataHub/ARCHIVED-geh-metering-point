@@ -22,6 +22,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetToGrid
 {
     internal class NetToGridValidator : IMasterDataValidatorStrategy
     {
+        public MeteringPointType Target => MeteringPointType.NetToGrid;
+
         public BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
             return new BusinessRulesValidationResult(new List<IBusinessRule>()

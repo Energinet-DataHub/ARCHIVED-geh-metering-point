@@ -23,6 +23,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.TotalConsum
 {
     internal class TotalConsumptionValidator : IMasterDataValidatorStrategy
     {
+        public MeteringPointType Target => MeteringPointType.TotalConsumption;
+
         public BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
             if (masterData == null) throw new ArgumentNullException(nameof(masterData));

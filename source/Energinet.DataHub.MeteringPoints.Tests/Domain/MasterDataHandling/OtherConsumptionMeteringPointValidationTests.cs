@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.OtherConsumption;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -32,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [Fact]
         public void Production_obligation_is_ignored()
         {
-            var masterData = BuilderFor(MeteringPointType.OtherConsumption.Name, "Virtual")
+            var masterData = Builder()
                 .WithProductionObligation(true)
                 .Build();
 
@@ -42,60 +42,61 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [Fact]
         public void Unit_type_must_be_kwh()
         {
-            var masterData = BuilderFor(MeteringPointType.OtherConsumption.Name, MeteringMethod.Virtual.Name)
+            var masterData = Builder()
                 .WithMeasurementUnitType(MeasurementUnitType.Ampere.Name)
                 .Build();
 
-            AssertError<UnitTypeIsNotValidForMeteringPointType>(CheckRules(masterData, From(MeteringPointType.OtherConsumption.Name)), true);
+            AssertError<UnitTypeIsNotValidForMeteringPointType>(CheckRules(masterData), true);
         }
 
         [Fact]
         public void Metering_method_must_be_physical_or_virtual()
         {
-            var masterData = BuilderFor(MeteringPointType.OtherProduction.Name, MeteringMethod.Calculated.Name)
+            var masterData = Builder()
+                .WithMeteringConfiguration(MeteringMethod.Calculated.Name, null)
                 .Build();
 
-            AssertError<MeteringMethodMustBePhysicalOrVirtualRuleError>(CheckRules(masterData, From(MeteringPointType.OtherProduction.Name)), true);
+            AssertError<MeteringMethodMustBePhysicalOrVirtualRuleError>(CheckRules(masterData), true);
         }
 
         [Fact]
         public void Unit_type_valid()
         {
-            var masterData = BuilderFor(MeteringPointType.OtherConsumption.Name, MeteringMethod.Virtual.Name)
+            var masterData = Builder()
                 .WithMeasurementUnitType(MeasurementUnitType.KWh.Name)
                 .Build();
 
-            AssertDoesNotContainValidationError<UnitTypeIsNotValidForMeteringPointType>(CheckRules(masterData, From(MeteringPointType.OtherConsumption.Name)));
+            AssertDoesNotContainValidationError<UnitTypeIsNotValidForMeteringPointType>(CheckRules(masterData));
         }
 
         [Fact]
         public void Product_type_must_be_energy_active()
         {
-            var masterData = BuilderFor(MeteringPointType.OtherConsumption.Name, MeteringMethod.Virtual.Name)
+            var masterData = Builder()
                 .WithProductType(ProductType.Tariff.Name)
                 .Build();
 
-            AssertError<InvalidProductType>(CheckRules(masterData, From(MeteringPointType.OtherConsumption.Name)), true);
+            AssertError<InvalidProductType>(CheckRules(masterData));
         }
 
         [Fact]
         public void Power_plant_should_not_be_required()
         {
-            var masterData = BuilderFor(MeteringPointType.OtherConsumption.Name, MeteringMethod.Virtual.Name)
+            var masterData = Builder()
                 .WithPowerPlant(null!)
                 .Build();
 
-            AssertDoesNotContainValidationError<PowerPlantIsRequired>(CheckRules(masterData, From(MeteringPointType.OtherConsumption.Name)));
+            AssertDoesNotContainValidationError<PowerPlantIsRequired>(CheckRules(masterData));
         }
 
         [Fact]
         public void Street_name_is_required()
         {
-            var masterData = BuilderFor(MeteringPointType.OtherConsumption.Name, MeteringMethod.Virtual.Name)
+            var masterData = Builder()
                 .WithAddress(streetName: string.Empty)
                 .Build();
 
-            AssertContainsValidationError<StreetNameIsRequiredRuleError>(CheckRules(masterData, From(MeteringPointType.OtherConsumption.Name)));
+            AssertContainsValidationError<StreetNameIsRequiredRuleError>(CheckRules(masterData));
         }
 
         [Theory]
@@ -104,32 +105,24 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [InlineData(nameof(ReadingOccurrence.Yearly), true)]
         public void Meter_reading_periodicity_is_hourly_or_quaterly(string readingOccurrence, bool expectError)
         {
-            var masterData = BuilderFor(MeteringPointType.OtherConsumption.Name, MeteringMethod.Virtual.Name)
+            var masterData = Builder()
                 .WithReadingPeriodicity(readingOccurrence)
                 .Build();
 
-            AssertError<InvalidMeterReadingOccurrenceRuleError>(CheckRules(masterData, From(MeteringPointType.OtherConsumption.Name)), expectError);
+            AssertError<InvalidMeterReadingOccurrenceRuleError>(CheckRules(masterData), expectError);
         }
 
-        private static IMasterDataBuilder BuilderFor(string meteringPointType, string meteringMethod) =>
-            new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(From(meteringPointType)))
+        private static IMasterDataBuilder Builder() =>
+            new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.OtherConsumption))
                 .WithReadingPeriodicity(ReadingOccurrence.Quarterly.Name)
                 .WithAddress(streetName: "Test street", countryCode: CountryCode.DK)
-                .WithMeteringConfiguration(meteringMethod, null);
+                .WithMeteringConfiguration(MeteringMethod.Virtual.Name, null);
 
-        private static BusinessRulesValidationResult CheckRules(MasterData masterData, MeteringPointType meteringPointType)
+        private static BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
-            return new MasterDataValidator().CheckRulesFor(meteringPointType, masterData);
-        }
-
-        private static MeteringPointType From(string meteringPointType)
-        {
-            return EnumerationType.FromName<MeteringPointType>(meteringPointType);
-        }
-
-        private static MasterDataUpdater UpdateBuilder(MasterData current, IEnumerable<MasterDataField>? fieldConfiguration = null)
-        {
-            return new MasterDataUpdater(fieldConfiguration ?? new List<MasterDataField>(), current);
+            return new MasterDataValidator(
+                    new OtherConsumptionValidator())
+                .CheckRulesFor(MeteringPointType.OtherConsumption, masterData);
         }
     }
 }

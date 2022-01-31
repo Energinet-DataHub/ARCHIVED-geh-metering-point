@@ -23,6 +23,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.ExchangeRea
 {
     public class ExchangeReactiveEnergyValidator : IMasterDataValidatorStrategy
     {
+        public MeteringPointType Target => MeteringPointType.ExchangeReactiveEnergy;
+
         public BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
             if (masterData == null) throw new ArgumentNullException(nameof(masterData));
