@@ -17,6 +17,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetConsumption;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -117,7 +118,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithReadingPeriodicity(ReadingOccurrence.Quarterly.Name)
                 .WithAddress(streetName: "Test street", countryCode: CountryCode.DK);
 
-        private static BusinessRulesValidationResult CheckRules(MasterData masterData) =>
-            new MasterDataValidator().CheckRulesFor(MeteringPointType.NetConsumption, masterData);
+        private static BusinessRulesValidationResult CheckRules(MasterData masterData)
+        {
+            return new MasterDataValidator(
+                new NetConsumptionValidator())
+                .CheckRulesFor(MeteringPointType.NetConsumption, masterData);
+        }
     }
 }

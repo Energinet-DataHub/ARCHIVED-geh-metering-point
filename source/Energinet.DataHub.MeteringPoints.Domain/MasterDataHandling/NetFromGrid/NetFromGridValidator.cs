@@ -22,6 +22,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.NetFromGrid
 {
     internal class NetFromGridValidator : IMasterDataValidatorStrategy
     {
+        public MeteringPointType Target => MeteringPointType.NetFromGrid;
+
         public BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
             return new BusinessRulesValidationResult(new List<IBusinessRule>()

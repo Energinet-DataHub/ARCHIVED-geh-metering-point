@@ -20,8 +20,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
     /// <summary>
     /// Validates a master data for specific type of metering point
     /// </summary>
-    internal interface IMasterDataValidatorStrategy
+    public interface IMasterDataValidatorStrategy
     {
+        /// <summary>
+        /// The type of metering point this validator targets
+        /// </summary>
+        MeteringPointType Target { get; }
+
         /// <summary>
         /// Checks business rules and returns the result
         /// </summary>
