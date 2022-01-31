@@ -140,14 +140,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
             _container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
 
-            var tenantId = Configuration["B2C_TENANT_ID"] ?? throw new InvalidOperationException(
-                "B2C tenant id not found.");
-
-            var audience = Configuration["FRONTEND_SERVICE_APP_ID"] ?? throw new InvalidOperationException(
-                "Frontend service app id not found.");
-
+            // var tenantId = Configuration["B2C_TENANT_ID"] ?? throw new InvalidOperationException(
+            //     "B2C tenant id not found.");
+            //
+            // var audience = Configuration["FRONTEND_SERVICE_APP_ID"] ?? throw new InvalidOperationException(
+            //     "Frontend service app id not found.");
             // TODO: below must be applied trough environment variables
-            _container.AddJwtTokenSecurity($"https://devdatahubb2c.b2clogin.com/4a7411ea-ac71-4b63-9647-b8bd4c5a20e0/B2C_1_u001_signin/v2.0/.well-known/openid-configuration", audience);
+            _container.AddJwtTokenSecurity($"https://devdatahubb2c.b2clogin.com/4a7411ea-ac71-4b63-9647-b8bd4c5a20e0/B2C_1_u001_signin/v2.0/.well-known/openid-configuration", "d91c10bb-1441-4ae5-9bf9-e6845567d018");
             _container.AddUserContext<NullUserProvider>();
             Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
 
