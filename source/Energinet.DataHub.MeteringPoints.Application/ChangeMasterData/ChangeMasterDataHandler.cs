@@ -41,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
             ISystemDateTimeProvider systemDateTimeProvider,
             ChangeMasterDataSettings settings,
             ChangeMeteringPointAuthorizer authorizer,
-            ParentChildCouplingHandler parentChildCouplingHandler)
+            ParentChildCouplingHandler parentChildCouplingHandler,
             MasterDataValidator masterDataValidator)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));

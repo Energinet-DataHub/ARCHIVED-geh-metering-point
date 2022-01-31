@@ -45,7 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             IGridAreaRepository gridAreaRepository,
             IMediator mediator,
             CreateMeteringPointAuthorizer authorizer,
-            MasterDataValidator masterDataValidator)
+            MasterDataValidator masterDataValidator,
             ParentChildCouplingHandler parentChildCouplingHandler)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
