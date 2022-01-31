@@ -207,7 +207,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             var masterData = Builder()
                 .Build();
 
-            var effectiveDate = "2022-01-01T22:00:00Z";
+            var effectiveDate = "2022-01-01T23:00:00Z";
             var updatedMasterData = UpdateBuilder(masterData)
                 .EffectiveOn(effectiveDate)
                 .Build();
