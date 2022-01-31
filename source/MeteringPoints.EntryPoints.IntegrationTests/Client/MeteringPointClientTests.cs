@@ -111,5 +111,33 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Client
 
             return confidentialClientApp;
         }
+
+        //         private async Task<AuthenticationResult> GetTokenAsync()
+//         {
+//             var credentials = new NetworkCredential("UserName", "Password");
+//             var publicClientApplication = CreatePublicClientApp();
+//
+//             return await publicClientApplication.AcquireTokenByUsernamePassword(Array.Empty<string>(), credentials.UserName, credentials.SecurePassword).ExecuteAsync().ConfigureAwait(false);
+//         }
+//
+//         private IPublicClientApplication CreatePublicClientApp()
+//         {
+//             var t = AuthorizationConfiguration.B2cTenantId;
+//
+//             // var publicClientApplication = PublicClientApplicationBuilder
+//             //     .CreateWithApplicationOptions(new PublicClientApplicationOptions
+//             //     {
+//             //         ClientId = "d91c10bb-1441-4ae5-9bf9-e6845567d018",
+//             //         TenantId = "devDataHubB2C.onmicrosoft.com",
+//             //     }).Build();
+// #pragma warning disable CA2234
+//             var publicClientApplication = PublicClientApplicationBuilder
+//                 .Create("d91c10bb-1441-4ae5-9bf9-e6845567d018")
+//                 .WithB2CAuthority("https://devdatahubb2c.b2clogin.com/tfp/devDataHubB2C.onmicrosoft.com/B2C_1_u001_signin")
+// #pragma warning restore CA2234
+//                 .Build();
+//
+//             return publicClientApplication;
+//         }
     }
 }
