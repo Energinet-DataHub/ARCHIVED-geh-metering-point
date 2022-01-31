@@ -94,7 +94,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
         private static string EffectiveDateNow()
         {
             var currentDate = SystemClock.Instance.GetCurrentInstant().InUtc();
-            var effectiveDate = Instant.FromUtc(currentDate.Year, currentDate.Month, currentDate.Day, 22, 0, 0);
+            var effectiveDate = Instant.FromUtc(currentDate.Year, currentDate.Month, currentDate.Day, 23, 0, 0);
             return effectiveDate.ToString();
         }
     }

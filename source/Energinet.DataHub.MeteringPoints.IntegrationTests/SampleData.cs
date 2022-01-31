@@ -40,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string AssetType => Domain.MasterDataHandling.Components.AssetType.GasTurbine.Name;
 
-        public static string EffectiveDate => "2021-05-05T22:00:00Z";
+        public static string EffectiveDate => "2021-05-05T23:00:00Z";
 
         public static string MeasurementUnitType => Domain.MasterDataHandling.Components.MeasurementUnitType.KWh.Name;
 

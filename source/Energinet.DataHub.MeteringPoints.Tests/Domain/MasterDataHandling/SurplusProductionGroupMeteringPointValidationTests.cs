@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addr
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.SurplusProduction;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
@@ -41,13 +42,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithMeteringConfiguration(MeteringMethod.Physical.Name, "123456")
                 .Build();
 
-            AssertError<MeteringMethodMustRemainCalculatedRuleError>(meteringPoint.CanUpdateMasterData(updatedMasterData, new MasterDataValidator()));
+            AssertError<MeteringMethodMustRemainCalculatedRuleError>(meteringPoint.CanUpdateMasterData(updatedMasterData, CreateValidator()));
         }
 
         [Fact]
         public void Production_obligation_is_ignored()
         {
-            var masterData = BuilderFor()
+            var masterData = Builder()
                 .WithProductionObligation(true)
                 .Build();
 
@@ -57,51 +58,51 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [Fact]
         public void Unit_type_must_be_kwh()
         {
-            var masterData = BuilderFor()
+            var masterData = Builder()
                 .WithMeasurementUnitType(MeasurementUnitType.Ampere.Name)
                 .Build();
 
-            AssertError<UnitTypeIsNotValidForMeteringPointType>(CheckRules(masterData, From(MeteringPointType.SurplusProductionGroup.Name)), true);
+            AssertError<UnitTypeIsNotValidForMeteringPointType>(CheckRules(masterData), true);
         }
 
         [Fact]
         public void Unit_type_valid()
         {
-            var masterData = BuilderFor()
+            var masterData = Builder()
                 .WithMeasurementUnitType(MeasurementUnitType.KWh.Name)
                 .Build();
 
-            AssertDoesNotContainValidationError<UnitTypeIsNotValidForMeteringPointType>(CheckRules(masterData, From(MeteringPointType.SurplusProductionGroup.Name)));
+            AssertDoesNotContainValidationError<UnitTypeIsNotValidForMeteringPointType>(CheckRules(masterData));
         }
 
         [Fact]
         public void Product_type_must_be_energy_active()
         {
-            var masterData = BuilderFor()
+            var masterData = Builder()
                 .WithProductType(ProductType.Tariff.Name)
                 .Build();
 
-            AssertError<InvalidProductType>(CheckRules(masterData, From(MeteringPointType.SurplusProductionGroup.Name)), true);
+            AssertError<InvalidProductType>(CheckRules(masterData), true);
         }
 
         [Fact]
         public void Power_plant_should_not_be_required()
         {
-            var masterData = BuilderFor()
+            var masterData = Builder()
                 .WithPowerPlant(null!)
                 .Build();
 
-            AssertDoesNotContainValidationError<PowerPlantIsRequired>(CheckRules(masterData, From(MeteringPointType.SurplusProductionGroup.Name)));
+            AssertDoesNotContainValidationError<PowerPlantIsRequired>(CheckRules(masterData));
         }
 
         [Fact]
         public void Street_name_is_required()
         {
-            var masterData = BuilderFor()
+            var masterData = Builder()
                 .WithAddress(streetName: string.Empty)
                 .Build();
 
-            AssertContainsValidationError<StreetNameIsRequiredRuleError>(CheckRules(masterData, From(MeteringPointType.SurplusProductionGroup.Name)));
+            AssertContainsValidationError<StreetNameIsRequiredRuleError>(CheckRules(masterData));
         }
 
         [Theory]
@@ -110,30 +111,30 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
         [InlineData(nameof(ReadingOccurrence.Yearly), true)]
         public void Meter_reading_periodicity_is_hourly_or_quaterly(string readingOccurrence, bool expectError)
         {
-            var masterData = BuilderFor()
+            var masterData = Builder()
                 .WithReadingPeriodicity(readingOccurrence)
                 .Build();
 
-            AssertError<InvalidMeterReadingOccurrenceRuleError>(CheckRules(masterData, From(MeteringPointType.SurplusProductionGroup.Name)), expectError);
+            AssertError<InvalidMeterReadingOccurrenceRuleError>(CheckRules(masterData), expectError);
         }
 
-        private static IMasterDataBuilder BuilderFor() =>
+        private static IMasterDataBuilder Builder() =>
             new MasterDataBuilder(new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.SurplusProductionGroup))
                 .WithReadingPeriodicity(ReadingOccurrence.Quarterly.Name)
                 .WithAddress(streetName: "Test street", countryCode: CountryCode.DK);
 
         private static MasterDataUpdater Updater(MeteringPoint meteringPoint) => new MasterDataUpdater(
-            new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Consumption),
+            new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.SurplusProductionGroup),
             meteringPoint.MasterData);
 
-        private static BusinessRulesValidationResult CheckRules(MasterData masterData, MeteringPointType meteringPointType)
+        private static BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
-            return new MasterDataValidator().CheckRulesFor(meteringPointType, masterData);
+            return new MasterDataValidator(
+                    new SurplusProductionGroupValidator())
+                .CheckRulesFor(MeteringPointType.SurplusProductionGroup, masterData);
         }
 
-        private static MeteringPointType From(string meteringPointType)
-        {
-            return EnumerationType.FromName<MeteringPointType>(meteringPointType);
-        }
+        private static MasterDataValidator CreateValidator() => new MasterDataValidator(
+            new SurplusProductionGroupValidator());
     }
 }

@@ -30,7 +30,7 @@ limitations under the License.
         </cim:businessProcessReference_MktActivityRecord.mRID>
         <cim:originalTransactionIDReference_MktActivityRecord.mRID>String
         </cim:originalTransactionIDReference_MktActivityRecord.mRID>
-        <cim:validityStart_DateAndOrTime.dateTime>2021-05-27T22:00:00.00Z</cim:validityStart_DateAndOrTime.dateTime>
+        <cim:validityStart_DateAndOrTime.dateTime>2021-05-27T23:00:00.00Z</cim:validityStart_DateAndOrTime.dateTime>
         <cim:snapshot_DateAndOrTime.dateTime>2001-12-17T09:30:47Z</cim:snapshot_DateAndOrTime.dateTime>
         <cim:MarketEvaluationPoint>
             <cim:mRID codingScheme="NBA">571234567891234605</cim:mRID>
@@ -62,7 +62,7 @@ limitations under the License.
             <cim:ratedCurrent unit="AMP">5000</cim:ratedCurrent>
             <cim:meter.mRID>123456789</cim:meter.mRID>
             <cim:energySupplier_MarketParticipant.mRID codingScheme="A02">a</cim:energySupplier_MarketParticipant.mRID>
-            <cim:supplyStart_DateAndOrTime.dateTime>2021-08-11T22:00:00Z</cim:supplyStart_DateAndOrTime.dateTime>
+            <cim:supplyStart_DateAndOrTime.dateTime>2021-08-11T23:00:00Z</cim:supplyStart_DateAndOrTime.dateTime>
             <cim:description>String</cim:description>
             <cim:usagePointLocation.mainAddress>
                 <cim:streetDetail>

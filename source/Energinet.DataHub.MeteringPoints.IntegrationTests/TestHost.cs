@@ -36,6 +36,7 @@ using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -188,6 +189,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 0));
 
             _container.Register<CouplingHandler>(Lifestyle.Scoped);
+            _container.AddMasterDataValidators(typeof(IMasterDataValidatorStrategy).Assembly);
 
             _container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
             _container.AddBusinessProcessAuthorizers();
@@ -425,7 +427,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         protected EffectiveDate CreateEffectiveDateAsOfToday()
         {
             var today = GetService<ISystemDateTimeProvider>().Now().ToDateTimeUtc();
-            return EffectiveDate.Create(new DateTime(today.Year, today.Month, today.Day, 22, 0, 0));
+            return EffectiveDate.Create(new DateTime(today.Year, today.Month, today.Day, 23, 0, 0));
         }
 
         protected async Task CreatePhysicalConsumptionMeteringPointAsync()
