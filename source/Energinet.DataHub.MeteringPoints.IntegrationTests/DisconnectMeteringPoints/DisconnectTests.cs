@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Disconnect;
@@ -57,14 +58,60 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.DisconnectMeteringPo
             Assert.NotNull(FindIntegrationEvent<MeteringPointDisconnectedIntegrationEvent>());
         }
 
-        [Fact(Skip = "Not implemented")]
-        public void Cannot_disconnect_if_not_connected()
+        [Fact]
+        public async Task Cannot_disconnect_if_not_connected()
         {
+            await CreateMeteringPointWithEnergySupplierAssigned().ConfigureAwait(false);
+
+            await SendCommandAsync(CreateDisconnectMeteringPointRequest()).ConfigureAwait(false);
+
+            AssertValidationError("D16");
         }
 
-        [Fact(Skip = "Not implemented")]
-        public void Request_must_have_validity_start_date_equal_to_send_date_or_minus_one_calendar_day_from_send_date()
+        [Theory]
+        [InlineData(3, true)]
+        [InlineData(1, false)]
+        public async Task Effective_date_must_be_within_the_allowed_time_period_in_past(int numberOfDaysOffset, bool expectError)
         {
+            var effectiveDate = EffectiveDateInPast(numberOfDaysOffset);
+
+            await CreateMeteringPointWithEnergySupplierAssigned(effectiveDate).ConfigureAwait(false);
+
+            await SendCommandAsync(CreateConnectMeteringPointRequest() with
+            {
+                EffectiveDate = effectiveDate.ToString(),
+            }).ConfigureAwait(false);
+
+            await SendCommandAsync(CreateDisconnectMeteringPointRequest() with
+            {
+                EffectiveDate = effectiveDate.ToString(),
+            }).ConfigureAwait(false);
+
+            AssertValidationError("E17", expectError);
+        }
+
+        [Theory]
+        [InlineData(2, true)]
+        [InlineData(0, false)]
+        public async Task Effective_date_must_be_within_the_allowed_time_period_in_future(int numberOfDaysOffset, bool expectError)
+        {
+            var effectiveDate = EffectiveDateInFuture(numberOfDaysOffset);
+
+            await CreateMeteringPointWithEnergySupplierAssigned().ConfigureAwait(false);
+
+            await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
+
+            await SendCommandAsync(CreateDisconnectMeteringPointRequest() with
+            {
+                EffectiveDate = effectiveDate.ToString(),
+            }).ConfigureAwait(false);
+
+            AssertValidationError("E17", expectError);
+        }
+
+        private static Instant ToEffectiveDate(DateTime date)
+        {
+            return Instant.FromUtc(date.Year, date.Month, date.Day, 22, 0);
         }
 
         private Task CreateMeteringPointWithEnergySupplierAssigned()
@@ -98,6 +145,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.DisconnectMeteringPo
             var currentDate = _dateTimeProvider.Now().ToDateTimeUtc();
             var effectiveDate = Instant.FromUtc(currentDate.Year, currentDate.Month, currentDate.Day, 22, 0);
             return new(SampleData.GsrnNumber, effectiveDate.ToString(), SampleData.Transaction);
+        }
+
+        private Instant EffectiveDateInPast(int numberOfDaysFromToday)
+        {
+            return ToEffectiveDate(_dateTimeProvider.Now().Minus(Duration.FromDays(numberOfDaysFromToday)).ToDateTimeUtc());
+        }
+
+        private Instant EffectiveDateInFuture(int numberOfDaysFromToday)
+        {
+            return ToEffectiveDate(_dateTimeProvider.Now().Plus(Duration.FromDays(numberOfDaysFromToday)).ToDateTimeUtc());
         }
     }
 }
