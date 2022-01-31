@@ -146,7 +146,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             var audience = Configuration["FRONTEND_SERVICE_APP_ID"] ?? throw new InvalidOperationException(
                 "Frontend service app id not found.");
 
-            _container.AddJwtTokenSecurity($"https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration", audience);
+            // TODO: below must be applied trough environment variables
+            _container.AddJwtTokenSecurity($"https://devdatahubb2c.b2clogin.com/4a7411ea-ac71-4b63-9647-b8bd4c5a20e0/B2C_1_u001_signin/v2.0/.well-known/openid-configuration", audience);
             _container.AddUserContext<NullUserProvider>();
             Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
 
