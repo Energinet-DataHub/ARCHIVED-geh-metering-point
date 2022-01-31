@@ -30,6 +30,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
         public static readonly DocumentType ConfirmChangeMasterData = new(6, nameof(ConfirmChangeMasterData), typeof(ConfirmMessage));
         public static readonly DocumentType RejectChangeMasterData = new(7, nameof(RejectChangeMasterData), typeof(RejectMessage));
         public static readonly DocumentType GenericNotification = new(8, nameof(GenericNotification), typeof(GenericNotificationMessage));
+        public static readonly DocumentType ConfirmDisconnectMeteringPoint = new(9, nameof(ConfirmDisconnectMeteringPoint), typeof(ConfirmMessage));
+        public static readonly DocumentType RejectDisconnectMeteringPoint = new(10, nameof(RejectDisconnectMeteringPoint), typeof(RejectMessage));
 
         public DocumentType(int id, string name)
             : base(id, name)

@@ -72,6 +72,21 @@ namespace Energinet.DataHub.MeteringPoints.Application.EDI
             string gsrn);
 
         /// <summary>
+        /// Rejection of disconnect metering point.
+        /// </summary>
+        Task SendDisconnectMeteringPointRejectAsync(
+            string transactionId,
+            string gsrn,
+            IEnumerable<ErrorMessage> errors);
+
+        /// <summary>
+        /// Confirm of disconnect metering point.
+        /// </summary>
+        Task SendDisconnectMeteringPointConfirmAsync(
+            string transactionId,
+            string gsrn);
+
+        /// <summary>
         /// Rejection of connect metering point.
         /// </summary>
         Task SendConnectMeteringPointRejectAsync(

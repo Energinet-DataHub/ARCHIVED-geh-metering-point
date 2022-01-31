@@ -54,6 +54,23 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements
                 };
         }
 
+        public static ConfirmMessage DisconnectMeteringPoint(
+            MarketRoleParticipant sender,
+            MarketRoleParticipant receiver,
+            Instant createdDateTime,
+            MarketActivityRecord marketActivityRecord)
+        {
+            return Defaults()
+                with
+                {
+                    ProcessType = "D15", // TODO: Insert correct process type
+                    Sender = sender,
+                    Receiver = receiver,
+                    CreatedDateTime = createdDateTime,
+                    MarketActivityRecord = marketActivityRecord,
+                };
+        }
+
         private static ConfirmMessage Defaults()
         {
             return new ConfirmMessage(

@@ -169,6 +169,41 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
             await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectConnectMeteringPoint, _actorContext.CurrentActor.Identifier, gsrn).ConfigureAwait(false);
         }
 
+        public async Task SendDisconnectMeteringPointConfirmAsync(string transactionId, string gsrn)
+        {
+            if (_actorContext.CurrentActor is null)
+                throw new InvalidOperationException("Can't create message when current actor is not set (null)");
+
+            var message = ConfirmMessageFactory.DisconnectMeteringPoint(
+                sender: Map(_actorContext.DataHub),
+                receiver: Map(_actorContext.CurrentActor),
+                createdDateTime: _dateTimeProvider.Now(),
+                marketActivityRecord: new Acknowledgements.MarketActivityRecord(
+                    Id: Guid.NewGuid().ToString(),
+                    MarketEvaluationPoint: gsrn,
+                    OriginalTransaction: transactionId));
+
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.ConfirmDisconnectMeteringPoint, _actorContext.CurrentActor.Identifier, gsrn).ConfigureAwait(false);
+        }
+
+        public async Task SendDisconnectMeteringPointRejectAsync(string transactionId, string gsrn, IEnumerable<ErrorMessage> errors)
+        {
+            if (_actorContext.CurrentActor is null)
+                throw new InvalidOperationException("Can't create message when current actor is not set (null)");
+
+            var message = RejectMessageFactory.DisconnectMeteringPoint(
+                sender: Map(_actorContext.DataHub),
+                receiver: Map(_actorContext.CurrentActor),
+                createdDateTime: _dateTimeProvider.Now(),
+                marketActivityRecord: new MarketActivityRecordWithReasons(
+                    Id: Guid.NewGuid().ToString(),
+                    MarketEvaluationPoint: gsrn,
+                    OriginalTransaction: transactionId,
+                    Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
+
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectDisconnectMeteringPoint, _actorContext.CurrentActor.Identifier, gsrn).ConfigureAwait(false);
+        }
+
         public async Task SendAccountingPointCharacteristicsMessageAsync(
             string transactionId,
             string businessReasonCode,

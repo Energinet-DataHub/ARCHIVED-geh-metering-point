@@ -12,19 +12,74 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
+using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Disconnect;
+using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.DisconnectMeteringPoint
 {
     public class DisconnectMeteringPointResultHandler : IBusinessProcessResultHandler<DisconnectMeteringPointRequest>
     {
+        private readonly IActorMessageService _actorMessageService;
+        private readonly ErrorMessageFactory _errorMessageFactory;
+        private readonly MeteringPointPipelineContext _pipelineContext;
+        private readonly ICommandScheduler _commandScheduler;
+
+        public DisconnectMeteringPointResultHandler(
+            ErrorMessageFactory errorMessageFactory,
+            MeteringPointPipelineContext pipelineContext,
+            ICommandScheduler commandScheduler,
+            IActorMessageService actorMessageService)
+        {
+            _errorMessageFactory = errorMessageFactory ?? throw new ArgumentNullException(nameof(errorMessageFactory));
+            _pipelineContext = pipelineContext ?? throw new ArgumentNullException(nameof(pipelineContext));
+            _commandScheduler = commandScheduler ?? throw new ArgumentNullException(nameof(commandScheduler));
+            _actorMessageService = actorMessageService;
+        }
+
         public Task HandleAsync(DisconnectMeteringPointRequest request, BusinessProcessResult result)
         {
-            // throw new System.NotImplementedException();
-            return Task.CompletedTask;
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (result == null) throw new ArgumentNullException(nameof(result));
+
+            return result.Success
+                ? CreateAcceptMessageAsync(request)
+                : CreateRejectResponseAsync(request, result);
+        }
+
+        private async Task CreateAcceptMessageAsync(DisconnectMeteringPointRequest request)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
+            await _actorMessageService
+                .SendDisconnectMeteringPointConfirmAsync(request.TransactionId, request.GsrnNumber)
+                .ConfigureAwait(false);
+
+            var command = new SendAccountingPointCharacteristicsMessage(
+                _pipelineContext.MeteringPointId,
+                request.TransactionId,
+                BusinessReasonCodes.DisconnectMeteringPoint);
+            await _commandScheduler.EnqueueAsync(command).ConfigureAwait(false);
+        }
+
+        private async Task CreateRejectResponseAsync(DisconnectMeteringPointRequest request, BusinessProcessResult result)
+        {
+            var errors = result.ValidationErrors
+                .Select(error => _errorMessageFactory.GetErrorMessage(error))
+                .AsEnumerable();
+
+            await _actorMessageService
+                .SendDisconnectMeteringPointRejectAsync(request.TransactionId, request.GsrnNumber, errors)
+                .ConfigureAwait(false);
         }
     }
 }
