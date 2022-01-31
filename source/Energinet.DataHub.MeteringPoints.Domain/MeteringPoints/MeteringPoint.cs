@@ -162,7 +162,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
 
-        public BusinessRulesValidationResult CanUpdateMasterData(MasterData updatedMasterData, MasterDataValidator validator)
+        internal BusinessRulesValidationResult CanUpdateMasterData(MasterData updatedMasterData, MasterDataValidator validator)
         {
             if (updatedMasterData == null) throw new ArgumentNullException(nameof(updatedMasterData));
             if (validator == null) throw new ArgumentNullException(nameof(validator));
@@ -178,7 +178,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             return new BusinessRulesValidationResult(errors);
         }
 
-        public void UpdateMasterData(MasterData updatedMasterData, MasterDataValidator validator)
+        internal void UpdateMasterData(MasterData updatedMasterData, MasterDataValidator validator)
         {
             if (validator == null) throw new ArgumentNullException(nameof(validator));
             var validationResult = CanUpdateMasterData(updatedMasterData, validator);
