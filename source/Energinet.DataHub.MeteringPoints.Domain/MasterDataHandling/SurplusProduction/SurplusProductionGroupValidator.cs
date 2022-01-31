@@ -21,6 +21,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.SurplusProd
 {
     internal class SurplusProductionGroupValidator : IMasterDataValidatorStrategy
     {
+        public MeteringPointType Target => MeteringPointType.SurplusProductionGroup;
+
         public BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
             var rules = GeneralRules(masterData);

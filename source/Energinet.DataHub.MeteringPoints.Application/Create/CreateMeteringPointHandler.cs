@@ -26,7 +26,6 @@ using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using MediatR;
 
@@ -39,19 +38,22 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
         private readonly IMediator _mediator;
         private readonly CreateMeteringPointAuthorizer _authorizer;
         private readonly CouplingHandler _couplingHandler;
+        private readonly MasterDataValidator _masterDataValidator;
 
         public CreateMeteringPointHandler(
             IMeteringPointRepository meteringPointRepository,
             IGridAreaRepository gridAreaRepository,
             IMediator mediator,
             CreateMeteringPointAuthorizer authorizer,
-            CouplingHandler couplingHandler)
+            CouplingHandler couplingHandler,
+            MasterDataValidator masterDataValidator)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _gridAreaRepository = gridAreaRepository;
             _mediator = mediator;
             _authorizer = authorizer;
             _couplingHandler = couplingHandler ?? throw new ArgumentNullException(nameof(couplingHandler));
+            _masterDataValidator = masterDataValidator ?? throw new ArgumentNullException(nameof(masterDataValidator));
         }
 
         public async Task<BusinessProcessResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
@@ -86,7 +88,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
 
             var masterData = masterDataBuilder.Build();
 
-            var creationValidationResult = MeteringPoint.CanCreate(meteringPointType, masterData, new MasterDataValidator());
+            var creationValidationResult = MeteringPoint.CanCreate(meteringPointType, masterData, _masterDataValidator);
             if (creationValidationResult.Success == false)
             {
                 return Failure(request, creationValidationResult.Errors.ToArray());

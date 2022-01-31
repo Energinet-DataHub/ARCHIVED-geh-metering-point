@@ -88,7 +88,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         private static BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
-            return new MasterDataValidator().CheckRulesFor(MeteringPointType.InternalUse, masterData);
+            return new MasterDataValidator(
+                new InternalUseValidator())
+                .CheckRulesFor(MeteringPointType.InternalUse, masterData);
         }
     }
 }
