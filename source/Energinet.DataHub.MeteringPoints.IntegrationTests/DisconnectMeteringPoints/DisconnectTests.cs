@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Disconnect;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using NodaTime;
 using Xunit;
@@ -53,6 +54,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.DisconnectMeteringPo
                 .HasConnectionState(PhysicalState.Disconnected);
 
             AssertConfirmMessage(DocumentType.ConfirmDisconnectMeteringPoint);
+            Assert.NotNull(FindIntegrationEvent<MeteringPointDisconnectedIntegrationEvent>());
         }
 
         [Fact(Skip = "Not implemented")]

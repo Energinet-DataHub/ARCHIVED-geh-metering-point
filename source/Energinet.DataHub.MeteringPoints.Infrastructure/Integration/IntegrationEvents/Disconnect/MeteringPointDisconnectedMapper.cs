@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//      http://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,14 +17,14 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Google.Protobuf;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Disconnect
 {
-    public class MeteringPointConnectedMapper : ProtobufOutboundMapper<MeteringPointConnectedIntegrationEvent>
+    public class MeteringPointDisconnectedMapper : ProtobufOutboundMapper<MeteringPointDisconnectedIntegrationEvent>
     {
-        protected override IMessage Convert(MeteringPointConnectedIntegrationEvent obj)
+        protected override IMessage Convert(MeteringPointDisconnectedIntegrationEvent obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
-            return new IntegrationEventContracts.MeteringPointConnected
+            return new IntegrationEventContracts.MeteringPointDisconnected
             {
                 EffectiveDate = obj.EffectiveDate.ToTimestamp(),
                 GsrnNumber = obj.GSRNNumber,
