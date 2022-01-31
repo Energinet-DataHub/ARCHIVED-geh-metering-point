@@ -242,13 +242,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
 
         private static Instant ToEffectiveDate(DateTime date)
         {
-            return Instant.FromUtc(date.Year, date.Month, date.Day, 22, 0);
+            return Instant.FromUtc(date.Year, date.Month, date.Day, 23, 0);
         }
 
         private ConnectMeteringPointRequest CreateConnectMeteringPointRequest()
         {
-            var currentDate = _dateTimeProvider.Now().ToDateTimeUtc();
-            var effectiveDate = Instant.FromUtc(currentDate.Year, currentDate.Month, currentDate.Day, 22, 0);
+            var effectiveDate = CreateEffectiveDateAsOfToday();
             return new(SampleData.GsrnNumber, effectiveDate.ToString(), SampleData.Transaction);
         }
 
