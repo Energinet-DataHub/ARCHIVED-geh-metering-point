@@ -87,7 +87,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
 
             var updateHandler = new MasterDataUpdateHandler(GetMasterValidator(), _meteringPointRepository);
 
-            var validationResult = await updateHandler.CanBeUpdatedWithAsync(targetMeteringPoint, updatedMasterData).ConfigureAwait(false);
+            var validationResult = await updateHandler.CanUpdateAsync(targetMeteringPoint, updatedMasterData).ConfigureAwait(false);
             if (validationResult.Success != true)
             {
                 return new BusinessProcessResult(request.TransactionId, validationResult.Errors);

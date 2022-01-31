@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild.Rules;
@@ -32,12 +32,27 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
         }
 
-        public async Task<BusinessRulesValidationResult> CanBeUpdatedWithAsync(MeteringPoint targetMeteringPoint, MasterData updatedMasterData)
+        public async Task<BusinessRulesValidationResult> CanUpdateAsync(MeteringPoint targetMeteringPoint, MasterData updatedMasterData)
         {
             if (targetMeteringPoint == null) throw new ArgumentNullException(nameof(targetMeteringPoint));
 
-            var validationErrors = targetMeteringPoint.CanUpdateMasterData(updatedMasterData, _validator).Errors.ToList();
+            var validationErrors = new List<ValidationError>();
 
+            validationErrors.AddRange(targetMeteringPoint.CanUpdateMasterData(updatedMasterData, _validator).Errors);
+            validationErrors.AddRange((await EnsureChildValuesMatchParentValuesAsync(targetMeteringPoint, updatedMasterData).ConfigureAwait(false)).Errors);
+
+            return new BusinessRulesValidationResult(validationErrors);
+        }
+
+        public void Update(MeteringPoint targetMeteringPoint, MasterData updatedMasterData)
+        {
+            if (targetMeteringPoint == null) throw new ArgumentNullException(nameof(targetMeteringPoint));
+            targetMeteringPoint.UpdateMasterData(updatedMasterData, _validator);
+        }
+
+        private async Task<BusinessRulesValidationResult> EnsureChildValuesMatchParentValuesAsync(MeteringPoint targetMeteringPoint, MasterData updatedMasterData)
+        {
+            var validationErrors = new List<ValidationError>();
             if (targetMeteringPoint.MeteringPointType == MeteringPointType.ExchangeReactiveEnergy && targetMeteringPoint.ParentMeteringPointId is not null)
             {
                 var parent = await _meteringPointRepository.GetByIdAsync(targetMeteringPoint.ParentMeteringPointId).ConfigureAwait(false);
@@ -51,12 +66,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             }
 
             return new BusinessRulesValidationResult(validationErrors);
-        }
-
-        public void Update(MeteringPoint targetMeteringPoint, MasterData updatedMasterData)
-        {
-            if (targetMeteringPoint == null) throw new ArgumentNullException(nameof(targetMeteringPoint));
-            targetMeteringPoint.UpdateMasterData(updatedMasterData, _validator);
         }
     }
 }
