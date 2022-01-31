@@ -85,25 +85,15 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
                 return new BusinessProcessResult(request.TransactionId, policyCheckResult.Errors);
             }
 
-            var validationResult = targetMeteringPoint.CanUpdateMasterData(updatedMasterData, GetMasterValidator());
+            var updateHandler = new MasterDataUpdateHandler(GetMasterValidator(), _meteringPointRepository);
+
+            var validationResult = await updateHandler.CanBeUpdatedWithAsync(targetMeteringPoint, updatedMasterData).ConfigureAwait(false);
             if (validationResult.Success != true)
             {
                 return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
             }
 
-            if (targetMeteringPoint.MeteringPointType == MeteringPointType.ExchangeReactiveEnergy && targetMeteringPoint.ParentMeteringPointId is not null)
-            {
-                var parent = await _meteringPointRepository.GetByIdAsync(targetMeteringPoint.ParentMeteringPointId).ConfigureAwait(false);
-                if (parent != null)
-                {
-                    if (parent.MasterData.ReadingOccurrence.Equals(updatedMasterData.ReadingOccurrence) == false)
-                    {
-                        return BusinessProcessResult.Fail(request.TransactionId, new List<ValidationError>() { new ReadingPeriodicityOfChildDoesNotMatchParent() });
-                    }
-                }
-            }
-
-            targetMeteringPoint.UpdateMasterData(updatedMasterData, GetMasterValidator());
+            updateHandler.Update(targetMeteringPoint, updatedMasterData);
 
             var parentCouplingResult = await HandleParentChildCouplingAsync(request, targetMeteringPoint).ConfigureAwait(false);
             return parentCouplingResult.Success == false ? parentCouplingResult : BusinessProcessResult.Ok(request.TransactionId);
