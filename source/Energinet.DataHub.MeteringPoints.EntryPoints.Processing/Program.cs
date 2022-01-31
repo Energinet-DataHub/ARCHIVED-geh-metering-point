@@ -187,6 +187,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             container.AddBusinessProcessAuthorizers();
             container.AddMasterDataValidators(typeof(IMasterDataValidatorStrategy).Assembly);
+            container.AddMasterDataUpdateServices();
 
             container.AddValidationErrorConversion(
                 validateRegistrations: false,
