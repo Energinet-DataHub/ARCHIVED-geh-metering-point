@@ -15,7 +15,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
+using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using SimpleInjector;
 

@@ -23,7 +23,7 @@ using Energinet.DataHub.MeteringPoints.Domain.Policies;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses
+namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.UpdateMasterData
 {
     public class UpdateMasterDataProcess
     {
