@@ -43,27 +43,24 @@ namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.UpdateMaster
             if (targetMeteringPoint == null) throw new ArgumentNullException(nameof(targetMeteringPoint));
             if (builder == null) throw new ArgumentNullException(nameof(builder));
 
-            var valueValidation = builder.Validate();
-            if (valueValidation.Success == false)
+            var builderValidation = builder.Validate();
+            if (builderValidation.Success == false)
             {
-                return valueValidation;
+                return builderValidation;
             }
 
             var updatedMasterData = builder.Build();
 
-            var policyCheckResult = await CheckPoliciesAsync(updatedMasterData, today).ConfigureAwait(false);
-            if (policyCheckResult.Success == false)
+            var policiesCheckResult = await CheckPoliciesAsync(updatedMasterData, today).ConfigureAwait(false);
+            if (policiesCheckResult.Success == false)
             {
-                return policyCheckResult;
+                return policiesCheckResult;
             }
 
-            var validationErrors = new List<ValidationError>();
-            validationErrors.AddRange(targetMeteringPoint.CanUpdateMasterData(updatedMasterData, _validator).Errors);
-            validationErrors.AddRange((await EnsureMeterReadingPeriodicityOfChildMatchParentAsync(targetMeteringPoint, updatedMasterData).ConfigureAwait(false)).Errors);
-
-            if (validationErrors.Count > 0)
+            var checkResult = await CheckIfApplicableToMeteringPointAsync(targetMeteringPoint, updatedMasterData).ConfigureAwait(false);
+            if (checkResult.Success == false)
             {
-                return BusinessRulesValidationResult.Failure(validationErrors.ToArray());
+                return BusinessRulesValidationResult.Failure(checkResult.Errors.ToArray());
             }
 
             targetMeteringPoint.UpdateMasterData(updatedMasterData, _validator);
@@ -80,6 +77,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.UpdateMaster
 
             var validationErrors = validationResults.SelectMany(results => results.Errors).ToList();
             return Task.FromResult<BusinessRulesValidationResult>(new BusinessRulesValidationResult(validationErrors));
+        }
+
+        private async Task<BusinessRulesValidationResult> CheckIfApplicableToMeteringPointAsync(MeteringPoint meteringPoint, MasterData masterData)
+        {
+            var validationErrors = new List<ValidationError>();
+            validationErrors.AddRange(meteringPoint.CanUpdateMasterData(masterData, _validator).Errors);
+            validationErrors.AddRange((await EnsureMeterReadingPeriodicityOfChildMatchParentAsync(meteringPoint, masterData).ConfigureAwait(false)).Errors);
+            return BusinessRulesValidationResult.Failure(validationErrors.ToArray());
         }
 
         private async Task<BusinessRulesValidationResult> EnsureMeterReadingPeriodicityOfChildMatchParentAsync(MeteringPoint targetMeteringPoint, MasterData updatedMasterData)
