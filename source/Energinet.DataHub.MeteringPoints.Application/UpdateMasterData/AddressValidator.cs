@@ -17,7 +17,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addr
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
+namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
 {
     public class AddressValidator : AbstractValidator<Address?>
     {

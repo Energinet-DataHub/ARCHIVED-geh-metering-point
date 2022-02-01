@@ -14,9 +14,9 @@
 
 using Energinet.DataHub.MeteringPoints.Application.Common;
 
-namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
+namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
 {
-    public record ChangeMasterDataRequest(
+    public record UpdateMasterDataRequest(
         string TransactionId = "",
         string GsrnNumber = "",
         string EffectiveDate = "",

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Validation;
+using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData.Validation;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain;
 using FluentValidation;

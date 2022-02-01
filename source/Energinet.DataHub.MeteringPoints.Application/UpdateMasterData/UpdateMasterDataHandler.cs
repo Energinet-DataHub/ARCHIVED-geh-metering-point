@@ -26,22 +26,22 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.Policies;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
+namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
 {
-    public class ChangeMasterDataHandler : IBusinessRequestHandler<ChangeMasterDataRequest>
+    public class UpdateMasterDataHandler : IBusinessRequestHandler<UpdateMasterDataRequest>
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
-        private readonly ChangeMasterDataSettings _settings;
-        private readonly ChangeMeteringPointAuthorizer _authorizer;
+        private readonly UpdateMasterDataSettings _settings;
+        private readonly UpdateMeteringPointAuthorizer _authorizer;
         private readonly ParentChildCouplingHandler _parentChildCouplingHandler;
         private readonly UpdateMasterDataProcess _updateMasterDataProcess;
 
-        public ChangeMasterDataHandler(
+        public UpdateMasterDataHandler(
             IMeteringPointRepository meteringPointRepository,
             ISystemDateTimeProvider systemDateTimeProvider,
-            ChangeMasterDataSettings settings,
-            ChangeMeteringPointAuthorizer authorizer,
+            UpdateMasterDataSettings settings,
+            UpdateMeteringPointAuthorizer authorizer,
             ParentChildCouplingHandler parentChildCouplingHandler,
             UpdateMasterDataProcess updateMasterDataProcess)
         {
@@ -53,7 +53,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
             _updateMasterDataProcess = updateMasterDataProcess ?? throw new ArgumentNullException(nameof(updateMasterDataProcess));
         }
 
-        public async Task<BusinessProcessResult> Handle(ChangeMasterDataRequest request, CancellationToken cancellationToken)
+        public async Task<BusinessProcessResult> Handle(UpdateMasterDataRequest request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -100,7 +100,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
             return parentCouplingResult.Success == false ? parentCouplingResult : BusinessProcessResult.Ok(request.TransactionId);
         }
 
-        private static MasterDataUpdater CreateMasterDataUpdater(ChangeMasterDataRequest request, MeteringPoint targetMeteringPoint)
+        private static MasterDataUpdater CreateMasterDataUpdater(UpdateMasterDataRequest request, MeteringPoint targetMeteringPoint)
         {
             var masterDataUpdater = new MasterDataUpdater(
                 new MasterDataFieldSelector().GetMasterDataFieldsFor(targetMeteringPoint.MeteringPointType),
@@ -139,7 +139,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
             return masterDataUpdater;
         }
 
-        private async Task<MeteringPoint?> FetchTargetMeteringPointAsync(ChangeMasterDataRequest request)
+        private async Task<MeteringPoint?> FetchTargetMeteringPointAsync(UpdateMasterDataRequest request)
         {
             return await _meteringPointRepository
                 .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
@@ -158,7 +158,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
             return Task.FromResult<BusinessRulesValidationResult>(new BusinessRulesValidationResult(validationErrors));
         }
 
-        private Task<BusinessProcessResult> HandleParentChildCouplingAsync(ChangeMasterDataRequest request, MeteringPoint meteringPoint)
+        private Task<BusinessProcessResult> HandleParentChildCouplingAsync(UpdateMasterDataRequest request, MeteringPoint meteringPoint)
         {
             if (request.ParentRelatedMeteringPoint is null)
                 return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
