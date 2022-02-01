@@ -12,7 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+
+namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData.Validation
 {
-    public record ChangeMasterDataSettings(int NumberOfDaysEffectiveDateIsAllowedToBeforeToday = 0);
+    public class FromGridAreaIsNotAllowed : ValidationError
+    {
+    }
 }

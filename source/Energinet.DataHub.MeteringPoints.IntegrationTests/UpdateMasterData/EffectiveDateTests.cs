@@ -16,7 +16,6 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
-using Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.ConsumptionMeteringPoints;
 using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
