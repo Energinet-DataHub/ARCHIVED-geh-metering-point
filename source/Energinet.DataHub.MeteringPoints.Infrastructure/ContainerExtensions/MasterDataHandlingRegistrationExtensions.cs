@@ -15,6 +15,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using SimpleInjector;
 
@@ -34,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions
         public static void AddMasterDataUpdateServices(this Container container)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
-            container.Register<MasterDataUpdateHandler>(Lifestyle.Transient);
+            container.Register<UpdateMasterDataProcess>(Lifestyle.Transient);
         }
     }
 }

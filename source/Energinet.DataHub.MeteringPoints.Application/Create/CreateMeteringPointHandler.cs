@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
         private readonly IMediator _mediator;
         private readonly CreateMeteringPointAuthorizer _authorizer;
         private readonly MasterDataValidator _masterDataValidator;
-        private readonly ParentChildCouplingHandler _parentChildCouplingHandler;
+        private readonly ParentCouplingService _parentCouplingService;
 
         public CreateMeteringPointHandler(
             IMeteringPointRepository meteringPointRepository,
@@ -46,13 +46,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             IMediator mediator,
             CreateMeteringPointAuthorizer authorizer,
             MasterDataValidator masterDataValidator,
-            ParentChildCouplingHandler parentChildCouplingHandler)
+            ParentCouplingService parentCouplingService)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _gridAreaRepository = gridAreaRepository;
             _mediator = mediator;
             _authorizer = authorizer;
-            _parentChildCouplingHandler = parentChildCouplingHandler ?? throw new ArgumentNullException(nameof(parentChildCouplingHandler));
+            _parentCouplingService = parentCouplingService ?? throw new ArgumentNullException(nameof(parentCouplingService));
             _masterDataValidator = masterDataValidator ?? throw new ArgumentNullException(nameof(masterDataValidator));
         }
 
@@ -162,12 +162,19 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             return parentCouplingResult.Success == false ? parentCouplingResult : BusinessProcessResult.Ok(request.TransactionId);
         }
 
-        private Task<BusinessProcessResult> CoupleToParentIfRequestedAsync(CreateMeteringPoint request, MeteringPoint meteringPoint)
+        private async Task<BusinessProcessResult> CoupleToParentIfRequestedAsync(CreateMeteringPoint request, MeteringPoint meteringPoint)
         {
             if (string.IsNullOrEmpty(request.ParentRelatedMeteringPoint))
-                return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
+                return BusinessProcessResult.Ok(request.TransactionId);
 
-            return _parentChildCouplingHandler.TryCoupleToParentAsync(meteringPoint, request.ParentRelatedMeteringPoint, request.TransactionId);
+            var parent = await _meteringPointRepository.GetByGsrnNumberAsync(GsrnNumber.Create(request.ParentRelatedMeteringPoint)).ConfigureAwait(false);
+            if (parent is null)
+            {
+                return BusinessProcessResult.Fail(request.TransactionId, new ParentMeteringPointWasNotFound());
+            }
+
+            var result = await _parentCouplingService.CoupleToParentAsync(meteringPoint, parent).ConfigureAwait(false);
+            return new BusinessProcessResult(request.TransactionId, result.Errors);
         }
 
         private async Task<BusinessProcessResult> CreateExchangeMeteringPointAsync(CreateMeteringPoint request, GridArea gridArea, MasterData masterData)

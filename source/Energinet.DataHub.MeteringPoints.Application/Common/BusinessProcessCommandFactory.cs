@@ -14,10 +14,10 @@
 
 using System;
 using System.Globalization;
-using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
+using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
 
         private static IBusinessRequest? CreateChangeMasterDataCommand(MasterDataDocument document)
         {
-            return new ChangeMasterDataRequest(
+            return new UpdateMasterDataRequest(
                 TransactionId: document.TransactionId,
                 GsrnNumber: document.GsrnNumber,
                 EffectiveDate: document.EffectiveDate,
