@@ -23,12 +23,12 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Common.ChildMeteringPoints
 {
-    public class CouplingHandler
+    public class ParentChildCouplingHandler
     {
         private readonly IGridAreaRepository _gridAreaRepository;
         private readonly IMeteringPointRepository _meteringPointRepository;
 
-        public CouplingHandler(IGridAreaRepository gridAreaRepository, IMeteringPointRepository meteringPointRepository)
+        public ParentChildCouplingHandler(IGridAreaRepository gridAreaRepository, IMeteringPointRepository meteringPointRepository)
         {
             _gridAreaRepository = gridAreaRepository ?? throw new ArgumentNullException(nameof(gridAreaRepository));
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));

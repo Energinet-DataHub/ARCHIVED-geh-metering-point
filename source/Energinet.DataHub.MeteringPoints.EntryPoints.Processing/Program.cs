@@ -183,10 +183,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));
 
             container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
-            container.Register<CouplingHandler>(Lifestyle.Scoped);
+            container.Register<ParentChildCouplingHandler>(Lifestyle.Scoped);
 
             container.AddBusinessProcessAuthorizers();
             container.AddMasterDataValidators(typeof(IMasterDataValidatorStrategy).Assembly);
+            container.AddMasterDataUpdateServices();
 
             container.AddValidationErrorConversion(
                 validateRegistrations: false,

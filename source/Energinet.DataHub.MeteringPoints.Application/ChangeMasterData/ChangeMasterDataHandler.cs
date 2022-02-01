@@ -33,23 +33,26 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
         private readonly ChangeMasterDataSettings _settings;
         private readonly ChangeMeteringPointAuthorizer _authorizer;
-        private readonly CouplingHandler _couplingHandler;
+        private readonly ParentChildCouplingHandler _parentChildCouplingHandler;
         private readonly MasterDataValidator _masterDataValidator;
+        private readonly MasterDataUpdateHandler _masterDataUpdateHandler;
 
         public ChangeMasterDataHandler(
             IMeteringPointRepository meteringPointRepository,
             ISystemDateTimeProvider systemDateTimeProvider,
             ChangeMasterDataSettings settings,
             ChangeMeteringPointAuthorizer authorizer,
-            CouplingHandler couplingHandler,
-            MasterDataValidator masterDataValidator)
+            ParentChildCouplingHandler parentChildCouplingHandler,
+            MasterDataValidator masterDataValidator,
+            MasterDataUpdateHandler masterDataUpdateHandler)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
             _settings = settings;
             _authorizer = authorizer ?? throw new ArgumentNullException(nameof(authorizer));
-            _couplingHandler = couplingHandler;
+            _parentChildCouplingHandler = parentChildCouplingHandler;
             _masterDataValidator = masterDataValidator ?? throw new ArgumentNullException(nameof(masterDataValidator));
+            _masterDataUpdateHandler = masterDataUpdateHandler ?? throw new ArgumentNullException(nameof(masterDataUpdateHandler));
         }
 
         public async Task<BusinessProcessResult> Handle(ChangeMasterDataRequest request, CancellationToken cancellationToken)
@@ -87,13 +90,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
                 return new BusinessProcessResult(request.TransactionId, policyCheckResult.Errors);
             }
 
-            var validationResult = targetMeteringPoint.CanUpdateMasterData(updatedMasterData, _masterDataValidator);
+            var validationResult = await _masterDataUpdateHandler.CanUpdateAsync(targetMeteringPoint, updatedMasterData).ConfigureAwait(false);
             if (validationResult.Success != true)
             {
                 return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
             }
 
-            targetMeteringPoint.UpdateMasterData(updatedMasterData, _masterDataValidator);
+            _masterDataUpdateHandler.Update(targetMeteringPoint, updatedMasterData);
 
             var parentCouplingResult = await HandleParentChildCouplingAsync(request, targetMeteringPoint).ConfigureAwait(false);
             return parentCouplingResult.Success == false ? parentCouplingResult : BusinessProcessResult.Ok(request.TransactionId);
@@ -164,10 +167,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
 
             if (request.ParentRelatedMeteringPoint.Length == 0)
             {
-                return _couplingHandler.DecoupleFromParentAsync(meteringPoint, request.TransactionId);
+                return _parentChildCouplingHandler.DecoupleFromParentAsync(meteringPoint, request.TransactionId);
             }
 
-            return _couplingHandler.TryCoupleToParentAsync(meteringPoint, request.ParentRelatedMeteringPoint, request.TransactionId);
+            return _parentChildCouplingHandler.TryCoupleToParentAsync(meteringPoint, request.ParentRelatedMeteringPoint, request.TransactionId);
         }
     }
 }
