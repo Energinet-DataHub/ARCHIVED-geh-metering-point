@@ -15,12 +15,13 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using SimpleInjector;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions
 {
-    public static class MasterDataValidatorsRegistrationExtensions
+    public static class MasterDataHandlingRegistrationExtensions
     {
         public static void AddMasterDataValidators(this Container container, params Assembly[] assembliesToScan)
         {
@@ -29,6 +30,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions
             container.Collection.Register<IMasterDataValidatorStrategy>(validatorTypes, Lifestyle.Transient);
             container.Register<MasterDataValidator>(() =>
                 new MasterDataValidator(container.GetAllInstances<IMasterDataValidatorStrategy>().ToArray()));
+        }
+
+        public static void AddMasterDataUpdateServices(this Container container)
+        {
+            if (container == null) throw new ArgumentNullException(nameof(container));
+            container.Register<UpdateMasterDataProcess>(Lifestyle.Transient);
         }
     }
 }

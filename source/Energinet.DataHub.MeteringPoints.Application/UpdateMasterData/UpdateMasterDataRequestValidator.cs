@@ -17,11 +17,11 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
+namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
 {
-    public class ChangeMasterDataRequestValidator : AbstractValidator<ChangeMasterDataRequest>
+    public class UpdateMasterDataRequestValidator : AbstractValidator<UpdateMasterDataRequest>
     {
-        public ChangeMasterDataRequestValidator()
+        public UpdateMasterDataRequestValidator()
         {
             RuleFor(request => request.GsrnNumber)
                 .SetValidator(new GsrnNumberValidator());

@@ -201,7 +201,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                     .HasConversion(toDbValue => toDbValue.Value, fromDbValue => new GridAreaLinkId(fromDbValue));
             });
 
-            builder.Property<MeteringPointId?>("_parentMeteringPoint")
+            builder.Property<MeteringPointId?>(x => x.ParentMeteringPointId)
                 .HasColumnName("ParentRelatedMeteringPoint")
                 .HasConversion<Guid?>(
                     toDbValue => toDbValue == null ? null : toDbValue.Value,

@@ -28,15 +28,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
             Success = ValidationErrors.Count == 0;
         }
 
-        public BusinessProcessResult(string transactionId, IBusinessRule businessRule)
-        {
-            if (businessRule == null) throw new ArgumentNullException(nameof(businessRule));
-
-            TransactionId = transactionId;
-            SetValidationErrors(new List<IBusinessRule>() { businessRule });
-            Success = ValidationErrors.Count == 0;
-        }
-
         public BusinessProcessResult(string transactionId, IReadOnlyCollection<ValidationError> validationErrors)
         {
             TransactionId = transactionId;
@@ -67,6 +58,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
         }
 
         public static BusinessProcessResult Fail(string transactionId, IReadOnlyList<ValidationError> errors)
+        {
+            return new BusinessProcessResult(transactionId, errors);
+        }
+
+        public static BusinessProcessResult Fail(string transactionId, params ValidationError[] errors)
         {
             return new BusinessProcessResult(transactionId, errors);
         }

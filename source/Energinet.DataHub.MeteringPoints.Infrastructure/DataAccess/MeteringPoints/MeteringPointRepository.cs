@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
         public void Add(MeteringPoint meteringPoint)
         {
             _meteringPointContext.MeteringPoints.Add(meteringPoint);
+        }
+
+        public Task<MeteringPoint?> GetByIdAsync(MeteringPointId id)
+        {
+            return _meteringPointContext.MeteringPoints
+                .SingleOrDefaultAsync(meteringPoint => meteringPoint.ParentMeteringPointId!.Equals(id));
         }
     }
 }
