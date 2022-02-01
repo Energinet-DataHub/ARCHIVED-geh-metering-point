@@ -72,7 +72,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.UpdateMaster
             if (masterData == null) throw new ArgumentNullException(nameof(masterData));
             var validationResults = new List<BusinessRulesValidationResult>()
             {
-                new EffectiveDatePolicy(_policyThresholds.NumberOfDaysEffectiveDateIsAllowedToBeforeToday).Check(today, masterData.EffectiveDate!),
+                new EffectiveDatePolicy(_policyThresholds.NumberOfDaysEffectiveDateIsAllowedToBeforeToday).Check(today, masterData.EffectiveDate),
             };
 
             var validationErrors = validationResults.SelectMany(results => results.Errors).ToList();
