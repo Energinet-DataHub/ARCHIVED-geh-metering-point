@@ -13,12 +13,12 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.ChildMeteringPoints;
+using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
@@ -32,20 +32,20 @@ namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
         private readonly UpdateMeteringPointAuthorizer _authorizer;
-        private readonly ParentChildCouplingHandler _parentChildCouplingHandler;
+        private readonly ParentCouplingService _parentCouplingService;
         private readonly UpdateMasterDataProcess _updateMasterDataProcess;
 
         public UpdateMasterDataHandler(
             IMeteringPointRepository meteringPointRepository,
             ISystemDateTimeProvider systemDateTimeProvider,
             UpdateMeteringPointAuthorizer authorizer,
-            ParentChildCouplingHandler parentChildCouplingHandler,
+            ParentCouplingService parentCouplingService,
             UpdateMasterDataProcess updateMasterDataProcess)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
             _authorizer = authorizer ?? throw new ArgumentNullException(nameof(authorizer));
-            _parentChildCouplingHandler = parentChildCouplingHandler;
+            _parentCouplingService = parentCouplingService;
             _updateMasterDataProcess = updateMasterDataProcess ?? throw new ArgumentNullException(nameof(updateMasterDataProcess));
         }
 
@@ -65,16 +65,20 @@ namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
                 return BusinessProcessResult.Fail(request.TransactionId, authorizationResult.Errors.ToArray());
             }
 
-            var masterDataUpdater = CreateBuilderFrom(request, targetMeteringPoint);
+            var parentCouplingResult = await HandleParentCouplingAsync(targetMeteringPoint, request.ParentRelatedMeteringPoint).ConfigureAwait(false);
+            if (parentCouplingResult.Success == false)
+            {
+                return BusinessProcessResult.Fail(request.TransactionId, parentCouplingResult.Errors.ToArray());
+            }
 
-            var result = await _updateMasterDataProcess.UpdateAsync(targetMeteringPoint, masterDataUpdater, _systemDateTimeProvider.Now()).ConfigureAwait(false);
+            var builder = CreateBuilderFrom(request, targetMeteringPoint);
+            var result = await _updateMasterDataProcess.UpdateAsync(targetMeteringPoint, builder, _systemDateTimeProvider.Now()).ConfigureAwait(false);
             if (result.Success == false)
             {
                 return BusinessProcessResult.Fail(request.TransactionId, result.Errors.ToArray());
             }
 
-            var parentCouplingResult = await HandleParentChildCouplingAsync(request, targetMeteringPoint).ConfigureAwait(false);
-            return parentCouplingResult.Success == false ? parentCouplingResult : BusinessProcessResult.Ok(request.TransactionId);
+            return BusinessProcessResult.Ok(request.TransactionId);
         }
 
         private static MasterDataUpdater CreateBuilderFrom(UpdateMasterDataRequest request, MeteringPoint targetMeteringPoint)
@@ -123,17 +127,29 @@ namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
                 .ConfigureAwait(false);
         }
 
-        private Task<BusinessProcessResult> HandleParentChildCouplingAsync(UpdateMasterDataRequest request, MeteringPoint meteringPoint)
+        private async Task<BusinessRulesValidationResult> HandleParentCouplingAsync(MeteringPoint meteringPoint, string? parentGsrnNumber)
         {
-            if (request.ParentRelatedMeteringPoint is null)
-                return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
+            if (parentGsrnNumber is null)
+                return BusinessRulesValidationResult.Valid();
 
-            if (request.ParentRelatedMeteringPoint.Length == 0)
+            if (parentGsrnNumber.Length == 0)
             {
-                return _parentChildCouplingHandler.DecoupleFromParentAsync(meteringPoint, request.TransactionId);
+                _parentCouplingService.DecoupleFromParent(meteringPoint);
+                return BusinessRulesValidationResult.Valid();
             }
 
-            return _parentChildCouplingHandler.TryCoupleToParentAsync(meteringPoint, request.ParentRelatedMeteringPoint, request.TransactionId);
+            return await CoupleToParentAsync(meteringPoint, parentGsrnNumber).ConfigureAwait(false);
+        }
+
+        private async Task<BusinessRulesValidationResult> CoupleToParentAsync(MeteringPoint child, string parentGsrnNumber)
+        {
+            var parent = await _meteringPointRepository.GetByGsrnNumberAsync(GsrnNumber.Create(parentGsrnNumber)).ConfigureAwait(false);
+            if (parent is null)
+            {
+                return BusinessRulesValidationResult.Failure(new ParentMeteringPointWasNotFound());
+            }
+
+            return await _parentCouplingService.CoupleToParentAsync(child, parent).ConfigureAwait(false);
         }
     }
 }

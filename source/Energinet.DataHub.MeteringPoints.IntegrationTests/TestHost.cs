@@ -184,7 +184,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             _container.AddMasterDataValidators(typeof(IMasterDataValidatorStrategy).Assembly);
             _container.AddMasterDataUpdateServices();
-            _container.Register<ParentChildCouplingHandler>(Lifestyle.Scoped);
+            _container.Register<ParentCouplingService>(Lifestyle.Scoped);
 
             _container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
             _container.AddBusinessProcessAuthorizers();
