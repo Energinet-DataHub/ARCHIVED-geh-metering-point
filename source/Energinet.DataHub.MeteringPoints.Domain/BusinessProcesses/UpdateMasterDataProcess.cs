@@ -39,25 +39,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses
             _policies = policies ?? throw new ArgumentNullException(nameof(policies));
         }
 
-        public async Task<BusinessRulesValidationResult> CanUpdateAsync(MeteringPoint targetMeteringPoint, MasterData updatedMasterData)
-        {
-            if (targetMeteringPoint == null) throw new ArgumentNullException(nameof(targetMeteringPoint));
-
-            var validationErrors = new List<ValidationError>();
-
-            validationErrors.AddRange(targetMeteringPoint.CanUpdateMasterData(updatedMasterData, _validator).Errors);
-            validationErrors.AddRange((await EnsureMeterReadingPeriodicityOfChildMatchParentAsync(targetMeteringPoint, updatedMasterData).ConfigureAwait(false)).Errors);
-
-            return new BusinessRulesValidationResult(validationErrors);
-        }
-
-        public BusinessRulesValidationResult Update(MeteringPoint targetMeteringPoint, MasterData updatedMasterData)
-        {
-            if (targetMeteringPoint == null) throw new ArgumentNullException(nameof(targetMeteringPoint));
-            targetMeteringPoint.UpdateMasterData(updatedMasterData, _validator);
-            return BusinessRulesValidationResult.Valid();
-        }
-
         public async Task<BusinessRulesValidationResult> UpdateAsync(MeteringPoint targetMeteringPoint, MasterDataUpdater builder)
         {
             if (targetMeteringPoint == null) throw new ArgumentNullException(nameof(targetMeteringPoint));
