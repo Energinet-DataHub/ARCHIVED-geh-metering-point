@@ -34,6 +34,7 @@ using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
 using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Contracts;
+using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
@@ -176,7 +177,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IMessageHubDispatcher, MessageHubDispatcher>(Lifestyle.Scoped);
             _container.Register<IActorMessageService, ActorMessageService>(Lifestyle.Scoped);
 
-            _container.Register<UpdateMasterDataSettings>(() => new UpdateMasterDataSettings(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1));
+            _container.Register<UpdateMasterDataPolicies>(() => new UpdateMasterDataPolicies(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1));
             _container.Register<ConnectSettings>(() => new ConnectSettings(
                 NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 7,
                 NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));

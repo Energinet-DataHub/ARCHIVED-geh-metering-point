@@ -14,10 +14,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.Policies;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses
@@ -26,11 +28,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses
     {
         private readonly MasterDataValidator _validator;
         private readonly IMeteringPointRepository _meteringPointRepository;
+        private readonly ISystemDateTimeProvider _systemDateTimeProvider;
+        private readonly UpdateMasterDataPolicies _policies;
 
-        public UpdateMasterDataProcess(MasterDataValidator validator, IMeteringPointRepository meteringPointRepository)
+        public UpdateMasterDataProcess(MasterDataValidator validator, IMeteringPointRepository meteringPointRepository, ISystemDateTimeProvider systemDateTimeProvider, UpdateMasterDataPolicies policies)
         {
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
+            _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
+            _policies = policies ?? throw new ArgumentNullException(nameof(policies));
         }
 
         public async Task<BusinessRulesValidationResult> CanUpdateAsync(MeteringPoint targetMeteringPoint, MasterData updatedMasterData)
@@ -45,10 +51,55 @@ namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses
             return new BusinessRulesValidationResult(validationErrors);
         }
 
-        public void Update(MeteringPoint targetMeteringPoint, MasterData updatedMasterData)
+        public BusinessRulesValidationResult Update(MeteringPoint targetMeteringPoint, MasterData updatedMasterData)
         {
             if (targetMeteringPoint == null) throw new ArgumentNullException(nameof(targetMeteringPoint));
             targetMeteringPoint.UpdateMasterData(updatedMasterData, _validator);
+            return BusinessRulesValidationResult.Valid();
+        }
+
+        public async Task<BusinessRulesValidationResult> UpdateAsync(MeteringPoint targetMeteringPoint, MasterDataUpdater builder)
+        {
+            if (targetMeteringPoint == null) throw new ArgumentNullException(nameof(targetMeteringPoint));
+            if (builder == null) throw new ArgumentNullException(nameof(builder));
+
+            var valueValidation = builder.Validate();
+            if (valueValidation.Success == false)
+            {
+                return valueValidation;
+            }
+
+            var updatedMasterData = builder.Build();
+
+            var policyCheckResult = await CheckPoliciesAsync(updatedMasterData).ConfigureAwait(false);
+            if (policyCheckResult.Success == false)
+            {
+                return policyCheckResult;
+            }
+
+            var validationErrors = new List<ValidationError>();
+            validationErrors.AddRange(targetMeteringPoint.CanUpdateMasterData(updatedMasterData, _validator).Errors);
+            validationErrors.AddRange((await EnsureMeterReadingPeriodicityOfChildMatchParentAsync(targetMeteringPoint, updatedMasterData).ConfigureAwait(false)).Errors);
+
+            if (validationErrors.Count > 0)
+            {
+                return BusinessRulesValidationResult.Failure(validationErrors.ToArray());
+            }
+
+            targetMeteringPoint.UpdateMasterData(updatedMasterData, _validator);
+            return BusinessRulesValidationResult.Valid();
+        }
+
+        private Task<BusinessRulesValidationResult> CheckPoliciesAsync(MasterData masterData)
+        {
+            if (masterData == null) throw new ArgumentNullException(nameof(masterData));
+            var validationResults = new List<BusinessRulesValidationResult>()
+            {
+                new EffectiveDatePolicy(_policies.NumberOfDaysEffectiveDateIsAllowedToBeforeToday).Check(_systemDateTimeProvider.Now(), masterData.EffectiveDate!),
+            };
+
+            var validationErrors = validationResults.SelectMany(results => results.Errors).ToList();
+            return Task.FromResult<BusinessRulesValidationResult>(new BusinessRulesValidationResult(validationErrors));
         }
 
         private async Task<BusinessRulesValidationResult> EnsureMeterReadingPeriodicityOfChildMatchParentAsync(MeteringPoint targetMeteringPoint, MasterData updatedMasterData)

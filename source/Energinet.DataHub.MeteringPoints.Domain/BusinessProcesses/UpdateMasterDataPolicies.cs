@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
+namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses
 {
-    public record UpdateMasterDataSettings(int NumberOfDaysEffectiveDateIsAllowedToBeforeToday = 0);
+    public record UpdateMasterDataPolicies(int NumberOfDaysEffectiveDateIsAllowedToBeforeToday = 0);
 }

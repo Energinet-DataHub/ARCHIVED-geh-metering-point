@@ -32,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
-        private readonly UpdateMasterDataSettings _settings;
+        private readonly UpdateMasterDataPolicies _policies;
         private readonly UpdateMeteringPointAuthorizer _authorizer;
         private readonly ParentChildCouplingHandler _parentChildCouplingHandler;
         private readonly UpdateMasterDataProcess _updateMasterDataProcess;
@@ -40,14 +40,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
         public UpdateMasterDataHandler(
             IMeteringPointRepository meteringPointRepository,
             ISystemDateTimeProvider systemDateTimeProvider,
-            UpdateMasterDataSettings settings,
+            UpdateMasterDataPolicies policies,
             UpdateMeteringPointAuthorizer authorizer,
             ParentChildCouplingHandler parentChildCouplingHandler,
             UpdateMasterDataProcess updateMasterDataProcess)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
-            _settings = settings;
+            _policies = policies;
             _authorizer = authorizer ?? throw new ArgumentNullException(nameof(authorizer));
             _parentChildCouplingHandler = parentChildCouplingHandler;
             _updateMasterDataProcess = updateMasterDataProcess ?? throw new ArgumentNullException(nameof(updateMasterDataProcess));
@@ -74,27 +74,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
 
             var masterDataUpdater = CreateMasterDataUpdater(request, targetMeteringPoint);
 
-            var valueValidation = masterDataUpdater.Validate();
-            if (valueValidation.Success == false)
+            var result = await _updateMasterDataProcess.UpdateAsync(targetMeteringPoint, masterDataUpdater).ConfigureAwait(false);
+            if (result.Success == false)
             {
-                return new BusinessProcessResult(request.TransactionId, valueValidation.Errors);
+                return BusinessProcessResult.Fail(request.TransactionId, result.Errors.ToArray());
             }
-
-            var updatedMasterData = masterDataUpdater.Build();
-
-            var policyCheckResult = await CheckPoliciesAsync(updatedMasterData).ConfigureAwait(false);
-            if (policyCheckResult.Success == false)
-            {
-                return new BusinessProcessResult(request.TransactionId, policyCheckResult.Errors);
-            }
-
-            var validationResult = await _updateMasterDataProcess.CanUpdateAsync(targetMeteringPoint, updatedMasterData).ConfigureAwait(false);
-            if (validationResult.Success != true)
-            {
-                return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
-            }
-
-            _updateMasterDataProcess.Update(targetMeteringPoint, updatedMasterData);
 
             var parentCouplingResult = await HandleParentChildCouplingAsync(request, targetMeteringPoint).ConfigureAwait(false);
             return parentCouplingResult.Success == false ? parentCouplingResult : BusinessProcessResult.Ok(request.TransactionId);
@@ -144,18 +128,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
             return await _meteringPointRepository
                 .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
                 .ConfigureAwait(false);
-        }
-
-        private Task<BusinessRulesValidationResult> CheckPoliciesAsync(MasterData masterData)
-        {
-            if (masterData == null) throw new ArgumentNullException(nameof(masterData));
-            var validationResults = new List<BusinessRulesValidationResult>()
-            {
-                new EffectiveDatePolicy(_settings.NumberOfDaysEffectiveDateIsAllowedToBeforeToday).Check(_systemDateTimeProvider.Now(), masterData.EffectiveDate!),
-            };
-
-            var validationErrors = validationResults.SelectMany(results => results.Errors).ToList();
-            return Task.FromResult<BusinessRulesValidationResult>(new BusinessRulesValidationResult(validationErrors));
         }
 
         private Task<BusinessProcessResult> HandleParentChildCouplingAsync(UpdateMasterDataRequest request, MeteringPoint meteringPoint)
