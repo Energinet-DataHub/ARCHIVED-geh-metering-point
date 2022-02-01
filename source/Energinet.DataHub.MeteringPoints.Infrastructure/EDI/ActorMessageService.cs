@@ -169,6 +169,23 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
             await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectConnectMeteringPoint, _actorContext.CurrentActor.Identifier, gsrn).ConfigureAwait(false);
         }
 
+        public async Task SendReconnectMeteringPointConfirmAsync(string transactionId, string gsrn)
+        {
+            if (_actorContext.CurrentActor is null)
+                throw new InvalidOperationException("Can't create message when current actor is not set (null)");
+
+            var message = ConfirmMessageFactory.ReconnectMeteringPoint(
+                sender: Map(_actorContext.DataHub),
+                receiver: Map(_actorContext.CurrentActor),
+                createdDateTime: _dateTimeProvider.Now(),
+                marketActivityRecord: new Acknowledgements.MarketActivityRecord(
+                    Id: Guid.NewGuid().ToString(),
+                    MarketEvaluationPoint: gsrn,
+                    OriginalTransaction: transactionId));
+
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.ConfirmReconnectMeteringPoint, _actorContext.CurrentActor.Identifier, gsrn).ConfigureAwait(false);
+        }
+
         public async Task SendDisconnectMeteringPointConfirmAsync(string transactionId, string gsrn)
         {
             if (_actorContext.CurrentActor is null)

@@ -21,6 +21,8 @@ using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Disconnect;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
@@ -60,14 +62,24 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.DisconnectMetering
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            await _actorMessageService
-                .SendDisconnectMeteringPointConfirmAsync(request.TransactionId, request.GsrnNumber)
-                .ConfigureAwait(false);
+            var connectionState = EnumerationType.FromName<PhysicalState>(request.ConnectionState);
+            if (connectionState == PhysicalState.Disconnected)
+            {
+                await _actorMessageService
+                    .SendDisconnectMeteringPointConfirmAsync(request.TransactionId, request.GsrnNumber)
+                    .ConfigureAwait(false);
+            }
+            else if (connectionState == PhysicalState.Connected)
+            {
+                await _actorMessageService
+                    .SendReconnectMeteringPointConfirmAsync(request.TransactionId, request.GsrnNumber)
+                    .ConfigureAwait(false);
+            }
 
             var command = new SendAccountingPointCharacteristicsMessage(
                 _pipelineContext.MeteringPointId,
                 request.TransactionId,
-                BusinessReasonCodes.DisconnectMeteringPoint);
+                BusinessReasonCodes.DisconnectReconnectMeteringPoint);
             await _commandScheduler.EnqueueAsync(command).ConfigureAwait(false);
         }
 

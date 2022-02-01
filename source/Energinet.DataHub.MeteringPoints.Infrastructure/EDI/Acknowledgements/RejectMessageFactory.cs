@@ -63,7 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements
             return Defaults()
                 with
                 {
-                    ProcessType = "D15", // TODO: Insert correct process type
+                    ProcessType = "E79",
                     Sender = sender,
                     Receiver = receiver,
                     CreatedDateTime = createdDateTime,

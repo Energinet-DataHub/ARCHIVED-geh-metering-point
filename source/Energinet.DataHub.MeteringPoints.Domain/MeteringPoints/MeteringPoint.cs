@@ -205,7 +205,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             }
 
             ConnectionState = ConnectionState.Connected(connectionDetails.EffectiveDate);
-            AddDomainEvent(new MeteringPointDisconnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
+            AddDomainEvent(new MeteringPointReconnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
 
         internal BusinessRulesValidationResult CanUpdateMasterData(MasterData updatedMasterData, MasterDataValidator validator)

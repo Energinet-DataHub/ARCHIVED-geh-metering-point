@@ -63,7 +63,24 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements
             return Defaults()
                 with
                 {
-                    ProcessType = "D15", // TODO: Insert correct process type
+                    ProcessType = "E79",
+                    Sender = sender,
+                    Receiver = receiver,
+                    CreatedDateTime = createdDateTime,
+                    MarketActivityRecord = marketActivityRecord,
+                };
+        }
+
+        public static ConfirmMessage ReconnectMeteringPoint(
+            MarketRoleParticipant sender,
+            MarketRoleParticipant receiver,
+            Instant createdDateTime,
+            MarketActivityRecord marketActivityRecord)
+        {
+            return Defaults()
+                with
+                {
+                    ProcessType = "E79",
                     Sender = sender,
                     Receiver = receiver,
                     CreatedDateTime = createdDateTime,
