@@ -132,7 +132,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             {
                 "E02" => nameof(BusinessProcessType.CreateMeteringPoint),
                 "D15" => nameof(BusinessProcessType.ConnectMeteringPoint),
-                "E79" => nameof(BusinessProcessType.DisconnectMeteringPoint),
+                "E79" => nameof(BusinessProcessType.DisconnectReconnectMeteringPoint),
                 "E32" => nameof(BusinessProcessType.ChangeMasterData),
                 _ => throw new NotImplementedException(processType),
             };
