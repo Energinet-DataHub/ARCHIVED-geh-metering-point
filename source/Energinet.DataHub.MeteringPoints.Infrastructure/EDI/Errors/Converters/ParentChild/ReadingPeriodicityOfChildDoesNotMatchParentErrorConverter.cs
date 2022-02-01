@@ -13,15 +13,15 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application.EDI;
-using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData.Validation;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild.Rules;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.ParentChild
 {
-    public class ToGridAreaIsNotAllowedErrorConverter : ErrorConverter<ToGridAreaIsNotAllowed>
+    public class ReadingPeriodicityOfChildDoesNotMatchParentErrorConverter : ErrorConverter<ReadingPeriodicityOfChildDoesNotMatchParent>
     {
-        protected override ErrorMessage Convert(ToGridAreaIsNotAllowed validationError)
+        protected override ErrorMessage Convert(ReadingPeriodicityOfChildDoesNotMatchParent validationError)
         {
-            return new ErrorMessage("D46", "Target grid area cannot be changed.");
+            return new ErrorMessage("D53", "Reading periodicity of parent and child metering points must match.");
         }
     }
 }

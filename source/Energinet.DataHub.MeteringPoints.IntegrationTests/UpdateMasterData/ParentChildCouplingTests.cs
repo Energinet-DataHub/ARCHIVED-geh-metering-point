@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
@@ -29,6 +30,26 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         public ParentChildCouplingTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
         {
+        }
+
+        [Fact]
+        public async Task Reject_if_reading_periodicity_does_not_match()
+        {
+            await CreateParentOf(MeteringPointType.Exchange).ConfigureAwait(false);
+            await SendCommandAsync(Scenarios.CreateExchangeReactiveEnergy()
+                with
+                {
+                    ParentRelatedMeteringPoint = _parentGsrnNumber,
+                }).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    MeterReadingOccurrence = ReadingOccurrence.Quarterly.Name,
+                };
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D53");
         }
 
         [Fact]
@@ -95,7 +116,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         [Fact]
         public async Task Child_is_decoupled_from_parent()
         {
-            await CoupleChildToParent().ConfigureAwait(false);
+            await CreateCoupledParentChildPair().ConfigureAwait(false);
 
             await SendCommandAsync(CreateUpdateRequest()
                 with
@@ -173,7 +194,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
                 }).ConfigureAwait(false);
         }
 
-        private async Task CoupleChildToParent()
+        private async Task CreateCoupledParentChildPair()
         {
             var createParentCommand = Scenarios.CreateCommand(MeteringPointType.Production) with
             {

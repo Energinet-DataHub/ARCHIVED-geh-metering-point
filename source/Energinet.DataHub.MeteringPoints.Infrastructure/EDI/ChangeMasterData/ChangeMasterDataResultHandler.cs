@@ -15,15 +15,15 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
+using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData
 {
-    public class ChangeMasterDataResultHandler : IBusinessProcessResultHandler<ChangeMasterDataRequest>
+    public class ChangeMasterDataResultHandler : IBusinessProcessResultHandler<UpdateMasterDataRequest>
     {
         private readonly ErrorMessageFactory _errorMessageFactory;
         private readonly IActorMessageService _actorMessageService;
@@ -36,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData
             _actorMessageService = actorMessageService;
         }
 
-        public Task HandleAsync(ChangeMasterDataRequest request, BusinessProcessResult result)
+        public Task HandleAsync(UpdateMasterDataRequest request, BusinessProcessResult result)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (result == null) throw new ArgumentNullException(nameof(result));
@@ -46,7 +46,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData
                 : CreateRejectResponseAsync(request, result);
         }
 
-        private async Task CreateAcceptMessageAsync(ChangeMasterDataRequest request)
+        private async Task CreateAcceptMessageAsync(UpdateMasterDataRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -55,7 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData
                 .ConfigureAwait(false);
         }
 
-        private async Task CreateRejectResponseAsync(ChangeMasterDataRequest request, BusinessProcessResult result)
+        private async Task CreateRejectResponseAsync(UpdateMasterDataRequest request, BusinessProcessResult result)
         {
             var errors = result.ValidationErrors
                 .Select(error => _errorMessageFactory.GetErrorMessage(error))

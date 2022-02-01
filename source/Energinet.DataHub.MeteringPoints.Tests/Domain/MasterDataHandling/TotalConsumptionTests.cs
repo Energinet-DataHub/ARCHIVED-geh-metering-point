@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Mete
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.TotalConsumption;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Xunit;
@@ -112,7 +113,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         private static BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
-            return new MasterDataValidator().CheckRulesFor(MeteringPointType.TotalConsumption, masterData);
+            return new MasterDataValidator(
+                new TotalConsumptionValidator())
+                .CheckRulesFor(MeteringPointType.TotalConsumption, masterData);
         }
     }
 }

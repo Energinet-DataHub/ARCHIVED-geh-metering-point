@@ -140,14 +140,15 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
             _container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
 
-            var tenantId = Configuration["B2C_TENANT_ID"] ?? throw new InvalidOperationException(
-                "B2C tenant id not found.");
+            var openIdUrl = Configuration["FRONTEND_OPEN_ID_URL"] ?? throw new InvalidOperationException(
+                "Frontend OpenID URL not found.");
 
             var audience = Configuration["FRONTEND_SERVICE_APP_ID"] ?? throw new InvalidOperationException(
                 "Frontend service app id not found.");
 
-            _container.AddJwtTokenSecurity($"https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration", audience);
+            _container.AddJwtTokenSecurity(openIdUrl, audience);
             _container.AddUserContext<UserProvider>();
+
             Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
 
             // TODO: Probably not needed

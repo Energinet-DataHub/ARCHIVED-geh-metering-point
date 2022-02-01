@@ -14,9 +14,9 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData.Validation
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild.Rules
 {
-    public class FromGridAreaIsNotAllowed : ValidationError
+    public class ReadingPeriodicityOfChildDoesNotMatchParent : ValidationError
     {
     }
 }

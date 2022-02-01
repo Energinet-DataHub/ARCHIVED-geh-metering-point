@@ -16,7 +16,6 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
-using Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.ConsumptionMeteringPoints;
 using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
@@ -61,10 +60,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         }
 
         [Theory]
-        [InlineData("2021-01-01T18:00:00Z", "2021-01-02T22:00:00Z", true)]
-        [InlineData("2021-01-01T18:00:00Z", "2020-12-30T22:00:00Z", true)]
-        [InlineData("2021-01-01T18:00:00Z", "2021-01-01T22:00:00Z", false)]
-        [InlineData("2021-01-01T18:00:00Z", "2020-12-31T22:00:00Z", false)]
+        [InlineData("2021-01-01T18:00:00Z", "2021-01-02T23:00:00Z", true)]
+        [InlineData("2021-01-01T18:00:00Z", "2020-12-30T23:00:00Z", true)]
+        [InlineData("2021-01-01T18:00:00Z", "2021-01-01T23:00:00Z", false)]
+        [InlineData("2021-01-01T18:00:00Z", "2020-12-31T23:00:00Z", false)]
         public async Task Effective_date_is_today_or_the_day_before(string today, string effectiveDate, bool expectError)
         {
             var timeProvider = GetService<ISystemDateTimeProvider>() as SystemDateTimeProviderStub;

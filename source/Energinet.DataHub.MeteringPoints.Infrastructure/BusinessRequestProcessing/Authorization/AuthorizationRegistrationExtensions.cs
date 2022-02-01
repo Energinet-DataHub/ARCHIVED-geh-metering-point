@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Create;
+using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData;
 using SimpleInjector;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Authorization
@@ -24,7 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcess
         public static void AddBusinessProcessAuthorizers(this Container container)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
-            container.Register<ChangeMeteringPointAuthorizer>();
+            container.Register<UpdateMeteringPointAuthorizer>();
             container.Register<CreateMeteringPointAuthorizer>();
         }
     }

@@ -26,7 +26,6 @@ using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using MediatR;
 
@@ -38,20 +37,23 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
         private readonly IGridAreaRepository _gridAreaRepository;
         private readonly IMediator _mediator;
         private readonly CreateMeteringPointAuthorizer _authorizer;
-        private readonly CouplingHandler _couplingHandler;
+        private readonly MasterDataValidator _masterDataValidator;
+        private readonly ParentCouplingService _parentCouplingService;
 
         public CreateMeteringPointHandler(
             IMeteringPointRepository meteringPointRepository,
             IGridAreaRepository gridAreaRepository,
             IMediator mediator,
             CreateMeteringPointAuthorizer authorizer,
-            CouplingHandler couplingHandler)
+            MasterDataValidator masterDataValidator,
+            ParentCouplingService parentCouplingService)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _gridAreaRepository = gridAreaRepository;
             _mediator = mediator;
             _authorizer = authorizer;
-            _couplingHandler = couplingHandler ?? throw new ArgumentNullException(nameof(couplingHandler));
+            _parentCouplingService = parentCouplingService ?? throw new ArgumentNullException(nameof(parentCouplingService));
+            _masterDataValidator = masterDataValidator ?? throw new ArgumentNullException(nameof(masterDataValidator));
         }
 
         public async Task<BusinessProcessResult> Handle(CreateMeteringPoint request, CancellationToken cancellationToken)
@@ -86,7 +88,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
 
             var masterData = masterDataBuilder.Build();
 
-            var creationValidationResult = MeteringPoint.CanCreate(meteringPointType, masterData, new MasterDataValidator());
+            var creationValidationResult = MeteringPoint.CanCreate(meteringPointType, masterData, _masterDataValidator);
             if (creationValidationResult.Success == false)
             {
                 return Failure(request, creationValidationResult.Errors.ToArray());
@@ -160,12 +162,19 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             return parentCouplingResult.Success == false ? parentCouplingResult : BusinessProcessResult.Ok(request.TransactionId);
         }
 
-        private Task<BusinessProcessResult> CoupleToParentIfRequestedAsync(CreateMeteringPoint request, MeteringPoint meteringPoint)
+        private async Task<BusinessProcessResult> CoupleToParentIfRequestedAsync(CreateMeteringPoint request, MeteringPoint meteringPoint)
         {
             if (string.IsNullOrEmpty(request.ParentRelatedMeteringPoint))
-                return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
+                return BusinessProcessResult.Ok(request.TransactionId);
 
-            return _couplingHandler.TryCoupleToParentAsync(meteringPoint, request.ParentRelatedMeteringPoint, request.TransactionId);
+            var parent = await _meteringPointRepository.GetByGsrnNumberAsync(GsrnNumber.Create(request.ParentRelatedMeteringPoint)).ConfigureAwait(false);
+            if (parent is null)
+            {
+                return BusinessProcessResult.Fail(request.TransactionId, new ParentMeteringPointWasNotFound());
+            }
+
+            var result = await _parentCouplingService.CoupleToParentAsync(meteringPoint, parent).ConfigureAwait(false);
+            return new BusinessProcessResult(request.TransactionId, result.Errors);
         }
 
         private async Task<BusinessProcessResult> CreateExchangeMeteringPointAsync(CreateMeteringPoint request, GridArea gridArea, MasterData masterData)
