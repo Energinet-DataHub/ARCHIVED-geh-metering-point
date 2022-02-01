@@ -17,9 +17,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Extensions;
+using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.Policies;
@@ -33,14 +33,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
         private readonly MeteringPointPipelineContext _pipelineContext;
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
         private readonly ConnectSettings _settings;
-        private readonly ChangeMeteringPointAuthorizer _authorizer;
+        private readonly UpdateMeteringPointAuthorizer _authorizer;
 
         public ConnectMeteringPointHandler(
             IMeteringPointRepository meteringPointRepository,
             MeteringPointPipelineContext pipelineContext,
             ISystemDateTimeProvider systemDateTimeProvider,
             ConnectSettings settings,
-            ChangeMeteringPointAuthorizer authorizer)
+            UpdateMeteringPointAuthorizer authorizer)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _pipelineContext = pipelineContext;

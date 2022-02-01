@@ -15,7 +15,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild;
@@ -23,43 +22,33 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Common.ChildMeteringPoints
 {
-    public class ParentChildCouplingHandler
+    public class ParentCouplingService
     {
         private readonly IGridAreaRepository _gridAreaRepository;
-        private readonly IMeteringPointRepository _meteringPointRepository;
 
-        public ParentChildCouplingHandler(IGridAreaRepository gridAreaRepository, IMeteringPointRepository meteringPointRepository)
+        public ParentCouplingService(IGridAreaRepository gridAreaRepository)
         {
             _gridAreaRepository = gridAreaRepository ?? throw new ArgumentNullException(nameof(gridAreaRepository));
-            _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
         }
 
-        internal async Task<BusinessProcessResult> TryCoupleToParentAsync(MeteringPoint child, string parentGsrnNumber, string transactionId)
+        internal async Task<BusinessRulesValidationResult> CoupleToParentAsync(MeteringPoint child, MeteringPoint parent)
         {
             if (child == null) throw new ArgumentNullException(nameof(child));
+            if (parent == null) throw new ArgumentNullException(nameof(parent));
 
             var childMeteringPoint = CreateChildMeteringPoint(child);
-            var parentMeteringPoint = await _meteringPointRepository.GetByGsrnNumberAsync(GsrnNumber.Create(parentGsrnNumber)).ConfigureAwait(false);
-            if (parentMeteringPoint is null)
-            {
-                return BusinessProcessResult.Fail(
-                    transactionId,
-                    new ValidationError[] { new ParentMeteringPointWasNotFound(), });
-            }
-
-            var parentChildValidation = await childMeteringPoint.CanCoupleToAsync(parentMeteringPoint).ConfigureAwait(false);
+            var parentChildValidation = await childMeteringPoint.CanCoupleToAsync(parent).ConfigureAwait(false);
             if (parentChildValidation.Success == false)
-                return BusinessProcessResult.Fail(transactionId, parentChildValidation.Errors.ToArray());
+                return BusinessRulesValidationResult.Failure(parentChildValidation.Errors.ToArray());
 
-            await childMeteringPoint.CoupleToAsync(parentMeteringPoint).ConfigureAwait(false);
-            return BusinessProcessResult.Ok(transactionId);
+            await childMeteringPoint.CoupleToAsync(parent).ConfigureAwait(false);
+            return BusinessRulesValidationResult.Valid();
         }
 
-        internal Task<BusinessProcessResult> DecoupleFromParentAsync(MeteringPoint child, string transactionId)
+        internal void DecoupleFromParent(MeteringPoint child)
         {
             var childMeteringPoint = CreateChildMeteringPoint(child);
             childMeteringPoint.Decouple();
-            return Task.FromResult(BusinessProcessResult.Ok(transactionId));
         }
 
         private ChildMeteringPoint CreateChildMeteringPoint(MeteringPoint child)

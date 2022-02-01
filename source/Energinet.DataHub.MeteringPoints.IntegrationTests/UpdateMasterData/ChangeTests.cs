@@ -17,7 +17,7 @@ using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
 using Xunit.Categories;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData.ConsumptionMeteringPoints
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 {
     [IntegrationTest]
     public class ChangeTests : TestHost

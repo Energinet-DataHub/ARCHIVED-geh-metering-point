@@ -23,14 +23,14 @@ using Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperatorPol
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 
-namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
+namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
 {
-    public class ChangeMeteringPointAuthorizer
+    public class UpdateMeteringPointAuthorizer
     {
         private readonly IActorContext _actorContext;
         private readonly IMeteringPointOwnershipProvider _ownershipProvider;
 
-        public ChangeMeteringPointAuthorizer(IActorContext actorContext, IMeteringPointOwnershipProvider ownershipProvider)
+        public UpdateMeteringPointAuthorizer(IActorContext actorContext, IMeteringPointOwnershipProvider ownershipProvider)
         {
             _actorContext = actorContext ?? throw new ArgumentNullException(nameof(actorContext));
             _ownershipProvider = ownershipProvider ?? throw new ArgumentNullException(nameof(ownershipProvider));
