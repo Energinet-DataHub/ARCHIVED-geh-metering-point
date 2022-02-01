@@ -56,12 +56,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             var sql = $@"{MeteringPointDtoQueryHelper.Sql} mp
                         INNER JOIN GridAreaLinks gl ON mp.MeteringGridArea = gl.GridAreaId
                         INNER JOIN GridAreas ga ON gl.GridAreaId = ga.Id
-                        INNER JOIN UserActor ua ON ga.ActorId = ua.ActorId
-                        WHERE mp.GsrnNumber = @GsrnNumber AND ua.UserId = @UserId";
+                        WHERE mp.GsrnNumber = @GsrnNumber AND ga.ActorId in @ActorIds";
 
             var meteringPointDto = await _connectionFactory
                 .GetOpenConnection()
-                .QuerySingleOrDefaultAsync<MeteringPointDto>(sql, new { request.GsrnNumber, _userContext.CurrentUser.UserId })
+                .QuerySingleOrDefaultAsync<MeteringPointDto>(sql, new { request.GsrnNumber, _userContext.CurrentUser.ActorIds })
                 .ConfigureAwait(false);
 
             if (meteringPointDto == null)
