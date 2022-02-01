@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exceptions;
@@ -29,13 +30,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 {
     public class MasterDataUpdater : MasterDataBuilderBase
     {
+        private readonly MasterData _currentMasterData;
         private readonly List<ValidationError> _validationErrors = new();
 
         public MasterDataUpdater(IEnumerable<MasterDataField> fields, MasterData currentMasterData)
             : base(fields)
         {
             if (currentMasterData == null) throw new ArgumentNullException(nameof(currentMasterData));
-            PopulateValuesFrom(currentMasterData);
+            _currentMasterData = currentMasterData;
+            PopulateValuesFrom(_currentMasterData);
         }
 
         public BusinessRulesValidationResult Validate()
@@ -92,6 +95,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 nameof(MasterData.MeteringConfiguration),
                 () =>
                 {
+                    if (method?.Length == 0)
+                    {
+                        return BusinessRulesValidationResult.Failure(new MeteringMethodIsRequired());
+                    }
+
                     if (method is not null)
                     {
                         if (EnumerationType.GetAll<MeteringMethod>()
@@ -130,15 +138,32 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             return this;
         }
 
-        public MasterDataUpdater WithAddress(string? streetName = null, string? streetCode = null, string? buildingNumber = null, string? city = null, string? citySubDivision = null, string? postCode = null, CountryCode? countryCode = null, string? floor = null, string? room = null, int? municipalityCode = null, bool? isActual = null, string? geoInfoReference = null, string? locationDescription = null)
+        public MasterDataUpdater WithAddress(string? streetName = null, string? streetCode = null, string? buildingNumber = null, string? city = null, string? citySubDivision = null, string? postCode = null, string? countryCode = null, string? floor = null, string? room = null, int? municipalityCode = null, bool? isActual = null, string? geoInfoReference = null, string? locationDescription = null)
         {
             SetValueIfValid(
                 nameof(MasterData.Address),
-                () => Address.CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, locationDescription, geoInfoReference, isActual),
                 () =>
                 {
+                    if (countryCode is not null)
+                    {
+                        if (EnumerationType.GetAll<CountryCode>()
+                                .Select(item => item.Name)
+                                .Contains(countryCode) == false)
+                        {
+                            return BusinessRulesValidationResult.Failure(new CountryCodeValidRuleError());
+                        }
+                    }
+
+                    var currentCountryCode =
+                        countryCode == null ? null : EnumerationType.FromName<CountryCode>(countryCode);
+                    return Address.CheckRules(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, currentCountryCode, floor, room, municipalityCode, locationDescription, geoInfoReference, isActual);
+                },
+                () =>
+                {
+                    var currentCountryCode =
+                        countryCode == null ? null : EnumerationType.FromName<CountryCode>(countryCode);
                     var currentAddress = GetValue<Address>(nameof(MasterData.Address));
-                    var address = Address.Create(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, countryCode, floor, room, municipalityCode, isActual, geoInfoReference, locationDescription);
+                    var address = Address.Create(streetName, streetCode, buildingNumber, city, citySubDivision, postCode, currentCountryCode, floor, room, municipalityCode, isActual, geoInfoReference, locationDescription);
                     return currentAddress.MergeFrom(address);
                 });
 

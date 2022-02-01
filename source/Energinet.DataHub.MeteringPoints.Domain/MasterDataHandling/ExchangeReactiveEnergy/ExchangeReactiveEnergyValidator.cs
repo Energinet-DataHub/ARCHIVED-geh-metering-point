@@ -16,12 +16,15 @@ using System;
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.ExchangeReactiveEnergy.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.ExchangeReactiveEnergy
 {
     public class ExchangeReactiveEnergyValidator : IMasterDataValidatorStrategy
     {
+        public MeteringPointType Target => MeteringPointType.ExchangeReactiveEnergy;
+
         public BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
             if (masterData == null) throw new ArgumentNullException(nameof(masterData));
@@ -32,6 +35,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.ExchangeRea
                 new ProductTypeMustBeEnergyReactive(masterData.ProductType),
                 new UnitTypeMustBeKVArh(masterData.UnitType),
             });
+        }
+
+        public BusinessRulesValidationResult CheckRules(MeteringPoint meteringPoint, MasterData updatedMasterData)
+        {
+            return CheckRules(updatedMasterData);
         }
     }
 }

@@ -13,6 +13,7 @@
 // limitations under the License.
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using StreetNameIsRequiredRule = Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules.StreetNameIsRequiredRule;
 
@@ -20,6 +21,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 {
     internal class InternalUseValidator : IMasterDataValidatorStrategy
     {
+        public MeteringPointType Target => MeteringPointType.InternalUse;
+
         public BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
             return new BusinessRulesValidationResult(new List<IBusinessRule>()
@@ -28,6 +31,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 new MeterReadingOccurrenceRule(masterData.ReadingOccurrence),
                 new ProductTypeMustBeEnergyActiveRule(masterData.ProductType),
             });
+        }
+
+        public BusinessRulesValidationResult CheckRules(MeteringPoint meteringPoint, MasterData updatedMasterData)
+        {
+            return CheckRules(updatedMasterData);
         }
     }
 }

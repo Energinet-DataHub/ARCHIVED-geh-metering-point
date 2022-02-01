@@ -23,6 +23,7 @@ using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Extensions;
 using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures;
 using FluentAssertions;
 using FluentAssertions.Execution;
+using Microsoft.Identity.Client;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -35,7 +36,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
         {
             Fixture = fixture;
             Fixture.SetTestOutputHelper(testOutputHelper);
-
             TestFileLoader = new TestFileLoader();
         }
 
@@ -68,7 +68,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
                 .Replace("{{gsrn}}", TestDataCreator.CreateGsrn(), StringComparison.OrdinalIgnoreCase)
                 .Replace("{{today}}", TestDataCreator.Today(), StringComparison.OrdinalIgnoreCase);
             using var request = new HttpRequestMessage(HttpMethod.Post, "api/MeteringPoint");
-            request.AddDefaultJwtToken();
+
+            var confidentialClientApp = CreateConfidentialClientApp();
+            var result = await confidentialClientApp.AcquireTokenForClient(Fixture.AuthorizationConfiguration.BackendAppScope).ExecuteAsync().ConfigureAwait(false);
+            request.Headers.Add("Authorization", $"Bearer {result.AccessToken}");
             request.Content = new StringContent(xml, Encoding.UTF8, "application/xml");
 
             // Act
@@ -115,7 +118,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
 
         private static async Task AssertFunctionExecuted(FunctionAppHostManager hostManager, string functionName)
         {
-            var waitTimespan = TimeSpan.FromSeconds(10);
+            var waitTimespan = TimeSpan.FromSeconds(1000);
 
             var functionExecuted = await Awaiter
                 .TryWaitUntilConditionAsync(
@@ -124,6 +127,19 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
                     waitTimespan)
                 .ConfigureAwait(false);
             functionExecuted.Should().BeTrue($"{functionName} was expected to run.");
+        }
+
+        private IConfidentialClientApplication CreateConfidentialClientApp()
+        {
+            var (teamClientId, teamClientSecret) = Fixture.AuthorizationConfiguration.ClientCredentialsSettings;
+
+            var confidentialClientApp = ConfidentialClientApplicationBuilder
+                .Create(teamClientId)
+                .WithClientSecret(teamClientSecret)
+                .WithAuthority(new Uri($"https://login.microsoftonline.com/{Fixture.AuthorizationConfiguration.B2cTenantId}"))
+                .Build();
+
+            return confidentialClientApp;
         }
 
         private void AssertConfirmMessages()

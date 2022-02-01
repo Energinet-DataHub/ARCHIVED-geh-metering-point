@@ -12,37 +12,41 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
+using Energinet.DataHub.Core.App.Common.Abstractions.ServiceBus;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
-using Energinet.DataHub.MeteringPoints.Infrastructure.ServiceBus;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion
 {
     public class InternalServiceBus : Channel
     {
-        private readonly IUserContext _userContext;
+        private readonly IActorContext _actorContext;
         private readonly ICorrelationContext _correlationContext;
         private readonly ServiceBusSender _sender;
 
         public InternalServiceBus(
-            IUserContext userContext,
+            IActorContext actorContext,
             ICorrelationContext correlationContext,
             ServiceBusSender sender)
         {
-            _userContext = userContext;
+            _actorContext = actorContext;
             _correlationContext = correlationContext;
             _sender = sender;
         }
 
         public override async Task WriteAsync(byte[] data, CancellationToken cancellationToken = default)
         {
+            if (_actorContext.CurrentActor is null)
+                throw new InvalidOperationException("Can't send message when current actor is not set (null)");
+
             var message = new ServiceBusMessage(data);
             message.CorrelationId = _correlationContext.Id;
-            message.ApplicationProperties.Add(Constants.ServiceBusIdentityKey, _userContext.CurrentUser?.AsString() ?? string.Empty);
+            message.ApplicationProperties.Add(Constants.ServiceBusIdentityKey, _actorContext.CurrentActor.AsString());
 
             await _sender.SendMessageAsync(message, cancellationToken).ConfigureAwait(false);
         }

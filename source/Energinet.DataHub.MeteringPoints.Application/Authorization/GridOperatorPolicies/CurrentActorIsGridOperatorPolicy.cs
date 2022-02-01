@@ -15,7 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -23,26 +23,26 @@ namespace Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperato
 {
     public class CurrentActorIsGridOperatorPolicy
     {
-        private readonly IUserContext _userContext;
+        private readonly IActorContext _actorContext;
 
-        public CurrentActorIsGridOperatorPolicy(IUserContext userContext)
+        public CurrentActorIsGridOperatorPolicy(IActorContext actorContext)
         {
-            _userContext = userContext;
+            _actorContext = actorContext;
         }
 
         public Task<AuthorizationResult> AuthorizeAsync(GridArea gridArea)
         {
             if (gridArea == null) throw new ArgumentNullException(nameof(gridArea));
-            if (_userContext.CurrentUser == null) throw new InvalidOperationException("No current user found");
+            if (_actorContext.CurrentActor == null) throw new InvalidOperationException("No current user found");
 
-            if (gridArea.ActorId.Value == _userContext.CurrentUser.ActorId)
+            if (gridArea.ActorId.Value == _actorContext.CurrentActor.ActorId)
             {
                 return Task.FromResult(AuthorizationResult.Ok());
             }
 
             return Task.FromResult(new AuthorizationResult(new List<ValidationError>()
             {
-                new CurrentActorIsNotGridOperator(_userContext.CurrentUser.Identifier, gridArea.Code.Value),
+                new CurrentActorIsNotGridOperator(_actorContext.CurrentActor.Identifier, gridArea.Code.Value),
             }));
         }
     }

@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Authentication;
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.MeteringPoints.Application.Authorization;
 using Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperatorPolicies;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
@@ -26,17 +26,17 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
 {
     public class CreateMeteringPointAuthorizer
     {
-        private readonly IUserContext _authenticatedUserContext;
+        private readonly IActorContext _actorContext;
 
-        public CreateMeteringPointAuthorizer(IUserContext authenticatedUserContext)
+        public CreateMeteringPointAuthorizer(IActorContext actorContext)
         {
-            _authenticatedUserContext = authenticatedUserContext ?? throw new ArgumentNullException(nameof(authenticatedUserContext));
+            _actorContext = actorContext ?? throw new ArgumentNullException(nameof(actorContext));
         }
 
         public Task<AuthorizationResult> AuthorizeAsync(GridArea gridArea)
         {
             if (gridArea == null) throw new ArgumentNullException(nameof(gridArea));
-            if (_authenticatedUserContext.CurrentUser is null)
+            if (_actorContext.CurrentActor is null)
             {
                 throw new AuthenticationException("No authenticated user");
             }
@@ -50,11 +50,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             return new AuthorizationResult(results.SelectMany(result => result.Errors).ToList());
         }
 
-        private IReadOnlyList<Task<AuthorizationResult>> GetAuthorizationHandlers(GridArea gridArea)
+        private IEnumerable<Task<AuthorizationResult>> GetAuthorizationHandlers(GridArea gridArea)
         {
-            return new List<Task<AuthorizationResult>>()
+            return new List<Task<AuthorizationResult>>
             {
-                new CurrentActorIsGridOperatorPolicy(_authenticatedUserContext).AuthorizeAsync(gridArea),
+                new CurrentActorIsGridOperatorPolicy(_actorContext).AuthorizeAsync(gridArea),
             };
         }
     }

@@ -16,6 +16,7 @@ using System;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
@@ -34,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             var meteringPoint = CreateMeteringPoint(MeteringPointType.Consumption, MasterDataBuilderForConsumption());
             meteringPoint.CloseDown();
 
-            var validationResult = meteringPoint.CanUpdateMasterData(UpdatedMasterData(meteringPoint.MasterData), new MasterDataValidator());
+            var validationResult = meteringPoint.CanUpdateMasterData(UpdatedMasterData(meteringPoint.MasterData), CreateValidator());
 
             AssertContainsValidationError<ClosedDownMeteringPointCannotBeChangedError>(validationResult);
         }
@@ -45,7 +46,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             var meteringPoint = CreateMeteringPoint(MeteringPointType.Consumption, MasterDataBuilderForConsumption());
 
             var updatedMasterData = UpdatedMasterData(meteringPoint.MasterData);
-            meteringPoint.UpdateMasterData(updatedMasterData, new MasterDataValidator());
+            meteringPoint.UpdateMasterData(updatedMasterData, CreateValidator());
 
             var masterDataWasUpdated = meteringPoint.DomainEvents.FirstOrDefault(e => e is MasterDataWasUpdated) as MasterDataWasUpdated;
             Assert.Equal(updatedMasterData.Address.StreetName, masterDataWasUpdated?.StreetName);
@@ -87,7 +88,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 
             var masterDataWithInvalidValues = InvalidForConsumptionMeteringPoints(meteringPoint.MasterData);
 
-            Assert.Throws<MasterDataChangeException>(() => meteringPoint.UpdateMasterData(masterDataWithInvalidValues, new MasterDataValidator()));
+            Assert.Throws<MasterDataChangeException>(() => meteringPoint.UpdateMasterData(masterDataWithInvalidValues, CreateValidator()));
         }
 
         [Fact]
@@ -97,7 +98,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             var masterDataWithInvalidValues = InvalidForConsumptionMeteringPoints(meteringPoint.MasterData);
 
             var validationResult =
-                meteringPoint.CanUpdateMasterData(masterDataWithInvalidValues, new MasterDataValidator());
+                meteringPoint.CanUpdateMasterData(masterDataWithInvalidValues, CreateValidator());
         }
 
         private static MasterData UpdatedMasterData(MasterData currentMasterData)
@@ -135,6 +136,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 currentMasterData.NetSettlementGroup!,
                 currentMasterData.ProductionObligation);
         }
+
+        private static MasterDataValidator CreateValidator() =>
+            new MasterDataValidator(new ConsumptionMeteringPointValidator());
 
         private static MasterData InvalidForConsumptionMeteringPoints(MasterData currentMasterData)
         {

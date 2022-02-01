@@ -33,11 +33,14 @@ module "func_ingestion" {
     # Endregion: Default Values
     METERINGPOINT_QUEUE_URL               = "${module.sb_meteringpoint.name}.servicebus.windows.net:9093"
     METERINGPOINT_QUEUE_CONNECTION_STRING = module.sb_meteringpoint.primary_connection_strings["send"]
+    METERINGPOINT_DB_CONNECTION_STRING    = local.MS_METERING_POINT_CONNECTION_STRING
     METERINGPOINT_QUEUE_TOPIC_NAME        = module.sbq_meteringpoint.name
     INTERNAL_SERVICEBUS_RETRY_COUNT       = 3
     # Shared resources logging
     REQUEST_RESPONSE_LOGGING_CONNECTION_STRING   = data.azurerm_key_vault_secret.st_market_operator_logs_primary_connection_string.value
     REQUEST_RESPONSE_LOGGING_CONTAINER_NAME      = data.azurerm_key_vault_secret.st_market_operator_logs_container_name.value
+    B2C_TENANT_ID                         = data.azurerm_key_vault_secret.b2c_tenant_id.value
+    BACKEND_SERVICE_APP_ID                = data.azurerm_key_vault_secret.backend_service_app_id.value
   }
 
   tags                                    = azurerm_resource_group.this.tags

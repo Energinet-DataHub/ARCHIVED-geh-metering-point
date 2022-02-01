@@ -12,26 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
+using System;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.XmlConversion.XmlConverter.Abstractions;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 {
     public class XmlSenderValidator
     {
-        private readonly IUserContext _userContext;
+        private readonly IActorContext _actorContext;
 
-        public XmlSenderValidator(IUserContext userContext)
+        public XmlSenderValidator(IActorContext actorContext)
         {
-            _userContext = userContext;
+            _actorContext = actorContext;
         }
 
         public (bool IsValid, string ErrorMessage) ValidateSender(XmlHeaderSender? sender)
         {
-            if (_userContext.CurrentUser is null)
-                return (false, "User is not authorized.");
+            if (_actorContext.CurrentActor is null)
+                throw new InvalidOperationException("Can't validate message when current actor is not set (null)");
 
-            return sender?.Id != _userContext.CurrentUser.Identifier
+            return sender?.Id != _actorContext.CurrentActor.Identifier
                 ? (false, "Identifier applied for sender was not equal to the identifier of the authorized actor.")
                 : (true, string.Empty);
         }

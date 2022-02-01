@@ -40,13 +40,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string AssetType => Domain.MasterDataHandling.Components.AssetType.GasTurbine.Name;
 
-        public static string EffectiveDate => "2021-05-05T22:00:00Z";
+        public static string EffectiveDate => "2021-05-05T23:00:00Z";
 
         public static string MeasurementUnitType => Domain.MasterDataHandling.Components.MeasurementUnitType.KWh.Name;
 
         public static string MeteringGridArea => "870";
 
-        public static Guid GridOperatorIdOfGrid870 => Guid.Parse("158725db-35b5-4740-8ba4-80c616ec9f92");
+        public static Guid GridOperatorIdOfGrid870 => Guid.Parse("90f6f4e5-8073-4842-b33e-c59e9f4a8c3f");
 
         public static string StreetName => "Test Road 1";
 

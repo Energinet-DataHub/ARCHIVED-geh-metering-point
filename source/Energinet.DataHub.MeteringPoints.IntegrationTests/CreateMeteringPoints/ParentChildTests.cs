@@ -32,6 +32,45 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
+        public async Task Reject_if_parent_is_closed_down()
+        {
+            var createParentCommand = Scenarios.CreateCommand(MeteringPointType.Production) with
+            {
+                GsrnNumber = "570851247381952311",
+            };
+            await SendCommandAsync(createParentCommand).ConfigureAwait(false);
+            await CloseDownMeteringPointAsync(createParentCommand.GsrnNumber).ConfigureAwait(false);
+
+            var createChildCommand = Scenarios.CreateCommand(MeteringPointType.ElectricalHeating)
+                with
+                {
+                    ParentRelatedMeteringPoint = createParentCommand.GsrnNumber,
+                };
+            await SendCommandAsync(createChildCommand).ConfigureAwait(false);
+
+            AssertValidationError("D16");
+        }
+
+        [Fact]
+        public async Task Reject_when_parent_can_not_act_as_parent()
+        {
+            var createInvalidParentCommand = Scenarios.CreateCommand(MeteringPointType.NetConsumption) with
+            {
+                GsrnNumber = "570851247381952311",
+            };
+            await SendCommandAsync(createInvalidParentCommand).ConfigureAwait(false);
+
+            var createChildCommand = Scenarios.CreateCommand(MeteringPointType.NetConsumption)
+                with
+                {
+                    ParentRelatedMeteringPoint = createInvalidParentCommand.GsrnNumber,
+                };
+            await SendCommandAsync(createChildCommand).ConfigureAwait(false);
+
+            AssertValidationError("D18");
+        }
+
+        [Fact]
         public async Task Parent_gsrn_number_is_must_be_valid()
         {
             var createChildCommand = Scenarios.CreateCommand(MeteringPointType.NetConsumption)

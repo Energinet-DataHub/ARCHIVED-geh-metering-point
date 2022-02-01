@@ -45,7 +45,13 @@ env:
   # Conditions
   PUSH_PACKAGES: ${{ github.event_name != 'pull_request' }}
   # Tool versions
-  DOTNET_VERSION: '5.0.202'
+  DOTNET_VERSION: '5.0.404'
+  AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID }}
+  AZURE_SPN_SECRET: ${{ secrets.AZURE_SPN_SECRET }}
+  AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
+  AZURE_SECRETS_KEYVAULT_URL: ${{ secrets.AZURE_SECRETS_KEYVAULT_URL }}
 
 jobs:
   build_and_publish:
@@ -68,6 +74,12 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Login to use Azure resources in integration tests
+        if: ${{ env.AZURE_KEYVAULT_URL != '' && env.AZURE_SECRETS_KEYVAULT_URL != '' }}
+        run: |
+          az login --service-principal --username "${{ secrets.AZURE_SPN_ID }}" --password "${{ secrets.AZURE_SPN_SECRET }}" --tenant "${{ secrets.AZURE_TENANT_ID }}"
+          az account set --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
 
       - name: Cache NuGet packages
         uses: actions/cache@v2
@@ -99,7 +111,7 @@ jobs:
         run: dotnet test ${{ env.SOLUTION_FILE_PATH }} --no-build --configuration ${{ env.BUILD_CONFIGURATION }} --verbosity normal --filter "FullyQualifiedName~MeteringPointClientTests"
 
       - name: Get version suffix property value
-        uses: Energinet-DataHub/.github/.github/actions/get-version-suffix@2.4.1
+        uses: Energinet-DataHub/.github/.github/actions/get-version-suffix@3.0.2
         id: get_version_suffix
 
       - name: Pack MeteringPoints.Client project
@@ -113,7 +125,7 @@ jobs:
           PROJECT_PATH: 'source/Energinet.DataHub.MeteringPoints.Client.Abstractions/Energinet.DataHub.MeteringPoints.Client.Abstractions.csproj'
 
       - name: Check each NuGet package version does not exists (not looking at prereleases)
-        uses: Energinet-DataHub/.github/.github/actions/nuget-assert-release-version@2.4.1
+        uses: Energinet-DataHub/.github/.github/actions/nuget-assert-release-version@3.0.2
         with:
           NUPKG_RECURSE_PATH: 'source'
 

@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Authentication;
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.MeteringPoints.Application.Authorization;
 using Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperatorPolicies;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
@@ -27,19 +27,19 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
 {
     public class ChangeMeteringPointAuthorizer
     {
-        private readonly IUserContext _authenticatedUserContext;
+        private readonly IActorContext _actorContext;
         private readonly IMeteringPointOwnershipProvider _ownershipProvider;
 
-        public ChangeMeteringPointAuthorizer(IUserContext authenticatedUserContext, IMeteringPointOwnershipProvider ownershipProvider)
+        public ChangeMeteringPointAuthorizer(IActorContext actorContext, IMeteringPointOwnershipProvider ownershipProvider)
         {
-            _authenticatedUserContext = authenticatedUserContext ?? throw new ArgumentNullException(nameof(authenticatedUserContext));
+            _actorContext = actorContext ?? throw new ArgumentNullException(nameof(actorContext));
             _ownershipProvider = ownershipProvider ?? throw new ArgumentNullException(nameof(ownershipProvider));
         }
 
         public Task<AuthorizationResult> AuthorizeAsync(MeteringPoint meteringPoint)
         {
             if (meteringPoint == null) throw new ArgumentNullException(nameof(meteringPoint));
-            if (_authenticatedUserContext.CurrentUser is null)
+            if (_actorContext.CurrentActor is null)
             {
                 throw new AuthenticationException("No authenticated user");
             }
@@ -53,11 +53,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeMasterData
             return new AuthorizationResult(results.SelectMany(result => result.Errors).ToList());
         }
 
-        private IReadOnlyList<Task<AuthorizationResult>> GetAuthorizationHandlers(MeteringPoint request)
+        private IEnumerable<Task<AuthorizationResult>> GetAuthorizationHandlers(MeteringPoint request)
         {
-            return new List<Task<AuthorizationResult>>()
+            return new List<Task<AuthorizationResult>>
             {
-                new GridOperatorIsOwnerPolicy(_ownershipProvider, _authenticatedUserContext).AuthorizeAsync(request),
+                new GridOperatorIsOwnerPolicy(_ownershipProvider, _actorContext).AuthorizeAsync(request),
             };
         }
     }

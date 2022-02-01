@@ -33,5 +33,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         /// </summary>
         /// <param name="meteringPoint"></param>
         void Add(MeteringPoint meteringPoint);
+
+        /// <summary>
+        /// Returns the parent metering point of a child
+        /// </summary>
+        /// /// <param name="id"></param>
+        /// <returns><see cref="MeteringPoint"/></returns>
+        Task<MeteringPoint?> GetByIdAsync(MeteringPointId id);
     }
 }

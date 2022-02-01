@@ -17,6 +17,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.ExchangeReactiveEnergy;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
@@ -70,7 +71,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithPowerPlant(null!)
                 .Build();
 
-            AssertDoesNotContainValidationError<PowerPlantRequirementRuleError>(CheckRules(masterData));
+            AssertDoesNotContainValidationError<PowerPlantIsRequired>(CheckRules(masterData));
         }
 
         [Fact]
@@ -102,7 +103,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
 
         private static BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
-            return new MasterDataValidator().CheckRulesFor(MeteringPointType.ExchangeReactiveEnergy, masterData);
+            return new MasterDataValidator(
+                new ExchangeReactiveEnergyValidator())
+                .CheckRulesFor(MeteringPointType.ExchangeReactiveEnergy, masterData);
         }
     }
 }

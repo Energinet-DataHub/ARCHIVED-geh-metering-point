@@ -16,6 +16,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
@@ -102,6 +103,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .Build();
 
             AssertContainsValidationError<ScheduledMeterReadingDateNotAllowedRuleError>(CheckRules(masterData));
+        }
+
+        [Fact]
+        public void Scheduled_meter_reading_date_cannot_be_changed()
+        {
+            var meteringPoint = CreateMeteringPoint(MeteringPointType.Consumption, MasterDataBuilderForConsumption()
+                .WithNetSettlementGroup(NetSettlementGroup.Six.Name)
+                .WithScheduledMeterReadingDate("0101"));
+
+            var updatedMasterData = Updater(meteringPoint)
+                .WithScheduledMeterReadingDate("0201")
+                .Build();
+
+            AssertError<ScheduledMeterReadingDateCannotBeChanged>(meteringPoint.CanUpdateMasterData(updatedMasterData, CreateValidator()));
         }
 
         [Fact]
@@ -261,9 +276,17 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithNetSettlementGroup(NetSettlementGroup.Two.Name)
                 .WithMeteringConfiguration(MeteringMethod.Virtual.Name, string.Empty);
 
+        private static MasterDataUpdater Updater(MeteringPoint meteringPoint) => new MasterDataUpdater(
+            new MasterDataFieldSelector().GetMasterDataFieldsFor(MeteringPointType.Consumption),
+            meteringPoint.MasterData);
+
         private static BusinessRulesValidationResult CheckRules(MasterData masterData)
         {
-            return new MasterDataValidator().CheckRulesFor(MeteringPointType.Consumption, masterData);
+            return new MasterDataValidator(new ConsumptionMeteringPointValidator()).CheckRulesFor(MeteringPointType.Consumption, masterData);
         }
+
+        private static MasterDataValidator CreateValidator() =>
+            new MasterDataValidator(
+                new ConsumptionMeteringPointValidator());
     }
 }

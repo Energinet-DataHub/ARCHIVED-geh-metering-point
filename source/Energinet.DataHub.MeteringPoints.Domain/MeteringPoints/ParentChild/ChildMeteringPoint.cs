@@ -48,6 +48,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild
                 new OnlySpecificGroupsCanActAsParentRule(parent),
                 new OnlyGroup3And4CanActAsChildOfGroup1(parent, _meteringPoint),
                 new OnlySpecificGroupsCanActAsChildOfGroup2(parent, _meteringPoint),
+                new CannotCoupleToClosedDownParentRule(parent),
             };
 
             errors.AddRange(rules.Where(rule => rule.IsBroken).Select(rule => rule.ValidationError).ToList());
@@ -64,6 +65,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild
             }
 
             _meteringPoint.SetParent(parent.Id);
+        }
+
+        public void Decouple()
+        {
+            _meteringPoint.RemoveParent();
         }
 
         private async Task<bool> GridAreasMatchAsync(MeteringPoint parent)

@@ -15,9 +15,8 @@
 using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
-using Energinet.DataHub.Core.FunctionApp.Common.Identity;
-using Energinet.DataHub.Core.FunctionApp.Common.Middleware;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware;
+using Energinet.DataHub.Core.App.FunctionApp.SimpleInjector;
 using Energinet.DataHub.Core.Logging.RequestResponseMiddleware;
 using Energinet.DataHub.Core.Logging.RequestResponseMiddleware.Storage;
 using Energinet.DataHub.Core.XmlConversion.XmlConverter.Configuration;
@@ -26,7 +25,9 @@ using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions;
+using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappings;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Resilience;
@@ -56,6 +57,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             base.ConfigureFunctionsWorkerDefaults(options);
 
             options.UseMiddleware<JwtTokenMiddleware>();
+            options.UseMiddleware<ActorMiddleware>();
             options.UseMiddleware<CorrelationIdMiddleware>();
             options.UseMiddleware<EntryPointTelemetryScopeMiddleware>();
             options.UseMiddleware<RequestResponseLoggingMiddleware>();
@@ -71,8 +73,20 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
             container.Register<CorrelationIdMiddleware>(Lifestyle.Scoped);
             container.Register<EntryPointTelemetryScopeMiddleware>(Lifestyle.Scoped);
-            container.Register<JwtTokenMiddleware>(Lifestyle.Scoped);
-            container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
+
+            var tenantId = Environment.GetEnvironmentVariable("B2C_TENANT_ID") ?? throw new InvalidOperationException(
+                "B2C tenant id not found.");
+            var audience = Environment.GetEnvironmentVariable("BACKEND_SERVICE_APP_ID") ?? throw new InvalidOperationException(
+                "Backend service app id not found.");
+
+            container.AddJwtTokenSecurity($"https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration", audience);
+            container.AddActorContext<ActorProvider>();
+            var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")
+                                   ?? throw new InvalidOperationException(
+                                       "Metering point db connection string not found.");
+            container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(connectionString), Lifestyle.Scoped);
+            Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
+
             container.Register<XmlSenderValidator>(Lifestyle.Scoped);
 
             container.Register<MessageDispatcher, InternalDispatcher>(Lifestyle.Scoped);
@@ -96,9 +110,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 
             container.AddXmlDeserialization(XmlMappingConfiguration, TranslateProcessType);
 
-            var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING");
+            var queueConnectionString = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING");
             var topic = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME");
-            container.Register(() => new ServiceBusClient(connectionString).CreateSender(topic), Lifestyle.Singleton);
+            container.Register(() => new ServiceBusClient(queueConnectionString).CreateSender(topic), Lifestyle.Singleton);
 
             container.SendProtobuf<MeteringPointEnvelope>();
         }

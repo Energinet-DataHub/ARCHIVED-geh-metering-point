@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
@@ -19,13 +20,26 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
     /// <summary>
     /// Validates a master data for specific type of metering point
     /// </summary>
-    internal interface IMasterDataValidatorStrategy
+    public interface IMasterDataValidatorStrategy
     {
+        /// <summary>
+        /// The type of metering point this validator targets
+        /// </summary>
+        MeteringPointType Target { get; }
+
         /// <summary>
         /// Checks business rules and returns the result
         /// </summary>
         /// <param name="masterData"></param>
         /// <returns><see cref="BusinessRulesValidationResult"/></returns>
         BusinessRulesValidationResult CheckRules(MasterData masterData);
+
+        /// <summary>
+        /// Verifies if master data is valid for a particular metering point
+        /// </summary>
+        /// <param name="meteringPoint"></param>
+        /// <param name="updatedMasterData"></param>
+        /// <returns><see cref="BusinessRulesValidationResult"/></returns>
+        BusinessRulesValidationResult CheckRules(MeteringPoint meteringPoint, MasterData updatedMasterData);
     }
 }

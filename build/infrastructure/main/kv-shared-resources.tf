@@ -36,18 +36,23 @@ data "azurerm_key_vault_secret" "appi_instrumentation_key" {
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
-data "azurerm_key_vault_secret" "sql_data_admin_name" {
-  name         = "sql-data-admin-user-name"
+data "azurerm_key_vault_secret" "mssql_data_name" {
+  name         = "mssql-data-name"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
-data "azurerm_key_vault_secret" "sql_data_admin_password" {
-  name         = "sql-data-admin-user-password"
+data "azurerm_key_vault_secret" "mssql_data_admin_name" {
+  name         = "mssql-data-admin-user-name"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
-data "azurerm_key_vault_secret" "sql_data_url" {
-  name         = "sql-data-url"
+data "azurerm_key_vault_secret" "mssql_data_admin_password" {
+  name         = "mssql-data-admin-user-password"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "mssql_data_url" {
+  name         = "mssql-data-url"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
@@ -63,11 +68,6 @@ data "azurerm_key_vault_secret" "st_market_operator_response_primary_connection_
 
 data "azurerm_key_vault_secret" "st_market_operator_response_postofficereply_container_name" {
   name         = "st-marketres-postofficereply-container-name"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "sql_data_name" {
-  name         = "sql-data-name"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
@@ -96,6 +96,16 @@ data "azurerm_key_vault_secret" "sbq_create_link_reply_name" {
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
+data "azurerm_key_vault_secret" "b2c_tenant_id" {
+  name         = "b2c-tenant-id"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "backend_service_app_id" {
+  name         = "backend-service-app-id"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
 data "azurerm_key_vault_secret" "st_market_operator_logs_primary_connection_string" {
   name         = "st-marketoplogs-primary-connection-string"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
@@ -108,5 +118,15 @@ data "azurerm_key_vault_secret" "st_market_operator_logs_container_name" {
 
 data "azurerm_key_vault_secret" "vnet_shared_name" {
   name         = "vnet-shared-name"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "frontend_open_id_url" {
+  name         = "frontend-open-id-url"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "frontend_service_app_id" {
+  name         = "frontend-service-app-id"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
