@@ -61,6 +61,9 @@ limitations under the License.
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="TestFiles\Cim\DisconnectMeteringPoint.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <None Remove="TestFiles\Cim\CreateMeteringPointConsumption.xml" />
     <EmbeddedResource Include="TestFiles\Cim\CreateMeteringPointConsumption.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

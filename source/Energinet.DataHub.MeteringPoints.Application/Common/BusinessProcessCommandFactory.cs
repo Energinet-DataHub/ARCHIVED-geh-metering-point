@@ -17,6 +17,7 @@ using System.Globalization;
 using Energinet.DataHub.MeteringPoints.Application.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Create;
+using Energinet.DataHub.MeteringPoints.Application.Disconnect;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -32,6 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
 
             if (processType == BusinessProcessType.CreateMeteringPoint) return CreateNewMeteringPointCommand(document);
             if (processType == BusinessProcessType.ConnectMeteringPoint) return CreateConnectMeteringPointCommand(document);
+            if (processType == BusinessProcessType.DisconnectMeteringPoint) return CreateDisconnectMeteringPointCommand(document);
             if (processType == BusinessProcessType.ChangeMasterData) return CreateChangeMasterDataCommand(document);
             return null;
         }
@@ -78,6 +80,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
         private static IBusinessRequest? CreateConnectMeteringPointCommand(MasterDataDocument document)
         {
             return new ConnectMeteringPointRequest(document.GsrnNumber, document.EffectiveDate, document.TransactionId);
+        }
+
+        private static IBusinessRequest? CreateDisconnectMeteringPointCommand(MasterDataDocument document)
+        {
+            return new DisconnectReconnectMeteringPointRequest(document.GsrnNumber, document.EffectiveDate, document.TransactionId);
         }
 
         private static IBusinessRequest? CreateNewMeteringPointCommand(MasterDataDocument document)

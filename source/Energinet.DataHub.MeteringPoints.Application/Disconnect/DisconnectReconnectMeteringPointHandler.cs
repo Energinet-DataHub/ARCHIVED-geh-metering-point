@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,12 +23,15 @@ using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Extensions;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Disconnect;
 using Energinet.DataHub.MeteringPoints.Domain.Policies;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using ConnectionState = Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums.ConnectionState;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Disconnect
 {
-    public class DisconnectMeteringPointHandler : IBusinessRequestHandler<DisconnectMeteringPointRequest>
+    public class DisconnectReconnectMeteringPointHandler : IBusinessRequestHandler<DisconnectReconnectMeteringPointRequest>
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly MeteringPointPipelineContext _pipelineContext;
@@ -35,7 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Disconnect
         private readonly DisconnectSettings _settings;
         private readonly ChangeMeteringPointAuthorizer _authorizer;
 
-        public DisconnectMeteringPointHandler(
+        public DisconnectReconnectMeteringPointHandler(
             IMeteringPointRepository meteringPointRepository,
             MeteringPointPipelineContext pipelineContext,
             ISystemDateTimeProvider systemDateTimeProvider,
@@ -49,7 +53,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Disconnect
             _authorizer = authorizer ?? throw new ArgumentNullException(nameof(authorizer));
         }
 
-        public async Task<BusinessProcessResult> Handle(DisconnectMeteringPointRequest request, CancellationToken cancellationToken)
+        public async Task<BusinessProcessResult> Handle(DisconnectReconnectMeteringPointRequest request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -74,14 +78,28 @@ namespace Energinet.DataHub.MeteringPoints.Application.Disconnect
                 return new BusinessProcessResult(request.TransactionId, policyCheckResult.Errors);
             }
 
+            var connectionState = EnumerationType.FromName<PhysicalState>(request.ConnectionState);
+            var connectionStateResult = CheckConnectionState(connectionState);
+            if (connectionStateResult.Success == false)
+            {
+                return new BusinessProcessResult(request.TransactionId, connectionStateResult.Errors);
+            }
+
             var connectionDetails = ConnectionDetails.Create(request.EffectiveDate.ToInstant());
-            var rulesCheckResult = CheckBusinessRules(request, connectionDetails, meteringPoint!);
+            var rulesCheckResult = CheckBusinessRules(request, connectionDetails, connectionState, meteringPoint!);
             if (!rulesCheckResult.Success)
             {
                 return rulesCheckResult;
             }
 
-            meteringPoint.Disconnect(ConnectionDetails.Create(request.EffectiveDate.ToInstant()));
+            if (connectionState == PhysicalState.Connected)
+            {
+                meteringPoint.Disconnect(ConnectionDetails.Create(request.EffectiveDate.ToInstant()));
+            }
+            else if (connectionState == PhysicalState.Disconnected)
+            {
+                meteringPoint.Reconnect(ConnectionDetails.Create(request.EffectiveDate.ToInstant()));
+            }
 
             _pipelineContext.MeteringPointId = meteringPoint.Id.Value.ToString()!;
 
@@ -89,13 +107,24 @@ namespace Energinet.DataHub.MeteringPoints.Application.Disconnect
         }
 
         private static BusinessProcessResult CheckBusinessRules(
-            DisconnectMeteringPointRequest request,
+            DisconnectReconnectMeteringPointRequest request,
             ConnectionDetails connectionDetails,
+            PhysicalState connectionState,
             MeteringPoint meteringPoint)
         {
-            var validationResult = meteringPoint.DisconnectAcceptable(connectionDetails);
+            var validationResult = connectionState == PhysicalState.Connected ? meteringPoint.DisconnectAcceptable(connectionDetails) : meteringPoint.ReconnectAcceptable(connectionDetails);
 
             return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
+        }
+
+        private static BusinessRulesValidationResult CheckConnectionState(
+            PhysicalState connectionState)
+        {
+            var rules = new Collection<IBusinessRule>
+            {
+                new ConnectionStateMustBeConnectedOrDisconnectedRule(connectionState),
+            };
+            return new BusinessRulesValidationResult(rules);
         }
 
         private async Task<MeteringPoint?> FetchTargetMeteringPointAsync(IChangeMeteringPointRequest request)
@@ -105,7 +134,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Disconnect
                 .ConfigureAwait(false);
         }
 
-        private Task<BusinessRulesValidationResult> CheckPoliciesAsync(DisconnectMeteringPointRequest request)
+        private Task<BusinessRulesValidationResult> CheckPoliciesAsync(DisconnectReconnectMeteringPointRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             var validationResults = new List<BusinessRulesValidationResult>()

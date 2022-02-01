@@ -140,11 +140,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.DisconnectMeteringPo
             return new(SampleData.GsrnNumber, effectiveDate.ToString(), SampleData.Transaction);
         }
 
-        private DisconnectMeteringPointRequest CreateDisconnectMeteringPointRequest()
+        private DisconnectReconnectMeteringPointRequest CreateDisconnectMeteringPointRequest()
         {
             var currentDate = _dateTimeProvider.Now().ToDateTimeUtc();
             var effectiveDate = Instant.FromUtc(currentDate.Year, currentDate.Month, currentDate.Day, 22, 0);
-            return new(SampleData.GsrnNumber, effectiveDate.ToString(), SampleData.Transaction);
+            return new(SampleData.GsrnNumber, effectiveDate.ToString(), SampleData.Transaction, "Disconnected");
         }
 
         private Instant EffectiveDateInPast(int numberOfDaysFromToday)

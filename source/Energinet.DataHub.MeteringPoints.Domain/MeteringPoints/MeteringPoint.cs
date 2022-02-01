@@ -174,12 +174,34 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             return new BusinessRulesValidationResult(rules);
         }
 
+        public BusinessRulesValidationResult ReconnectAcceptable(ConnectionDetails connectionDetails)
+        {
+            var rules = new Collection<IBusinessRule>
+            {
+                new PhysicalStateMustBeDisconnectedRule(ConnectionState),
+                new MustHaveEnergySupplierRule(this, connectionDetails),
+            };
+            return new BusinessRulesValidationResult(rules);
+        }
+
         public void Disconnect(ConnectionDetails connectionDetails)
         {
             if (connectionDetails == null) throw new ArgumentNullException(nameof(connectionDetails));
             if (!DisconnectAcceptable(connectionDetails).Success)
             {
                 throw MeteringPointDisconnectException.Create(Id, GsrnNumber);
+            }
+
+            ConnectionState = ConnectionState.Disconnected(connectionDetails.EffectiveDate);
+            AddDomainEvent(new MeteringPointDisconnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
+        }
+
+        public void Reconnect(ConnectionDetails connectionDetails)
+        {
+            if (connectionDetails == null) throw new ArgumentNullException(nameof(connectionDetails));
+            if (!ReconnectAcceptable(connectionDetails).Success)
+            {
+                throw MeteringPointReconnectException.Create(Id, GsrnNumber);
             }
 
             ConnectionState = ConnectionState.Disconnected(connectionDetails.EffectiveDate);

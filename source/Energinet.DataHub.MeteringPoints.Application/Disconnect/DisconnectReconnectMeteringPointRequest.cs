@@ -12,18 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
-using FluentValidation;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Disconnect
 {
-    public class DisconnectMeteringPointRuleSet : AbstractValidator<DisconnectReconnectMeteringPointRequest>
-    {
-        public DisconnectMeteringPointRuleSet()
-        {
-            RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberValidator());
-            RuleFor(request => request.EffectiveDate).SetValidator(request => new EffectiveDateRule());
-            RuleFor(request => request.TransactionId).SetValidator(new TransactionIdentificationRule());
-        }
-    }
+    public record DisconnectReconnectMeteringPointRequest(
+            string GsrnNumber = "",
+            string EffectiveDate = "",
+            string TransactionId = "",
+            string ConnectionState = "")
+        : IChangeMeteringPointRequest;
 }

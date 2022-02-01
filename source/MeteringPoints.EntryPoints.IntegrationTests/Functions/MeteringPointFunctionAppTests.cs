@@ -60,6 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
         [InlineData("TestFiles/Cim/CreateMeteringPointProduction.xml")]
         [InlineData("TestFiles/Cim/CreateMeteringPointExchange.xml")]
         [InlineData("TestFiles/Cim/ConnectMeteringPoint.xml")]
+        [InlineData("TestFiles/Cim/DisconnectMeteringPoint.xml")]
         public async Task Metering_point_flow_should_succeed(string testFileXml)
         {
             // Arrange

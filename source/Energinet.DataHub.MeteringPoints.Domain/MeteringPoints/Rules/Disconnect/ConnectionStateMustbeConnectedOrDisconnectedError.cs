@@ -12,13 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Disconnect
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Disconnect
 {
-    public record DisconnectMeteringPointRequest(
-            string GsrnNumber = "",
-            string EffectiveDate = "",
-            string TransactionId = "")
-        : IChangeMeteringPointRequest;
+    public class ConnectionStateMustbeConnectedOrDisconnectedError : ValidationError
+    {
+    }
 }

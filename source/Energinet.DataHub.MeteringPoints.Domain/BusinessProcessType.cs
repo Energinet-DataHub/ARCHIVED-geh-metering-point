@@ -21,6 +21,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain
         public static readonly BusinessProcessType CreateMeteringPoint = new BusinessProcessType(0, nameof(CreateMeteringPoint));
         public static readonly BusinessProcessType ConnectMeteringPoint = new BusinessProcessType(1, nameof(ConnectMeteringPoint));
         public static readonly BusinessProcessType ChangeMasterData = new BusinessProcessType(2, nameof(ChangeMasterData));
+        public static readonly BusinessProcessType DisconnectMeteringPoint = new BusinessProcessType(3, nameof(DisconnectMeteringPoint));
 
         public BusinessProcessType(int id, string name)
             : base(id, name)
