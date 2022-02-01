@@ -15,18 +15,19 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
+namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses
 {
-    public class MasterDataUpdateHandler
+    public class UpdateMasterDataProcess
     {
         private readonly MasterDataValidator _validator;
         private readonly IMeteringPointRepository _meteringPointRepository;
 
-        public MasterDataUpdateHandler(MasterDataValidator validator, IMeteringPointRepository meteringPointRepository)
+        public UpdateMasterDataProcess(MasterDataValidator validator, IMeteringPointRepository meteringPointRepository)
         {
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
