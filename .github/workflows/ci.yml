@@ -47,7 +47,8 @@ jobs:
       TERRAFORM_VERSION: '1.1.2'
 
   ingestion_ci:
-    needs: [ci_base, terraform_validate, dotnet_solution_ci]
+    # needs: [ci_base, terraform_validate, dotnet_solution_ci]
+    needs: [ci_base, terraform_validate]
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@3.0.2
     with:
       CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion/Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.csproj'
@@ -55,7 +56,8 @@ jobs:
       ARTIFACT_NAME: ingestion
 
   outbox_ci:
-    needs: [ci_base, terraform_validate, dotnet_solution_ci]
+    # needs: [ci_base, terraform_validate, dotnet_solution_ci]
+    needs: [ci_base, terraform_validate]
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@3.0.2
     with:
       CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.Outbox/Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.csproj'
@@ -63,7 +65,8 @@ jobs:
       ARTIFACT_NAME: outbox
 
   processing_ci:
-    needs: [ci_base, terraform_validate, dotnet_solution_ci]
+    # needs: [ci_base, terraform_validate, dotnet_solution_ci]
+    needs: [ci_base, terraform_validate]
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@3.0.2
     with:
       CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.Processing/Energinet.DataHub.MeteringPoints.EntryPoints.Processing.csproj'
@@ -71,7 +74,8 @@ jobs:
       ARTIFACT_NAME: processing
 
   localmessagehub_ci:
-    needs: [ci_base, terraform_validate, dotnet_solution_ci]
+    # needs: [ci_base, terraform_validate, dotnet_solution_ci]
+    needs: [ci_base, terraform_validate]
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@3.0.2
     with:
       CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub/Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub.csproj'
@@ -79,7 +83,8 @@ jobs:
       ARTIFACT_NAME: localmessagehub
 
   internalcommanddispatcher_ci:
-    needs: [ci_base, terraform_validate, dotnet_solution_ci]
+    # needs: [ci_base, terraform_validate, dotnet_solution_ci]
+    needs: [ci_base, terraform_validate]
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@3.0.2
     with:
       CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher/Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher.csproj'
@@ -87,7 +92,8 @@ jobs:
       ARTIFACT_NAME: internalcommanddispatcher
 
   webapi_ci:
-    needs: [ci_base, terraform_validate, dotnet_solution_ci]
+    # needs: [ci_base, terraform_validate, dotnet_solution_ci]
+    needs: [ci_base, terraform_validate]
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-webapi-artifact.yml@3.0.2
     with:
       CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.WebApi/Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.csproj'
@@ -95,7 +101,8 @@ jobs:
       ARTIFACT_NAME: webapi
 
   database_migration_ci:
-    needs: [ci_base, terraform_validate, dotnet_solution_ci]
+    # needs: [ci_base, terraform_validate, dotnet_solution_ci]
+    needs: [ci_base, terraform_validate]
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@3.0.2
     with:
       CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp/Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.csproj'
