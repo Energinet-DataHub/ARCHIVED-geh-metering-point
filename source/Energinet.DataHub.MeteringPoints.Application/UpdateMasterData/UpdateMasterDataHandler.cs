@@ -23,7 +23,6 @@ using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.Policies;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
@@ -32,7 +31,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
-        private readonly UpdateMasterDataPolicies _policies;
         private readonly UpdateMeteringPointAuthorizer _authorizer;
         private readonly ParentChildCouplingHandler _parentChildCouplingHandler;
         private readonly UpdateMasterDataProcess _updateMasterDataProcess;
@@ -40,14 +38,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
         public UpdateMasterDataHandler(
             IMeteringPointRepository meteringPointRepository,
             ISystemDateTimeProvider systemDateTimeProvider,
-            UpdateMasterDataPolicies policies,
             UpdateMeteringPointAuthorizer authorizer,
             ParentChildCouplingHandler parentChildCouplingHandler,
             UpdateMasterDataProcess updateMasterDataProcess)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
-            _policies = policies;
             _authorizer = authorizer ?? throw new ArgumentNullException(nameof(authorizer));
             _parentChildCouplingHandler = parentChildCouplingHandler;
             _updateMasterDataProcess = updateMasterDataProcess ?? throw new ArgumentNullException(nameof(updateMasterDataProcess));
@@ -60,19 +56,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
             var targetMeteringPoint = await FetchTargetMeteringPointAsync(request).ConfigureAwait(false);
             if (targetMeteringPoint == null)
             {
-                return new BusinessProcessResult(request.TransactionId, new List<ValidationError>()
-                {
-                    new MeteringPointMustBeKnownValidationError(request.GsrnNumber),
-                });
+                return BusinessProcessResult.Fail(request.TransactionId, new MeteringPointMustBeKnownValidationError(request.GsrnNumber));
             }
 
             var authorizationResult = await _authorizer.AuthorizeAsync(targetMeteringPoint).ConfigureAwait(false);
             if (authorizationResult.Success == false)
             {
-                return new BusinessProcessResult(request.TransactionId, authorizationResult.Errors);
+                return BusinessProcessResult.Fail(request.TransactionId, authorizationResult.Errors.ToArray());
             }
 
-            var masterDataUpdater = CreateMasterDataUpdater(request, targetMeteringPoint);
+            var masterDataUpdater = CreateBuilderFrom(request, targetMeteringPoint);
 
             var result = await _updateMasterDataProcess.UpdateAsync(targetMeteringPoint, masterDataUpdater).ConfigureAwait(false);
             if (result.Success == false)
@@ -84,7 +77,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
             return parentCouplingResult.Success == false ? parentCouplingResult : BusinessProcessResult.Ok(request.TransactionId);
         }
 
-        private static MasterDataUpdater CreateMasterDataUpdater(UpdateMasterDataRequest request, MeteringPoint targetMeteringPoint)
+        private static MasterDataUpdater CreateBuilderFrom(UpdateMasterDataRequest request, MeteringPoint targetMeteringPoint)
         {
             var masterDataUpdater = new MasterDataUpdater(
                 new MasterDataFieldSelector().GetMasterDataFieldsFor(targetMeteringPoint.MeteringPointType),
