@@ -20,6 +20,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Reconnect;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using NodaTime;
 using Xunit;
@@ -43,15 +44,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ReconnecMeteringPoin
 
             await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
 
-            AssertPersistedMeteringPoint
-                .Initialize(SampleData.GsrnNumber, GetService<IDbConnectionFactory>())
-                .HasConnectionState(PhysicalState.Connected);
-
             await SendCommandAsync(CreateDisconnectMeteringPointRequest()).ConfigureAwait(false);
-
-            AssertPersistedMeteringPoint
-                .Initialize(SampleData.GsrnNumber, GetService<IDbConnectionFactory>())
-                .HasConnectionState(PhysicalState.Disconnected);
 
             await SendCommandAsync(CreateReconnectMeteringPointRequest()).ConfigureAwait(false);
 
@@ -60,7 +53,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ReconnecMeteringPoin
                 .HasConnectionState(PhysicalState.Connected);
 
             AssertConfirmMessage(DocumentType.ConfirmReconnectMeteringPoint);
-            // Assert.NotNull(FindIntegrationEvent<MeteringPointDisconnectedIntegrationEvent>());
+            Assert.NotNull(FindIntegrationEvent<MeteringPointReconnectedIntegrationEvent>());
         }
 
         [Fact]
