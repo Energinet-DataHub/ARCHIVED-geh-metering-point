@@ -67,7 +67,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
 
             var masterDataUpdater = CreateBuilderFrom(request, targetMeteringPoint);
 
-            var result = await _updateMasterDataProcess.UpdateAsync(targetMeteringPoint, masterDataUpdater).ConfigureAwait(false);
+            var result = await _updateMasterDataProcess.UpdateAsync(targetMeteringPoint, masterDataUpdater, _systemDateTimeProvider.Now()).ConfigureAwait(false);
             if (result.Success == false)
             {
                 return BusinessProcessResult.Fail(request.TransactionId, result.Errors.ToArray());

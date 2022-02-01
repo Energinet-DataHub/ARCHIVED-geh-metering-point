@@ -21,6 +21,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.Policies;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses
 {
@@ -28,18 +29,16 @@ namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses
     {
         private readonly MasterDataValidator _validator;
         private readonly IMeteringPointRepository _meteringPointRepository;
-        private readonly ISystemDateTimeProvider _systemDateTimeProvider;
         private readonly UpdateMasterDataPolicies _policies;
 
-        public UpdateMasterDataProcess(MasterDataValidator validator, IMeteringPointRepository meteringPointRepository, ISystemDateTimeProvider systemDateTimeProvider, UpdateMasterDataPolicies policies)
+        public UpdateMasterDataProcess(MasterDataValidator validator, IMeteringPointRepository meteringPointRepository, UpdateMasterDataPolicies policies)
         {
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
-            _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
             _policies = policies ?? throw new ArgumentNullException(nameof(policies));
         }
 
-        public async Task<BusinessRulesValidationResult> UpdateAsync(MeteringPoint targetMeteringPoint, MasterDataUpdater builder)
+        public async Task<BusinessRulesValidationResult> UpdateAsync(MeteringPoint targetMeteringPoint, MasterDataUpdater builder, Instant today)
         {
             if (targetMeteringPoint == null) throw new ArgumentNullException(nameof(targetMeteringPoint));
             if (builder == null) throw new ArgumentNullException(nameof(builder));
@@ -52,7 +51,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses
 
             var updatedMasterData = builder.Build();
 
-            var policyCheckResult = await CheckPoliciesAsync(updatedMasterData).ConfigureAwait(false);
+            var policyCheckResult = await CheckPoliciesAsync(updatedMasterData, today).ConfigureAwait(false);
             if (policyCheckResult.Success == false)
             {
                 return policyCheckResult;
@@ -71,12 +70,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses
             return BusinessRulesValidationResult.Valid();
         }
 
-        private Task<BusinessRulesValidationResult> CheckPoliciesAsync(MasterData masterData)
+        private Task<BusinessRulesValidationResult> CheckPoliciesAsync(MasterData masterData, Instant today)
         {
             if (masterData == null) throw new ArgumentNullException(nameof(masterData));
             var validationResults = new List<BusinessRulesValidationResult>()
             {
-                new EffectiveDatePolicy(_policies.NumberOfDaysEffectiveDateIsAllowedToBeforeToday).Check(_systemDateTimeProvider.Now(), masterData.EffectiveDate!),
+                new EffectiveDatePolicy(_policies.NumberOfDaysEffectiveDateIsAllowedToBeforeToday).Check(today, masterData.EffectiveDate!),
             };
 
             var validationErrors = validationResults.SelectMany(results => results.Errors).ToList();
