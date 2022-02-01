@@ -178,7 +178,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             container.Register<IMessageHubDispatcher, MessageHubDispatcher>(Lifestyle.Scoped);
 
-            container.Register<UpdateMasterDataPolicies>(() => new UpdateMasterDataPolicies(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1));
+            container.Register<PolicyThresholds>(() => new PolicyThresholds(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1));
             container.Register<ConnectSettings>(() => new ConnectSettings(
                 NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 7,
                 NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));

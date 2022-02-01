@@ -14,5 +14,5 @@
 
 namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.UpdateMasterData
 {
-    public record UpdateMasterDataPolicies(int NumberOfDaysEffectiveDateIsAllowedToBeforeToday = 0);
+    public record PolicyThresholds(int NumberOfDaysEffectiveDateIsAllowedToBeforeToday = 0);
 }

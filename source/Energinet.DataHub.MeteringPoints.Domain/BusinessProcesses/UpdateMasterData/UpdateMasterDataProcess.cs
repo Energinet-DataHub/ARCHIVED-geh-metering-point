@@ -29,13 +29,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.UpdateMaster
     {
         private readonly MasterDataValidator _validator;
         private readonly IMeteringPointRepository _meteringPointRepository;
-        private readonly UpdateMasterDataPolicies _policies;
+        private readonly PolicyThresholds _policyThresholds;
 
-        public UpdateMasterDataProcess(MasterDataValidator validator, IMeteringPointRepository meteringPointRepository, UpdateMasterDataPolicies policies)
+        public UpdateMasterDataProcess(MasterDataValidator validator, IMeteringPointRepository meteringPointRepository, PolicyThresholds policies)
         {
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
-            _policies = policies ?? throw new ArgumentNullException(nameof(policies));
+            _policyThresholds = policies ?? throw new ArgumentNullException(nameof(policies));
         }
 
         public async Task<BusinessRulesValidationResult> UpdateAsync(MeteringPoint targetMeteringPoint, MasterDataUpdater builder, Instant today)
@@ -75,7 +75,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.UpdateMaster
             if (masterData == null) throw new ArgumentNullException(nameof(masterData));
             var validationResults = new List<BusinessRulesValidationResult>()
             {
-                new EffectiveDatePolicy(_policies.NumberOfDaysEffectiveDateIsAllowedToBeforeToday).Check(today, masterData.EffectiveDate!),
+                new EffectiveDatePolicy(_policyThresholds.NumberOfDaysEffectiveDateIsAllowedToBeforeToday).Check(today, masterData.EffectiveDate!),
             };
 
             var validationErrors = validationResults.SelectMany(results => results.Errors).ToList();
