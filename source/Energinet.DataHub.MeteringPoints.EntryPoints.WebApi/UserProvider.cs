@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
@@ -34,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
 
         public async Task<User> GetUserAsync(Guid userId)
         {
-            var sql = @"SELECT TOP 1
+            var sql = @"SELECT
                 u.Id,
                 ua.ActorId
                 FROM [dbo].[User] u
@@ -44,10 +45,12 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             {
                 var result = await _connectionFactory
                     .GetOpenConnection()
-                    .QuerySingleAsync<User>(sql, new { UserId = userId })
+                    .QueryAsync<(Guid, Guid)>(sql, new { UserId = userId })
                     .ConfigureAwait(false);
 
-                return result;
+                var actorIds = result.Select(row => row.Item2).ToList();
+
+                return new(userId, actorIds);
             }
             catch (Exception)
             {
