@@ -35,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             string sql = $@"{MeteringPointDtoQueryHelper.Sql}
-                            WHERE Id = @MeteringPointId";
+                            WHERE mp.Id = @MeteringPointId";
 
             var result = await _connectionFactory
                 .GetOpenConnection()

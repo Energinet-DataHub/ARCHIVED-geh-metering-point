@@ -11,13 +11,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using StreetNameIsRequiredRule = Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules.StreetNameIsRequiredRule;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.InternalUse
 {
     internal class InternalUseValidator : IMasterDataValidatorStrategy
     {

@@ -25,6 +25,7 @@ using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Create.Validation;
+using Energinet.DataHub.MeteringPoints.Application.Disconnect;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
@@ -58,6 +59,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.DisconnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GenericNotification;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
@@ -150,9 +152,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IValidator<MasterDataDocument>, ValidationRuleSet>(Lifestyle.Scoped);
             container.Register<IValidator<ConnectMeteringPointRequest>, ConnectMeteringPointRuleSet>(Lifestyle.Scoped);
             container.Register<IValidator<UpdateMasterDataRequest>, NullValidationSet<UpdateMasterDataRequest>>(Lifestyle.Scoped);
+            container.Register<IValidator<DisconnectReconnectMeteringPointRequest>, DisconnectReconnectMeteringPointRuleSet>(Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<UpdateMasterDataRequest>), typeof(ChangeMasterDataResultHandler), Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<CreateMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateMeteringPoint>), Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<ConnectMeteringPointRequest>), typeof(ConnectMeteringPointResultHandler), Lifestyle.Scoped);
+            container.Register(typeof(IBusinessProcessResultHandler<DisconnectReconnectMeteringPointRequest>), typeof(DisconnectReconnectMeteringPointResultHandler), Lifestyle.Scoped);
             container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
             container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Scoped);
             container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
@@ -181,6 +185,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<PolicyThresholds>(() => new PolicyThresholds(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1));
             container.Register<ConnectSettings>(() => new ConnectSettings(
                 NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 7,
+                NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));
+            container.Register<DisconnectReconnectSettings>(() => new DisconnectReconnectSettings(
+                NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1,
                 NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));
 
             container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();

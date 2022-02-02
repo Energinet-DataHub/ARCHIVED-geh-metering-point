@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Analysis;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;

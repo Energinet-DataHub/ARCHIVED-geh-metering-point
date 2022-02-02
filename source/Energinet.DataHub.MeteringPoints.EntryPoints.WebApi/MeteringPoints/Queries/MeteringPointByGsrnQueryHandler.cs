@@ -55,8 +55,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.MeteringPoints.Que
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var sql = $@"{MeteringPointDtoQueryHelper.Sql} mp
-                        INNER JOIN GridAreaLinks gl ON mp.MeteringGridArea = gl.GridAreaId
+            var sql = $@"{MeteringPointDtoQueryHelper.Sql}
+                        INNER JOIN GridAreaLinks gl ON mp.MeteringGridArea = gl.Id
                         INNER JOIN GridAreas ga ON gl.GridAreaId = ga.Id
                         WHERE mp.GsrnNumber = @GsrnNumber AND ga.ActorId in @ActorIds";
 
