@@ -24,7 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new("?", $"The grid area code {validationError.Code} already exists");
+            return new("?", $"The grid area code {validationError.GridAreaCode} already exists");
         }
     }
 }

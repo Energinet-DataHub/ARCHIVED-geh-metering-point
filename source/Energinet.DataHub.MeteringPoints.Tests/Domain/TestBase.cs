@@ -34,6 +34,22 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             Assert.Equal(errorExpected, hasError);
         }
 
+        protected static void AssertError<TRuleError>(string errorCode, BusinessRulesValidationResult rulesValidationResult, bool errorExpected = true)
+            where TRuleError : ValidationError
+        {
+            if (rulesValidationResult == null) throw new ArgumentNullException(nameof(rulesValidationResult));
+            var hasError = rulesValidationResult.Errors.Any(error => error is TRuleError && error.Code.Equals(errorCode, StringComparison.OrdinalIgnoreCase));
+            Assert.Equal(errorExpected, hasError);
+        }
+
+        protected static void AssertError(string errorCode, BusinessRulesValidationResult rulesValidationResult, bool errorExpected = true)
+        {
+            if (errorCode == null) throw new ArgumentNullException(nameof(errorCode));
+            if (rulesValidationResult == null) throw new ArgumentNullException(nameof(rulesValidationResult));
+            var hasError = rulesValidationResult.Errors.Any(error => error.Code.Equals(errorCode, StringComparison.OrdinalIgnoreCase));
+            Assert.Equal(errorExpected, hasError);
+        }
+
         protected static MeteringPoint CreateMeteringPoint(MeteringPointType type, IMasterDataBuilder? masterDataBuilder = null)
         {
             var builder = masterDataBuilder ?? MasterDataBuilder(type);
