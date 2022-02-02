@@ -22,6 +22,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
         public RequestCloseDownValidator()
         {
             RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberValidator());
+            RuleFor(request => request.TransactionId).SetValidator(new TransactionIdValidator());
+            RuleFor(request => request.EffectiveDate).SetValidator(new EffectiveDateValidator());
         }
     }
 }

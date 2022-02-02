@@ -269,8 +269,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                 throw new InvalidOperationException("Can't create message when current actor is not set (null)");
 
             var message = ConfirmMessageFactory.RequestCloseDown(
-                sender: Map(_actorContext.DataHub),
-                receiver: Map(_actorContext.CurrentActor),
+                sender: Map(_actorContext.DataHub, Role.MeteringPointAdministrator),
+                receiver: Map(_actorContext.CurrentActor, Role.GridAccessProvider),
                 createdDateTime: _dateTimeProvider.Now(),
                 marketActivityRecord: new Acknowledgements.MarketActivityRecord(
                     Id: Guid.NewGuid().ToString(),
@@ -286,8 +286,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                 throw new InvalidOperationException("Can't create message when current actor is not set (null)");
 
             var message = RejectMessageFactory.RequestCloseDown(
-                sender: Map(_actorContext.DataHub),
-                receiver: Map(_actorContext.CurrentActor),
+                sender: Map(_actorContext.DataHub, Role.MeteringPointAdministrator),
+                receiver: Map(_actorContext.CurrentActor, Role.GridAccessProvider),
                 createdDateTime: _dateTimeProvider.Now(),
                 marketActivityRecord: new MarketActivityRecordWithReasons(
                     Id: Guid.NewGuid().ToString(),
@@ -298,7 +298,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
             await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectCloseDownRequest, _actorContext.CurrentActor.Identifier, gsrnNumber).ConfigureAwait(false);
         }
 
-        private static MarketRoleParticipant Map(Actor actor)
         private static MarketRoleParticipant Map(Actor actor, Role documentRole)
         {
             var codingScheme = actor.IdentificationType.ToUpperInvariant() switch

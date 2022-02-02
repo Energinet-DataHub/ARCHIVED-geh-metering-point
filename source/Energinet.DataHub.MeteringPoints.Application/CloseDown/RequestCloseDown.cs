@@ -18,5 +18,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
 {
     public record RequestCloseDown(
         string TransactionId,
-        string GsrnNumber) : IBusinessRequest;
+        string GsrnNumber,
+        string EffectiveDate) : IBusinessRequest;
 }

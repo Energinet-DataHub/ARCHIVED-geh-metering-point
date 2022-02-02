@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Validation
                 .Must(value => EnumerationType.GetAll<MeteringPointType>().Select(item => item.Name).Contains(value, StringComparer.OrdinalIgnoreCase))
                 .WithState(request =>
                     new MeteringPointTypeValidationError(request.MeteringPointType ?? string.Empty));
-            RuleFor(request => request.EffectiveDate).SetValidator(new EffectiveDateRule());
+            RuleFor(request => request.EffectiveDate).SetValidator(new EffectiveDateValidator());
             RuleFor(request => request.CountryCode)
                 .NotEmpty()
                 .SetValidator(new CountryCodeRule());

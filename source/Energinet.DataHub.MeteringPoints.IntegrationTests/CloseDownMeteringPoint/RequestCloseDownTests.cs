@@ -53,11 +53,50 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoi
             AssertValidationError("D57");
         }
 
+        [Fact]
+        public async Task Reject_if_transaction_id_is_missing()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    TransactionId = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E10");
+        }
+
+        [Fact]
+        public async Task Reject_if_effective_date_is_invalid()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    EffectiveDate = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
+        }
+
+        [Fact]
+        public async Task Reject_if_metering_point_does_not_exist()
+        {
+            var request = CreateRequest();
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E10");
+        }
+
         private static RequestCloseDown CreateRequest()
         {
             return new RequestCloseDown(
                 SampleData.Transaction,
-                SampleData.GsrnNumber);
+                SampleData.GsrnNumber,
+                SampleData.EffectiveDate);
         }
     }
 }

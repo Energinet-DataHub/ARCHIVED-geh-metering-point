@@ -16,15 +16,33 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 
 namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
 {
     public class RequestCloseDownHandler : IBusinessRequestHandler<RequestCloseDown>
     {
-        public Task<BusinessProcessResult> Handle(RequestCloseDown request, CancellationToken cancellationToken)
+        private readonly IMeteringPointRepository _meteringPointRepository;
+
+        public RequestCloseDownHandler(IMeteringPointRepository meteringPointRepository)
+        {
+            _meteringPointRepository = meteringPointRepository;
+        }
+
+        public async Task<BusinessProcessResult> Handle(RequestCloseDown request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
-            return Task.FromResult(BusinessProcessResult.Ok(request.TransactionId));
+
+            var targetMeteringPoint = await _meteringPointRepository
+                .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
+                .ConfigureAwait(false);
+            if (targetMeteringPoint == null)
+            {
+                return BusinessProcessResult.Fail(request.TransactionId, new MeteringPointMustBeKnownValidationError(request.GsrnNumber));
+            }
+
+            return BusinessProcessResult.Ok(request.TransactionId);
         }
     }
 }

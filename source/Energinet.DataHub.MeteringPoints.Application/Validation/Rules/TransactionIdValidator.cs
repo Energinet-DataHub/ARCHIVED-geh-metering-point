@@ -12,22 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Validation.Extensions;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class EffectiveDateRule : AbstractValidator<string>
+    public class TransactionIdValidator : AbstractValidator<string>
     {
-        public EffectiveDateRule()
+        public TransactionIdValidator()
         {
-            RuleFor(effectiveDate => effectiveDate)
-                .Cascade(CascadeMode.Stop)
+            RuleFor(transaction => transaction)
                 .NotEmpty()
-                .WithState(createMeteringPoint => new EffectiveDateRequiredValidationError())
-                .CheckRules(EffectiveDate.CheckRules);
+                .WithState(_ => new TransactionIdentificationValidationError());
         }
     }
 }
