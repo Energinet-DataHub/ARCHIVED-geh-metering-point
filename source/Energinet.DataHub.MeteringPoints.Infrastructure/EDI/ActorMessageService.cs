@@ -275,6 +275,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
             {
                 nameof(Role.MeteringPointAdministrator) => "DDZ",
                 nameof(Role.GridAccessProvider) => "DDM",
+                nameof(Role.BalancePowerSupplier) => "DDQ",
+                nameof(Role.SystemOperator) => "EZ",
+                nameof(Role.MeteredDataResponsible) => "MDR",
                 _ => throw new InvalidOperationException("Unknown party role"),
             };
 
