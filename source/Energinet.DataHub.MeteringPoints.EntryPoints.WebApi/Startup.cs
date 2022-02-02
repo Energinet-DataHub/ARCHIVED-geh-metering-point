@@ -164,8 +164,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
                 new[] { typeof(CreateGridAreaHandler).Assembly, },
                 new[] { typeof(UnitOfWorkBehavior<,>), typeof(InputValidationBehavior<,>), typeof(InternalCommandHandlingBehaviour<,>), typeof(BusinessProcessResultBehavior<,>), });
 
-            _container.Register<IRequestHandler<MeteringPointByGsrnQuery, MeteringPointCimDto?>, MeteringPointByGsrnQueryHandler>();
-
             _container.SendProtobuf<MeteringPointEnvelope>();
         }
 
