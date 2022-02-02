@@ -22,7 +22,9 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Connect;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Disconnect;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
@@ -160,6 +162,50 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
             ConnectionState = ConnectionState.Connected(connectionDetails.EffectiveDate);
             AddDomainEvent(new MeteringPointConnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
+        }
+
+        public BusinessRulesValidationResult DisconnectAcceptable(ConnectionDetails connectionDetails)
+        {
+            var rules = new Collection<IBusinessRule>
+            {
+                new PhysicalStateMustBeConnectedRule(ConnectionState, Id.Value),
+                new MustHaveEnergySupplierRule(this, connectionDetails),
+            };
+            return new BusinessRulesValidationResult(rules);
+        }
+
+        public BusinessRulesValidationResult ReconnectAcceptable(ConnectionDetails connectionDetails)
+        {
+            var rules = new Collection<IBusinessRule>
+            {
+                new PhysicalStateMustBeDisconnectedRule(ConnectionState, Id.Value),
+                new MustHaveEnergySupplierRule(this, connectionDetails),
+            };
+            return new BusinessRulesValidationResult(rules);
+        }
+
+        public void Disconnect(ConnectionDetails connectionDetails)
+        {
+            if (connectionDetails == null) throw new ArgumentNullException(nameof(connectionDetails));
+            if (!DisconnectAcceptable(connectionDetails).Success)
+            {
+                throw MeteringPointDisconnectException.Create(Id, GsrnNumber);
+            }
+
+            ConnectionState = ConnectionState.Disconnected(connectionDetails.EffectiveDate);
+            AddDomainEvent(new MeteringPointDisconnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
+        }
+
+        public void Reconnect(ConnectionDetails connectionDetails)
+        {
+            if (connectionDetails == null) throw new ArgumentNullException(nameof(connectionDetails));
+            if (!ReconnectAcceptable(connectionDetails).Success)
+            {
+                throw MeteringPointReconnectException.Create(Id, GsrnNumber);
+            }
+
+            ConnectionState = ConnectionState.Connected(connectionDetails.EffectiveDate);
+            AddDomainEvent(new MeteringPointReconnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
         }
 
         internal BusinessRulesValidationResult CanUpdateMasterData(MasterData updatedMasterData, MasterDataValidator validator)

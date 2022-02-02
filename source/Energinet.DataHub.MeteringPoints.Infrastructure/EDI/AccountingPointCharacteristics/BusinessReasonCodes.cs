@@ -17,5 +17,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCha
     public static class BusinessReasonCodes
     {
         public const string ConnectMeteringPoint = "D15";
+        public const string DisconnectReconnectMeteringPoint = "E79";
     }
 }
