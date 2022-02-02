@@ -149,7 +149,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register(typeof(IBusinessProcessResultHandler<UpdateMasterDataRequest>), typeof(ChangeMasterDataResultHandler), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<CreateMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateMeteringPoint>), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<ConnectMeteringPointRequest>), typeof(ConnectMeteringPointResultHandler), Lifestyle.Scoped);
-            _container.Register(typeof(IBusinessProcessResultHandler<DisconnectReconnectMeteringPointRequest>), typeof(DisconnectMeteringPointResultHandler), Lifestyle.Scoped);
+            _container.Register(typeof(IBusinessProcessResultHandler<DisconnectReconnectMeteringPointRequest>), typeof(DisconnectReconnectMeteringPointResultHandler), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<CreateGridArea>), typeof(CreateGridAreaNullResultHandler), Lifestyle.Singleton);
             _container.Register<IValidator<MasterDataDocument>, ValidationRuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<ConnectMeteringPointRequest>, ConnectMeteringPointRuleSet>(Lifestyle.Scoped);
@@ -185,7 +185,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<ConnectSettings>(() => new ConnectSettings(
                 NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 7,
                 NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));
-            _container.Register<DisconnectSettings>(() => new DisconnectSettings(
+            _container.Register<DisconnectReconnectSettings>(() => new DisconnectReconnectSettings(
                 1,
                 0));
 

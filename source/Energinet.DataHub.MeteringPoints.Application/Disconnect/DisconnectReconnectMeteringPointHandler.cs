@@ -34,20 +34,20 @@ namespace Energinet.DataHub.MeteringPoints.Application.Disconnect
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly MeteringPointPipelineContext _pipelineContext;
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
-        private readonly DisconnectSettings _settings;
+        private readonly DisconnectReconnectSettings _reconnectSettings;
         private readonly UpdateMeteringPointAuthorizer _authorizer;
 
         public DisconnectReconnectMeteringPointHandler(
             IMeteringPointRepository meteringPointRepository,
             MeteringPointPipelineContext pipelineContext,
             ISystemDateTimeProvider systemDateTimeProvider,
-            DisconnectSettings settings,
+            DisconnectReconnectSettings reconnectSettings,
             UpdateMeteringPointAuthorizer authorizer)
         {
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _pipelineContext = pipelineContext;
             _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
-            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            _reconnectSettings = reconnectSettings ?? throw new ArgumentNullException(nameof(reconnectSettings));
             _authorizer = authorizer ?? throw new ArgumentNullException(nameof(authorizer));
         }
 
@@ -137,7 +137,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Disconnect
             if (request == null) throw new ArgumentNullException(nameof(request));
             var validationResults = new List<BusinessRulesValidationResult>()
             {
-                new EffectiveDatePolicy(_settings.NumberOfDaysEffectiveDateIsAllowedToBeforeToday).Check(_systemDateTimeProvider.Now(), EffectiveDate.Create(request.EffectiveDate)),
+                new EffectiveDatePolicy(_reconnectSettings.NumberOfDaysEffectiveDateIsAllowedToBeforeToday).Check(_systemDateTimeProvider.Now(), EffectiveDate.Create(request.EffectiveDate)),
             };
 
             var validationErrors = validationResults.SelectMany(results => results.Errors).ToList();

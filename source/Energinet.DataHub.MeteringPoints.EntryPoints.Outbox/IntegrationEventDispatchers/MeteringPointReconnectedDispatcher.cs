@@ -14,14 +14,14 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Disconnect;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Reconnect;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDispatchers
 {
-    public class MeteringPointDisconnectedDispatcher : IRequestHandler<MeteringPointDisconnectedIntegrationEvent>
+    public class MeteringPointReconnectedDispatcher : IRequestHandler<MeteringPointReconnectedIntegrationEvent>
     {
-        public Task<Unit> Handle(MeteringPointDisconnectedIntegrationEvent request, CancellationToken cancellationToken)
+        public Task<Unit> Handle(MeteringPointReconnectedIntegrationEvent request, CancellationToken cancellationToken)
         {
             // TODO: Implement correct handler when Infrastructure is done
             return Task.FromResult(Unit.Value);

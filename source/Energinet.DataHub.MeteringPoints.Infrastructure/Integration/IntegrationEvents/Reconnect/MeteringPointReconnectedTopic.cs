@@ -12,10 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.Disconnect
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Reconnect
 {
-    public record DisconnectSettings
-    (
-        int NumberOfDaysEffectiveDateIsAllowedToBeforeToday = 1,
-        int NumberOfDaysEffectiveDateIsAllowedToAfterToday = 0);
+    public record MeteringPointReconnectedTopic(string Name) : Topic;
 }

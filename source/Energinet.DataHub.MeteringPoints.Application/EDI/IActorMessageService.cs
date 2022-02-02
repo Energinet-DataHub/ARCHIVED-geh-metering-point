@@ -94,6 +94,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.EDI
             string gsrn);
 
         /// <summary>
+        /// Rejection of reconnect metering point.
+        /// </summary>
+        Task SendReconnectMeteringPointRejectAsync(
+            string transactionId,
+            string gsrn,
+            IEnumerable<ErrorMessage> errors);
+
+        /// <summary>
         /// Rejection of connect metering point.
         /// </summary>
         Task SendConnectMeteringPointRejectAsync(

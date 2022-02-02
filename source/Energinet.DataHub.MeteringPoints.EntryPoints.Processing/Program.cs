@@ -25,6 +25,7 @@ using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Create.Validation;
+using Energinet.DataHub.MeteringPoints.Application.Disconnect;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
@@ -181,6 +182,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<PolicyThresholds>(() => new PolicyThresholds(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1));
             container.Register<ConnectSettings>(() => new ConnectSettings(
                 NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 7,
+                NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));
+            container.Register<DisconnectReconnectSettings>(() => new DisconnectReconnectSettings(
+                NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1,
                 NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));
 
             container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
