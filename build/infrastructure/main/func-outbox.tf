@@ -39,6 +39,8 @@ module "func_outbox" {
     EXCHANGE_METERING_POINT_CREATED_TOPIC                         = "exchange-metering-point-created"
     METERING_POINT_CONNECTED_TOPIC                                = "metering-point-connected"
     METERING_POINT_MESSAGE_DEQUEUED_TOPIC                         = "metering-point-message-dequeued"
+    METERING_POINT_DISCONNECTED_TOPIC                             = "metering-point-disconnected"
+    METERING_POINT_RECONNECTED_TOPIC                              = "metering-point-reconnected"
     ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER                          = "*/10 * * * * *"
     EVENT_MESSAGE_DISPATCH_TRIGGER_TIMER                          = "*/10 * * * * *"
     MESSAGEHUB_STORAGE_CONNECTION_STRING                          = data.azurerm_key_vault_secret.st_market_operator_response_primary_connection_string.value
