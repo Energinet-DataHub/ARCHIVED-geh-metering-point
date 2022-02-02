@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
+using Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.MeteringPoints.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
