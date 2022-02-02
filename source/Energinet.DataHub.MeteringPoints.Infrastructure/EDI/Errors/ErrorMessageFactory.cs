@@ -34,6 +34,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors
         public ErrorMessage GetErrorMessage(ValidationError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+            if (string.IsNullOrEmpty(validationError.Code) == false)
+            {
+                return new ErrorMessage(validationError.Code, validationError.Message);
+            }
 
             return _converters[validationError.GetType()]().Convert(validationError);
         }
