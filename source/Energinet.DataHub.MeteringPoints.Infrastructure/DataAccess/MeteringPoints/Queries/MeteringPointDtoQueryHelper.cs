@@ -16,7 +16,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 {
     public static class MeteringPointDtoQueryHelper
     {
-        public const string Sql = @"SELECT [Id] AS MeteringPointId
+        public const string Sql = @"SELECT mp.[Id] AS MeteringPointId
                                 ,[GsrnNumber]
                                 ,[StreetName]
                                 ,[PostCode]
@@ -55,6 +55,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                                 ,[DisconnectionType]
                                 ,[ProductionObligation]
                                 ,[ParentRelatedMeteringPoint] AS ParentMeteringPointId
-                          FROM  [dbo].[MeteringPoints]";
+                          FROM  [dbo].[MeteringPoints] mp";
     }
 }
