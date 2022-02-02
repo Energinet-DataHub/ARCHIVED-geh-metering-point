@@ -39,7 +39,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
                 u.Id,
                 ua.ActorId
                 FROM [dbo].[User] u
-                JOIN [dbo].[UserActor] ua on u.Id = ua.UserId";
+                JOIN [dbo].[UserActor] ua on u.Id = ua.UserId
+                WHERE u.Id = @UserId";
 
             try
             {
