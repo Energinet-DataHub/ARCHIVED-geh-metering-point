@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
     public class UnitTypeIsNotValidForMeteringPointType : ValidationError
     {
+        public UnitTypeIsNotValidForMeteringPointType()
+        {
+            Code = "E73";
+            Message = "Unit type is not allowed for this type of metering point.";
+        }
     }
 }
