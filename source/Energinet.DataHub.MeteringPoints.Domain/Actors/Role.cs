@@ -21,6 +21,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Actors
         public static readonly Role None = new Role(0, nameof(None));
         public static readonly Role MeteringPointAdministrator = new Role(1, nameof(MeteringPointAdministrator));
         public static readonly Role GridAccessProvider = new Role(2, nameof(GridAccessProvider));
+        public static readonly Role BalancePowerSupplier = new Role(3, nameof(BalancePowerSupplier));
+        public static readonly Role SystemOperator = new Role(4, nameof(SystemOperator));
+        public static readonly Role MeteredDataResponsible = new Role(5, nameof(MeteredDataResponsible));
 
         public Role(int id, string name)
             : base(id, name)
