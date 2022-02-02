@@ -32,13 +32,32 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoi
         [Fact]
         public async Task Request_is_accepted()
         {
-            var request = new RequestCloseDown(
-                SampleData.Transaction,
-                SampleData.GsrnNumber);
+            var request = CreateRequest();
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertConfirmMessage(DocumentType.AcceptCloseDownRequest);
+        }
+
+        [Fact]
+        public async Task Reject_if_gsrn_number_is_missing()
+        {
+            var request = CreateRequest()
+                with
+                {
+                    GsrnNumber = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D57");
+        }
+
+        private static RequestCloseDown CreateRequest()
+        {
+            return new RequestCloseDown(
+                SampleData.Transaction,
+                SampleData.GsrnNumber);
         }
     }
 }

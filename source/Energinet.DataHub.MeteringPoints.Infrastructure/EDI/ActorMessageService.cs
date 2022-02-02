@@ -279,9 +279,22 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
             await _messageHubDispatcher.DispatchAsync(message, DocumentType.AcceptCloseDownRequest, _actorContext.CurrentActor.Identifier, gsrnNumber).ConfigureAwait(false);
         }
 
-        public Task SendRequestCloseDownRejectedAsync(string transactionId, string gsrnNumber, IEnumerable<ErrorMessage> errors)
+        public async Task SendRequestCloseDownRejectedAsync(string transactionId, string gsrnNumber, IEnumerable<ErrorMessage> errors)
         {
-            throw new NotImplementedException();
+            if (_actorContext.CurrentActor is null)
+                throw new InvalidOperationException("Can't create message when current actor is not set (null)");
+
+            var message = RejectMessageFactory.RequestCloseDown(
+                sender: Map(_actorContext.DataHub),
+                receiver: Map(_actorContext.CurrentActor),
+                createdDateTime: _dateTimeProvider.Now(),
+                marketActivityRecord: new MarketActivityRecordWithReasons(
+                    Id: Guid.NewGuid().ToString(),
+                    MarketEvaluationPoint: gsrnNumber,
+                    OriginalTransaction: transactionId,
+                    Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
+
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectCloseDownRequest, _actorContext.CurrentActor.Identifier, gsrnNumber).ConfigureAwait(false);
         }
 
         private static MarketRoleParticipant Map(Actor actor)
