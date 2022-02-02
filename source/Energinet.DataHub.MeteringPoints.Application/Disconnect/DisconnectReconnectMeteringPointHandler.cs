@@ -77,7 +77,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Disconnect
             }
 
             var connectionState = EnumerationType.FromName<PhysicalState>(request.ConnectionState);
-            var connectionStateResult = CheckConnectionState(connectionState);
+            var connectionStateResult = CheckConnectionState(connectionState, GsrnNumber.Create(request.GsrnNumber));
             if (connectionStateResult.Success == false)
             {
                 return new BusinessProcessResult(request.TransactionId, connectionStateResult.Errors);
@@ -116,11 +116,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Disconnect
         }
 
         private static BusinessRulesValidationResult CheckConnectionState(
-            PhysicalState connectionState)
+            PhysicalState connectionState,
+            GsrnNumber gsrnNumber)
         {
             var rules = new Collection<IBusinessRule>
             {
-                new ConnectionStateMustBeConnectedOrDisconnectedRule(connectionState),
+                new ConnectionStateMustBeConnectedOrDisconnectedRule(connectionState, gsrnNumber.Value),
             };
             return new BusinessRulesValidationResult(rules);
         }

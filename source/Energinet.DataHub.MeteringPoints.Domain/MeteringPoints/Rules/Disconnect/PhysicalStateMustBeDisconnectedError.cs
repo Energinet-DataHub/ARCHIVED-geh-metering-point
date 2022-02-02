@@ -12,11 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Disconnect
 {
     public class PhysicalStateMustBeDisconnectedError : ValidationError
     {
+        public PhysicalStateMustBeDisconnectedError(Guid meteringPointId, PhysicalState physicalState)
+        {
+            MeteringPointId = meteringPointId;
+            PhysicalState = physicalState;
+        }
+
+        public PhysicalState PhysicalState { get; }
+
+        public Guid MeteringPointId { get; }
     }
 }

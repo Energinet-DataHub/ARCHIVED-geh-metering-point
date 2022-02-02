@@ -19,14 +19,19 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Disconnec
 {
     public class PhysicalStateMustBeDisconnectedRule : IBusinessRule
     {
-        public PhysicalStateMustBeDisconnectedRule(ConnectionState connectionState)
+        private readonly ConnectionState _connectionState;
+        private readonly Guid _meteringPointId;
+
+        public PhysicalStateMustBeDisconnectedRule(ConnectionState connectionState, Guid meteringPointId)
         {
             if (connectionState == null) throw new ArgumentNullException(nameof(connectionState));
+            _connectionState = connectionState;
+            _meteringPointId = meteringPointId;
             IsBroken = !(connectionState.PhysicalState == PhysicalState.Disconnected);
         }
 
         public bool IsBroken { get; }
 
-        public ValidationError ValidationError => new PhysicalStateMustBeDisconnectedError();
+        public ValidationError ValidationError => new PhysicalStateMustBeDisconnectedError(_meteringPointId, _connectionState.PhysicalState);
     }
 }

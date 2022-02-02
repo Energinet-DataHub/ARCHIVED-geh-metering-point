@@ -168,7 +168,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             var rules = new Collection<IBusinessRule>
             {
-                new PhysicalStateMustBeConnectedRule(ConnectionState),
+                new PhysicalStateMustBeConnectedRule(ConnectionState, Id.Value),
                 new MustHaveEnergySupplierRule(this, connectionDetails),
             };
             return new BusinessRulesValidationResult(rules);
@@ -178,7 +178,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             var rules = new Collection<IBusinessRule>
             {
-                new PhysicalStateMustBeDisconnectedRule(ConnectionState),
+                new PhysicalStateMustBeDisconnectedRule(ConnectionState, Id.Value),
                 new MustHaveEnergySupplierRule(this, connectionDetails),
             };
             return new BusinessRulesValidationResult(rules);

@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
             // TODO: find correct description
-            return new ErrorMessage("D16", $"Find Description");
+            return new ErrorMessage("D16", $"Physical status {validationError.PhysicalState.Name} not allowed: The new status for metering point {validationError.MeteringPointId} must be Disconnected or Connected and unequal to the current status");
         }
     }
 }
