@@ -17,7 +17,7 @@ data "azurerm_mssql_server" "mssqlsrv" {
 }
 
 module "mssqldb_meteringpoint" {
-  source                = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/mssql-database?ref=5.4.0"
+  source                = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/mssql-database?ref=6.0.0"
 
   name                  = "meteringpoint"
   project_name          = var.domain_name_short
