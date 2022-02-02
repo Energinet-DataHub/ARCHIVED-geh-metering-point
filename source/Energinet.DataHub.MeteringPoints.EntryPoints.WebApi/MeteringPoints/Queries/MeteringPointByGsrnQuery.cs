@@ -15,7 +15,7 @@
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Queries
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.MeteringPoints.Queries
 {
     public class MeteringPointByGsrnQuery : IRequest<MeteringPointCimDto?>
     {

@@ -27,6 +27,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create;
+using Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.MeteringPoints.Queries;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
@@ -147,7 +148,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
                 "Frontend service app id not found.");
 
             _container.AddJwtTokenSecurity(openIdUrl, audience);
-            _container.AddUserContext<NullUserProvider>();
+            _container.AddUserContext<UserProvider>();
+
             Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
 
             // TODO: Probably not needed
