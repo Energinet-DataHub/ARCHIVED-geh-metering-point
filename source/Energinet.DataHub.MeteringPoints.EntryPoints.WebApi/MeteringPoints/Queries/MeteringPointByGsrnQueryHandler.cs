@@ -25,6 +25,8 @@ using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints.Queries;
 using MediatR;
 using AssetType = Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums.AssetType;
 using ConnectionState = Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums.ConnectionState;
@@ -36,7 +38,7 @@ using ReadingOccurrence = Energinet.DataHub.MeteringPoints.Client.Abstractions.E
 using SettlementMethod = Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums.SettlementMethod;
 using Unit = Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums.Unit;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints.Queries
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.MeteringPoints.Queries
 {
     public class MeteringPointByGsrnQueryHandler : IRequestHandler<MeteringPointByGsrnQuery, MeteringPointCimDto?>
     {
