@@ -14,17 +14,29 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.MeteringPoints.Application.Integrations;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Disconnect;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDispatchers
 {
-    public class MeteringPointDisconnectedDispatcher : IRequestHandler<MeteringPointDisconnectedIntegrationEvent>
+    public class MeteringPointDisconnectedDispatcher : IntegrationEventDispatcher<MeteringPointDisconnectedTopic, MeteringPointDisconnectedIntegrationEvent>
     {
-        public Task<Unit> Handle(MeteringPointDisconnectedIntegrationEvent request, CancellationToken cancellationToken)
+        public MeteringPointDisconnectedDispatcher(ITopicSender<MeteringPointDisconnectedTopic> topicSender, ProtobufOutboundMapper<MeteringPointDisconnectedIntegrationEvent> mapper, IIntegrationEventMessageFactory integrationEventMessageFactory, IIntegrationMetadataContext integrationMetadataContext)
+            : base(topicSender, mapper, integrationEventMessageFactory, integrationMetadataContext)
         {
-            // TODO: Implement correct handler when Infrastructure is done
-            return Task.FromResult(Unit.Value);
+        }
+
+        protected override void EnrichMessage(ServiceBusMessage serviceBusMessage)
+        {
+            serviceBusMessage.EnrichMetadata(
+                nameof(MeteringPointDisconnected),
+                1);
         }
     }
 }
