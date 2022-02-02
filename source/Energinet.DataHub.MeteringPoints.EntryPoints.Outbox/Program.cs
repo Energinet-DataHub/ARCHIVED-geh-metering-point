@@ -38,6 +38,8 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEve
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Exchange;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.MessageDequeued;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Production;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Disconnect;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Reconnect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
@@ -140,6 +142,20 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                     Environment.GetEnvironmentVariable("METERING_POINT_MESSAGE_DEQUEUED_TOPIC") ??
                     throw new InvalidOperationException(
                         "No MeteringPointConnected Topic found")),
+                Lifestyle.Singleton);
+
+            container.Register(
+                () => new MeteringPointDisconnectedTopic(
+                    Environment.GetEnvironmentVariable("METERING_POINT_DISCONNECTED_TOPIC") ??
+                    throw new InvalidOperationException(
+                        "No MeteringPointDisconnected Topic found")),
+                Lifestyle.Singleton);
+
+            container.Register(
+                () => new MeteringPointReconnectedTopic(
+                    Environment.GetEnvironmentVariable("METERING_POINT_RECONNECTED_TOPIC") ??
+                    throw new InvalidOperationException(
+                        "No MeteringPointReconnected Topic found")),
                 Lifestyle.Singleton);
 
             container.Register(typeof(ITopicSender<>), typeof(TopicSender<>), Lifestyle.Singleton);

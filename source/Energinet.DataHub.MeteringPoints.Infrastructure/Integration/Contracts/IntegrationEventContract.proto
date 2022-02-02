@@ -121,14 +121,6 @@ message MeteringPointCreated {
 }
 
 /**
- * Represents the disconnection of a metering point.
- */
-message MeteringPointDisconnected {
-  string metering_point_id = 1; // Unique metering point identifier.
-  string effective_date = 2; // The date on which the metering point is disconnected.
-}
-
-/**
  * Represents the closing of a metering point.
  */
 message MeteringPointClosed {
@@ -193,13 +185,12 @@ message NetSettlementGroupChanged {
 message IntegrationEventEnvelope {
   oneof IntegrationEventMessages {
     MeteringPointCreated meteringPointCreatedMessage = 1;
-    MeteringPointDisconnected meteringPointDisconnectedMessage = 2;
-    MeteringPointClosed meteringPointClosedMessage = 3;
-    MeteringPointCancelled meteringPointCancelledMessage = 4;
-    ParentCoupled parentCoupledMessage = 5;
-    ParentDecoupled parentDecoupledMessage = 6;
-    SettlementDetailsChanged settlementDetailsChangedMessage = 7;
-    MeteringMethodChanged meteringMethodChangedMessage = 8;
-    NetSettlementGroupChanged netSettlementGroupChangedMessage = 9;
+    MeteringPointClosed meteringPointClosedMessage = 2;
+    MeteringPointCancelled meteringPointCancelledMessage = 3;
+    ParentCoupled parentCoupledMessage = 4;
+    ParentDecoupled parentDecoupledMessage = 5;
+    SettlementDetailsChanged settlementDetailsChangedMessage = 6;
+    MeteringMethodChanged meteringMethodChangedMessage = 7;
+    NetSettlementGroupChanged netSettlementGroupChangedMessage = 8;
   }
 }

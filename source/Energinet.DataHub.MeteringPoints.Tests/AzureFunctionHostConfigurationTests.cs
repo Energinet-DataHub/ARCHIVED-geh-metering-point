@@ -80,6 +80,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests
             Environment.SetEnvironmentVariable("PRODUCTION_METERING_POINT_CREATED_TOPIC", SomeString);
             Environment.SetEnvironmentVariable("METERING_POINT_MESSAGE_DEQUEUED_TOPIC", SomeString);
             Environment.SetEnvironmentVariable("METERING_POINT_CONNECTED_TOPIC", SomeString);
+            Environment.SetEnvironmentVariable("METERING_POINT_DISCONNECTED_TOPIC", SomeString);
+            Environment.SetEnvironmentVariable("METERING_POINT_RECONNECTED_TOPIC", SomeString);
             Environment.SetEnvironmentVariable("MESSAGEHUB_QUEUE_CONNECTION_STRING", ServiceBusConnectionString);
             Environment.SetEnvironmentVariable("MESSAGEHUB_STORAGE_CONNECTION_STRING", SomeString);
             Environment.SetEnvironmentVariable("MESSAGEHUB_STORAGE_CONTAINER_NAME", SomeString);
