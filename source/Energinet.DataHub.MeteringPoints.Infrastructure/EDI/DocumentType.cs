@@ -34,6 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
         public static readonly DocumentType RejectDisconnectMeteringPoint = new(10, nameof(RejectDisconnectMeteringPoint), typeof(RejectMessage));
         public static readonly DocumentType ConfirmReconnectMeteringPoint = new(11, nameof(ConfirmReconnectMeteringPoint), typeof(ConfirmMessage));
         public static readonly DocumentType RejectReconnectMeteringPoint = new(12, nameof(RejectReconnectMeteringPoint), typeof(RejectMessage));
+        public static readonly DocumentType AcceptCloseDownRequest = new(13, nameof(AcceptCloseDownRequest), typeof(ConfirmMessage));
 
         public DocumentType(int id, string name)
             : base(id, name)
