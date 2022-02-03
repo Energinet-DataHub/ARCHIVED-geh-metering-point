@@ -42,14 +42,15 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoi
         }
 
         [Fact]
-        public async Task Request_is_accepted()
+        public async Task Request_is_accepted_if_validation_check_is_passed()
         {
             await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
 
             var request = CreateRequest();
-
             await SendCommandAsync(request).ConfigureAwait(false);
 
+            AssertProcess()
+                .HasStatus("RequestWasAccepted");
             AssertConfirmMessage(DocumentType.AcceptCloseDownRequest);
         }
 

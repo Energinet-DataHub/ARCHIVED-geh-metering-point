@@ -55,5 +55,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             Assert.Equal(businessProcessType, EnumerationType.FromName<BusinessProcessType>(_process.ProcessType));
             return this;
         }
+
+        public AssertBusinessProcess HasStatus(string status)
+        {
+            Assert.Equal(status, _process.Status);
+            return this;
+        }
     }
 }
