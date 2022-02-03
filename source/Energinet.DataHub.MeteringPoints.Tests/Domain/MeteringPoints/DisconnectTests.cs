@@ -35,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         public void Metering_point_must_be_connected()
         {
             var meteringPoint = CreateMeteringPoint(MeteringPointType.Consumption);
-            AssertError<PhysicalStateMustBeConnectedError>(meteringPoint.DisconnectAcceptable(ConnectNow()));
+            AssertError<PhysicalStateMustBeConnectedorDisconnectedError>(meteringPoint.DisconnectAcceptable(ConnectNow()));
         }
 
         [Theory]

@@ -17,9 +17,9 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Disconnect
 {
-    public class PhysicalStateMustBeConnectedError : ValidationError
+    public class PhysicalStateMustBeConnectedorDisconnectedError : ValidationError
     {
-        public PhysicalStateMustBeConnectedError(PhysicalState physicalState, Guid meteringPointId)
+        public PhysicalStateMustBeConnectedorDisconnectedError(PhysicalState physicalState, Guid meteringPointId)
         {
             PhysicalState = physicalState;
             MeteringPointId = meteringPointId;
