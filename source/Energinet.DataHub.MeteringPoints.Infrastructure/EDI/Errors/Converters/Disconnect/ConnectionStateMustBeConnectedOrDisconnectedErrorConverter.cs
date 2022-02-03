@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
             // TODO: find correct description
-            return new ErrorMessage("D16", $"GSRN-code {validationError.GsrnCode} not allowed: The specified metering point is currently not connected nor disconnected (physical status {validationError.PhysicalState})");
+            return new ErrorMessage("D16", $"GSRN number {validationError.GsrnNumber} not allowed: The specified metering point is currently not connected nor disconnected (physical status {validationError.PhysicalState})");
         }
     }
 }

@@ -19,13 +19,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Disconnec
 {
     public class ConnectionStateMustBeConnectedOrDisconnectedError : ValidationError
     {
-        public ConnectionStateMustBeConnectedOrDisconnectedError(string gsrnCode, PhysicalState physicalState)
+        public ConnectionStateMustBeConnectedOrDisconnectedError(string gsrnNumber, PhysicalState physicalState)
         {
-            GsrnCode = gsrnCode;
+            GsrnNumber = gsrnNumber;
             PhysicalState = physicalState;
         }
 
-        public string GsrnCode { get; }
+        public string GsrnNumber { get; }
 
         public PhysicalState PhysicalState { get; }
     }
