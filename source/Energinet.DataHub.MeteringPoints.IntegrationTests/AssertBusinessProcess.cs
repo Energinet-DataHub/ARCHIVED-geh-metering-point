@@ -41,5 +41,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             Assert.NotNull(process);
             return new AssertBusinessProcess(process, connectionFactory);
         }
+
+        public AssertBusinessProcess HasTransactionId(string transactionId)
+        {
+            _process.TransactionId = transactionId;
+            return this;
+        }
     }
 }

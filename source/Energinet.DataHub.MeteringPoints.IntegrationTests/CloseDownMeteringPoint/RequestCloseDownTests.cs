@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.CloseDown;
+using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
@@ -37,7 +38,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoi
             var request = CreateRequest();
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertProcess();
+            AssertProcess()
+                .HasTransactionId(request.TransactionId);
         }
 
         [Fact]
