@@ -134,6 +134,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
                 "D15" => nameof(BusinessProcessType.ConnectMeteringPoint),
                 "E79" => nameof(BusinessProcessType.DisconnectReconnectMeteringPoint),
                 "E32" => nameof(BusinessProcessType.ChangeMasterData),
+                "D14" => nameof(BusinessProcessType.CloseDownMeteringPoint),
                 _ => throw new NotImplementedException(processType),
             };
         }

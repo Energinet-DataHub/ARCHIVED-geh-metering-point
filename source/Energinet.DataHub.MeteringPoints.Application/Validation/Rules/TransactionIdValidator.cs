@@ -17,9 +17,9 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class TransactionIdentificationRule : AbstractValidator<string>
+    public class TransactionIdValidator : AbstractValidator<string>
     {
-        public TransactionIdentificationRule()
+        public TransactionIdValidator()
         {
             RuleFor(transaction => transaction)
                 .NotEmpty()

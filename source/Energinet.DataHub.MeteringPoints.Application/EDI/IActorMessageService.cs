@@ -117,5 +117,20 @@ namespace Energinet.DataHub.MeteringPoints.Application.EDI
             string businessReasonCode,
             MeteringPointDto meteringPoint,
             EnergySupplierDto energySupplier);
+
+        /// <summary>
+        /// Send request close down metering point accept message.
+        /// </summary>
+        /// <param name="transactionId"></param>
+        /// <param name="gsrnNumber"></param>
+        Task SendRequestCloseDownAcceptedAsync(string transactionId, string gsrnNumber);
+
+        /// <summary>
+        /// Send request close down metering point reject message.
+        /// </summary>
+        /// <param name="transactionId"></param>
+        /// <param name="gsrnNumber"></param>
+        /// <param name="errors"></param>
+        Task SendRequestCloseDownRejectedAsync(string transactionId, string gsrnNumber, IEnumerable<ErrorMessage> errors);
     }
 }
