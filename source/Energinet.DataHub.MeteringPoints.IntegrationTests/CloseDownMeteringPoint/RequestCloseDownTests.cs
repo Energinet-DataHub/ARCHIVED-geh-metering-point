@@ -32,6 +32,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoi
         [Fact]
         public async Task Request_is_accepted()
         {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+
             var request = CreateRequest();
 
             await SendCommandAsync(request).ConfigureAwait(false);
