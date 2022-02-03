@@ -48,7 +48,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 notification.ProductType,
                 notification.UnitType,
                 string.Empty,
-                notification.OccurredOn);
+                notification.EffectiveDate);
 
             CreateAndAddOutboxMessage(message);
 
