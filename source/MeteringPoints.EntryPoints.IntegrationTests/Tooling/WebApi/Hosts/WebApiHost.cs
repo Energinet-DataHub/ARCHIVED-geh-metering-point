@@ -18,10 +18,10 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Tooling.WebApi
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Tooling.WebApi.Hosts
 {
     [Collection("IntegrationTest")]
-    public abstract class WebApiHost : IClassFixture<WebApiFactory>, IClassFixture<DatabaseFixture>
+    public abstract class WebApiHost : IClassFixture<DatabaseFixture>
     {
         protected WebApiHost(DatabaseFixture databaseFixture)
         {
