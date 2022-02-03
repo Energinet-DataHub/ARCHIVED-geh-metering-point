@@ -14,18 +14,17 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Disconnect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Google.Protobuf;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Reconnect
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Disconnect
 {
-    public class MeteringPointReconnectedMapper : ProtobufOutboundMapper<MeteringPointReconnectedIntegrationEvent>
+    public class MeteringPointDisconnectedMapper : ProtobufOutboundMapper<MeteringPointDisconnectedIntegrationEvent>
     {
-        protected override IMessage Convert(MeteringPointReconnectedIntegrationEvent obj)
+        protected override IMessage Convert(MeteringPointDisconnectedIntegrationEvent obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
-            return new IntegrationEventContracts.MeteringPointReconnected
+            return new IntegrationEventContracts.MeteringPointDisconnected
             {
                 EffectiveDate = obj.EffectiveDate.ToTimestamp(),
                 GsrnNumber = obj.GSRNNumber,

@@ -17,8 +17,8 @@ using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using MediatR;
 using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Reconnect
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Disconnect
 {
-    public record MeteringPointReconnectedIntegrationEvent(Guid MeteringPointId, string GSRNNumber, Instant EffectiveDate)
+    public record MeteringPointDisconnectedIntegrationEvent(Guid MeteringPointId, string GSRNNumber, Instant EffectiveDate)
         : IIntegrationEvent, IRequest, IOutboundMessage;
 }

@@ -12,10 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.Disconnect
+using Energinet.DataHub.MeteringPoints.Application.Common;
+
+namespace Energinet.DataHub.MeteringPoints.Application.ChangeConnectionStatus
 {
-    public record DisconnectReconnectSettings
-    (
-        int NumberOfDaysEffectiveDateIsAllowedToBeforeToday = 1,
-        int NumberOfDaysEffectiveDateIsAllowedToAfterToday = 0);
+    public record DisconnectReconnectMeteringPointRequest(
+            string GsrnNumber = "",
+            string EffectiveDate = "",
+            string TransactionId = "",
+            string ConnectionState = "")
+        : IChangeMeteringPointRequest;
 }

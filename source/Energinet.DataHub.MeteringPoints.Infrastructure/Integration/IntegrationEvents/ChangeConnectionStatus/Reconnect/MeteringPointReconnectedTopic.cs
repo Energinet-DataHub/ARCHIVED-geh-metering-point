@@ -12,13 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
-using MediatR;
-using NodaTime;
-
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Disconnect
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Reconnect
 {
-    public record MeteringPointDisconnectedIntegrationEvent(Guid MeteringPointId, string GSRNNumber, Instant EffectiveDate)
-        : IIntegrationEvent, IRequest, IOutboundMessage;
+    public record MeteringPointReconnectedTopic(string Name) : Topic;
 }

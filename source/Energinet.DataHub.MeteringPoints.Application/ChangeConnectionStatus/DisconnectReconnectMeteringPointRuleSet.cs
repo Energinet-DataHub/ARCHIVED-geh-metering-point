@@ -15,7 +15,7 @@
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Disconnect
+namespace Energinet.DataHub.MeteringPoints.Application.ChangeConnectionStatus
 {
     public class DisconnectReconnectMeteringPointRuleSet : AbstractValidator<DisconnectReconnectMeteringPointRequest>
     {

@@ -27,7 +27,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Disconnect;
 using Energinet.DataHub.MeteringPoints.Domain.Policies;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Disconnect
+namespace Energinet.DataHub.MeteringPoints.Application.ChangeConnectionStatus
 {
     public class DisconnectReconnectMeteringPointHandler : IBusinessRequestHandler<DisconnectReconnectMeteringPointRequest>
     {

@@ -12,14 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common;
-
-namespace Energinet.DataHub.MeteringPoints.Application.Disconnect
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Disconnect
 {
-    public record DisconnectReconnectMeteringPointRequest(
-            string GsrnNumber = "",
-            string EffectiveDate = "",
-            string TransactionId = "",
-            string ConnectionState = "")
-        : IChangeMeteringPointRequest;
+    public record MeteringPointDisconnectedTopic(string Name) : Topic;
 }
