@@ -37,6 +37,7 @@ using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
 using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Contracts;
+using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
@@ -54,6 +55,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.
 using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bundling;
@@ -145,6 +147,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
             _container.Register<IEnergySupplierRepository, EnergySupplierRepository>(Lifestyle.Scoped);
             _container.Register<IGridAreaRepository, GridAreaRepository>(Lifestyle.Scoped);
+            _container.Register<IBusinessProcessRepository, BusinessProcessRepository>(Lifestyle.Scoped);
             _container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
             _container.Register<IOutboxManager, OutboxManager>(Lifestyle.Scoped);
             _container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Singleton);
@@ -504,6 +507,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 .Initialize(gsrnNumber, GetService<IDbConnectionFactory>());
         }
 
+        protected AssertBusinessProcess AssertProcess()
+        {
+            return AssertBusinessProcess
+                .Initialize(SampleData.Transaction, GetService<IDbConnectionFactory>());
+        }
+
         private void CleanupDatabase()
         {
             var cleanupStatement = new StringBuilder();
@@ -515,6 +524,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             cleanupStatement.AppendLine($"DELETE FROM GridAreaLinks");
             cleanupStatement.AppendLine($"DELETE FROM GridAreas");
             cleanupStatement.AppendLine($"DELETE FROM MessageHubMessages");
+            cleanupStatement.AppendLine($"DELETE FROM BusinessProcesses");
 
             _container.GetInstance<MeteringPointContext>()
                 .Database.ExecuteSqlRaw(cleanupStatement.ToString());

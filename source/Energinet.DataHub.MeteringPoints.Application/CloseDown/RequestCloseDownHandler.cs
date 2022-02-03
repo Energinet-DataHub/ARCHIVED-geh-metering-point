@@ -17,6 +17,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 
 namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
@@ -24,15 +25,20 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
     public class RequestCloseDownHandler : IBusinessRequestHandler<RequestCloseDown>
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
+        private readonly IBusinessProcessRepository _businessProcesses;
 
-        public RequestCloseDownHandler(IMeteringPointRepository meteringPointRepository)
+        public RequestCloseDownHandler(IMeteringPointRepository meteringPointRepository, IBusinessProcessRepository businessProcesses)
         {
-            _meteringPointRepository = meteringPointRepository;
+            _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
+            _businessProcesses = businessProcesses ?? throw new ArgumentNullException(nameof(businessProcesses));
         }
 
         public async Task<BusinessProcessResult> Handle(RequestCloseDown request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
+
+            var businessProcess = BusinessProcess.Create(BusinessProcessId.Create(), request.TransactionId);
+            _businessProcesses.Add(businessProcess);
 
             var targetMeteringPoint = await _meteringPointRepository
                 .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
