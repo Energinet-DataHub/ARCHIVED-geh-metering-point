@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -48,6 +49,25 @@ namespace Energinet.DataHub.MeteringPoints.Client
                     new JsonStringEnumConverter(),
                 },
             }).ConfigureAwait(false);
+        }
+
+        public async Task<List<ProcessDto>> GetProcessesByGsrnAsync(string gsrn)
+        {
+            var response = await _httpClient.GetAsync(new Uri($"MeteringPoint/GetMeteringPointProcessesByGsrn/?gsrn={gsrn}", UriKind.Relative)).ConfigureAwait(false);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized) throw new UnauthorizedAccessException();
+
+            if (!response.IsSuccessStatusCode) return new List<ProcessDto>();
+
+            var result = await response.Content.ReadFromJsonAsync<List<ProcessDto>>(new JsonSerializerOptions(JsonSerializerDefaults.Web)
+            {
+                Converters =
+                {
+                    new JsonStringEnumConverter(),
+                },
+            }).ConfigureAwait(false);
+
+            return result ?? new List<ProcessDto>();
         }
     }
 }

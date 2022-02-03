@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 
@@ -30,5 +31,13 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions
         /// <returns>A Metering Point DTO if found. If not found null will be returned.</returns>
         /// <exception cref="UnauthorizedAccessException">Thrown if unauthorized</exception>
         public Task<MeteringPointCimDto?> GetMeteringPointByGsrnAsync(string gsrn);
+
+        /// <summary>
+        /// Get process overview by GSRN number.
+        /// </summary>
+        /// <param name="gsrn">GSRN number to identify a Metering Point.</param>
+        /// <returns>A list of processes for a given Metering Point.</returns>
+        /// <exception cref="UnauthorizedAccessException">Thrown if unauthorized</exception>
+        public Task<List<ProcessDto>> GetProcessesByGsrnAsync(string gsrn);
     }
 }

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 using Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.MeteringPoints.Queries;
@@ -38,6 +39,15 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.Controllers
             var result = await _mediator.Send(request).ConfigureAwait(false);
 
             if (result == null) return NotFound();
+
+            return Ok(result);
+        }
+
+        [HttpGet("GetMeteringPointProcessesByGsrn")]
+        public async Task<ActionResult<List<ProcessDto>>> GetProcessesByGsrnAsync(string gsrn)
+        {
+            var request = new MeteringPointProcessesByGsrnQuery(gsrn);
+            var result = await _mediator.Send(request).ConfigureAwait(false);
 
             return Ok(result);
         }
