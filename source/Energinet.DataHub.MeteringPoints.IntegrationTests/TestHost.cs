@@ -23,6 +23,7 @@ using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.ChangeConnectionStatus;
+using Energinet.DataHub.MeteringPoints.Application.CloseDown;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.ChildMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
@@ -63,6 +64,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharact
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeConnectionStatus;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CloseDown;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
@@ -152,6 +154,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register(typeof(IBusinessProcessResultHandler<CreateMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateMeteringPoint>), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<ConnectMeteringPointRequest>), typeof(ConnectMeteringPointResultHandler), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<DisconnectReconnectMeteringPointRequest>), typeof(DisconnectReconnectMeteringPointResultHandler), Lifestyle.Scoped);
+            _container.Register(typeof(IBusinessProcessResultHandler<RequestCloseDown>), typeof(RequestCloseDownResultHandler), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<CreateGridArea>), typeof(CreateGridAreaNullResultHandler), Lifestyle.Singleton);
             _container.Register<IValidator<MasterDataDocument>, ValidationRuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<ConnectMeteringPointRequest>, ConnectMeteringPointRuleSet>(Lifestyle.Scoped);
@@ -159,6 +162,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IValidator<CreateGridArea>, CreateGridAreaRuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<CreateMeteringPoint>, RuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<UpdateMasterDataRequest>, UpdateMasterDataRequestValidator>(Lifestyle.Scoped);
+            _container.Register<IValidator<RequestCloseDown>, RequestCloseDownValidator>(Lifestyle.Scoped);
             _container.Register<IDomainEventsAccessor, DomainEventsAccessor>();
             _container.Register<IDomainEventsDispatcher, DomainEventsDispatcher>();
             _container.Register<IDomainEventPublisher, DomainEventPublisher>();

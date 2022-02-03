@@ -263,6 +263,41 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                 .ConfigureAwait(false);
         }
 
+        public async Task SendRequestCloseDownAcceptedAsync(string transactionId, string gsrnNumber)
+        {
+            if (_actorContext.CurrentActor is null)
+                throw new InvalidOperationException("Can't create message when current actor is not set (null)");
+
+            var message = ConfirmMessageFactory.RequestCloseDown(
+                sender: Map(_actorContext.DataHub, Role.MeteringPointAdministrator),
+                receiver: Map(_actorContext.CurrentActor, Role.GridAccessProvider),
+                createdDateTime: _dateTimeProvider.Now(),
+                marketActivityRecord: new Acknowledgements.MarketActivityRecord(
+                    Id: Guid.NewGuid().ToString(),
+                    MarketEvaluationPoint: gsrnNumber,
+                    OriginalTransaction: transactionId));
+
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.AcceptCloseDownRequest, _actorContext.CurrentActor.Identifier, gsrnNumber).ConfigureAwait(false);
+        }
+
+        public async Task SendRequestCloseDownRejectedAsync(string transactionId, string gsrnNumber, IEnumerable<ErrorMessage> errors)
+        {
+            if (_actorContext.CurrentActor is null)
+                throw new InvalidOperationException("Can't create message when current actor is not set (null)");
+
+            var message = RejectMessageFactory.RequestCloseDown(
+                sender: Map(_actorContext.DataHub, Role.MeteringPointAdministrator),
+                receiver: Map(_actorContext.CurrentActor, Role.GridAccessProvider),
+                createdDateTime: _dateTimeProvider.Now(),
+                marketActivityRecord: new MarketActivityRecordWithReasons(
+                    Id: Guid.NewGuid().ToString(),
+                    MarketEvaluationPoint: gsrnNumber,
+                    OriginalTransaction: transactionId,
+                    Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
+
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectCloseDownRequest, _actorContext.CurrentActor.Identifier, gsrnNumber).ConfigureAwait(false);
+        }
+
         private static MarketRoleParticipant Map(Actor actor, Role documentRole)
         {
             var codingScheme = actor.IdentificationType.ToUpperInvariant() switch

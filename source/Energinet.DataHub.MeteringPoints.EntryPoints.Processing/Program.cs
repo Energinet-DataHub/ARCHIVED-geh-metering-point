@@ -19,6 +19,7 @@ using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.ChangeConnectionStatus;
+using Energinet.DataHub.MeteringPoints.Application.CloseDown;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.ChildMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
@@ -58,6 +59,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharact
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeConnectionStatus;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CloseDown;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
@@ -152,10 +154,12 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IValidator<MasterDataDocument>, ValidationRuleSet>(Lifestyle.Scoped);
             container.Register<IValidator<ConnectMeteringPointRequest>, ConnectMeteringPointRuleSet>(Lifestyle.Scoped);
             container.Register<IValidator<UpdateMasterDataRequest>, NullValidationSet<UpdateMasterDataRequest>>(Lifestyle.Scoped);
+            container.Register<IValidator<RequestCloseDown>, RequestCloseDownValidator>(Lifestyle.Scoped);
             container.Register<IValidator<DisconnectReconnectMeteringPointRequest>, DisconnectReconnectMeteringPointRuleSet>(Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<UpdateMasterDataRequest>), typeof(ChangeMasterDataResultHandler), Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<CreateMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateMeteringPoint>), Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<ConnectMeteringPointRequest>), typeof(ConnectMeteringPointResultHandler), Lifestyle.Scoped);
+            container.Register(typeof(IBusinessProcessResultHandler<RequestCloseDown>), typeof(RequestCloseDownResultHandler), Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<DisconnectReconnectMeteringPointRequest>), typeof(DisconnectReconnectMeteringPointResultHandler), Lifestyle.Scoped);
             container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
             container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Scoped);

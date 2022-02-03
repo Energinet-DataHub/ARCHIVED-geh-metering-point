@@ -22,8 +22,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeConnectionStatus
         public DisconnectReconnectMeteringPointRuleSet()
         {
             RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberValidator());
-            RuleFor(request => request.EffectiveDate).SetValidator(request => new EffectiveDateRule());
-            RuleFor(request => request.TransactionId).SetValidator(new TransactionIdentificationRule());
+            RuleFor(request => request.EffectiveDate).SetValidator(request => new EffectiveDateValidator());
+            RuleFor(request => request.TransactionId).SetValidator(new TransactionIdValidator());
         }
     }
 }
