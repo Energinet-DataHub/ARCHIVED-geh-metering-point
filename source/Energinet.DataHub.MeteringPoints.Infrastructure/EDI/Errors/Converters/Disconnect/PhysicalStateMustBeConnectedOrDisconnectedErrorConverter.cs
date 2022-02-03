@@ -18,9 +18,9 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Disconnect;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Disconnect
 {
-    public class PhysicalStateMustBeConnectedErrorConverter : ErrorConverter<PhysicalStateMustBeConnectedorDisconnectedError>
+    public class PhysicalStateMustBeConnectedOrDisconnectedErrorConverter : ErrorConverter<PhysicalStateMustBeConnectedOrDisconnectedError>
     {
-        protected override ErrorMessage Convert(PhysicalStateMustBeConnectedorDisconnectedError validationError)
+        protected override ErrorMessage Convert(PhysicalStateMustBeConnectedOrDisconnectedError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 

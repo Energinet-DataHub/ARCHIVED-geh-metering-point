@@ -31,6 +31,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Disconnec
 
         public bool IsBroken { get; }
 
-        public ValidationError ValidationError => new PhysicalStateMustBeConnectedorDisconnectedError(_physicalState, _meteringPointId);
+        public ValidationError ValidationError => new PhysicalStateMustBeConnectedOrDisconnectedError(_physicalState, _meteringPointId);
     }
 }

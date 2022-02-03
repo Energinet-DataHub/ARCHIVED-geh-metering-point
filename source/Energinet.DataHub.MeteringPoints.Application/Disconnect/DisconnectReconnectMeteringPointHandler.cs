@@ -107,10 +107,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Disconnect
         private static BusinessProcessResult CheckBusinessRules(
             DisconnectReconnectMeteringPointRequest request,
             ConnectionDetails connectionDetails,
-            PhysicalState connectionState,
+            PhysicalState physicalState,
             MeteringPoint meteringPoint)
         {
-            var validationResult = connectionState == PhysicalState.Disconnected ? meteringPoint.DisconnectAcceptable(connectionDetails) : meteringPoint.ReconnectAcceptable(connectionDetails);
+            var validationResult = physicalState == PhysicalState.Disconnected ? meteringPoint.DisconnectAcceptable(connectionDetails) : meteringPoint.ReconnectAcceptable(connectionDetails);
 
             return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
         }
