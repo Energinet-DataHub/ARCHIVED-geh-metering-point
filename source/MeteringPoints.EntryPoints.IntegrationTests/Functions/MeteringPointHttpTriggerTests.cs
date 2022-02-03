@@ -67,7 +67,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
             // Assert
             var responseMessage = await actualResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
             Fixture.TestLogger.WriteLine(responseMessage);
-            actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            actualResponse.StatusCode.Should().Be(HttpStatusCode.Accepted);
         }
 
         private IConfidentialClientApplication CreateConfidentialClientApp()
