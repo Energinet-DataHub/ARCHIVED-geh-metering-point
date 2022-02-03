@@ -15,18 +15,18 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Disconnect
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.ChangeConnectionStatus
 {
-    public class ConnectionStateMustBeConnectedOrDisconnectedRule : IBusinessRule
+    public class ConnectionStateMustBeConnectedRule : IBusinessRule
     {
         private readonly ConnectionState _connectionState;
         private readonly string _gsrnNumber;
 
-        public ConnectionStateMustBeConnectedOrDisconnectedRule(ConnectionState connectionState, string gsrnNumber)
+        public ConnectionStateMustBeConnectedRule(ConnectionState connectionState, string gsrnNumber)
         {
             _connectionState = connectionState ?? throw new ArgumentNullException(nameof(connectionState));
             _gsrnNumber = gsrnNumber;
-            IsBroken = !(connectionState.PhysicalState == PhysicalState.Connected || connectionState.PhysicalState == PhysicalState.Disconnected);
+            IsBroken = !(connectionState.PhysicalState == PhysicalState.Connected);
         }
 
         public bool IsBroken { get; }

@@ -23,7 +23,7 @@ using Energinet.DataHub.MeteringPoints.Application.Extensions;
 using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Disconnect;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.ChangeConnectionStatus;
 using Energinet.DataHub.MeteringPoints.Domain.Policies;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 

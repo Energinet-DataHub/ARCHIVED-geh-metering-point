@@ -15,7 +15,7 @@
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Disconnect;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.ChangeConnectionStatus;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 using Xunit;
@@ -35,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         public void Metering_point_must_be_connected()
         {
             var meteringPoint = CreateMeteringPoint(MeteringPointType.Consumption);
-            AssertError<PhysicalStateMustBeConnectedOrDisconnectedError>(meteringPoint.DisconnectAcceptable(ConnectNow()));
+            AssertError<ConnectionStateMustBeConnectedOrDisconnectedError>(meteringPoint.DisconnectAcceptable(ConnectNow()));
         }
 
         [Theory]
