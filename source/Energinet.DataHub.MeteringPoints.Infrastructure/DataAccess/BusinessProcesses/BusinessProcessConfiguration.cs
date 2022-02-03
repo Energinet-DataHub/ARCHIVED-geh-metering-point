@@ -13,7 +13,9 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -32,6 +34,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.BusinessPro
                     fromDbValue => BusinessProcessId.Create(fromDbValue));
             builder.Property<string>("_transactionId")
                 .HasColumnName("TransactionId");
+
+            builder.Property<BusinessProcessType>("_processType")
+                .HasColumnName("ProcessType")
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<BusinessProcessType>(fromDbValue));
         }
     }
 }

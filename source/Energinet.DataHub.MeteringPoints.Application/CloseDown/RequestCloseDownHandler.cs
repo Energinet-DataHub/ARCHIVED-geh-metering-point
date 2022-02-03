@@ -17,6 +17,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 
@@ -37,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var businessProcess = BusinessProcess.Create(BusinessProcessId.Create(), request.TransactionId);
+            var businessProcess = BusinessProcess.Create(BusinessProcessId.Create(), request.TransactionId, BusinessProcessType.CloseDownMeteringPoint);
             _businessProcesses.Add(businessProcess);
 
             var targetMeteringPoint = await _meteringPointRepository

@@ -39,6 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoi
             await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertProcess()
+                .IsProcessType(BusinessProcessType.CloseDownMeteringPoint)
                 .HasTransactionId(request.TransactionId);
         }
 

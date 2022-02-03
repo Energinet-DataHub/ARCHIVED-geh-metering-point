@@ -14,6 +14,8 @@
 
 using System;
 using Dapper;
+using Energinet.DataHub.MeteringPoints.Domain;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Xunit;
 
@@ -44,7 +46,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public AssertBusinessProcess HasTransactionId(string transactionId)
         {
-            _process.TransactionId = transactionId;
+            Assert.Equal(transactionId, _process.TransactionId);
+            return this;
+        }
+
+        public AssertBusinessProcess IsProcessType(BusinessProcessType businessProcessType)
+        {
+            Assert.Equal(businessProcessType, EnumerationType.FromName<BusinessProcessType>(_process.ProcessType));
             return this;
         }
     }

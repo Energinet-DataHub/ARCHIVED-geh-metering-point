@@ -20,18 +20,20 @@ namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses
     public class BusinessProcess : AggregateRootBase
     {
         private readonly string _transactionId;
+        private readonly BusinessProcessType _processType;
 
-        public BusinessProcess(BusinessProcessId id, string transactionId)
+        public BusinessProcess(BusinessProcessId id, string transactionId, BusinessProcessType processType)
         {
             Id = id ?? throw new ArgumentNullException(nameof(id));
             _transactionId = transactionId ?? throw new ArgumentNullException(nameof(transactionId));
+            _processType = processType ?? throw new ArgumentNullException(nameof(processType));
         }
 
         public BusinessProcessId Id { get; init; }
 
-        public static BusinessProcess Create(BusinessProcessId id, string transactionId)
+        public static BusinessProcess Create(BusinessProcessId id, string transactionId, BusinessProcessType processType)
         {
-            return new BusinessProcess(id, transactionId);
+            return new BusinessProcess(id, transactionId, processType);
         }
     }
 }
