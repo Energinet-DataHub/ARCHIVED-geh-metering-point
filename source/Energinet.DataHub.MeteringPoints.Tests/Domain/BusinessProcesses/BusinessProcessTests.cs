@@ -23,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.BusinessProcesses
         [Fact]
         public void Request_is_accepted()
         {
-            var businessProcess = BusinessProcess.Create(BusinessProcessId.Create(), "fakeid", BusinessProcessType.CloseDownMeteringPoint);
+            var businessProcess = CreateProcess();
 
             businessProcess.AcceptRequest();
 
@@ -35,10 +35,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.BusinessProcesses
         [Fact]
         public void Can_not_accept_request_when_state_is_other_than_not_started()
         {
-            var businessProcess = BusinessProcess.Create(BusinessProcessId.Create(), "fakeid", BusinessProcessType.CloseDownMeteringPoint);
+            var businessProcess = CreateProcess();
             businessProcess.AcceptRequest();
 
             Assert.Throws<InvalidBusinessProcessStateException>(() => businessProcess.AcceptRequest());
+        }
+
+        private static BusinessProcess CreateProcess()
+        {
+            return BusinessProcess.Create(BusinessProcessId.Create(), "fakeid", BusinessProcessType.CloseDownMeteringPoint);
         }
     }
 }
