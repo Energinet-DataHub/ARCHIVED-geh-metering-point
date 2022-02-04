@@ -26,7 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.BusinessProcesses
         {
             var businessProcess = BusinessProcess.Create(BusinessProcessId.Create(), "fakeid", BusinessProcessType.CloseDownMeteringPoint);
 
-            businessProcess.RequestWasAccepted();
+            businessProcess.AcceptRequest();
 
             var requestWasAcceptedEvent = businessProcess.DomainEvents.FirstOrDefault(e => e is RequestWasAccepted) as RequestWasAccepted;
             Assert.NotNull(requestWasAcceptedEvent);

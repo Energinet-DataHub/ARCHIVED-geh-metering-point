@@ -49,7 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
                 return BusinessProcessResult.Fail(request.TransactionId, new MeteringPointMustBeKnownValidationError(request.GsrnNumber));
             }
 
-            businessProcess.RequestWasAccepted();
+            businessProcess.AcceptRequest();
 
             return BusinessProcessResult.Ok(request.TransactionId);
         }
