@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Xunit;
@@ -64,7 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.BusinessProcesses
 
         private static BusinessProcess CreateProcess()
         {
-            return BusinessProcess.Create(BusinessProcessId.Create(), "fakeid", BusinessProcessType.CloseDownMeteringPoint);
+            return BusinessProcess.Create(BusinessProcessId.Create(), Guid.NewGuid().ToString(), BusinessProcessType.CloseDownMeteringPoint);
         }
     }
 }
