@@ -30,39 +30,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR
             return new MediatorBuilder(container);
         }
 
-        public static void BuildMinimalMediator(this Container container, Assembly assembly, params Type[] types)
-        {
-            if (container == null) throw new ArgumentNullException(nameof(container));
-            if (types == null) throw new ArgumentNullException(nameof(types));
-
-            container.RegisterSingleton<IMediator, Mediator>();
-            foreach (var type in types)
-            {
-                container.Register(type, assembly);
-            }
-
-            RegisterHandlers(container, typeof(IRequestExceptionAction<,>), new[] { assembly });
-            RegisterHandlers(container, typeof(IRequestExceptionHandler<,,>), new[] { assembly });
-
-            // Add built-in pipeline behaviors
-            var builtInBehaviors = new[]
-            {
-                typeof(RequestHandlerTelemetryBehavior<,>),
-                typeof(RequestExceptionProcessorBehavior<,>),
-                typeof(RequestExceptionActionProcessorBehavior<,>),
-                typeof(RequestPreProcessorBehavior<,>),
-                typeof(RequestPostProcessorBehavior<,>),
-            };
-
-            // Register both built-in and custom pipeline
-            container.Collection.Register(typeof(IPipelineBehavior<,>), builtInBehaviors);
-
-            container.Collection.Register(typeof(IRequestPreProcessor<>), new[] { typeof(EmptyRequestPreProcessor<>) });
-            container.Collection.Register(typeof(IRequestPostProcessor<,>), new[] { typeof(EmptyRequestPostProcessor<,>) });
-
-            container.Register(() => new ServiceFactory(container.GetInstance), Lifestyle.Singleton);
-        }
-
         public static void BuildMediator(this Container container, Assembly[] applicationAssemblies, Type[] pipelineBehaviors)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
