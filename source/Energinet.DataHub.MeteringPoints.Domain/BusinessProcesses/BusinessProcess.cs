@@ -51,6 +51,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses
 
         public void RejectRequest()
         {
+            if (_status != BusinessProcessStatus.NotStarted)
+            {
+                throw new InvalidBusinessProcessStateException();
+            }
+
             _status = BusinessProcessStatus.RequestWasRejected;
             AddDomainEvent(new RequestWasRejected(Id.Value, _transactionId, _processType.Name, _status.Name));
         }
