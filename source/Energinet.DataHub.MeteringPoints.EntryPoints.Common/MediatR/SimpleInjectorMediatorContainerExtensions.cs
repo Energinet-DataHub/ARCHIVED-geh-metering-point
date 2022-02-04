@@ -25,6 +25,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR
     // Note: https://github.com/jbogard/MediatR/tree/master/samples/MediatR.Examples.SimpleInjector
     public static class SimpleInjectorMediatorContainerExtensions
     {
+        public static MediatorBuilder UseMediatR(this Container container)
+        {
+            return new MediatorBuilder(container);
+        }
+
         public static void BuildMinimalMediator(this Container container, Assembly assembly, params Type[] types)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
@@ -49,7 +54,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR
                 typeof(RequestPostProcessorBehavior<,>),
             };
 
-            // Register built both-in and custom pipeline
+            // Register both built-in and custom pipeline
             container.Collection.Register(typeof(IPipelineBehavior<,>), builtInBehaviors);
 
             container.Collection.Register(typeof(IRequestPreProcessor<>), new[] { typeof(EmptyRequestPreProcessor<>) });
@@ -82,7 +87,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR
                 typeof(RequestPostProcessorBehavior<,>),
             };
 
-            // Register built both-in and custom pipeline
+            // Register both built-in and custom pipeline
             container.Collection.Register(typeof(IPipelineBehavior<,>), builtInBehaviors.Union(pipelineBehaviors));
 
             container.Collection.Register(typeof(IRequestPreProcessor<>), new[] { typeof(EmptyRequestPreProcessor<>) });
