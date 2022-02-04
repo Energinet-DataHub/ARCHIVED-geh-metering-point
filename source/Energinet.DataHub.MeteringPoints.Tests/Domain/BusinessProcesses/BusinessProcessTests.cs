@@ -15,6 +15,7 @@
 using System;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
+using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.CloseDown;
 using Xunit;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain.BusinessProcesses
@@ -30,7 +31,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.BusinessProcesses
 
             var requestWasAcceptedEvent = businessProcess.DomainEvents.FirstOrDefault(e => e is RequestWasAccepted) as RequestWasAccepted;
             Assert.NotNull(requestWasAcceptedEvent);
-            Assert.Equal("RequestWasAccepted", requestWasAcceptedEvent?.Status);
         }
 
         [Fact]
@@ -42,7 +42,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.BusinessProcesses
 
             var domainEvent = businessProcess.DomainEvents.FirstOrDefault(e => e is RequestWasRejected) as RequestWasRejected;
             Assert.NotNull(domainEvent);
-            Assert.Equal(nameof(BusinessProcessStatus.RequestWasRejected), domainEvent?.Status);
         }
 
         [Fact]
@@ -63,9 +62,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.BusinessProcesses
             Assert.Throws<InvalidBusinessProcessStateException>(() => businessProcess.AcceptRequest());
         }
 
-        private static BusinessProcess CreateProcess()
+        private static CloseDownProcess CreateProcess()
         {
-            return BusinessProcess.Create(BusinessProcessId.Create(), Guid.NewGuid().ToString(), BusinessProcessType.CloseDownMeteringPoint);
+            return CloseDownProcess.Create(BusinessProcessId.Create(), Guid.NewGuid().ToString());
         }
     }
 }

@@ -38,4 +38,8 @@ limitations under the License.
     <Folder Include="BusinessProcesses\CloseDown" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="BusinessProcesses\CloseDown\CloseDownProcessStatus.cs" />
+  </ItemGroup>
+
 </Project>

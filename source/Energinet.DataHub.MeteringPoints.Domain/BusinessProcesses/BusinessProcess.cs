@@ -17,47 +17,19 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses
 {
-    public class BusinessProcess : AggregateRootBase
+    public abstract class BusinessProcess : AggregateRootBase
     {
-        private readonly string _transactionId;
-        private readonly BusinessProcessType _processType;
-        private BusinessProcessStatus _status;
-
-        public BusinessProcess(BusinessProcessId id, string transactionId, BusinessProcessType processType)
+        protected BusinessProcess(BusinessProcessId id, string transactionId, BusinessProcessType processType)
         {
             Id = id ?? throw new ArgumentNullException(nameof(id));
-            _transactionId = transactionId ?? throw new ArgumentNullException(nameof(transactionId));
-            _processType = processType ?? throw new ArgumentNullException(nameof(processType));
-            _status = BusinessProcessStatus.NotStarted;
+            TransactionId = transactionId ?? throw new ArgumentNullException(nameof(transactionId));
+            ProcessType = processType ?? throw new ArgumentNullException(nameof(processType));
         }
 
         public BusinessProcessId Id { get; }
 
-        public static BusinessProcess Create(BusinessProcessId id, string transactionId, BusinessProcessType processType)
-        {
-            return new BusinessProcess(id, transactionId, processType);
-        }
+        protected string TransactionId { get; }
 
-        public void AcceptRequest()
-        {
-            if (_status != BusinessProcessStatus.NotStarted)
-            {
-                throw new InvalidBusinessProcessStateException();
-            }
-
-            _status = BusinessProcessStatus.RequestWasAccepted;
-            AddDomainEvent(new RequestWasAccepted(Id.Value, _transactionId, _processType.Name, _status.Name));
-        }
-
-        public void RejectRequest()
-        {
-            if (_status != BusinessProcessStatus.NotStarted)
-            {
-                throw new InvalidBusinessProcessStateException();
-            }
-
-            _status = BusinessProcessStatus.RequestWasRejected;
-            AddDomainEvent(new RequestWasRejected(Id.Value, _transactionId, _processType.Name, _status.Name));
-        }
+        protected BusinessProcessType ProcessType { get; }
     }
 }

@@ -20,12 +20,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses
 {
     public class RequestWasRejected : DomainEventBase
     {
-        public RequestWasRejected(Guid processId, string transactionId, string processType, string status)
+        public RequestWasRejected(Guid processId, string transactionId, string processType)
         {
             ProcessId = processId;
             TransactionId = transactionId;
             ProcessType = processType;
-            Status = status;
         }
 
         public Guid ProcessId { get; }
@@ -33,7 +32,5 @@ namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses
         public string TransactionId { get; }
 
         public string ProcessType { get; }
-
-        public string Status { get; }
     }
 }

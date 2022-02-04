@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
+using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.CloseDown;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -27,25 +27,23 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.BusinessPro
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder));
             builder.ToTable("BusinessProcesses", "dbo");
+
+            builder.HasDiscriminator<BusinessProcessType>("ProcessType")
+                .HasValue<CloseDownProcess>(BusinessProcessType.CloseDownMeteringPoint);
+
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id)
                 .HasConversion(
                     toDbValue => toDbValue.Value,
                     fromDbValue => BusinessProcessId.Create(fromDbValue));
-            builder.Property<string>("_transactionId")
+            builder.Property<string>("TransactionId")
                 .HasColumnName("TransactionId");
 
-            builder.Property<BusinessProcessType>("_processType")
+            builder.Property<BusinessProcessType>("ProcessType")
                 .HasColumnName("ProcessType")
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<BusinessProcessType>(fromDbValue));
-
-            builder.Property<BusinessProcessStatus>("_status")
-                .HasColumnName("Status")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<BusinessProcessStatus>(fromDbValue));
         }
     }
 }
