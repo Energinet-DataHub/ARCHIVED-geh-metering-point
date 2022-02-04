@@ -41,8 +41,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.BusinessPro
                     toDbValue => toDbValue.Name,
                     fromDbValue => EnumerationType.FromName<BusinessProcessType>(fromDbValue));
 
-            builder.Property<string>("_status")
-                .HasColumnName("Status");
+            builder.Property<BusinessProcessStatus>("_status")
+                .HasColumnName("Status")
+                .HasConversion(
+                    toDbValue => toDbValue.Name,
+                    fromDbValue => EnumerationType.FromName<BusinessProcessStatus>(fromDbValue));
         }
     }
 }

@@ -403,6 +403,17 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             Assert.NotNull(confirmMessage);
         }
 
+        protected void AssertRejectMessage(DocumentType documentType)
+        {
+            var message = GetOutboxMessages
+                    <MessageHubEnvelope>()
+                .Single(msg => msg.MessageType.Equals(documentType));
+
+            var rejectMessage = GetService<IJsonSerializer>().Deserialize<RejectMessage>(message.Content);
+
+            Assert.NotNull(rejectMessage);
+        }
+
         protected void AseertNoIntegrationEventIsRaised<TIntegrationEvent>()
         {
             Assert.Null(GetOutboxMessages<TIntegrationEvent>().SingleOrDefault());

@@ -33,6 +33,18 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.BusinessProcesses
         }
 
         [Fact]
+        public void Request_is_rejected()
+        {
+            var businessProcess = CreateProcess();
+
+            businessProcess.RejectRequest();
+
+            var domainEvent = businessProcess.DomainEvents.FirstOrDefault(e => e is RequestWasRejected) as RequestWasRejected;
+            Assert.NotNull(domainEvent);
+            Assert.Equal(nameof(BusinessProcessStatus.RequestWasRejected), domainEvent?.Status);
+        }
+
+        [Fact]
         public void Can_not_accept_request_when_state_is_other_than_not_started()
         {
             var businessProcess = CreateProcess();

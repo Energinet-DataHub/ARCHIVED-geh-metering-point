@@ -46,11 +46,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
                 .ConfigureAwait(false);
             if (targetMeteringPoint == null)
             {
+                businessProcess.RejectRequest();
                 return BusinessProcessResult.Fail(request.TransactionId, new MeteringPointMustBeKnownValidationError(request.GsrnNumber));
             }
 
             businessProcess.AcceptRequest();
-
             return BusinessProcessResult.Ok(request.TransactionId);
         }
     }

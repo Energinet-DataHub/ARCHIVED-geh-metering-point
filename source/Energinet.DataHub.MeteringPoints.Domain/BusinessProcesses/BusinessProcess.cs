@@ -48,5 +48,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses
             _status = BusinessProcessStatus.RequestWasAccepted;
             AddDomainEvent(new RequestWasAccepted(Id.Value, _transactionId, _processType.Name, _status.Name));
         }
+
+        public void RejectRequest()
+        {
+            _status = BusinessProcessStatus.RequestWasRejected;
+            AddDomainEvent(new RequestWasRejected(Id.Value, _transactionId, _processType.Name, _status.Name));
+        }
     }
 }

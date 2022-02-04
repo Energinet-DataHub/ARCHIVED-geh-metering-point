@@ -14,7 +14,6 @@
 
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.CloseDown;
-using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
@@ -53,6 +52,17 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoi
             AssertProcess()
                 .HasStatus("RequestWasAccepted");
             AssertConfirmMessage(DocumentType.AcceptCloseDownRequest);
+        }
+
+        [Fact]
+        public async Task Request_is_rejected_if_validation_check_is_fails()
+        {
+            var request = CreateRequest();
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertProcess()
+                .HasStatus("RequestWasRejected");
+            AssertRejectMessage(DocumentType.RejectCloseDownRequest);
         }
 
         [Fact]

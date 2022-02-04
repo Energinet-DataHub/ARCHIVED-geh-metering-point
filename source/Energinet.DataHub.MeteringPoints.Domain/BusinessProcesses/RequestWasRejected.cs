@@ -12,19 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses
 {
-    public class BusinessProcessStatus : EnumerationType
+    public class RequestWasRejected : DomainEventBase
     {
-        public static readonly BusinessProcessStatus NotStarted = new(0, nameof(NotStarted));
-        public static readonly BusinessProcessStatus RequestWasAccepted = new(1, nameof(RequestWasAccepted));
-        public static readonly BusinessProcessStatus RequestWasRejected = new(2, nameof(RequestWasRejected));
-
-        protected BusinessProcessStatus(int id, string name)
-            : base(id, name)
+        public RequestWasRejected(Guid processId, string transactionId, string processType, string status)
         {
+            ProcessId = processId;
+            TransactionId = transactionId;
+            ProcessType = processType;
+            Status = status;
         }
+
+        public Guid ProcessId { get; }
+
+        public string TransactionId { get; }
+
+        public string ProcessType { get; }
+
+        public string Status { get; }
     }
 }
