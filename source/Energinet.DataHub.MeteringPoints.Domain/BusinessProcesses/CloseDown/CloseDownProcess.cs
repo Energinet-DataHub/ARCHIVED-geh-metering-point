@@ -52,7 +52,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.CloseDown
             }
 
             _status = Status.RequestWasAccepted;
-            AddDomainEvent(new RequestWasAccepted(Id.Value, TransactionId, ProcessType.Name));
+            AddDomainEvent(new CloseDownRequestWasAccepted(Id.Value, TransactionId));
         }
 
         public void RejectRequest()
@@ -63,7 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.CloseDown
             }
 
             _status = Status.RequestWasRejected;
-            AddDomainEvent(new RequestWasRejected(Id.Value, TransactionId, ProcessType.Name));
+            AddDomainEvent(new CloseDownRequestWasRejected(Id.Value, TransactionId));
         }
     }
 }

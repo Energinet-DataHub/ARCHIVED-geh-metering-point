@@ -29,7 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.BusinessProcesses
 
             businessProcess.AcceptRequest();
 
-            var requestWasAcceptedEvent = businessProcess.DomainEvents.FirstOrDefault(e => e is RequestWasAccepted) as RequestWasAccepted;
+            var requestWasAcceptedEvent = businessProcess.DomainEvents.FirstOrDefault(e => e is CloseDownRequestWasAccepted) as CloseDownRequestWasAccepted;
             Assert.NotNull(requestWasAcceptedEvent);
         }
 
@@ -40,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.BusinessProcesses
 
             businessProcess.RejectRequest();
 
-            var domainEvent = businessProcess.DomainEvents.FirstOrDefault(e => e is RequestWasRejected) as RequestWasRejected;
+            var domainEvent = businessProcess.DomainEvents.FirstOrDefault(e => e is CloseDownRequestWasRejected) as CloseDownRequestWasRejected;
             Assert.NotNull(domainEvent);
         }
 

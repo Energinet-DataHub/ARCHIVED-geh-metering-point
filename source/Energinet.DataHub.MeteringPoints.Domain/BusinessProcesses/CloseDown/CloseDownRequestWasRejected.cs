@@ -13,24 +13,20 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses
+namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.CloseDown
 {
-    public class RequestWasRejected : DomainEventBase
+    public class CloseDownRequestWasRejected : DomainEventBase
     {
-        public RequestWasRejected(Guid processId, string transactionId, string processType)
+        public CloseDownRequestWasRejected(Guid processId, string transactionId)
         {
             ProcessId = processId;
             TransactionId = transactionId;
-            ProcessType = processType;
         }
 
         public Guid ProcessId { get; }
 
         public string TransactionId { get; }
-
-        public string ProcessType { get; }
     }
 }
