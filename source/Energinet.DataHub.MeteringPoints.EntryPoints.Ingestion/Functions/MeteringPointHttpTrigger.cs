@@ -119,7 +119,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
 
         private async Task<HttpResponseData> CreateOkResponseAsync(HttpRequestData request)
         {
-            var response = request.CreateResponse(HttpStatusCode.OK);
+            var response = request.CreateResponse(HttpStatusCode.Accepted);
 
             response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
 
