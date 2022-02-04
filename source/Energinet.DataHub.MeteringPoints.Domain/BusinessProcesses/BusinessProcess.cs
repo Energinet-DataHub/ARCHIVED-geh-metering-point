@@ -21,18 +21,17 @@ namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses
     {
         private readonly string _transactionId;
         private readonly BusinessProcessType _processType;
-        #pragma warning disable
-        private string _status;
+        private BusinessProcessStatus _status;
 
         public BusinessProcess(BusinessProcessId id, string transactionId, BusinessProcessType processType)
         {
             Id = id ?? throw new ArgumentNullException(nameof(id));
             _transactionId = transactionId ?? throw new ArgumentNullException(nameof(transactionId));
             _processType = processType ?? throw new ArgumentNullException(nameof(processType));
-            _status = "not started";
+            _status = BusinessProcessStatus.NotStarted;
         }
 
-        public BusinessProcessId Id { get; init; }
+        public BusinessProcessId Id { get; }
 
         public static BusinessProcess Create(BusinessProcessId id, string transactionId, BusinessProcessType processType)
         {
@@ -41,8 +40,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses
 
         public void AcceptRequest()
         {
-            _status = "RequestWasAccepted";
-            AddDomainEvent(new RequestWasAccepted(Id.Value, _transactionId, _processType.Name, _status));
+            if (_status != BusinessProcessStatus.NotStarted)
+            {
+                throw new InvalidBusinessProcessStateException();
+            }
+
+            _status = BusinessProcessStatus.RequestWasAccepted;
+            AddDomainEvent(new RequestWasAccepted(Id.Value, _transactionId, _processType.Name, _status.Name));
         }
     }
 }

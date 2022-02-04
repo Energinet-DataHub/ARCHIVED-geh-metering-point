@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Xunit;
 
@@ -31,6 +30,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.BusinessProcesses
             var requestWasAcceptedEvent = businessProcess.DomainEvents.FirstOrDefault(e => e is RequestWasAccepted) as RequestWasAccepted;
             Assert.NotNull(requestWasAcceptedEvent);
             Assert.Equal("RequestWasAccepted", requestWasAcceptedEvent?.Status);
+        }
+
+        [Fact]
+        public void Can_not_accept_request_when_state_is_other_than_not_started()
+        {
+            var businessProcess = BusinessProcess.Create(BusinessProcessId.Create(), "fakeid", BusinessProcessType.CloseDownMeteringPoint);
+            businessProcess.AcceptRequest();
+
+            Assert.Throws<InvalidBusinessProcessStateException>(() => businessProcess.AcceptRequest());
         }
     }
 }
