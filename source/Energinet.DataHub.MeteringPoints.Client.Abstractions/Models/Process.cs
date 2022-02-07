@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
 namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
 {
     public record Process(
+        Guid Id,
         string Name,
         DateTime CreatedDate,
         DateTime EffectiveDate,

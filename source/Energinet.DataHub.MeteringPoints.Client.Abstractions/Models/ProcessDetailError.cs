@@ -12,9 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+
 namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
 {
-    public record ErrorDto(
+    public record ProcessDetailError(
+        Guid Id,
+        Guid ProcessDetailId,
         string Code,
         string Description);
 }

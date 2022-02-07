@@ -13,20 +13,24 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
+using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 
-namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.Processes
 {
-    public record ProcessDetail(
-        Guid Id,
-        Guid ProcessId,
-        string Name,
-        string Type,
-        string Sender,
-        string Receiver,
-        DateTime CreatedDate,
-        DateTime EffectiveDate,
-        ProcessStatus Status,
-        IReadOnlyList<ProcessDetailError> Errors);
+    public class ProcessRepository
+    {
+        private readonly MeteringPointContext _meteringPointContext;
+
+        public ProcessRepository(MeteringPointContext meteringPointContext)
+        {
+            _meteringPointContext = meteringPointContext;
+        }
+
+        public void Add(Process process)
+        {
+            if (process == null) throw new ArgumentNullException(nameof(process));
+
+            _meteringPointContext.Processes.Add(process);
+        }
+    }
 }
