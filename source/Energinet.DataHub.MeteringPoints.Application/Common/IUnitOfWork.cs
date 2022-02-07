@@ -14,7 +14,7 @@
 
 using System.Threading.Tasks;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
+namespace Energinet.DataHub.MeteringPoints.Application.Common
 {
     /// <summary>
     /// Unit of work for handling database transactions
