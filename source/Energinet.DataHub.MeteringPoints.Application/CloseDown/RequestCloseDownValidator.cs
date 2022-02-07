@@ -12,22 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Validation.Extensions;
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
 {
-    public class EffectiveDateRule : AbstractValidator<string>
+    public class RequestCloseDownValidator : AbstractValidator<RequestCloseDown>
     {
-        public EffectiveDateRule()
+        public RequestCloseDownValidator()
         {
-            RuleFor(effectiveDate => effectiveDate)
-                .Cascade(CascadeMode.Stop)
-                .NotEmpty()
-                .WithState(createMeteringPoint => new EffectiveDateRequiredValidationError())
-                .CheckRules(EffectiveDate.CheckRules);
+            RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberValidator());
+            RuleFor(request => request.TransactionId).SetValidator(new TransactionIdValidator());
+            RuleFor(request => request.EffectiveDate).SetValidator(new EffectiveDateValidator());
         }
     }
 }

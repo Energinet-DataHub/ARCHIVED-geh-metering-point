@@ -40,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
                     .WithState(_ => new FromGridAreaIsNotAllowed());
             });
 
-            RuleFor(request => request.TransactionId).SetValidator(new TransactionIdentificationRule());
+            RuleFor(request => request.TransactionId).SetValidator(new TransactionIdValidator());
         }
     }
 }

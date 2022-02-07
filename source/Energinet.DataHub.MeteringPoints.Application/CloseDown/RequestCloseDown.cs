@@ -12,15 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using SimpleInjector;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR
+namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
 {
-    public static class SimpleInjectorMediatorContainerExtensions
-    {
-        public static MediatorBuilder UseMediatR(this Container container)
-        {
-            return new MediatorBuilder(container);
-        }
-    }
+    public record RequestCloseDown(
+        string TransactionId,
+        string GsrnNumber,
+        string EffectiveDate) : IBusinessRequest;
 }
