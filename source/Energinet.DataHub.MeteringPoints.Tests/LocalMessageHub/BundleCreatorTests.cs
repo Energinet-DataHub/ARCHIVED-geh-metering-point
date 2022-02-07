@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,7 +25,6 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Confirm;
 using FluentAssertions;
-using MediatR;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Logging;
@@ -45,8 +43,12 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
         public async Task Bundles_should_be_created_for_multiple_documents()
         {
             await using var container = new Container();
-            container.BuildMinimalMediator(typeof(BundleHandler<>).Assembly, Array.Empty<Type>());
-            container.Register<IRequestHandler<BundleRequest<ConfirmMessage>, string>, ConfirmMessageBundleHandler>();
+
+            container.UseMediatR()
+                .WithPipeline()
+                .WithRequestHandlers(
+                    typeof(ConfirmMessageBundleHandler));
+
             container.Register<IJsonSerializer, JsonSerializer>();
             container.Register<IBundleCreator, BundleCreator>();
             container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageXmlSerializer>();
