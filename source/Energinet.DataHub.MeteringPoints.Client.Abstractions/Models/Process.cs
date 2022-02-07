@@ -18,13 +18,10 @@ using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
 
 namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
 {
-    public record ProcessDetailDto(
+    public record Process(
         string Name,
-        string Type,
-        string Sender,
-        string Receiver,
         DateTime CreatedDate,
         DateTime EffectiveDate,
         ProcessStatus Status,
-        IReadOnlyList<ErrorDto> Errors);
+        IReadOnlyList<ProcessDetail> Details);
 }

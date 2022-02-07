@@ -25,7 +25,7 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.MeteringPoints.Queries
 {
-    public class MeteringPointProcessesByGsrnQueryHandler : IRequestHandler<MeteringPointProcessesByGsrnQuery, List<ProcessDto>>
+    public class MeteringPointProcessesByGsrnQueryHandler : IRequestHandler<MeteringPointProcessesByGsrnQuery, List<Process>>
     {
         private readonly IDbConnectionFactory _connectionFactory;
         private readonly IUserContext _userContext;
@@ -36,20 +36,20 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.MeteringPoints.Que
             _userContext = userContext;
         }
 
-        public Task<List<ProcessDto>> Handle(MeteringPointProcessesByGsrnQuery request, CancellationToken cancellationToken)
+        public Task<List<Process>> Handle(MeteringPointProcessesByGsrnQuery request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            return Task.FromResult(new List<ProcessDto>
+            return Task.FromResult(new List<Process>
             {
-                new ProcessDto(
+                new Process(
                     Name: "BRS-006",
                     CreatedDate: new DateTime(2022, 2, 1),
                     EffectiveDate: new DateTime(2022, 2, 2),
                     Status: ProcessStatus.Completed,
-                    Details: new ProcessDetailDto[]
+                    Details: new ProcessDetail[]
                     {
-                        new ProcessDetailDto(
+                        new ProcessDetail(
                             Name: "RSM-021",
                             Type: "E58",
                             CreatedDate: new DateTime(2022, 2, 1),

@@ -44,7 +44,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.Controllers
         }
 
         [HttpGet("GetMeteringPointProcessesByGsrn")]
-        public async Task<ActionResult<List<ProcessDto>>> GetProcessesByGsrnAsync(string gsrn)
+        public async Task<ActionResult<List<Process>>> GetProcessesByGsrnAsync(string gsrn)
         {
             var request = new MeteringPointProcessesByGsrnQuery(gsrn);
             var result = await _mediator.Send(request).ConfigureAwait(false);

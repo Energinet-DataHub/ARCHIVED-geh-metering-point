@@ -38,6 +38,6 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions
         /// <param name="gsrn">GSRN number to identify a Metering Point.</param>
         /// <returns>A list of processes for a given Metering Point.</returns>
         /// <exception cref="UnauthorizedAccessException">Thrown if unauthorized</exception>
-        public Task<List<ProcessDto>> GetProcessesByGsrnAsync(string gsrn);
+        public Task<List<Process>> GetProcessesByGsrnAsync(string gsrn);
     }
 }

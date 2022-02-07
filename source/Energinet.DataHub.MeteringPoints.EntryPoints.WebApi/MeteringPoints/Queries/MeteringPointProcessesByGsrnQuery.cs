@@ -18,7 +18,7 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.MeteringPoints.Queries
 {
-    public class MeteringPointProcessesByGsrnQuery : IRequest<List<ProcessDto>>
+    public class MeteringPointProcessesByGsrnQuery : IRequest<List<Process>>
     {
         public MeteringPointProcessesByGsrnQuery(string gsrnNumber)
         {

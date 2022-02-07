@@ -51,15 +51,15 @@ namespace Energinet.DataHub.MeteringPoints.Client
             }).ConfigureAwait(false);
         }
 
-        public async Task<List<ProcessDto>> GetProcessesByGsrnAsync(string gsrn)
+        public async Task<List<Process>> GetProcessesByGsrnAsync(string gsrn)
         {
             var response = await _httpClient.GetAsync(new Uri($"MeteringPoint/GetMeteringPointProcessesByGsrn/?gsrn={gsrn}", UriKind.Relative)).ConfigureAwait(false);
 
             if (response.StatusCode == HttpStatusCode.Unauthorized) throw new UnauthorizedAccessException();
 
-            if (!response.IsSuccessStatusCode) return new List<ProcessDto>();
+            if (!response.IsSuccessStatusCode) return new List<Process>();
 
-            var result = await response.Content.ReadFromJsonAsync<List<ProcessDto>>(new JsonSerializerOptions(JsonSerializerDefaults.Web)
+            var result = await response.Content.ReadFromJsonAsync<List<Process>>(new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {
                 Converters =
                 {
@@ -67,7 +67,7 @@ namespace Energinet.DataHub.MeteringPoints.Client
                 },
             }).ConfigureAwait(false);
 
-            return result ?? new List<ProcessDto>();
+            return result ?? new List<Process>();
         }
     }
 }
