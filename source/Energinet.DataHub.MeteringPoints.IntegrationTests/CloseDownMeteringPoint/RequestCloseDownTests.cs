@@ -39,7 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoi
             var request = CreateRequest();
             var receiver = CreateReceiver();
 
-            await receiver.ReceiveRequest(request).ConfigureAwait(false);
+            await receiver.ReceiveRequestAsync(request).ConfigureAwait(false);
 
             AssertProcess()
                 .IsProcessType(BusinessProcessType.CloseDownMeteringPoint)
@@ -54,7 +54,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoi
             var request = CreateRequest();
             var receiver = CreateReceiver();
 
-            await receiver.ReceiveRequest(request).ConfigureAwait(false);
+            await receiver.ReceiveRequestAsync(request).ConfigureAwait(false);
 
             AssertProcess()
                 .HasStatus("RequestWasAccepted");

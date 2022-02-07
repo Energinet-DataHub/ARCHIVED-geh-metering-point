@@ -27,6 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
         private readonly IBusinessProcessRepository _businessProcesses;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IActorMessageService _actorMessageService;
+        private CloseDownProcess? _businessProcess;
 
         public CloseDownRequestReceiver(IBusinessProcessRepository businessProcesses, IUnitOfWork unitOfWork, IActorMessageService actorMessageService)
         {
@@ -34,18 +35,27 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _actorMessageService = actorMessageService ?? throw new ArgumentNullException(nameof(actorMessageService));
         }
-        #pragma warning disable
 
-        public async Task ReceiveRequest(MasterDataDocument request)
+        public async Task ReceiveRequestAsync(MasterDataDocument request)
         {
-            var businessProcess = CloseDownProcess.Create(BusinessProcessId.Create(), request.TransactionId);
-            _businessProcesses.Add(businessProcess);
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            InitiateProcess(request);
 
-            businessProcess.AcceptRequest();
+            await AcceptRequestAsync(request).ConfigureAwait(false);
 
+            await _unitOfWork.CommitAsync().ConfigureAwait(false);
+        }
+
+        private async Task AcceptRequestAsync(MasterDataDocument request)
+        {
+            _businessProcess?.AcceptRequest();
             await CreateAcceptMessageAsync(request).ConfigureAwait(false);
+        }
 
-            await _unitOfWork.CommitAsync();
+        private void InitiateProcess(MasterDataDocument request)
+        {
+            _businessProcess = CloseDownProcess.Create(BusinessProcessId.Create(), request.TransactionId);
+            _businessProcesses.Add(_businessProcess);
         }
 
         private async Task CreateAcceptMessageAsync(MasterDataDocument request)
