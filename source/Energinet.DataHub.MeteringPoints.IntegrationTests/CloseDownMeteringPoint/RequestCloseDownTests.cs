@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.CloseDown;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
@@ -117,12 +118,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoi
             AssertValidationError("E10");
         }
 
-        private static RequestCloseDown CreateRequest()
+        private static MasterDataDocument CreateRequest()
         {
-            return new RequestCloseDown(
-                SampleData.Transaction,
-                SampleData.GsrnNumber,
-                SampleData.EffectiveDate);
+            return new MasterDataDocument(
+                 ProcessType: BusinessProcessType.CloseDownMeteringPoint.Name,
+                 TransactionId: SampleData.Transaction,
+                 EffectiveDate: SampleData.EffectiveDate,
+                 GsrnNumber: SampleData.GsrnNumber);
         }
     }
 }

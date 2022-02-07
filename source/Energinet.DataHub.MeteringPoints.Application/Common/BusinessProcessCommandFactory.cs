@@ -14,6 +14,7 @@
 
 using System;
 using System.Globalization;
+using Energinet.DataHub.MeteringPoints.Application.CloseDown;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Disconnect;
@@ -36,7 +37,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
             if (processType == BusinessProcessType.ConnectMeteringPoint) return CreateConnectMeteringPointCommand(document);
             if (processType == BusinessProcessType.DisconnectReconnectMeteringPoint) return CreateDisconnectReconnectMeteringPointCommand(document);
             if (processType == BusinessProcessType.ChangeMasterData) return CreateChangeMasterDataCommand(document);
+            if (processType == BusinessProcessType.CloseDownMeteringPoint) return CreateRequestCloseDownCommand(document);
             return null;
+        }
+
+        private static IBusinessRequest CreateRequestCloseDownCommand(MasterDataDocument document)
+        {
+            return new RequestCloseDown(
+                TransactionId: document.TransactionId,
+                EffectiveDate: document.EffectiveDate,
+                GsrnNumber: document.GsrnNumber);
         }
 
         private static IBusinessRequest? CreateChangeMasterDataCommand(MasterDataDocument document)
