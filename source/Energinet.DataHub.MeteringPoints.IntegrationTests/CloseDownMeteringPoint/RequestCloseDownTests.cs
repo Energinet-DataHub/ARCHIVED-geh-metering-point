@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
@@ -135,7 +136,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoi
                 GetService<IUnitOfWork>(),
                 GetService<IActorMessageService>(),
                 GetService<RequestCloseDownValidator>(),
-                GetService<ErrorMessageFactory>());
+                GetService<ErrorMessageFactory>(),
+                GetService<IMeteringPointRepository>());
         }
 
         private Task ReceiveRequest(MasterDataDocument request)

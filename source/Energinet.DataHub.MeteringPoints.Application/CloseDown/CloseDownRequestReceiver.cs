@@ -13,14 +13,19 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.CloseDown;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using FluentValidation.Results;
 
 namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
 {
@@ -31,6 +36,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
         private readonly IActorMessageService _actorMessageService;
         private readonly RequestCloseDownValidator _validator;
         private readonly ErrorMessageFactory _errorMessageFactory;
+        private readonly IMeteringPointRepository _meteringPoints;
+        private readonly BusinessRulesValidationResult _validationResult = new();
         private CloseDownProcess? _businessProcess;
 
         public CloseDownRequestReceiver(
@@ -38,13 +45,15 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
             IUnitOfWork unitOfWork,
             IActorMessageService actorMessageService,
             RequestCloseDownValidator validator,
-            ErrorMessageFactory errorMessageFactory)
+            ErrorMessageFactory errorMessageFactory,
+            IMeteringPointRepository meteringPoints)
         {
             _businessProcesses = businessProcesses ?? throw new ArgumentNullException(nameof(businessProcesses));
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _actorMessageService = actorMessageService ?? throw new ArgumentNullException(nameof(actorMessageService));
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
             _errorMessageFactory = errorMessageFactory ?? throw new ArgumentNullException(nameof(errorMessageFactory));
+            _meteringPoints = meteringPoints;
         }
 
         public async Task ReceiveRequestAsync(MasterDataDocument request)
@@ -52,23 +61,60 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
             if (request == null) throw new ArgumentNullException(nameof(request));
             InitiateProcess(request);
 
-            var validationResult = await _validator.ValidateAsync(request).ConfigureAwait(false);
-            if (validationResult.IsValid == false)
+            await ValidateRequestValuesAsync(request).ConfigureAwait(false);
+            if (_validationResult.Success == false)
             {
-                var validationErrors = validationResult
-                    .Errors
-                    .Select(error => (ValidationError)error.CustomState)
-                    .ToList()
-                    .AsReadOnly();
+                await CreateRejectMessageAsync(request).ConfigureAwait(false);
+                _businessProcess?.RejectRequest();
+                await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                return;
+            }
 
-                var errorMessages = validationErrors
-                    .Select(validationError => _errorMessageFactory.GetErrorMessage(validationError)).ToList();
-                await _actorMessageService.SendRequestCloseDownRejectedAsync(request.TransactionId, request.GsrnNumber, errorMessages).ConfigureAwait(false);
+            var targetMeteringPoint = await _meteringPoints
+                .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
+                .ConfigureAwait(false);
+            if (targetMeteringPoint == null)
+            {
+                _validationResult.AddErrors(new MeteringPointMustBeKnownValidationError(request.GsrnNumber));
+                await CreateRejectMessageAsync(request).ConfigureAwait(false);
+                _businessProcess?.RejectRequest();
+                await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                return;
             }
 
             await AcceptRequestAsync(request).ConfigureAwait(false);
-
             await _unitOfWork.CommitAsync().ConfigureAwait(false);
+        }
+
+        private static ReadOnlyCollection<ValidationError> ExtractValidationErrorsFrom(ValidationResult validationResult)
+        {
+            return validationResult
+                .Errors
+                .Select(error => (ValidationError)error.CustomState)
+                .ToList()
+                .AsReadOnly();
+        }
+
+        private async Task ValidateRequestValuesAsync(MasterDataDocument request)
+        {
+            var validationResult = await _validator.ValidateAsync(request).ConfigureAwait(false);
+            if (validationResult.IsValid == false)
+            {
+                _validationResult.AddErrors(ExtractValidationErrorsFrom(validationResult).ToArray());
+            }
+        }
+
+        private async Task CreateRejectMessageAsync(MasterDataDocument request)
+        {
+            await _actorMessageService
+                .SendRequestCloseDownRejectedAsync(request.TransactionId, request.GsrnNumber, ConvertValidationErrorsToErrorMessages())
+                .ConfigureAwait(false);
+        }
+
+        private List<ErrorMessage> ConvertValidationErrorsToErrorMessages()
+        {
+            return _validationResult.Errors
+                .Select(validationError => _errorMessageFactory.GetErrorMessage(validationError)).ToList();
         }
 
         private async Task AcceptRequestAsync(MasterDataDocument request)
