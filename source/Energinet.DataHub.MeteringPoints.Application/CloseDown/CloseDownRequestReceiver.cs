@@ -79,7 +79,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
             }
 
             await AcceptRequestAsync(request).ConfigureAwait(false);
-            await _unitOfWork.CommitAsync().ConfigureAwait(false);
         }
 
         private static ReadOnlyCollection<ValidationError> ExtractValidationErrorsFrom(ValidationResult validationResult)
@@ -117,6 +116,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
         {
             _businessProcess?.AcceptRequest();
             await CreateAcceptMessageAsync(request).ConfigureAwait(false);
+            await _unitOfWork.CommitAsync().ConfigureAwait(false);
         }
 
         private async Task RejectRequestAsync(MasterDataDocument request)
