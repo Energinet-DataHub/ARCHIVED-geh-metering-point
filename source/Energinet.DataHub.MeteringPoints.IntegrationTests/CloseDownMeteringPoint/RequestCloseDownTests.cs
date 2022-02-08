@@ -37,6 +37,17 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoi
         }
 
         [Fact]
+        public async Task Metering_point_is_closed_down_when_effective_date_is_due()
+        {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+
+            await ReceiveRequest(CreateRequest()).ConfigureAwait(false);
+
+            AssertMasterData()
+                .HasConnectionState(PhysicalState.ClosedDown);
+        }
+
+        [Fact]
         public async Task A_new_process_is_started_when_request_is_received()
         {
             var request = CreateRequest();

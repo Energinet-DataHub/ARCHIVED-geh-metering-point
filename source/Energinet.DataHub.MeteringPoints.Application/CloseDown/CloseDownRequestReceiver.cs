@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
@@ -26,6 +27,7 @@ using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.CloseDown;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation.Results;
+using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
 {
@@ -36,6 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
         private readonly RequestCloseDownValidator _validator;
         private readonly ErrorMessageFactory _errorMessageFactory;
         private readonly IMeteringPointRepository _meteringPoints;
+        private readonly IMediator _mediator;
         private BusinessRulesValidationResult _validationResult = new();
         private CloseDownProcess? _businessProcess;
 
@@ -44,13 +47,15 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
             IActorMessageService actorMessageService,
             RequestCloseDownValidator validator,
             ErrorMessageFactory errorMessageFactory,
-            IMeteringPointRepository meteringPoints)
+            IMeteringPointRepository meteringPoints,
+            IMediator mediator)
         {
             _businessProcesses = businessProcesses ?? throw new ArgumentNullException(nameof(businessProcesses));
             _actorMessageService = actorMessageService ?? throw new ArgumentNullException(nameof(actorMessageService));
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
             _errorMessageFactory = errorMessageFactory ?? throw new ArgumentNullException(nameof(errorMessageFactory));
             _meteringPoints = meteringPoints;
+            _mediator = mediator;
         }
 
         public async Task ReceiveRequestAsync(MasterDataDocument request)
@@ -73,6 +78,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
             }
 
             await AcceptRequestAsync(request).ConfigureAwait(false);
+
+            var closeDownCommand = new CloseDownMeteringPoint(request.GsrnNumber);
+            await _mediator.Send(closeDownCommand, CancellationToken.None).ConfigureAwait(false);
         }
 
         public bool CanHandleRequest(MasterDataDocument request)
