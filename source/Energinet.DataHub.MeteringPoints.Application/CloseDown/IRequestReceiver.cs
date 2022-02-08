@@ -17,10 +17,21 @@ using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 
 namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
 {
-    #pragma warning disable
+    /// <summary>
+    /// Handles incoming business requests
+    /// </summary>
     public interface IRequestReceiver
     {
+        /// <summary>
+        /// Initiates handling of incoming business request
+        /// </summary>
+        /// <param name="request"></param>
         Task ReceiveRequestAsync(MasterDataDocument request);
+
+        /// <summary>
+        /// Determines whether the receiver can handle the incoming business request (process)
+        /// </summary>
+        /// <param name="request"></param>
         bool CanHandleRequest(MasterDataDocument request);
     }
 }
