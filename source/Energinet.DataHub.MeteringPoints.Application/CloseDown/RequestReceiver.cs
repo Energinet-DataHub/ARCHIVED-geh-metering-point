@@ -13,32 +13,37 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 
 namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
 {
-    public class UnitOfWorkDecorator : IRequestReceiver
+    public class RequestReceiver : IRequestReceiver
     {
-        private readonly IRequestReceiver _decorated;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IEnumerable<IRequestReceiver> _receivers;
 
-        public UnitOfWorkDecorator(IRequestReceiver decorated, IUnitOfWork unitOfWork)
+        public RequestReceiver(IEnumerable<IRequestReceiver> receivers)
         {
-            _decorated = decorated ?? throw new ArgumentNullException(nameof(decorated));
-            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _receivers = receivers;
         }
 
-        public async Task ReceiveRequestAsync(MasterDataDocument request)
+        public Task ReceiveRequestAsync(MasterDataDocument request)
         {
-            await _decorated.ReceiveRequestAsync(request).ConfigureAwait(false);
-            await _unitOfWork.CommitAsync().ConfigureAwait(false);
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            var receiver = _receivers.FirstOrDefault(receiver => receiver.CanHandleRequest(request));
+            if (receiver is null)
+            {
+                throw new NoBusinessRequestReceiverFoundException($"Could not find receiver capable of handling this type {request.ProcessType} of business request.");
+            }
+
+            return receiver.ReceiveRequestAsync(request);
         }
 
         public bool CanHandleRequest(MasterDataDocument request)
         {
-            return _decorated.CanHandleRequest(request);
+            return _receivers.Any(receiver => receiver.CanHandleRequest(request));
         }
     }
 }

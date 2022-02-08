@@ -213,8 +213,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 typeof(MeteringPoint).Assembly, // Domain
                 typeof(DocumentType).Assembly); // Infrastructure
 
-            _container.Register<IRequestReceiver, CloseDownRequestReceiver>();
+            _container.Collection.Register<IRequestReceiver>(typeof(CloseDownRequestReceiver));
             _container.RegisterDecorator(typeof(IRequestReceiver), typeof(UnitOfWorkDecorator));
+            _container.Register(() =>
+                new RequestReceiver(_container.GetAllInstances<IRequestReceiver>().ToArray()));
 
             _container.BuildMediator(
                 new[]

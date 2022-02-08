@@ -143,7 +143,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoi
 
         private IRequestReceiver CreateReceiver()
         {
-            return GetService<IRequestReceiver>();
+            return GetService<RequestReceiver>();
         }
 
         private Task ReceiveRequest(MasterDataDocument request)
