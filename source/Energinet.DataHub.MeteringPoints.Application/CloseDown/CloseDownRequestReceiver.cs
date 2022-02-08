@@ -29,10 +29,9 @@ using FluentValidation.Results;
 
 namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
 {
-    public class CloseDownRequestReceiver
+    public class CloseDownRequestReceiver : IRequestReceiver
     {
         private readonly IBusinessProcessRepository _businessProcesses;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IActorMessageService _actorMessageService;
         private readonly RequestCloseDownValidator _validator;
         private readonly ErrorMessageFactory _errorMessageFactory;
@@ -42,14 +41,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
 
         public CloseDownRequestReceiver(
             IBusinessProcessRepository businessProcesses,
-            IUnitOfWork unitOfWork,
             IActorMessageService actorMessageService,
             RequestCloseDownValidator validator,
             ErrorMessageFactory errorMessageFactory,
             IMeteringPointRepository meteringPoints)
         {
             _businessProcesses = businessProcesses ?? throw new ArgumentNullException(nameof(businessProcesses));
-            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _actorMessageService = actorMessageService ?? throw new ArgumentNullException(nameof(actorMessageService));
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
             _errorMessageFactory = errorMessageFactory ?? throw new ArgumentNullException(nameof(errorMessageFactory));
@@ -76,6 +73,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
             }
 
             await AcceptRequestAsync(request).ConfigureAwait(false);
+        }
+
+        public bool CanHandleRequest(MasterDataDocument request)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            return request.ProcessType.Equals(BusinessProcessType.CloseDownMeteringPoint.Name, StringComparison.OrdinalIgnoreCase);
         }
 
         private static ReadOnlyCollection<ValidationError> ExtractValidationErrorsFrom(ValidationResult validationResult)
@@ -127,14 +130,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
         {
             _businessProcess?.AcceptRequest();
             await CreateAcceptMessageAsync(request).ConfigureAwait(false);
-            await _unitOfWork.CommitAsync().ConfigureAwait(false);
         }
 
         private async Task RejectRequestAsync(MasterDataDocument request)
         {
             await CreateRejectMessageAsync(request).ConfigureAwait(false);
             _businessProcess?.RejectRequest();
-            await _unitOfWork.CommitAsync().ConfigureAwait(false);
         }
 
         private void InitiateProcess(MasterDataDocument request)

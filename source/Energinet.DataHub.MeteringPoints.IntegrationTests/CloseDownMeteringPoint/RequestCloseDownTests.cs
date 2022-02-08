@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.CloseDown;
 using Energinet.DataHub.MeteringPoints.Application.Common;
@@ -129,15 +130,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoi
                  GsrnNumber: SampleData.GsrnNumber);
         }
 
-        private CloseDownRequestReceiver CreateReceiver()
+        private IRequestReceiver CreateReceiver()
         {
-            return new CloseDownRequestReceiver(
-                GetService<IBusinessProcessRepository>(),
-                GetService<IUnitOfWork>(),
-                GetService<IActorMessageService>(),
-                GetService<RequestCloseDownValidator>(),
-                GetService<ErrorMessageFactory>(),
-                GetService<IMeteringPointRepository>());
+            return GetService<IRequestReceiver>();
         }
 
         private Task ReceiveRequest(MasterDataDocument request)
