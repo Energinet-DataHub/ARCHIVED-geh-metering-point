@@ -44,6 +44,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.MeteringPoints.Que
             {
                 new Process(
                     id: Guid.NewGuid(),
+                    meteringPointGsrn: "1231231321231",
                     name: "BRS-006",
                     createdDate: new DateTime(2022, 2, 1),
                     effectiveDate: new DateTime(2022, 2, 2),

@@ -33,7 +33,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
 
         protected override string ProcessName => "BRS-xxx";
 
-        public override ProcessDetail GetProcessDetails(TRequest request)
+        protected override string GetGsrn(TRequest request) => request?.GsrnNumber
+                                                               ?? throw new InvalidOperationException("GSRN cannot be empty");
+
+        protected override ProcessDetail GetProcessDetails(TRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -46,7 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 ProcessStatus.Received);
         }
 
-        public override ProcessDetail GetProcessDetails(BusinessProcessResult result)
+        protected override ProcessDetail GetProcessDetails(BusinessProcessResult result)
         {
             if (result == null) throw new ArgumentNullException(nameof(result));
 

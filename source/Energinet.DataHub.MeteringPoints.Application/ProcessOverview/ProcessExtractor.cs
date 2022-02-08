@@ -40,20 +40,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.ProcessOverview
 
         protected abstract string ProcessName { get; }
 
-        public Process GetProcess(params ProcessDetail[] details)
+        public Process GetProcess(TRequest request, BusinessProcessResult result)
         {
-            return new Process(
-                id: Guid.NewGuid(),
-                name: ProcessName,
-                createdDate: details.First().CreatedDate,
-                effectiveDate: details.FirstOrDefault(d => d.EffectiveDate.HasValue)?.EffectiveDate,
-                status: ProcessStatus.Completed,
-                details: details);
+            var gsrn = GetGsrn(request);
+            var requestDetails = GetProcessDetails(request);
+            var resultDetails = GetProcessDetails(result);
+            return GetProcess(gsrn, requestDetails, resultDetails);
         }
-
-        public abstract ProcessDetail GetProcessDetails(TRequest request);
-
-        public abstract ProcessDetail GetProcessDetails(BusinessProcessResult result);
 
         protected static DateTime? GetDateTime(string? dateTimeString)
         {
@@ -69,6 +62,24 @@ namespace Energinet.DataHub.MeteringPoints.Application.ProcessOverview
             }
 
             return parseResult.Value.ToDateTimeUtc();
+        }
+
+        protected abstract string GetGsrn(TRequest request);
+
+        protected abstract ProcessDetail GetProcessDetails(TRequest request);
+
+        protected abstract ProcessDetail GetProcessDetails(BusinessProcessResult result);
+
+        private Process GetProcess(string gsrn, params ProcessDetail[] details)
+        {
+            return new Process(
+                id: Guid.NewGuid(),
+                meteringPointGsrn: gsrn,
+                name: ProcessName,
+                createdDate: details.First().CreatedDate,
+                effectiveDate: details.FirstOrDefault(d => d.EffectiveDate.HasValue)?.EffectiveDate,
+                status: ProcessStatus.Completed,
+                details: details);
         }
     }
 }

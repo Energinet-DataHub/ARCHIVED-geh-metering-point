@@ -46,13 +46,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcess
 
             if (_processExtractor.IsProcessOverviewEnabled)
             {
-                var requestDetails = _processExtractor.GetProcessDetails(request);
-
                 var businessProcessResult = result as BusinessProcessResult
                                             ?? throw new InvalidOperationException($"Results should be {nameof(BusinessProcessResult)}");
-                var resultDetails = _processExtractor.GetProcessDetails(businessProcessResult);
-
-                var process = _processExtractor.GetProcess(requestDetails, resultDetails);
+                var process = _processExtractor.GetProcess(request, businessProcessResult);
 
                 _meteringPointContext.Processes.Add(process);
             }

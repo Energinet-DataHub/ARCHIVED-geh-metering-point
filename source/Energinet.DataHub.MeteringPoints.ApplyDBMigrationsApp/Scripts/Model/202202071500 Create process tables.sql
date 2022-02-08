@@ -1,6 +1,7 @@
 CREATE TABLE [dbo].[Processes](
     [Id] [uniqueidentifier] NOT NULL,
-    [Name] [nvarchar](10) NOT NULL,
+    [Name] [nvarchar](1024) NOT NULL,
+    [MeteringPointGsrn] [nvarchar](128) NOT NULL,
     [CreatedDate] [datetime2](7) NOT NULL,
     [EffectiveDate] [datetime2](7) NULL,
     [Status] [smallint] NULL,

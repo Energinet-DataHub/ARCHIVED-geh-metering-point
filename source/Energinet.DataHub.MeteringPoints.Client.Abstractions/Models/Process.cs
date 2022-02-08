@@ -22,6 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
     {
         public Process(
             Guid id,
+            string meteringPointGsrn,
             string name,
             DateTime createdDate,
             DateTime? effectiveDate,
@@ -29,6 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
             IReadOnlyList<ProcessDetail> details)
         {
             Id = id;
+            MeteringPointGsrn = meteringPointGsrn;
             Name = name;
             CreatedDate = createdDate;
             EffectiveDate = effectiveDate;
@@ -37,12 +39,14 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
         }
 
         public Process(
+            string meteringPointGsrn,
             string name,
             DateTime createdDate,
             DateTime? effectiveDate,
             ProcessStatus status)
         {
             Id = Guid.NewGuid();
+            MeteringPointGsrn = meteringPointGsrn;
             Name = name;
             CreatedDate = createdDate;
             EffectiveDate = effectiveDate;
@@ -53,6 +57,7 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
         public Process()
         {
             Id = Guid.NewGuid();
+            MeteringPointGsrn = string.Empty;
             Name = string.Empty;
             CreatedDate = DateTime.MinValue;
             EffectiveDate = null;
@@ -61,6 +66,8 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
         }
 
         public Guid Id { get; init; }
+
+        public string MeteringPointGsrn { get; init; }
 
         public string Name { get; init; }
 

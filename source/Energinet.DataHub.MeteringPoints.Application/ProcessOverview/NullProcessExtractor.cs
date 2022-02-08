@@ -34,12 +34,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.ProcessOverview
 
         protected override string ProcessName => "Null";
 
-        public override ProcessDetail GetProcessDetails(TRequest request)
+        protected override string GetGsrn(TRequest request) => "GSRN";
+
+        protected override ProcessDetail GetProcessDetails(TRequest request)
         {
             throw new NotImplementedException();
         }
 
-        public override ProcessDetail GetProcessDetails(BusinessProcessResult result)
+        protected override ProcessDetail GetProcessDetails(BusinessProcessResult result)
         {
             throw new NotImplementedException();
         }
