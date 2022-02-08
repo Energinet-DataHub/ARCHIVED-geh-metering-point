@@ -36,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
         private readonly RequestCloseDownValidator _validator;
         private readonly ErrorMessageFactory _errorMessageFactory;
         private readonly IMeteringPointRepository _meteringPoints;
-        private readonly BusinessRulesValidationResult _validationResult = new();
+        private BusinessRulesValidationResult _validationResult = new();
         private CloseDownProcess? _businessProcess;
 
         public CloseDownRequestReceiver(
@@ -58,7 +58,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
             if (request == null) throw new ArgumentNullException(nameof(request));
             InitiateProcess(request);
 
-            await ValidateRequestValuesAsync(request).ConfigureAwait(false);
+            _validationResult = await ValidateRequestValuesAsync(request).ConfigureAwait(false);
             if (_validationResult.Success == false)
             {
                 await RejectRequestAsync(request).ConfigureAwait(false);
@@ -90,13 +90,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
                 .AsReadOnly();
         }
 
-        private async Task ValidateRequestValuesAsync(MasterDataDocument request)
+        private async Task<BusinessRulesValidationResult> ValidateRequestValuesAsync(MasterDataDocument request)
         {
-            var validationResult = await _validator.ValidateAsync(request).ConfigureAwait(false);
-            if (validationResult.IsValid == false)
-            {
-                _validationResult.AddErrors(ExtractValidationErrorsFrom(validationResult).ToArray());
-            }
+            var result = await _validator.ValidateAsync(request).ConfigureAwait(false);
+            return new BusinessRulesValidationResult(ExtractValidationErrorsFrom(result).ToArray());
         }
 
         private async Task CreateRejectMessageAsync(MasterDataDocument request)
