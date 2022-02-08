@@ -4,7 +4,7 @@ CREATE TABLE [dbo].[Processes](
     [MeteringPointGsrn] [nvarchar](128) NOT NULL,
     [CreatedDate] [datetime2](7) NOT NULL,
     [EffectiveDate] [datetime2](7) NULL,
-    [Status] [smallint] NULL,
+    [Status] [int] NULL,
     CONSTRAINT [PK_Processes] PRIMARY KEY CLUSTERED
     (
        [Id] ASC
@@ -19,7 +19,7 @@ CREATE TABLE [dbo].[ProcessDetails](
     [Receiver] [nvarchar](1024) NULL,
     [CreatedDate] [datetime2](7) NOT NULL,
     [EffectiveDate] [datetime2](7) NULL,
-    [Status] [smallint] NULL,
+    [Status] [int] NULL,
     CONSTRAINT [PK_ProcessDetails] PRIMARY KEY CLUSTERED
     (
         [Id] ASC

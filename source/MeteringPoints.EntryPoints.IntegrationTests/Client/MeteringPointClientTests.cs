@@ -41,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Client
             var sut = await CreateMeteringPointClient().ConfigureAwait(false);
 
             // Act
-            var response = await sut.GetProcessesByGsrnAsync("571313180400013469").ConfigureAwait(false);
+            var response = await sut.GetProcessesByGsrnAsync("571313157178361184").ConfigureAwait(false);
 
             // Assert
             response.Should().NotBeNull();
