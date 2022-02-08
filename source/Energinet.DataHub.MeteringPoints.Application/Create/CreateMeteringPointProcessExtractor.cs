@@ -31,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
         {
         }
 
-        protected override string ProcessName => "BRS-xxx";
+        protected override string ProcessName => "BRS-004";
 
         protected override string GetGsrn(TRequest request) => request?.GsrnNumber
                                                                ?? throw new InvalidOperationException("GSRN cannot be empty");
