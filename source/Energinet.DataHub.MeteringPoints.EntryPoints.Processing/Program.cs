@@ -157,7 +157,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IValidator<MasterDataDocument>, ValidationRuleSet>(Lifestyle.Scoped);
             container.Register<IValidator<ConnectMeteringPointRequest>, ConnectMeteringPointRuleSet>(Lifestyle.Scoped);
             container.Register<IValidator<UpdateMasterDataRequest>, NullValidationSet<UpdateMasterDataRequest>>(Lifestyle.Scoped);
-            container.Register<IValidator<RequestCloseDown>, RequestCloseDownValidator>(Lifestyle.Scoped);
+            container.Register<RequestCloseDownValidator>(Lifestyle.Scoped);
             container.Register<IValidator<DisconnectReconnectMeteringPointRequest>, DisconnectReconnectMeteringPointRuleSet>(Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<UpdateMasterDataRequest>), typeof(ChangeMasterDataResultHandler), Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<CreateMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateMeteringPoint>), Lifestyle.Scoped);

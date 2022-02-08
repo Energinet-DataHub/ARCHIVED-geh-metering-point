@@ -165,7 +165,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IValidator<CreateGridArea>, CreateGridAreaRuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<CreateMeteringPoint>, RuleSet>(Lifestyle.Scoped);
             _container.Register<IValidator<UpdateMasterDataRequest>, UpdateMasterDataRequestValidator>(Lifestyle.Scoped);
-            _container.Register<IValidator<RequestCloseDown>, RequestCloseDownValidator>(Lifestyle.Scoped);
+            //_container.Register<IValidator<RequestCloseDown>, RequestCloseDownValidator>(Lifestyle.Scoped);
+            _container.Register<RequestCloseDownValidator>(Lifestyle.Scoped);
             _container.Register<IDomainEventsAccessor, DomainEventsAccessor>();
             _container.Register<IDomainEventsDispatcher, DomainEventsDispatcher>();
             _container.Register<IDomainEventPublisher, DomainEventPublisher>();
@@ -210,7 +211,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 validateRegistrations: true,
                 typeof(MasterDataDocument).Assembly, // Application
                 typeof(MeteringPoint).Assembly, // Domain
-                typeof(ErrorMessageFactory).Assembly); // Infrastructure
+                typeof(DocumentType).Assembly); // Infrastructure
 
             _container.BuildMediator(
                 new[]
