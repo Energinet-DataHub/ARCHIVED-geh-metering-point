@@ -18,11 +18,58 @@ using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
 
 namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
 {
-    public record Process(
-        Guid Id,
-        string Name,
-        DateTime CreatedDate,
-        DateTime EffectiveDate,
-        ProcessStatus Status,
-        IReadOnlyList<ProcessDetail> Details);
+    public record Process
+    {
+        public Process(
+            Guid id,
+            string name,
+            DateTime createdDate,
+            DateTime? effectiveDate,
+            ProcessStatus status,
+            IReadOnlyList<ProcessDetail> details)
+        {
+            Id = id;
+            Name = name;
+            CreatedDate = createdDate;
+            EffectiveDate = effectiveDate;
+            Status = status;
+            Details = details;
+        }
+
+        public Process(
+            string name,
+            DateTime createdDate,
+            DateTime? effectiveDate,
+            ProcessStatus status)
+        {
+            Id = Guid.NewGuid();
+            Name = name;
+            CreatedDate = createdDate;
+            EffectiveDate = effectiveDate;
+            Status = status;
+            Details = new List<ProcessDetail>();
+        }
+
+        public Process()
+        {
+            Id = Guid.NewGuid();
+            Name = string.Empty;
+            CreatedDate = DateTime.MinValue;
+            EffectiveDate = null;
+            Status = ProcessStatus.None;
+            Details = new List<ProcessDetail>();
+        }
+
+        public Guid Id { get; init; }
+
+        public string Name { get; init; }
+
+        public DateTime CreatedDate { get; init; }
+
+        public DateTime? EffectiveDate { get; init; }
+
+        public ProcessStatus Status { get; init; }
+
+        public IReadOnlyList<ProcessDetail> Details { get; init; }
+    }
 }

@@ -18,5 +18,7 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums
     {
         None = 0,
         Completed = 1,
+        Received = 2,
+        Sent = 3,
     }
 }

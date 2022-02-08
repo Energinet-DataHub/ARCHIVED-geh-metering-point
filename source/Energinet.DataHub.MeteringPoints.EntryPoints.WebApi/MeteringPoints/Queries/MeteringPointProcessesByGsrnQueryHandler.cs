@@ -43,24 +43,23 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.MeteringPoints.Que
             return Task.FromResult(new List<Process>
             {
                 new Process(
-                    Id: Guid.NewGuid(),
-                    Name: "BRS-006",
-                    CreatedDate: new DateTime(2022, 2, 1),
-                    EffectiveDate: new DateTime(2022, 2, 2),
-                    Status: ProcessStatus.Completed,
-                    Details: new ProcessDetail[]
+                    id: Guid.NewGuid(),
+                    name: "BRS-006",
+                    createdDate: new DateTime(2022, 2, 1),
+                    effectiveDate: new DateTime(2022, 2, 2),
+                    status: ProcessStatus.Completed,
+                    details: new ProcessDetail[]
                     {
                         new ProcessDetail(
-                            Id: Guid.NewGuid(),
-                            ProcessId: Guid.NewGuid(),
-                            Name: "RSM-021",
-                            Type: "E58",
-                            CreatedDate: new DateTime(2022, 2, 1),
-                            EffectiveDate: new DateTime(2022, 2, 2),
-                            Receiver: "57000000001",
-                            Sender: "DataHub",
-                            Status: ProcessStatus.Completed,
-                            Errors: Array.Empty<ProcessDetailError>()),
+                            id: Guid.NewGuid(),
+                            processId: Guid.NewGuid(),
+                            name: "RSM-021",
+                            createdDate: new DateTime(2022, 2, 1),
+                            effectiveDate: new DateTime(2022, 2, 2),
+                            receiver: "57000000001",
+                            sender: "DataHub",
+                            status: ProcessStatus.Completed,
+                            errors: Array.Empty<ProcessDetailError>()),
                     }),
             });
         }

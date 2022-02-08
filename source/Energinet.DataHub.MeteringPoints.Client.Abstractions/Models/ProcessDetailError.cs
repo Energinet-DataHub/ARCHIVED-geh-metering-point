@@ -16,9 +16,34 @@ using System;
 
 namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
 {
-    public record ProcessDetailError(
-        Guid Id,
-        Guid ProcessDetailId,
-        string Code,
-        string Description);
+    public record ProcessDetailError
+    {
+        public ProcessDetailError(
+            Guid id,
+            Guid processDetailId,
+            string code,
+            string description)
+        {
+            Id = id;
+            ProcessDetailId = processDetailId;
+            Code = code;
+            Description = description;
+        }
+
+        public ProcessDetailError(
+            string code,
+            string description)
+        {
+            Code = code;
+            Description = description;
+        }
+
+        public Guid Id { get; init; }
+
+        public Guid ProcessDetailId { get; init; }
+
+        public string Code { get; init; }
+
+        public string Description { get; init; }
+    }
 }
