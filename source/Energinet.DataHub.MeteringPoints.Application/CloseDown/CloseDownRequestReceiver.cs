@@ -68,12 +68,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
                 return;
             }
 
-            var targetMeteringPoint = await _meteringPoints
-                .GetByGsrnNumberAsync(GsrnNumber.Create(request.GsrnNumber))
-                .ConfigureAwait(false);
+            var targetMeteringPoint = await FindTargetMeteringPointAsync(request.GsrnNumber).ConfigureAwait(false);
             if (targetMeteringPoint == null)
             {
-                _validationResult.AddErrors(new MeteringPointMustBeKnownValidationError(request.GsrnNumber));
                 await RejectRequestAsync(request).ConfigureAwait(false);
                 return;
             }
@@ -110,6 +107,20 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
         {
             return _validationResult.Errors
                 .Select(validationError => _errorMessageFactory.GetErrorMessage(validationError)).ToList();
+        }
+
+        private async Task<MeteringPoint?> FindTargetMeteringPointAsync(string gsrnNumber)
+        {
+            var targetMeteringPoint = await _meteringPoints
+                .GetByGsrnNumberAsync(GsrnNumber.Create(gsrnNumber))
+                .ConfigureAwait(false);
+
+            if (targetMeteringPoint is null)
+            {
+                _validationResult.AddErrors(new MeteringPointMustBeKnownValidationError(gsrnNumber));
+            }
+
+            return targetMeteringPoint;
         }
 
         private async Task AcceptRequestAsync(MasterDataDocument request)
