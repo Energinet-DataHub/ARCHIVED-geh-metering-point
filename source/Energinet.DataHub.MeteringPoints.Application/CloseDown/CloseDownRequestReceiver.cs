@@ -64,9 +64,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
             await ValidateRequestValuesAsync(request).ConfigureAwait(false);
             if (_validationResult.Success == false)
             {
-                await CreateRejectMessageAsync(request).ConfigureAwait(false);
-                _businessProcess?.RejectRequest();
-                await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                await RejectRequestAsync(request).ConfigureAwait(false);
                 return;
             }
 
@@ -76,9 +74,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
             if (targetMeteringPoint == null)
             {
                 _validationResult.AddErrors(new MeteringPointMustBeKnownValidationError(request.GsrnNumber));
-                await CreateRejectMessageAsync(request).ConfigureAwait(false);
-                _businessProcess?.RejectRequest();
-                await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                await RejectRequestAsync(request).ConfigureAwait(false);
                 return;
             }
 
@@ -121,6 +117,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
         {
             _businessProcess?.AcceptRequest();
             await CreateAcceptMessageAsync(request).ConfigureAwait(false);
+        }
+
+        private async Task RejectRequestAsync(MasterDataDocument request)
+        {
+            await CreateRejectMessageAsync(request).ConfigureAwait(false);
+            _businessProcess?.RejectRequest();
+            await _unitOfWork.CommitAsync().ConfigureAwait(false);
         }
 
         private void InitiateProcess(MasterDataDocument request)
