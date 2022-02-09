@@ -27,6 +27,7 @@ using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.ChildMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
+using Energinet.DataHub.MeteringPoints.Application.Common.ReceiveBusinessRequests;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Create.Validation;
@@ -209,10 +210,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 typeof(MeteringPoint).Assembly, // Domain
                 typeof(DocumentType).Assembly); // Infrastructure
 
-            _container.Collection.Register<IRequestReceiver>(typeof(CloseDownRequestReceiver));
-            _container.RegisterDecorator(typeof(IRequestReceiver), typeof(UnitOfWorkDecorator));
-            _container.Register(() =>
-                new RequestReceiver(_container.GetAllInstances<IRequestReceiver>().ToArray()));
+            _container.AddBusinessRequestReceivers();
 
             _container.BuildMediator(
                 new[]
