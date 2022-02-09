@@ -15,10 +15,12 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 using Energinet.DataHub.MeteringPoints.Domain.Actors;
+using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.Actors;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub;
@@ -60,6 +62,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
 
         public DbSet<Actor> Actors { get; private set; }
 
+        public DbSet<BusinessProcess> BusinessProcesses { get; private set; }
+
         public DbSet<Process> Processes { get; private set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -75,6 +79,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
             modelBuilder.ApplyConfiguration(new EnergySupplierEntityConfiguration());
             modelBuilder.ApplyConfiguration(new ActorEntityConfiguration());
             modelBuilder.ApplyConfiguration(new ProcessEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new BusinessProcessEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new CloseDownProcessEntityConfiguration());
         }
     }
 }

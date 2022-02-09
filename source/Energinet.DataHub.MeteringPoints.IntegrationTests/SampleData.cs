@@ -24,7 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string TypeOfMeteringPoint => nameof(MeteringPointType.Consumption);
 
-        public static string Transaction => Guid.NewGuid().ToString();
+        public static string Transaction => "175C1079-4E53-47CB-BE27-02E9BB674487";
 
         public static string SubTypeOfMeteringPoint => MeteringMethod.Physical.Name;
 
