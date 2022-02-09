@@ -12,12 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Client;
 using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Tooling.WebApi;
 using Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Tooling.WebApi.Hosts;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Xunit;
 using Xunit.Categories;
 
@@ -46,6 +48,44 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Client
             // Assert
             response.Should().NotBeNull();
             response.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public async Task Get_metering_point_processes_by_gsrn_should_order_steps_correct()
+        {
+            // Arrange
+            var sut = await CreateMeteringPointClient().ConfigureAwait(false);
+
+            // Act
+            var response = await sut.GetProcessesByGsrnAsync("571313157178361184").ConfigureAwait(false);
+
+            // Assert
+            using (new AssertionScope())
+            {
+                response.Should().HaveCount(2);
+                response.First().Details[0].Name.Should().StartWith("Request");
+                response.First().Details[1].Name.Should().StartWith("Reject");
+                response.Last().Details[0].Name.Should().StartWith("Request");
+                response.Last().Details[1].Name.Should().StartWith("Confirm");
+            }
+        }
+
+        [Fact]
+        public async Task Get_metering_point_processes_by_gsrn_should_contain_errors_in_reject_steps()
+        {
+            // Arrange
+            var sut = await CreateMeteringPointClient().ConfigureAwait(false);
+
+            // Act
+            var response = await sut.GetProcessesByGsrnAsync("571313157178361184").ConfigureAwait(false);
+
+            // Assert
+            using (new AssertionScope())
+            {
+                var rejectedDetails = response.First().Details[1];
+                rejectedDetails.Name.Should().StartWith("Reject");
+                rejectedDetails.Errors.Should().NotBeEmpty();
+            }
         }
 
         private async Task<MeteringPointClient> CreateMeteringPointClient()
