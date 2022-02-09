@@ -21,7 +21,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.BusinessProcesses
 {
-    public class BusinessProcessConfiguration : IEntityTypeConfiguration<BusinessProcess>
+    public class BusinessProcessEntityConfiguration : IEntityTypeConfiguration<BusinessProcess>
     {
         public void Configure(EntityTypeBuilder<BusinessProcess> builder)
         {

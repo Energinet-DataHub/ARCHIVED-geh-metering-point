@@ -164,6 +164,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
                     typeof(BusinessProcessResultBehavior<,>))
                 .WithRequestHandlers(
                     typeof(CreateGridAreaHandler),
+                    typeof(MeteringPointProcessesByGsrnQueryHandler),
                     typeof(MeteringPointByGsrnQueryHandler));
 
             _container.SendProtobuf<MeteringPointEnvelope>();
