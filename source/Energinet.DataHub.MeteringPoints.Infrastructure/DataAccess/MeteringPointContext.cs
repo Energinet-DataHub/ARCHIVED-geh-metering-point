@@ -79,8 +79,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
             modelBuilder.ApplyConfiguration(new EnergySupplierEntityConfiguration());
             modelBuilder.ApplyConfiguration(new ActorEntityConfiguration());
             modelBuilder.ApplyConfiguration(new ProcessEntityConfiguration());
-            modelBuilder.ApplyConfiguration(new BusinessProcessConfiguration());
-            modelBuilder.ApplyConfiguration(new CloseDownProcessConfiguration());
+            modelBuilder.ApplyConfiguration(new BusinessProcessEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new CloseDownProcessEntityConfiguration());
         }
     }
 }
