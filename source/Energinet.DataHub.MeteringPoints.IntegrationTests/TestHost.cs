@@ -72,8 +72,6 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeConnectionStatus
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.DisconnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GenericNotification;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.ChargeLinks.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
