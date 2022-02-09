@@ -15,6 +15,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using SimpleInjector;
 

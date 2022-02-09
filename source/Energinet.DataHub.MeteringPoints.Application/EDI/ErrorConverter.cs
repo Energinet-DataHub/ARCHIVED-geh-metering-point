@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors
+namespace Energinet.DataHub.MeteringPoints.Application.EDI
 {
     #pragma warning disable SA1402 // These ErrorConverter types "overloaded" by type parameter are tightly coupled and it seems logical to have them in the same file.
     public abstract class ErrorConverter

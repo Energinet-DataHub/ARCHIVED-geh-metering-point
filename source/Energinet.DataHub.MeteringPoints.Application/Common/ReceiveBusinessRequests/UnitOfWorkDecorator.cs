@@ -14,27 +14,30 @@
 
 using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
-using MediatR;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notifications
+namespace Energinet.DataHub.MeteringPoints.Application.Common.ReceiveBusinessRequests
 {
-    public class NotificationReceiver : INotificationReceiver
+    public class UnitOfWorkDecorator : IRequestReceiver
     {
-        private readonly IMediator _mediator;
+        private readonly IRequestReceiver _decorated;
         private readonly IUnitOfWork _unitOfWork;
 
-        public NotificationReceiver(IMediator mediator, IUnitOfWork unitOfWork)
+        public UnitOfWorkDecorator(IRequestReceiver decorated, IUnitOfWork unitOfWork)
         {
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _decorated = decorated ?? throw new ArgumentNullException(nameof(decorated));
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
-        public async Task PublishAndCommitAsync(object notification)
+        public async Task ReceiveRequestAsync(MasterDataDocument request)
         {
-            await _mediator.Publish(notification).ConfigureAwait(false);
+            await _decorated.ReceiveRequestAsync(request).ConfigureAwait(false);
             await _unitOfWork.CommitAsync().ConfigureAwait(false);
+        }
+
+        public bool CanHandleRequest(MasterDataDocument request)
+        {
+            return _decorated.CanHandleRequest(request);
         }
     }
 }

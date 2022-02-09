@@ -12,24 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
+namespace Energinet.DataHub.MeteringPoints.Application.Common
 {
-    public class UnitOfWork : IUnitOfWork
+    /// <summary>
+    /// Unit of work for handling database transactions
+    /// </summary>
+    public interface IUnitOfWork
     {
-        private readonly MeteringPointContext _context;
-
-        public UnitOfWork(MeteringPointContext context)
-        {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-        }
-
-        public Task CommitAsync()
-        {
-            return _context.SaveChangesAsync();
-        }
+        /// <summary>
+        /// Commits the transaction
+        /// </summary>
+        /// <returns><see cref="Task"/></returns>
+        Task CommitAsync();
     }
 }

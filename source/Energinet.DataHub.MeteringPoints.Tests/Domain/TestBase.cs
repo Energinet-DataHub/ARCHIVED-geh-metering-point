@@ -42,14 +42,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             Assert.Equal(errorExpected, hasError);
         }
 
-        protected static void AssertError(string errorCode, BusinessRulesValidationResult rulesValidationResult, bool errorExpected = true)
-        {
-            if (errorCode == null) throw new ArgumentNullException(nameof(errorCode));
-            if (rulesValidationResult == null) throw new ArgumentNullException(nameof(rulesValidationResult));
-            var hasError = rulesValidationResult.Errors.Any(error => error.Code.Equals(errorCode, StringComparison.OrdinalIgnoreCase));
-            Assert.Equal(errorExpected, hasError);
-        }
-
         protected static MeteringPoint CreateMeteringPoint(MeteringPointType type, IMasterDataBuilder? masterDataBuilder = null)
         {
             var builder = masterDataBuilder ?? MasterDataBuilder(type);
@@ -94,13 +86,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 .WithMeasurementUnitType(MeasurementUnitType.KWh.Name);
 
             return builder;
-        }
-
-        protected static IMasterDataBuilder MasterDataBuilderForSpecial()
-        {
-            return MasterDataBuilder(MeteringPointType.VEProduction)
-                .WithMeasurementUnitType(MeasurementUnitType.KWh.Name)
-                .WithProductType(ProductType.EnergyActive.Name);
         }
 
         protected static IMasterDataBuilder MasterDataBuilderForProduction()
@@ -151,23 +136,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 .WithMeasurementUnitType(MeasurementUnitType.KWh.Name)
                 .WithScheduledMeterReadingDate(null)
                 .WithProductType(ProductType.EnergyActive.Name);
-        }
-
-        protected static Address CreateAddress()
-        {
-            return Address.Create(
-                SampleData.StreetName,
-                SampleData.StreetCode,
-                string.Empty,
-                SampleData.CityName,
-                string.Empty,
-                SampleData.PostCode,
-                CountryCode.DK,
-                string.Empty,
-                string.Empty,
-                default,
-                isActual: true,
-                geoInfoReference: Guid.NewGuid().ToString());
         }
 
         protected static void AssertContainsValidationError<TValidationError>(BusinessRulesValidationResult result)

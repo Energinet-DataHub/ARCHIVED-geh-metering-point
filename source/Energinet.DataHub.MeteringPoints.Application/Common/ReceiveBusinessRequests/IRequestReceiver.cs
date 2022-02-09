@@ -13,18 +13,25 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
+namespace Energinet.DataHub.MeteringPoints.Application.Common.ReceiveBusinessRequests
 {
     /// <summary>
-    /// Unit of work for handling database transactions
+    /// Handles incoming business requests
     /// </summary>
-    public interface IUnitOfWork
+    public interface IRequestReceiver
     {
         /// <summary>
-        /// Commits the transaction
+        /// Initiates handling of incoming business request
         /// </summary>
-        /// <returns><see cref="Task"/></returns>
-        Task CommitAsync();
+        /// <param name="request"></param>
+        Task ReceiveRequestAsync(MasterDataDocument request);
+
+        /// <summary>
+        /// Determines whether the receiver can handle the incoming business request (process)
+        /// </summary>
+        /// <param name="request"></param>
+        bool CanHandleRequest(MasterDataDocument request);
     }
 }

@@ -13,23 +13,29 @@
 // limitations under the License.
 
 using System;
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using System.Runtime.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
+namespace Energinet.DataHub.MeteringPoints.Application.Common.ReceiveBusinessRequests
 {
-    public class UnitOfWork : IUnitOfWork
+    public class NoBusinessRequestReceiverFoundException : Exception
     {
-        private readonly MeteringPointContext _context;
-
-        public UnitOfWork(MeteringPointContext context)
+        public NoBusinessRequestReceiverFoundException()
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Task CommitAsync()
+        public NoBusinessRequestReceiverFoundException(string? message)
+            : base(message)
         {
-            return _context.SaveChangesAsync();
+        }
+
+        public NoBusinessRequestReceiverFoundException(string? message, Exception? innerException)
+            : base(message, innerException)
+        {
+        }
+
+        protected NoBusinessRequestReceiverFoundException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
         }
     }
 }
