@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
@@ -31,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
                 Errors = errors.ToList();
             }
 
-            private BusinessRulesValidationResult()
+            public BusinessRulesValidationResult()
             {
             }
 
@@ -47,6 +48,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
             public static BusinessRulesValidationResult Valid()
             {
                 return new BusinessRulesValidationResult();
+            }
+
+            public void AddErrors(params ValidationError[] validationErrors)
+            {
+                Errors = validationErrors;
             }
 
             private void SetValidationErrors(IEnumerable<IBusinessRule> rules)

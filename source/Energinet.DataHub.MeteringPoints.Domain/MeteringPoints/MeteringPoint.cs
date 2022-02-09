@@ -123,6 +123,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         public void CloseDown()
         {
             ConnectionState = ConnectionState.ClosedDown();
+            AddDomainEvent(new MeteringPointWasClosedDown(Id.Value));
         }
 
         public void SetEnergySupplierDetails(EnergySupplierDetails energySupplierDetails)

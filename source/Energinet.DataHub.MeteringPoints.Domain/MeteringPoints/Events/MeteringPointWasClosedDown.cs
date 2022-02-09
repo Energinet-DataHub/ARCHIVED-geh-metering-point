@@ -13,23 +13,17 @@
 // limitations under the License.
 
 using System;
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events
 {
-    public class UnitOfWork : IUnitOfWork
+    public class MeteringPointWasClosedDown : DomainEventBase
     {
-        private readonly MeteringPointContext _context;
-
-        public UnitOfWork(MeteringPointContext context)
+        public MeteringPointWasClosedDown(Guid meteringPointId)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            MeteringPointId = meteringPointId;
         }
 
-        public Task CommitAsync()
-        {
-            return _context.SaveChangesAsync();
-        }
+        public Guid MeteringPointId { get; }
     }
 }
