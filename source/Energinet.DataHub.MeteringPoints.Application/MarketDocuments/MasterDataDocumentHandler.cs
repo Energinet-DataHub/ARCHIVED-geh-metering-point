@@ -18,6 +18,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.CloseDown;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.ReceiveBusinessRequests;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 using MediatR;

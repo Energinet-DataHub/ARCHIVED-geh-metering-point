@@ -15,7 +15,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
+namespace Energinet.DataHub.MeteringPoints.Application.Common.ReceiveBusinessRequests
 {
     public class NoBusinessRequestReceiverFoundException : Exception
     {

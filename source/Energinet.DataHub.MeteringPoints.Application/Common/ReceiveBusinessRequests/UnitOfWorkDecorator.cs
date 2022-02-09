@@ -14,10 +14,9 @@
 
 using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 
-namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
+namespace Energinet.DataHub.MeteringPoints.Application.Common.ReceiveBusinessRequests
 {
     public class UnitOfWorkDecorator : IRequestReceiver
     {
