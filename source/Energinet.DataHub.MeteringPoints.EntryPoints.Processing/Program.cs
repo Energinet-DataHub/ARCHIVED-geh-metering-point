@@ -64,11 +64,9 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CloseDown;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.DisconnectMeteringPoint;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GenericNotification;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.ChargeLinks.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
@@ -168,12 +166,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IValidator<MasterDataDocument>, ValidationRuleSet>(Lifestyle.Scoped);
             container.Register<IValidator<ConnectMeteringPointRequest>, ConnectMeteringPointRuleSet>(Lifestyle.Scoped);
             container.Register<IValidator<UpdateMasterDataRequest>, NullValidationSet<UpdateMasterDataRequest>>(Lifestyle.Scoped);
-            container.Register<IValidator<RequestCloseDown>, RequestCloseDownValidator>(Lifestyle.Scoped);
+            container.Register<RequestCloseDownValidator>(Lifestyle.Scoped);
             container.Register<IValidator<DisconnectReconnectMeteringPointRequest>, DisconnectReconnectMeteringPointRuleSet>(Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<UpdateMasterDataRequest>), typeof(ChangeMasterDataResultHandler), Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<CreateMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateMeteringPoint>), Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<ConnectMeteringPointRequest>), typeof(ConnectMeteringPointResultHandler), Lifestyle.Scoped);
-            container.Register(typeof(IBusinessProcessResultHandler<RequestCloseDown>), typeof(RequestCloseDownResultHandler), Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<DisconnectReconnectMeteringPointRequest>), typeof(DisconnectReconnectMeteringPointResultHandler), Lifestyle.Scoped);
             container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
             container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Scoped);
@@ -215,6 +212,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.AddMasterDataValidators(typeof(IMasterDataValidatorStrategy).Assembly);
             container.AddMasterDataUpdateServices();
 
+            container.AddBusinessRequestReceivers();
+
             container.AddValidationErrorConversion(
                 validateRegistrations: false,
                 typeof(MasterDataDocument).Assembly, // Application
@@ -241,11 +240,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     typeof(ConnectMeteringPointHandler),
                     typeof(SendAccountingPointCharacteristicsMessageHandler),
                     typeof(SetEnergySupplierDetailsHandler),
-                    typeof(RequestCloseDownHandler),
                     typeof(CreateDefaultChargeLinksHandler),
                     typeof(MeteringPointByIdQueryHandler),
                     typeof(MeteringPointGsrnExistsQueryHandler),
-                    typeof(EnergySuppliersByMeteringPointIdQueryHandler))
+                    typeof(EnergySuppliersByMeteringPointIdQueryHandler),
+                    typeof(CloseDownMeteringPointHandler))
                 .WithNotificationHandlers(
                     typeof(MeteringPointCreatedNotificationHandler),
                     typeof(OnProductionMeteringPointCreated),

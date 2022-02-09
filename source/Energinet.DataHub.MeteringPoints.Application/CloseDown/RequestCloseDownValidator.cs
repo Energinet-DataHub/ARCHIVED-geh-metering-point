@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
 {
-    public class RequestCloseDownValidator : AbstractValidator<RequestCloseDown>
+    public class RequestCloseDownValidator : AbstractValidator<MasterDataDocument>
     {
         public RequestCloseDownValidator()
         {

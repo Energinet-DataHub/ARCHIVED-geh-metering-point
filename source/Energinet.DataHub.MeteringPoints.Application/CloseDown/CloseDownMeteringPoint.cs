@@ -12,12 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 
 namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
 {
-    public record RequestCloseDown(
-        string TransactionId,
-        string GsrnNumber,
-        string EffectiveDate) : IBusinessRequest;
+    public class CloseDownMeteringPoint : InternalCommand
+    {
+        public CloseDownMeteringPoint(string gsrnNumber)
+        {
+            GsrnNumber = gsrnNumber;
+        }
+
+        public string GsrnNumber { get; }
+    }
 }

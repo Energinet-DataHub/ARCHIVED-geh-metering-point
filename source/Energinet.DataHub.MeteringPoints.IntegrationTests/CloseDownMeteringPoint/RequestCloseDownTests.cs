@@ -12,9 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.CloseDown;
+using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.ReceiveBusinessRequests;
+using Energinet.DataHub.MeteringPoints.Application.EDI;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
@@ -31,10 +38,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoi
         }
 
         [Fact]
+        public async Task Metering_point_is_closed_down_when_effective_date_is_due()
+        {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+
+            await ReceiveRequest(CreateRequest()).ConfigureAwait(false);
+
+            AssertMasterData()
+                .HasConnectionState(PhysicalState.ClosedDown);
+        }
+
+        [Fact]
         public async Task A_new_process_is_started_when_request_is_received()
         {
             var request = CreateRequest();
-            await SendCommandAsync(request).ConfigureAwait(false);
+            await ReceiveRequest(request).ConfigureAwait(false);
 
             AssertProcess()
                 .IsProcessType(BusinessProcessType.CloseDownMeteringPoint)
@@ -47,7 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoi
             await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
 
             var request = CreateRequest();
-            await SendCommandAsync(request).ConfigureAwait(false);
+            await ReceiveRequest(request).ConfigureAwait(false);
 
             AssertProcess()
                 .HasStatus("RequestWasAccepted");
@@ -58,7 +76,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoi
         public async Task Request_is_rejected_if_validation_check_is_fails()
         {
             var request = CreateRequest();
-            await SendCommandAsync(request).ConfigureAwait(false);
+            await ReceiveRequest(request).ConfigureAwait(false);
 
             AssertProcess()
                 .HasStatus("RequestWasRejected");
@@ -73,8 +91,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoi
                 {
                     GsrnNumber = string.Empty,
                 };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
+            await ReceiveRequest(request).ConfigureAwait(false);
 
             AssertValidationError("D57");
         }
@@ -88,7 +105,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoi
                     TransactionId = string.Empty,
                 };
 
-            await SendCommandAsync(request).ConfigureAwait(false);
+            await ReceiveRequest(request).ConfigureAwait(false);
 
             AssertValidationError("E10");
         }
@@ -101,8 +118,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoi
                 {
                     EffectiveDate = string.Empty,
                 };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
+            await ReceiveRequest(request).ConfigureAwait(false);
 
             AssertValidationError("D02");
         }
@@ -112,17 +128,30 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoi
         {
             var request = CreateRequest();
 
-            await SendCommandAsync(request).ConfigureAwait(false);
+            await ReceiveRequest(request).ConfigureAwait(false);
 
             AssertValidationError("E10");
         }
 
-        private static RequestCloseDown CreateRequest()
+        private static MasterDataDocument CreateRequest()
         {
-            return new RequestCloseDown(
-                SampleData.Transaction,
-                SampleData.GsrnNumber,
-                SampleData.EffectiveDate);
+            return new MasterDataDocument(
+                 ProcessType: BusinessProcessType.CloseDownMeteringPoint.Name,
+                 TransactionId: SampleData.Transaction,
+                 EffectiveDate: SampleData.EffectiveDate,
+                 GsrnNumber: SampleData.GsrnNumber);
+        }
+
+        private IRequestReceiver CreateReceiver()
+        {
+            return GetService<RequestReceiver>();
+        }
+
+        private Task ReceiveRequest(MasterDataDocument request)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            var receiver = CreateReceiver();
+            return receiver.ReceiveRequestAsync(request);
         }
     }
 }
