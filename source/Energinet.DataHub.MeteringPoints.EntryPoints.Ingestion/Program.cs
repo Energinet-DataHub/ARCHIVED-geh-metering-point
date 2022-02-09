@@ -23,6 +23,7 @@ using Energinet.DataHub.Core.XmlConversion.XmlConverter.Configuration;
 using Energinet.DataHub.Core.XmlConversion.XmlConverter.SimpleInjector.Extensions;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain;
+using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
@@ -134,6 +135,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
                 "D15" => nameof(BusinessProcessType.ConnectMeteringPoint),
                 "E79" => nameof(BusinessProcessType.DisconnectReconnectMeteringPoint),
                 "E32" => nameof(BusinessProcessType.ChangeMasterData),
+                "D14" => nameof(BusinessProcessType.CloseDownMeteringPoint),
                 _ => throw new NotImplementedException(processType),
             };
         }

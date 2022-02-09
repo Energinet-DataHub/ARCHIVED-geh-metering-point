@@ -19,6 +19,7 @@ using Energinet.DataHub.Core.App.Common;
 using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.MessageHub.Client;
 using Energinet.DataHub.MessageHub.Client.SimpleInjector;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
@@ -46,7 +47,6 @@ using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Confirm;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Generic;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Reject;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
-using MediatR;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -110,13 +110,14 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub
             container.Register<IMessageDispatcher, InternalDispatcher>(Lifestyle.Scoped);
             container.Register<Channel, InternalServiceBus>(Lifestyle.Scoped);
             container.Register<IActorContext, ActorContext>(Lifestyle.Scoped);
-            container.BuildMinimalMediator(typeof(BundleHandler<>).Assembly, Array.Empty<Type>());
 
-            // TODO: register with assembly scan once assemblies have been split.
-            container.Register<IRequestHandler<BundleRequest<ConfirmMessage>, string>, ConfirmMessageBundleHandler>(Lifestyle.Scoped);
-            container.Register<IRequestHandler<BundleRequest<RejectMessage>, string>, RejectMessageBundleHandler>(Lifestyle.Scoped);
-            container.Register<IRequestHandler<BundleRequest<GenericNotificationMessage>, string>, GenericNotificationBundleHandler>(Lifestyle.Scoped);
-            container.Register<IRequestHandler<BundleRequest<AccountingPointCharacteristicsMessage>, string>, AccountingPointCharacteristicsBundleHandler>(Lifestyle.Scoped);
+            container.UseMediatR()
+                .WithPipeline()
+                .WithRequestHandlers(
+                    typeof(ConfirmMessageBundleHandler),
+                    typeof(RejectMessageBundleHandler),
+                    typeof(GenericNotificationBundleHandler),
+                    typeof(AccountingPointCharacteristicsBundleHandler));
 
             var messageHubStorageConnectionString = Environment.GetEnvironmentVariable("MESSAGEHUB_STORAGE_CONNECTION_STRING") ?? throw new InvalidOperationException("MessageHub storage connection string not found.");
             var messageHubStorageContainerName = Environment.GetEnvironmentVariable("MESSAGEHUB_STORAGE_CONTAINER_NAME") ?? throw new InvalidOperationException("MessageHub storage container name not found.");

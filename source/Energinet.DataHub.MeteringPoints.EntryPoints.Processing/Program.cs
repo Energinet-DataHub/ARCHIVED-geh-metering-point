@@ -18,6 +18,7 @@ using Energinet.DataHub.Core.App.Common;
 using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware;
 using Energinet.DataHub.MeteringPoints.Application;
+using Energinet.DataHub.MeteringPoints.Application.CloseDown;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.ChildMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
@@ -29,10 +30,12 @@ using Energinet.DataHub.MeteringPoints.Application.Disconnect;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
+using Energinet.DataHub.MeteringPoints.Application.ProcessOverview;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
 using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Contracts;
+using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
@@ -48,10 +51,14 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.
 using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.EnergySuppliers;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.EnergySuppliers.Queries;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bundling;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints.Queries;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.Processes;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
@@ -60,10 +67,16 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.DisconnectMeteringPoint;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GenericNotification;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.ChargeLinks.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Exchange;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Production;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Disconnect;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Reconnect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notifications;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency;
@@ -141,6 +154,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
             container.Register<IEnergySupplierRepository, EnergySupplierRepository>(Lifestyle.Scoped);
             container.Register<IGridAreaRepository, GridAreaRepository>(Lifestyle.Scoped);
+            container.Register<IBusinessProcessRepository, BusinessProcessRepository>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
             container.Register<CorrelationIdMiddleware>(Lifestyle.Scoped);
             container.Register<EntryPointTelemetryScopeMiddleware>(Lifestyle.Scoped);
@@ -152,6 +166,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IValidator<MasterDataDocument>, ValidationRuleSet>(Lifestyle.Scoped);
             container.Register<IValidator<ConnectMeteringPointRequest>, ConnectMeteringPointRuleSet>(Lifestyle.Scoped);
             container.Register<IValidator<UpdateMasterDataRequest>, NullValidationSet<UpdateMasterDataRequest>>(Lifestyle.Scoped);
+            container.Register<RequestCloseDownValidator>(Lifestyle.Scoped);
             container.Register<IValidator<DisconnectReconnectMeteringPointRequest>, DisconnectReconnectMeteringPointRuleSet>(Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<UpdateMasterDataRequest>), typeof(ChangeMasterDataResultHandler), Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<CreateMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateMeteringPoint>), Lifestyle.Scoped);
@@ -197,27 +212,48 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.AddMasterDataValidators(typeof(IMasterDataValidatorStrategy).Assembly);
             container.AddMasterDataUpdateServices();
 
+            container.AddBusinessRequestReceivers();
+
             container.AddValidationErrorConversion(
                 validateRegistrations: false,
                 typeof(MasterDataDocument).Assembly, // Application
                 typeof(MeteringPoint).Assembly, // Domain
                 typeof(ErrorMessageFactory).Assembly); // Infrastructure
 
-            // Setup pipeline behaviors
-            container.BuildMediator(
-                new[]
-                {
-                    typeof(MasterDataDocument).Assembly,
-                    typeof(MeteringPointCreatedNotificationHandler).Assembly,
-                },
-                new[]
-                {
+            container.Register(typeof(ProcessExtractor<>), typeof(CreateMeteringPointProcessExtractor<>), Lifestyle.Scoped);
+            container.RegisterConditional(typeof(ProcessExtractor<>), typeof(NullProcessExtractor<>), context => !context.Handled);
+
+            container.UseMediatR()
+                .WithPipeline(
                     typeof(UnitOfWorkBehavior<,>),
+                    typeof(ProcessOverviewBehavior<,>),
                     typeof(InputValidationBehavior<,>),
                     typeof(DomainEventsDispatcherBehaviour<,>),
                     typeof(InternalCommandHandlingBehaviour<,>),
-                    typeof(BusinessProcessResultBehavior<,>),
-                });
+                    typeof(BusinessProcessResultBehavior<,>))
+                .WithRequestHandlers(
+                    typeof(UpdateMasterDataHandler),
+                    typeof(MasterDataDocumentHandler),
+                    typeof(DisconnectReconnectMeteringPointHandler),
+                    typeof(CreateMeteringPointHandler),
+                    typeof(AddEnergySupplierHandler),
+                    typeof(ConnectMeteringPointHandler),
+                    typeof(SendAccountingPointCharacteristicsMessageHandler),
+                    typeof(SetEnergySupplierDetailsHandler),
+                    typeof(CreateDefaultChargeLinksHandler),
+                    typeof(MeteringPointByIdQueryHandler),
+                    typeof(MeteringPointGsrnExistsQueryHandler),
+                    typeof(EnergySuppliersByMeteringPointIdQueryHandler),
+                    typeof(CloseDownMeteringPointHandler))
+                .WithNotificationHandlers(
+                    typeof(MeteringPointCreatedNotificationHandler),
+                    typeof(OnProductionMeteringPointCreated),
+                    typeof(OnConsumptionMeteringPointCreated),
+                    typeof(OnExchangeMeteringPointCreated),
+                    typeof(OnMeteringPointConnected),
+                    typeof(OnMeteringPointDisconnected),
+                    typeof(OnMeteringPointReconnected),
+                    typeof(SetEnergySupplierHACK));
 
             Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
 

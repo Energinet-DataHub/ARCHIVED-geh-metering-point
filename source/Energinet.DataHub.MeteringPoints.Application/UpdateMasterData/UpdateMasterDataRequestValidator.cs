@@ -26,9 +26,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
             RuleFor(request => request.GsrnNumber)
                 .SetValidator(new GsrnNumberValidator());
             RuleFor(request => request.EffectiveDate)
-                .SetValidator(new EffectiveDateRule());
+                .SetValidator(new EffectiveDateValidator());
             RuleFor(request => request.TransactionId)
-                .SetValidator(new TransactionIdentificationRule());
+                .SetValidator(new TransactionIdValidator());
             RuleFor(request => request.ParentRelatedMeteringPoint)
                 .Must(value => GsrnNumber.CheckRules(value!).Success)
                 .WithState(request => new InvalidParentGsrnNumber())

@@ -12,19 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
+namespace Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses
 {
-    /// <summary>
-    /// Unit of work for handling database transactions
-    /// </summary>
-    public interface IUnitOfWork
+    public class BusinessProcessId : ValueObject
     {
-        /// <summary>
-        /// Commits the transaction
-        /// </summary>
-        /// <returns><see cref="Task"/></returns>
-        Task CommitAsync();
+        private BusinessProcessId(Guid value)
+        {
+            Value = value;
+        }
+
+        public Guid Value { get; }
+
+        public static BusinessProcessId Create()
+        {
+            return new BusinessProcessId(Guid.NewGuid());
+        }
+
+        public static BusinessProcessId Create(Guid id)
+        {
+            return new BusinessProcessId(id);
+        }
     }
 }

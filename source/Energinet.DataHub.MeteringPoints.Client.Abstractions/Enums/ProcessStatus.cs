@@ -12,18 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
-using FluentValidation;
-
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums
 {
-    public class TransactionIdentificationRule : AbstractValidator<string>
+    public enum ProcessStatus
     {
-        public TransactionIdentificationRule()
-        {
-            RuleFor(transaction => transaction)
-                .NotEmpty()
-                .WithState(_ => new TransactionIdentificationValidationError());
-        }
+        None = 0,
+        Completed = 1,
+        Received = 2,
+        Sent = 3,
     }
 }
