@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 using Energinet.DataHub.MeteringPoints.Application.CloseDown;
 using Energinet.DataHub.MeteringPoints.Application.Common.ReceiveBusinessRequests;
 using SimpleInjector;
@@ -27,8 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions
             if (container == null) throw new ArgumentNullException(nameof(container));
             container.Collection.Register<IRequestReceiver>(typeof(CloseDownRequestReceiver));
             container.RegisterDecorator(typeof(IRequestReceiver), typeof(UnitOfWorkDecorator));
-            container.Register(() =>
-                new RequestReceiver(container.GetAllInstances<IRequestReceiver>().ToArray()));
+            container.Register<RequestReceiver>(Lifestyle.Scoped);
         }
     }
 }
