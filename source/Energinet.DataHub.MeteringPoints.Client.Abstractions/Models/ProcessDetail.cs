@@ -76,7 +76,7 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
             CreatedDate = createdDate;
             EffectiveDate = effectiveDate;
             Status = status;
-            Errors = Array.Empty<ProcessDetailError>();
+            Errors = new List<ProcessDetailError>();
         }
 
         public ProcessDetail()
@@ -88,7 +88,7 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
             CreatedDate = DateTime.MinValue;
             EffectiveDate = null;
             Status = ProcessStatus.None;
-            Errors = Array.Empty<ProcessDetailError>();
+            Errors = new List<ProcessDetailError>();
         }
 
         public Guid Id { get; init; }
