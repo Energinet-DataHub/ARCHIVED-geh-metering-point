@@ -34,16 +34,19 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
         {
             RootConfiguration = BuildKeyVaultConfigurationRoot();
             Environment = "u002";
+            var team = "batman";
+
             SecretsConfiguration = BuildSecretsKeyVaultConfiguration(RootConfiguration.GetValue<string>("AZURE_SECRETS_KEYVAULT_URL"));
             B2cTenantId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "tenant-id"));
-            var backendAppId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "backend-app-id"));
-            BackendAppScope = new[] { $"{backendAppId}/.default" };
+            BackendAppId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "backend-app-id"));
+            BackendAppScope = new[] { $"{BackendAppId}/.default" };
 
-            BackendAppId = SecretsConfiguration.GetValue<string>(BuildB2CBackendAppId(Environment));
-            var teamClientId = SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, "batman", "client-id"));
-            var teamClientSecret = SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, "batman", "client-secret"));
+            var teamClientId = SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, team, "client-id"));
+            var teamClientSecret = SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, team, "client-secret"));
+            ClientCredentialsSettings = RetrieveB2CTeamClientSettings(team, teamClientId, teamClientSecret);
 
-            ClientCredentialsSettings = RetrieveB2CTeamClientSettings("batman", teamClientId, teamClientSecret);
+            FrontendOpenId = SecretsConfiguration.GetValue<string>("B2C-frontend-open-id-url");
+            FrontendAppId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "frontend-app-id"));
 
             ApiManagementBaseAddress = SecretsConfiguration.GetValue<Uri>(BuildApiManagementEnvironmentSecretName(Environment, "host-url"));
         }
@@ -52,6 +55,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
         /// Backend application ID
         /// </summary>
         public string BackendAppId { get; }
+
+        public string FrontendAppId { get; }
+
+        public string FrontendOpenId { get; }
 
         public IConfigurationRoot RootConfiguration { get; }
 
@@ -120,11 +127,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
         private static string BuildApiManagementEnvironmentSecretName(string environment, string secret)
         {
             return $"APIM-{environment}-{secret}";
-        }
-
-        private static string BuildB2CBackendAppId(string environment)
-        {
-            return $"B2C-{environment}-backend-app-id";
         }
 
         private static string BuildB2CTeamSecretName(string environment, string team, string secret)

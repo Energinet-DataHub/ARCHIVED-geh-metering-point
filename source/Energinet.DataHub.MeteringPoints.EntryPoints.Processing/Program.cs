@@ -30,6 +30,7 @@ using Energinet.DataHub.MeteringPoints.Application.Disconnect;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
+using Energinet.DataHub.MeteringPoints.Application.ProcessOverview;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
 using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
@@ -55,6 +56,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub.Bundling;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints.Queries;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.Processes;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
@@ -216,9 +218,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 typeof(MeteringPoint).Assembly, // Domain
                 typeof(ErrorMessageFactory).Assembly); // Infrastructure
 
+            container.Register(typeof(ProcessExtractor<>), typeof(CreateMeteringPointProcessExtractor<>), Lifestyle.Scoped);
+            container.RegisterConditional(typeof(ProcessExtractor<>), typeof(NullProcessExtractor<>), context => !context.Handled);
+
             container.UseMediatR()
                 .WithPipeline(
                     typeof(UnitOfWorkBehavior<,>),
+                    typeof(ProcessOverviewBehavior<,>),
                     typeof(InputValidationBehavior<,>),
                     typeof(DomainEventsDispatcherBehaviour<,>),
                     typeof(InternalCommandHandlingBehaviour<,>),
