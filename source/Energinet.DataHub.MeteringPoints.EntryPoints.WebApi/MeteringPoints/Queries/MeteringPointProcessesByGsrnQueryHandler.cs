@@ -21,6 +21,7 @@ using Energinet.DataHub.Core.App.Common.Abstractions.Users;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.MeteringPoints.Queries
 {
@@ -48,7 +49,12 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.MeteringPoints.Que
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             // TODO: Include filtration on user/actor
-            return Task.FromResult(_dbContext.Processes.Where(p => p.MeteringPointGsrn == request.GsrnNumber).ToList());
+            var result = _dbContext.Processes
+                .Include(p => p.Details.OrderBy(d => d.CreatedDate))
+                .Where(p => p.MeteringPointGsrn == request.GsrnNumber)
+                .OrderByDescending(p => p.CreatedDate);
+
+            return Task.FromResult(result.ToList());
         }
     }
 }
