@@ -243,7 +243,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     typeof(CreateDefaultChargeLinksHandler),
                     typeof(MeteringPointByIdQueryHandler),
                     typeof(MeteringPointGsrnExistsQueryHandler),
-                    typeof(EnergySuppliersByMeteringPointIdQueryHandler))
+                    typeof(EnergySuppliersByMeteringPointIdQueryHandler),
+                    typeof(CloseDownMeteringPointHandler))
                 .WithNotificationHandlers(
                     typeof(MeteringPointCreatedNotificationHandler),
                     typeof(OnProductionMeteringPointCreated),

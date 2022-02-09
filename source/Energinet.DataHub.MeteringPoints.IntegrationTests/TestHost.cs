@@ -243,7 +243,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                     typeof(MeteringPointGsrnExistsQueryHandler),
                     typeof(EnergySuppliersByMeteringPointIdQueryHandler),
                     typeof(MeteringPointByGsrnQueryHandler),
-                    typeof(CreateGridAreaHandler))
+                    typeof(CreateGridAreaHandler),
+                    typeof(CloseDownMeteringPointHandler))
                 .WithNotificationHandlers(
                     typeof(MeteringPointCreatedNotificationHandler),
                     typeof(OnProductionMeteringPointCreated),
