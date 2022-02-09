@@ -238,7 +238,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                     typeof(ConnectMeteringPointHandler),
                     typeof(SendAccountingPointCharacteristicsMessageHandler),
                     typeof(SetEnergySupplierDetailsHandler),
-                    typeof(RequestCloseDownHandler),
                     typeof(CreateDefaultChargeLinksHandler),
                     typeof(MeteringPointByIdQueryHandler),
                     typeof(MeteringPointGsrnExistsQueryHandler),
