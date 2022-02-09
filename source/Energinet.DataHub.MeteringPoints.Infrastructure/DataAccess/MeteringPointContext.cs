@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Domain.EnergySuppliers;
@@ -24,6 +25,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.EnergySuppliers
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.Processes;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency;
@@ -62,6 +64,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
 
         public DbSet<BusinessProcess> BusinessProcesses { get; private set; }
 
+        public DbSet<Process> Processes { get; private set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             if (modelBuilder == null) throw new ArgumentNullException(nameof(modelBuilder));
@@ -74,6 +78,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
             modelBuilder.ApplyConfiguration(new MessageHubMessageEntityConfiguration());
             modelBuilder.ApplyConfiguration(new EnergySupplierEntityConfiguration());
             modelBuilder.ApplyConfiguration(new ActorEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new ProcessEntityConfiguration());
             modelBuilder.ApplyConfiguration(new BusinessProcessConfiguration());
             modelBuilder.ApplyConfiguration(new CloseDownProcessConfiguration());
         }

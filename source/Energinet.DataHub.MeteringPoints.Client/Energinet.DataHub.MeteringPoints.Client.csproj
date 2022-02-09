@@ -26,7 +26,7 @@ limitations under the License.
 
   <PropertyGroup>
     <PackageId>Energinet.DataHub.MeteringPoints.Client</PackageId>
-    <PackageVersion>2.0.0$(VersionSuffix)</PackageVersion>
+    <PackageVersion>2.1.0$(VersionSuffix)</PackageVersion>
     <Title>MeteringPoints client library</Title>
     <Company>Energinet-DataHub</Company>
     <Authors>Energinet-DataHub</Authors>
@@ -68,7 +68,7 @@ limitations under the License.
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Client.Abstractions\Energinet.DataHub.MeteringPoints.Client.Abstractions.csproj" />
   </ItemGroup>
