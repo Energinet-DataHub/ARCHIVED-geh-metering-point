@@ -19,7 +19,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.BusinessProcesses
 {
-    public class CloseDownProcessConfiguration : IEntityTypeConfiguration<CloseDownProcess>
+    public class CloseDownProcessEntityConfiguration : IEntityTypeConfiguration<CloseDownProcess>
     {
         public void Configure(EntityTypeBuilder<CloseDownProcess> builder)
         {
