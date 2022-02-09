@@ -19,19 +19,18 @@ using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.ProcessOverview;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
-using NodaTime.Text;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Create
+namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
 {
-    public class CreateMeteringPointProcessExtractor<TRequest> : ProcessExtractor<TRequest>
-        where TRequest : CreateMeteringPoint
+    public class UpdateMeteringPointProcessExtractor<TRequest> : ProcessExtractor<TRequest>
+        where TRequest : UpdateMasterDataRequest
     {
-        public CreateMeteringPointProcessExtractor(IActorContext actorContext)
+        public UpdateMeteringPointProcessExtractor(IActorContext actorContext)
             : base(actorContext)
         {
         }
 
-        protected override string ProcessName => "BRS-004";
+        protected override string ProcessName => "BRS-006";
 
         protected override string GetGsrn(TRequest request) => request?.GsrnNumber
                                                                ?? throw new InvalidOperationException("GSRN cannot be empty");
@@ -41,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             return new ProcessDetail(
-                "RequestCreateMeteringPoint",
+                "RequestUpdateMeteringPoint",
                 CurrentActor,
                 DataHub,
                 DateTime.UtcNow,
@@ -54,8 +53,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             if (result == null) throw new ArgumentNullException(nameof(result));
 
             var name = result.Success
-                ? "ConfirmCreateMeteringPoint"
-                : "RejectCreateMeteringPoint";
+                ? "ConfirmUpdateMeteringPoint"
+                : "RejectUpdateMeteringPoint";
 
             return new ProcessDetail(
                 name,

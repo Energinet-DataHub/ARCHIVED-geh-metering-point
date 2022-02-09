@@ -38,6 +38,14 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Models
             Description = description;
         }
 
+        public ProcessDetailError()
+        {
+            Id = Guid.NewGuid();
+            ProcessDetailId = Guid.Empty;
+            Code = string.Empty;
+            Description = string.Empty;
+        }
+
         public Guid Id { get; init; }
 
         public Guid ProcessDetailId { get; init; }
