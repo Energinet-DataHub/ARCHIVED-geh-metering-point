@@ -16,6 +16,7 @@ using System;
 using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData.Validation;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain;
+using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments

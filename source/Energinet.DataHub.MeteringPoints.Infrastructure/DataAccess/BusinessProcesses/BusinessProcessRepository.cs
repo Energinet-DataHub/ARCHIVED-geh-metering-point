@@ -12,24 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
-using Energinet.DataHub.MeteringPoints.Domain;
+using System;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.BusinessProcesses
 {
-    public static class TestUtils
+    public class BusinessProcessRepository : IBusinessProcessRepository
     {
-        internal static MasterDataDocument CreateRequest()
+        private readonly MeteringPointContext _context;
+
+        public BusinessProcessRepository(MeteringPointContext context)
         {
-            return new MasterDataDocument()
-                with
-                {
-                    ProcessType = BusinessProcessType.ChangeMasterData.Name,
-                    EffectiveDate = SampleData.EffectiveDate,
-                    TransactionId = SampleData.Transaction,
-                    GsrnNumber = SampleData.GsrnNumber,
-                };
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+        }
+
+        public void Add(BusinessProcess process)
+        {
+            _context.BusinessProcesses.Add(process);
         }
     }
 }

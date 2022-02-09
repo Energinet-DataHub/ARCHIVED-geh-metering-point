@@ -23,6 +23,7 @@ using Energinet.DataHub.Core.XmlConversion.XmlConverter.Configuration;
 using Energinet.DataHub.Core.XmlConversion.XmlConverter.SimpleInjector.Extensions;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain;
+using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
