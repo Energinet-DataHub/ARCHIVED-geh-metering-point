@@ -12,20 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Immutable;
+using System;
+using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
+using Xunit;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
 {
-    /// <summary>
-    /// Access provider for queued internal commands
-    /// </summary>
-    public interface IInternalCommandAccessor
+    public class InternalCommandTrigger
     {
-        /// <summary>
-        /// Returns all queued internal commands that have not been marked as dispatched
-        /// </summary>
-        /// <returns><see cref="QueuedInternalCommand"/></returns>
-        Task<ImmutableList<QueuedInternalCommand>> GetPendingAsync();
+        public InternalCommandTrigger()
+        {
+            Thread triggerThread = new Thread(DoWork);
+            triggerThread.Start();
+        }
+
+        private void DoWork()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Console.WriteLine("DoWork");
+                Thread.Sleep(1000);
+            }
+        }
     }
 }

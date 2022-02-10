@@ -17,10 +17,11 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
 {
-    public class InternalCommandAccessor : IInternalCommandAccessor
+    public class InternalCommandAccessor
     {
         private readonly MeteringPointContext _context;
 
@@ -29,10 +30,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Task<ImmutableList<QueuedInternalCommand>> GetPendingAsync()
+        public Task<ImmutableList<QueuedInternalCommand>> GetPendingAsync(Instant today)
         {
             return Task.FromResult(_context.QueuedInternalCommands
-                .Where(queuedCommand => queuedCommand.ProcessedDate == null)
+                .Where(queuedCommand => queuedCommand.ProcessedDate == null && (queuedCommand.ScheduleDate <= today || queuedCommand.ScheduleDate == null))
                 .ToImmutableList());
         }
     }
