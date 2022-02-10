@@ -244,7 +244,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                     typeof(EnergySuppliersByMeteringPointIdQueryHandler),
                     typeof(MeteringPointByGsrnQueryHandler),
                     typeof(CreateGridAreaHandler),
-                    typeof(CloseDownMeteringPointHandler))
+                    typeof(CloseDownMeteringPointHandler),
+                    typeof(TestCommandHandler))
                 .WithNotificationHandlers(
                     typeof(MeteringPointCreatedNotificationHandler),
                     typeof(OnProductionMeteringPointCreated),
@@ -309,11 +310,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 .Where(c => c.ProcessedDate == null && c.Type == typeof(TCommand).FullName)
                 .ToList();
 
-            var messageExtractor = GetService<MessageExtractor>();
-
+            //var messageExtractor = GetService<MessageExtractor>();
+            var serializer = GetService<IJsonSerializer>();
             foreach (var command in commands)
             {
-                var message = await messageExtractor.ExtractAsync(command.Data).ConfigureAwait(false);
+                var message = serializer.Deserialize(command.Data, Type.GetType(command.Type, true)!);
 
                 // var meteringPointEnvelope = MeteringPointEnvelope.Parser.ParseFrom(command.Data);
                 //     meteringPointEnvelope.SendAccountingPointCharacteristicsMessage.

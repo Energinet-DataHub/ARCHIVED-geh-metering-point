@@ -19,7 +19,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
 {
     public class QueuedInternalCommand
     {
-        public QueuedInternalCommand(Guid id, string type, byte[] data, Instant creationDate, Instant? scheduleDate, string correlationId)
+        public QueuedInternalCommand(Guid id, string type, string data, Instant creationDate, Instant? scheduleDate, string correlationId)
         {
             Id = id;
             Type = type;
@@ -34,7 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
         public string Type { get;  } = string.Empty;
 
         #pragma warning disable CA1819 // Properties should not return arrays
-        public byte[] Data { get; }
+        public string Data { get; }
 
         public Instant CreationDate { get; private set; }
 

@@ -29,10 +29,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Task<ImmutableList<QueuedInternalCommand>> GetUndispatchedAsync()
+        public Task<ImmutableList<QueuedInternalCommand>> GetPendingAsync()
         {
             return Task.FromResult(_context.QueuedInternalCommands
-                .Where(queuedCommand => queuedCommand.DispatchedDate == null)
+                .Where(queuedCommand => queuedCommand.ProcessedDate == null)
                 .ToImmutableList());
         }
     }
