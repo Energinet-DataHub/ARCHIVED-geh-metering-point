@@ -12,10 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Application.Disconnect
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.ChangeConnectionStatus
 {
-    public record DisconnectReconnectSettings
-    (
-        int NumberOfDaysEffectiveDateIsAllowedToBeforeToday = 1,
-        int NumberOfDaysEffectiveDateIsAllowedToAfterToday = 0);
+    public class PhysicalStateMustBeConnectedOrDisconnectedError : ValidationError
+    {
+        public PhysicalStateMustBeConnectedOrDisconnectedError(PhysicalState physicalState, Guid meteringPointId)
+        {
+            PhysicalState = physicalState;
+            MeteringPointId = meteringPointId;
+        }
+
+        public PhysicalState PhysicalState { get; }
+
+        public Guid MeteringPointId { get; }
+    }
 }

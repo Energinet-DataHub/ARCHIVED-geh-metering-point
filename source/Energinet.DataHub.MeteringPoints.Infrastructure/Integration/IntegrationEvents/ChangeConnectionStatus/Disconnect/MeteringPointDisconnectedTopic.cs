@@ -12,21 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Disconnect
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Disconnect
 {
-    public class ConnectionStateMustBeConnectedOrDisconnectedError : ValidationError
-    {
-        public ConnectionStateMustBeConnectedOrDisconnectedError(string gsrnCode, PhysicalState physicalState)
-        {
-            GsrnCode = gsrnCode;
-            PhysicalState = physicalState;
-        }
-
-        public string GsrnCode { get; }
-
-        public PhysicalState PhysicalState { get; }
-    }
+    public record MeteringPointDisconnectedTopic(string Name) : Topic;
 }

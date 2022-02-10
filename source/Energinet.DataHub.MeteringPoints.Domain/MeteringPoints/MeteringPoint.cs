@@ -21,8 +21,8 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.ChangeConnectionStatus;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Connect;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Disconnect;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
@@ -169,7 +169,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             var rules = new Collection<IBusinessRule>
             {
-                new PhysicalStateMustBeConnectedRule(ConnectionState, Id.Value),
+                new ConnectionStateMustBeConnectedRule(ConnectionState, GsrnNumber.Value),
                 new MustHaveEnergySupplierRule(this, connectionDetails),
             };
             return new BusinessRulesValidationResult(rules);
@@ -179,7 +179,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             var rules = new Collection<IBusinessRule>
             {
-                new PhysicalStateMustBeDisconnectedRule(ConnectionState, Id.Value),
+                new ConnectionStateMustBeDisconnectedRule(ConnectionState, GsrnNumber.Value),
                 new MustHaveEnergySupplierRule(this, connectionDetails),
             };
             return new BusinessRulesValidationResult(rules);

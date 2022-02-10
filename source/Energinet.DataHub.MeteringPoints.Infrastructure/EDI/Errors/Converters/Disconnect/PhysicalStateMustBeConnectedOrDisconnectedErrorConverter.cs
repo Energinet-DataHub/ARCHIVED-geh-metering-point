@@ -14,13 +14,13 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Disconnect;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.ChangeConnectionStatus;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Disconnect
 {
-    public class PhysicalStateMustBeConnectedErrorConverter : ErrorConverter<PhysicalStateMustBeConnectedError>
+    public class PhysicalStateMustBeConnectedOrDisconnectedErrorConverter : ErrorConverter<PhysicalStateMustBeConnectedOrDisconnectedError>
     {
-        protected override ErrorMessage Convert(PhysicalStateMustBeConnectedError validationError)
+        protected override ErrorMessage Convert(PhysicalStateMustBeConnectedOrDisconnectedError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
