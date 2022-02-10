@@ -15,23 +15,22 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Disconnect
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.ChangeConnectionStatus
 {
-    public class PhysicalStateMustBeDisconnectedRule : IBusinessRule
+    public class ConnectionStateMustBeConnectedRule : IBusinessRule
     {
         private readonly ConnectionState _connectionState;
-        private readonly Guid _meteringPointId;
+        private readonly string _gsrnNumber;
 
-        public PhysicalStateMustBeDisconnectedRule(ConnectionState connectionState, Guid meteringPointId)
+        public ConnectionStateMustBeConnectedRule(ConnectionState connectionState, string gsrnNumber)
         {
-            if (connectionState == null) throw new ArgumentNullException(nameof(connectionState));
-            _connectionState = connectionState;
-            _meteringPointId = meteringPointId;
-            IsBroken = !(connectionState.PhysicalState == PhysicalState.Disconnected);
+            _connectionState = connectionState ?? throw new ArgumentNullException(nameof(connectionState));
+            _gsrnNumber = gsrnNumber;
+            IsBroken = !(connectionState.PhysicalState == PhysicalState.Connected);
         }
 
         public bool IsBroken { get; }
 
-        public ValidationError ValidationError => new PhysicalStateMustBeDisconnectedError(_meteringPointId, _connectionState.PhysicalState);
+        public ValidationError ValidationError => new ConnectionStateMustBeConnectedOrDisconnectedError(_gsrnNumber, _connectionState.PhysicalState);
     }
 }

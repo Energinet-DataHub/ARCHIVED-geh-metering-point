@@ -23,11 +23,11 @@ using Energinet.DataHub.MeteringPoints.Application.Extensions;
 using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Disconnect;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.ChangeConnectionStatus;
 using Energinet.DataHub.MeteringPoints.Domain.Policies;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Disconnect
+namespace Energinet.DataHub.MeteringPoints.Application.ChangeConnectionStatus
 {
     public class DisconnectReconnectMeteringPointHandler : IBusinessRequestHandler<DisconnectReconnectMeteringPointRequest>
     {
@@ -77,7 +77,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Disconnect
             }
 
             var connectionState = EnumerationType.FromName<PhysicalState>(request.ConnectionState);
-            var connectionStateResult = CheckConnectionState(connectionState, GsrnNumber.Create(request.GsrnNumber));
+            var connectionStateResult = CheckConnectionState(connectionState, meteringPoint.Id);
             if (connectionStateResult.Success == false)
             {
                 return new BusinessProcessResult(request.TransactionId, connectionStateResult.Errors);
@@ -107,21 +107,21 @@ namespace Energinet.DataHub.MeteringPoints.Application.Disconnect
         private static BusinessProcessResult CheckBusinessRules(
             DisconnectReconnectMeteringPointRequest request,
             ConnectionDetails connectionDetails,
-            PhysicalState connectionState,
+            PhysicalState physicalState,
             MeteringPoint meteringPoint)
         {
-            var validationResult = connectionState == PhysicalState.Disconnected ? meteringPoint.DisconnectAcceptable(connectionDetails) : meteringPoint.ReconnectAcceptable(connectionDetails);
+            var validationResult = physicalState == PhysicalState.Disconnected ? meteringPoint.DisconnectAcceptable(connectionDetails) : meteringPoint.ReconnectAcceptable(connectionDetails);
 
             return new BusinessProcessResult(request.TransactionId, validationResult.Errors);
         }
 
         private static BusinessRulesValidationResult CheckConnectionState(
             PhysicalState connectionState,
-            GsrnNumber gsrnNumber)
+            MeteringPointId id)
         {
             var rules = new Collection<IBusinessRule>
             {
-                new ConnectionStateMustBeConnectedOrDisconnectedRule(connectionState, gsrnNumber.Value),
+                new PhysicalStateMustBeConnectedOrDisconnectedRule(connectionState, id.Value),
             };
             return new BusinessRulesValidationResult(rules);
         }

@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Disconnect
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Disconnect
 {
     public class OnMeteringPointDisconnected : IntegrationEventPublisher<MeteringPointDisconnected>
     {

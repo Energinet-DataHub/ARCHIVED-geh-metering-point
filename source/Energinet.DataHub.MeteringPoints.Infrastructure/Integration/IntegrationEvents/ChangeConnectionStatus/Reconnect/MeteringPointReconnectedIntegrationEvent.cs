@@ -13,20 +13,12 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+using MediatR;
+using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Disconnect
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Reconnect
 {
-    public class PhysicalStateMustBeDisconnectedError : ValidationError
-    {
-        public PhysicalStateMustBeDisconnectedError(Guid meteringPointId, PhysicalState physicalState)
-        {
-            MeteringPointId = meteringPointId;
-            PhysicalState = physicalState;
-        }
-
-        public PhysicalState PhysicalState { get; }
-
-        public Guid MeteringPointId { get; }
-    }
+    public record MeteringPointReconnectedIntegrationEvent(Guid MeteringPointId, string GSRNNumber, Instant EffectiveDate)
+        : IIntegrationEvent, IRequest, IOutboundMessage;
 }
