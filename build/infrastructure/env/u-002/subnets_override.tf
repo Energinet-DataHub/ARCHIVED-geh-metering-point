@@ -13,17 +13,17 @@
 # limitations under the License.
 
 module "snet_internal_private_endpoints" {
-  address_prefixes = ["10.143.7.128/27"]
+  address_prefixes = ["10.140.103.0/27"]
 }
 
 module "snet_external_private_endpoints" {
-  address_prefixes = ["10.143.6.160/28"]
+  address_prefixes = ["10.140.103.32/28"]
 }
 
 module "vnet_integrations_webapi" {
-  address_prefixes = ["10.143.6.176/28"]
+  address_prefixes = ["10.140.103.48/28"]
 }
 
 module "vnet_integrations_functions" {
-  address_prefixes = ["10.143.6.192/28"]
+  address_prefixes = ["10.140.103.64/28"]
 }
