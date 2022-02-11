@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exceptions;
 using NodaTime.Text;
@@ -24,13 +25,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
     public class EffectiveDateTests
     {
         [Theory]
-        [InlineData("2021-06-01T23:00:00Z", true)]
-        [InlineData("2021-06-01T23:00:00.000Z", true)]
+        [InlineData("2021-06-01T22:00:00Z", true)]
+        [InlineData("2021-12-30T23:00:00Z", true)]
+        [InlineData("2021-06-01T22:00:00.000Z", true)]
         [InlineData("2021-06-01T23:00:00.100Z", false)]
         [InlineData("2021-06-01T23:01:00Z", false)]
         [InlineData("2021-06-01T00:00:00Z", false)]
         [InlineData("2021-06-01T00:00:00.000Z", false)]
         [InlineData("2021-06-01", false)]
+        [InlineData("Not a date", false)]
         public void Date_format_must_be_23_00_00_UTC(string dateString, bool isValid)
         {
             var result = EffectiveDate.CheckRules(dateString);
@@ -39,9 +42,22 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         }
 
         [Fact]
+        public void Daylightsavings_Something_Something()
+        {
+            //Arrange
+            DateTime date = new DateTime(2021, 6, 1, 23, 0, 0);
+            string dateString = "2021-06-01T23:00:00Z";
+
+            //Act
+            var actual = EffectiveDate.CheckRules(dateString);
+
+            //Assert
+        }
+
+        [Fact]
         public void Create_should_succeed_when_date_format_is_valid()
         {
-            var dateString = "2021-06-01T23:00:00Z";
+            var dateString = "2021-06-01T23:00:00.000Z";
             var effectiveDate = EffectiveDate.Create(dateString);
 
             Assert.NotNull(effectiveDate);
