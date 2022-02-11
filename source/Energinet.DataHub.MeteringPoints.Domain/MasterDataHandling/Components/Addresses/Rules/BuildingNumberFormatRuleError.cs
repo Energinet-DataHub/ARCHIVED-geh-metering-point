@@ -20,13 +20,19 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.
     {
         public BuildingNumberFormatRuleError()
         {
+            Code = "E86";
+            Message =
+                $"Building number has an incorrect format: the length exceeds 4 characters " +
+                $"or is not in the range 1-999, optionally with a capital letter (if country code is DK) or " +
+                $"the length exceeds 6 characters (if other country)";
         }
 
         public BuildingNumberFormatRuleError(string buildingNumber)
         {
-            BuildingNumber = buildingNumber;
+            Code = "E86";
+            Message = $"Building number {buildingNumber} has an incorrect format: the length exceeds 4 characters " +
+                      $"or is not in the range 1-999, optionally with a capital letter (if country code is DK) or " +
+                      $"the length exceeds 6 characters (if other country)";
         }
-
-        public string BuildingNumber { get; } = string.Empty;
     }
 }

@@ -23,7 +23,7 @@ using Xunit.Categories;
 namespace Energinet.DataHub.MeteringPoints.Tests.Domain
 {
     [UnitTest]
-    public class AddressTests
+    public class AddressTests : TestBase
     {
         [Fact]
         public void Actual_address_must_be_set_when_geo_info_reference_is_set()
@@ -99,7 +99,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 buildingNumber: buildingNumber,
                 countryCode: CountryCode.DK);
 
-            AssertError<BuildingNumberFormatRuleError>(checkResult, expectError);
+            AssertError<BuildingNumberFormatRuleError>("E86", checkResult, expectError);
         }
 
         [Theory]
@@ -113,7 +113,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 buildingNumber: buildingNumber,
                 countryCode: !string.IsNullOrWhiteSpace(countryCode) ? EnumerationType.FromName<CountryCode>(countryCode) : null);
 
-            AssertError<BuildingNumberFormatRuleError>(checkResult, expectError);
+            AssertError<BuildingNumberFormatRuleError>("E86", checkResult, expectError);
         }
 
         [Theory]
@@ -399,12 +399,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 locationDescription: locationDescription,
                 geoInfoReference: geoInfoReference,
                 isActualAddress: isActualAddress);
-        }
-
-        private static void AssertError<TRuleError>(BusinessRulesValidationResult rulesValidationResult, bool errorExpected)
-        {
-            var hasError = rulesValidationResult.Errors.Any(error => error is TRuleError);
-            Assert.Equal(errorExpected, hasError);
         }
     }
 }
