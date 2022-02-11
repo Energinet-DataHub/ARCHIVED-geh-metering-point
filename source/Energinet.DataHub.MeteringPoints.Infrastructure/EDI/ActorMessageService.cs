@@ -49,17 +49,19 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
             _actorContext = actorContext;
         }
 
-        public async Task SendGenericNotificationMessageAsync(string transactionId, string gsrn, Instant startDateAndOrTime, string receiverGln)
+        public async Task SendGenericNotificationMessageAsync(string transactionId, string gsrn, Instant startDateAndOrTime, Actor recipient, Role recipientRole)
         {
+            if (recipient == null) throw new ArgumentNullException(nameof(recipient));
+
             var message = GenericNotificationMessageFactory.GenericNotification(
                 sender: Map(_actorContext.DataHub, Role.MeteringPointAdministrator),
-                receiver: new MarketRoleParticipant(receiverGln, "A10", "DDQ"), // TODO: Re-visit when actor context has been implemented properly
+                receiver: Map(recipient, recipientRole), // TODO: Re-visit when actor context has been implemented properly
                 createdDateTime: _dateTimeProvider.Now(),
                 gsrn,
                 startDateAndOrTime,
                 transactionId);
 
-            await _messageHubDispatcher.DispatchAsync(message, DocumentType.GenericNotification, receiverGln, gsrn).ConfigureAwait(false);
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.GenericNotification, recipient.Identifier, gsrn).ConfigureAwait(false);
         }
 
         public async Task SendCreateMeteringPointConfirmAsync(string transactionId, string gsrn)
@@ -304,7 +306,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
             {
                 nameof(IdentificationType.GLN) => "A10",
                 nameof(IdentificationType.EIC) => "A01",
-                _ => throw new InvalidOperationException($"Unknown party identifier type: {actor.IdentificationType}"),
+                _ => throw new InvalidOperationException($"Unknown actor identifier type: {actor.IdentificationType}"),
             };
 
             var currentRole = actor.GetRole(documentRole);
@@ -315,7 +317,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                 nameof(Role.BalancePowerSupplier) => "DDQ",
                 nameof(Role.SystemOperator) => "EZ",
                 nameof(Role.MeteredDataResponsible) => "MDR",
-                _ => throw new InvalidOperationException($"Unknown party role: {currentRole.Name}"),
+                _ => throw new InvalidOperationException($"Unknown actor role: {currentRole.Name}"),
             };
 
             return new MarketRoleParticipant(actor.Identifier, codingScheme, role);
