@@ -24,6 +24,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using MediatR;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -32,34 +33,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
     [IntegrationTest]
     public class RefactorInternalCommandsTests : TestHost
     {
+        private InternalCommandTrigger _commandTrigger;
+
         public RefactorInternalCommandsTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
         {
-        }
-
-        [Fact]
-        public async Task Command_is_executed()
-        {
-            var unitOfWork = GetService<IUnitOfWork>();
-            var accessor = new InternalCommandAccessor(GetService<MeteringPointContext>());
-            var processor = new InternalCommandProcessor(
-                accessor,
-                GetService<ISystemDateTimeProvider>(),
-                GetService<IJsonSerializer>(),
-                GetService<IMediator>());
-            var scheduler = new CommandScheduler(
-                GetService<MeteringPointContext>(),
-                GetService<IJsonSerializer>(),
-                GetService<ISystemDateTimeProvider>(),
-                GetService<ICorrelationContext>());
-            await scheduler.EnqueueAsync(new TestCommand()).ConfigureAwait(false);
-            await unitOfWork.CommitAsync().ConfigureAwait(false);
-
-            await processor.ProcessUndispatchedAsync().ConfigureAwait(false);
-
-            var pending = await accessor.GetPendingAsync().ConfigureAwait(false);
-
-            Assert.Empty(pending);
+            _commandTrigger = new InternalCommandTrigger();
         }
     }
 }

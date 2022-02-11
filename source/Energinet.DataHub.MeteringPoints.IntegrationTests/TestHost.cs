@@ -314,7 +314,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             var serializer = GetService<IJsonSerializer>();
             foreach (var command in commands)
             {
-                var message = serializer.Deserialize(command.Data, Type.GetType(command.Type, true)!);
+                var message = serializer.Deserialize(command.Data, typeof(InternalCommand).Assembly.GetType(command.Type, true)!);
 
                 // var meteringPointEnvelope = MeteringPointEnvelope.Parser.ParseFrom(command.Data);
                 //     meteringPointEnvelope.SendAccountingPointCharacteristicsMessage.

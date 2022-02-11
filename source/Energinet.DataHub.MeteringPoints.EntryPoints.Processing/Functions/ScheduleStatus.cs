@@ -12,19 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
+using System;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
 {
-    /// <summary>
-    /// Service for dispatching of queued internal commands
-    /// </summary>
-    public interface IInternalCommandProcessor
+    public class ScheduleStatus
     {
-        /// <summary>
-        /// Dispatch all undispatched internal commands
-        /// </summary>
-        /// <returns><see cref="Task"/></returns>
-        Task ProcessUndispatchedAsync();
+        public DateTime Last { get; set; }
+
+        public DateTime Next { get; set; }
+
+        public DateTime LastUpdated { get; set; }
     }
 }

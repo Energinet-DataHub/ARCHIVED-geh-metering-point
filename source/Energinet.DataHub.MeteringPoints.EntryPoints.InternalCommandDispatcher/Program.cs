@@ -23,6 +23,7 @@ using Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher.Fun
 using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -66,9 +67,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher
             container.Register<Dispatcher>(Lifestyle.Scoped);
             container.Register<ISystemDateTimeProvider, SystemDateTimeProvider>(Lifestyle.Scoped);
             container.Register<IUnitOfWork, UnitOfWork>(Lifestyle.Scoped);
-            container.Register<IInternalCommandAccessor, InternalCommandAccessor>(Lifestyle.Scoped);
-            container.Register<IInternalCommandProcessor, InternalCommandProcessor>(Lifestyle.Scoped);
+            container.Register<InternalCommandAccessor>(Lifestyle.Scoped);
+            container.Register<InternalCommandProcessor>(Lifestyle.Scoped);
             container.Register<IInternalCommandDispatcher, InternalCommandServiceBusDispatcher>(Lifestyle.Scoped);
+            container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Scoped);
+
 
             var connectionString = Environment.GetEnvironmentVariable("PROCESSING_QUEUE_CONNECTION_STRING");
             var queueName = Environment.GetEnvironmentVariable("PROCESSING_QUEUE_NAME");
