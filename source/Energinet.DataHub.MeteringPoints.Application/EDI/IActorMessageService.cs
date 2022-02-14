@@ -16,7 +16,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
+using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using NodaTime;
+using Actor = Energinet.DataHub.Core.App.Common.Abstractions.Actor.Actor;
 
 namespace Energinet.DataHub.MeteringPoints.Application.EDI
 {
@@ -32,7 +34,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.EDI
             string transactionId,
             string gsrn,
             Instant startDateAndOrTime,
-            string receiverGln);
+            Actor recipient,
+            Role recipientRole);
 
         /// <summary>
         /// Confirmation of create metering point.
@@ -72,6 +75,36 @@ namespace Energinet.DataHub.MeteringPoints.Application.EDI
             string gsrn);
 
         /// <summary>
+        /// Rejection of disconnect metering point.
+        /// </summary>
+        Task SendDisconnectMeteringPointRejectAsync(
+            string transactionId,
+            string gsrn,
+            IEnumerable<ErrorMessage> errors);
+
+        /// <summary>
+        /// Confirm of disconnect metering point.
+        /// </summary>
+        Task SendDisconnectMeteringPointConfirmAsync(
+            string transactionId,
+            string gsrn);
+
+        /// <summary>
+        /// Confirm of reconnect metering point.
+        /// </summary>
+        Task SendReconnectMeteringPointConfirmAsync(
+            string transactionId,
+            string gsrn);
+
+        /// <summary>
+        /// Rejection of reconnect metering point.
+        /// </summary>
+        Task SendReconnectMeteringPointRejectAsync(
+            string transactionId,
+            string gsrn,
+            IEnumerable<ErrorMessage> errors);
+
+        /// <summary>
         /// Rejection of connect metering point.
         /// </summary>
         Task SendConnectMeteringPointRejectAsync(
@@ -87,5 +120,20 @@ namespace Energinet.DataHub.MeteringPoints.Application.EDI
             string businessReasonCode,
             MeteringPointDto meteringPoint,
             EnergySupplierDto energySupplier);
+
+        /// <summary>
+        /// Send request close down metering point accept message.
+        /// </summary>
+        /// <param name="transactionId"></param>
+        /// <param name="gsrnNumber"></param>
+        Task SendRequestCloseDownAcceptedAsync(string transactionId, string gsrnNumber);
+
+        /// <summary>
+        /// Send request close down metering point reject message.
+        /// </summary>
+        /// <param name="transactionId"></param>
+        /// <param name="gsrnNumber"></param>
+        /// <param name="errors"></param>
+        Task SendRequestCloseDownRejectedAsync(string transactionId, string gsrnNumber, IEnumerable<ErrorMessage> errors);
     }
 }

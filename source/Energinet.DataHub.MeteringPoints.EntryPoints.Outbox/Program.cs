@@ -15,23 +15,27 @@
 using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.Charges.Clients.DefaultChargeLink;
 using Energinet.DataHub.Charges.Clients.Models;
-using Energinet.DataHub.Charges.Clients.Providers;
 using Energinet.DataHub.Charges.Clients.SimpleInjector;
 using Energinet.DataHub.MessageHub.Client;
 using Energinet.DataHub.MessageHub.Client.SimpleInjector;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Integrations;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Functions;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDispatchers;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.MessageHub;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Disconnect;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Reconnect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
@@ -142,6 +146,20 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                         "No MeteringPointConnected Topic found")),
                 Lifestyle.Singleton);
 
+            container.Register(
+                () => new MeteringPointDisconnectedTopic(
+                    Environment.GetEnvironmentVariable("METERING_POINT_DISCONNECTED_TOPIC") ??
+                    throw new InvalidOperationException(
+                        "No MeteringPointDisconnected Topic found")),
+                Lifestyle.Singleton);
+
+            container.Register(
+                () => new MeteringPointReconnectedTopic(
+                    Environment.GetEnvironmentVariable("METERING_POINT_RECONNECTED_TOPIC") ??
+                    throw new InvalidOperationException(
+                        "No MeteringPointReconnected Topic found")),
+                Lifestyle.Singleton);
+
             container.Register(typeof(ITopicSender<>), typeof(TopicSender<>), Lifestyle.Singleton);
 
             container.SendProtobuf<IntegrationEventEnvelope>();
@@ -171,13 +189,22 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                 container.GetInstance<ServiceBusClient>,
                 new ServiceBusRequestSenderConfiguration(Environment.GetEnvironmentVariable("CHARGES_DEFAULT_LINK_RESPONSE_QUEUE") ?? throw new InvalidOperationException()));
 
-            // Setup pipeline behaviors
-            container.BuildMediator(
-                new[]
-                {
-                    typeof(OutboxWatcher).Assembly,
-                },
-                Array.Empty<Type>());
+            container.UseMediatR()
+                .WithPipeline()
+                .WithRequestHandlers(
+                    typeof(DataAvailableNotificationDispatcher),
+                    typeof(DataBundleResponseDispatcher),
+                    typeof(ConsumptionMeteringPointCreatedDispatcher),
+                    typeof(CreateMeteringPointDispatcher),
+                    typeof(ExchangeMeteringPointCreatedDispatcher),
+                    typeof(MeteringPointConnectedDispatcher),
+                    typeof(MeteringPointDisconnectedDispatcher),
+                    typeof(MeteringPointMessageDequeuedIntegrationEventDispatcher),
+                    typeof(MeteringPointReconnectedDispatcher),
+                    typeof(NullMeteringConfigrationChangedDispatcher),
+                    typeof(ProductionMeteringPointCreatedDispatcher),
+                    typeof(RequestDefaultChargeLinksDispatcher),
+                    typeof(MessageHubDispatcher));
         }
     }
 }

@@ -14,11 +14,12 @@
 
 using System;
 using System.Globalization;
+using Energinet.DataHub.MeteringPoints.Application.ChangeConnectionStatus;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData;
-using Energinet.DataHub.MeteringPoints.Domain;
+using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Common
@@ -32,6 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
 
             if (processType == BusinessProcessType.CreateMeteringPoint) return CreateNewMeteringPointCommand(document);
             if (processType == BusinessProcessType.ConnectMeteringPoint) return CreateConnectMeteringPointCommand(document);
+            if (processType == BusinessProcessType.DisconnectReconnectMeteringPoint) return CreateDisconnectReconnectMeteringPointCommand(document);
             if (processType == BusinessProcessType.ChangeMasterData) return CreateChangeMasterDataCommand(document);
             return null;
         }
@@ -78,6 +80,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
         private static IBusinessRequest? CreateConnectMeteringPointCommand(MasterDataDocument document)
         {
             return new ConnectMeteringPointRequest(document.GsrnNumber, document.EffectiveDate, document.TransactionId);
+        }
+
+        private static IBusinessRequest? CreateDisconnectReconnectMeteringPointCommand(MasterDataDocument document)
+        {
+            return new DisconnectReconnectMeteringPointRequest(document.GsrnNumber, document.EffectiveDate, document.TransactionId, document.PhysicalStatusOfMeteringPoint);
         }
 
         private static IBusinessRequest? CreateNewMeteringPointCommand(MasterDataDocument document)

@@ -16,6 +16,7 @@ using System;
 using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData.Validation;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain;
+using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
@@ -40,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
                     .WithState(_ => new FromGridAreaIsNotAllowed());
             });
 
-            RuleFor(request => request.TransactionId).SetValidator(new TransactionIdentificationRule());
+            RuleFor(request => request.TransactionId).SetValidator(new TransactionIdValidator());
         }
     }
 }

@@ -54,6 +54,57 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements
                 };
         }
 
+        public static ConfirmMessage DisconnectMeteringPoint(
+            MarketRoleParticipant sender,
+            MarketRoleParticipant receiver,
+            Instant createdDateTime,
+            MarketActivityRecord marketActivityRecord)
+        {
+            return Defaults()
+                with
+                {
+                    ProcessType = "E79",
+                    Sender = sender,
+                    Receiver = receiver,
+                    CreatedDateTime = createdDateTime,
+                    MarketActivityRecord = marketActivityRecord,
+                };
+        }
+
+        public static ConfirmMessage ReconnectMeteringPoint(
+            MarketRoleParticipant sender,
+            MarketRoleParticipant receiver,
+            Instant createdDateTime,
+            MarketActivityRecord marketActivityRecord)
+        {
+            return Defaults()
+                with
+                {
+                    ProcessType = "E79",
+                    Sender = sender,
+                    Receiver = receiver,
+                    CreatedDateTime = createdDateTime,
+                    MarketActivityRecord = marketActivityRecord,
+                };
+        }
+
+        public static ConfirmMessage RequestCloseDown(
+            MarketRoleParticipant sender,
+            MarketRoleParticipant receiver,
+            Instant createdDateTime,
+            MarketActivityRecord marketActivityRecord)
+        {
+            return Defaults()
+                with
+                {
+                    ProcessType = "D14",
+                    Sender = sender,
+                    Receiver = receiver,
+                    CreatedDateTime = createdDateTime,
+                    MarketActivityRecord = marketActivityRecord,
+                };
+        }
+
         private static ConfirmMessage Defaults()
         {
             return new ConfirmMessage(

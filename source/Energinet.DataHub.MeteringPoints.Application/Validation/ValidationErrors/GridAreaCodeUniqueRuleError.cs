@@ -18,11 +18,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class GridAreaCodeUniqueRuleError : ValidationError
     {
-        public GridAreaCodeUniqueRuleError(string code)
+        public GridAreaCodeUniqueRuleError(string gridAreaCode)
         {
-            Code = code;
+            GridAreaCode = gridAreaCode;
         }
 
-        public string Code { get; }
+        public string GridAreaCode { get; }
     }
 }

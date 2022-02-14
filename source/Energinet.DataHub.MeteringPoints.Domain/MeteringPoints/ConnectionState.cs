@@ -44,5 +44,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
         {
             return new ConnectionState(PhysicalState.ClosedDown, null);
         }
+
+        public static ConnectionState Disconnected(Instant effectiveDate)
+        {
+            return new ConnectionState(PhysicalState.Disconnected, effectiveDate);
+        }
     }
 }
