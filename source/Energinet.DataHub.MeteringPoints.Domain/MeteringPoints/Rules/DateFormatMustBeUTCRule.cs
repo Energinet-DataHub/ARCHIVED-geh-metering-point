@@ -13,40 +13,33 @@
 // limitations under the License.
 
 using System;
-using System.Globalization;
 using System.Text.RegularExpressions;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using NodaTime;
 using NodaTime.Text;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
     public class DateFormatMustBeUTCRule : IBusinessRule
     {
-        private const string FormatRegExSummer = @"\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2]\d|3[0-1])T22:00:00(.000)?Z$";
-        private const string FormatRegExWinter = @"\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2]\d|3[0-1])T23:00:00(.000)?Z$";
+        private const string FormatRegExSummer = @"\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2]\d|3[0-1])T23:00:00(.000)?Z$";
+        private const string FormatRegExWinter = @"\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2]\d|3[0-1])T22:00:00(.000)?Z$";
         private readonly string _date;
 
         public DateFormatMustBeUTCRule(string date)
         {
             _date = date;
-            var parseSuccess = DateTime.TryParse(date, out var dateTime);
+            var parseSuccess = InstantPattern.ExtendedIso.Parse(date);
 
-            if (!parseSuccess)
+            if (!parseSuccess.Success)
             {
                 IsBroken = true;
                 return;
             }
 
             var tzi = TimeZoneInfo.Local;
-            if (tzi.IsDaylightSavingTime(dateTime))
-            {
-                IsBroken = !Regex.IsMatch(date, FormatRegExSummer);
-            }
-            else
-            {
-                IsBroken = !Regex.IsMatch(date, FormatRegExWinter);
-            }
+            IsBroken = tzi.IsDaylightSavingTime(parseSuccess.Value.ToDateTimeUtc())
+                ? !Regex.IsMatch(date, FormatRegExSummer)
+                : !Regex.IsMatch(date, FormatRegExWinter);
         }
 
         public bool IsBroken { get; }

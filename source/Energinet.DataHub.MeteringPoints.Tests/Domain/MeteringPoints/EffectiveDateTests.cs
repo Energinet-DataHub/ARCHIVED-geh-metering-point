@@ -15,7 +15,7 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exceptions;
-using NodaTime.Text;
+using Energinet.DataHub.MeteringPoints.Tests.Tooling;
 using Xunit;
 using Xunit.Categories;
 
@@ -25,9 +25,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
     public class EffectiveDateTests
     {
         [Theory]
-        [InlineData("2021-06-01T22:00:00Z", true)]
-        [InlineData("2021-12-30T23:00:00Z", true)]
-        [InlineData("2021-06-01T22:00:00.000Z", true)]
+        [InlineData("2021-06-01T23:00:00Z", true)]
+        [InlineData("2021-12-30T22:00:00Z", true)]
+        [InlineData("2021-06-01T23:00:00.000Z", true)]
         [InlineData("2021-06-01T23:00:00.100Z", false)]
         [InlineData("2021-06-01T23:01:00Z", false)]
         [InlineData("2021-06-01T00:00:00Z", false)]
@@ -46,7 +46,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         {
             //Arrange
             DateTime date = new DateTime(2021, 6, 1, 23, 0, 0);
-            string dateString = "2021-06-01T23:00:00Z";
+            string dateString = "2021-06-01T22:00:00Z";
 
             //Act
             var actual = EffectiveDate.CheckRules(dateString);
@@ -57,7 +57,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         [Fact]
         public void Create_should_succeed_when_date_format_is_valid()
         {
-            var dateString = "2021-06-01T23:00:00.000Z";
+            var dateString = TestHelpers.DaylightSavingsString(new DateTime(2021, 6, 1));
+            //var dateString = "2021-06-01T22:00:00Z";
             var effectiveDate = EffectiveDate.Create(dateString);
 
             Assert.NotNull(effectiveDate);

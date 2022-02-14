@@ -478,7 +478,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         protected EffectiveDate CreateEffectiveDateAsOfToday()
         {
             var today = GetService<ISystemDateTimeProvider>().Now().ToDateTimeUtc();
-            return EffectiveDate.Create(new DateTime(today.Year, today.Month, today.Day, 23, 0, 0));
+            return EffectiveDate.Create(TestHelpers.DaylightSavingsString(new DateTime(
+                today.Year,
+                today.Month,
+                today.Day)));
         }
 
         protected async Task CreatePhysicalConsumptionMeteringPointAsync()

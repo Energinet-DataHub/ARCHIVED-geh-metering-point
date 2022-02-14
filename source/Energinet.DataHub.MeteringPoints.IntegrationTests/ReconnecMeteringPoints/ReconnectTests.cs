@@ -113,13 +113,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ReconnecMeteringPoin
 
         private static Instant ToEffectiveDate(DateTime date)
         {
-            return Instant.FromUtc(date.Year, date.Month, date.Day, 23, 0);
+            return TestHelpers.DaylightSavingsInstant(date);
         }
 
         private Task CreateMeteringPointWithEnergySupplierAssigned()
         {
             var currentDate = _dateTimeProvider.Now().ToDateTimeUtc();
-            var startOfSupplyDate = Instant.FromUtc(currentDate.Year, currentDate.Month, currentDate.Day, 22, 0);
+            var startOfSupplyDate = TestHelpers.DaylightSavingsInstant(currentDate);
             return CreateMeteringPointWithEnergySupplierAssigned(startOfSupplyDate);
         }
 
@@ -138,21 +138,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ReconnecMeteringPoin
         private ConnectMeteringPointRequest CreateConnectMeteringPointRequest()
         {
             var currentDate = _dateTimeProvider.Now().ToDateTimeUtc();
-            var effectiveDate = Instant.FromUtc(currentDate.Year, currentDate.Month, currentDate.Day, 23, 0);
+            var effectiveDate = TestHelpers.DaylightSavingsInstant(currentDate);
             return new(SampleData.GsrnNumber, effectiveDate.ToString(), SampleData.Transaction);
         }
 
         private DisconnectReconnectMeteringPointRequest CreateDisconnectMeteringPointRequest()
         {
             var currentDate = _dateTimeProvider.Now().ToDateTimeUtc();
-            var effectiveDate = Instant.FromUtc(currentDate.Year, currentDate.Month, currentDate.Day, 23, 0);
+            var effectiveDate = TestHelpers.DaylightSavingsInstant(currentDate);
             return new(SampleData.GsrnNumber, effectiveDate.ToString(), SampleData.Transaction, "Disconnected");
         }
 
         private DisconnectReconnectMeteringPointRequest CreateReconnectMeteringPointRequest()
         {
             var currentDate = _dateTimeProvider.Now().ToDateTimeUtc();
-            var effectiveDate = Instant.FromUtc(currentDate.Year, currentDate.Month, currentDate.Day, 23, 0);
+            var effectiveDate = TestHelpers.DaylightSavingsInstant(currentDate);
             return new(SampleData.GsrnNumber, effectiveDate.ToString(), SampleData.Transaction, "Connected");
         }
 
