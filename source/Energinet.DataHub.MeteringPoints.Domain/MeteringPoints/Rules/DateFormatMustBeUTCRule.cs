@@ -28,7 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
         public DateFormatMustBeUTCRule(string date)
         {
             _date = date;
-            var parseSuccess = InstantPattern.ExtendedIso.Parse(date);
+            var parseSuccess = InstantPattern.General.Parse(date);
 
             if (!parseSuccess.Success)
             {
