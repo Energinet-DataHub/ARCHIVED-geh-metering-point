@@ -109,19 +109,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.DisconnectMeteringPo
             AssertValidationError("E17", expectError);
         }
 
-        [Fact]
-        public async Task Cannot_Disconnect_if_connection_state_is_empty()
-        {
-            await CreateMeteringPointWithEnergySupplierAssigned().ConfigureAwait(false);
-
-            await SendCommandAsync(CreateDisconnectMeteringPointRequest() with
-            {
-                ConnectionState = string.Empty,
-            }).ConfigureAwait(false);
-
-            AssertValidationError("D64");
-        }
-
         private static Instant ToEffectiveDate(DateTime date)
         {
             return Instant.FromUtc(date.Year, date.Month, date.Day, 23, 0);

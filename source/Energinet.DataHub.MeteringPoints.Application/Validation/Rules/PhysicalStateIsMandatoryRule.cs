@@ -12,18 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class ConnectionStateValidator : AbstractValidator<string>
+    public class PhysicalStateIsMandatoryRule : AbstractValidator<MasterDataDocument>
     {
-        public ConnectionStateValidator()
+        public PhysicalStateIsMandatoryRule()
         {
-            RuleFor(connectionState => connectionState)
+            RuleFor(request => request.PhysicalStatusOfMeteringPoint)
                 .NotEmpty()
-                .WithState(_ => new ConnectionStateIsRequiredError());
+                .WithState(_ => new PhysicalStateMandatoryValidationError(_.GsrnNumber));
         }
     }
 }

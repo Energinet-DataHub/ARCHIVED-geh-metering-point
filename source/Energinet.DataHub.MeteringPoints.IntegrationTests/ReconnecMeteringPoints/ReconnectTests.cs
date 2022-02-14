@@ -70,23 +70,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ReconnecMeteringPoin
             AssertValidationError("D16");
         }
 
-        [Fact]
-        public async Task Cannot_reconnect_if_connection_state_is_empty()
-        {
-            await CreateMeteringPointWithEnergySupplierAssigned().ConfigureAwait(false);
-
-            await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
-
-            await SendCommandAsync(CreateDisconnectMeteringPointRequest()).ConfigureAwait(false);
-
-            await SendCommandAsync(CreateReconnectMeteringPointRequest() with
-            {
-                ConnectionState = string.Empty,
-            }).ConfigureAwait(false);
-
-            AssertValidationError("D64");
-        }
-
         [Theory]
         [InlineData(3, true)]
         [InlineData(1, false)]
