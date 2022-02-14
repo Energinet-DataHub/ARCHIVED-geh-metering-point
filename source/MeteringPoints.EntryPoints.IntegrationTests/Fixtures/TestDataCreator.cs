@@ -31,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
 
         public static string Today()
         {
-            var date = DateTime.Today.AddDays(-1);
+            var date = DateTime.Today.AddDays(-1).ToUniversalTime();
             return TimeZoneInfo.Local.IsDaylightSavingTime(date)
                 ? date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) + "T23:00:00Z"
                 : date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) + "T22:00:00Z";

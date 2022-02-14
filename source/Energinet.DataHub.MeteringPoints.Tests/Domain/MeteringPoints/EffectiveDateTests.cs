@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exceptions;
 using Energinet.DataHub.MeteringPoints.Tests.Tooling;
@@ -24,20 +26,20 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
     [UnitTest]
     public class EffectiveDateTests
     {
-        [Theory]
-        [InlineData("2021-06-01T23:00:00Z", true)]
-        [InlineData("2021-12-30T22:00:00Z", true)]
-        [InlineData("2021-06-01T23:00:00.000Z", true)]
-        [InlineData("2021-06-01T23:00:00.100Z", false)]
-        [InlineData("2021-06-01T23:01:00Z", false)]
-        [InlineData("2021-06-01T00:00:00Z", false)]
-        [InlineData("2021-06-01T00:00:00.000Z", false)]
-        [InlineData("2021-06-01", false)]
-        [InlineData("Not a date", false)]
-        public void Date_format_must_be_23_00_00_UTC(string dateString, bool isValid)
+        [Fact]
+        public void Date_format_must_be_23_00_00_UTC()
         {
+            var dateString = TestHelpers.DaylightSavingsString(new DateTime(2021, 6, 1));
             var result = EffectiveDate.CheckRules(dateString);
-            Assert.Equal(isValid, result.Success);
+            Assert.True(result.Success);
+        }
+
+        [Fact]
+        public void Date_format_must_be_22_00_00_UTC()
+        {
+            var dateString = TestHelpers.DaylightSavingsString(new DateTime(2021, 12, 30));
+            var result = EffectiveDate.CheckRules(dateString);
+            Assert.True(result.Success);
         }
 
         [Fact]
