@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Data;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using FluentValidation;
 
@@ -24,6 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeConnectionStatus
             RuleFor(request => request.GsrnNumber).SetValidator(new GsrnNumberValidator());
             RuleFor(request => request.EffectiveDate).SetValidator(request => new EffectiveDateValidator());
             RuleFor(request => request.TransactionId).SetValidator(new TransactionIdValidator());
+            RuleFor(request => request.ConnectionState).SetValidator(new ConnectionStateValidator());
         }
     }
 }

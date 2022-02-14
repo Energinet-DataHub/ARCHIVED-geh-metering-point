@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.ChangeConnectionStatus;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
@@ -20,7 +22,9 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Reconnect;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using NodaTime;
 using Xunit;
@@ -52,7 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ReconnecMeteringPoin
                 .Initialize(SampleData.GsrnNumber, GetService<IDbConnectionFactory>())
                 .HasConnectionState(PhysicalState.Connected);
 
-            AssertConfirmMessage(DocumentType.ConfirmReconnectMeteringPoint);
+            AssertConfirmMessages(DocumentType.ConfirmConnectionStatusMeteringPoint, 2);
             Assert.NotNull(FindIntegrationEvent<MeteringPointReconnectedIntegrationEvent>());
         }
 
@@ -64,6 +68,23 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ReconnecMeteringPoin
             await SendCommandAsync(CreateReconnectMeteringPointRequest()).ConfigureAwait(false);
 
             AssertValidationError("D16");
+        }
+
+        [Fact]
+        public async Task Cannot_reconnect_if_connection_state_is_empty()
+        {
+            await CreateMeteringPointWithEnergySupplierAssigned().ConfigureAwait(false);
+
+            await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
+
+            await SendCommandAsync(CreateDisconnectMeteringPointRequest()).ConfigureAwait(false);
+
+            await SendCommandAsync(CreateReconnectMeteringPointRequest() with
+            {
+                ConnectionState = string.Empty,
+            }).ConfigureAwait(false);
+
+            AssertValidationError("D64");
         }
 
         [Theory]
@@ -164,6 +185,17 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ReconnecMeteringPoin
         private Instant EffectiveDateInFuture(int numberOfDaysFromToday)
         {
             return ToEffectiveDate(_dateTimeProvider.Now().Plus(Duration.FromDays(numberOfDaysFromToday)).ToDateTimeUtc());
+        }
+
+        private void AssertConfirmMessages(DocumentType documentType, int expectedNumbeOfMessages)
+        {
+            var messages = GetOutboxMessages<MessageHubEnvelope>().Where(msg => msg.MessageType.Equals(documentType)).ToList();
+
+            Assert.Equal(expectedNumbeOfMessages, messages.Count);
+            foreach (var confirmMessage in messages.Select(msg => GetService<IJsonSerializer>().Deserialize<ConfirmMessage>(msg.Content)))
+            {
+                Assert.NotNull(confirmMessage);
+            }
         }
     }
 }

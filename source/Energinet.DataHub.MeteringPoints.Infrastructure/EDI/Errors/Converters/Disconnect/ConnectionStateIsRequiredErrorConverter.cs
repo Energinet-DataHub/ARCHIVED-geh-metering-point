@@ -14,17 +14,17 @@
 
 using System;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.ChangeConnectionStatus;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Disconnect
 {
-    public class PhysicalStateMustBeConnectedOrDisconnectedErrorConverter : ErrorConverter<PhysicalStateMustBeConnectedOrDisconnectedError>
+    public class ConnectionStateIsRequiredErrorConverter : ErrorConverter<ConnectionStateIsRequiredError>
     {
-        protected override ErrorMessage Convert(PhysicalStateMustBeConnectedOrDisconnectedError validationError)
+        protected override ErrorMessage Convert(ConnectionStateIsRequiredError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
 
-            return new ErrorMessage("D16", $"Physical status {validationError.PhysicalState.Name} not allowed: The new status for metering point {validationError.MeteringPointId} must be Disconnected or Connected and unequal to the current status");
+            return new ErrorMessage("D64", "s");
         }
     }
 }

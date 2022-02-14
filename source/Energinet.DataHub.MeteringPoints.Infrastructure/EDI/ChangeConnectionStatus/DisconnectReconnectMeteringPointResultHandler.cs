@@ -53,29 +53,18 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeConnectionSt
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (result == null) throw new ArgumentNullException(nameof(result));
 
-            var connectionState = EnumerationType.FromName<PhysicalState>(request.ConnectionState);
-
             return result.Success
-                ? CreateAcceptMessageAsync(request, connectionState)
-                : CreateRejectResponseAsync(request, result, connectionState);
+                ? CreateAcceptMessageAsync(request)
+                : CreateRejectResponseAsync(request, result);
         }
 
-        private async Task CreateAcceptMessageAsync(DisconnectReconnectMeteringPointRequest request, PhysicalState connectionState)
+        private async Task CreateAcceptMessageAsync(DisconnectReconnectMeteringPointRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            if (connectionState == PhysicalState.Disconnected)
-            {
-                await _actorMessageService
-                    .SendDisconnectMeteringPointConfirmAsync(request.TransactionId, request.GsrnNumber)
-                    .ConfigureAwait(false);
-            }
-            else if (connectionState == PhysicalState.Connected)
-            {
-                await _actorMessageService
-                    .SendReconnectMeteringPointConfirmAsync(request.TransactionId, request.GsrnNumber)
-                    .ConfigureAwait(false);
-            }
+            await _actorMessageService
+                .SendConnectionStatusMeteringPointConfirmAsync(request.TransactionId, request.GsrnNumber)
+                .ConfigureAwait(false);
 
             var command = new SendAccountingPointCharacteristicsMessage(
                 _pipelineContext.MeteringPointId,
@@ -84,24 +73,15 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeConnectionSt
             await _commandScheduler.EnqueueAsync(command).ConfigureAwait(false);
         }
 
-        private async Task CreateRejectResponseAsync(DisconnectReconnectMeteringPointRequest request, BusinessProcessResult result, PhysicalState connectionState)
+        private async Task CreateRejectResponseAsync(DisconnectReconnectMeteringPointRequest request, BusinessProcessResult result)
         {
             var errors = result.ValidationErrors
                 .Select(error => _errorMessageFactory.GetErrorMessage(error))
                 .AsEnumerable();
 
-            if (connectionState == PhysicalState.Disconnected)
-            {
-                await _actorMessageService
-                    .SendDisconnectMeteringPointRejectAsync(request.TransactionId, request.GsrnNumber, errors)
-                    .ConfigureAwait(false);
-            }
-            else if (connectionState == PhysicalState.Connected)
-            {
-                await _actorMessageService
-                    .SendDisconnectMeteringPointRejectAsync(request.TransactionId, request.GsrnNumber, errors)
-                    .ConfigureAwait(false);
-            }
+            await _actorMessageService
+                .SendConnectionStatusMeteringPointRejectAsync(request.TransactionId, request.GsrnNumber, errors)
+                .ConfigureAwait(false);
         }
     }
 }
