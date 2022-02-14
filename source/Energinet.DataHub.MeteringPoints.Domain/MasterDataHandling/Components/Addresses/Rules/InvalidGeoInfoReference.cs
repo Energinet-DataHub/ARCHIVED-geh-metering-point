@@ -21,8 +21,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.
         public InvalidGeoInfoReference(string? providedValue)
         {
             ProvidedValue = providedValue;
+            SetErrorProperties();
         }
 
-        public string? ProvidedValue { get; }
+        private string? ProvidedValue { get; }
+
+        private void SetErrorProperties()
+        {
+            Code = "E86";
+            Message = $"The format of the metering point DAR reference {ProvidedValue} must comply with the generic UUID format";
+        }
     }
 }

@@ -20,14 +20,15 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.
     {
         public BuildingNumberFormatRuleError()
         {
-            Code = "E86";
-            Message =
-                $"Building number has an incorrect format: the length exceeds 4 characters " +
-                $"or is not in the range 1-999, optionally with a capital letter (if country code is DK) or " +
-                $"the length exceeds 6 characters (if other country)";
+            SetErrorProperties(string.Empty);
         }
 
         public BuildingNumberFormatRuleError(string buildingNumber)
+        {
+            SetErrorProperties(buildingNumber);
+        }
+
+        private void SetErrorProperties(string buildingNumber)
         {
             Code = "E86";
             Message = $"Building number {buildingNumber} has an incorrect format: the length exceeds 4 characters " +
