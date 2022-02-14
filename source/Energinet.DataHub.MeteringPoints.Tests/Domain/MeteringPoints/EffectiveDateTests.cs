@@ -27,7 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         [Theory]
         [InlineData("2021-06-01T23:00:00Z", true)]
         [InlineData("2021-12-30T22:00:00Z", true)]
-        [InlineData("2021-06-01T23:00:00.000Z", false)]
+        [InlineData("2021-06-01T23:00:00.000Z", true)]
         [InlineData("2021-06-01T23:00:00.100Z", false)]
         [InlineData("2021-06-01T23:01:00Z", false)]
         [InlineData("2021-06-01T00:00:00Z", false)]
