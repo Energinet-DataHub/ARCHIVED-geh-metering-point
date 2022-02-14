@@ -37,28 +37,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         public void Date_format_must_be_23_00_00_UTC(string dateString, bool isValid)
         {
             var result = EffectiveDate.CheckRules(dateString);
-
             Assert.Equal(isValid, result.Success);
-        }
-
-        [Fact]
-        public void Daylightsavings_Something_Something()
-        {
-            //Arrange
-            DateTime date = new DateTime(2021, 6, 1, 23, 0, 0);
-            string dateString = "2021-06-01T22:00:00Z";
-
-            //Act
-            var actual = EffectiveDate.CheckRules(dateString);
-
-            //Assert
         }
 
         [Fact]
         public void Create_should_succeed_when_date_format_is_valid()
         {
             var dateString = TestHelpers.DaylightSavingsString(new DateTime(2021, 6, 1));
-            //var dateString = "2021-06-01T22:00:00Z";
             var effectiveDate = EffectiveDate.Create(dateString);
 
             Assert.NotNull(effectiveDate);
@@ -69,7 +54,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         public void Create_should_throw_exception_when_format_is_invalid()
         {
             var invalidDate = "2021-06-01";
-
             Assert.Throws<InvalidEffectiveDateFormat>(() => EffectiveDate.Create(invalidDate));
         }
     }
