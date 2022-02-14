@@ -26,6 +26,7 @@ using FluentAssertions.Execution;
 using Microsoft.Identity.Client;
 using Xunit;
 using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Functions
 {
@@ -96,10 +97,17 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
             // InternalCommands
             await AssertFunctionExecuted(Fixture.InternalCommandDispatcherHostManager, "Dispatcher").ConfigureAwait(false);
 
-            // MessageHub
-            await Fixture.MessageHubSimulator
-                .WaitForNotificationsInDataAvailableQueueAsync(correlationId)
-                .ConfigureAwait(false);
+            try
+            {
+                // MessageHub
+                await Fixture.MessageHubSimulator
+                    .WaitForNotificationsInDataAvailableQueueAsync(correlationId)
+                    .ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                throw new XunitException(e.ToString());
+            }
 
             var peekSimulationResponseDto = await Fixture.MessageHubSimulator.PeekAsync().ConfigureAwait(false);
 
