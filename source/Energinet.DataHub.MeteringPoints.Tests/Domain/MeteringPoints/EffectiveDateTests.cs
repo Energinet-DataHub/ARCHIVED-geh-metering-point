@@ -45,13 +45,24 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         [Fact]
         public void Date_format_must_be_22_00_00_UTC_Wierd()
         {
-            var dateString = "2021-09-25T23:00:00Z";
+            var dateString = "2021-06-06T23:00:00Z";
             var result = EffectiveDate.CheckRules(dateString);
             Assert.True(result.Success);
         }
 
         [Fact]
         public void Create_should_succeed_when_date_format_is_valid()
+        {
+            var dateString = TestHelpers.DaylightSavingsString(new DateTime(2021, 6, 1));
+            var effectiveDate = EffectiveDate.Create(dateString);
+
+            Assert.NotNull(effectiveDate);
+            Assert.Equal(dateString, effectiveDate.ToString());
+        }
+
+        //2021-06-06 23:00:00.0000000
+        [Fact]
+        public void Create_should_succeed_when_date_format_is_valid_Wierd()
         {
             var dateString = TestHelpers.DaylightSavingsString(new DateTime(2021, 6, 1));
             var effectiveDate = EffectiveDate.Create(dateString);
