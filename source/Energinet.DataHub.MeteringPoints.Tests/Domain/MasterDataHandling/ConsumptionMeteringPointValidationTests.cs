@@ -181,7 +181,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithCapacity(null!)
                 .Build();
 
-            AssertContainsValidationError<CapacityIsRequiredRuleError>(CheckRules(masterData));
+            AssertContainsValidationError<CapacityIsRequiredRuleError>("D56", CheckRules(masterData));
         }
 
         [Fact]
