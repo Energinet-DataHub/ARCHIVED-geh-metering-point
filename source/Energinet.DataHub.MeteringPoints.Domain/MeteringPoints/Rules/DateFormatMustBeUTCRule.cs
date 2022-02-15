@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using Energinet.DataHub.MeteringPoints.Domain.Extensions;
@@ -31,16 +32,17 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
         public DateFormatMustBeUTCRule(string date)
         {
             _date = date;
-            var parseSuccess = InstantPattern.General.Parse(date);
 
-            if (!parseSuccess.Success)
+            var canParse = DateTime.TryParse(date, out var parseSuccess);
+
+            if (!canParse)
             {
                 IsBroken = true;
                 return;
             }
 
             var tzi = TimeZoneInfo.Local;
-            IsBroken = tzi.IsDaylightSavingTime(parseSuccess.Value.ToDateTimeUtc())
+            IsBroken = tzi.IsDaylightSavingTime(parseSuccess.ToUniversalTime())
                 ? !Regex.IsMatch(date, FormatRegExSummer)
                 : !Regex.IsMatch(date, FormatRegExWinter);
         }
