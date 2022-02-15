@@ -40,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
         {
             var checkResult = CheckRules(geoInfoReference: geoInfoReference);
 
-            AssertError<InvalidGeoInfoReference>(checkResult, expectError);
+            AssertError<InvalidGeoInfoReference>("E86", checkResult, expectError);
         }
 
         [Theory]
@@ -53,7 +53,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
         {
             var checkResult = CheckRules(streetCode: streetCode);
 
-            AssertError<StreetCodeLengthRuleError>(checkResult, expectError);
+            AssertError<StreetCodeLengthRuleError>("E86", checkResult, expectError);
         }
 
         [Fact]
@@ -130,7 +130,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 countryCode: null,
                 floor: floor);
 
-            AssertError<FloorLengthRuleError>(checkResult, expectError);
+            AssertError<FloorLengthRuleError>("E86", checkResult, expectError);
         }
 
         [Theory]
@@ -148,7 +148,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 floor: string.Empty,
                 room: room);
 
-            AssertError<RoomLengthRuleError>(checkResult, expectError);
+            AssertError<RoomLengthRuleError>("E86", checkResult, expectError);
         }
 
         [Theory]
@@ -167,7 +167,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 floor: string.Empty,
                 room: string.Empty);
 
-            AssertError<CityNameLengthRuleError>(checkResult, expectError);
+            AssertError<CityNameLengthRuleError>("E86", checkResult, expectError);
         }
 
         [Theory]
@@ -188,7 +188,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 floor: string.Empty,
                 room: string.Empty);
 
-            AssertError<PostCodeFormatRuleError>(checkResult, expectError);
+            AssertError<PostCodeFormatRuleError>("E86", checkResult, expectError);
         }
 
         [Theory]
@@ -209,7 +209,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 floor: string.Empty,
                 room: string.Empty);
 
-            AssertError<PostCodeFormatRuleError>(checkResult, expectError);
+            AssertError<PostCodeFormatRuleError>("E86", checkResult, expectError);
         }
 
         [Theory]
@@ -232,7 +232,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 floor: string.Empty,
                 room: string.Empty);
 
-            AssertError<CitySubdivisionRuleError>(checkResult, expectError);
+            AssertError<CitySubdivisionRuleError>("E86", checkResult, expectError);
         }
 
         [Theory]
@@ -256,7 +256,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 room: string.Empty,
                 municipalityCode: municipalityCode);
 
-            AssertError<MunicipalityCodeRuleError>(checkResult, expectError);
+            AssertError<MunicipalityCodeRuleError>("E86", checkResult, expectError);
         }
 
         [Fact]
