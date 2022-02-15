@@ -16,6 +16,7 @@ using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using Energinet.DataHub.MeteringPoints.Domain.Extensions;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 using NodaTime.Text;
@@ -36,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
             if (!parseSuccess.Success)
             {
                 IsBroken = true;
-                return;
+                throw new InvalidEffectiveDateFormat(date, parseSuccess.Exception);
             }
 
             var tzi = TimeZoneInfo.Local;
