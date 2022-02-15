@@ -20,9 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
     {
         public InvalidAmperePowerLimitRuleError(int? ampere)
         {
-            Ampere = ampere;
+            Code = "E86";
+            Message = $"Power limit A {ampere} contains a non-digit character or has a length that exceeds 6";
         }
-
-        public int? Ampere { get; }
     }
 }

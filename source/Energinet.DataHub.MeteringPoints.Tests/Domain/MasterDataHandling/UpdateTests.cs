@@ -417,7 +417,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithAssetType(string.Empty)
                 .Validate();
 
-            AssertContainsValidationError<AssetTypeIsRequired>(validationResult);
+            AssertContainsValidationError<AssetTypeIsRequired>("D59", validationResult);
         }
 
         [Fact]
