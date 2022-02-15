@@ -41,6 +41,15 @@ namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
                     .WithState(_ => new FromGridAreaIsNotAllowed());
             });
 
+            When(
+                message => message.ProcessType.Equals(
+                    BusinessProcessType.DisconnectReconnectMeteringPoint.Name,
+                    StringComparison.OrdinalIgnoreCase),
+                () =>
+                {
+                    RuleFor(request => request).SetValidator(new PhysicalStateIsMandatoryRule());
+                });
+
             RuleFor(request => request.TransactionId).SetValidator(new TransactionIdValidator());
         }
     }
