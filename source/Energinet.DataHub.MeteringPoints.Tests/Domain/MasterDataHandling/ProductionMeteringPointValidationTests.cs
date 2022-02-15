@@ -148,7 +148,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithConnectionType(null!)
                 .Build();
 
-            AssertContainsValidationError<ConnectionTypeIsRequiredRuleError>(CheckRules(masterData));
+            AssertContainsValidationError<ConnectionTypeIsRequiredRuleError>("D66", CheckRules(masterData));
         }
 
         [Fact]
