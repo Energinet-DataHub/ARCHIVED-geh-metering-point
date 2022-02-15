@@ -26,7 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
                 !(netSettlementGroup == NetSettlementGroup.Zero || netSettlementGroup == NetSettlementGroup.Ninetynine) &&
                 !(meteringMethod == MeteringMethod.Calculated || meteringMethod == MeteringMethod.Virtual);
             ValidationError =
-                new MeteringMethodDoesNotMatchNetSettlementGroupRuleError(netSettlementGroup, meteringMethod);
+                new MeteringMethodDoesNotMatchNetSettlementGroupRuleError(meteringMethod);
         }
 
         public bool IsBroken { get; }

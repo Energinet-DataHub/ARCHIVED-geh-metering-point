@@ -40,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 
             meteringPoint.Connect(connectionDetails);
 
-            AssertError<ConnectionStateMustBeConnectedOrDisconnectedError>(meteringPoint.ReconnectAcceptable(connectionDetails));
+            AssertError<ConnectionStateMustBeConnectedOrDisconnectedError>("D16", meteringPoint.ReconnectAcceptable(connectionDetails));
         }
 
         [Theory]

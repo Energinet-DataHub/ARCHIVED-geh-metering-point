@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild.Rul
 {
     public class ParentAndChildGridAreasMustBeTheSame : ValidationError
     {
+        public ParentAndChildGridAreasMustBeTheSame()
+        {
+            Code = "D46";
+            Message = "The grid area for parent and child metering points must be same.";
+        }
     }
 }

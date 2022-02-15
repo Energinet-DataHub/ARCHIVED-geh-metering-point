@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.
 {
     public class ActualAddressIsRequired : ValidationError
     {
+        public ActualAddressIsRequired()
+        {
+            Code = "D63";
+            Message = "The actual address indicator is required when geo info reference is defined.";
+        }
     }
 }

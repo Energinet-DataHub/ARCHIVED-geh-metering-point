@@ -30,7 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
         {
             var result = CheckRules(geoInfoReference: Guid.NewGuid().ToString(), isActualAddress: null);
 
-            AssertError<ActualAddressIsRequired>(result, true);
+            AssertError<ActualAddressIsRequired>("D63", result, true);
         }
 
         [Theory]
