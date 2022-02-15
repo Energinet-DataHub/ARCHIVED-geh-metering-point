@@ -37,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 
             var validationResult = meteringPoint.CanUpdateMasterData(UpdatedMasterData(meteringPoint.MasterData), CreateValidator());
 
-            AssertContainsValidationError<ClosedDownMeteringPointCannotBeChangedError>(validationResult);
+            AssertContainsValidationError<ClosedDownMeteringPointCannotBeChangedError>("D16", validationResult);
         }
 
         [Fact]
