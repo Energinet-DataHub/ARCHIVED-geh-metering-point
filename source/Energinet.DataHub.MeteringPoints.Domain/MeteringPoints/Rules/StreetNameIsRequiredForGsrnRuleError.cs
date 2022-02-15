@@ -16,13 +16,12 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
-    public class StreetNameIsRequiredRuleError : ValidationError
+    public class StreetNameIsRequiredForGsrnRuleError : ValidationError
     {
-        public StreetNameIsRequiredRuleError(GsrnNumber meteringPointGSRN)
+        public StreetNameIsRequiredForGsrnRuleError(GsrnNumber meteringPointGSRN)
         {
-            MeteringPointGSRN = meteringPointGSRN;
+            Code = "E86";
+            Message = $"Street name is missing for metering point {meteringPointGSRN}.";
         }
-
-        public GsrnNumber MeteringPointGSRN { get; }
     }
 }

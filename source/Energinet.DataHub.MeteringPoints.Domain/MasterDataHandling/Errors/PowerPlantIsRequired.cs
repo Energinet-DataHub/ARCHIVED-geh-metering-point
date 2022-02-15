@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
     public class PowerPlantIsRequired : ValidationError
     {
+        public PowerPlantIsRequired()
+        {
+            Code = "D57";
+            Message = "Power plant for Production (E18) metering point is missing.";
+        }
     }
 }

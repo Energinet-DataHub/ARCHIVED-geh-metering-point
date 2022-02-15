@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
     public class PostCodeIsRequiredRuleError : ValidationError
     {
+        public PostCodeIsRequiredRuleError()
+        {
+            Code = "E86";
+            Message = "Post code is required for market metering points";
+        }
     }
 }
