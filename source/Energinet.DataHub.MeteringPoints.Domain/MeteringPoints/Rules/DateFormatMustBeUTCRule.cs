@@ -13,16 +13,19 @@
 // limitations under the License.
 
 using System;
+using System.Text;
 using System.Text.RegularExpressions;
+using Energinet.DataHub.MeteringPoints.Domain.Extensions;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using NodaTime;
 using NodaTime.Text;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
     public class DateFormatMustBeUTCRule : IBusinessRule
     {
-        private const string FormatRegExSummer = @"\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2]\d|3[0-1])T23:00:00(.000)?Z$";
-        private const string FormatRegExWinter = @"\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2]\d|3[0-1])T22:00:00(.000)?Z$";
+        private const string FormatRegExSummer = @"\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2]\d|3[0-1])T23:00:00([.][0]*)?Z$";
+        private const string FormatRegExWinter = @"\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2]\d|3[0-1])T22:00:00([.][0]*)?Z$";
         private readonly string _date;
 
         public DateFormatMustBeUTCRule(string date)
