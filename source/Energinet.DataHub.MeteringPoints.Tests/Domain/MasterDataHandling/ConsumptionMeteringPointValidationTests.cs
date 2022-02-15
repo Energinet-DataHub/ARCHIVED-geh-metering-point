@@ -213,7 +213,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithConnectionType(ConnectionType.Installation.Name)
                 .Build();
 
-            AssertContainsValidationError<ConnectionTypeIsNotAllowedRuleError>(CheckRules(masterData));
+            AssertContainsValidationError<ConnectionTypeIsNotAllowedRuleError>("D02", CheckRules(masterData));
         }
 
         [Fact]
