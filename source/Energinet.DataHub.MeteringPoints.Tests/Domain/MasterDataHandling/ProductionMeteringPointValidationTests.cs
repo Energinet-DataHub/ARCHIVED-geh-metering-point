@@ -159,7 +159,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithConnectionType(ConnectionType.Direct.Name)
                 .Build();
 
-            AssertContainsValidationError<ConnectionTypeDoesNotMatchNetSettlementGroupRuleError>(CheckRules(masterData));
+            AssertContainsValidationError<ConnectionTypeDoesNotMatchNetSettlementGroupRuleError>("D55", CheckRules(masterData));
         }
 
         [Fact]
