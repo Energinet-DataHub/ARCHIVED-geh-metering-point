@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Connect
 {
     public class MustBeCoupledToParent : ValidationError
     {
+        public MustBeCoupledToParent()
+        {
+            Code = "D36";
+            Message = "Exchange reactive energy metering points cannot be connected unless coupled to parent metering point.";
+        }
     }
 }

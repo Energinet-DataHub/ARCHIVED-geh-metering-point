@@ -155,5 +155,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             if (result == null) throw new ArgumentNullException(nameof(result));
             Assert.DoesNotContain(result.Errors, error => error is TValidationError);
         }
+
+        protected static void AssertDoesNotContainValidationError<TValidationError>(string errorCode, BusinessRulesValidationResult result)
+        {
+            if (result == null) throw new ArgumentNullException(nameof(result));
+            Assert.DoesNotContain(result.Errors, error => error is TValidationError && error.Code.Equals(errorCode, StringComparison.OrdinalIgnoreCase));
+        }
     }
 }
