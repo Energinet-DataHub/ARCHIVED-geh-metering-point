@@ -38,6 +38,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.EDI
                 return new ErrorMessage(validationError.Code, validationError.Message);
             }
 
+            if (!_converters.ContainsKey(validationError.GetType()))
+            {
+                return new ErrorMessage(validationError.Code, validationError.Message);
+            }
+
             return _converters[validationError.GetType()]().Convert(validationError);
         }
     }
