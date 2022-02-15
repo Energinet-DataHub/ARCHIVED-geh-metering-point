@@ -21,16 +21,24 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.
         public PostCodeFormatRuleError()
         {
             PostCode = string.Empty;
+            SetErrorProperties();
         }
 
         public PostCodeFormatRuleError(string postCode, int maxLength)
         {
             PostCode = postCode;
             MaxLength = maxLength;
+            SetErrorProperties();
         }
 
-        public string PostCode { get; }
+        private string PostCode { get; }
 
-        public int MaxLength { get; }
+        private int MaxLength { get; }
+
+        private void SetErrorProperties()
+        {
+            Code = "E86";
+            Message = $"Post code {PostCode} is out of range maximum length is {MaxLength}.";
+        }
     }
 }

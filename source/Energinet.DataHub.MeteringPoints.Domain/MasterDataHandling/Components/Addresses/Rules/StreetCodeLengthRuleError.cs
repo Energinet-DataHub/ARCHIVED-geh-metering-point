@@ -21,13 +21,21 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.
         public StreetCodeLengthRuleError()
         {
             StreetCode = string.Empty;
+            SetErrorProperties();
         }
 
         public StreetCodeLengthRuleError(string streetCode)
         {
             StreetCode = streetCode;
+            SetErrorProperties();
         }
 
-        public string StreetCode { get; }
+        private string StreetCode { get; }
+
+        private void SetErrorProperties()
+        {
+            Code = "E86";
+            Message = $"Street code {StreetCode} is out of range or contains a non-digit character or has a length that does not equal 4";
+        }
     }
 }

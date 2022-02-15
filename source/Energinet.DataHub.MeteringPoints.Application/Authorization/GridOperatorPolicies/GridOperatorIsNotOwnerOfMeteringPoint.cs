@@ -18,11 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperato
 {
     public class GridOperatorIsNotOwnerOfMeteringPoint : ValidationError
     {
-        public GridOperatorIsNotOwnerOfMeteringPoint(string gsrnNumber)
+        public GridOperatorIsNotOwnerOfMeteringPoint()
         {
-            GsrnNumber = gsrnNumber;
+            Code = "E10";
+            Message = "The specified metering point is owned by another grid operator.";
         }
-
-        public string GsrnNumber { get; }
     }
 }

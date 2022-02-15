@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
     public class CountryCodeRuleError : ValidationError
     {
+        public CountryCodeRuleError()
+        {
+            Code = "E86";
+            Message = "Invalid country code.";
+        }
     }
 }

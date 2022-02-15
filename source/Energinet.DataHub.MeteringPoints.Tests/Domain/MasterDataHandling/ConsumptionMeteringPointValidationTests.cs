@@ -91,7 +91,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithScheduledMeterReadingDate("0512")
                 .Build();
 
-            AssertContainsValidationError<InvalidScheduledMeterReadingDateNetSettlementGroupRuleError>(CheckRules(masterData));
+            AssertContainsValidationError<InvalidScheduledMeterReadingDateNetSettlementGroupRuleError>("E0H", CheckRules(masterData));
         }
 
         [Fact]
@@ -102,7 +102,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithScheduledMeterReadingDate("0512")
                 .Build();
 
-            AssertContainsValidationError<ScheduledMeterReadingDateNotAllowedRuleError>(CheckRules(masterData));
+            AssertContainsValidationError<ScheduledMeterReadingDateNotAllowedRuleError>("D02", CheckRules(masterData));
         }
 
         [Fact]
@@ -127,7 +127,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithPowerPlant(null!)
                 .Build();
 
-            AssertContainsValidationError<PowerPlantIsRequiredForNetSettlementGroupRuleError>(CheckRules(masterData));
+            AssertContainsValidationError<PowerPlantIsRequiredForNetSettlementGroupRuleError>("D57", CheckRules(masterData));
         }
 
         [Theory]
@@ -140,7 +140,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithPowerPlant(null!)
                 .Build();
 
-            AssertDoesNotContainValidationError<PowerPlantIsRequiredForNetSettlementGroupRuleError>(CheckRules(masterData));
+            AssertDoesNotContainValidationError<PowerPlantIsRequiredForNetSettlementGroupRuleError>("D57", CheckRules(masterData));
         }
 
         [Fact]
@@ -257,7 +257,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithSettlementMethod(SettlementMethod.Profiled.Name)
                 .Build();
 
-            AssertContainsValidationError<InvalidSettlementMethodRuleError>(CheckRules(masterData));
+            AssertContainsValidationError<InvalidSettlementMethodRuleError>("D15", CheckRules(masterData));
         }
 
         [Fact]
