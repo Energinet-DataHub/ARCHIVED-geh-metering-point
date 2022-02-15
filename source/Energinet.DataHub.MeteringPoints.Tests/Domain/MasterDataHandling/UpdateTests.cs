@@ -529,7 +529,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithDisconnectionType(string.Empty)
                 .Validate();
 
-            AssertContainsValidationError<DisconnectionTypeIsRequired>(validationResult);
+            AssertContainsValidationError<DisconnectionTypeIsRequired>("D65", validationResult);
         }
 
         [Fact]
