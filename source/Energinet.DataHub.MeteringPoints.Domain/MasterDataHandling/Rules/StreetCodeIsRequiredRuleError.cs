@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
     public class StreetCodeIsRequiredRuleError : ValidationError
     {
+        public StreetCodeIsRequiredRuleError()
+        {
+            Code = "E86";
+            Message = "Street Code is required for market metering points";
+        }
     }
 }

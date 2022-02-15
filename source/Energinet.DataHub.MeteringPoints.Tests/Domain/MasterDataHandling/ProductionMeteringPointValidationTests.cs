@@ -66,7 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithMeteringConfiguration(meteringMethod, meter)
                 .Build();
 
-            AssertError<MeteringMethodDoesNotMatchNetSettlementGroupRuleError>(CheckRules(details), expectError);
+            AssertError<MeteringMethodDoesNotMatchNetSettlementGroupRuleError>("D37", CheckRules(details), expectError);
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithAddress(streetName: string.Empty)
                 .Build();
 
-            AssertContainsValidationError<StreetNameIsRequiredRuleError>(CheckRules(masterData));
+            AssertContainsValidationError<StreetNameIsRequiredRuleError>("E86", CheckRules(masterData));
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithAddress(postCode: string.Empty)
                 .Build();
 
-            AssertContainsValidationError<PostCodeIsRequiredRuleError>(CheckRules(masterData));
+            AssertContainsValidationError<PostCodeIsRequiredRuleError>("E86", CheckRules(masterData));
         }
 
         [Fact]
@@ -96,7 +96,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithAddress(city: string.Empty)
                 .Build();
 
-            AssertContainsValidationError<CityIsRequiredRuleError>(CheckRules(masterData));
+            AssertContainsValidationError<CityIsRequiredRuleError>("E86", CheckRules(masterData));
         }
 
         [Fact]
@@ -126,7 +126,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithPowerPlant(null!)
                 .Build();
 
-            AssertContainsValidationError<PowerPlantIsRequired>(CheckRules(masterData));
+            AssertContainsValidationError<PowerPlantIsRequired>("D57", CheckRules(masterData));
         }
 
         [Fact]

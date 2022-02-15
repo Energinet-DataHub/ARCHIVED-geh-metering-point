@@ -21,12 +21,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.ChangeCon
     {
         public PhysicalStateMustBeConnectedOrDisconnectedError(PhysicalState physicalState, Guid meteringPointId)
         {
-            PhysicalState = physicalState;
-            MeteringPointId = meteringPointId;
+            if (physicalState is null) throw new ArgumentNullException(nameof(physicalState));
+
+            Code = "D16";
+            Message = $"Physical status {physicalState.Name} not allowed: The new status for metering point {meteringPointId} must be Disconnected or Connected and unequal to the current status";
         }
-
-        public PhysicalState PhysicalState { get; }
-
-        public Guid MeteringPointId { get; }
     }
 }

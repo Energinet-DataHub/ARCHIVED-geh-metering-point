@@ -37,6 +37,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 
         public bool IsBroken { get; }
 
-        public ValidationError ValidationError => new StreetNameIsRequiredRuleError(_meteringpointGsrn);
+        public ValidationError ValidationError => new StreetNameIsRequiredForGsrnRuleError(_meteringpointGsrn);
     }
 }

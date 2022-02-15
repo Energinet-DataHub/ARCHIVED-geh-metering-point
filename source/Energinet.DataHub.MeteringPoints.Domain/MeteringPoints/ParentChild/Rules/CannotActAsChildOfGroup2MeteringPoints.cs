@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild.Rul
 {
     public class CannotActAsChildOfGroup2MeteringPoints : ValidationError
     {
+        public CannotActAsChildOfGroup2MeteringPoints()
+        {
+            Code = "D18";
+            Message = "Only group 5 metering points can act as child of group 2 metering points.";
+        }
     }
 }

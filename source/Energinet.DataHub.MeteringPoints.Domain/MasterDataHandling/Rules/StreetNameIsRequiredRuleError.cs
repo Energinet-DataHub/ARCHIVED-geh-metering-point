@@ -20,6 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
     {
         public StreetNameIsRequiredRuleError()
         {
+            Code = "E86";
+            Message = "Street name is required.";
         }
     }
 }

@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Application.Create;
-using Energinet.DataHub.MeteringPoints.Application.EDI;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.ParentChild
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
-    public class ParentMeteringPointWasNotFoundConverter : ErrorConverter<ParentMeteringPointWasNotFound>
+    public class StreetNameIsRequiredForGsrnRuleError : ValidationError
     {
-        protected override ErrorMessage Convert(ParentMeteringPointWasNotFound validationError)
+        public StreetNameIsRequiredForGsrnRuleError(GsrnNumber meteringPointGSRN)
         {
-            return new ErrorMessage("E10", "Parent metering was not found.");
+            Code = "E86";
+            Message = $"Street name is missing for metering point {meteringPointGSRN}.";
         }
     }
 }
