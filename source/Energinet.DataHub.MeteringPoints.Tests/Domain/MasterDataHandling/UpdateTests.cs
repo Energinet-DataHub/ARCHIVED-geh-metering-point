@@ -320,7 +320,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithScheduledMeterReadingDate("invalid value")
                 .Validate();
 
-            AssertContainsValidationError<InvalidScheduledMeterReadingDateRuleError>(validationResult);
+            AssertContainsValidationError<InvalidScheduledMeterReadingDateRuleError>("E86", validationResult);
         }
 
         [Fact]

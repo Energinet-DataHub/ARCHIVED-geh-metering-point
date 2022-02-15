@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
 {
     public class InvalidScheduledMeterReadingDateRuleError : ValidationError
     {
+        public InvalidScheduledMeterReadingDateRuleError()
+        {
+            Code = "E86";
+            Message = "Meter reading date must have format 'MMDD'";
+        }
     }
 }
