@@ -106,7 +106,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithAddress(geoInfoReference: null)
                 .Build();
 
-            AssertContainsValidationError<GeoInfoReferenceIsRequiredRuleError>(CheckRules(masterData));
+            AssertContainsValidationError<GeoInfoReferenceIsRequiredRuleError>("E86", CheckRules(masterData));
         }
 
         [Fact]
