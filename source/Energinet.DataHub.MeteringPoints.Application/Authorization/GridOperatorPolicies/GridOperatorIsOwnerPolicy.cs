@@ -45,7 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperato
 
             return new AuthorizationResult(new List<ValidationError>
             {
-                new GridOperatorIsNotOwnerOfMeteringPoint(meteringPoint.GsrnNumber.Value),
+                new GridOperatorIsNotOwnerOfMeteringPoint(),
             });
         }
     }

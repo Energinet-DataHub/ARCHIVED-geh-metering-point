@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Policies
 {
     public class EffectiveDateIsNotWithinAllowedTimePeriod : ValidationError
     {
+        public EffectiveDateIsNotWithinAllowedTimePeriod()
+        {
+            Code = "E17";
+            Message = "Effectuation date incorrect: The information is not received within the correct time period (either too soon or too late).";
+        }
     }
 }

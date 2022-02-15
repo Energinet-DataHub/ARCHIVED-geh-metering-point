@@ -48,7 +48,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 
             var checkResult = meteringPoint.DisconnectAcceptable(connectionDetails);
 
-            Assert.Contains(checkResult.Errors, error => error is MustHaveEnergySupplierRuleError);
+            AssertContainsValidationError<MustHaveEnergySupplierRuleError>("D36", checkResult);
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 
             var checkResult = meteringPoint.DisconnectAcceptable(connectionDetails);
 
-            Assert.DoesNotContain(checkResult.Errors, error => error is MustHaveEnergySupplierRuleError);
+            AssertDoesNotContainValidationError<MustHaveEnergySupplierRuleError>("D36", checkResult);
         }
 
         [Fact]

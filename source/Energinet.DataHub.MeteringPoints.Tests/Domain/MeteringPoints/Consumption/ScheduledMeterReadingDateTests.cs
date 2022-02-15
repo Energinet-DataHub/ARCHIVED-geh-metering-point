@@ -37,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Consumpti
         {
             var checkResult = ScheduledMeterReadingDate.CheckRules(monthAndDay);
 
-            AssertError<InvalidScheduledMeterReadingDateRuleError>(checkResult, expectError);
+            AssertError<InvalidScheduledMeterReadingDateRuleError>("E86", checkResult, expectError);
         }
 
         [Fact]

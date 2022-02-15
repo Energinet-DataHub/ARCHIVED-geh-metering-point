@@ -21,13 +21,21 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.
         public FloorLengthRuleError()
         {
             Floor = string.Empty;
+            SetErrorProperties();
         }
 
         public FloorLengthRuleError(string floor)
         {
             Floor = floor;
+            SetErrorProperties();
         }
 
-        public string Floor { get; }
+        private string Floor { get; }
+
+        private void SetErrorProperties()
+        {
+            Code = "E86";
+            Message = $"Floor identification {Floor} has a length that exceeds 4";
+        }
     }
 }

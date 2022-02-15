@@ -26,8 +26,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
             Message = message;
         }
 
-        public string Code { get; protected init; } = string.Empty;
+        public string Code { get; protected set; } = string.Empty;
 
-        public string Message { get; protected init; } = string.Empty;
+        public string Message { get; protected set; } = string.Empty;
     }
 }
