@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
 {
     public class ScheduledMeterReadingDateNotAllowedRuleError : ValidationError
     {
+        public ScheduledMeterReadingDateNotAllowedRuleError()
+        {
+            Code = "D02";
+            Message = "Scheduled meter reading date is not allowed for this net settlement group.";
+        }
     }
 }

@@ -21,9 +21,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
     {
         public ToGridAreaMustExistRuleError(GridArea? gridArea)
         {
-            GridArea = gridArea;
+            Code = "D46";
+            Message = $"Target grid area {gridArea?.Code} is not an existing grid area";
         }
-
-        public GridArea? GridArea { get; }
     }
 }

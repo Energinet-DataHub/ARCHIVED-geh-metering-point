@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
     public class ClosedDownMeteringPointCannotBeChangedError : ValidationError
     {
+        public ClosedDownMeteringPointCannotBeChangedError()
+        {
+            Code = "D16";
+            Message = "The specified metering point has already been closed down and cannot be changed";
+        }
     }
 }

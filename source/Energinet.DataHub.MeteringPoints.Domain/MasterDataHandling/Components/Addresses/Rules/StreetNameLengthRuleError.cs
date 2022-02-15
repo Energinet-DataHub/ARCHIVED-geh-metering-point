@@ -21,16 +21,24 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.
         public StreetNameLengthRuleError()
         {
             StreetName = string.Empty;
+            SetErrorProperties();
         }
 
         public StreetNameLengthRuleError(string streetName, int maxLength)
         {
             StreetName = streetName;
             MaxLength = maxLength;
+            SetErrorProperties();
         }
 
-        public string StreetName { get; }
+        private string StreetName { get; }
 
-        public int MaxLength { get; }
+        private int MaxLength { get; }
+
+        private void SetErrorProperties()
+        {
+            Code = "E86";
+            Message = $"Street name {StreetName} has a length that exceeds {MaxLength}";
+        }
     }
 }

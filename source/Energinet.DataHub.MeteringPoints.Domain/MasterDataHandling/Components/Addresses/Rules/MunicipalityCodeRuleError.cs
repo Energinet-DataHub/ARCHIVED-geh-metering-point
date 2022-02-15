@@ -21,13 +21,21 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.
         public MunicipalityCodeRuleError()
         {
             MunicipalityCode = default;
+            SetErrorProperties();
         }
 
         public MunicipalityCodeRuleError(int municipalityCode)
         {
             MunicipalityCode = municipalityCode;
+            SetErrorProperties();
         }
 
-        public int MunicipalityCode { get; }
+        private int MunicipalityCode { get; }
+
+        private void SetErrorProperties()
+        {
+            Code = "E86";
+            Message = $"Municipality code {MunicipalityCode} is out of range or contains a non-digit character or has a length that does not equal 3";
+        }
     }
 }
