@@ -993,7 +993,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithMeteringConfiguration("invalid value", "2")
                 .Validate();
 
-            AssertContainsValidationError<InvalidMeteringMethodValue>(validationResult);
+            AssertContainsValidationError<InvalidMeteringMethodValue>("D02", validationResult);
         }
 
         [Fact]
