@@ -18,11 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
     public class InvalidConnectionTypeValue : ValidationError
     {
-        public InvalidConnectionTypeValue(string providedValue)
+        public InvalidConnectionTypeValue(string connectionType)
         {
-            ProvidedValue = providedValue;
+            Code = "D66";
+            Message = $"Connection type {connectionType} has wrong value (outside domain).";
         }
-
-        public string ProvidedValue { get; }
     }
 }

@@ -1129,7 +1129,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithConnectionType("invalid value")
                 .Validate();
 
-            AssertError<InvalidConnectionTypeValue>(validationResult, true);
+            AssertError<InvalidConnectionTypeValue>("D66", validationResult, true);
         }
 
         [Fact]
