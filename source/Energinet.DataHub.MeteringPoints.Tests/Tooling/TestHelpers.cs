@@ -13,10 +13,10 @@
 // limitations under the License.
 
 using System;
+using System.Globalization;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.Tooling
 {
-#pragma warning disable CA1305
     public static class TestHelpers
     {
         public static string DaylightSavingsString(int minute = 0, int second = 0, int millisecond = 0)
@@ -45,11 +45,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Tooling
                 date.Millisecond);
 
             var info = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
-            var tzi = info.IsDaylightSavingTime(dateForString);
+            var isDaylightSavingTime = info.IsDaylightSavingTime(dateForString);
 
-            var retVal = dateForString.ToString(tzi
+            var retVal = dateForString.ToString(
+                isDaylightSavingTime
                 ? $"yyyy'-'MM'-'dd'T'23':'mm':'ss'Z'"
-                : "yyyy'-'MM'-'dd'T'22':'mm':'ss'Z'");
+                : "yyyy'-'MM'-'dd'T'22':'mm':'ss'Z'",
+                CultureInfo.InvariantCulture);
 
             return retVal;
         }

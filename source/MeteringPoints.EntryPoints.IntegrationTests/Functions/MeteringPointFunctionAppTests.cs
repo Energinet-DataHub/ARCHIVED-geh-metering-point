@@ -97,17 +97,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
             // InternalCommands
             await AssertFunctionExecuted(Fixture.InternalCommandDispatcherHostManager, "Dispatcher").ConfigureAwait(false);
 
-            try
-            {
                 // MessageHub
-                await Fixture.MessageHubSimulator
+            await Fixture.MessageHubSimulator
                     .WaitForNotificationsInDataAvailableQueueAsync(correlationId)
                     .ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                throw new XunitException(e.ToString());
-            }
 
             var peekSimulationResponseDto = await Fixture.MessageHubSimulator.PeekAsync().ConfigureAwait(false);
 

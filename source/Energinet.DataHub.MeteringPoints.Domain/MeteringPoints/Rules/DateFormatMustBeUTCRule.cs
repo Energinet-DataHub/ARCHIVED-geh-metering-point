@@ -34,7 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
             _date = date;
             var canParse = DateTime.TryParse(
                 date,
-                out var parseSuccess);
+                out var dateParsed);
 
             if (!canParse)
             {
@@ -43,16 +43,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
             }
 
             var info = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
-            var tzi = info.IsDaylightSavingTime(parseSuccess);
+            var isDaylightSavingTime = info.IsDaylightSavingTime(dateParsed);
 
-            if (tzi)
-            {
-                IsBroken = !Regex.IsMatch(date, FormatRegExSummer);
-            }
-            else
-            {
-                IsBroken = !Regex.IsMatch(date, FormatRegExWinter);
-            }
+            IsBroken = isDaylightSavingTime
+                ? !Regex.IsMatch(date, FormatRegExSummer)
+                : !Regex.IsMatch(date, FormatRegExWinter);
         }
 
         public bool IsBroken { get; }

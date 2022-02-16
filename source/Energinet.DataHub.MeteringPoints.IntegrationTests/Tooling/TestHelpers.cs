@@ -13,12 +13,12 @@
 // limitations under the License.
 
 using System;
+using System.Globalization;
 using FluentAssertions.Extensions;
 using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
 {
-#pragma warning disable CA1305
     public static class TestHelpers
     {
         public static string DaylightSavingsString(int minute = 0, int second = 0, int millisecond = 0)
@@ -47,11 +47,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
                 date.Millisecond);
 
             var info = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
-            var tzi = info.IsDaylightSavingTime(date);
+            var isDaylightSavingTime = info.IsDaylightSavingTime(date);
 
-            var retVal = dateForString.ToString(tzi
+            var retVal = dateForString.ToString(
+                isDaylightSavingTime
                 ? $"yyyy'-'MM'-'dd'T'23':'mm':'ss'Z'"
-                : "yyyy'-'MM'-'dd'T'22':'mm':'ss'Z'");
+                : "yyyy'-'MM'-'dd'T'22':'mm':'ss'Z'",
+                CultureInfo.InvariantCulture);
 
             return retVal;
         }
@@ -59,13 +61,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
         public static Instant DaylightSavingsInstant(DateTime date)
         {
             var info = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
-            var tzi = info.IsDaylightSavingTime(date);
+            var isDaylightSavingTime = info.IsDaylightSavingTime(date);
 
             return Instant.FromUtc(
                 date.Year,
                 date.Month,
                 date.Day,
-                tzi ? 23 : 22,
+                isDaylightSavingTime ? 23 : 22,
                 0);
         }
     }
