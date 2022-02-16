@@ -34,6 +34,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             : base(databaseFixture) { }
 
         [Fact]
+        public async Task Metering_point_created_shows_in_process_overview()
+        {
+            var request = CreateCommand();
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            await AssertProcessOverviewAsync(
+                    SampleData.GsrnNumber,
+                    "BRS-004",
+                    "RequestCreateMeteringPoint",
+                    "ConfirmCreateMeteringPoint")
+                .ConfigureAwait(false);
+        }
+
+        [Fact]
         public async Task Reject_if_metering_method_is_not_applicable_to_metering_point_type()
         {
             var request = CreateCommand()

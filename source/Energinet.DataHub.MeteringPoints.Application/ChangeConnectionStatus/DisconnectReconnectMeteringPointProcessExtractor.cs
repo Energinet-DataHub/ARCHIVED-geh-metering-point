@@ -16,30 +16,31 @@ using System;
 using System.Linq;
 using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.ProcessOverview;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Create
+namespace Energinet.DataHub.MeteringPoints.Application.ChangeConnectionStatus
 {
-    public class CreateMeteringPointProcessExtractor : ProcessExtractor<CreateMeteringPoint>
+    public class DisconnectReconnectMeteringPointProcessExtractor : ProcessExtractor<DisconnectReconnectMeteringPointRequest>
     {
-        public CreateMeteringPointProcessExtractor(IActorContext actorContext)
+        public DisconnectReconnectMeteringPointProcessExtractor(IActorContext actorContext)
             : base(actorContext)
         {
         }
 
-        protected override string ProcessName => "BRS-004";
+        protected override string ProcessName => "BRS-013";
 
-        protected override string GetGsrn(CreateMeteringPoint request) => request?.GsrnNumber
-                                                                          ?? throw new InvalidOperationException("GSRN cannot be empty");
+        protected override string GetGsrn(DisconnectReconnectMeteringPointRequest request) => request?.GsrnNumber
+                                                               ?? throw new InvalidOperationException("GSRN cannot be empty");
 
-        protected override ProcessDetail GetProcessDetails(CreateMeteringPoint request)
+        protected override ProcessDetail GetProcessDetails(DisconnectReconnectMeteringPointRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             return new ProcessDetail(
-                "RequestCreateMeteringPoint",
+                "RequestUpdateConnectionState",
                 CurrentActor,
                 DataHub,
                 DateTime.UtcNow,
@@ -52,8 +53,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             if (result == null) throw new ArgumentNullException(nameof(result));
 
             var name = result.Success
-                ? "ConfirmCreateMeteringPoint"
-                : "RejectCreateMeteringPoint";
+                ? "ConfirmUpdateConnectionState"
+                : "RejectUpdateConnectionState";
 
             return new ProcessDetail(
                 name,

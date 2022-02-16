@@ -22,8 +22,7 @@ using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 
 namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
 {
-    public class UpdateMeteringPointProcessExtractor<TRequest> : ProcessExtractor<TRequest>
-        where TRequest : UpdateMasterDataRequest
+    public class UpdateMeteringPointProcessExtractor : ProcessExtractor<UpdateMasterDataRequest>
     {
         public UpdateMeteringPointProcessExtractor(IActorContext actorContext)
             : base(actorContext)
@@ -32,10 +31,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
 
         protected override string ProcessName => "BRS-006";
 
-        protected override string GetGsrn(TRequest request) => request?.GsrnNumber
-                                                               ?? throw new InvalidOperationException("GSRN cannot be empty");
+        protected override string GetGsrn(UpdateMasterDataRequest request) => request?.GsrnNumber
+                                                                              ?? throw new InvalidOperationException("GSRN cannot be empty");
 
-        protected override ProcessDetail GetProcessDetails(TRequest request)
+        protected override ProcessDetail GetProcessDetails(UpdateMasterDataRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 

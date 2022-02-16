@@ -29,7 +29,7 @@ using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using NodaTime;
 using Xunit;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ReconnecMeteringPoints
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ReconnectMeteringPoints
 {
     public class ReconnectTests : TestHost
     {
@@ -58,6 +58,14 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ReconnecMeteringPoin
 
             AssertConfirmMessages(DocumentType.ConfirmConnectionStatusMeteringPoint, 2);
             Assert.NotNull(FindIntegrationEvent<MeteringPointReconnectedIntegrationEvent>());
+
+            await AssertMultipleProcessOverviewAsync(
+                    SampleData.GsrnNumber,
+                    "BRS-013",
+                    2,
+                    "RequestUpdateConnectionState",
+                    "ConfirmUpdateConnectionState")
+                .ConfigureAwait(false);
         }
 
         [Fact]
