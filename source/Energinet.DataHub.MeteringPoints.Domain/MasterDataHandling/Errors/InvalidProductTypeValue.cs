@@ -18,11 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
     public class InvalidProductTypeValue : ValidationError
     {
-        public InvalidProductTypeValue(string providedValue)
+        public InvalidProductTypeValue(string product)
         {
-            ProvidedValue = providedValue;
+            Code = "E29";
+            Message = $"Product {product} has wrong value (outside domain)";
         }
-
-        public string ProvidedValue { get; }
     }
 }
