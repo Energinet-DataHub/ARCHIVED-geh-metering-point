@@ -24,7 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
         {
             var result = MeteringConfiguration.CheckRules(MeteringMethod.Physical, MeterId.Empty());
 
-            AssertError<MeterIdIsRequiredRuleError>(result, true);
+            AssertError<MeterIdIsRequiredRuleError>("D31", result, true);
         }
 
         [Fact]
