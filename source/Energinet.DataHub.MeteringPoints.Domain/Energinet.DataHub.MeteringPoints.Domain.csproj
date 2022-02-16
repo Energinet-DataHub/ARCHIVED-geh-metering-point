@@ -34,4 +34,8 @@ limitations under the License.
     <PackageReference Include="NodaTime" Version="3.0.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="BusinessProcesses\CloseDown\CloseDownProcessStatus.cs" />
+  </ItemGroup>
+
 </Project>

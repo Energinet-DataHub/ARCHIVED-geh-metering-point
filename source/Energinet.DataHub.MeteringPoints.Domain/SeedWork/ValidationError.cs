@@ -14,7 +14,20 @@
 
 namespace Energinet.DataHub.MeteringPoints.Domain.SeedWork
 {
-    public abstract class ValidationError
+    public class ValidationError
     {
+        public ValidationError()
+        {
+        }
+
+        public ValidationError(string code, string message)
+        {
+            Code = code;
+            Message = message;
+        }
+
+        public string Code { get; protected init; } = string.Empty;
+
+        public string Message { get; protected init; } = string.Empty;
     }
 }

@@ -12,100 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using MediatR;
-using MediatR.Pipeline;
 using SimpleInjector;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR
 {
-    // Note: https://github.com/jbogard/MediatR/tree/master/samples/MediatR.Examples.SimpleInjector
     public static class SimpleInjectorMediatorContainerExtensions
     {
-        public static void BuildMinimalMediator(this Container container, Assembly assembly, params Type[] types)
+        public static MediatorBuilder UseMediatR(this Container container)
         {
-            if (container == null) throw new ArgumentNullException(nameof(container));
-            if (types == null) throw new ArgumentNullException(nameof(types));
-
-            container.RegisterSingleton<IMediator, Mediator>();
-            foreach (var type in types)
-            {
-                container.Register(type, assembly);
-            }
-
-            RegisterHandlers(container, typeof(IRequestExceptionAction<,>), new[] { assembly });
-            RegisterHandlers(container, typeof(IRequestExceptionHandler<,,>), new[] { assembly });
-
-            // Add built-in pipeline behaviors
-            var builtInBehaviors = new[]
-            {
-                typeof(RequestHandlerTelemetryBehavior<,>),
-                typeof(RequestExceptionProcessorBehavior<,>),
-                typeof(RequestExceptionActionProcessorBehavior<,>),
-                typeof(RequestPreProcessorBehavior<,>),
-                typeof(RequestPostProcessorBehavior<,>),
-            };
-
-            // Register built both-in and custom pipeline
-            container.Collection.Register(typeof(IPipelineBehavior<,>), builtInBehaviors);
-
-            container.Collection.Register(typeof(IRequestPreProcessor<>), new[] { typeof(EmptyRequestPreProcessor<>) });
-            container.Collection.Register(typeof(IRequestPostProcessor<,>), new[] { typeof(EmptyRequestPostProcessor<,>) });
-
-            container.Register(() => new ServiceFactory(container.GetInstance), Lifestyle.Singleton);
-        }
-
-        public static void BuildMediator(this Container container, Assembly[] applicationAssemblies, Type[] pipelineBehaviors)
-        {
-            if (container == null) throw new ArgumentNullException(nameof(container));
-
-            var assemblies = GetMediatorAssemblies().Union(applicationAssemblies).ToArray();
-            container.RegisterSingleton<IMediator, Mediator>();
-            container.Register(typeof(IRequestHandler<,>), assemblies);
-
-            RegisterHandlers(container, typeof(INotificationHandler<>), assemblies);
-            container.RegisterDecorator(typeof(INotificationHandler<>), typeof(NotificationHandlerTelemetryDecorator<>));
-
-            RegisterHandlers(container, typeof(IRequestExceptionAction<,>), assemblies);
-            RegisterHandlers(container, typeof(IRequestExceptionHandler<,,>), assemblies);
-
-            // Add built-in pipeline behaviors
-            var builtInBehaviors = new[]
-            {
-                typeof(RequestHandlerTelemetryBehavior<,>),
-                typeof(RequestExceptionProcessorBehavior<,>),
-                typeof(RequestExceptionActionProcessorBehavior<,>),
-                typeof(RequestPreProcessorBehavior<,>),
-                typeof(RequestPostProcessorBehavior<,>),
-            };
-
-            // Register built both-in and custom pipeline
-            container.Collection.Register(typeof(IPipelineBehavior<,>), builtInBehaviors.Union(pipelineBehaviors));
-
-            container.Collection.Register(typeof(IRequestPreProcessor<>), new[] { typeof(EmptyRequestPreProcessor<>) });
-            container.Collection.Register(typeof(IRequestPostProcessor<,>), new[] { typeof(EmptyRequestPostProcessor<,>) });
-
-            container.Register(() => new ServiceFactory(container.GetInstance), Lifestyle.Singleton);
-        }
-
-        private static void RegisterHandlers(Container container, Type collectionType, Assembly[] assemblies)
-        {
-            // we have to do this because by default, generic type definitions (such as the Constrained Notification Handler) won't be registered
-            var handlerTypes = container.GetTypesToRegister(collectionType, assemblies, new TypesToRegisterOptions
-            {
-                IncludeGenericTypeDefinitions = true,
-                IncludeComposites = false,
-            });
-
-            container.Collection.Register(collectionType, handlerTypes);
-        }
-
-        private static IEnumerable<Assembly> GetMediatorAssemblies()
-        {
-            yield return typeof(IMediator).GetTypeInfo().Assembly;
+            return new MediatorBuilder(container);
         }
     }
 }

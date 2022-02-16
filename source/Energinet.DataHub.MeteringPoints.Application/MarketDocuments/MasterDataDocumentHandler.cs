@@ -16,7 +16,9 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.CloseDown;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.ReceiveBusinessRequests;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation;
 using MediatR;
@@ -29,17 +31,30 @@ namespace Energinet.DataHub.MeteringPoints.Application.MarketDocuments
         private readonly IMediator _mediator;
         private readonly IBusinessProcessValidationContext _validationContext;
         private readonly IBusinessProcessCommandFactory _commandFactory;
+        private readonly RequestReceiver _requestReceiver;
 
-        public MasterDataDocumentHandler(IValidator<MasterDataDocument> validator, IMediator mediator, IBusinessProcessValidationContext validationContext, IBusinessProcessCommandFactory commandFactory)
+        public MasterDataDocumentHandler(
+            IValidator<MasterDataDocument> validator,
+            IMediator mediator,
+            IBusinessProcessValidationContext validationContext,
+            IBusinessProcessCommandFactory commandFactory,
+            RequestReceiver requestReceiver)
         {
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _validationContext = validationContext ?? throw new ArgumentNullException(nameof(validationContext));
             _commandFactory = commandFactory ?? throw new ArgumentNullException(nameof(commandFactory));
+            _requestReceiver = requestReceiver ?? throw new ArgumentNullException(nameof(requestReceiver));
         }
 
         public async Task<BusinessProcessResult> Handle(MasterDataDocument request, CancellationToken cancellationToken)
         {
+            if (_requestReceiver.CanHandleRequest(request))
+            {
+                await _requestReceiver.ReceiveRequestAsync(request).ConfigureAwait(false);
+                return BusinessProcessResult.Ok(request.TransactionId);
+            }
+
             var validationResult = await _validator.ValidateAsync(request, cancellationToken).ConfigureAwait(false);
             if (!validationResult.IsValid)
             {

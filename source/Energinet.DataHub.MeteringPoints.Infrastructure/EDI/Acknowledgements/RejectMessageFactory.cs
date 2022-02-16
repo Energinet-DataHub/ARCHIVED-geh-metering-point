@@ -54,6 +54,57 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements
                 };
         }
 
+        public static RejectMessage DisconnectMeteringPoint(
+            MarketRoleParticipant sender,
+            MarketRoleParticipant receiver,
+            Instant createdDateTime,
+            MarketActivityRecordWithReasons marketActivityRecord)
+        {
+            return Defaults()
+                with
+                {
+                    ProcessType = "E79",
+                    Sender = sender,
+                    Receiver = receiver,
+                    CreatedDateTime = createdDateTime,
+                    MarketActivityRecord = marketActivityRecord,
+                };
+        }
+
+        public static RejectMessage ReconnectMeteringPoint(
+            MarketRoleParticipant sender,
+            MarketRoleParticipant receiver,
+            Instant createdDateTime,
+            MarketActivityRecordWithReasons marketActivityRecord)
+        {
+            return Defaults()
+                with
+                {
+                    ProcessType = "E79",
+                    Sender = sender,
+                    Receiver = receiver,
+                    CreatedDateTime = createdDateTime,
+                    MarketActivityRecord = marketActivityRecord,
+                };
+        }
+
+        public static RejectMessage RequestCloseDown(
+            MarketRoleParticipant sender,
+            MarketRoleParticipant receiver,
+            Instant createdDateTime,
+            MarketActivityRecordWithReasons marketActivityRecord)
+        {
+            return Defaults()
+                with
+                {
+                    ProcessType = "D14",
+                    Sender = sender,
+                    Receiver = receiver,
+                    CreatedDateTime = createdDateTime,
+                    MarketActivityRecord = marketActivityRecord,
+                };
+        }
+
         private static RejectMessage Defaults()
         {
             return new RejectMessage(

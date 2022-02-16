@@ -16,6 +16,8 @@ using System;
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Application.Integrations.ChargeLinks.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Disconnect;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Reconnect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
@@ -40,6 +42,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers
             { typeof(DataBundleResponse).FullName!, typeof(DataBundleResponse) },
             { typeof(DataAvailableNotification).FullName!, typeof(DataAvailableNotification) },
             { typeof(RequestDefaultChargeLinks).FullName!, typeof(RequestDefaultChargeLinks) },
+            { typeof(MeteringPointDisconnectedIntegrationEvent).FullName!, typeof(MeteringPointDisconnectedIntegrationEvent) },
+            { typeof(MeteringPointReconnectedIntegrationEvent).FullName!, typeof(MeteringPointReconnectedIntegrationEvent) },
         };
 
         public static Type GetType(string type)

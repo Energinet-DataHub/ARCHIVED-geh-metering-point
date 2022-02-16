@@ -14,6 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain;
+using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 {

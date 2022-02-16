@@ -16,45 +16,45 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
 {
     public static class MeteringPointDtoQueryHelper
     {
-        public const string Sql = @"SELECT [Id] AS MeteringPointId
-                                ,[GsrnNumber]
-                                ,[StreetName]
-                                ,[PostCode]
-                                ,[CityName]
-                                ,[CountryCode]
-                                ,[ConnectionState_PhysicalState] AS PhysicalState
-                                ,[MeteringPointSubType]
-                                ,[MeterReadingOccurrence] AS ReadingOccurrence
-                                ,[TypeOfMeteringPoint] AS MeteringPointType
-                                ,[MaximumCurrent]
-                                ,[MaximumPower]
+        public const string Sql = @"SELECT mp.[Id] AS MeteringPointId
+                                ,mp.[GsrnNumber]
+                                ,mp.[StreetName]
+                                ,mp.[PostCode]
+                                ,mp.[CityName]
+                                ,mp.[CountryCode]
+                                ,mp.[ConnectionState_PhysicalState] AS PhysicalState
+                                ,mp.[MeteringPointSubType]
+                                ,mp.[MeterReadingOccurrence] AS ReadingOccurrence
+                                ,mp.[TypeOfMeteringPoint] AS MeteringPointType
+                                ,mp.[MaximumCurrent]
+                                ,mp.[MaximumPower]
 					            ,(SELECT TOP(1) G.[Name] FROM [GridAreas] G INNER JOIN [GridAreaLinks] GL ON G.Id = GL.GridAreaId WHERE GL.Id = [MeteringGridArea]) AS GridAreaName
                                 ,(SELECT TOP(1) G.[Code] FROM [GridAreas] G INNER JOIN [GridAreaLinks] GL ON G.Id = GL.GridAreaId WHERE GL.Id = [MeteringGridArea]) AS GridAreaCode
-                                ,[PowerPlant] AS PowerPlantGsrnNumber
-                                ,[LocationDescription]
-                                ,[ProductType] AS Product
-                                ,[UnitType]
-                                ,[EffectiveDate]
-                                ,[MeterNumber]
-                                ,[StreetCode]
-                                ,[CitySubDivision] AS CitySubDivisionName
-                                ,[Floor]
-                                ,[Room] AS Suite
-                                ,[BuildingNumber]
-                                ,[MunicipalityCode]
-                                ,[IsActualAddress]
-                                ,[GeoInfoReference]
-                                ,[Capacity]
-                                ,[AssetType]
-                                ,[SettlementMethod]
+                                ,mp.[PowerPlant] AS PowerPlantGsrnNumber
+                                ,mp.[LocationDescription]
+                                ,mp.[ProductType] AS Product
+                                ,mp.[UnitType]
+                                ,mp.[EffectiveDate]
+                                ,mp.[MeterNumber]
+                                ,mp.[StreetCode]
+                                ,mp.[CitySubDivision] AS CitySubDivisionName
+                                ,mp.[Floor]
+                                ,mp.[Room] AS Suite
+                                ,mp.[BuildingNumber]
+                                ,mp.[MunicipalityCode]
+                                ,mp.[IsActualAddress]
+                                ,mp.[GeoInfoReference]
+                                ,mp.[Capacity]
+                                ,mp.[AssetType]
+                                ,mp.[SettlementMethod]
                                 ,(SELECT TOP(1) G.Code FROM [GridAreas] G INNER JOIN [GridAreaLinks] GL ON G.Id = GL.GridAreaId WHERE GL.Id = [ToGrid]) AS ToGridAreaCode
                                 ,(SELECT TOP(1) G.Code FROM [GridAreas] G INNER JOIN [GridAreaLinks] GL ON G.Id = GL.GridAreaId WHERE GL.Id = [FromGrid]) AS FromGridAreaCode
-                                ,[NetSettlementGroup]
-	                            ,[StartOfSupplyDate] AS SupplyStart
-                                ,[ConnectionType]
-                                ,[DisconnectionType]
-                                ,[ProductionObligation]
-                                ,[ParentRelatedMeteringPoint] AS ParentMeteringPointId
-                          FROM  [dbo].[MeteringPoints]";
+                                ,mp.[NetSettlementGroup]
+	                            ,mp.[StartOfSupplyDate] AS SupplyStart
+                                ,mp.[ConnectionType]
+                                ,mp.[DisconnectionType]
+                                ,mp.[ProductionObligation]
+                                ,mp.[ParentRelatedMeteringPoint] AS ParentMeteringPointId
+                          FROM  [dbo].[MeteringPoints] mp";
     }
 }

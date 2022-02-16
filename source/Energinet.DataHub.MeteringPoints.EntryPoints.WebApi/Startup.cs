@@ -18,15 +18,15 @@ using Energinet.DataHub.Core.App.WebApp.Middleware;
 using Energinet.DataHub.Core.App.WebApp.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
+using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
-using Energinet.DataHub.MeteringPoints.Application.Queries;
-using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create;
+using Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.MeteringPoints.Queries;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
@@ -35,7 +35,6 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints.Queries;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
@@ -44,7 +43,6 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentValidation;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -147,7 +145,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
                 "Frontend service app id not found.");
 
             _container.AddJwtTokenSecurity(openIdUrl, audience);
-            _container.AddUserContext<NullUserProvider>();
+            _container.AddUserContext<UserProvider>();
+
             Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
 
             // TODO: Probably not needed
@@ -157,12 +156,16 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
                 typeof(MeteringPoint).Assembly, // Domain
                 typeof(ErrorMessageFactory).Assembly); // Infrastructure
 
-            // Setup pipeline behaviors
-            _container.BuildMediator(
-                new[] { typeof(CreateGridAreaHandler).Assembly, },
-                new[] { typeof(UnitOfWorkBehavior<,>), typeof(InputValidationBehavior<,>), typeof(InternalCommandHandlingBehaviour<,>), typeof(BusinessProcessResultBehavior<,>), });
-
-            _container.Register<IRequestHandler<MeteringPointByGsrnQuery, MeteringPointCimDto?>, MeteringPointByGsrnQueryHandler>();
+            _container.UseMediatR()
+                .WithPipeline(
+                    typeof(UnitOfWorkBehavior<,>),
+                    typeof(InputValidationBehavior<,>),
+                    typeof(InternalCommandHandlingBehaviour<,>),
+                    typeof(BusinessProcessResultBehavior<,>))
+                .WithRequestHandlers(
+                    typeof(CreateGridAreaHandler),
+                    typeof(MeteringPointProcessesByGsrnQueryHandler),
+                    typeof(MeteringPointByGsrnQueryHandler));
 
             _container.SendProtobuf<MeteringPointEnvelope>();
         }

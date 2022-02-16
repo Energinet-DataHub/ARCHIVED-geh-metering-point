@@ -41,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithMeasurementUnitType(measurementUnitType)
                 .Build();
 
-            AssertError<UnitTypeIsNotValidForMeteringPointType>(CheckRules(masterData), expectError);
+            AssertError<UnitTypeIsNotValidForMeteringPointType>("E73", CheckRules(masterData), expectError);
         }
 
         [Theory]
