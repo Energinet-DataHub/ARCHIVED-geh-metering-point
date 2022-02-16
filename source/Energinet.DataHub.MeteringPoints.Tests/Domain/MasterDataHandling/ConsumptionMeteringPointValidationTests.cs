@@ -116,7 +116,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithScheduledMeterReadingDate("0201")
                 .Build();
 
-            AssertError<ScheduledMeterReadingDateCannotBeChanged>(meteringPoint.CanUpdateMasterData(updatedMasterData, CreateValidator()));
+            AssertError<ScheduledMeterReadingDateCannotBeChanged>("D47", meteringPoint.CanUpdateMasterData(updatedMasterData, CreateValidator()));
         }
 
         [Fact]

@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
 {
     public class ScheduledMeterReadingDateCannotBeChanged : ValidationError
     {
+        public ScheduledMeterReadingDateCannotBeChanged()
+        {
+            Code = "D47";
+            Message = "Scheduled meter reading date cannot be changed.";
+        }
     }
 }
