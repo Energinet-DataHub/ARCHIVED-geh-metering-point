@@ -18,11 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
     public class InvalidReadingPeriodicityType : ValidationError
     {
-        public InvalidReadingPeriodicityType(string providedValue)
+        public InvalidReadingPeriodicityType(string readingOccurence)
         {
-            ProvidedValue = providedValue;
+            Code = "D53";
+            Message = $"Meter reading occurrence {readingOccurence} has wrong value (outside domain)";
         }
-
-        public string ProvidedValue { get; }
     }
 }

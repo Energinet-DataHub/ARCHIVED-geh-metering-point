@@ -711,7 +711,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithReadingPeriodicity("invalid reading periodicity value")
                 .Validate();
 
-            AssertContainsValidationError<InvalidReadingPeriodicityType>(validationResult);
+            AssertContainsValidationError<InvalidReadingPeriodicityType>("D53", validationResult);
         }
 
         [Fact]
