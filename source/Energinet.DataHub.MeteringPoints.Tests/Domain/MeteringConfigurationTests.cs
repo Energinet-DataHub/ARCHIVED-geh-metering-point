@@ -32,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
         {
             var result = MeteringConfiguration.CheckRules(MeteringMethod.Virtual, MeterId.Create("fakeId"));
 
-            AssertError<MeterIdIsNotAllowedRuleError>(result, true);
+            AssertError<MeterIdIsNotAllowedRuleError>("E86", result, true);
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
         {
             var result = MeteringConfiguration.CheckRules(MeteringMethod.Calculated, MeterId.Create("fakeId"));
 
-            AssertError<MeterIdIsNotAllowedRuleError>(result, true);
+            AssertError<MeterIdIsNotAllowedRuleError>("E86", result, true);
         }
 
         [Fact]
