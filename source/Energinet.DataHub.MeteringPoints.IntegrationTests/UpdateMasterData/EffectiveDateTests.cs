@@ -66,9 +66,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         [InlineData("2020-12-31T22:00:00Z", false)]
         public async Task Effective_date_is_today_or_the_day_before(string effectiveDate, bool expectError)
         {
-            var timeProvider = GetService<ISystemDateTimeProvider>() as RunnableDateTimeProviderStub;
             const string today = "2021-01-01T18:00:00Z";
-            var timeProvider = GetService<ISystemDateTimeProvider>() as SystemDateTimeProviderStub;
+            var timeProvider = GetService<ISystemDateTimeProvider>() as RunnableDateTimeProviderStub;
             timeProvider!.SetNow(InstantPattern.General.Parse(today).Value);
 
             await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
