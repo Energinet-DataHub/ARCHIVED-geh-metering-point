@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
     public class MeteringMethodMustBePhysicalOrVirtualRuleError : ValidationError
     {
+        public MeteringMethodMustBePhysicalOrVirtualRuleError()
+        {
+            Code = "D37";
+            Message = "Metering method must be Physical or Virtual";
+        }
     }
 }

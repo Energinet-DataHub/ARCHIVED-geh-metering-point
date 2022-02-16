@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class TransactionIdentificationValidationError : ValidationError
     {
+        public TransactionIdentificationValidationError()
+        {
+            Code = "E10";
+            Message = "Identification is missing, metering point can not be processed";
+        }
     }
 }

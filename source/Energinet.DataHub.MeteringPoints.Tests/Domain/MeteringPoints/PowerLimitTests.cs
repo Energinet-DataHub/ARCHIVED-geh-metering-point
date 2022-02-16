@@ -34,7 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             var ampere = 999999;
             var checkResult = PowerLimit.CheckRules(kwh, ampere);
 
-            AssertError<InvalidKwhPowerLimitRuleError>(checkResult, expectError);
+            AssertError<InvalidKwhPowerLimitRuleError>("E86", checkResult, expectError);
         }
 
         [Theory]
@@ -46,7 +46,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             var kwh = 999999;
             var checkResult = PowerLimit.CheckRules(kwh, ampere);
 
-            AssertError<InvalidAmperePowerLimitRuleError>(checkResult, expectError);
+            AssertError<InvalidAmperePowerLimitRuleError>("E86", checkResult, expectError);
         }
 
         [Theory]

@@ -20,9 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
     {
         public InvalidCapacityFormatRuleError(string capacity)
         {
-            Capacity = capacity;
+            Code = "E86";
+            Message = $"Capacity {capacity} contains a non-digit character other than a decimal point or has a length that exceeds 9.";
         }
-
-        public string Capacity { get; }
     }
 }

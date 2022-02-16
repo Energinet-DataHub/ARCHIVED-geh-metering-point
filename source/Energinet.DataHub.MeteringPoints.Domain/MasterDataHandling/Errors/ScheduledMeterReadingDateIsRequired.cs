@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
     public class ScheduledMeterReadingDateIsRequired : ValidationError
     {
+        public ScheduledMeterReadingDateIsRequired()
+        {
+            Code = "E0H";
+            Message = "Scheduled meter reading date is required.";
+        }
     }
 }

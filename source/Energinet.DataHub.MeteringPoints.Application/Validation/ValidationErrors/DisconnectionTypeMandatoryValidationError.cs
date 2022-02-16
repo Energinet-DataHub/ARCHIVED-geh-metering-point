@@ -20,12 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
     {
         public DisconnectionTypeMandatoryValidationError(string gsrnNumber, string disconnectionType)
         {
-            GsrnNumber = gsrnNumber;
-            DisconnectionType = disconnectionType;
+            Code = "D02";
+            Message = $"Disconnection type {disconnectionType} for metering point {gsrnNumber} is missing (type E17/E18) or not allowed (other types)";
         }
-
-        public string GsrnNumber { get; }
-
-        public string DisconnectionType { get; }
     }
 }

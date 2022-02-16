@@ -56,7 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithMeteringConfiguration(MeteringMethod.Calculated.Name, null)
                 .Build();
 
-            AssertError<MeteringMethodMustBePhysicalOrVirtualRuleError>(CheckRules(masterData), true);
+            AssertError<MeteringMethodMustBePhysicalOrVirtualRuleError>("D37", CheckRules(masterData), true);
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithProductType(ProductType.Tariff.Name)
                 .Build();
 
-            AssertError<InvalidProductType>(CheckRules(masterData));
+            AssertError<InvalidProductType>("E29", CheckRules(masterData));
         }
 
         [Fact]
@@ -109,7 +109,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithReadingPeriodicity(readingOccurrence)
                 .Build();
 
-            AssertError<InvalidMeterReadingOccurrenceRuleError>(CheckRules(masterData), expectError);
+            AssertError<InvalidMeterReadingOccurrenceRuleError>("D53", CheckRules(masterData), expectError);
         }
 
         private static IMasterDataBuilder Builder() =>

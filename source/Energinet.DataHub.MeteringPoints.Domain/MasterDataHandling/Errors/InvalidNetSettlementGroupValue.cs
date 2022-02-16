@@ -18,11 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
     public class InvalidNetSettlementGroupValue : ValidationError
     {
-        public InvalidNetSettlementGroupValue(string? providedValue)
+        public InvalidNetSettlementGroupValue()
         {
-            ProvidedValue = providedValue;
+            Code = "D62";
+            Message = "Net settlement group has wrong value (outside domain)";
         }
-
-        public string? ProvidedValue { get; }
     }
 }

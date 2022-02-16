@@ -20,9 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
     {
         public InvalidMeterReadingOccurrenceRuleError(string meterReadingOccurrence)
         {
-            MeterReadingOccurrence = meterReadingOccurrence;
+            Code = "D53";
+            Message = $"Meter reading occurrence {meterReadingOccurrence} is not valid for this type of metering point.";
         }
-
-        public string MeterReadingOccurrence { get; }
     }
 }

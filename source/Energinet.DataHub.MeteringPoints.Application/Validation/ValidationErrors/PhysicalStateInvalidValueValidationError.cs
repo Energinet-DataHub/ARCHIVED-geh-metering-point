@@ -20,12 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
     {
         public PhysicalStateInvalidValueValidationError(string gsrnNumber, string physicalState)
         {
-            GsrnNumber = gsrnNumber;
-            PhysicalState = physicalState;
+            Code = "D02";
+            Message = $"Physical status {physicalState} for metering point {gsrnNumber} has wrong value (outside domain)";
         }
-
-        public string GsrnNumber { get; }
-
-        public string PhysicalState { get; }
     }
 }

@@ -20,12 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
     {
         public PowerPlantValidationError(string gsrnNumber, string? powerPlant)
         {
-            GsrnNumber = gsrnNumber;
-            PowerPlant = powerPlant;
+            Code = "D57";
+            Message = $"Power plant {powerPlant} for metering point {gsrnNumber} is missing (type E18/D01) or not allowed (types E20/D02/D13/D14/D15/D20)";
         }
-
-        public string GsrnNumber { get; }
-
-        public string? PowerPlant { get; }
     }
 }

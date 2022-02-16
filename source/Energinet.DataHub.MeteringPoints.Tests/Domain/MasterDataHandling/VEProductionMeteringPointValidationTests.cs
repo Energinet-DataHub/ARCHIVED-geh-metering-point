@@ -45,7 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             var validationResult = Builder()
                 .Validate();
 
-            AssertContainsValidationError<ProductTypeIsRequired>(validationResult);
+            AssertContainsValidationError<ProductTypeIsRequired>("D02", validationResult);
         }
 
         [Fact]
@@ -79,7 +79,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithReadingPeriodicity(readingOccurrence)
                 .Build();
 
-            AssertError<InvalidMeterReadingOccurrenceRuleError>(CheckRules(masterData), expectError);
+            AssertError<InvalidMeterReadingOccurrenceRuleError>("D53", CheckRules(masterData), expectError);
         }
 
         private static IMasterDataBuilder Builder() =>

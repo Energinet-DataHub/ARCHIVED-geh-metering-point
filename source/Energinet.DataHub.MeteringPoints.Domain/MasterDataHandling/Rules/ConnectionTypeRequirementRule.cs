@@ -34,7 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
             if (netSettlementGroup != NetSettlementGroup.Zero && connectionType is null)
             {
                 IsBroken = true;
-                ValidationError = new ConnectionTypeIsRequiredRuleError(netSettlementGroup);
+                ValidationError = new ConnectionTypeIsRequiredRuleError();
                 return;
             }
 

@@ -20,9 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
     {
         public SourceMeteringGridAreaNotAllowedValidationError(string gsrnNumber)
         {
-            GsrnNumber = gsrnNumber;
+            Code = "D46";
+            Message = $"The source metering point grid area attribute of the request may not be provided for D20 metering point id {gsrnNumber}.";
         }
-
-        public string GsrnNumber { get; }
     }
 }
