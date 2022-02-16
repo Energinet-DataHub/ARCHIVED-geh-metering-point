@@ -739,7 +739,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithReadingPeriodicity(string.Empty)
                 .Validate();
 
-            AssertContainsValidationError<MeterReadingPeriodicityIsRequired>(validationResult);
+            AssertContainsValidationError<MeterReadingPeriodicityIsRequired>("D53", validationResult);
         }
 
         [Fact]
