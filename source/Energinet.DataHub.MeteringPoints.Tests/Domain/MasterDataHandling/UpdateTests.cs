@@ -139,7 +139,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithNetSettlementGroup(string.Empty)
                 .Validate();
 
-            AssertContainsValidationError<NetSettlementGroupIsRequired>(validationResult);
+            AssertContainsValidationError<NetSettlementGroupIsRequired>("D62", validationResult);
         }
 
         [Fact]

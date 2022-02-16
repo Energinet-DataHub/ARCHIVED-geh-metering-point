@@ -82,7 +82,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             var sut = Builder()
                 .Validate();
 
-            AssertContainsValidationError<NetSettlementGroupIsRequired>(sut);
+            AssertContainsValidationError<NetSettlementGroupIsRequired>("D62", sut);
         }
 
         private static IMasterDataBuilder Builder() =>
