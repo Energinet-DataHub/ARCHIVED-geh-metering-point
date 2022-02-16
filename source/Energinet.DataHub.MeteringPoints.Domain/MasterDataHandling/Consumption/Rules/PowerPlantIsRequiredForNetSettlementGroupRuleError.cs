@@ -19,11 +19,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
 {
     public class PowerPlantIsRequiredForNetSettlementGroupRuleError : ValidationError
     {
-        public PowerPlantIsRequiredForNetSettlementGroupRuleError(NetSettlementGroup netSettlementGroup)
+        public PowerPlantIsRequiredForNetSettlementGroupRuleError()
         {
-            NetSettlementGroup = netSettlementGroup;
+            Code = "D57";
+            Message = "Power plant is required for a consumption metering point which is not in net settlement group 0 or 99.";
         }
-
-        public NetSettlementGroup NetSettlementGroup { get; }
     }
 }

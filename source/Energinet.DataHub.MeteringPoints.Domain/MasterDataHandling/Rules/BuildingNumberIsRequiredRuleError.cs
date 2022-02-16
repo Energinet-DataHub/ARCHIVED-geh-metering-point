@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
     public class BuildingNumberIsRequiredRuleError : ValidationError
     {
+        public BuildingNumberIsRequiredRuleError()
+        {
+            Code = "E86";
+            Message = "Building Number is required for market metering points";
+        }
     }
 }

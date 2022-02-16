@@ -34,7 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.Policies
 
             var result = policy.Check(today, effective);
 
-            AssertError<EffectiveDateIsNotWithinAllowedTimePeriod>(result, expectError);
+            AssertError<EffectiveDateIsNotWithinAllowedTimePeriod>("E17", result, expectError);
         }
 
         [Theory]
@@ -48,7 +48,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.Policies
 
             var result = policy.Check(today, effective);
 
-            AssertError<EffectiveDateIsNotWithinAllowedTimePeriod>(result, expectError);
+            AssertError<EffectiveDateIsNotWithinAllowedTimePeriod>("E17", result, expectError);
         }
 
         [Fact]
@@ -60,7 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.Policies
 
             var result = policy.Check(today, effective);
 
-            AssertError<EffectiveDateIsNotWithinAllowedTimePeriod>(result, false);
+            AssertError<EffectiveDateIsNotWithinAllowedTimePeriod>("E17", result, false);
         }
     }
 }

@@ -144,10 +144,22 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             Assert.Contains(result.Errors, error => error is TValidationError);
         }
 
+        protected static void AssertContainsValidationError<TValidationError>(string errorCode, BusinessRulesValidationResult result)
+        {
+            if (result == null) throw new ArgumentNullException(nameof(result));
+            Assert.Contains(result.Errors, error => error is TValidationError && error.Code.Equals(errorCode, StringComparison.OrdinalIgnoreCase));
+        }
+
         protected static void AssertDoesNotContainValidationError<TValidationError>(BusinessRulesValidationResult result)
         {
             if (result == null) throw new ArgumentNullException(nameof(result));
             Assert.DoesNotContain(result.Errors, error => error is TValidationError);
+        }
+
+        protected static void AssertDoesNotContainValidationError<TValidationError>(string errorCode, BusinessRulesValidationResult result)
+        {
+            if (result == null) throw new ArgumentNullException(nameof(result));
+            Assert.DoesNotContain(result.Errors, error => error is TValidationError && error.Code.Equals(errorCode, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

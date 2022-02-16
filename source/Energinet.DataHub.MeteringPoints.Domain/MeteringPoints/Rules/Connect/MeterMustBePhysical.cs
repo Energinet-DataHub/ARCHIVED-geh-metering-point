@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Connect
 {
     public class MeterMustBePhysical : ValidationError
     {
+        public MeterMustBePhysical()
+        {
+            Code = "D37";
+            Message = "Net production, supply to grid or consumption from grid metering points must be physical in order to be connected.";
+        }
     }
 }

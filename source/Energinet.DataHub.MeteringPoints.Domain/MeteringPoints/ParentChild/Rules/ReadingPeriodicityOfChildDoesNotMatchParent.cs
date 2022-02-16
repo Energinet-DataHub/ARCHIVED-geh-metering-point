@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild.Rul
 {
     public class ReadingPeriodicityOfChildDoesNotMatchParent : ValidationError
     {
+        public ReadingPeriodicityOfChildDoesNotMatchParent()
+        {
+            Code = "D53";
+            Message = "Reading periodicity of parent and child metering points must match.";
+        }
     }
 }

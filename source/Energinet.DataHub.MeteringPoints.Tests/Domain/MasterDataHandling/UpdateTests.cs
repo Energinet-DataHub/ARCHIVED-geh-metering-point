@@ -320,7 +320,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithScheduledMeterReadingDate("invalid value")
                 .Validate();
 
-            AssertContainsValidationError<InvalidScheduledMeterReadingDateRuleError>(validationResult);
+            AssertContainsValidationError<InvalidScheduledMeterReadingDateRuleError>("E86", validationResult);
         }
 
         [Fact]
@@ -786,7 +786,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithPowerPlant(string.Empty)
                 .Validate();
 
-            AssertContainsValidationError<PowerPlantIsRequired>(validationResult);
+            AssertContainsValidationError<PowerPlantIsRequired>("D57", validationResult);
         }
 
         [Fact]

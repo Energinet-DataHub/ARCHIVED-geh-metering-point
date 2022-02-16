@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
     public class MunicipalityCodeIsRequiredRuleError : ValidationError
     {
+        public MunicipalityCodeIsRequiredRuleError()
+        {
+            Code = "E86";
+            Message = "Municipality Code is required for market metering points";
+        }
     }
 }
