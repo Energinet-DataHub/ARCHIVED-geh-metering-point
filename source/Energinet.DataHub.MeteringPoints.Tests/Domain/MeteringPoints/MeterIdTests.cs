@@ -31,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             var invalidMeterId = "12345678901234567890";
             var checkResult = MeterId.CheckRules(invalidMeterId);
 
-            AssertError<InvalidMeterIdRuleError>(checkResult, true);
+            AssertError<InvalidMeterIdRuleError>("E86", checkResult, true);
         }
 
         [Fact]

@@ -1021,7 +1021,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithMeteringConfiguration(null, "12345678901234567890")
                 .Validate();
 
-            AssertContainsValidationError<InvalidMeterIdRuleError>(validationResult);
+            AssertContainsValidationError<InvalidMeterIdRuleError>("E86", validationResult);
         }
 
         [Fact]
