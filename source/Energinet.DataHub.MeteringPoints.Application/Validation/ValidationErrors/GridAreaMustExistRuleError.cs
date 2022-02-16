@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class GridAreaMustExistRuleError : ValidationError
     {
+        public GridAreaMustExistRuleError()
+        {
+            Code = "E10";
+            Message = "A metering point cannot be registered in GEH without belonging to an existing grid area";
+        }
     }
 }

@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
     public class ConnectionTypeIsNotAllowedRuleError : ValidationError
     {
+        public ConnectionTypeIsNotAllowedRuleError()
+        {
+            Code = "D02";
+            Message = "Connection type is not allowed for net settlement group 0.";
+        }
     }
 }

@@ -20,6 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
     {
         public MeteringPointTypeRequiredValidationError()
         {
+            Code = "D02";
+            Message = "Metering point type is required.";
         }
     }
 }

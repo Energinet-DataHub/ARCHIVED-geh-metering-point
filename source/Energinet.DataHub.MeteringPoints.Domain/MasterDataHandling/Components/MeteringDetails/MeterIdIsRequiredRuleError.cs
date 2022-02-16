@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.
 {
     public class MeterIdIsRequiredRuleError : ValidationError
     {
+        public MeterIdIsRequiredRuleError()
+        {
+            Code = "D31";
+            Message = "Meter number is mandatory for sub type physical.";
+        }
     }
 }

@@ -18,11 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
     public class InvalidUnitTypeValue : ValidationError
     {
-        public InvalidUnitTypeValue(string providedValue)
+        public InvalidUnitTypeValue(string unitType)
         {
-            ProvidedValue = providedValue;
+            Code = "E73";
+            Message = $"Energy time series measure unit {unitType} has wrong value (outside domain)";
         }
-
-        public string ProvidedValue { get; }
     }
 }

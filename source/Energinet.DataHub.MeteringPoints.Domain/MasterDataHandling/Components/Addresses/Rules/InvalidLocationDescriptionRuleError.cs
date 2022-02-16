@@ -20,9 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.
     {
         public InvalidLocationDescriptionRuleError(string locationDescription)
         {
-            LocationDescription = locationDescription;
+            Code = "E86";
+            Message = $"Location description {locationDescription} has a length that exceeds 60";
         }
-
-        public string LocationDescription { get; }
     }
 }

@@ -20,12 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
     {
         public ConnectionTypeDoesNotMatchNetSettlementGroupRuleError(string connectionType, string netSettlementGroup)
         {
-            ConnectionType = connectionType;
-            NetSettlementGroup = netSettlementGroup;
+            Code = "D55";
+            Message = $"Connection type {connectionType} not allowed: the connection type must be Installation connected (D02) if net settlement group is {netSettlementGroup}.";
         }
-
-        public string ConnectionType { get; set; }
-
-        public string NetSettlementGroup { get; set; }
     }
 }

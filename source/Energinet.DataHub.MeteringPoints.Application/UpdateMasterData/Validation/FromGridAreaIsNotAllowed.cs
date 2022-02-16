@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData.Validati
 {
     public class FromGridAreaIsNotAllowed : ValidationError
     {
+        public FromGridAreaIsNotAllowed()
+        {
+            Code = "D46";
+            Message = "Source grid area cannot be changed.";
+        }
     }
 }

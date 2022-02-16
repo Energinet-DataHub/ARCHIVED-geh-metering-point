@@ -21,6 +21,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
     {
         public MeteringMethodIsMandatoryValidationError()
         {
+            Code = "D02";
+            Message = "Metering method is missing.";
         }
     }
 }

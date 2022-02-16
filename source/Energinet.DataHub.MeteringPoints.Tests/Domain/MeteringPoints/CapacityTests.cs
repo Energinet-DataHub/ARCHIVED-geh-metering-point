@@ -35,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         {
             var checkResult = Capacity.CheckRules(capacity);
 
-            AssertError<InvalidCapacityFormatRuleError>(checkResult, expectError);
+            AssertError<InvalidCapacityFormatRuleError>("E86", checkResult, expectError);
         }
 
         [Fact]

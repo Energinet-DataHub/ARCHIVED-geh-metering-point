@@ -18,14 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class AssetTypeNotAllowedValidationError : ValidationError
     {
-        public AssetTypeNotAllowedValidationError(string gsrnNumber, string? assetType)
+        public AssetTypeNotAllowedValidationError(string gsrnNumber)
         {
-            GsrnNumber = gsrnNumber;
-            AssetType = assetType;
+            Code = "D59";
+            Message = $"AssetType for metering point {gsrnNumber} is not allowed.";
         }
-
-        public string GsrnNumber { get; }
-
-        public string? AssetType { get; }
     }
 }

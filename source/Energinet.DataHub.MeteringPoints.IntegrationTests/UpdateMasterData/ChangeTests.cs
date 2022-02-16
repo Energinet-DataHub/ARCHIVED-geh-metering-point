@@ -28,6 +28,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         }
 
         [Fact]
+        public async Task Metering_point_updated_shows_in_process_overview()
+        {
+            await CreateMeteringPointAsync().ConfigureAwait(false);
+            var request = CreateUpdateRequest();
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            await AssertProcessOverviewAsync(
+                    SampleData.GsrnNumber,
+                    "BRS-006",
+                    "RequestUpdateMeteringPoint",
+                    "ConfirmUpdateMeteringPoint")
+                .ConfigureAwait(false);
+        }
+
+        [Fact]
         public async Task It_is_not_allowed_to_provide_to_grid_area()
         {
             await SendCommandAsync(CreateUpdateRequest()

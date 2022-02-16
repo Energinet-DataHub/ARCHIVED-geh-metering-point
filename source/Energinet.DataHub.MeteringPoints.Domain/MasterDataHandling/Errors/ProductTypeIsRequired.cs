@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
     public class ProductTypeIsRequired : ValidationError
     {
+        public ProductTypeIsRequired()
+        {
+            Code = "D02";
+            Message = "Product type is missing";
+        }
     }
 }

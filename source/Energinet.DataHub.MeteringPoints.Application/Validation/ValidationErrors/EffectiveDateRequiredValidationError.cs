@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class EffectiveDateRequiredValidationError : ValidationError
     {
+        public EffectiveDateRequiredValidationError()
+        {
+            Code = "D02";
+            Message = "Occurrence date is missing";
+        }
     }
 }

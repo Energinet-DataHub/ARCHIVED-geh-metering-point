@@ -12,19 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Application.EDI;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
-    public class MeasureUnitTypeIsRequiredErrorConverter : ErrorConverter<UnitTypeIsRequired>
+    public class RunnableDateTimeProviderStub : ISystemDateTimeProvider
     {
-        protected override ErrorMessage Convert(UnitTypeIsRequired validationError)
-        {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
+        private Duration _duration = Duration.Zero;
 
-            return new ErrorMessage("E73", $"Energy time series measure unit is required.");
+        public void SetNow(Instant now)
+        {
+            _duration = now.Minus(SystemClock.Instance.GetCurrentInstant());
+        }
+
+        public Instant Now()
+        {
+            return SystemClock.Instance.GetCurrentInstant().Plus(_duration);
         }
     }
 }
