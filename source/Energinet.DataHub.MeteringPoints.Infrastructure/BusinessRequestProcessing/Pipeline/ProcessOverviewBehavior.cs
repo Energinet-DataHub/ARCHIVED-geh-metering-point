@@ -41,17 +41,23 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcess
         {
             if (next == null) throw new ArgumentNullException(nameof(next));
 
+            if (!_processExtractor.IsProcessOverviewEnabled)
+            {
+                return await next().ConfigureAwait(false);
+            }
+
+            var requestDetails = _processExtractor.GetProcessDetails(request);
+
             // Call next handler in the pipeline and wait for the result
             var result = await next().ConfigureAwait(false);
 
-            if (_processExtractor.IsProcessOverviewEnabled)
-            {
-                var businessProcessResult = result as BusinessProcessResult
-                                            ?? throw new InvalidOperationException($"Results should be {nameof(BusinessProcessResult)}");
-                var process = _processExtractor.GetProcess(request, businessProcessResult);
+            var businessProcessResult = result as BusinessProcessResult
+                                        ?? throw new InvalidOperationException($"Results should be {nameof(BusinessProcessResult)}");
+            var resultDetails = _processExtractor.GetProcessDetails(businessProcessResult);
 
-                _meteringPointContext.Processes.Add(process);
-            }
+            var process = _processExtractor.GetProcess(request, requestDetails, resultDetails);
+
+            _meteringPointContext.Processes.Add(process);
 
             return result;
         }

@@ -21,23 +21,23 @@ using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Connect
+namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
 {
-    public class ConnectMeteringPointProcessExtractor : ProcessExtractor<ConnectMeteringPointRequest>
+    public class UpdateMeteringPointProcessExtractor : ProcessExtractor<UpdateMasterDataRequest>
     {
-        public ConnectMeteringPointProcessExtractor(IActorContext actorContext, ISystemDateTimeProvider dateTimeProvider)
+        public UpdateMeteringPointProcessExtractor(IActorContext actorContext, ISystemDateTimeProvider dateTimeProvider)
             : base(actorContext, dateTimeProvider)
         {
         }
 
-        protected override string ProcessName => "BRS-008";
+        protected override string ProcessName => "BRS-006";
 
-        public override ProcessDetail GetProcessDetails(ConnectMeteringPointRequest request)
+        public override ProcessDetail GetProcessDetails(UpdateMasterDataRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             return new ProcessDetail(
-                "RequestConnectMeteringPoint",
+                "RequestUpdateMeteringPoint",
                 CurrentActor,
                 DataHub,
                 UtcNow,
@@ -50,8 +50,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
             if (result == null) throw new ArgumentNullException(nameof(result));
 
             var name = result.Success
-                ? "ConfirmConnectMeteringPoint"
-                : "RejectConnectMeteringPoint";
+                ? "ConfirmUpdateMeteringPoint"
+                : "RejectUpdateMeteringPoint";
 
             return new ProcessDetail(
                 name,
@@ -63,7 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
                 result.ValidationErrors.Select(error => new ProcessDetailError(error.Code, error.Message)).ToArray());
         }
 
-        protected override string GetGsrn(ConnectMeteringPointRequest request) => request?.GsrnNumber
-            ?? throw new InvalidOperationException("GSRN cannot be empty");
+        protected override string GetGsrn(UpdateMasterDataRequest request) => request?.GsrnNumber
+                                                                              ?? throw new InvalidOperationException("GSRN cannot be empty");
     }
 }

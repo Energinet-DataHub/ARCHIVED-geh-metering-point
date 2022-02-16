@@ -18,6 +18,7 @@ using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime.Text;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ProcessOverview
@@ -25,10 +26,14 @@ namespace Energinet.DataHub.MeteringPoints.Application.ProcessOverview
     public abstract class ProcessExtractor<TRequest>
     {
         private readonly IActorContext _actorContext;
+        private readonly ISystemDateTimeProvider _dateTimeProvider;
 
-        protected ProcessExtractor(IActorContext actorContext)
+        protected ProcessExtractor(
+            IActorContext actorContext,
+            ISystemDateTimeProvider dateTimeProvider)
         {
             _actorContext = actorContext;
+            _dateTimeProvider = dateTimeProvider;
         }
 
         public virtual bool IsProcessOverviewEnabled => true;
@@ -37,6 +42,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.ProcessOverview
                                          throw new InvalidOperationException("Current actor cannot be unknown");
 
         protected string DataHub => _actorContext.DataHub.Identifier;
+
+        protected DateTime UtcNow => _dateTimeProvider.Now().ToDateTimeUtc();
 
         protected abstract string ProcessName { get; }
 
@@ -47,6 +54,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.ProcessOverview
             var resultDetails = GetProcessDetails(result);
             return GetProcess(gsrn, requestDetails, resultDetails);
         }
+
+        public Process GetProcess(TRequest request, params ProcessDetail[] processDetails)
+        {
+            var gsrn = GetGsrn(request);
+            return GetProcess(gsrn, processDetails);
+        }
+
+        public abstract ProcessDetail GetProcessDetails(TRequest request);
+
+        public abstract ProcessDetail GetProcessDetails(BusinessProcessResult result);
 
         protected static DateTime? GetDateTime(string? dateTimeString)
         {
@@ -65,10 +82,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.ProcessOverview
         }
 
         protected abstract string GetGsrn(TRequest request);
-
-        protected abstract ProcessDetail GetProcessDetails(TRequest request);
-
-        protected abstract ProcessDetail GetProcessDetails(BusinessProcessResult result);
 
         private Process GetProcess(string gsrn, params ProcessDetail[] details)
         {
