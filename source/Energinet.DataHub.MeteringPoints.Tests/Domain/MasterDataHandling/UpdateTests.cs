@@ -88,7 +88,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithNetSettlementGroup("invalid value")
                 .Validate();
 
-            AssertContainsValidationError<InvalidNetSettlementGroupValue>(validationResult);
+            AssertContainsValidationError<InvalidNetSettlementGroupValue>("D62", validationResult);
         }
 
         [Fact]
