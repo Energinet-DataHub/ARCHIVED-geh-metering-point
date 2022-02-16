@@ -266,7 +266,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             var builder = Builder()
                 .WithSettlementMethod(string.Empty);
 
-            AssertContainsValidationError<SettlementMethodIsRequired>(builder.Validate());
+            AssertContainsValidationError<SettlementMethodIsRequired>("D15", builder.Validate());
         }
 
         private static IMasterDataBuilder Builder() =>

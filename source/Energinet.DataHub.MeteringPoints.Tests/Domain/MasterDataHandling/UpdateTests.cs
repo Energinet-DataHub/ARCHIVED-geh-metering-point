@@ -590,7 +590,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithSettlementMethod(string.Empty)
                 .Validate();
 
-            AssertContainsValidationError<SettlementMethodIsRequired>(validationResult);
+            AssertContainsValidationError<SettlementMethodIsRequired>("D15", validationResult);
         }
 
         [Fact]
