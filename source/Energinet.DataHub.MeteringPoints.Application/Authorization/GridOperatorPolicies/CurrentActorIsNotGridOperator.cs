@@ -20,12 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Authorization.GridOperato
     {
         public CurrentActorIsNotGridOperator(string actorIdentifier, string gridAreaGsrn)
         {
-            ActorIdentifier = actorIdentifier;
-            GridAreaGsrn = gridAreaGsrn;
+            Code = "E0I";
+            Message = $"Grid operator {actorIdentifier} is not an authorized market party for this Grid area {gridAreaGsrn}";
         }
-
-        public string ActorIdentifier { get; }
-
-        public string GridAreaGsrn { get; }
     }
 }

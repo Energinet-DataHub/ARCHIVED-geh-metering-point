@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild.Rul
 {
     public class CannotCoupleToClosedDownParent : ValidationError
     {
+        public CannotCoupleToClosedDownParent()
+        {
+            Code = "D16";
+            Message = "Cannot couple to a closed down parent metering point.";
+        }
     }
 }

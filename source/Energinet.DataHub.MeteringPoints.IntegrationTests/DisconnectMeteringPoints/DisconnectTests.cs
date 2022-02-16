@@ -54,7 +54,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.DisconnectMeteringPo
                 .Initialize(SampleData.GsrnNumber, GetService<IDbConnectionFactory>())
                 .HasConnectionState(PhysicalState.Disconnected);
 
-            AssertConfirmMessage(DocumentType.ConfirmDisconnectMeteringPoint);
+            AssertConfirmMessage(DocumentType.ConfirmConnectionStatusMeteringPoint);
             Assert.NotNull(FindIntegrationEvent<MeteringPointDisconnectedIntegrationEvent>());
         }
 

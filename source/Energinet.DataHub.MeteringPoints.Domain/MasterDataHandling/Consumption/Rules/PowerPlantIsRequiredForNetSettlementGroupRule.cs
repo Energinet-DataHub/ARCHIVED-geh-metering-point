@@ -33,7 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
         public bool IsBroken { get; }
 
         public ValidationError ValidationError =>
-            new PowerPlantIsRequiredForNetSettlementGroupRuleError(_netSettlementGroup);
+            new PowerPlantIsRequiredForNetSettlementGroupRuleError();
 
         private static bool PowerPlantIsRequiredFor(NetSettlementGroup netSettlementGroup)
         {

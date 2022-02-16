@@ -35,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         public void Metering_point_must_be_connected()
         {
             var meteringPoint = CreateMeteringPoint(MeteringPointType.Consumption);
-            AssertError<ConnectionStateMustBeConnectedOrDisconnectedError>(meteringPoint.DisconnectAcceptable(ConnectNow()));
+            AssertError<ConnectionStateMustBeConnectedOrDisconnectedError>("D16", meteringPoint.DisconnectAcceptable(ConnectNow()));
         }
 
         [Theory]
@@ -48,7 +48,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 
             var checkResult = meteringPoint.DisconnectAcceptable(connectionDetails);
 
-            Assert.Contains(checkResult.Errors, error => error is MustHaveEnergySupplierRuleError);
+            AssertContainsValidationError<MustHaveEnergySupplierRuleError>("D36", checkResult);
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 
             var checkResult = meteringPoint.DisconnectAcceptable(connectionDetails);
 
-            Assert.DoesNotContain(checkResult.Errors, error => error is MustHaveEnergySupplierRuleError);
+            AssertDoesNotContainValidationError<MustHaveEnergySupplierRuleError>("D36", checkResult);
         }
 
         [Fact]

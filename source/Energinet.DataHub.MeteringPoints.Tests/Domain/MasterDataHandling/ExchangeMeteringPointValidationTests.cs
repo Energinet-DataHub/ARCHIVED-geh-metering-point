@@ -57,7 +57,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithAddress(streetName: string.Empty)
                 .Build();
 
-            AssertContainsValidationError<StreetNameIsRequiredRuleError>(CheckRules(masterData));
+            AssertContainsValidationError<StreetNameIsRequiredRuleError>("E86", CheckRules(masterData));
         }
 
         [Fact]

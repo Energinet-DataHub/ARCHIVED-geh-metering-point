@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 
@@ -21,12 +22,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
     {
         public MustHaveEnergySupplierRuleError(GsrnNumber meteringPointGSRN, Instant effectiveDate)
         {
-            MeteringPointGsrn = meteringPointGSRN;
-            EffectiveDate = effectiveDate;
+            if (meteringPointGSRN == null) throw new ArgumentNullException(nameof(meteringPointGSRN));
+            Code = "D36";
+            Message = $"Metering Point {meteringPointGSRN.Value} of type E17 cannot be connected: There is no Energy Supplier registered on the effectuation date {effectiveDate}.";
         }
-
-        public GsrnNumber MeteringPointGsrn { get; }
-
-        public Instant EffectiveDate { get;  }
     }
 }
