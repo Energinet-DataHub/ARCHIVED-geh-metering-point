@@ -13,20 +13,17 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Application.Create;
-using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
-using NodaTime.Text;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ProcessOverview
 {
     public class NullProcessExtractor<TRequest> : ProcessExtractor<TRequest>
     {
-        public NullProcessExtractor(IActorContext actorContext)
-            : base(actorContext)
+        public NullProcessExtractor(IActorContext actorContext, ISystemDateTimeProvider dateTimeProvider)
+            : base(actorContext, dateTimeProvider)
         {
         }
 

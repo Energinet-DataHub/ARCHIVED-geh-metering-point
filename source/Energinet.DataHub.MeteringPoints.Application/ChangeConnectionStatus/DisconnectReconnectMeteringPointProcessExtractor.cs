@@ -16,17 +16,17 @@ using System;
 using System.Linq;
 using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.ProcessOverview;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.ChangeConnectionStatus
 {
     public class DisconnectReconnectMeteringPointProcessExtractor : ProcessExtractor<DisconnectReconnectMeteringPointRequest>
     {
-        public DisconnectReconnectMeteringPointProcessExtractor(IActorContext actorContext)
-            : base(actorContext)
+        public DisconnectReconnectMeteringPointProcessExtractor(IActorContext actorContext, ISystemDateTimeProvider dateTimeProvider)
+            : base(actorContext, dateTimeProvider)
         {
         }
 
@@ -43,7 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeConnectionStatus
                 "RequestUpdateConnectionState",
                 CurrentActor,
                 DataHub,
-                DateTime.UtcNow,
+                UtcNow,
                 GetDateTime(request.EffectiveDate),
                 ProcessStatus.Received);
         }
@@ -60,7 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.ChangeConnectionStatus
                 name,
                 DataHub,
                 CurrentActor,
-                DateTime.UtcNow,
+                UtcNow,
                 null,
                 ProcessStatus.Sent,
                 result.ValidationErrors.Select(error => new ProcessDetailError(error.Code, error.Message)).ToArray());

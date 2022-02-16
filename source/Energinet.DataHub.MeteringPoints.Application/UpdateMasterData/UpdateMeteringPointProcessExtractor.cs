@@ -19,13 +19,14 @@ using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.ProcessOverview;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
 {
     public class UpdateMeteringPointProcessExtractor : ProcessExtractor<UpdateMasterDataRequest>
     {
-        public UpdateMeteringPointProcessExtractor(IActorContext actorContext)
-            : base(actorContext)
+        public UpdateMeteringPointProcessExtractor(IActorContext actorContext, ISystemDateTimeProvider dateTimeProvider)
+            : base(actorContext, dateTimeProvider)
         {
         }
 
@@ -42,7 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
                 "RequestUpdateMeteringPoint",
                 CurrentActor,
                 DataHub,
-                DateTime.UtcNow,
+                UtcNow,
                 GetDateTime(request.EffectiveDate),
                 ProcessStatus.Received);
         }
@@ -59,7 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
                 name,
                 DataHub,
                 CurrentActor,
-                DateTime.UtcNow,
+                UtcNow,
                 null,
                 ProcessStatus.Sent,
                 result.ValidationErrors.Select(error => new ProcessDetailError(error.Code, error.Message)).ToArray());
