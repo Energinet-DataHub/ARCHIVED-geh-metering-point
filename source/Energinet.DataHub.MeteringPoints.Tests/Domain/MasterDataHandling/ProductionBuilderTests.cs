@@ -73,7 +73,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithMeasurementUnitType(null)
                 .Validate();
 
-            Assert.Contains(sut.Errors, e => e is UnitTypeIsRequired);
+            AssertContainsValidationError<UnitTypeIsRequired>("E73", sut);
         }
 
         [Fact]

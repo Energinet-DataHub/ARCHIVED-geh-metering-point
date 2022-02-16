@@ -882,7 +882,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithMeasurementUnitType(string.Empty)
                 .Validate();
 
-            AssertContainsValidationError<UnitTypeIsRequired>(validationResult);
+            AssertContainsValidationError<UnitTypeIsRequired>("E73", validationResult);
         }
 
         [Fact]
