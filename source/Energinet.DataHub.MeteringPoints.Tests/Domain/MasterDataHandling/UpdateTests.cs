@@ -400,7 +400,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithAssetType("invalid value")
                 .Validate();
 
-            AssertContainsValidationError<InvalidAssetTypeValue>(validationResult);
+            AssertContainsValidationError<InvalidAssetTypeValue>("D59", validationResult);
         }
 
         [Fact]
