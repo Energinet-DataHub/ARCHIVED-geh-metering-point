@@ -66,7 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithProductType(ProductType.Tariff.Name)
                 .Build();
 
-            AssertError<InvalidProductType>(CheckRules(masterData));
+            AssertError<InvalidProductType>("E29", CheckRules(masterData));
         }
 
         [Fact]
