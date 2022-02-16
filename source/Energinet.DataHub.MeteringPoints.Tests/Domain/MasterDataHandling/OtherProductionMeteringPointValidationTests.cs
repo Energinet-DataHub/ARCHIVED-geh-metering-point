@@ -108,7 +108,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithReadingPeriodicity(readingOccurrence)
                 .Build();
 
-            AssertError<InvalidMeterReadingOccurrenceRuleError>(CheckRules(masterData, From(MeteringPointType.OtherProduction.Name)), expectError);
+            AssertError<InvalidMeterReadingOccurrenceRuleError>("D53", CheckRules(masterData, From(MeteringPointType.OtherProduction.Name)), expectError);
         }
 
         private static IMasterDataBuilder BuilderFor(string meteringPointType, string meteringConfiguration) =>

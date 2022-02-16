@@ -91,7 +91,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithReadingPeriodicity(ReadingOccurrence.Yearly.Name)
                 .Build();
 
-            AssertError<InvalidMeterReadingOccurrenceRuleError>(CheckRules(masterData), true);
+            AssertError<InvalidMeterReadingOccurrenceRuleError>("D53", CheckRules(masterData), true);
         }
 
         private static IMasterDataBuilder Builder() =>
