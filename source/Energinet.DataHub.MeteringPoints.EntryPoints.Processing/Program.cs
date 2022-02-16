@@ -214,8 +214,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             container.AddBusinessRequestReceivers();
 
-            container.Register(typeof(ProcessExtractor<>), typeof(CreateMeteringPointProcessExtractor<>), Lifestyle.Scoped);
-
             container.Register(typeof(ProcessExtractor<>), typeof(CreateMeteringPointProcessExtractor), Lifestyle.Scoped);
             container.Register(typeof(ProcessExtractor<>), typeof(ConnectMeteringPointProcessExtractor), Lifestyle.Scoped);
             container.Register(typeof(ProcessExtractor<>), typeof(UpdateMeteringPointProcessExtractor), Lifestyle.Scoped);
