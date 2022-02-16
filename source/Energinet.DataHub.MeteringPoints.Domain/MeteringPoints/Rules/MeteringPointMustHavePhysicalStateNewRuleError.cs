@@ -18,14 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
     public class MeteringPointMustHavePhysicalStateNewRuleError : ValidationError
     {
-        public MeteringPointMustHavePhysicalStateNewRuleError(GsrnNumber gsrnNumber, MeteringPointType meteringPointType)
+        public MeteringPointMustHavePhysicalStateNewRuleError(GsrnNumber gsrnNumber)
         {
-            GsrnNumber = gsrnNumber;
-            MeteringPointType = meteringPointType;
+            Code = "D16";
+            Message = $"Metering Point {gsrnNumber} must be in state 'New' to perform connection";
         }
-
-        public GsrnNumber GsrnNumber { get; }
-
-        public MeteringPointType MeteringPointType { get; }
     }
 }
