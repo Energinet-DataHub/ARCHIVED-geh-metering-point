@@ -55,6 +55,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.ProcessOverview
             return GetProcess(gsrn, requestDetails, resultDetails);
         }
 
+        public Process GetProcess(TRequest request, params ProcessDetail[] processDetails)
+        {
+            var gsrn = GetGsrn(request);
+            return GetProcess(gsrn, processDetails);
+        }
+
+        public abstract ProcessDetail GetProcessDetails(TRequest request);
+
+        public abstract ProcessDetail GetProcessDetails(BusinessProcessResult result);
+
         protected static DateTime? GetDateTime(string? dateTimeString)
         {
             if (string.IsNullOrEmpty(dateTimeString))
@@ -72,10 +82,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.ProcessOverview
         }
 
         protected abstract string GetGsrn(TRequest request);
-
-        protected abstract ProcessDetail GetProcessDetails(TRequest request);
-
-        protected abstract ProcessDetail GetProcessDetails(BusinessProcessResult result);
 
         private Process GetProcess(string gsrn, params ProcessDetail[] details)
         {

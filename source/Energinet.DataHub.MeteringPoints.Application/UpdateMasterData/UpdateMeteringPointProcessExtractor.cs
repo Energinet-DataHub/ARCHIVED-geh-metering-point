@@ -32,10 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
 
         protected override string ProcessName => "BRS-006";
 
-        protected override string GetGsrn(UpdateMasterDataRequest request) => request?.GsrnNumber
-                                                                              ?? throw new InvalidOperationException("GSRN cannot be empty");
-
-        protected override ProcessDetail GetProcessDetails(UpdateMasterDataRequest request)
+        public override ProcessDetail GetProcessDetails(UpdateMasterDataRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -48,7 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
                 ProcessStatus.Received);
         }
 
-        protected override ProcessDetail GetProcessDetails(BusinessProcessResult result)
+        public override ProcessDetail GetProcessDetails(BusinessProcessResult result)
         {
             if (result == null) throw new ArgumentNullException(nameof(result));
 
@@ -65,5 +62,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
                 ProcessStatus.Sent,
                 result.ValidationErrors.Select(error => new ProcessDetailError(error.Code, error.Message)).ToArray());
         }
+
+        protected override string GetGsrn(UpdateMasterDataRequest request) => request?.GsrnNumber
+                                                                              ?? throw new InvalidOperationException("GSRN cannot be empty");
     }
 }

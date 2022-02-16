@@ -25,17 +25,17 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
 {
     public class CreateMeteringPointProcessExtractor : ProcessExtractor<CreateMeteringPoint>
     {
+        private readonly ISystemDateTimeProvider _dateTimeProvider;
+
         public CreateMeteringPointProcessExtractor(IActorContext actorContext, ISystemDateTimeProvider dateTimeProvider)
             : base(actorContext, dateTimeProvider)
         {
+            _dateTimeProvider = dateTimeProvider;
         }
 
         protected override string ProcessName => "BRS-004";
 
-        protected override string GetGsrn(CreateMeteringPoint request) => request?.GsrnNumber
-                                                                          ?? throw new InvalidOperationException("GSRN cannot be empty");
-
-        protected override ProcessDetail GetProcessDetails(CreateMeteringPoint request)
+        public override ProcessDetail GetProcessDetails(CreateMeteringPoint request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -43,12 +43,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 "RequestCreateMeteringPoint",
                 CurrentActor,
                 DataHub,
-                UtcNow,
+                _dateTimeProvider.Now().ToDateTimeUtc(),
                 GetDateTime(request.EffectiveDate),
                 ProcessStatus.Received);
         }
 
-        protected override ProcessDetail GetProcessDetails(BusinessProcessResult result)
+        public override ProcessDetail GetProcessDetails(BusinessProcessResult result)
         {
             if (result == null) throw new ArgumentNullException(nameof(result));
 
@@ -60,10 +60,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 name,
                 DataHub,
                 CurrentActor,
-                UtcNow,
+                _dateTimeProvider.Now().ToDateTimeUtc(),
                 null,
                 ProcessStatus.Sent,
                 result.ValidationErrors.Select(error => new ProcessDetailError(error.Code, error.Message)).ToArray());
         }
+
+        protected override string GetGsrn(CreateMeteringPoint request) => request?.GsrnNumber
+                                                                          ?? throw new InvalidOperationException("GSRN cannot be empty");
     }
 }
