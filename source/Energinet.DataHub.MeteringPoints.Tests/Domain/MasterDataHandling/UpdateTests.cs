@@ -338,7 +338,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithScheduledMeterReadingDate(string.Empty)
                 .Validate();
 
-            AssertContainsValidationError<ScheduledMeterReadingDateIsRequired>(validationResult);
+            AssertContainsValidationError<ScheduledMeterReadingDateIsRequired>("E0H", validationResult);
         }
 
         [Fact]
