@@ -37,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithMeteringConfiguration(MeteringMethod.Physical.Name, "123455")
                 .Build();
 
-            AssertError<MeteringMethodIsNotApplicable>(CheckRules(masterData));
+            AssertError<MeteringMethodIsNotApplicable>("D37", CheckRules(masterData));
         }
 
         [Fact]
