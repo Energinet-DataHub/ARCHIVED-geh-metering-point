@@ -493,7 +493,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithDisconnectionType("Invalid value")
                 .Validate();
 
-            AssertContainsValidationError<InvalidDisconnectionTypeValue>(validationResult);
+            AssertContainsValidationError<InvalidDisconnectionTypeValue>("D65", validationResult);
         }
 
         [Fact]
