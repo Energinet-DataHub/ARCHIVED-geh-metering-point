@@ -32,9 +32,14 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
         public static string Today()
         {
             var date = DateTime.Today.AddDays(-1);
-            return TimeZoneInfo.Local.IsDaylightSavingTime(date)
-                ? date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) + "T23:00:00Z"
-                : date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) + "T22:00:00Z";
+            if (TimeZoneInfo.Utc.IsDaylightSavingTime(date))
+            {
+                return date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) + "T23:00:00Z";
+            }
+            else
+            {
+                return date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) + "T22:00:00Z";
+            }
         }
 
         private static int Parse(string input)
