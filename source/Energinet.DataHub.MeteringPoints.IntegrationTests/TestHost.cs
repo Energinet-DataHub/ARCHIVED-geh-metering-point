@@ -35,8 +35,10 @@ using Energinet.DataHub.MeteringPoints.Application.Create.Validation;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
+using Energinet.DataHub.MeteringPoints.Application.ProcessOverview;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
 using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData;
+using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.UpdateMasterData;
@@ -161,7 +163,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IOutboxManager, OutboxManager>(Lifestyle.Scoped);
             _container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Singleton);
             _container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
-            _container.Register<ISystemDateTimeProvider, SystemDateTimeProviderStub>(Lifestyle.Singleton);
+            _container.Register<ISystemDateTimeProvider, RunnableDateTimeProviderStub>(Lifestyle.Singleton);
             _container.Register(typeof(IBusinessProcessResultHandler<UpdateMasterDataRequest>), typeof(ChangeMasterDataResultHandler), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<CreateMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateMeteringPoint>), Lifestyle.Scoped);
             _container.Register(typeof(IBusinessProcessResultHandler<ConnectMeteringPointRequest>), typeof(ConnectMeteringPointResultHandler), Lifestyle.Scoped);
@@ -220,6 +222,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.UseMediatR()
                 .WithPipeline(
                     typeof(UnitOfWorkBehavior<,>),
+                    typeof(ProcessOverviewBehavior<,>),
                     typeof(InputValidationBehavior<,>),
                     typeof(DomainEventsDispatcherBehaviour<,>),
                     typeof(InternalCommandHandlingBehaviour<,>),
@@ -252,6 +255,15 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             // Specific for test instead of using Application Insights package
             _container.Register(() => new TelemetryClient(new TelemetryConfiguration()), Lifestyle.Scoped);
+
+            // Only for asserting process overview creation
+            _container.Register<IRequestHandler<MeteringPointProcessesByGsrnQuery, List<Process>>, MeteringPointProcessesByGsrnQueryHandler>();
+
+            _container.Register(typeof(ProcessExtractor<>), typeof(CreateMeteringPointProcessExtractor), Lifestyle.Scoped);
+            _container.Register(typeof(ProcessExtractor<>), typeof(ConnectMeteringPointProcessExtractor), Lifestyle.Scoped);
+            _container.Register(typeof(ProcessExtractor<>), typeof(UpdateMeteringPointProcessExtractor), Lifestyle.Scoped);
+            _container.Register(typeof(ProcessExtractor<>), typeof(DisconnectReconnectMeteringPointProcessExtractor), Lifestyle.Scoped);
+            _container.RegisterConditional(typeof(ProcessExtractor<>), typeof(NullProcessExtractor<>), context => !context.Handled);
 
             _container.Verify();
 
@@ -439,6 +451,38 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         protected void AseertNoIntegrationEventIsRaised<TIntegrationEvent>()
         {
             Assert.Null(GetOutboxMessages<TIntegrationEvent>().SingleOrDefault());
+        }
+
+        protected async Task AssertMultipleProcessOverviewAsync(
+            string gsrn,
+            string expectedProcessName,
+            int expectedProcessCount,
+            params string[] expectedProcessSteps)
+        {
+            var processes = (await GetService<IRequestHandler<MeteringPointProcessesByGsrnQuery, List<Process>>>()
+                .Handle(new MeteringPointProcessesByGsrnQuery(gsrn), CancellationToken.None)
+                .ConfigureAwait(false)).Where(process => process.Name == expectedProcessName).ToList();
+
+            processes.Should()
+                .HaveCount(expectedProcessCount)
+                .And
+                .AllSatisfy(process => process
+                    .Details.Select(detail => detail.Name)
+                    .Should()
+                    .ContainInOrder(expectedProcessSteps));
+        }
+
+        protected async Task AssertProcessOverviewAsync(
+            string gsrn,
+            string expectedProcessName,
+            params string[] expectedProcessSteps)
+        {
+            var processes = await GetService<IRequestHandler<MeteringPointProcessesByGsrnQuery, List<Process>>>()
+                .Handle(new MeteringPointProcessesByGsrnQuery(gsrn), CancellationToken.None)
+                .ConfigureAwait(false);
+
+            processes.Should().ContainSingle(process => process.Name == expectedProcessName, $"a single process with name {expectedProcessName} was expected")
+                .Which.Details.Select(detail => detail.Name).Should().ContainInOrder(expectedProcessSteps);
         }
 
         protected async Task<BusinessProcessResult> InvokeBusinessProcessAsync(IBusinessRequest request)

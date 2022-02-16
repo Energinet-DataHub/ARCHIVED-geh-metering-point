@@ -19,24 +19,23 @@ using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.ProcessOverview;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
-using NodaTime.Text;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Create
 {
-    public class CreateMeteringPointProcessExtractor<TRequest> : ProcessExtractor<TRequest>
-        where TRequest : CreateMeteringPoint
+    public class CreateMeteringPointProcessExtractor : ProcessExtractor<CreateMeteringPoint>
     {
-        public CreateMeteringPointProcessExtractor(IActorContext actorContext)
-            : base(actorContext)
+        private readonly ISystemDateTimeProvider _dateTimeProvider;
+
+        public CreateMeteringPointProcessExtractor(IActorContext actorContext, ISystemDateTimeProvider dateTimeProvider)
+            : base(actorContext, dateTimeProvider)
         {
+            _dateTimeProvider = dateTimeProvider;
         }
 
         protected override string ProcessName => "BRS-004";
 
-        protected override string GetGsrn(TRequest request) => request?.GsrnNumber
-                                                               ?? throw new InvalidOperationException("GSRN cannot be empty");
-
-        protected override ProcessDetail GetProcessDetails(TRequest request)
+        public override ProcessDetail GetProcessDetails(CreateMeteringPoint request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -44,12 +43,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 "RequestCreateMeteringPoint",
                 CurrentActor,
                 DataHub,
-                DateTime.UtcNow,
+                _dateTimeProvider.Now().ToDateTimeUtc(),
                 GetDateTime(request.EffectiveDate),
                 ProcessStatus.Received);
         }
 
-        protected override ProcessDetail GetProcessDetails(BusinessProcessResult result)
+        public override ProcessDetail GetProcessDetails(BusinessProcessResult result)
         {
             if (result == null) throw new ArgumentNullException(nameof(result));
 
@@ -61,10 +60,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 name,
                 DataHub,
                 CurrentActor,
-                DateTime.UtcNow,
+                _dateTimeProvider.Now().ToDateTimeUtc(),
                 null,
                 ProcessStatus.Sent,
                 result.ValidationErrors.Select(error => new ProcessDetailError(error.Code, error.Message)).ToArray());
         }
+
+        protected override string GetGsrn(CreateMeteringPoint request) => request?.GsrnNumber
+                                                                          ?? throw new InvalidOperationException("GSRN cannot be empty");
     }
 }

@@ -154,6 +154,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
         }
 
         [Fact]
+        public async Task Metering_point_connected_shows_in_process_overview()
+        {
+            await CreateMeteringPointWithEnergySupplierAssigned().ConfigureAwait(false);
+
+            await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
+
+            await AssertProcessOverviewAsync(
+                    SampleData.GsrnNumber,
+                    "BRS-008",
+                    "RequestConnectMeteringPoint",
+                    "ConfirmConnectMeteringPoint")
+                .ConfigureAwait(false);
+        }
+
+        [Fact]
         public async Task Send_master_data_to_associated_energy_suppliers_when_connected()
         {
             var createMeteringPointRequest = CreateMeteringPointRequest();
