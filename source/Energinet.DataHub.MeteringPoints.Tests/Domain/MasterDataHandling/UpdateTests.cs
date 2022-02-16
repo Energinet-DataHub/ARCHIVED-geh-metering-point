@@ -1007,7 +1007,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithMeteringConfiguration(string.Empty, "2")
                 .Validate();
 
-            AssertContainsValidationError<MeteringMethodIsRequired>(validationResult);
+            AssertContainsValidationError<MeteringMethodIsRequired>("D64", validationResult);
         }
 
         [Fact]
