@@ -42,7 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithMeteringConfiguration(MeteringMethod.Physical.Name, "123456")
                 .Build();
 
-            AssertError<MeteringMethodMustRemainCalculatedRuleError>(meteringPoint.CanUpdateMasterData(updatedMasterData, CreateValidator()));
+            AssertError<MeteringMethodMustRemainCalculatedRuleError>("D37", meteringPoint.CanUpdateMasterData(updatedMasterData, CreateValidator()));
         }
 
         [Fact]
