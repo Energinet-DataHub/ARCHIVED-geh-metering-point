@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
     public class AssetTypeIsRequired : ValidationError
     {
+        public AssetTypeIsRequired()
+        {
+            Code = "D59";
+            Message = "AssetType is missing. It must be applied for Production (E18) and Consumption (E17) in net settlement groups other than 0.";
+        }
     }
 }

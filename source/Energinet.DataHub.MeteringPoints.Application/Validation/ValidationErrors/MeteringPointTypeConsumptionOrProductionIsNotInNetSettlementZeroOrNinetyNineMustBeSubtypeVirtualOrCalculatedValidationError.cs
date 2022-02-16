@@ -20,15 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
     {
         public MeteringPointTypeConsumptionOrProductionIsNotInNetSettlementZeroOrNinetyNineMustBeSubtypeVirtualOrCalculatedValidationError(string gsrnNumber, string meteringPointSubType, string meteringPointType)
         {
-            GsrnNumber = gsrnNumber;
-            MeteringPointSubType = meteringPointSubType;
-            MeteringPointType = meteringPointType;
+            Code = "D37";
+            Message = $"Sub type {meteringPointSubType} not allowed: the sub type for metering point {gsrnNumber} must be Virtual (D02) or Calculated (D03) if type is {meteringPointType} and net settlement group is not 0 or 99.";
         }
-
-        public string GsrnNumber { get; }
-
-        public string MeteringPointSubType { get; }
-
-        public string MeteringPointType { get; }
     }
 }

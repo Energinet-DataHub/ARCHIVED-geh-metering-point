@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.
 {
     public class MeterIdIsNotAllowedRuleError : ValidationError
     {
+        public MeterIdIsNotAllowedRuleError()
+        {
+            Code = "E86";
+            Message = "Meter number is not allowed for sub types other than physical";
+        }
     }
 }

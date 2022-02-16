@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
     public class MeteringMethodIsRequired : ValidationError
     {
+        public MeteringMethodIsRequired()
+        {
+            Code = "D64";
+            Message = "Metering method is required.";
+        }
     }
 }

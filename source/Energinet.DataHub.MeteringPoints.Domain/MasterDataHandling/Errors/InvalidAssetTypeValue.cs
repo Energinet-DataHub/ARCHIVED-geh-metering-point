@@ -18,11 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
     public class InvalidAssetTypeValue : ValidationError
     {
-        public InvalidAssetTypeValue(string providedValue)
+        public InvalidAssetTypeValue(string assetType)
         {
-            ProvidedValue = providedValue;
+            Code = "D59";
+            Message = $"AssetType {assetType} has wrong value (outside domain).";
         }
-
-        public string ProvidedValue { get; }
     }
 }

@@ -19,11 +19,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
     public class ConnectionTypeIsRequiredRuleError : ValidationError
     {
-        public ConnectionTypeIsRequiredRuleError(NetSettlementGroup netSettlementGroup)
+        public ConnectionTypeIsRequiredRuleError()
         {
-            NetSettlementGroup = netSettlementGroup;
+            Code = "D66";
+            Message = "Connection type is required for net settlement groups other than 0 for type Consumption/Production).";
         }
-
-        public NetSettlementGroup NetSettlementGroup { get; }
     }
 }

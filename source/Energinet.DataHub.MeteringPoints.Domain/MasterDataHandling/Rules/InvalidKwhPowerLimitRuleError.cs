@@ -20,9 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
     {
         public InvalidKwhPowerLimitRuleError(int? kwh)
         {
-            Kwh = kwh;
+            Code = "E86";
+            Message = $"Power limit KW {kwh} contains a non-digit character or has a length that exceeds 6";
         }
-
-        public int? Kwh { get; }
     }
 }

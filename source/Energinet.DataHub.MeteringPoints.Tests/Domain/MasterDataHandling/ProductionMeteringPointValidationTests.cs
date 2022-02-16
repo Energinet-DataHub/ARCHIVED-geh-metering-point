@@ -106,7 +106,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithAddress(geoInfoReference: null)
                 .Build();
 
-            AssertContainsValidationError<GeoInfoReferenceIsRequiredRuleError>(CheckRules(masterData));
+            AssertContainsValidationError<GeoInfoReferenceIsRequiredRuleError>("E86", CheckRules(masterData));
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithAssetType(null!)
                 .Build();
 
-            AssertContainsValidationError<AssetTypeIsRequired>(CheckRules(masterData));
+            AssertContainsValidationError<AssetTypeIsRequired>("D59", CheckRules(masterData));
         }
 
         [Fact]
@@ -137,7 +137,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithConnectionType(ConnectionType.Installation.Name)
                 .Build();
 
-            AssertContainsValidationError<ConnectionTypeIsNotAllowedRuleError>(CheckRules(masterData));
+            AssertContainsValidationError<ConnectionTypeIsNotAllowedRuleError>("D02", CheckRules(masterData));
         }
 
         [Fact]
@@ -148,7 +148,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithConnectionType(null!)
                 .Build();
 
-            AssertContainsValidationError<ConnectionTypeIsRequiredRuleError>(CheckRules(masterData));
+            AssertContainsValidationError<ConnectionTypeIsRequiredRuleError>("D66", CheckRules(masterData));
         }
 
         [Fact]
@@ -159,7 +159,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithConnectionType(ConnectionType.Direct.Name)
                 .Build();
 
-            AssertContainsValidationError<ConnectionTypeDoesNotMatchNetSettlementGroupRuleError>(CheckRules(masterData));
+            AssertContainsValidationError<ConnectionTypeDoesNotMatchNetSettlementGroupRuleError>("D55", CheckRules(masterData));
         }
 
         [Fact]
@@ -169,7 +169,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithReadingPeriodicity(ReadingOccurrence.Yearly.Name)
                 .Build();
 
-            AssertContainsValidationError<InvalidMeterReadingOccurrenceRuleError>(CheckRules(masterData));
+            AssertContainsValidationError<InvalidMeterReadingOccurrenceRuleError>("D53", CheckRules(masterData));
         }
 
         [Theory]
@@ -181,7 +181,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithProductType(productType)
                 .Build();
 
-            AssertError<InvalidProductType>(CheckRules(masterData), expectError);
+            AssertError<InvalidProductType>("E29", CheckRules(masterData), expectError);
         }
 
         private static IMasterDataBuilder Builder() =>

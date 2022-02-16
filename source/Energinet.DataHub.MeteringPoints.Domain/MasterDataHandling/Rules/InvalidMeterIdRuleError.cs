@@ -20,12 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
     {
         public InvalidMeterIdRuleError(string meterId, int maximumLength)
         {
-            MeterId = meterId;
-            MaximumLength = maximumLength;
+            Code = "E86";
+            Message = $"Meter number {meterId} has a length that exceeds {maximumLength}";
         }
-
-        public string MeterId { get; }
-
-        public int MaximumLength { get; }
     }
 }

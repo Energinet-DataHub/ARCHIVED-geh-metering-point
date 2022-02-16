@@ -20,9 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
     {
         public InvalidConnectionTypeRuleError(string connectionType)
         {
-            ConnectionType = connectionType;
+            Code = "D02";
+            Message = $"Connection type {connectionType} has wrong value (outside domain)";
         }
-
-        public string ConnectionType { get; }
     }
 }
