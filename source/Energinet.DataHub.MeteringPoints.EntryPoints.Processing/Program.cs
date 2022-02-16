@@ -67,7 +67,6 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeConnectionStatus
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GenericNotification;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.ChargeLinks.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
@@ -214,12 +213,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.AddMasterDataUpdateServices();
 
             container.AddBusinessRequestReceivers();
-
-            container.AddValidationErrorConversion(
-                validateRegistrations: false,
-                typeof(MasterDataDocument).Assembly, // Application
-                typeof(MeteringPoint).Assembly, // Domain
-                typeof(ErrorMessageFactory).Assembly); // Infrastructure
 
             container.Register(typeof(ProcessExtractor<>), typeof(CreateMeteringPointProcessExtractor<>), Lifestyle.Scoped);
             container.RegisterConditional(typeof(ProcessExtractor<>), typeof(NullProcessExtractor<>), context => !context.Handled);

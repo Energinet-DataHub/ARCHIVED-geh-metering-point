@@ -214,11 +214,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             _container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
             _container.AddBusinessProcessAuthorizers();
-            _container.AddValidationErrorConversion(
-                validateRegistrations: true,
-                typeof(MasterDataDocument).Assembly, // Application
-                typeof(MeteringPoint).Assembly, // Domain
-                typeof(DocumentType).Assembly); // Infrastructure
 
             _container.AddBusinessRequestReceivers();
 

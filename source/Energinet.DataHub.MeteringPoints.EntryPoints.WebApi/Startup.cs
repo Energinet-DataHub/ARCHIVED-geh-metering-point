@@ -36,7 +36,6 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DomainEventDispatching;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
@@ -148,13 +147,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             _container.AddUserContext<UserProvider>();
 
             Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
-
-            // TODO: Probably not needed
-            _container.AddValidationErrorConversion(
-                validateRegistrations: true,
-                typeof(CreateGridArea).Assembly, // Application
-                typeof(MeteringPoint).Assembly, // Domain
-                typeof(ErrorMessageFactory).Assembly); // Infrastructure
 
             _container.UseMediatR()
                 .WithPipeline(
