@@ -865,7 +865,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithMeasurementUnitType("invalid unit type value")
                 .Validate();
 
-            AssertContainsValidationError<InvalidUnitTypeValue>(validationResult);
+            AssertContainsValidationError<InvalidUnitTypeValue>("E73", validationResult);
         }
 
         [Fact]
