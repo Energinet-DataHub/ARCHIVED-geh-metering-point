@@ -20,9 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
     {
         public MeteringGridAreaMandatoryValidationError(string gsrnNumber)
         {
-            GsrnNumber = gsrnNumber;
+            Code = "E10";
+            Message = $"Metering grid area is missing for metering point {gsrnNumber}";
         }
-
-        public string GsrnNumber { get; }
     }
 }
