@@ -76,6 +76,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ReconnectMeteringPoi
             await SendCommandAsync(CreateReconnectMeteringPointRequest()).ConfigureAwait(false);
 
             AssertValidationError("D16");
+            AssertRejectMessage(DocumentType.RejectConnectionStatusMeteringPoint);
         }
 
         [Theory]
