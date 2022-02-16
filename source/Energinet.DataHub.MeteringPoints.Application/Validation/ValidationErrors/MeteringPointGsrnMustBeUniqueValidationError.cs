@@ -20,9 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
     {
         public MeteringPointGsrnMustBeUniqueValidationError(string gsrnNumber)
         {
-            GsrnNumber = gsrnNumber;
+            Code = "E10";
+            Message = $"Metering point {gsrnNumber} already exists";
         }
-
-        public string GsrnNumber { get; }
     }
 }
