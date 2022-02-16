@@ -45,7 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             var validationResult = Builder()
                 .Validate();
 
-            AssertContainsValidationError<ProductTypeIsRequired>(validationResult);
+            AssertContainsValidationError<ProductTypeIsRequired>("D02", validationResult);
         }
 
         [Fact]
