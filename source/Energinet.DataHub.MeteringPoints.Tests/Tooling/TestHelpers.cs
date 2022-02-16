@@ -44,7 +44,10 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Tooling
                 date.Second,
                 date.Millisecond);
 
-            var retVal = dateForString.ToString(TimeZoneInfo.Local.IsDaylightSavingTime(date)
+            var info = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
+            var tzi = info.IsDaylightSavingTime(dateForString);
+
+            var retVal = dateForString.ToString(tzi
                 ? $"yyyy'-'MM'-'dd'T'23':'mm':'ss'Z'"
                 : "yyyy'-'MM'-'dd'T'22':'mm':'ss'Z'");
 

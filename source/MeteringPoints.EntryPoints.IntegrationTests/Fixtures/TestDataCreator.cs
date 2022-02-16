@@ -32,7 +32,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
         public static string Today()
         {
             var date = DateTime.Today.AddDays(-1);
-            if (TimeZoneInfo.Utc.IsDaylightSavingTime(date))
+            var info = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
+            var tzi = info.IsDaylightSavingTime(date);
+
+            if (tzi)
             {
                 return date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) + "T23:00:00Z";
             }
