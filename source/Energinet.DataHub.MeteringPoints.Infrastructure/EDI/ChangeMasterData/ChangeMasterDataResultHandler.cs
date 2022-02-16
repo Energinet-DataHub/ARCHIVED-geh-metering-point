@@ -19,20 +19,16 @@ using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData
 {
     public class ChangeMasterDataResultHandler : IBusinessProcessResultHandler<UpdateMasterDataRequest>
     {
-        private readonly ErrorMessageFactory _errorMessageFactory;
         private readonly IActorMessageService _actorMessageService;
 
         public ChangeMasterDataResultHandler(
-            ErrorMessageFactory errorMessageFactory,
             IActorMessageService actorMessageService)
         {
-            _errorMessageFactory = errorMessageFactory ?? throw new ArgumentNullException(nameof(errorMessageFactory));
             _actorMessageService = actorMessageService;
         }
 
@@ -58,7 +54,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData
         private async Task CreateRejectResponseAsync(UpdateMasterDataRequest request, BusinessProcessResult result)
         {
             var errors = result.ValidationErrors
-                .Select(error => _errorMessageFactory.GetErrorMessage(error))
+                .Select(error => ErrorMessageFactory.GetErrorMessage(error))
                 .AsEnumerable();
 
             await _actorMessageService

@@ -16,7 +16,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,12 +26,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.Controllers
     public class GridAreaController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly ErrorMessageFactory _errorMessageFactory;
 
-        public GridAreaController(IMediator mediator, ErrorMessageFactory errorMessageFactory)
+        public GridAreaController(IMediator mediator)
         {
             _mediator = mediator;
-            _errorMessageFactory = errorMessageFactory;
         }
 
         [HttpPost("Create")]
@@ -41,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.Controllers
             var result = await _mediator.Send(createGridArea).ConfigureAwait(false);
 
             var errors = result.ValidationErrors
-                .Select(error => _errorMessageFactory.GetErrorMessage(error))
+                .Select(error => ErrorMessageFactory.GetErrorMessage(error))
                 .ToArray();
 
             return Ok(new
