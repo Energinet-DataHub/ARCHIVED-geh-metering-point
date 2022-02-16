@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.App.Common.Abstractions.Users;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using MediatR;
@@ -28,17 +27,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.MeteringPoints.Que
     public class
         MeteringPointProcessesByGsrnQueryHandler : IRequestHandler<MeteringPointProcessesByGsrnQuery, List<Process>>
     {
-        private readonly IDbConnectionFactory _connectionFactory;
-        private readonly IUserContext _userContext;
         private readonly MeteringPointContext _dbContext;
 
         public MeteringPointProcessesByGsrnQueryHandler(
-            IDbConnectionFactory connectionFactory,
-            IUserContext userContext,
             MeteringPointContext dbContext)
         {
-            _connectionFactory = connectionFactory;
-            _userContext = userContext;
             _dbContext = dbContext;
         }
 

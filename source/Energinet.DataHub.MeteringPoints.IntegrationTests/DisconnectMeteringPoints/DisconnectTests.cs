@@ -56,6 +56,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.DisconnectMeteringPo
 
             AssertConfirmMessage(DocumentType.ConfirmConnectionStatusMeteringPoint);
             Assert.NotNull(FindIntegrationEvent<MeteringPointDisconnectedIntegrationEvent>());
+
+            await AssertProcessOverviewAsync(
+                    SampleData.GsrnNumber,
+                    "BRS-013",
+                    "RequestUpdateConnectionState",
+                    "ConfirmUpdateConnectionState")
+                .ConfigureAwait(false);
         }
 
         [Fact]

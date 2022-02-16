@@ -19,51 +19,51 @@ using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.ProcessOverview;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.UpdateMasterData
+namespace Energinet.DataHub.MeteringPoints.Application.ChangeConnectionStatus
 {
-    public class UpdateMeteringPointProcessExtractor<TRequest> : ProcessExtractor<TRequest>
-        where TRequest : UpdateMasterDataRequest
+    public class DisconnectReconnectMeteringPointProcessExtractor : ProcessExtractor<DisconnectReconnectMeteringPointRequest>
     {
-        public UpdateMeteringPointProcessExtractor(IActorContext actorContext)
-            : base(actorContext)
+        public DisconnectReconnectMeteringPointProcessExtractor(IActorContext actorContext, ISystemDateTimeProvider dateTimeProvider)
+            : base(actorContext, dateTimeProvider)
         {
         }
 
-        protected override string ProcessName => "BRS-006";
+        protected override string ProcessName => "BRS-013";
 
-        protected override string GetGsrn(TRequest request) => request?.GsrnNumber
-                                                               ?? throw new InvalidOperationException("GSRN cannot be empty");
-
-        protected override ProcessDetail GetProcessDetails(TRequest request)
+        public override ProcessDetail GetProcessDetails(DisconnectReconnectMeteringPointRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             return new ProcessDetail(
-                "RequestUpdateMeteringPoint",
+                "RequestUpdateConnectionState",
                 CurrentActor,
                 DataHub,
-                DateTime.UtcNow,
+                UtcNow,
                 GetDateTime(request.EffectiveDate),
                 ProcessStatus.Received);
         }
 
-        protected override ProcessDetail GetProcessDetails(BusinessProcessResult result)
+        public override ProcessDetail GetProcessDetails(BusinessProcessResult result)
         {
             if (result == null) throw new ArgumentNullException(nameof(result));
 
             var name = result.Success
-                ? "ConfirmUpdateMeteringPoint"
-                : "RejectUpdateMeteringPoint";
+                ? "ConfirmUpdateConnectionState"
+                : "RejectUpdateConnectionState";
 
             return new ProcessDetail(
                 name,
                 DataHub,
                 CurrentActor,
-                DateTime.UtcNow,
+                UtcNow,
                 null,
                 ProcessStatus.Sent,
                 result.ValidationErrors.Select(error => new ProcessDetailError(error.Code, error.Message)).ToArray());
         }
+
+        protected override string GetGsrn(DisconnectReconnectMeteringPointRequest request) => request?.GsrnNumber
+                                                                                              ?? throw new InvalidOperationException("GSRN cannot be empty");
     }
 }

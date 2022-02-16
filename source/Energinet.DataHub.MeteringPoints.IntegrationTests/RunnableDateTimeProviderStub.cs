@@ -17,18 +17,18 @@ using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
-    public class SystemDateTimeProviderStub : ISystemDateTimeProvider
+    public class RunnableDateTimeProviderStub : ISystemDateTimeProvider
     {
-        private Instant _now = SystemClock.Instance.GetCurrentInstant();
+        private Duration _duration = Duration.Zero;
 
         public void SetNow(Instant now)
         {
-            _now = now;
+            _duration = now.Minus(SystemClock.Instance.GetCurrentInstant());
         }
 
         public Instant Now()
         {
-            return _now;
+            return SystemClock.Instance.GetCurrentInstant().Plus(_duration);
         }
     }
 }
