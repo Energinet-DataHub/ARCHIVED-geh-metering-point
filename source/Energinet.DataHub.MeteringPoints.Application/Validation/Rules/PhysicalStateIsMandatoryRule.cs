@@ -12,18 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Energinet.DataHub.MeteringPoints.Application.EDI;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses.Rules;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
+using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
+using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors.Converters.Address
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class CountryCodeInvalidRuleErrorConverter : ErrorConverter<CountryCodeValidRuleError>
+    public class PhysicalStateIsMandatoryRule : AbstractValidator<MasterDataDocument>
     {
-        protected override ErrorMessage Convert(CountryCodeValidRuleError validationError)
+        public PhysicalStateIsMandatoryRule()
         {
-            if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-            return new("E86", $"Country code does not contain a valid value");
+            RuleFor(request => request.PhysicalStatusOfMeteringPoint)
+                .NotEmpty()
+                .WithState(_ => new PhysicalStateMandatoryValidationError(_.GsrnNumber));
         }
     }
 }

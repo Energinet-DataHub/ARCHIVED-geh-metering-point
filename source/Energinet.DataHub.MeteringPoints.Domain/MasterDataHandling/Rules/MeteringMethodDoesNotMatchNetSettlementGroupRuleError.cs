@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -20,14 +21,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
     public class MeteringMethodDoesNotMatchNetSettlementGroupRuleError : ValidationError
     {
-        public MeteringMethodDoesNotMatchNetSettlementGroupRuleError(NetSettlementGroup netSettlementGroup, MeteringMethod meteringMethod)
+        public MeteringMethodDoesNotMatchNetSettlementGroupRuleError(MeteringMethod meteringMethod)
         {
-            NetSettlementGroup = netSettlementGroup;
-            MeteringMethod = meteringMethod;
+            if (meteringMethod is null) throw new ArgumentNullException(nameof(meteringMethod));
+            Code = "D37";
+            Message = $"Metering method {meteringMethod.Name} not allowed: the metering method for this type of metering point must be Virtual (D02) or Calculated (D03) if net settlement group is not 0 or 99.";
         }
-
-        public NetSettlementGroup NetSettlementGroup { get; }
-
-        public MeteringMethod MeteringMethod { get; }
     }
 }

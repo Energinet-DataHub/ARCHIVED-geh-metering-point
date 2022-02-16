@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
 {
     public class InvalidScheduledMeterReadingDateNetSettlementGroupRuleError : ValidationError
     {
+        public InvalidScheduledMeterReadingDateNetSettlementGroupRuleError()
+        {
+            Code = "E0H";
+            Message = "Day of scheduled meter reading date must be 01 when net settlement group is 6.";
+        }
     }
 }

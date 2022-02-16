@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.ParentChild.Rul
 {
     public class CannotActAsParent : ValidationError
     {
+        public CannotActAsParent()
+        {
+            Code = "D18";
+            Message = "Only consumption, production and exchange metering points can be a parent metering point.";
+        }
     }
 }

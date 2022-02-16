@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Data;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using FluentValidation;
 

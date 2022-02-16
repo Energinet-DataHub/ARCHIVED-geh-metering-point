@@ -44,7 +44,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             var childMeteringPoint = CreateChildMeteringPoint(MeteringPointType.ElectricalHeating);
             parent.CloseDown();
 
-            AssertContainsValidationError<CannotCoupleToClosedDownParent>(await childMeteringPoint.CanCoupleToAsync(parent).ConfigureAwait(false));
+            AssertContainsValidationError<CannotCoupleToClosedDownParent>("D16", await childMeteringPoint.CanCoupleToAsync(parent).ConfigureAwait(false));
             await Assert.ThrowsAsync<ParentCouplingException>(() => childMeteringPoint.CoupleToAsync(parent)).ConfigureAwait(false);
         }
 
@@ -54,7 +54,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             var parent = CreateMeteringPoint(MeteringPointType.Consumption, CreateGridArea());
             var childMeteringPoint = CreateChildMeteringPoint(MeteringPointType.ElectricalHeating);
 
-            AssertContainsValidationError<ParentAndChildGridAreasMustBeTheSame>(await childMeteringPoint.CanCoupleToAsync(parent).ConfigureAwait(false));
+            AssertContainsValidationError<ParentAndChildGridAreasMustBeTheSame>("D46", await childMeteringPoint.CanCoupleToAsync(parent).ConfigureAwait(false));
             await Assert.ThrowsAsync<ParentCouplingException>(() => childMeteringPoint.CoupleToAsync(parent)).ConfigureAwait(false);
         }
 
@@ -64,7 +64,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             var parent = CreateMeteringPoint(MeteringPointType.InternalUse);
             var childMeteringPoint = CreateChildMeteringPoint(MeteringPointType.ElectricalHeating);
 
-            AssertContainsValidationError<CannotActAsParent>(await childMeteringPoint.CanCoupleToAsync(parent).ConfigureAwait(false));
+            AssertContainsValidationError<CannotActAsParent>("D18", await childMeteringPoint.CanCoupleToAsync(parent).ConfigureAwait(false));
             await Assert.ThrowsAsync<ParentCouplingException>(() => childMeteringPoint.CoupleToAsync(parent)).ConfigureAwait(false);
         }
 
@@ -74,7 +74,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             var parent = CreateMeteringPoint(MeteringPointType.Exchange);
             var childMeteringPoint = CreateChildMeteringPoint(MeteringPointType.Consumption);
 
-            AssertContainsValidationError<CannotActAsChildOfGroup2MeteringPoints>(await childMeteringPoint.CanCoupleToAsync(parent).ConfigureAwait(false));
+            AssertContainsValidationError<CannotActAsChildOfGroup2MeteringPoints>("D18", await childMeteringPoint.CanCoupleToAsync(parent).ConfigureAwait(false));
             await Assert.ThrowsAsync<ParentCouplingException>(() => childMeteringPoint.CoupleToAsync(parent)).ConfigureAwait(false);
         }
 
@@ -84,7 +84,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             var parent = CreateMeteringPoint(MeteringPointType.Production);
             var childMeteringPoint = CreateChildMeteringPoint(MeteringPointType.Consumption);
 
-            AssertContainsValidationError<CannotActAsChildOfGroup1MeteringPoints>(await childMeteringPoint.CanCoupleToAsync(parent).ConfigureAwait(false));
+            AssertContainsValidationError<CannotActAsChildOfGroup1MeteringPoints>("D18", await childMeteringPoint.CanCoupleToAsync(parent).ConfigureAwait(false));
             await Assert.ThrowsAsync<ParentCouplingException>(() => childMeteringPoint.CoupleToAsync(parent)).ConfigureAwait(false);
         }
 

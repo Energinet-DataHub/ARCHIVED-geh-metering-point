@@ -75,7 +75,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithPowerPlant(null!)
                 .Build();
 
-            AssertDoesNotContainValidationError<PowerPlantIsRequired>(CheckRules(masterData));
+            AssertDoesNotContainValidationError<PowerPlantIsRequired>("D57", CheckRules(masterData));
         }
 
         [Fact]
@@ -85,7 +85,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithAddress(streetName: string.Empty)
                 .Build();
 
-            AssertContainsValidationError<StreetNameIsRequiredRuleError>(CheckRules(masterData));
+            AssertContainsValidationError<StreetNameIsRequiredRuleError>("E86", CheckRules(masterData));
         }
 
         [Theory]

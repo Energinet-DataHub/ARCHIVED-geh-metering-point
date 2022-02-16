@@ -21,13 +21,21 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.
         public CitySubdivisionRuleError()
         {
             CitySubdivision = string.Empty;
+            SetErrorProperties();
         }
 
         public CitySubdivisionRuleError(string citySubdivision)
         {
             CitySubdivision = citySubdivision;
+            SetErrorProperties();
         }
 
-        public string CitySubdivision { get; }
+        private string CitySubdivision { get; }
+
+        private void SetErrorProperties()
+        {
+            Code = "E86";
+            Message = $"City sub division name {CitySubdivision} has a length that exceeds 34.";
+        }
     }
 }
