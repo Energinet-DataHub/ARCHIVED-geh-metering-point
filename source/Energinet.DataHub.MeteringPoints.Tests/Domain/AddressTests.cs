@@ -349,7 +349,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
             var invalidDescription = "1234567890123456789012345678901234567890123456789012345678901234567890";
             var result = CheckRules(locationDescription: invalidDescription);
 
-            AssertError<InvalidLocationDescriptionRuleError>(result, true);
+            AssertError<InvalidLocationDescriptionRuleError>("E86", result, true);
         }
 
         private static Address Create(
