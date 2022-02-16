@@ -20,9 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules
     {
         public GridAreaNameMaxLengthRuleError(int maxLength)
         {
-            MaxLength = maxLength;
+            Code = "?";
+            Message = $"Name of the Grid Area must have length of maximum {maxLength} characters.";
         }
-
-        public int MaxLength { get; set; }
     }
 }

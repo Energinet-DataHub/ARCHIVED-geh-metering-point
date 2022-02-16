@@ -22,24 +22,20 @@ using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint
 {
     public sealed class ConnectMeteringPointResultHandler : IBusinessProcessResultHandler<ConnectMeteringPointRequest>
     {
         private readonly IActorMessageService _actorMessageService;
-        private readonly ErrorMessageFactory _errorMessageFactory;
         private readonly MeteringPointPipelineContext _pipelineContext;
         private readonly ICommandScheduler _commandScheduler;
 
         public ConnectMeteringPointResultHandler(
-            ErrorMessageFactory errorMessageFactory,
             MeteringPointPipelineContext pipelineContext,
             ICommandScheduler commandScheduler,
             IActorMessageService actorMessageService)
         {
-            _errorMessageFactory = errorMessageFactory ?? throw new ArgumentNullException(nameof(errorMessageFactory));
             _pipelineContext = pipelineContext ?? throw new ArgumentNullException(nameof(pipelineContext));
             _commandScheduler = commandScheduler ?? throw new ArgumentNullException(nameof(commandScheduler));
             _actorMessageService = actorMessageService;
@@ -73,7 +69,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoi
         private async Task CreateRejectResponseAsync(ConnectMeteringPointRequest request, BusinessProcessResult result)
         {
             var errors = result.ValidationErrors
-                .Select(error => _errorMessageFactory.GetErrorMessage(error))
+                .Select(error => ErrorMessageFactory.GetErrorMessage(error))
                 .AsEnumerable();
 
             await _actorMessageService
