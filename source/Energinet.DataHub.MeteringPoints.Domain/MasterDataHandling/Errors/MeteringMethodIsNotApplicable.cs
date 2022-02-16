@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
     public class MeteringMethodIsNotApplicable : ValidationError
     {
+        public MeteringMethodIsNotApplicable()
+        {
+            Code = "D37";
+            Message = "The metering method is not valid for this type of metering point.";
+        }
     }
 }

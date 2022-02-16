@@ -20,9 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
     {
         public GridAreaCodeUniqueRuleError(string gridAreaCode)
         {
-            GridAreaCode = gridAreaCode;
+            Code = "?";
+            Message = $"The grid area code {gridAreaCode} already exists";
         }
-
-        public string GridAreaCode { get; }
     }
 }

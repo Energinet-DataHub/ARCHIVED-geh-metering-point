@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
     public class DisconnectionTypeIsRequired : ValidationError
     {
+        public DisconnectionTypeIsRequired()
+        {
+            Code = "D65";
+            Message = "Disconnection type is required.";
+        }
     }
 }

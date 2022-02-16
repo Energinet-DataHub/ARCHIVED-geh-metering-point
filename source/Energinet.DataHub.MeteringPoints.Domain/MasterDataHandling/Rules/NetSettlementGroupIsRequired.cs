@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
     public class NetSettlementGroupIsRequired : ValidationError
     {
+        public NetSettlementGroupIsRequired()
+        {
+            Code = "D62";
+            Message = "Net settlement group is missing (type E17/E18)";
+        }
     }
 }

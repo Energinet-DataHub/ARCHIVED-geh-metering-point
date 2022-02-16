@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
     public class GeoInfoReferenceIsRequiredRuleError : ValidationError
     {
+        public GeoInfoReferenceIsRequiredRuleError()
+        {
+            Code = "E86";
+            Message = "Geo info reference is required for this type of metering point.";
+        }
     }
 }

@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
     public class InvalidProductType : ValidationError
     {
+        public InvalidProductType()
+        {
+            Code = "E29";
+            Message = "Product type is not allowed for this type of metering point.";
+        }
     }
 }

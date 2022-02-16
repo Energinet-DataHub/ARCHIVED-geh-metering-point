@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
     public class SettlementMethodIsRequired : ValidationError
     {
+        public SettlementMethodIsRequired()
+        {
+            Code = "D15";
+            Message = "Settlement method is required.";
+        }
     }
 }

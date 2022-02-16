@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production
 {
     public class MeterReadingPeriodicityIsRequired : ValidationError
     {
+        public MeterReadingPeriodicityIsRequired()
+        {
+            Code = "D53";
+            Message = "Meter reading periodicity is required.";
+        }
     }
 }

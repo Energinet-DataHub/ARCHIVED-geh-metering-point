@@ -73,7 +73,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Validation
                 .Must(value => EnumerationType.GetAll<NetSettlementGroup>()
                     .Select(item => item.Name)
                     .Contains(value, StringComparer.OrdinalIgnoreCase))
-                .WithState(createMeteringPoint => new InvalidNetSettlementGroupValue(createMeteringPoint.NetSettlementGroup))
+                .WithState(createMeteringPoint => new InvalidNetSettlementGroupValue())
                 .Unless(request => string.IsNullOrEmpty(request.NetSettlementGroup));
 
             RuleFor(request => request.MeterReadingOccurrence)

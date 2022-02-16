@@ -20,12 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
     {
         public PowerPlantGsrnEan18ValidValidationError(string gsrnNumber, string powerPlant)
         {
-            GsrnNumber = gsrnNumber;
-            PowerPlant = powerPlant;
+            Code = "D57";
+            Message = $"Power plant {powerPlant} for metering point {gsrnNumber} is not a valid GSRN/EAN18 code (wrong checksum) or does not start with digits '57'";
         }
-
-        public string GsrnNumber { get; }
-
-        public string PowerPlant { get; }
     }
 }
