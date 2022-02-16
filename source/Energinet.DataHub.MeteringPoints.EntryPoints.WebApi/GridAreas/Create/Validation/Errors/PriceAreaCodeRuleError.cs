@@ -20,9 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create.V
     {
         public PriceAreaCodeRuleError(string priceAreaCode)
         {
-            PriceAreaCode = priceAreaCode;
+            Code = "?";
+            Message = $"Price area code {priceAreaCode} has wrong value (outside domain).";
         }
-
-        public string PriceAreaCode { get; }
     }
 }
