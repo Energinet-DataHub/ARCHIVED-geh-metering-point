@@ -20,9 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
     {
         public PhysicalStateMandatoryValidationError(string gsrnNumber)
         {
-            GsrnNumber = gsrnNumber;
+            Code = "D02";
+            Message = $"Physical status is missing for metering point {gsrnNumber}";
         }
-
-        public string GsrnNumber { get; }
     }
 }
