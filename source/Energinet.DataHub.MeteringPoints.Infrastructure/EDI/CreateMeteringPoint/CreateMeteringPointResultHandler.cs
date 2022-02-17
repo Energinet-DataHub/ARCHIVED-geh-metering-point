@@ -19,7 +19,6 @@ using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint
 {
@@ -27,14 +26,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
         IBusinessProcessResultHandler<TMeteringPoint>
         where TMeteringPoint : ICreateMeteringPointRequest
     {
-        private readonly ErrorMessageFactory _errorMessageFactory;
         private readonly IActorMessageService _actorMessageService;
 
         public CreateMeteringPointResultHandler(
-            ErrorMessageFactory errorMessageFactory,
             IActorMessageService actorMessageService)
         {
-            _errorMessageFactory = errorMessageFactory;
             _actorMessageService = actorMessageService;
         }
 
@@ -58,7 +54,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoin
         private async Task CreateRejectResponseAsync(string gsrnNumber, string transactionId, BusinessProcessResult result)
         {
             var errors = result.ValidationErrors
-                .Select(error => _errorMessageFactory.GetErrorMessage(error))
+                .Select(error => ErrorMessageFactory.GetErrorMessage(error))
                 .AsEnumerable();
 
             await _actorMessageService

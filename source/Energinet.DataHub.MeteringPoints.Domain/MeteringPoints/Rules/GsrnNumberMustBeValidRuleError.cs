@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
     public class GsrnNumberMustBeValidRuleError : ValidationError
     {
+        public GsrnNumberMustBeValidRuleError()
+        {
+            Code = "D57";
+            Message = "Invalid GSRN number";
+        }
     }
 }

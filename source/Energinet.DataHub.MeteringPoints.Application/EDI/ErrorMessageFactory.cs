@@ -19,31 +19,18 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.EDI
 {
-    public record ErrorConverterRegistration(Type Error, Func<ErrorConverter> Func);
-
-    public class ErrorMessageFactory
+    public static class ErrorMessageFactory
     {
-        private readonly Dictionary<Type, Func<ErrorConverter>> _converters;
-
-        public ErrorMessageFactory(IEnumerable<ErrorConverterRegistration> registrations)
-        {
-            _converters = registrations.ToDictionary(x => x.Error, x => x.Func);
-        }
-
-        public ErrorMessage GetErrorMessage(ValidationError validationError)
+        public static ErrorMessage GetErrorMessage(ValidationError validationError)
         {
             if (validationError == null) throw new ArgumentNullException(nameof(validationError));
-            if (string.IsNullOrEmpty(validationError.Code) == false)
+
+            if (!string.IsNullOrEmpty(validationError.Code))
             {
                 return new ErrorMessage(validationError.Code, validationError.Message);
             }
 
-            if (!_converters.ContainsKey(validationError.GetType()))
-            {
-                return new ErrorMessage(validationError.Code, validationError.Message);
-            }
-
-            return _converters[validationError.GetType()]().Convert(validationError);
+            return new ErrorMessage(string.Empty, string.Empty);
         }
     }
 }

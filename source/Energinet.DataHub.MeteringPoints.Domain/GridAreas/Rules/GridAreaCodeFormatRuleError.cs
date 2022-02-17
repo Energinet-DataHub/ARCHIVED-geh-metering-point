@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules
 {
     public class GridAreaCodeFormatRuleError : ValidationError
     {
+        public GridAreaCodeFormatRuleError()
+        {
+            Code = "?";
+            Message = "Code of the Grid Area must consist of 3 digits.";
+        }
     }
 }

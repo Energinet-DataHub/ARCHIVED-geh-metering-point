@@ -62,7 +62,6 @@ limitations under the License.
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="EDI\Errors\Converters\Common" />
     <Folder Include="Integration\IntegrationEvents\ChangeConnectionStatus" />
     <Folder Include="Messaging\Incoming\Protobuf\Contracts" />
   </ItemGroup>
