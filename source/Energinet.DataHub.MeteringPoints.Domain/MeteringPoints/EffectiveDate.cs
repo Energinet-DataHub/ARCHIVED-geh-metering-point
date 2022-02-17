@@ -48,10 +48,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 
         public static EffectiveDate Create(string dateInUtc)
         {
-            if (!string.IsNullOrEmpty(dateInUtc)) throw new ArgumentNullException(nameof(dateInUtc));
-            {
-                dateInUtc = dateInUtc.Trim();
-            }
+            if (string.IsNullOrEmpty(dateInUtc)) throw new ArgumentNullException(nameof(dateInUtc));
+
+            dateInUtc = dateInUtc.Trim();
 
             if (CheckRules(dateInUtc).Success == false)
             {
