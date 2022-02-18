@@ -69,6 +69,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ReconnectMeteringPoi
         }
 
         [Fact]
+        public async Task Send_master_data_to_associated_energy_suppliers_when_reconnected()
+        {
+            await CreateMeteringPointWithEnergySupplierAssigned().ConfigureAwait(false);
+
+            await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
+
+            await SendCommandAsync(CreateDisconnectMeteringPointRequest()).ConfigureAwait(false);
+
+            await SendCommandAsync(CreateReconnectMeteringPointRequest()).ConfigureAwait(false);
+
+            await AssertAndRunInternalCommandAsync<SendAccountingPointCharacteristicsMessage>().ConfigureAwait(false);
+
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.AccountingPointCharacteristicsMessage, 3);
+        }
+
+        [Fact]
         public async Task Cannot_reconnect_if_not_disconnected()
         {
             await CreateMeteringPointWithEnergySupplierAssigned().ConfigureAwait(false);
@@ -140,12 +156,23 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ReconnectMeteringPoi
         {
             await SendCommandAsync(Scenarios.CreateCommand(MeteringPointType.Consumption)).ConfigureAwait(false);
             await MarkAsEnergySupplierAssigned(startOfSupplyDate).ConfigureAwait(false);
+            await AddEnergySupplier(startOfSupplyDate).ConfigureAwait(false);
         }
 
         private async Task MarkAsEnergySupplierAssigned(Instant startOfSupply)
         {
             var setEnergySupplierAssigned = new SetEnergySupplierInfo(SampleData.GsrnNumber, startOfSupply);
             await SendCommandAsync(setEnergySupplierAssigned).ConfigureAwait(false);
+        }
+
+        private async Task AddEnergySupplier(Instant startOfSupply)
+        {
+            var meteringPointRepository = GetService<IMeteringPointRepository>();
+            var meteringPoint = await meteringPointRepository.GetByGsrnNumberAsync(GsrnNumber.Create(SampleData.GsrnNumber))
+                .ConfigureAwait(false);
+
+            var addEnergySupplier = new AddEnergySupplier(meteringPoint?.Id.Value.ToString()!, startOfSupply, SampleData.GlnNumber);
+            await SendCommandAsync(addEnergySupplier).ConfigureAwait(false);
         }
 
         private ConnectMeteringPointRequest CreateConnectMeteringPointRequest()
