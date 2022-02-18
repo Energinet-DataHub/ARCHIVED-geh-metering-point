@@ -24,6 +24,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Tests.Tooling;
 using Xunit;
 using Xunit.Categories;
 
@@ -207,7 +208,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             var masterData = Builder()
                 .Build();
 
-            var effectiveDate = "2022-01-01T23:00:00Z";
+            var effectiveDate = TestHelpers.DaylightSavingsString(new DateTime(2022, 1, 1));
             var updatedMasterData = UpdateBuilder(masterData)
                 .EffectiveOn(effectiveDate)
                 .Build();

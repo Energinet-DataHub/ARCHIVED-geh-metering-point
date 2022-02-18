@@ -15,6 +15,7 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Tests.Tooling;
 using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Tests
@@ -94,8 +95,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests
         private static string EffectiveDateNow()
         {
             var currentDate = SystemClock.Instance.GetCurrentInstant().InUtc();
-            var effectiveDate = Instant.FromUtc(currentDate.Year, currentDate.Month, currentDate.Day, 23, 0, 0);
-            return effectiveDate.ToString();
+            var effectiveDate = Instant.FromUtc(
+                currentDate.Year,
+                currentDate.Month,
+                currentDate.Day,
+                23,
+                0,
+                0);
+
+            return TestHelpers.DaylightSavingsString(effectiveDate.ToDateTimeUtc());
         }
     }
 }
