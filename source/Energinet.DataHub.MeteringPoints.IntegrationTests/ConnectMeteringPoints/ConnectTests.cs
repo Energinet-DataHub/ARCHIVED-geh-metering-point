@@ -88,6 +88,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             var effectiveDate = effectiveDateIsInThePast
                 ? EffectiveDateInPast(numberOfDaysOffset)
                 : EffectiveDateInFuture(numberOfDaysOffset);
+
             await CreateMeteringPointWithEnergySupplierAssigned(effectiveDate).ConfigureAwait(false);
 
             await SendCommandAsync(CreateConnectMeteringPointRequest() with
@@ -258,7 +259,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
 
         private static Instant ToEffectiveDate(DateTime date)
         {
-            return Instant.FromUtc(date.Year, date.Month, date.Day, 23, 0);
+            return TestHelpers.DaylightSavingsInstant(date);
         }
 
         private ConnectMeteringPointRequest CreateConnectMeteringPointRequest()

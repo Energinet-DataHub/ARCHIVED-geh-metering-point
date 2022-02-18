@@ -52,7 +52,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
             {
                 mapper.Property<EffectiveDate>(x => x.EffectiveDate)
                     .HasColumnName("EffectiveDate")
-                    .HasConversion<DateTime>(toDbValue => toDbValue.DateInUtc.ToDateTimeUtc(), fromDbValue => EffectiveDate.Create(fromDbValue));
+                    .HasConversion<DateTime>(
+                        toDbValue => toDbValue.DateInUtc.ToDateTimeUtc(),
+                        fromDbValue => EffectiveDate.Create(fromDbValue));
 
                 mapper.Property(x => x.ProductType)
                     .HasColumnName("ProductType")
