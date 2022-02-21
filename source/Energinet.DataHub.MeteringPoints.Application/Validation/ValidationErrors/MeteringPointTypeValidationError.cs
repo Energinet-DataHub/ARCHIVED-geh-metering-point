@@ -20,9 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
     {
         public MeteringPointTypeValidationError(string meteringPointType)
         {
-            MeteringPointType = meteringPointType;
+            Code = "D18";
+            Message = $"{meteringPointType} is not a valid metering point type.";
         }
-
-        public string MeteringPointType { get; }
     }
 }

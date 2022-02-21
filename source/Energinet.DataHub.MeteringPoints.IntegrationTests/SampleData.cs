@@ -15,6 +15,8 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
+using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
@@ -40,7 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string AssetType => Domain.MasterDataHandling.Components.AssetType.GasTurbine.Name;
 
-        public static string EffectiveDate => "2021-05-05T23:00:00Z";
+        public static string EffectiveDate => GetEffectiveDate();
 
         public static string MeasurementUnitType => Domain.MasterDataHandling.Components.MeasurementUnitType.KWh.Name;
 
@@ -85,5 +87,18 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         public static string GlnNumber => "3963865549824";
 
         public static string ParentGsrnNumber => "570851247381952311";
+
+        private static string GetEffectiveDate()
+        {
+            var effectiveDate = Instant.FromUtc(
+                2021,
+                5,
+                5,
+                23,
+                0,
+                0);
+
+            return TestHelpers.DaylightSavingsString(effectiveDate.ToDateTimeUtc());
+        }
     }
 }

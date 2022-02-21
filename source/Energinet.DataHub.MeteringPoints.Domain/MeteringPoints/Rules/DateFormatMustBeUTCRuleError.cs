@@ -20,9 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
     {
         public DateFormatMustBeUTCRuleError(string date)
         {
-            Date = date;
+            Code = "E86";
+            Message = $"Date time {date} must have UTC+0 format 'YYYY-MM-DD HH:MI:SS'";
         }
-
-        public string Date { get; }
     }
 }

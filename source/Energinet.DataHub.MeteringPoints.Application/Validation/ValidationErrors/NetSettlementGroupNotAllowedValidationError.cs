@@ -20,12 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
     {
         public NetSettlementGroupNotAllowedValidationError(string meteringPointType, string netSettlementGroup)
         {
-            MeteringPointType = meteringPointType;
-            NetSettlementGroup = netSettlementGroup;
+            Code = "D02";
+            Message = $"Net settlement group {netSettlementGroup} is not allowed for metering point type {meteringPointType}";
         }
-
-        public string MeteringPointType { get; }
-
-        public string NetSettlementGroup { get; }
     }
 }

@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
 {
     public class GsrnNumberIsRequired : ValidationError
     {
+        public GsrnNumberIsRequired()
+        {
+            Code = "D57";
+            Message = "GSRN number is required";
+        }
     }
 }

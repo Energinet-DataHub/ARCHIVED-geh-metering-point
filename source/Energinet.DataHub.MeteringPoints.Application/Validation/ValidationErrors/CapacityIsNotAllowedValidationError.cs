@@ -20,12 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
     {
         public CapacityIsNotAllowedValidationError(string gsrnNumber, string? capacity)
         {
-            GsrnNumber = gsrnNumber;
-            Capacity = capacity;
+            Code = "D56";
+            Message = $"Capacity '{capacity}' for metering point {gsrnNumber} with net settlement group not 0 is missing (type E18) or not allowed (other types).";
         }
-
-        public string GsrnNumber { get; }
-
-        public string? Capacity { get; }
     }
 }

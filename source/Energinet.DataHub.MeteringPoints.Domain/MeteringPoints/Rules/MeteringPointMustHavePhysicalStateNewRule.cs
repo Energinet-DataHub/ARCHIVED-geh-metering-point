@@ -30,6 +30,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 
         public bool IsBroken { get; }
 
-        public ValidationError ValidationError => new MeteringPointMustHavePhysicalStateNewRuleError(_gsrnNumber, _meteringPointType);
+        public ValidationError ValidationError => new MeteringPointMustHavePhysicalStateNewRuleError(_gsrnNumber);
     }
 }

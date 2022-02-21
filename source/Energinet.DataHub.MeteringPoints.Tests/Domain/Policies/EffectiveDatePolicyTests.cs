@@ -14,6 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.Policies;
+using Energinet.DataHub.MeteringPoints.Tests.Tooling;
 using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
@@ -24,31 +25,33 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.Policies
     public class EffectiveDatePolicyTests : TestBase
     {
         [Theory]
-        [InlineData("2021-01-01T11:00:00Z", "2020-12-26T23:00:00Z", 5, true)]
-        [InlineData("2021-01-01T11:00:00Z", "2020-12-26T23:00:00Z", 10, false)]
-        public void Effective_date_is_within_range_of_allowed_number_of_days_before_today(string todayDate, string effectiveDate, int allowedNumberOfDaysBeforeToday, bool expectError)
+        [InlineData("2020-12-26T22:00:00Z", 5, true)]
+        [InlineData("2020-12-26T22:00:00Z", 10, false)]
+        public void Effective_date_is_within_range_of_allowed_number_of_days_before_today(string effectiveDate, int allowedNumberOfDaysBeforeToday, bool expectError)
         {
+            const string todayDate = "2021-01-01T11:00:00Z";
             var policy = new EffectiveDatePolicy(allowedNumberOfDaysBeforeToday, 0);
             var today = InstantPattern.General.Parse(todayDate).Value;
             var effective = EffectiveDate.Create(effectiveDate);
 
             var result = policy.Check(today, effective);
 
-            AssertError<EffectiveDateIsNotWithinAllowedTimePeriod>(result, expectError);
+            AssertError<EffectiveDateIsNotWithinAllowedTimePeriod>("E17", result, expectError);
         }
 
         [Theory]
-        [InlineData("2021-01-01T11:00:00Z", "2021-01-10T23:00:00Z", 5, true)]
-        [InlineData("2021-01-01T11:00:00Z", "2021-01-10T23:00:00Z", 10, false)]
-        public void Effective_date_is_within_range_of_allowed_number_of_days_after_today(string todayDate, string effectiveDate, int allowedNumberOfDaysAfterToday, bool expectError)
+        [InlineData("2021-01-10T22:00:00Z", 5, true)]
+        [InlineData("2021-01-10T22:00:00Z", 10, false)]
+        public void Effective_date_is_within_range_of_allowed_number_of_days_after_today(string effectiveDate, int allowedNumberOfDaysAfterToday, bool expectError)
         {
+            const string todayDate = "2021-01-01T11:00:00Z";
             var policy = new EffectiveDatePolicy(0, allowedNumberOfDaysAfterToday);
             var today = InstantPattern.General.Parse(todayDate).Value;
             var effective = EffectiveDate.Create(effectiveDate);
 
             var result = policy.Check(today, effective);
 
-            AssertError<EffectiveDateIsNotWithinAllowedTimePeriod>(result, expectError);
+            AssertError<EffectiveDateIsNotWithinAllowedTimePeriod>("E17", result, expectError);
         }
 
         [Fact]
@@ -56,11 +59,11 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.Policies
         {
             var policy = new EffectiveDatePolicy(10, 10);
             var today = InstantPattern.General.Parse("2021-01-10T10:00:00Z").Value;
-            var effective = EffectiveDate.Create("2021-01-10T23:00:00Z");
+            var effective = EffectiveDate.Create("2021-01-10T22:00:00Z");
 
             var result = policy.Check(today, effective);
 
-            AssertError<EffectiveDateIsNotWithinAllowedTimePeriod>(result, false);
+            AssertError<EffectiveDateIsNotWithinAllowedTimePeriod>("E17", result, false);
         }
     }
 }

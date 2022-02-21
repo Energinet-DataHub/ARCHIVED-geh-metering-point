@@ -88,6 +88,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             var effectiveDate = effectiveDateIsInThePast
                 ? EffectiveDateInPast(numberOfDaysOffset)
                 : EffectiveDateInFuture(numberOfDaysOffset);
+
             await CreateMeteringPointWithEnergySupplierAssigned(effectiveDate).ConfigureAwait(false);
 
             await SendCommandAsync(CreateConnectMeteringPointRequest() with
@@ -151,6 +152,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
                 .HasConnectionState(PhysicalState.Connected);
             AssertConfirmMessage(DocumentType.ConfirmConnectMeteringPoint);
             Assert.NotNull(FindIntegrationEvent<MeteringPointConnectedIntegrationEvent>());
+        }
+
+        [Fact]
+        public async Task Metering_point_connected_shows_in_process_overview()
+        {
+            await CreateMeteringPointWithEnergySupplierAssigned().ConfigureAwait(false);
+
+            await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
+
+            await AssertProcessOverviewAsync(
+                    SampleData.GsrnNumber,
+                    "BRS-008",
+                    "RequestConnectMeteringPoint",
+                    "ConfirmConnectMeteringPoint")
+                .ConfigureAwait(false);
         }
 
         [Fact]
@@ -243,7 +259,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
 
         private static Instant ToEffectiveDate(DateTime date)
         {
-            return Instant.FromUtc(date.Year, date.Month, date.Day, 23, 0);
+            return TestHelpers.DaylightSavingsInstant(date);
         }
 
         private ConnectMeteringPointRequest CreateConnectMeteringPointRequest()

@@ -15,7 +15,7 @@
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Disconnect;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.ChangeConnectionStatus;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using NodaTime;
 using Xunit;
@@ -40,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 
             meteringPoint.Connect(connectionDetails);
 
-            AssertError<PhysicalStateMustBeDisconnectedError>(meteringPoint.ReconnectAcceptable(connectionDetails));
+            AssertError<ConnectionStateMustBeConnectedOrDisconnectedError>("D16", meteringPoint.ReconnectAcceptable(connectionDetails));
         }
 
         [Theory]
@@ -53,7 +53,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 
             var checkResult = meteringPoint.ReconnectAcceptable(connectionDetails);
 
-            Assert.Contains(checkResult.Errors, error => error is MustHaveEnergySupplierRuleError);
+            AssertContainsValidationError<MustHaveEnergySupplierRuleError>("D36", checkResult);
         }
 
         [Fact]
@@ -64,7 +64,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 
             var checkResult = meteringPoint.ReconnectAcceptable(connectionDetails);
 
-            Assert.DoesNotContain(checkResult.Errors, error => error is MustHaveEnergySupplierRuleError);
+            AssertDoesNotContainValidationError<MustHaveEnergySupplierRuleError>("D36", checkResult);
         }
 
         [Fact]

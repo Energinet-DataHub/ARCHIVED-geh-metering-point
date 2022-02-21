@@ -37,7 +37,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
         private readonly IBusinessProcessRepository _businessProcesses;
         private readonly IActorMessageService _actorMessageService;
         private readonly RequestCloseDownValidator _validator;
-        private readonly ErrorMessageFactory _errorMessageFactory;
         private readonly IMeteringPointRepository _meteringPoints;
         private readonly IMediator _mediator;
         private BusinessRulesValidationResult _validationResult = new();
@@ -47,14 +46,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
             IBusinessProcessRepository businessProcesses,
             IActorMessageService actorMessageService,
             RequestCloseDownValidator validator,
-            ErrorMessageFactory errorMessageFactory,
             IMeteringPointRepository meteringPoints,
             IMediator mediator)
         {
             _businessProcesses = businessProcesses ?? throw new ArgumentNullException(nameof(businessProcesses));
             _actorMessageService = actorMessageService ?? throw new ArgumentNullException(nameof(actorMessageService));
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
-            _errorMessageFactory = errorMessageFactory ?? throw new ArgumentNullException(nameof(errorMessageFactory));
             _meteringPoints = meteringPoints;
             _mediator = mediator;
         }
@@ -115,7 +112,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
         private List<ErrorMessage> ConvertValidationErrorsToErrorMessages()
         {
             return _validationResult.Errors
-                .Select(validationError => _errorMessageFactory.GetErrorMessage(validationError)).ToList();
+                .Select(validationError => ErrorMessageFactory.GetErrorMessage(validationError)).ToList();
         }
 
         private async Task<MeteringPoint?> FindTargetMeteringPointAsync(string gsrnNumber)

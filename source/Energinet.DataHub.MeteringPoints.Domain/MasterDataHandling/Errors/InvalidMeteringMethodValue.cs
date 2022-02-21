@@ -18,11 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
     public class InvalidMeteringMethodValue : ValidationError
     {
-        public InvalidMeteringMethodValue(string providedValue)
+        public InvalidMeteringMethodValue(string meteringMethod)
         {
-            ProvidedValue = providedValue;
+            Code = "D02";
+            Message = $"Metering method {meteringMethod} has wrong value (outside domain)";
         }
-
-        public string ProvidedValue { get; }
     }
 }

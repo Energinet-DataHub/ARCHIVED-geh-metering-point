@@ -21,9 +21,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
     {
         public InvalidSettlementMethodRuleError(SettlementMethod settlementMethod)
         {
-            SettlementMethod = settlementMethod;
+            Code = "D15";
+            Message = $"Settlement method {settlementMethod} not allowed: settlement method must be non-profiled or flex settled.";
         }
-
-        public SettlementMethod SettlementMethod { get; }
     }
 }

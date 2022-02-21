@@ -80,7 +80,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                     {
                         return EnumerationType.GetAll<NetSettlementGroup>()
                             .Select(item => item.Name)
-                            .Contains(netSettlementGroup) == false ? BusinessRulesValidationResult.Failure(new InvalidNetSettlementGroupValue(netSettlementGroup)) : BusinessRulesValidationResult.Valid();
+                            .Contains(netSettlementGroup) == false ? BusinessRulesValidationResult.Failure(new InvalidNetSettlementGroupValue()) : BusinessRulesValidationResult.Valid();
                     },
                     () => EnumerationType.FromName<NetSettlementGroup>(netSettlementGroup));
             }

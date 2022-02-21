@@ -16,7 +16,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
+using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using NodaTime;
+using Actor = Energinet.DataHub.Core.App.Common.Abstractions.Actor.Actor;
 
 namespace Energinet.DataHub.MeteringPoints.Application.EDI
 {
@@ -32,7 +34,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.EDI
             string transactionId,
             string gsrn,
             Instant startDateAndOrTime,
-            string receiverGln);
+            Actor recipient,
+            Role recipientRole);
 
         /// <summary>
         /// Confirmation of create metering point.
@@ -74,32 +77,17 @@ namespace Energinet.DataHub.MeteringPoints.Application.EDI
         /// <summary>
         /// Rejection of disconnect metering point.
         /// </summary>
-        Task SendDisconnectMeteringPointRejectAsync(
+        Task SendConnectionStatusMeteringPointRejectAsync(
             string transactionId,
             string gsrn,
             IEnumerable<ErrorMessage> errors);
-
-        /// <summary>
-        /// Confirm of disconnect metering point.
-        /// </summary>
-        Task SendDisconnectMeteringPointConfirmAsync(
-            string transactionId,
-            string gsrn);
 
         /// <summary>
         /// Confirm of reconnect metering point.
         /// </summary>
-        Task SendReconnectMeteringPointConfirmAsync(
+        Task SendConnectionStatusMeteringPointConfirmAsync(
             string transactionId,
             string gsrn);
-
-        /// <summary>
-        /// Rejection of reconnect metering point.
-        /// </summary>
-        Task SendReconnectMeteringPointRejectAsync(
-            string transactionId,
-            string gsrn,
-            IEnumerable<ErrorMessage> errors);
 
         /// <summary>
         /// Rejection of connect metering point.

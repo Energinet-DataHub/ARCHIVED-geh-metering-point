@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
     public class UnitTypeIsRequired : ValidationError
     {
+        public UnitTypeIsRequired()
+        {
+            Code = "E73";
+            Message = "Energy time series measure unit is required.";
+        }
     }
 }

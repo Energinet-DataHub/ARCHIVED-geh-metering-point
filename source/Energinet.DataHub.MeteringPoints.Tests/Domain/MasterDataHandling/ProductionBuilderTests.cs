@@ -63,7 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithReadingPeriodicity(string.Empty)
                 .Validate();
 
-            Assert.Contains(sut.Errors, e => e is MeterReadingPeriodicityIsRequired);
+            AssertContainsValidationError<MeterReadingPeriodicityIsRequired>("D53", sut);
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithMeasurementUnitType(null)
                 .Validate();
 
-            Assert.Contains(sut.Errors, e => e is UnitTypeIsRequired);
+            AssertContainsValidationError<UnitTypeIsRequired>("E73", sut);
         }
 
         [Fact]
@@ -82,7 +82,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             var sut = Builder()
                 .Validate();
 
-            AssertContainsValidationError<NetSettlementGroupIsRequired>(sut);
+            AssertContainsValidationError<NetSettlementGroupIsRequired>("D62", sut);
         }
 
         private static IMasterDataBuilder Builder() =>

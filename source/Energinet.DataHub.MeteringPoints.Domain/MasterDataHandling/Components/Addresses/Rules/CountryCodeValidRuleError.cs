@@ -20,6 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.
     {
         public CountryCodeValidRuleError()
         {
+            Code = "E86";
+            Message = "Country code does not contain a valid value";
         }
     }
 }

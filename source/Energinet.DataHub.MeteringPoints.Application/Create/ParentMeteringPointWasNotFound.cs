@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
 {
     public class ParentMeteringPointWasNotFound : ValidationError
     {
+        public ParentMeteringPointWasNotFound()
+        {
+            Code = "E10";
+            Message = "Parent metering was not found.";
+        }
     }
 }
