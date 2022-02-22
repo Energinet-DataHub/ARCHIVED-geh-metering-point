@@ -43,7 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
             foreach (var queuedCommand in pendingCommands)
             {
                 queuedCommand.SetProcessed(_systemDateTimeProvider.Now());
-                var command = _serializer.Deserialize(queuedCommand.Data, typeof(InternalCommand).Assembly.GetType(queuedCommand.Type, true)!);
+                var command = _serializer.Deserialize(queuedCommand.Data, Type.GetType(queuedCommand.Type, true)!);
                 await _mediator.Send(command).ConfigureAwait(false);
             }
         }

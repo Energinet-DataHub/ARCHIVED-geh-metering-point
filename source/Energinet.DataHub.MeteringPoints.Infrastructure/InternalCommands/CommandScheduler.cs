@@ -13,14 +13,12 @@
 // limitations under the License.
 
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
@@ -51,7 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
             if (command == null) throw new ArgumentNullException(nameof(command));
 
             var data = _serializer.Serialize(command);
-            var type = command.GetType().FullName;
+            var type = command.GetType().AssemblyQualifiedName;
             var queuedCommand = new QueuedInternalCommand(command.Id, type!, data, _systemDateTimeProvider.Now(), scheduleDate!, _correlationContext.Id);
             await _context.QueuedInternalCommands.AddAsync(queuedCommand).ConfigureAwait(false);
         }
