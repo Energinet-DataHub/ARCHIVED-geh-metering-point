@@ -315,17 +315,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             var meteringPointContext = GetService<MeteringPointContext>();
             var commands = meteringPointContext
                 .QueuedInternalCommands
-                .Where(c => c.ProcessedDate == null && c.Type == typeof(TCommand).FullName)
+                .Where(c => c.ProcessedDate == null && c.Type == typeof(TCommand).AssemblyQualifiedName)
                 .ToList();
 
-            //var messageExtractor = GetService<MessageExtractor>();
             var serializer = GetService<IJsonSerializer>();
             foreach (var command in commands)
             {
-                var message = serializer.Deserialize(command.Data, typeof(InternalCommand).Assembly.GetType(command.Type, true)!);
-
-                // var meteringPointEnvelope = MeteringPointEnvelope.Parser.ParseFrom(command.Data);
-                //     meteringPointEnvelope.SendAccountingPointCharacteristicsMessage.
+                var message = serializer.Deserialize(command.Data, Type.GetType(command.Type, true)!);
                 await SendCommandAsync(message).ConfigureAwait(false);
             }
         }
