@@ -63,9 +63,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
         public FunctionAppHostManager? LocalMessageHubHostManager { get; private set; }
 
         [NotNull]
-        public FunctionAppHostManager? InternalCommandDispatcherHostManager { get; private set; }
-
-        [NotNull]
         public MessageHubSimulation? MessageHubSimulator { get; private set; }
 
         public MeteringPointDatabaseManager DatabaseManager { get; }
@@ -92,7 +89,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             var processingHostSettings = HostConfigurationBuilder.CreateFunctionAppHostSettings();
             var outboxHostSettings = HostConfigurationBuilder.CreateFunctionAppHostSettings();
             var localMessageHubHostSettings = HostConfigurationBuilder.CreateFunctionAppHostSettings();
-            var internalCommandDispatcherHostSettings = HostConfigurationBuilder.CreateFunctionAppHostSettings();
 
             var buildConfiguration = GetBuildConfiguration();
             var port = 8000;
@@ -112,29 +108,22 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             localMessageHubHostSettings.Functions = "BundleDequeuedQueueSubscriber RequestBundleQueueSubscriber";
             localMessageHubHostSettings.Port = ++port;
 
-            internalCommandDispatcherHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher\\bin\\{buildConfiguration}\\net5.0";
-            internalCommandDispatcherHostSettings.Functions = "Dispatcher";
-            internalCommandDispatcherHostSettings.Port = ++port;
-
             ingestionHostSettings.ProcessEnvironmentVariables.Add("INTERNAL_SERVICEBUS_RETRY_COUNT", "3");
             ingestionHostSettings.ProcessEnvironmentVariables.Add("B2C_TENANT_ID", AuthorizationConfiguration.B2cTenantId);
             ingestionHostSettings.ProcessEnvironmentVariables.Add("BACKEND_SERVICE_APP_ID", AuthorizationConfiguration.BackendAppId);
 
             // Use "0 0 8 1 1 *", to do: 8:00 1. January ~ we must set this setting, but we do not want the trigger to run automatically, we want to trigger it manually
             outboxHostSettings.ProcessEnvironmentVariables.Add("ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER", "*/1 * * * * *");
-            internalCommandDispatcherHostSettings.ProcessEnvironmentVariables.Add("DISPATCH_TRIGGER_TIMER", "*/2 * * * * *");
 
             ingestionHostSettings.ProcessEnvironmentVariables.Add("AzureWebJobsStorage", "UseDevelopmentStorage=true");
             processingHostSettings.ProcessEnvironmentVariables.Add("AzureWebJobsStorage", "UseDevelopmentStorage=true");
             outboxHostSettings.ProcessEnvironmentVariables.Add("AzureWebJobsStorage", "UseDevelopmentStorage=true");
             localMessageHubHostSettings.ProcessEnvironmentVariables.Add("AzureWebJobsStorage", "UseDevelopmentStorage=true");
-            internalCommandDispatcherHostSettings.ProcessEnvironmentVariables.Add("AzureWebJobsStorage", "UseDevelopmentStorage=true");
 
             ingestionHostSettings.ProcessEnvironmentVariables.Add("APPINSIGHTS_INSTRUMENTATIONKEY", IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
             processingHostSettings.ProcessEnvironmentVariables.Add("APPINSIGHTS_INSTRUMENTATIONKEY", IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
             outboxHostSettings.ProcessEnvironmentVariables.Add("APPINSIGHTS_INSTRUMENTATIONKEY", IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
             localMessageHubHostSettings.ProcessEnvironmentVariables.Add("APPINSIGHTS_INSTRUMENTATIONKEY", IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
-            internalCommandDispatcherHostSettings.ProcessEnvironmentVariables.Add("APPINSIGHTS_INSTRUMENTATIONKEY", IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
 
             ingestionHostSettings.ProcessEnvironmentVariables.Add("REQUEST_RESPONSE_LOGGING_CONNECTION_STRING", "UseDevelopmentStorage=true");
             ingestionHostSettings.ProcessEnvironmentVariables.Add("REQUEST_RESPONSE_LOGGING_CONTAINER_NAME", "marketoplogs");
@@ -147,7 +136,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             ingestionHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
             processingHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
             localMessageHubHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
-            internalCommandDispatcherHostSettings.ProcessEnvironmentVariables.Add("PROCESSING_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
 
             var meteringPointQueue = await ServiceBusResourceProvider
                 .BuildQueue("sbq-meteringpoint")
@@ -156,7 +144,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
                     ingestionHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_TOPIC_NAME", p.Name);
                     processingHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_TOPIC_NAME", p.Name);
                     localMessageHubHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_TOPIC_NAME", p.Name);
-                    internalCommandDispatcherHostSettings.ProcessEnvironmentVariables.Add("PROCESSING_QUEUE_NAME", p.Name);
                 })
                 .CreateAsync().ConfigureAwait(false);
 
@@ -237,19 +224,16 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             processingHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
             outboxHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
             localMessageHubHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
-            internalCommandDispatcherHostSettings.ProcessEnvironmentVariables.Add("DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
 
             IngestionHostManager = new FunctionAppHostManager(ingestionHostSettings, TestLogger);
             ProcessingHostManager = new FunctionAppHostManager(processingHostSettings, TestLogger);
             OutboxHostManager = new FunctionAppHostManager(outboxHostSettings, TestLogger);
             LocalMessageHubHostManager = new FunctionAppHostManager(localMessageHubHostSettings, TestLogger);
-            InternalCommandDispatcherHostManager = new FunctionAppHostManager(internalCommandDispatcherHostSettings, TestLogger);
 
             StartHost(IngestionHostManager);
             StartHost(ProcessingHostManager);
             StartHost(OutboxHostManager);
             StartHost(LocalMessageHubHostManager);
-            StartHost(InternalCommandDispatcherHostManager);
         }
 
         public async Task DisposeAsync()
@@ -258,7 +242,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             ProcessingHostManager.Dispose();
             OutboxHostManager.Dispose();
             LocalMessageHubHostManager.Dispose();
-            InternalCommandDispatcherHostManager.Dispose();
 
             AzuriteManager.Dispose();
 
