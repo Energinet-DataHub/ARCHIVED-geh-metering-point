@@ -340,14 +340,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             messages.Should().HaveCount(count);
         }
 
-        protected void AssertOutboxMessage<TMessage>()
-        {
-            var message = GetOutboxMessages<TMessage>().SingleOrDefault();
-
-            message.Should().NotBeNull();
-            message.Should().BeOfType<TMessage>();
-        }
-
         protected void AssertValidationError(string expectedErrorCode, DocumentType type)
         {
             var message = GetOutboxMessages
@@ -446,11 +438,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             Assert.NotNull(rejectMessage);
         }
 
-        protected void AseertNoIntegrationEventIsRaised<TIntegrationEvent>()
-        {
-            Assert.Null(GetOutboxMessages<TIntegrationEvent>().SingleOrDefault());
-        }
-
         protected async Task AssertMultipleProcessOverviewAsync(
             string gsrn,
             string expectedProcessName,
@@ -481,12 +468,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             processes.Should().ContainSingle(process => process.Name == expectedProcessName, $"a single process with name {expectedProcessName} was expected")
                 .Which.Details.Select(detail => detail.Name).Should().ContainInOrder(expectedProcessSteps);
-        }
-
-        protected async Task<BusinessProcessResult> InvokeBusinessProcessAsync(IBusinessRequest request)
-        {
-            var result = await GetService<IMediator>().Send(request).ConfigureAwait(false);
-            return result;
         }
 
         protected async Task SendCommandAsync(object command, CancellationToken cancellationToken = default)
