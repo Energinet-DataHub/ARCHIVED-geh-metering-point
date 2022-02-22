@@ -90,7 +90,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Client
 
         private async Task<MeteringPointClient> CreateMeteringPointClient()
         {
-            var token = "invalid token that will not be checked anyway";
+            var token = "a3f90ec2-66d1-48fd-8c44-4f78566e3b7b";
 
             var httpContextAccessorMock = new HttpContextAccessorMock(token);
             var httpClientFactoryMock = new HttpClientFactoryMock(_webApiFactory);

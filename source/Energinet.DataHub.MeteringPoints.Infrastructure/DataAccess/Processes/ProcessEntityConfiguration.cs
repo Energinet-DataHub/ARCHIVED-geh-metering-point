@@ -13,11 +13,7 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
-using Energinet.DataHub.MeteringPoints.Domain.Actors;
-using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -37,8 +33,18 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.Processes
 
             builder.HasKey(process => process.Id);
 
+            builder.Property(process => process.EffectiveDate)
+                .HasConversion(
+                    toDbValue => toDbValue.GetValueOrDefault(),
+                    fromDbValue => new DateTime(fromDbValue.Ticks, DateTimeKind.Utc));
+
+            builder.Property(process => process.CreatedDate)
+                .HasConversion(
+                    toDbValue => toDbValue,
+                    fromDbValue => new DateTime(fromDbValue.Ticks, DateTimeKind.Utc));
+
             builder
-                .OwnsMany<ProcessDetail>(process => process.Details, details =>
+                .OwnsMany(process => process.Details, details =>
                 {
                     details.ToTable("ProcessDetails")
                         .WithOwner()
@@ -46,7 +52,17 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.Processes
 
                     details.HasKey(processDetail => processDetail.Id);
 
-                    details.OwnsMany<ProcessDetailError>(processDetail => processDetail.Errors, errors =>
+                    details.Property(processDetail => processDetail.EffectiveDate)
+                        .HasConversion(
+                            toDbValue => toDbValue.GetValueOrDefault(),
+                            fromDbValue => new DateTime(fromDbValue.Ticks, DateTimeKind.Utc));
+
+                    details.Property(processDetail => processDetail.CreatedDate)
+                        .HasConversion(
+                            toDbValue => toDbValue,
+                            fromDbValue => new DateTime(fromDbValue.Ticks, DateTimeKind.Utc));
+
+                    details.OwnsMany(processDetail => processDetail.Errors, errors =>
                     {
                         errors.ToTable("ProcessDetailErrors")
                             .WithOwner()
