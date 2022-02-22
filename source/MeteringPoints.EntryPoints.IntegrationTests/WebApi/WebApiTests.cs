@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -56,12 +57,41 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.WebApi
             effectiveDateElement.Should().EndWith("Z");
         }
 
+        [Fact]
+        public async Task Get_metering_point_process_dates_must_include_utc_identifier()
+        {
+            // Arrange
+            var httpClient = _webApiFactory.CreateClient();
+            var userId = "a3f90ec2-66d1-48fd-8c44-4f78566e3b7b";
+            var gsrn = "571313157178361184";
+
+            // Act
+            var response = await GetMeteringPointProcesses(httpClient, userId, gsrn).ConfigureAwait(false);
+
+            // Assert
+            var jsonString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            using var document = JsonDocument.Parse(jsonString);
+            var root = document.RootElement;
+            var effectiveDateElement = root.EnumerateArray().First().GetProperty("effectiveDate").GetString();
+            effectiveDateElement.Should().EndWith("Z");
+        }
+
         private static async Task<HttpResponseMessage> GetMeteringPoint(HttpClient httpClient, string userId, string gsrn)
+        {
+            return await GetMethod(httpClient, userId, gsrn, "GetMeteringPointByGsrn").ConfigureAwait(false);
+        }
+
+        private static async Task<HttpResponseMessage> GetMeteringPointProcesses(HttpClient httpClient, string userId, string gsrn)
+        {
+            return await GetMethod(httpClient, userId, gsrn, "GetMeteringPointProcessesByGsrn").ConfigureAwait(false);
+        }
+
+        private static async Task<HttpResponseMessage> GetMethod(HttpClient httpClient, string userId, string gsrn, string method)
         {
             httpClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", userId);
             var response = await httpClient
-                .GetAsync(new Uri($"MeteringPoint/GetMeteringPointByGsrn/?gsrn={gsrn}", UriKind.Relative))
+                .GetAsync(new Uri($"MeteringPoint/{method}/?gsrn={gsrn}", UriKind.Relative))
                 .ConfigureAwait(false);
             return response;
         }
