@@ -17,13 +17,8 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Application
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.InternalCommands
 {
-    #pragma warning disable
-    public class TestCommand : InternalCommand
-    {
-    }
-
     public class TestCommandHandler : ICommandHandler<TestCommand>
     {
         public Task<Unit> Handle(TestCommand request, CancellationToken cancellationToken)
