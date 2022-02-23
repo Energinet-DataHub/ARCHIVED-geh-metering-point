@@ -32,8 +32,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
         [Function("ProcessInternalCommands")]
         public Task RunAsync([TimerTrigger("%INTERNAL_COMMAND_PROCESSING_INTERVAL%")] TimerInfo timerTimerInfo, FunctionContext context)
         {
-            var logger = context.GetLogger("Dispatcher");
-            logger.LogInformation($"Timer trigger function executed at: {DateTime.Now}");
+            var logger = context.GetLogger("Scheduled commands processing");
+            logger.LogInformation($"Trigger function executed at: {DateTime.Now}");
             logger.LogInformation($"Next timer schedule at: {timerTimerInfo?.ScheduleStatus?.Next}");
 
             return _internalCommandProcessor.ProcessPendingAsync();
