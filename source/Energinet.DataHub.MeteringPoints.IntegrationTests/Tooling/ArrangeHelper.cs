@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using Energinet.DataHub.Core.App.Common;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using SimpleInjector;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
@@ -24,6 +27,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
             Container container)
         {
             _container = container;
+        }
+
+        protected internal void SetGridOperatorAsAuthenticatedUser(string glnNumber)
+        {
+            ((ActorContext)_container.GetInstance<IActorContext>()).CurrentActor = new Actor(Guid.NewGuid(), "GLN", glnNumber, "GridAccessProvider");
+        }
+
+        protected internal void SetCurrentAuthenticatedActor(Guid actorId)
+        {
+            ((ActorContext)_container.GetInstance<IActorContext>()).CurrentActor = new Actor(actorId, "GLN", "FakeIdentifier", "GridAccessProvider");
         }
     }
 }

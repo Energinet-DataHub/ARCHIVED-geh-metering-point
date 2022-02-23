@@ -36,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
         private readonly Scope _scope;
         private bool _disposed;
 
-        public EntryPointBasedFixture(
+        protected EntryPointBasedFixture(
             DatabaseFixture databaseFixture)
         {
             if (databaseFixture == null) throw new ArgumentNullException(nameof(databaseFixture));
