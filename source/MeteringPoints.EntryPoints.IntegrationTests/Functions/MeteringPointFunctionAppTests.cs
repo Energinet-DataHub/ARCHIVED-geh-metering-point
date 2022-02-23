@@ -26,7 +26,6 @@ using FluentAssertions.Execution;
 using Microsoft.Identity.Client;
 using Xunit;
 using Xunit.Abstractions;
-using Xunit.Sdk;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Functions
 {
@@ -90,6 +89,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
 
             // Processing
             await AssertFunctionExecuted(Fixture.ProcessingHostManager, "QueueSubscriber").ConfigureAwait(false);
+            await AssertFunctionExecuted(Fixture.ProcessingHostManager, "ProcessInternalCommands").ConfigureAwait(false);
 
             // Outbox
             await AssertFunctionExecuted(Fixture.OutboxHostManager, "OutboxWatcher").ConfigureAwait(false);

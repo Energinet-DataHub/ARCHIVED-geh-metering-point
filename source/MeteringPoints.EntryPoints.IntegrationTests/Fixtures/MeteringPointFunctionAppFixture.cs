@@ -97,7 +97,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             ingestionHostSettings.Port = ++port;
 
             processingHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Processing\\bin\\{buildConfiguration}\\net5.0";
-            processingHostSettings.Functions = "QueueSubscriber";
+            processingHostSettings.Functions = "QueueSubscriber ProcessInternalCommands";
             processingHostSettings.Port = ++port;
 
             outboxHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Outbox\\bin\\{buildConfiguration}\\net5.0";
