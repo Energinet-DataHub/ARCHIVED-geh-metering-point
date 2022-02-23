@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -23,9 +24,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Mocks
     {
         public Task<(bool IsValid, ClaimsPrincipal? ClaimsPrincipal)> ValidateTokenAsync(string? token)
         {
+            if (token == null) throw new ArgumentNullException(nameof(token), "Set desired user id as token in the test.");
+
             var claims = new List<Claim>
             {
-                new(ClaimTypes.NameIdentifier, "a0b26da3-d8a6-467f-9b21-dedb1f4ea5af"),
+                new(ClaimTypes.NameIdentifier, token),
             };
             var identity = new ClaimsIdentity(claims, "TestAuthType");
             var claimsPrincipal = new ClaimsPrincipal(identity);
