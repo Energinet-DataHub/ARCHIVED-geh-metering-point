@@ -46,9 +46,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         {
             var request = CreateCommand();
 
-            await SendCommandAsync(request).ConfigureAwait(false);
+            await Act.SendCommandAsync(request).ConfigureAwait(false);
 
-            await AssertProcessOverviewAsync(
+            await Assert.ProcessOverviewAsync(
                     SampleData.GsrnNumber,
                     "BRS-004",
                     "RequestCreateMeteringPoint",

@@ -15,17 +15,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
-using Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.MeteringPoints.Queries;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
-using FluentAssertions;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
@@ -62,9 +55,19 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
             _container
                 .GetInstance<ICorrelationContext>()
                 .SetId(Guid.NewGuid().ToString().Replace("-", string.Empty, StringComparison.Ordinal));
+
+            Arrange = new ArrangeHelper(_container);
+            Act = new ActHelper(_container);
+            Assert = new AssertHelper(_container);
         }
 
         protected string DatabaseConnectionString { get; }
+
+        protected ArrangeHelper Arrange { get; }
+
+        protected ActHelper Act { get; }
+
+        protected AssertHelper Assert { get; }
 
         public void Dispose()
         {
@@ -72,7 +75,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
             GC.SuppressFinalize(this);
         }
 
-        internal TService GetService<TService>()
+        protected internal TService GetService<TService>()
             where TService : class
         {
             return _container.GetInstance<TService>();
@@ -81,25 +84,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
         protected virtual void AddEnvironmentVariables([NotNull] Dictionary<string, string> variables) { }
 
         protected virtual void OverrideRegistrations([NotNull] Container container) { }
-
-        protected async Task SendCommandAsync(object command, CancellationToken cancellationToken = default)
-        {
-            await using var scope = AsyncScopedLifestyle.BeginScope(_container);
-            await scope.GetInstance<IMediator>().Send(command, cancellationToken).ConfigureAwait(false);
-        }
-
-        protected async Task AssertProcessOverviewAsync(
-            string gsrn,
-            string expectedProcessName,
-            params string[] expectedProcessSteps)
-        {
-            var processes = await _container.GetInstance<IRequestHandler<MeteringPointProcessesByGsrnQuery, List<Process>>>()
-                .Handle(new MeteringPointProcessesByGsrnQuery(gsrn), CancellationToken.None)
-                .ConfigureAwait(false);
-
-            processes.Should().ContainSingle(process => process.Name == expectedProcessName, $"a single process with name {expectedProcessName} was expected")
-                .Which.Details.Select(detail => detail.Name).Should().ContainInOrder(expectedProcessSteps);
-        }
 
         protected virtual void Dispose(bool disposing)
         {
