@@ -114,6 +114,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
 
             // Use "0 0 8 1 1 *", to do: 8:00 1. January ~ we must set this setting, but we do not want the trigger to run automatically, we want to trigger it manually
             outboxHostSettings.ProcessEnvironmentVariables.Add("ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER", "*/1 * * * * *");
+            processingHostSettings.ProcessEnvironmentVariables.Add("INTERNAL_COMMAND_PROCESSING_INTERVAL", "*/1 * * * * *");
 
             ingestionHostSettings.ProcessEnvironmentVariables.Add("AzureWebJobsStorage", "UseDevelopmentStorage=true");
             processingHostSettings.ProcessEnvironmentVariables.Add("AzureWebJobsStorage", "UseDevelopmentStorage=true");
