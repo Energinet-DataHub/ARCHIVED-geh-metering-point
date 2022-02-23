@@ -36,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.AccountingPointCharacterist
     [UnitTest]
     public class AccountingPointCharacteristicsSerializerTests
     {
-        [Fact(Skip = "Not required yet.")]
+        [Fact]
         public async Task Message_should_validate_against_schema()
         {
             var transactionId = "25369847";
@@ -70,7 +70,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.AccountingPointCharacterist
                 true,
                 Guid.Parse("f26f8678-6cd3-4e12-b70e-cf96290ada94"),
                 1300,
-                "D09",
+                "D07",
                 "E02",
                 "031",
                 "151",

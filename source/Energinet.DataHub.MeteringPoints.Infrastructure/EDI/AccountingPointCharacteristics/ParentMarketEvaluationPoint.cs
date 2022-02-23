@@ -17,7 +17,9 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics
 {
     public record ParentMarketEvaluationPoint(
-        string Id)
+        string Id,
+        string CodingScheme,
+        string Description)
     {
     }
 }

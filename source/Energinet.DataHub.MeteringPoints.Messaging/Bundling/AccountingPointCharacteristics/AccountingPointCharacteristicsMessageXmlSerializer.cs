@@ -29,7 +29,7 @@ namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.AccountingPointCha
         public AccountingPointCharacteristicsMessageXmlSerializer()
         {
             XmlDeclaration = new AccountingPointCharacteristicsXmlDeclaration();
-            DocumentName = "AccountingPointcharacteristics_MarketDocument";
+            DocumentName = "AccountingPointCharacteristics_MarketDocument";
         }
 
         private XmlDeclaration XmlDeclaration { get; }
@@ -108,7 +108,7 @@ namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.AccountingPointCha
                 MridElement(XmlDeclaration.XmlNamespace, "meteringGridArea_Domain.mRID", message.MarketActivityRecord.MarketEvaluationPoint.MeteringGridAreaDomainId),
                 MridElement(XmlDeclaration.XmlNamespace, "inMeteringGridArea_Domain.mRID", message.MarketActivityRecord.MarketEvaluationPoint.InMeteringGridAreaDomainId),
                 MridElement(XmlDeclaration.XmlNamespace, "outMeteringGridArea_Domain.mRID", message.MarketActivityRecord.MarketEvaluationPoint.OutMeteringGridAreaDomainId),
-                new XElement(XmlDeclaration.XmlNamespace + "linked_MarketEvaluationPoint.mRID", message.MarketActivityRecord.MarketEvaluationPoint.LinkedMarketEvaluationPoint),
+                MridElement(XmlDeclaration.XmlNamespace, "linked_MarketEvaluationPoint.mRID", message.MarketActivityRecord.MarketEvaluationPoint.LinkedMarketEvaluationPoint),
                 UnitElement(XmlDeclaration.XmlNamespace, "physicalConnectionCapacity", message.MarketActivityRecord.MarketEvaluationPoint.PhysicalConnectionCapacity),
                 new XElement(XmlDeclaration.XmlNamespace + "mPConnectionType", message.MarketActivityRecord.MarketEvaluationPoint.ConnectionType),
                 new XElement(XmlDeclaration.XmlNamespace + "disconnectionMethod", message.MarketActivityRecord.MarketEvaluationPoint.DisconnectionMethod),
@@ -119,10 +119,6 @@ namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.AccountingPointCha
                 new XElement(XmlDeclaration.XmlNamespace + "meter.mRID", message.MarketActivityRecord.MarketEvaluationPoint.MeterId),
                 MarketParticipantElement(XmlDeclaration.XmlNamespace, "energySupplier_MarketParticipant.mRID", message.MarketActivityRecord.MarketEvaluationPoint.EnergySupplierMarketParticipantId),
                 new XElement(XmlDeclaration.XmlNamespace + "supplyStart_DateAndOrTime.dateTime", message.MarketActivityRecord.MarketEvaluationPoint.SupplyStartDateAndOrTimeDateTime),
-                new XElement(
-                    XmlDeclaration.XmlNamespace + "Series",
-                    new XElement(XmlDeclaration.XmlNamespace + "product", message.MarketActivityRecord.MarketEvaluationPoint.Series.Product),
-                    new XElement(XmlDeclaration.XmlNamespace + "quantity_Measure_Unit.name", message.MarketActivityRecord.MarketEvaluationPoint.Series.QuantityMeasureUnit)),
                 new XElement(XmlDeclaration.XmlNamespace + "description", message.MarketActivityRecord.MarketEvaluationPoint.Description),
                 new XElement(XmlDeclaration.XmlNamespace + "usagePointLocation.geoInfoReference", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationGeoInfoReference),
                 new XElement(
@@ -144,11 +140,16 @@ namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.AccountingPointCha
                 new XElement(XmlDeclaration.XmlNamespace + "usagePointLocation.actualAddressIndicator", message.MarketActivityRecord.MarketEvaluationPoint.UsagePointLocationActualAddressIndicator),
                 new XElement(
                     XmlDeclaration.XmlNamespace + "Parent_MarketEvaluationPoint",
-                    new XElement(XmlDeclaration.XmlNamespace + "mRID", message.MarketActivityRecord.MarketEvaluationPoint.ParentMarketEvaluationPoint.Id)),
+                    new XElement(XmlDeclaration.XmlNamespace + "mRID", message.MarketActivityRecord.MarketEvaluationPoint.ParentMarketEvaluationPoint.Id, new XAttribute("codingScheme", message.MarketActivityRecord.MarketEvaluationPoint.ParentMarketEvaluationPoint.CodingScheme)),
+                    new XElement(XmlDeclaration.XmlNamespace + "description", message.MarketActivityRecord.MarketEvaluationPoint.ParentMarketEvaluationPoint.Description)),
                 new XElement(
                     XmlDeclaration.XmlNamespace + "Child_MarketEvaluationPoint",
-                    new XElement(XmlDeclaration.XmlNamespace + "mRID", message.MarketActivityRecord.MarketEvaluationPoint.ChildMarketEvaluationPoint.Id),
-                    new XElement(XmlDeclaration.XmlNamespace + "description", message.MarketActivityRecord.MarketEvaluationPoint.ChildMarketEvaluationPoint.Description))));
+                    new XElement(XmlDeclaration.XmlNamespace + "mRID", message.MarketActivityRecord.MarketEvaluationPoint.ChildMarketEvaluationPoint.Id, new XAttribute("codingScheme", message.MarketActivityRecord.MarketEvaluationPoint.ChildMarketEvaluationPoint.CodingScheme)),
+                    new XElement(XmlDeclaration.XmlNamespace + "description", message.MarketActivityRecord.MarketEvaluationPoint.ChildMarketEvaluationPoint.Description)),
+                new XElement(
+                    XmlDeclaration.XmlNamespace + "Series",
+                    new XElement(XmlDeclaration.XmlNamespace + "product", message.MarketActivityRecord.MarketEvaluationPoint.Series.Product),
+                    new XElement(XmlDeclaration.XmlNamespace + "quantity_Measure_Unit.name", message.MarketActivityRecord.MarketEvaluationPoint.Series.QuantityMeasureUnit))));
         }
 
         private XDocument CreateDocumentWithHeader(AccountingPointCharacteristicsMessage message)
