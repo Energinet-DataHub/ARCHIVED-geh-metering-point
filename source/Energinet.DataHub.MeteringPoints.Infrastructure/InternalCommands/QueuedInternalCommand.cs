@@ -33,12 +33,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
 
         public string Type { get;  } = string.Empty;
 
-        #pragma warning disable CA1819 // Properties should not return arrays
         public string Data { get; }
 
-        public Instant CreationDate { get; private set; }
+        public Instant CreationDate { get; }
 
-        public Instant? ScheduleDate { get; private set; }
+        public Instant? ScheduleDate { get; }
 
         public Instant? ProcessedDate { get; set; }
 
@@ -51,16 +50,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
         public void SetProcessed(Instant now)
         {
             ProcessedDate = now;
-        }
-
-        public void SetDispatched(Instant now)
-        {
-            DispatchedDate = now;
-        }
-
-        public void SetSequenceId(long sequenceId)
-        {
-            SequenceId = sequenceId;
         }
     }
 }
