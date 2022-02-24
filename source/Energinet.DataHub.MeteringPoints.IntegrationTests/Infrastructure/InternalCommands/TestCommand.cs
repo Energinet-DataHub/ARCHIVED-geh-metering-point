@@ -12,16 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher.Infrastructure.TimerTriggers
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.InternalCommands
 {
-    public class ScheduleStatus
+    public class TestCommand : InternalCommand
     {
-        public DateTime Last { get; set; }
-
-        public DateTime Next { get; set; }
-
-        public DateTime LastUpdated { get; set; }
     }
 }

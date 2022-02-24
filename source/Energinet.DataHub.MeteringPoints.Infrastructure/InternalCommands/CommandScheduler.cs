@@ -13,13 +13,12 @@
 // limitations under the License.
 
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
@@ -27,13 +26,13 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
     public class CommandScheduler : ICommandScheduler
     {
         private readonly MeteringPointContext _context;
-        private readonly MessageSerializer _serializer;
+        private readonly IJsonSerializer _serializer;
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
         private readonly ICorrelationContext _correlationContext;
 
         public CommandScheduler(
             MeteringPointContext context,
-            MessageSerializer serializer,
+            IJsonSerializer serializer,
             ISystemDateTimeProvider systemDateTimeProvider,
             ICorrelationContext correlationContext)
         {
@@ -49,8 +48,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
         {
             if (command == null) throw new ArgumentNullException(nameof(command));
 
-            var data = await _serializer.ToBytesAsync(command, CancellationToken.None).ConfigureAwait(false);
-            var type = command.GetType().FullName;
+            var data = _serializer.Serialize(command);
+            var type = command.GetType().AssemblyQualifiedName;
             var queuedCommand = new QueuedInternalCommand(command.Id, type!, data, _systemDateTimeProvider.Now(), scheduleDate!, _correlationContext.Id);
             await _context.QueuedInternalCommands.AddAsync(queuedCommand).ConfigureAwait(false);
         }

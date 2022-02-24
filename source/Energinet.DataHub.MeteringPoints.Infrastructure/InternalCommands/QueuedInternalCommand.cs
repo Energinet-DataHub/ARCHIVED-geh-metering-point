@@ -19,7 +19,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
 {
     public class QueuedInternalCommand
     {
-        public QueuedInternalCommand(Guid id, string type, byte[] data, Instant creationDate, Instant? scheduleDate, string correlationId)
+        public QueuedInternalCommand(Guid id, string type, string data, Instant creationDate, Instant? scheduleDate, string correlationId)
         {
             Id = id;
             Type = type;
@@ -31,36 +31,21 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
 
         public Guid Id { get; }
 
-        public string Type { get;  } = string.Empty;
+        public string Type { get;  }
 
-        #pragma warning disable CA1819 // Properties should not return arrays
-        public byte[] Data { get; }
+        public string Data { get; }
 
-        public Instant CreationDate { get; private set; }
+        public Instant CreationDate { get; }
 
-        public Instant? ScheduleDate { get; private set; }
+        public Instant? ScheduleDate { get; }
 
         public Instant? ProcessedDate { get; set; }
-
-        public Instant? DispatchedDate { get; private set; }
-
-        public long SequenceId { get; private set; }
 
         public string CorrelationId { get; }
 
         public void SetProcessed(Instant now)
         {
             ProcessedDate = now;
-        }
-
-        public void SetDispatched(Instant now)
-        {
-            DispatchedDate = now;
-        }
-
-        public void SetSequenceId(long sequenceId)
-        {
-            SequenceId = sequenceId;
         }
     }
 }
