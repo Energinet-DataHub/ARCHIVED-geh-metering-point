@@ -21,7 +21,6 @@ using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
-using MediatR;
 using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
@@ -141,7 +140,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
             await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
 
             var command = new CloseDownMeteringPoint(SampleData.GsrnNumber);
-            await GetService<IMediator>().Send(command).ConfigureAwait(false);
+            await SendCommandAsync(command).ConfigureAwait(false);
 
             AssertMasterData()
                 .HasConnectionState(PhysicalState.ClosedDown);
