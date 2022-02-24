@@ -31,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
 
         public Guid Id { get; }
 
-        public string Type { get;  } = string.Empty;
+        public string Type { get;  }
 
         public string Data { get; }
 
@@ -40,10 +40,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
         public Instant? ScheduleDate { get; }
 
         public Instant? ProcessedDate { get; set; }
-
-        public Instant? DispatchedDate { get; private set; }
-
-        public long SequenceId { get; private set; }
 
         public string CorrelationId { get; }
 
