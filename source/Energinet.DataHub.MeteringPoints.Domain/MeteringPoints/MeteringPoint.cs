@@ -22,9 +22,9 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.ChangeConnectionStatus;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.CloseDown;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
 {
@@ -120,8 +120,23 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             return new MeteringPoint(id, gsrnNumber, meteringPointType, gridAreaLinkId, masterData);
         }
 
+        public BusinessRulesValidationResult CanCloseDown()
+        {
+            if (IsClosedDown())
+            {
+                return BusinessRulesValidationResult.Failure(new MeteringPointIsAlreadyClosedDown());
+            }
+
+            return BusinessRulesValidationResult.Valid();
+        }
+
         public void CloseDown()
         {
+            if (CanCloseDown().Success == false)
+            {
+                throw new CloseDownException();
+            }
+
             ConnectionState = ConnectionState.ClosedDown();
             AddDomainEvent(new MeteringPointWasClosedDown(Id.Value));
         }
