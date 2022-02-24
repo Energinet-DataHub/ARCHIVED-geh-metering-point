@@ -12,20 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Immutable;
+using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.InternalCommands
 {
-    /// <summary>
-    /// Access provider for queued internal commands
-    /// </summary>
-    public interface IInternalCommandAccessor
+    public class TestCommandHandler : ICommandHandler<TestCommand>
     {
-        /// <summary>
-        /// Returns all queued internal commands that have not been marked as dispatched
-        /// </summary>
-        /// <returns><see cref="QueuedInternalCommand"/></returns>
-        Task<ImmutableList<QueuedInternalCommand>> GetUndispatchedAsync();
+        public Task<Unit> Handle(TestCommand request, CancellationToken cancellationToken)
+        {
+            return Unit.Task;
+        }
     }
 }

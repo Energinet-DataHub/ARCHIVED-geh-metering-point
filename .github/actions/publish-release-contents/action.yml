@@ -57,12 +57,6 @@ runs:
         name: localmessagehub
         path: ${{ inputs.RELEASE_FOLDER_PATH }}/functions/localmessagehub
 
-    - name: Publish Internal command dispatcher to release folder
-      uses: actions/download-artifact@v2
-      with:
-        name: internalcommanddispatcher
-        path: ${{ inputs.RELEASE_FOLDER_PATH }}/functions/internalcommanddispatcher
-
     - name: Publish Database Migration to release folder
       uses: actions/download-artifact@v2
       with:

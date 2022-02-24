@@ -23,11 +23,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common.Commands
             Id = Guid.NewGuid();
         }
 
-        protected InternalCommand(Guid id)
-        {
-            Id = id;
-        }
-
         public Guid Id { get; protected set; }
     }
 }
