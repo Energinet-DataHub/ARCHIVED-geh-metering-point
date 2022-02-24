@@ -82,8 +82,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
 
             await AcceptRequestAsync(request).ConfigureAwait(false);
 
-            var closeDownCommand = new CloseDownMeteringPoint(request.GsrnNumber);
-            await _scheduler.EnqueueAsync(closeDownCommand, InstantPattern.General.Parse(request.EffectiveDate).Value).ConfigureAwait(false);
+            await ScheduleCloseDownAsync(request).ConfigureAwait(false);
         }
 
         public bool CanHandleRequest(MasterDataDocument request)
@@ -99,6 +98,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
                 .Select(error => (ValidationError)error.CustomState)
                 .ToList()
                 .AsReadOnly();
+        }
+
+        private Task ScheduleCloseDownAsync(MasterDataDocument request)
+        {
+            var closeDownCommand = new CloseDownMeteringPoint(request.GsrnNumber);
+            return _scheduler.EnqueueAsync(closeDownCommand, InstantPattern.General.Parse(request.EffectiveDate).Value);
         }
 
         private async Task<BusinessRulesValidationResult> ValidateRequestValuesAsync(MasterDataDocument request)
