@@ -103,6 +103,7 @@ using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using NodaTime;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Xunit;
@@ -307,6 +308,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             return context.OutboxMessages
                 .Where(message => message.Type == typeof(TMessage).FullName)
                 .Select(message => jsonSerializer.Deserialize<TMessage>(message.Data));
+        }
+
+        protected async Task<TCommandType?> GetScheduledCommandAsync<TCommandType>(Instant withScheduleDateAtOrBefore)
+            where TCommandType : InternalCommand
+        {
+            var accessor = GetService<InternalCommandAccessor>();
+            var queuedCommands = await accessor.GetPendingAsync(withScheduleDateAtOrBefore).ConfigureAwait(false);
+            return queuedCommands
+                .Select(queuedCommand => queuedCommand.ToCommand(GetService<IJsonSerializer>()))
+                .First(queuedCommand => queuedCommand is TCommandType) as TCommandType;
         }
 
         protected async Task AssertAndRunInternalCommandAsync<TCommand>()
