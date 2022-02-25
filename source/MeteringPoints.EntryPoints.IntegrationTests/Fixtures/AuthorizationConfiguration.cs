@@ -45,7 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             var teamClientSecret = SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, team, "client-secret"));
             ClientCredentialsSettings = RetrieveB2CTeamClientSettings(team, teamClientId, teamClientSecret);
 
-            FrontendOpenId = SecretsConfiguration.GetValue<string>("B2C-frontend-open-id-url");
+            FrontendOpenId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "frontend-open-id-url"));
             FrontendAppId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "frontend-app-id"));
 
             ApiManagementBaseAddress = SecretsConfiguration.GetValue<Uri>(BuildApiManagementEnvironmentSecretName(Environment, "host-url"));
