@@ -11,10 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-module "func_ingestion" {
+module "func_internalcommanddispatcher" {
   source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=5.1.0"
 
-  name                                      = "ingestion"
+  name                                      = "internalcommanddispatcher"
   project_name                              = var.domain_name_short
   environment_short                         = var.environment_short
   environment_instance                      = var.environment_instance
@@ -30,17 +30,11 @@ module "func_ingestion" {
     WEBSITES_ENABLE_APP_SERVICE_STORAGE   = true
     FUNCTIONS_WORKER_RUNTIME              = "dotnet-isolated"
     # Endregion: Default Values
-    METERINGPOINT_QUEUE_URL               = "${module.sb_meteringpoint.name}.servicebus.windows.net:9093"
-    METERINGPOINT_QUEUE_CONNECTION_STRING = module.sb_meteringpoint.primary_connection_strings["send"]
-    METERINGPOINT_DB_CONNECTION_STRING    = local.MS_METERING_POINT_CONNECTION_STRING
-    METERINGPOINT_QUEUE_TOPIC_NAME        = module.sbq_meteringpoint.name
-    INTERNAL_SERVICEBUS_RETRY_COUNT       = 3
-    # Shared resources logging
-    REQUEST_RESPONSE_LOGGING_CONNECTION_STRING   = data.azurerm_key_vault_secret.st_market_operator_logs_primary_connection_string.value
-    REQUEST_RESPONSE_LOGGING_CONTAINER_NAME      = data.azurerm_key_vault_secret.st_market_operator_logs_container_name.value
-    B2C_TENANT_ID                         = data.azurerm_key_vault_secret.b2c_tenant_id.value
-    BACKEND_SERVICE_APP_ID                = data.azurerm_key_vault_secret.backend_service_app_id.value
+    DB_CONNECTION_STRING                  = local.MS_METERING_POINT_CONNECTION_STRING
+    PROCESSING_QUEUE_NAME                 = module.sbq_meteringpoint.name
+    PROCESSING_QUEUE_CONNECTION_STRING    = module.sb_meteringpoint.primary_connection_strings["send"]
+    DISPATCH_TRIGGER_TIMER                = "*/10 * * * * *"
   }
 
-  tags                                    = azurerm_resource_group.this.tags
+  tags                                      = azurerm_resource_group.this.tags
 }
