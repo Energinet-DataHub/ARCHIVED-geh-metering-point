@@ -11,10 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-module "func_localmessagehub" {
+module "func_internalcommanddispatcher" {
   source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=7.0.0"
 
-  name                                      = "localmessagehub"
+  name                                      = "internalcommanddispatcher"
   project_name                              = var.domain_name_short
   environment_short                         = var.environment_short
   environment_instance                      = var.environment_instance
@@ -34,17 +34,11 @@ module "func_localmessagehub" {
     WEBSITES_ENABLE_APP_SERVICE_STORAGE   = true
     FUNCTIONS_WORKER_RUNTIME              = "dotnet-isolated"
     # Endregion: Default Values
-    METERINGPOINT_DB_CONNECTION_STRING    = local.MS_METERING_POINT_CONNECTION_STRING
-    MESSAGEHUB_STORAGE_CONNECTION_STRING  = data.azurerm_key_vault_secret.st_market_operator_response_primary_connection_string.value
-    MESSAGEHUB_QUEUE_CONNECTION_STRING    = data.azurerm_key_vault_secret.sb_domain_relay_transceiver_connection_string.value
-    MESSAGEHUB_STORAGE_CONTAINER_NAME     = data.azurerm_key_vault_secret.st_market_operator_response_postofficereply_container_name.value
-    METERINGPOINT_QUEUE_CONNECTION_STRING = module.sb_meteringpoint.primary_connection_strings["send"]
-    METERINGPOINT_QUEUE_TOPIC_NAME        = module.sbq_meteringpoint.name
-    MESSAGEHUB_DATA_AVAILABLE_QUEUE       = data.azurerm_key_vault_secret.sbq_data_available_name.value
-    MESSAGEHUB_DOMAIN_REPLY_QUEUE         = data.azurerm_key_vault_secret.sbq_metering_points_reply_name.value
-    REQUEST_BUNDLE_QUEUE_SUBSCRIBER_QUEUE = data.azurerm_key_vault_secret.sbq_metering_points_name.value
-    BUNDLE_DEQUEUED_SUBSCRIBER_QUEUE      = data.azurerm_key_vault_secret.sbq_metering_points_dequeue_name.value
+    DB_CONNECTION_STRING                  = local.MS_METERING_POINT_CONNECTION_STRING
+    PROCESSING_QUEUE_NAME                 = module.sbq_meteringpoint.name
+    PROCESSING_QUEUE_CONNECTION_STRING    = module.sb_meteringpoint.primary_connection_strings["send"]
+    DISPATCH_TRIGGER_TIMER                = "*/10 * * * * *"
   }
 
-  tags                                    = azurerm_resource_group.this.tags
+  tags                                      = azurerm_resource_group.this.tags
 }
