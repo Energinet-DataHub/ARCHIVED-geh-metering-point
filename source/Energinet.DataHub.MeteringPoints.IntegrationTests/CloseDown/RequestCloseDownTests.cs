@@ -13,21 +13,19 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.CloseDown;
-using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.ReceiveBusinessRequests;
-using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
+using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoint
+namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
 {
     [IntegrationTest]
     public class RequestCloseDownTests : TestHost
@@ -35,17 +33,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoi
         public RequestCloseDownTests(DatabaseFixture databaseFixture)
         : base(databaseFixture)
         {
-        }
-
-        [Fact]
-        public async Task Metering_point_is_closed_down_when_effective_date_is_due()
-        {
-            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
-
-            await ReceiveRequest(CreateRequest()).ConfigureAwait(false);
-
-            AssertMasterData()
-                .HasConnectionState(PhysicalState.ClosedDown);
         }
 
         [Fact]
@@ -131,6 +118,32 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDownMeteringPoi
             await ReceiveRequest(request).ConfigureAwait(false);
 
             AssertValidationError("E10");
+        }
+
+        [Fact]
+        public async Task The_close_down_activity_is_scheduled_when_process_is_started()
+        {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+
+            var request = CreateRequest();
+            await ReceiveRequest(request).ConfigureAwait(false);
+
+            var command = await GetScheduledCommandAsync<CloseDownMeteringPoint>(InstantPattern.General.Parse(request.EffectiveDate).Value).ConfigureAwait(false);
+
+            Assert.NotNull(command);
+            Assert.Equal(request.GsrnNumber, command?.GsrnNumber);
+        }
+
+        [Fact]
+        public async Task Metering_point_is_closed_down()
+        {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+
+            var command = new CloseDownMeteringPoint(SampleData.GsrnNumber);
+            await SendCommandAsync(command).ConfigureAwait(false);
+
+            AssertMasterData()
+                .HasConnectionState(PhysicalState.ClosedDown);
         }
 
         private static MasterDataDocument CreateRequest()
