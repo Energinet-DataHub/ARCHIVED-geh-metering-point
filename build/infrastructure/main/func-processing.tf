@@ -20,7 +20,7 @@ module "func_processing" {
   environment_instance                      = var.environment_instance
   resource_group_name                       = azurerm_resource_group.this.name
   location                                  = azurerm_resource_group.this.location
-  app_service_plan_id                       = module.plan_shared.id
+  app_service_plan_id                       = data.azurerm_key_vault_secret.plan_shared_id.value
   application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_instrumentation_key.value
   always_on                                 = true
   app_settings                              = {
@@ -37,6 +37,7 @@ module "func_processing" {
     INTEGRATION_EVENT_QUEUE                 = data.azurerm_key_vault_secret.metering_point_forwarded_name.value
     INTEGRATION_EVENT_QUEUE_CONNECTION      = data.azurerm_key_vault_secret.sb_domain_relay_listen_connection_string.value
     CHARGES_DEFAULT_LINK_RESPONSE_QUEUE     = "create-link-reply"
+    INTERNAL_COMMAND_PROCESSING_INTERVAL    = "*/10 * * * * *"
   }
 
   tags                                      = azurerm_resource_group.this.tags

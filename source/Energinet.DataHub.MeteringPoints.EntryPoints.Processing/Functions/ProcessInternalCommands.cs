@@ -14,30 +14,29 @@
 
 using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher.Infrastructure.TimerTriggers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher.Functions
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
 {
-    public class Dispatcher
+    public class ProcessInternalCommands
     {
-        private readonly IInternalCommandProcessor _internalCommandProcessor;
+        private readonly InternalCommandProcessor _internalCommandProcessor;
 
-        public Dispatcher(IInternalCommandProcessor internalCommandProcessor)
+        public ProcessInternalCommands(InternalCommandProcessor internalCommandProcessor)
         {
-            _internalCommandProcessor = internalCommandProcessor ?? throw new ArgumentNullException(nameof(internalCommandProcessor));
+            _internalCommandProcessor = internalCommandProcessor;
         }
 
-        [Function("Dispatcher")]
-        public Task RunAsync([TimerTrigger("%DISPATCH_TRIGGER_TIMER%")] TimerInfo timerTimerInfo, FunctionContext context)
+        [Function("ProcessInternalCommands")]
+        public Task RunAsync([TimerTrigger("%INTERNAL_COMMAND_PROCESSING_INTERVAL%")] TimerInfo timerTimerInfo, FunctionContext context)
         {
-            var logger = context.GetLogger("Dispatcher");
-            logger.LogInformation($"Timer trigger function executed at: {DateTime.Now}");
+            var logger = context.GetLogger("Scheduled commands processing");
+            logger.LogInformation($"Trigger function executed at: {DateTime.Now}");
             logger.LogInformation($"Next timer schedule at: {timerTimerInfo?.ScheduleStatus?.Next}");
 
-            return _internalCommandProcessor.ProcessUndispatchedAsync();
+            return _internalCommandProcessor.ProcessPendingAsync();
         }
     }
 }

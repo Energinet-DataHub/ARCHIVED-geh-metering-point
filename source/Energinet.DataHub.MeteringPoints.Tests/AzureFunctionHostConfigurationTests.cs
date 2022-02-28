@@ -41,20 +41,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests
         }
 
         [Fact]
-        public void InternalCommandDispatcherHostConfigurationTest()
-        {
-            Environment.SetEnvironmentVariable("DB_CONNECTION_STRING", SomeString);
-            Environment.SetEnvironmentVariable("PROCESSING_QUEUE_CONNECTION_STRING", ServiceBusConnectionString);
-            Environment.SetEnvironmentVariable("PROCESSING_QUEUE_NAME", SomeString);
-            Environment.SetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", SomeString);
-            var program = new EntryPoints.InternalCommandDispatcher.Program();
-
-            program.ConfigureApplication();
-
-            program.AssertConfiguration();
-        }
-
-        [Fact]
         public void ProcessingHostConfigurationTest()
         {
             Environment.SetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING", SomeString);
