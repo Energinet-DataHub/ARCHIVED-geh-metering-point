@@ -18,5 +18,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCha
 {
     public record ChildMarketEvaluationPoint(
         string Id,
+        string CodingScheme,
         string Description);
 }

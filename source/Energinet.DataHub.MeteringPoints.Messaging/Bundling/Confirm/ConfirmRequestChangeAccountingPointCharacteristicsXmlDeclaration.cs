@@ -15,13 +15,13 @@
 using System.Xml.Linq;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Xml;
 
-namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.Reject
+namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.Confirm
 {
-    public class RejectRequestChangeOfAccountingPointCharacteristicsXmlDeclaration : XmlDeclaration
+    public class ConfirmRequestChangeAccountingPointCharacteristicsXmlDeclaration : XmlDeclaration
     {
-        public override string XmlNamespaceText => "urn:ediel.org:structure:rejectrequestchangeofaccountingpointcharacteristics:0:1";
+        public override string XmlNamespaceText => "urn:ediel.org:structure:confirmrequestchangeaccountingpointcharacteristics:0:1";
 
-        public override string SchemaLocationText => "urn-ediel-org-structure-rejectrequestchangeofaccountingpointcharacteristics-0-1.xsd";
+        public override string SchemaLocationText => "urn-ediel-org-structure-confirmrequestchangeaccountingpointcharacteristics-0-1.xsd";
 
         public override XNamespace XmlNamespace => XmlNamespaceText;
     }
