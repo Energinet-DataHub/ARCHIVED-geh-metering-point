@@ -27,7 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.Confirm
     {
         public ConfirmMessageXmlSerializer()
         {
-            XmlDeclaration = new ConfirmRequestChangeOfAccountingPointCharacteristicsXmlDeclaration();
+            XmlDeclaration = new ConfirmRequestChangeAccountingPointCharacteristicsXmlDeclaration();
         }
 
         private XmlDeclaration XmlDeclaration { get; }
@@ -77,9 +77,8 @@ namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.Confirm
 
         private XDocument CreateDocumentWithHeader(ConfirmMessage message)
         {
-            XNamespace xmlns = XNamespace.Get("urn:ediel.org:structure:accountingpointcharacteristics:0:1");
             XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
-            XNamespace schemaLocation = XNamespace.Get("urn:ediel.org:structure:accountingpointcharacteristics:0:1 urn-ediel-org-structure-accountingpointcharacteristics-0-1.xsd");
+            XNamespace schemaLocation = XNamespace.Get($"{XmlDeclaration.XmlNamespace} {XmlDeclaration.SchemaLocationText}");
 
             var document = new XDocument(
                 new XElement(
