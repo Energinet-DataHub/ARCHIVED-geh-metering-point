@@ -31,7 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCha
         Mrid MeteringGridAreaDomainId,
         Mrid? InMeteringGridAreaDomainId,
         Mrid? OutMeteringGridAreaDomainId,
-        string LinkedMarketEvaluationPoint,
+        Mrid LinkedMarketEvaluationPoint,
         UnitValue PhysicalConnectionCapacity,
         string ConnectionType,
         string DisconnectionMethod,

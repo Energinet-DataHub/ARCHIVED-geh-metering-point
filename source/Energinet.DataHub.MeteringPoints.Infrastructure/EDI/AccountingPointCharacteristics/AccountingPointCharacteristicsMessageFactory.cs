@@ -63,7 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCha
                         MeteringGridAreaDomainId: new Mrid(meteringPoint.GridAreaCode, "NDK"),
                         InMeteringGridAreaDomainId: meteringPoint.FromGridAreaCode != null ? new Mrid(meteringPoint.FromGridAreaCode!, "NDK") : null!,
                         OutMeteringGridAreaDomainId: meteringPoint.ToGridAreaCode != null ? new Mrid(meteringPoint.ToGridAreaCode!, "NDK") : null!,
-                        LinkedMarketEvaluationPoint: meteringPoint.PowerPlantGsrnNumber,
+                        LinkedMarketEvaluationPoint: new Mrid(meteringPoint.PowerPlantGsrnNumber, "NDK"),
                         PhysicalConnectionCapacity: new UnitValue(
                             meteringPoint.Capacity.HasValue
                                 ? meteringPoint.Capacity.Value.ToString(CultureInfo.InvariantCulture)
@@ -106,10 +106,13 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCha
                         UsagePointLocationActualAddressIndicator: meteringPoint.IsActualAddress ?? false,
                         UsagePointLocationGeoInfoReference: meteringPoint.GeoInfoReference.HasValue ? meteringPoint.GeoInfoReference.ToString()! : string.Empty,
                         ParentMarketEvaluationPoint: new ParentMarketEvaluationPoint(
-                            Id: "579999993331812345"), // TODO: Hardcoded, not implemented yet
+                            Id: "579999993331812345",
+                            CodingScheme: "NDK",
+                            Description: "D06"), // TODO: Hardcoded, not implemented yet
                         // Only for BRS 5, request stam data, possible multiple
                         ChildMarketEvaluationPoint: new ChildMarketEvaluationPoint(
                             Id: "579999993331812325", // TODO: Hardcoded, not implemented yet
+                            CodingScheme: "NDK",
                             Description: "D06")))); // TODO: Hardcoded, not implemented yet
 
             return accountingPointCharacteristicsMessage;
