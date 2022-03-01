@@ -134,7 +134,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 currentMasterData.ConnectionType,
                 currentMasterData.DisconnectionType!,
                 currentMasterData.NetSettlementGroup!,
-                currentMasterData.ProductionObligation);
+                currentMasterData.ProductionObligation,
+                currentMasterData.Administrator);
         }
 
         private static MasterDataValidator CreateValidator() =>
@@ -173,7 +174,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 currentMasterData.ConnectionType,
                 currentMasterData.DisconnectionType!,
                 currentMasterData.NetSettlementGroup!,
-                currentMasterData.ProductionObligation);
+                currentMasterData.ProductionObligation,
+                currentMasterData.Administrator);
         }
     }
 }

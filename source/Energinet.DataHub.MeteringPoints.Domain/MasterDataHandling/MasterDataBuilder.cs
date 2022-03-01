@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
@@ -53,7 +54,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 connectionType: GetValue<ConnectionType>(nameof(MasterData.ConnectionType)),
                 disconnectionType: GetValue<DisconnectionType>(nameof(MasterData.DisconnectionType)),
                 netSettlementGroup: GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)),
-                productionObligation: GetValue<bool?>(nameof(MasterData.ProductionObligation)));
+                productionObligation: GetValue<bool?>(nameof(MasterData.ProductionObligation)),
+                administrator: GetValue<ActorId>(nameof(MasterData.Administrator)));
         }
 
         public IMasterDataBuilder WithNetSettlementGroup(string? netSettlementGroup)
