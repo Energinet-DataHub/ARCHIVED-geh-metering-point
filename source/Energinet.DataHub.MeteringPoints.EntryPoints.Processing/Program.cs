@@ -175,6 +175,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register(typeof(IBusinessProcessResultHandler<CreateMeteringPoint>), typeof(CreateMeteringPointResultHandler<CreateMeteringPoint>), Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<ConnectMeteringPointRequest>), typeof(ConnectMeteringPointResultHandler), Lifestyle.Scoped);
             container.Register(typeof(IBusinessProcessResultHandler<DisconnectReconnectMeteringPointRequest>), typeof(DisconnectReconnectMeteringPointResultHandler), Lifestyle.Scoped);
+            container.RegisterDecorator(typeof(IBusinessProcessResultHandler<>), typeof(BusinessProcessResultHandlerRejectReasonDecorator<>), Lifestyle.Scoped);
             container.Register<IOutbox, OutboxProvider>(Lifestyle.Scoped);
             container.Register<IOutboxMessageFactory, OutboxMessageFactory>(Lifestyle.Scoped);
             container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Singleton);
