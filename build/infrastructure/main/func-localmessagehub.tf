@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 module "func_localmessagehub" {
-  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=6.0.0"
+  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=7.0.0"
 
   name                                      = "localmessagehub"
   project_name                              = var.domain_name_short
@@ -20,8 +20,8 @@ module "func_localmessagehub" {
   environment_instance                      = var.environment_instance
   resource_group_name                       = azurerm_resource_group.this.name
   location                                  = azurerm_resource_group.this.location
-  vnet_integration_subnet_id                = module.vnet_integrations_functions.id
-  private_endpoint_subnet_id                = module.snet_internal_private_endpoints.id
+  vnet_integration_subnet_id                = azurerm_key_vault_secret.snet_vnet_integrations_id.value
+  private_endpoint_subnet_id                = azurerm_key_vault_secret.snet_private_endpoints_id.value
   private_dns_resource_group_name           = data.azurerm_key_vault_secret.pdns_resource_group_name.value
   app_service_plan_id                       = data.azurerm_key_vault_secret.plan_shared_id.value
   application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_instrumentation_key.value
