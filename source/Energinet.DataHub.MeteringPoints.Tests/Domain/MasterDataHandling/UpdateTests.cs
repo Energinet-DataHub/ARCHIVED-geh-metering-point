@@ -24,6 +24,7 @@ using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exceptions;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Tests.Tooling;
 using Xunit;
 using Xunit.Categories;
 
@@ -88,7 +89,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithNetSettlementGroup("invalid value")
                 .Validate();
 
-            AssertContainsValidationError<InvalidNetSettlementGroupValue>(validationResult);
+            AssertContainsValidationError<InvalidNetSettlementGroupValue>("D62", validationResult);
         }
 
         [Fact]
@@ -139,7 +140,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithNetSettlementGroup(string.Empty)
                 .Validate();
 
-            AssertContainsValidationError<NetSettlementGroupIsRequired>(validationResult);
+            AssertContainsValidationError<NetSettlementGroupIsRequired>("D62", validationResult);
         }
 
         [Fact]
@@ -207,7 +208,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             var masterData = Builder()
                 .Build();
 
-            var effectiveDate = "2022-01-01T23:00:00Z";
+            var effectiveDate = TestHelpers.DaylightSavingsString(new DateTime(2022, 1, 1));
             var updatedMasterData = UpdateBuilder(masterData)
                 .EffectiveOn(effectiveDate)
                 .Build();
@@ -320,7 +321,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithScheduledMeterReadingDate("invalid value")
                 .Validate();
 
-            AssertContainsValidationError<InvalidScheduledMeterReadingDateRuleError>(validationResult);
+            AssertContainsValidationError<InvalidScheduledMeterReadingDateRuleError>("E86", validationResult);
         }
 
         [Fact]
@@ -338,7 +339,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithScheduledMeterReadingDate(string.Empty)
                 .Validate();
 
-            AssertContainsValidationError<ScheduledMeterReadingDateIsRequired>(validationResult);
+            AssertContainsValidationError<ScheduledMeterReadingDateIsRequired>("E0H", validationResult);
         }
 
         [Fact]
@@ -400,7 +401,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithAssetType("invalid value")
                 .Validate();
 
-            AssertContainsValidationError<InvalidAssetTypeValue>(validationResult);
+            AssertContainsValidationError<InvalidAssetTypeValue>("D59", validationResult);
         }
 
         [Fact]
@@ -417,7 +418,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithAssetType(string.Empty)
                 .Validate();
 
-            AssertContainsValidationError<AssetTypeIsRequired>(validationResult);
+            AssertContainsValidationError<AssetTypeIsRequired>("D59", validationResult);
         }
 
         [Fact]
@@ -493,7 +494,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithDisconnectionType("Invalid value")
                 .Validate();
 
-            AssertContainsValidationError<InvalidDisconnectionTypeValue>(validationResult);
+            AssertContainsValidationError<InvalidDisconnectionTypeValue>("D65", validationResult);
         }
 
         [Fact]
@@ -529,7 +530,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithDisconnectionType(string.Empty)
                 .Validate();
 
-            AssertContainsValidationError<DisconnectionTypeIsRequired>(validationResult);
+            AssertContainsValidationError<DisconnectionTypeIsRequired>("D65", validationResult);
         }
 
         [Fact]
@@ -590,7 +591,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithSettlementMethod(string.Empty)
                 .Validate();
 
-            AssertContainsValidationError<SettlementMethodIsRequired>(validationResult);
+            AssertContainsValidationError<SettlementMethodIsRequired>("D15", validationResult);
         }
 
         [Fact]
@@ -711,7 +712,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithReadingPeriodicity("invalid reading periodicity value")
                 .Validate();
 
-            AssertContainsValidationError<InvalidReadingPeriodicityType>(validationResult);
+            AssertContainsValidationError<InvalidReadingPeriodicityType>("D53", validationResult);
         }
 
         [Fact]
@@ -739,7 +740,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithReadingPeriodicity(string.Empty)
                 .Validate();
 
-            AssertContainsValidationError<MeterReadingPeriodicityIsRequired>(validationResult);
+            AssertContainsValidationError<MeterReadingPeriodicityIsRequired>("D53", validationResult);
         }
 
         [Fact]
@@ -786,7 +787,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithPowerPlant(string.Empty)
                 .Validate();
 
-            AssertContainsValidationError<PowerPlantIsRequired>(validationResult);
+            AssertContainsValidationError<PowerPlantIsRequired>("D57", validationResult);
         }
 
         [Fact]
@@ -865,7 +866,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithMeasurementUnitType("invalid unit type value")
                 .Validate();
 
-            AssertContainsValidationError<InvalidUnitTypeValue>(validationResult);
+            AssertContainsValidationError<InvalidUnitTypeValue>("E73", validationResult);
         }
 
         [Fact]
@@ -882,7 +883,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithMeasurementUnitType(string.Empty)
                 .Validate();
 
-            AssertContainsValidationError<UnitTypeIsRequired>(validationResult);
+            AssertContainsValidationError<UnitTypeIsRequired>("E73", validationResult);
         }
 
         [Fact]
@@ -993,7 +994,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithMeteringConfiguration("invalid value", "2")
                 .Validate();
 
-            AssertContainsValidationError<InvalidMeteringMethodValue>(validationResult);
+            AssertContainsValidationError<InvalidMeteringMethodValue>("D02", validationResult);
         }
 
         [Fact]
@@ -1007,7 +1008,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithMeteringConfiguration(string.Empty, "2")
                 .Validate();
 
-            AssertContainsValidationError<MeteringMethodIsRequired>(validationResult);
+            AssertContainsValidationError<MeteringMethodIsRequired>("D64", validationResult);
         }
 
         [Fact]
@@ -1021,7 +1022,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithMeteringConfiguration(null, "12345678901234567890")
                 .Validate();
 
-            AssertContainsValidationError<InvalidMeterIdRuleError>(validationResult);
+            AssertContainsValidationError<InvalidMeterIdRuleError>("E86", validationResult);
         }
 
         [Fact]
@@ -1129,7 +1130,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithConnectionType("invalid value")
                 .Validate();
 
-            AssertError<InvalidConnectionTypeValue>(validationResult, true);
+            AssertError<InvalidConnectionTypeValue>("D66", validationResult, true);
         }
 
         [Fact]
@@ -1214,7 +1215,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithProductType("invalid value")
                 .Validate();
 
-            AssertContainsValidationError<InvalidProductTypeValue>(validationResult);
+            AssertContainsValidationError<InvalidProductTypeValue>("E29", validationResult);
         }
 
         [Fact]
@@ -1265,7 +1266,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithProductType(string.Empty)
                 .Validate();
 
-            AssertContainsValidationError<ProductTypeIsRequired>(validationResult);
+            AssertContainsValidationError<ProductTypeIsRequired>("D02", validationResult);
         }
 
         [Fact]

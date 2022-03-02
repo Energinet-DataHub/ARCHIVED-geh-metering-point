@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.
 {
     public class CountryCodeRequiredRuleError : ValidationError
     {
+        public CountryCodeRequiredRuleError()
+        {
+            Code = "E86";
+            Message = "Country code is a mandatory field";
+        }
     }
 }

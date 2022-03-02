@@ -67,7 +67,6 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeConnectionStatus
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GenericNotification;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.ChargeLinks.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
@@ -144,6 +143,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             // Register application components.
             container.Register<QueueSubscriber>(Lifestyle.Scoped);
+            container.Register<ProcessInternalCommands>(Lifestyle.Scoped);
+            container.Register<InternalCommandProcessor>(Lifestyle.Scoped);
+            container.Register<InternalCommandAccessor>(Lifestyle.Scoped);
 
             var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")
                                    ?? throw new InvalidOperationException(
@@ -215,13 +217,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             container.AddBusinessRequestReceivers();
 
-            container.AddValidationErrorConversion(
-                validateRegistrations: false,
-                typeof(MasterDataDocument).Assembly, // Application
-                typeof(MeteringPoint).Assembly, // Domain
-                typeof(ErrorMessageFactory).Assembly); // Infrastructure
-
-            container.Register(typeof(ProcessExtractor<>), typeof(CreateMeteringPointProcessExtractor<>), Lifestyle.Scoped);
+            container.Register(typeof(ProcessExtractor<>), typeof(CreateMeteringPointProcessExtractor), Lifestyle.Scoped);
+            container.Register(typeof(ProcessExtractor<>), typeof(ConnectMeteringPointProcessExtractor), Lifestyle.Scoped);
+            container.Register(typeof(ProcessExtractor<>), typeof(UpdateMeteringPointProcessExtractor), Lifestyle.Scoped);
+            container.Register(typeof(ProcessExtractor<>), typeof(DisconnectReconnectMeteringPointProcessExtractor), Lifestyle.Scoped);
             container.RegisterConditional(typeof(ProcessExtractor<>), typeof(NullProcessExtractor<>), context => !context.Handled);
 
             container.UseMediatR()

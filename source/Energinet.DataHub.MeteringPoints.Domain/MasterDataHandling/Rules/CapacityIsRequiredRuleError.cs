@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
     public class CapacityIsRequiredRuleError : ValidationError
     {
+        public CapacityIsRequiredRuleError()
+        {
+            Code = "D56";
+            Message = "Capacity is required for this metering point type.";
+        }
     }
 }

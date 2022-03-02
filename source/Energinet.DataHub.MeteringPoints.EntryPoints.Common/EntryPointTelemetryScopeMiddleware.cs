@@ -14,6 +14,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Microsoft.ApplicationInsights;
@@ -23,6 +24,22 @@ using Microsoft.Azure.Functions.Worker.Middleware;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common
 {
+    #pragma warning disable
+    public static class FunctionContextExtensions
+    {
+        public static bool Is(this FunctionContext context, Trigger trigger)
+        {
+            return context.FunctionDefinition.InputBindings.Any(input => input.Value.Type == trigger.ToString());
+        }
+    }
+
+    public enum Trigger
+    {
+        HttpTrigger,
+        TimerTrigger,
+        ServiceBusTrigger,
+    }
+
     public class EntryPointTelemetryScopeMiddleware : IFunctionsWorkerMiddleware
     {
         private readonly TelemetryClient _telemetryClient;
@@ -39,6 +56,16 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common
         public async Task Invoke(FunctionContext context, [NotNull] FunctionExecutionDelegate next)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
+
+            if (context.Is(Trigger.ServiceBusTrigger))
+            {
+                // ServiceBusTrigger
+            }
+
+            if (context.Is(Trigger.TimerTrigger))
+            {
+                // TimerTrigger
+            }
 
             var operation = _telemetryClient.StartOperation<DependencyTelemetry>(context.FunctionDefinition.Name, _correlationContext.Id, _correlationContext.ParentId);
             operation.Telemetry.Type = "Function";

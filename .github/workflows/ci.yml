@@ -78,14 +78,6 @@ jobs:
       DOTNET_VERSION: '5.0.404'
       ARTIFACT_NAME: localmessagehub
 
-  internalcommanddispatcher_ci:
-    needs: [ci_base, terraform_validate, dotnet_solution_ci]
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@3.0.2
-    with:
-      CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher/Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher.csproj'
-      DOTNET_VERSION: '5.0.404'
-      ARTIFACT_NAME: internalcommanddispatcher
-
   webapi_ci:
     needs: [ci_base, terraform_validate, dotnet_solution_ci]
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-webapi-artifact.yml@3.0.2
@@ -109,7 +101,6 @@ jobs:
       processing_ci,
       webapi_ci,
       localmessagehub_ci,
-      internalcommanddispatcher_ci,
       database_migration_ci
     ]
     uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@3.0.2

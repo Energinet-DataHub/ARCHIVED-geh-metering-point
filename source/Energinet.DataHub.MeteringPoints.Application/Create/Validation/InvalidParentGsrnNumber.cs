@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Validation
 {
     public class InvalidParentGsrnNumber : ValidationError
     {
+        public InvalidParentGsrnNumber()
+        {
+            Code = "E10";
+            Message = "Invalid parent metering point GSRN number.";
+        }
     }
 }

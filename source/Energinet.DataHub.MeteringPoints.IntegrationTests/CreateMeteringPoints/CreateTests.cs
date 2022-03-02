@@ -19,8 +19,10 @@ using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -32,6 +34,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
     {
         public CreateTests(DatabaseFixture databaseFixture)
             : base(databaseFixture) { }
+
+        [Fact]
+        public async Task Metering_point_created_shows_in_process_overview()
+        {
+            var request = CreateCommand();
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            await AssertProcessOverviewAsync(
+                    SampleData.GsrnNumber,
+                    "BRS-004",
+                    "RequestCreateMeteringPoint",
+                    "ConfirmCreateMeteringPoint")
+                .ConfigureAwait(false);
+        }
 
         [Fact]
         public async Task Reject_if_metering_method_is_not_applicable_to_metering_point_type()

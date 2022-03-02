@@ -20,12 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
     {
         public ProductTypeWrongDefaultValueValidationError(string gsrnNumber, string productType)
         {
-            GsrnNumber = gsrnNumber;
-            ProductType = productType;
+            Code = "E86";
+            Message = $"Product {productType} for metering point {gsrnNumber} has wrong value (differs from default)";
         }
-
-        public string GsrnNumber { get; }
-
-        public string ProductType { get; }
     }
 }

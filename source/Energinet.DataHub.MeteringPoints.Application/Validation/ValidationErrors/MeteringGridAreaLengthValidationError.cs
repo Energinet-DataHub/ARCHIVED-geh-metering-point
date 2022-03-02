@@ -20,15 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
     {
         public MeteringGridAreaLengthValidationError(string gsrnNumber, string meteringGridArea, int exactLengthAllowed)
         {
-            MeteringGridArea = meteringGridArea;
-            ExactLengthAllowed = exactLengthAllowed;
-            GsrnNumber = gsrnNumber;
+            Code = "E86";
+            Message = $"Metering grid area {meteringGridArea} for metering point {gsrnNumber} contains a non-digit character or has a length that does not equal {exactLengthAllowed}";
         }
-
-        public string GsrnNumber { get; }
-
-        public string MeteringGridArea { get; }
-
-        public int ExactLengthAllowed { get; }
     }
 }

@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using NodaTime;
 
@@ -20,14 +19,6 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
     public class SetEnergySupplierInfo : InternalCommand
     {
-        public SetEnergySupplierInfo(
-            Guid id,
-            string meteringPointGsrn)
-        {
-            Id = id;
-            MeteringPointGsrn = meteringPointGsrn;
-        }
-
         public SetEnergySupplierInfo(
             string meteringPointGsrn,
             Instant startOfSupply)

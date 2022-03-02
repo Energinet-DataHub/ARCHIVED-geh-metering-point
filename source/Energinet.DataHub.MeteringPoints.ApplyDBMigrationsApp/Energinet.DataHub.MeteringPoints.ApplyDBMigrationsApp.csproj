@@ -69,6 +69,9 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Model\202202011123 Create user table.sql" />
     <EmbeddedResource Include="Scripts\Model\202202071500 Create process tables.sql" />
     <EmbeddedResource Include="Scripts\Model\202202031350 Create business processes table.sql" />
+    <EmbeddedResource Include="Scripts\Model\202202091600 Change data type.sql" />
+    <EmbeddedResource Include="Scripts\Model\202202241200 Remove servicebus related columns.sql" />
+    <EmbeddedResource Include="Scripts\Model\202203011200 Clean QueuedInternalCommands.sql" />
     <EmbeddedResource Include="Scripts\Seed\202201171400 Distribute grid areas to actors.sql" />
     <EmbeddedResource Include="Scripts\Seed\202112142130 Create Grid Area seed data.sql" />
     <EmbeddedResource Include="Scripts\Seed\202112141430 Actor seed data.sql" />
@@ -86,6 +89,7 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Model\202110080920 Alter Correlation in QueuedInternalCommands.sql" />
     <EmbeddedResource Include="Scripts\Test\202110281315 Create Metering Point test data.sql" />
     <EmbeddedResource Include="Scripts\Test\202112141430 Actor test data.sql" />
+    <EmbeddedResource Include="Scripts\Test\202202220830 User test data.sql" />
     <EmbeddedResource Include="Scripts\Test\202112142130 Create Grid Area test data.sql" />
     <EmbeddedResource Include="Scripts\Test\202201061300 Create Metering Point test data.sql" />
     <EmbeddedResource Include="Scripts\Seed\202201191330 Add grid access provider test data.sql" />

@@ -14,42 +14,36 @@
 
 using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
+using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
 {
-    public class InternalCommandProcessor : IInternalCommandProcessor
+    public class InternalCommandProcessor
     {
-        private readonly IInternalCommandAccessor _internalCommandAccessor;
-        private readonly IInternalCommandDispatcher _internalCommandDispatcher;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly InternalCommandAccessor _internalCommandAccessor;
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
+        private readonly IJsonSerializer _serializer;
+        private readonly IMediator _mediator;
 
-        public InternalCommandProcessor(IInternalCommandAccessor internalCommandAccessor, IInternalCommandDispatcher internalCommandDispatcher, IUnitOfWork unitOfWork, ISystemDateTimeProvider systemDateTimeProvider)
+        public InternalCommandProcessor(InternalCommandAccessor internalCommandAccessor, ISystemDateTimeProvider systemDateTimeProvider, IJsonSerializer serializer, IMediator mediator)
         {
             _internalCommandAccessor = internalCommandAccessor ?? throw new ArgumentNullException(nameof(internalCommandAccessor));
-            _internalCommandDispatcher = internalCommandDispatcher ?? throw new ArgumentNullException(nameof(internalCommandDispatcher));
-            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
+            _serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public async Task ProcessUndispatchedAsync()
+        public async Task ProcessPendingAsync()
         {
-            var undispatchedCommands = await _internalCommandAccessor.GetUndispatchedAsync().ConfigureAwait(false);
+            var pendingCommands = await _internalCommandAccessor.GetPendingAsync(_systemDateTimeProvider.Now()).ConfigureAwait(false);
 
-            foreach (var queuedCommand in undispatchedCommands)
+            foreach (var queuedCommand in pendingCommands)
             {
-                var dispatchResult = await _internalCommandDispatcher.DispatchAsync(queuedCommand).ConfigureAwait(false);
-                queuedCommand.SetDispatched(_systemDateTimeProvider.Now());
-
-                if (dispatchResult.SequenceId != default(long))
-                {
-                    queuedCommand.SetSequenceId(dispatchResult.SequenceId);
-                }
-
-                await _unitOfWork.CommitAsync().ConfigureAwait(false);
+                queuedCommand.SetProcessed(_systemDateTimeProvider.Now());
+                var command = queuedCommand.ToCommand(_serializer);
+                await _mediator.Send(command).ConfigureAwait(false);
             }
         }
     }

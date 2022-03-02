@@ -54,8 +54,15 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.DisconnectMeteringPo
                 .Initialize(SampleData.GsrnNumber, GetService<IDbConnectionFactory>())
                 .HasConnectionState(PhysicalState.Disconnected);
 
-            AssertConfirmMessage(DocumentType.ConfirmDisconnectMeteringPoint);
+            AssertConfirmMessage(DocumentType.ConfirmConnectionStatusMeteringPoint);
             Assert.NotNull(FindIntegrationEvent<MeteringPointDisconnectedIntegrationEvent>());
+
+            await AssertProcessOverviewAsync(
+                    SampleData.GsrnNumber,
+                    "BRS-013",
+                    "RequestUpdateConnectionState",
+                    "ConfirmUpdateConnectionState")
+                .ConfigureAwait(false);
         }
 
         [Fact]
@@ -66,6 +73,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.DisconnectMeteringPo
             await SendCommandAsync(CreateDisconnectMeteringPointRequest()).ConfigureAwait(false);
 
             AssertValidationError("D16");
+            AssertRejectMessage(DocumentType.RejectConnectionStatusMeteringPoint);
+        }
+
+        [Fact]
+        public async Task Send_master_data_to_associated_energy_suppliers_when_disconnected()
+        {
+            await CreateMeteringPointWithEnergySupplierAssigned().ConfigureAwait(false);
+
+            await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
+
+            await SendCommandAsync(CreateDisconnectMeteringPointRequest()).ConfigureAwait(false);
+
+            await AssertAndRunInternalCommandAsync<SendAccountingPointCharacteristicsMessage>().ConfigureAwait(false);
+
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.AccountingPointCharacteristicsMessage, 2);
         }
 
         [Theory]
@@ -111,13 +133,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.DisconnectMeteringPo
 
         private static Instant ToEffectiveDate(DateTime date)
         {
-            return Instant.FromUtc(date.Year, date.Month, date.Day, 23, 0);
+            return TestHelpers.DaylightSavingsInstant(date);
         }
 
         private Task CreateMeteringPointWithEnergySupplierAssigned()
         {
             var currentDate = _dateTimeProvider.Now().ToDateTimeUtc();
-            var startOfSupplyDate = Instant.FromUtc(currentDate.Year, currentDate.Month, currentDate.Day, 22, 0);
+            var startOfSupplyDate = TestHelpers.DaylightSavingsInstant(currentDate);
             return CreateMeteringPointWithEnergySupplierAssigned(startOfSupplyDate);
         }
 
@@ -125,6 +147,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.DisconnectMeteringPo
         {
             await SendCommandAsync(Scenarios.CreateCommand(MeteringPointType.Consumption)).ConfigureAwait(false);
             await MarkAsEnergySupplierAssigned(startOfSupplyDate).ConfigureAwait(false);
+            await AddEnergySupplier(startOfSupplyDate).ConfigureAwait(false);
         }
 
         private async Task MarkAsEnergySupplierAssigned(Instant startOfSupply)
@@ -133,17 +156,27 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.DisconnectMeteringPo
             await SendCommandAsync(setEnergySupplierAssigned).ConfigureAwait(false);
         }
 
+        private async Task AddEnergySupplier(Instant startOfSupply)
+        {
+            var meteringPointRepository = GetService<IMeteringPointRepository>();
+            var meteringPoint = await meteringPointRepository.GetByGsrnNumberAsync(GsrnNumber.Create(SampleData.GsrnNumber))
+                .ConfigureAwait(false);
+
+            var addEnergySupplier = new AddEnergySupplier(meteringPoint?.Id.Value.ToString()!, startOfSupply, SampleData.GlnNumber);
+            await SendCommandAsync(addEnergySupplier).ConfigureAwait(false);
+        }
+
         private ConnectMeteringPointRequest CreateConnectMeteringPointRequest()
         {
             var currentDate = _dateTimeProvider.Now().ToDateTimeUtc();
-            var effectiveDate = Instant.FromUtc(currentDate.Year, currentDate.Month, currentDate.Day, 23, 0);
+            var effectiveDate = TestHelpers.DaylightSavingsInstant(currentDate);
             return new(SampleData.GsrnNumber, effectiveDate.ToString(), SampleData.Transaction);
         }
 
         private DisconnectReconnectMeteringPointRequest CreateDisconnectMeteringPointRequest()
         {
             var currentDate = _dateTimeProvider.Now().ToDateTimeUtc();
-            var effectiveDate = Instant.FromUtc(currentDate.Year, currentDate.Month, currentDate.Day, 23, 0);
+            var effectiveDate = TestHelpers.DaylightSavingsInstant(currentDate);
             return new(SampleData.GsrnNumber, effectiveDate.ToString(), SampleData.Transaction, "Disconnected");
         }
 

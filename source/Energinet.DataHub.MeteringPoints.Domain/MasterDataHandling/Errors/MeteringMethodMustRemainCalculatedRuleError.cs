@@ -18,5 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
     public class MeteringMethodMustRemainCalculatedRuleError : ValidationError
     {
+        public MeteringMethodMustRemainCalculatedRuleError()
+        {
+            Code = "D37";
+            Message = "Metering method can not be changed from Calculated for surplus production metering points";
+        }
     }
 }

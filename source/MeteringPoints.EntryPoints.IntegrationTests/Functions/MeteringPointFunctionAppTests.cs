@@ -89,17 +89,15 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
 
             // Processing
             await AssertFunctionExecuted(Fixture.ProcessingHostManager, "QueueSubscriber").ConfigureAwait(false);
+            await AssertFunctionExecuted(Fixture.ProcessingHostManager, "ProcessInternalCommands").ConfigureAwait(false);
 
             // Outbox
             await AssertFunctionExecuted(Fixture.OutboxHostManager, "OutboxWatcher").ConfigureAwait(false);
 
-            // InternalCommands
-            await AssertFunctionExecuted(Fixture.InternalCommandDispatcherHostManager, "Dispatcher").ConfigureAwait(false);
-
             // MessageHub
             await Fixture.MessageHubSimulator
-                .WaitForNotificationsInDataAvailableQueueAsync(correlationId)
-                .ConfigureAwait(false);
+                    .WaitForNotificationsInDataAvailableQueueAsync(correlationId)
+                    .ConfigureAwait(false);
 
             var peekSimulationResponseDto = await Fixture.MessageHubSimulator.PeekAsync().ConfigureAwait(false);
 
@@ -163,7 +161,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
             Fixture.ProcessingHostManager.CheckIfFunctionThrewException().Should().BeFalse();
             Fixture.OutboxHostManager.CheckIfFunctionThrewException().Should().BeFalse();
             Fixture.LocalMessageHubHostManager.CheckIfFunctionThrewException().Should().BeFalse();
-            Fixture.InternalCommandDispatcherHostManager.CheckIfFunctionThrewException().Should().BeFalse();
         }
     }
 }

@@ -20,12 +20,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.ChangeCon
     {
         public ConnectionStateMustBeConnectedOrDisconnectedError(string gsrnNumber, PhysicalState physicalState)
         {
-            GsrnNumber = gsrnNumber;
-            PhysicalState = physicalState;
+            Code = "D16";
+            Message = $"GSRN number {gsrnNumber} not allowed: The specified metering point is currently not connected nor disconnected (physical status {physicalState})";
         }
-
-        public string GsrnNumber { get; }
-
-        public PhysicalState PhysicalState { get; }
     }
 }

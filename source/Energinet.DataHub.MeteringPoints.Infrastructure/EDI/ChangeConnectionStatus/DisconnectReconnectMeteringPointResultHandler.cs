@@ -25,24 +25,20 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Errors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeConnectionStatus
 {
     public class DisconnectReconnectMeteringPointResultHandler : IBusinessProcessResultHandler<DisconnectReconnectMeteringPointRequest>
     {
         private readonly IActorMessageService _actorMessageService;
-        private readonly ErrorMessageFactory _errorMessageFactory;
         private readonly MeteringPointPipelineContext _pipelineContext;
         private readonly ICommandScheduler _commandScheduler;
 
         public DisconnectReconnectMeteringPointResultHandler(
-            ErrorMessageFactory errorMessageFactory,
             MeteringPointPipelineContext pipelineContext,
             ICommandScheduler commandScheduler,
             IActorMessageService actorMessageService)
         {
-            _errorMessageFactory = errorMessageFactory ?? throw new ArgumentNullException(nameof(errorMessageFactory));
             _pipelineContext = pipelineContext ?? throw new ArgumentNullException(nameof(pipelineContext));
             _commandScheduler = commandScheduler ?? throw new ArgumentNullException(nameof(commandScheduler));
             _actorMessageService = actorMessageService;
@@ -53,29 +49,18 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeConnectionSt
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (result == null) throw new ArgumentNullException(nameof(result));
 
-            var connectionState = EnumerationType.FromName<PhysicalState>(request.ConnectionState);
-
             return result.Success
-                ? CreateAcceptMessageAsync(request, connectionState)
-                : CreateRejectResponseAsync(request, result, connectionState);
+                ? CreateAcceptMessageAsync(request)
+                : CreateRejectResponseAsync(request, result);
         }
 
-        private async Task CreateAcceptMessageAsync(DisconnectReconnectMeteringPointRequest request, PhysicalState connectionState)
+        private async Task CreateAcceptMessageAsync(DisconnectReconnectMeteringPointRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            if (connectionState == PhysicalState.Disconnected)
-            {
-                await _actorMessageService
-                    .SendDisconnectMeteringPointConfirmAsync(request.TransactionId, request.GsrnNumber)
-                    .ConfigureAwait(false);
-            }
-            else if (connectionState == PhysicalState.Connected)
-            {
-                await _actorMessageService
-                    .SendReconnectMeteringPointConfirmAsync(request.TransactionId, request.GsrnNumber)
-                    .ConfigureAwait(false);
-            }
+            await _actorMessageService
+                .SendConnectionStatusMeteringPointConfirmAsync(request.TransactionId, request.GsrnNumber)
+                .ConfigureAwait(false);
 
             var command = new SendAccountingPointCharacteristicsMessage(
                 _pipelineContext.MeteringPointId,
@@ -84,24 +69,15 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeConnectionSt
             await _commandScheduler.EnqueueAsync(command).ConfigureAwait(false);
         }
 
-        private async Task CreateRejectResponseAsync(DisconnectReconnectMeteringPointRequest request, BusinessProcessResult result, PhysicalState connectionState)
+        private async Task CreateRejectResponseAsync(DisconnectReconnectMeteringPointRequest request, BusinessProcessResult result)
         {
             var errors = result.ValidationErrors
-                .Select(error => _errorMessageFactory.GetErrorMessage(error))
+                .Select(error => ErrorMessageFactory.GetErrorMessage(error))
                 .AsEnumerable();
 
-            if (connectionState == PhysicalState.Disconnected)
-            {
-                await _actorMessageService
-                    .SendDisconnectMeteringPointRejectAsync(request.TransactionId, request.GsrnNumber, errors)
-                    .ConfigureAwait(false);
-            }
-            else if (connectionState == PhysicalState.Connected)
-            {
-                await _actorMessageService
-                    .SendDisconnectMeteringPointRejectAsync(request.TransactionId, request.GsrnNumber, errors)
-                    .ConfigureAwait(false);
-            }
+            await _actorMessageService
+                .SendConnectionStatusMeteringPointRejectAsync(request.TransactionId, request.GsrnNumber, errors)
+                .ConfigureAwait(false);
         }
     }
 }

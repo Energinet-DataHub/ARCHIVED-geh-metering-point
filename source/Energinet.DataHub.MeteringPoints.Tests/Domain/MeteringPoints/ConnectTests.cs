@@ -42,7 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         {
             var meteringPoint = CreateMeteringPoint(EnumerationType.FromName<MeteringPointType>(meteringPointType));
 
-            AssertError<MeterMustBePhysical>(meteringPoint.ConnectAcceptable(ConnectNow()), true);
+            AssertError<MeterMustBePhysical>("D37", meteringPoint.ConnectAcceptable(ConnectNow()), true);
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
         {
             var meteringPoint = CreateMeteringPoint(MeteringPointType.ExchangeReactiveEnergy);
 
-            AssertError<MustBeCoupledToParent>(meteringPoint.ConnectAcceptable(ConnectNow()), true);
+            AssertError<MustBeCoupledToParent>("D36", meteringPoint.ConnectAcceptable(ConnectNow()), true);
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 
             var checkResult = meteringPoint.ConnectAcceptable(connectionDetails);
 
-            Assert.Contains(checkResult.Errors, error => error is MustHaveEnergySupplierRuleError);
+            AssertContainsValidationError<MustHaveEnergySupplierRuleError>("D36", checkResult);
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 
             var checkResult = meteringPoint.ConnectAcceptable(connectionDetails);
 
-            Assert.Contains(checkResult.Errors, error => error is MustHaveEnergySupplierRuleError);
+            AssertContainsValidationError<MustHaveEnergySupplierRuleError>("D36", checkResult);
         }
 
         [Fact]

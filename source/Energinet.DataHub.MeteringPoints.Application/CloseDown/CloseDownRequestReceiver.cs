@@ -18,7 +18,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.ReceiveBusinessRequests;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
@@ -29,6 +29,8 @@ using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using FluentValidation.Results;
 using MediatR;
+using NodaTime;
+using NodaTime.Text;
 
 namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
 {
@@ -37,9 +39,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
         private readonly IBusinessProcessRepository _businessProcesses;
         private readonly IActorMessageService _actorMessageService;
         private readonly RequestCloseDownValidator _validator;
-        private readonly ErrorMessageFactory _errorMessageFactory;
         private readonly IMeteringPointRepository _meteringPoints;
         private readonly IMediator _mediator;
+        private readonly ICommandScheduler _scheduler;
         private BusinessRulesValidationResult _validationResult = new();
         private CloseDownProcess? _businessProcess;
 
@@ -47,16 +49,16 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
             IBusinessProcessRepository businessProcesses,
             IActorMessageService actorMessageService,
             RequestCloseDownValidator validator,
-            ErrorMessageFactory errorMessageFactory,
             IMeteringPointRepository meteringPoints,
-            IMediator mediator)
+            IMediator mediator,
+            ICommandScheduler scheduler)
         {
             _businessProcesses = businessProcesses ?? throw new ArgumentNullException(nameof(businessProcesses));
             _actorMessageService = actorMessageService ?? throw new ArgumentNullException(nameof(actorMessageService));
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
-            _errorMessageFactory = errorMessageFactory ?? throw new ArgumentNullException(nameof(errorMessageFactory));
             _meteringPoints = meteringPoints;
             _mediator = mediator;
+            _scheduler = scheduler ?? throw new ArgumentNullException(nameof(scheduler));
         }
 
         public async Task ReceiveRequestAsync(MasterDataDocument request)
@@ -80,8 +82,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
 
             await AcceptRequestAsync(request).ConfigureAwait(false);
 
-            var closeDownCommand = new CloseDownMeteringPoint(request.GsrnNumber);
-            await _mediator.Send(closeDownCommand, CancellationToken.None).ConfigureAwait(false);
+            await ScheduleCloseDownAsync(request).ConfigureAwait(false);
         }
 
         public bool CanHandleRequest(MasterDataDocument request)
@@ -97,6 +98,12 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
                 .Select(error => (ValidationError)error.CustomState)
                 .ToList()
                 .AsReadOnly();
+        }
+
+        private Task ScheduleCloseDownAsync(MasterDataDocument request)
+        {
+            var closeDownCommand = new CloseDownMeteringPoint(request.GsrnNumber);
+            return _scheduler.EnqueueAsync(closeDownCommand, InstantPattern.General.Parse(request.EffectiveDate).Value);
         }
 
         private async Task<BusinessRulesValidationResult> ValidateRequestValuesAsync(MasterDataDocument request)
@@ -115,7 +122,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
         private List<ErrorMessage> ConvertValidationErrorsToErrorMessages()
         {
             return _validationResult.Errors
-                .Select(validationError => _errorMessageFactory.GetErrorMessage(validationError)).ToList();
+                .Select(validationError => ErrorMessageFactory.GetErrorMessage(validationError)).ToList();
         }
 
         private async Task<MeteringPoint?> FindTargetMeteringPointAsync(string gsrnNumber)

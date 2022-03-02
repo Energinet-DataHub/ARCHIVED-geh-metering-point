@@ -18,11 +18,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
     public class InvalidSettlementMethodValue : ValidationError
     {
-        public InvalidSettlementMethodValue(string providedValue)
+        public InvalidSettlementMethodValue(string settlementMethod)
         {
-            ProvidedValue = providedValue;
+            Code = "D15";
+            Message = $"Settlement method {settlementMethod} has wrong value (outside domain)";
         }
-
-        public string ProvidedValue { get; }
     }
 }
