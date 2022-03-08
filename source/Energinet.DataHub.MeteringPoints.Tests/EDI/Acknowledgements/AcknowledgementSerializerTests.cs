@@ -58,7 +58,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.Acknowledgements
 
             var schemaValidationReader = new SchemaValidatingReader(
                 stream,
-                Schemas.CimXml.StructureConfirmRequestChangeOfAccountingPointCharacteristics);
+                Schemas.CimXml.StructureConfirmRequestChangeAccountingPointCharacteristics);
 
             while (await schemaValidationReader.AdvanceAsync().ConfigureAwait(false)) { }
 
@@ -90,7 +90,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.Acknowledgements
 
             var schemaValidationReader = new SchemaValidatingReader(
                 stream,
-                Schemas.CimXml.StructureRejectRequestChangeOfAccountingPointCharacteristics);
+                Schemas.CimXml.StructureRejectRequestChangeAccountingPointCharacteristics);
 
             while (await schemaValidationReader.AdvanceAsync().ConfigureAwait(false)) { }
 
@@ -126,7 +126,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.EDI.Acknowledgements
 
             var schemaValidationReader = new SchemaValidatingReader(
                 stream,
-                Schemas.CimXml.StructureRejectRequestChangeOfAccountingPointCharacteristics);
+                Schemas.CimXml.StructureRejectRequestChangeAccountingPointCharacteristics);
 
             while (await schemaValidationReader.AdvanceAsync().ConfigureAwait(false)) { }
 

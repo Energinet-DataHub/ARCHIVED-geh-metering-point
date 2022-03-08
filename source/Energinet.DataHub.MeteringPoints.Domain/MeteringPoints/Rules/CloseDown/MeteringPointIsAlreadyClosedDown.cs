@@ -12,17 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Xml.Linq;
-using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Xml;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.Reject
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.CloseDown
 {
-    public class RejectRequestChangeOfAccountingPointCharacteristicsXmlDeclaration : XmlDeclaration
+    public class MeteringPointIsAlreadyClosedDown : ValidationError
     {
-        public override string XmlNamespaceText => "urn:ediel.org:structure:rejectrequestchangeofaccountingpointcharacteristics:0:1";
-
-        public override string SchemaLocationText => "urn-ediel-org-structure-rejectrequestchangeofaccountingpointcharacteristics-0-1.xsd";
-
-        public override XNamespace XmlNamespace => XmlNamespaceText;
+        public MeteringPointIsAlreadyClosedDown()
+        {
+            Code = "D16";
+            Message = "Metering is already closed down.";
+        }
     }
 }

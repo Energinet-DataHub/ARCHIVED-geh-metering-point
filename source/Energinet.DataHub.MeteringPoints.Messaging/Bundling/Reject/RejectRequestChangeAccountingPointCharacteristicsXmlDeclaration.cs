@@ -12,12 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Common;
+using System.Xml.Linq;
+using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Xml;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharacteristics
+namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.Reject
 {
-    public record ChildMarketEvaluationPoint(
-        string Id,
-        string CodingScheme,
-        string Description);
+    public class RejectRequestChangeAccountingPointCharacteristicsXmlDeclaration : XmlDeclaration
+    {
+        public override string XmlNamespaceText => "urn:ediel.org:structure:rejectrequestchangeaccountingpointcharacteristics:0:1";
+
+        public override string SchemaLocationText => "urn-ediel-org-structure-rejectrequestchangeaccountingpointcharacteristics-0-1.xsd";
+
+        public override XNamespace XmlNamespace => XmlNamespaceText;
+    }
 }

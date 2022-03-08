@@ -12,17 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Xml.Linq;
-using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Xml;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.Confirm
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exceptions
 {
-    public class ConfirmRequestChangeOfAccountingPointCharacteristicsXmlDeclaration : XmlDeclaration
+    public class CloseDownException : BusinessOperationException
     {
-        public override string XmlNamespaceText => "urn:ediel.org:structure:confirmrequestchangeofaccountingpointcharacteristics:0:1";
+        public CloseDownException(string message)
+            : base(message)
+        {
+        }
 
-        public override string SchemaLocationText => "urn-ediel-org-structure-confirmrequestchangeofaccountingpointcharacteristics-0-1.xsd";
+        public CloseDownException(string message, System.Exception innerException)
+            : base(message, innerException)
+        {
+        }
 
-        public override XNamespace XmlNamespace => XmlNamespaceText;
+        public CloseDownException()
+        {
+        }
     }
 }
