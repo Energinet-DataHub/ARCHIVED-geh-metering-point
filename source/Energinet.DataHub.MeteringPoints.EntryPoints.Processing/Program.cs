@@ -254,7 +254,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     typeof(OnMeteringPointConnected),
                     typeof(OnMeteringPointDisconnected),
                     typeof(OnMeteringPointReconnected),
-                    typeof(SetEnergySupplierHACK));
+                    typeof(SetEnergySupplierHACK),
+                    typeof(ProcessInternalCommandsOnTimeHasPassed));
 
             Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
 
