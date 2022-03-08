@@ -135,33 +135,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
             AssertValidationError("E10");
         }
 
-        // [Fact]
-        // public async Task The_close_down_activity_is_scheduled_when_process_is_started()
-        // {
-        //     await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
-        //
-        //     var request = CreateRequest();
-        //     await ReceiveRequest(request).ConfigureAwait(false);
-        //
-        //     var command =
-        //         await GetScheduledCommandAsync<CloseDownMeteringPoint>(InstantPattern.General
-        //             .Parse(request.EffectiveDate).Value).ConfigureAwait(false);
-        //
-        //     Assert.NotNull(command);
-        //     Assert.Equal(request.GsrnNumber, command?.GsrnNumber);
-        // }
-        //
-        // [Fact]
-        // public async Task Metering_point_is_closed_down()
-        // {
-        //     await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
-        //
-        //     var command = new CloseDownMeteringPoint(SampleData.GsrnNumber);
-        //     await SendCommandAsync(command).ConfigureAwait(false);
-        //
-        //     AssertMasterData()
-        //         .HasConnectionState(PhysicalState.ClosedDown);
-        // }
         [Fact]
         public async Task Metering_point_is_closed_down_when_due_date_has_transpired()
         {
