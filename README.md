@@ -41,7 +41,6 @@ ___OUTDATED___
 
 ## Domain Roadmap
 
-
 * A market actor can create all metering point types - Done
 * A market actor can update metering point master data on all metering point types - Done
 * A market actor can connect all metering point types - Done
