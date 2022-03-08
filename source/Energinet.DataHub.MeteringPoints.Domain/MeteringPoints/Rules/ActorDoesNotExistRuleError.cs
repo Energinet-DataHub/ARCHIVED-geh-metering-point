@@ -12,36 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.Actors
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
-    public class ActorId : ValueObject
+    public class ActorDoesNotExistRuleError : ValidationError
     {
-        public ActorId(Guid value)
+        public ActorDoesNotExistRuleError(string actorId)
         {
-            Value = value;
-        }
-
-        public static ActorId Empty
-        {
-            get
-            {
-                return new ActorId(Guid.Empty);
-            }
-        }
-
-        public Guid Value { get; }
-
-        public static ActorId Create(string id)
-        {
-            return new ActorId(Guid.Parse(id));
-        }
-
-        public static ActorId Create()
-        {
-            return new ActorId(Guid.NewGuid());
+            Code = "E10";
+            Message = $"Actor {actorId} does not exist";
         }
     }
 }

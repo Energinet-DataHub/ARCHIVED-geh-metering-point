@@ -14,6 +14,7 @@
 
 using System;
 using System.Linq;
+using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
@@ -62,6 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints.Exchange
                 meteringPointGsrn,
                 gridAreaLinkId,
                 ExchangeGridAreas.Create(sourceGridAreaLinkId, targetGridAreaLinkId),
+                ActorId.Create(),
                 MasterDataBuilderForExchange()
                 .WithAddress(address.StreetName, address.StreetCode, address.BuildingNumber, address.City, address.CitySubDivision, address.PostCode, address.CountryCode, address.Floor, address.Room, address.MunicipalityCode, address.IsActual, address.GeoInfoReference.ToString(), address.LocationDescription)
                 .Build());
