@@ -125,6 +125,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 type,
                 gridArea is not null ? gridArea.DefaultLink.Id : _defaultGridArea.DefaultLink.Id,
+                ActorId.Create(SampleData.Administrator),
                 MasterDataBuilder(type).Build());
         }
 

@@ -12,12 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
+using Energinet.DataHub.MeteringPoints.Domain.Actors;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Create
 {
     public record CreateMeteringPoint(
             string MeteringPointType = "",
+            string AdministratorId = "",
             string? StreetName = null,
             string? BuildingNumber = null,
             string? PostCode = null,
