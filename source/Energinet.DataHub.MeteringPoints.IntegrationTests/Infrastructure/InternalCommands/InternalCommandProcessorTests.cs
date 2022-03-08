@@ -14,6 +14,7 @@
 
 using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
@@ -69,8 +70,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.Inter
 
         private void AssertIsProcessed(InternalCommand command)
         {
-            var queuedInternalCommand = GetQueuedCommandFrom(command);
-            Assert.NotNull(queuedInternalCommand.ProcessedDate);
+            var checkStatement =
+                $"SELECT COUNT(1) FROM [dbo].[QueuedInternalCommands] WHERE Id = '{command.Id}' AND ProcessedDate IS NOT NULL";
+            var isProcessed = GetService<IDbConnectionFactory>().GetOpenConnection().ExecuteScalar<bool>(checkStatement);
+            Assert.True(isProcessed);
         }
 
         private void AssertIsNotProcessed(InternalCommand command)
@@ -89,7 +92,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.Inter
         private async Task ProcessPendingCommands()
         {
             await _processor.ProcessPendingAsync().ConfigureAwait(false);
-            await _unitOfWork.CommitAsync().ConfigureAwait(false);
         }
 
         private async Task Schedule(InternalCommand command, Instant? executeOn)
