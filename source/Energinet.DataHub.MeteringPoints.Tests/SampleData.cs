@@ -22,6 +22,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests
 {
     public static class SampleData
     {
+        public static string Administrator => "38406E2F-4045-45A3-A63C-3E8CCE07FEB9";
+
         public static string GsrnNumber => "571234567891234568";
 
         public static string GridAreaLinkId => "10A9E0E7-3906-4DC0-8CBD-A5C042A5C484";
