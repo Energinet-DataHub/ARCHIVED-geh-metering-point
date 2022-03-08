@@ -39,7 +39,6 @@ ___OUTDATED___
 
 ![MP context stream](![Context stream MP](https://user-images.githubusercontent.com/72008816/157206098-19dd7295-2cb8-4278-8960-d51cda2d6355.png)
 
-
 ## Domain Roadmap
 
 
