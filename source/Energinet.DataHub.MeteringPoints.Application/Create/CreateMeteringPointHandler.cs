@@ -79,11 +79,11 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
 
             try
             {
-                var actor = await _actorProvider.GetActorAsync(ActorId.Create(request.Administrator).Value).ConfigureAwait(false);
+                var actor = await _actorProvider.GetActorAsync(ActorId.Create(request.AdministratorId).Value).ConfigureAwait(false);
             }
             catch (InvalidOperationException)
             {
-                return Failure(request, new ActorDoesNotExistRuleError(request.Administrator));
+                return Failure(request, new ActorDoesNotExistRuleError(request.AdministratorId));
             }
 
             var authorizationResult = await _authorizer.AuthorizeAsync(gridArea).ConfigureAwait(false);
@@ -168,7 +168,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 GsrnNumber.Create(request.GsrnNumber),
                 meteringPointType,
                 gridArea.DefaultLink.Id,
-                ActorId.Create(request.Administrator),
+                ActorId.Create(request.AdministratorId),
                 masterData);
 
             _meteringPointRepository.Add(
@@ -221,7 +221,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                     GsrnNumber.Create(request.GsrnNumber),
                     gridArea.DefaultLink.Id,
                     ExchangeGridAreas.Create(sourceGridArea!.DefaultLink.Id, targetGridArea!.DefaultLink.Id),
-                    ActorId.Create(request.Administrator),
+                    ActorId.Create(request.AdministratorId),
                     masterData));
 
             return BusinessProcessResult.Ok(request.TransactionId);

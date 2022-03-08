@@ -101,7 +101,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
             return new CreateMeteringPoint
             {
                 MeteringPointType = document.TypeOfMeteringPoint,
-                Administrator = _actorContext.CurrentActor == null ? Guid.Empty.ToString() : _actorContext.CurrentActor.ActorId.ToString(),
+                AdministratorId = _actorContext.CurrentActor == null ? Guid.Empty.ToString() : _actorContext.CurrentActor.ActorId.ToString(),
                 AssetType = document.AssetType,
                 BuildingNumber = document.BuildingNumber,
                 CityName = document.CityName,

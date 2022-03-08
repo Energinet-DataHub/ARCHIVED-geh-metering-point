@@ -1,2 +1,2 @@
 ﻿ALTER TABLE [dbo].[MeteringPoints]
-    ADD [Administrator] UNIQUEIDENTIFIER NOT NULL
+    ADD [AdministratorId] UNIQUEIDENTIFIER NOT NULL
