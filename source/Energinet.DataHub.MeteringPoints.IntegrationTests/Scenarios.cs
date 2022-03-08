@@ -59,6 +59,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         {
             return new CreateMeteringPoint(
                 MeteringPointType: MeteringPointType.Consumption.Name,
+                SampleData.Administrator,
                 SampleData.StreetName,
                 SampleData.BuildingNumber,
                 SampleData.PostCode,
@@ -97,6 +98,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         {
             return new CreateMeteringPoint(
                 MeteringPointType: MeteringPointType.Production.Name,
+                SampleData.Administrator,
                 SampleData.StreetName,
                 SampleData.BuildingNumber,
                 SampleData.PostCode,
@@ -135,6 +137,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         {
             return new CreateMeteringPoint(
                 MeteringPointType: meteringPointType.Name,
+                SampleData.Administrator,
                 SampleData.StreetName,
                 SampleData.BuildingNumber,
                 SampleData.PostCode,

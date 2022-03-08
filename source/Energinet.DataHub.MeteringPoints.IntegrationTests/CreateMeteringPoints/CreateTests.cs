@@ -519,11 +519,31 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task Should_reject_when_current_actor_is_not_grid_operator_for_applied_grid_area()
         {
-            SetCurrentAuthenticatedActor(Guid.NewGuid());
+            SetCurrentAuthenticatedActor(new Guid("08e2ba01-0ead-48c0-bdc7-8e2c7f7c5525"));
             var request = Scenarios.CreateDocument();
 
             await SendCommandAsync(request).ConfigureAwait(false);
             AssertValidationError("E0I");
+        }
+
+        [Fact]
+        public async Task Grid_operator_is_not_known()
+        {
+            SetCurrentAuthenticatedActor(new Guid("FA37E2A1-7E00-4BBC-89EA-3CAB9981A105"));
+            var request = Scenarios.CreateDocument();
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+            AssertValidationError("E10");
+        }
+
+        [Fact]
+        public async Task Grid_operator_is_empty()
+        {
+            SetCurrentAuthenticatedActor(Guid.Empty);
+            var request = Scenarios.CreateDocument();
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+            AssertValidationError("E10");
         }
 
         private static CreateMeteringPoint CreateCommand()

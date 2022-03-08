@@ -44,7 +44,6 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
             new MasterDataValue(nameof(MasterData.Capacity), typeof(Capacity), Applicability.Optional),
             new MasterDataValue(nameof(MasterData.Address), typeof(Address), Applicability.Optional),
             new MasterDataValue(nameof(MasterData.ProductionObligation), typeof(bool), Applicability.Optional),
-            new MasterDataValue(nameof(MasterData.Administrator), typeof(ActorId), Applicability.Optional),
         };
 
         protected MasterDataBuilderBase(IEnumerable<MasterDataField> masterDataFields)

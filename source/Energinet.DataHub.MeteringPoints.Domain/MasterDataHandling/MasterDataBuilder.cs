@@ -50,12 +50,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 address: GetValue<Address>(nameof(MasterData.Address)),
                 meteringConfiguration: GetValue<MeteringConfiguration>(nameof(MasterData.MeteringConfiguration)),
                 settlementMethod: GetValue<SettlementMethod>(nameof(MasterData.SettlementMethod)),
-                scheduledMeterReadingDate: GetValue<ScheduledMeterReadingDate>(nameof(MasterData.ScheduledMeterReadingDate)),
+                scheduledMeterReadingDate: GetValue<ScheduledMeterReadingDate>(
+                    nameof(MasterData.ScheduledMeterReadingDate)),
                 connectionType: GetValue<ConnectionType>(nameof(MasterData.ConnectionType)),
                 disconnectionType: GetValue<DisconnectionType>(nameof(MasterData.DisconnectionType)),
                 netSettlementGroup: GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)),
-                productionObligation: GetValue<bool?>(nameof(MasterData.ProductionObligation)),
-                administrator: GetValue<ActorId>(nameof(MasterData.Administrator)));
+                productionObligation: GetValue<bool?>(nameof(MasterData.ProductionObligation)));
         }
 
         public IMasterDataBuilder WithNetSettlementGroup(string? netSettlementGroup)

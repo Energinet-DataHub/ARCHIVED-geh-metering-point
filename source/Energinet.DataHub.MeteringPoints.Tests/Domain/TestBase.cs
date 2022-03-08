@@ -14,6 +14,7 @@
 
 using System;
 using System.Linq;
+using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
@@ -50,6 +51,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain
                 GsrnNumber.Create(SampleData.GsrnNumber),
                 type,
                 new GridAreaLinkId(Guid.Parse(SampleData.GridAreaLinkId)),
+                ActorId.Create(SampleData.Administrator),
                 builder.Build());
         }
 
