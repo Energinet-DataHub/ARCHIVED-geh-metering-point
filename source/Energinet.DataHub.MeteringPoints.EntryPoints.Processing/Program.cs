@@ -146,6 +146,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<SystemTimer>(Lifestyle.Scoped);
             container.Register<InternalCommandProcessor>(Lifestyle.Scoped);
             container.Register<InternalCommandAccessor>(Lifestyle.Scoped);
+            container.Register<CommandExecutor>(Lifestyle.Scoped);
 
             var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")
                                    ?? throw new InvalidOperationException(
