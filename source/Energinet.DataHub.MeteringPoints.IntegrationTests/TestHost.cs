@@ -254,7 +254,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                     typeof(OnMeteringPointConnected),
                     typeof(OnMeteringPointDisconnected),
                     typeof(OnMeteringPointReconnected),
-                    typeof(SetEnergySupplierHACK));
+                    typeof(SetEnergySupplierHACK),
+                    typeof(ProcessInternalCommandsOnTimeHasPassed));
 
             // Specific for test instead of using Application Insights package
             _container.Register(() => new TelemetryClient(new TelemetryConfiguration()), Lifestyle.Scoped);

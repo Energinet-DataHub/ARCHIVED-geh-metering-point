@@ -11,6 +11,6 @@
     "INTEGRATION_EVENT_QUEUE_CONNECTION": "<Service Bus connection string where integration/notification events are received>",
     "SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING": "<Shared Azure Service Bus connection string>",
     "CHARGES_DEFAULT_LINK_RESPONSE_QUEUE": "<Queue name that Charges response to in request/response pattern>",
-    "INTERNAL_COMMAND_PROCESSING_INTERVAL": "*/10 * * * * *"
+    "RAISE_TIME_HAS_PASSED_EVENT_SCHEDULE": "*/10 * * * * *"
   }
 }

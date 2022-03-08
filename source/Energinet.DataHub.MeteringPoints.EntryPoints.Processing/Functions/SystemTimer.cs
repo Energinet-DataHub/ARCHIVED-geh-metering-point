@@ -14,29 +14,31 @@
 
 using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
+using Energinet.DataHub.MeteringPoints.Application.Common.SystemTime;
+using MediatR;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
+using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
 {
-    public class ProcessInternalCommands
+    public class SystemTimer
     {
-        private readonly InternalCommandProcessor _internalCommandProcessor;
+        private readonly IMediator _mediator;
 
-        public ProcessInternalCommands(InternalCommandProcessor internalCommandProcessor)
+        public SystemTimer(IMediator mediator)
         {
-            _internalCommandProcessor = internalCommandProcessor;
+            _mediator = mediator;
         }
 
-        [Function("ProcessInternalCommands")]
-        public Task RunAsync([TimerTrigger("%INTERNAL_COMMAND_PROCESSING_INTERVAL%")] TimerInfo timerTimerInfo, FunctionContext context)
+        [Function("RaiseTimeHasPassedEvent")]
+        public Task RunAsync([TimerTrigger("%RAISE_TIME_HAS_PASSED_EVENT_SCHEDULE%")] TimerInfo timerTimerInfo, FunctionContext context)
         {
-            var logger = context.GetLogger("Scheduled commands processing");
-            logger.LogInformation($"Trigger function executed at: {DateTime.Now}");
+            var logger = context.GetLogger("System timer");
+            logger.LogInformation($"System timer trigger at: {DateTime.Now}");
             logger.LogInformation($"Next timer schedule at: {timerTimerInfo?.ScheduleStatus?.Next}");
 
-            return _internalCommandProcessor.ProcessPendingAsync();
+            return _mediator.Publish(new TimeHasPassed(Instant.FromDateTimeUtc(DateTime.UtcNow)));
         }
     }
 }

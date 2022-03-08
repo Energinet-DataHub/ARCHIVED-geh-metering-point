@@ -89,7 +89,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
 
             // Processing
             await AssertFunctionExecuted(Fixture.ProcessingHostManager, "QueueSubscriber").ConfigureAwait(false);
-            await AssertFunctionExecuted(Fixture.ProcessingHostManager, "ProcessInternalCommands").ConfigureAwait(false);
+            await AssertFunctionExecuted(Fixture.ProcessingHostManager, "RaiseTimeHasPassedEvent").ConfigureAwait(false);
 
             // Outbox
             await AssertFunctionExecuted(Fixture.OutboxHostManager, "OutboxWatcher").ConfigureAwait(false);
