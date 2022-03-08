@@ -80,6 +80,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
                 return;
             }
 
+            _validationResult = targetMeteringPoint.CanCloseDown();
+            if (_validationResult.Success == false)
+            {
+                await RejectRequestAsync(request).ConfigureAwait(false);
+                return;
+            }
+
             await AcceptRequestAsync(request).ConfigureAwait(false);
 
             await ScheduleCloseDownAsync(request).ConfigureAwait(false);

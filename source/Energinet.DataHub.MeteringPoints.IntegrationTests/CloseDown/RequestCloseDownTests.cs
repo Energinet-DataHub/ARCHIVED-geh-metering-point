@@ -31,8 +31,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
     public class RequestCloseDownTests : TestHost
     {
         public RequestCloseDownTests(DatabaseFixture databaseFixture)
-        : base(databaseFixture)
+            : base(databaseFixture)
         {
+        }
+
+        [Fact]
+        public async Task Reject_if_business_rules_are_violated()
+        {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+            await CloseDownMeteringPointAsync().ConfigureAwait(false);
+
+            var request = CreateRequest();
+            await ReceiveRequest(request).ConfigureAwait(false);
+
+            AssertRejectMessage(DocumentType.RejectCloseDownRequest);
         }
 
         [Fact]
@@ -128,7 +140,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
             var request = CreateRequest();
             await ReceiveRequest(request).ConfigureAwait(false);
 
-            var command = await GetScheduledCommandAsync<CloseDownMeteringPoint>(InstantPattern.General.Parse(request.EffectiveDate).Value).ConfigureAwait(false);
+            var command =
+                await GetScheduledCommandAsync<CloseDownMeteringPoint>(InstantPattern.General
+                    .Parse(request.EffectiveDate).Value).ConfigureAwait(false);
 
             Assert.NotNull(command);
             Assert.Equal(request.GsrnNumber, command?.GsrnNumber);
@@ -149,10 +163,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
         private static MasterDataDocument CreateRequest()
         {
             return new MasterDataDocument(
-                 ProcessType: BusinessProcessType.CloseDownMeteringPoint.Name,
-                 TransactionId: SampleData.Transaction,
-                 EffectiveDate: SampleData.EffectiveDate,
-                 GsrnNumber: SampleData.GsrnNumber);
+                ProcessType: BusinessProcessType.CloseDownMeteringPoint.Name,
+                TransactionId: SampleData.Transaction,
+                EffectiveDate: SampleData.EffectiveDate,
+                GsrnNumber: SampleData.GsrnNumber);
         }
 
         private IRequestReceiver CreateReceiver()
