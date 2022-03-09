@@ -13,10 +13,10 @@
 // limitations under the License.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
-using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
 {
@@ -25,14 +25,14 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
         private readonly InternalCommandAccessor _internalCommandAccessor;
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
         private readonly IJsonSerializer _serializer;
-        private readonly IMediator _mediator;
+        private readonly CommandExecutor _commandExecutor;
 
-        public InternalCommandProcessor(InternalCommandAccessor internalCommandAccessor, ISystemDateTimeProvider systemDateTimeProvider, IJsonSerializer serializer, IMediator mediator)
+        public InternalCommandProcessor(InternalCommandAccessor internalCommandAccessor, ISystemDateTimeProvider systemDateTimeProvider, IJsonSerializer serializer, CommandExecutor commandExecutor)
         {
             _internalCommandAccessor = internalCommandAccessor ?? throw new ArgumentNullException(nameof(internalCommandAccessor));
             _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
             _serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _commandExecutor = commandExecutor ?? throw new ArgumentNullException(nameof(commandExecutor));
         }
 
         public async Task ProcessPendingAsync()
@@ -41,9 +41,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
 
             foreach (var queuedCommand in pendingCommands)
             {
-                queuedCommand.SetProcessed(_systemDateTimeProvider.Now());
                 var command = queuedCommand.ToCommand(_serializer);
-                await _mediator.Send(command).ConfigureAwait(false);
+                await _commandExecutor.ExecuteAsync(command, CancellationToken.None).ConfigureAwait(false);
             }
         }
     }

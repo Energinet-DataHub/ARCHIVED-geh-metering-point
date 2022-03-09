@@ -13,21 +13,28 @@
 // limitations under the License.
 
 using System;
-using System.Text.Json.Serialization;
+using System.Threading;
+using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
+using MediatR;
+using SimpleInjector;
+using SimpleInjector.Lifestyles;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.InternalCommands
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
 {
-    public class TestCommand : InternalCommand
+    public class CommandExecutor
     {
-        [JsonConstructor]
-        public TestCommand(Guid id)
-            : base(id)
+        private readonly Container _container;
+
+        public CommandExecutor(Container container)
         {
+            _container = container ?? throw new ArgumentNullException(nameof(container));
         }
 
-        public TestCommand()
+        public async Task ExecuteAsync(InternalCommand command, CancellationToken cancellationToken)
         {
+            await using var scope = AsyncScopedLifestyle.BeginScope(_container);
+            await scope.GetInstance<IMediator>().Send(command, cancellationToken).ConfigureAwait(false);
         }
     }
 }
