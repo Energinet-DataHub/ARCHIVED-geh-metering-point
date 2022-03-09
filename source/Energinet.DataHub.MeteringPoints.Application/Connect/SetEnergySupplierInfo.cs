@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Text.Json.Serialization;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using NodaTime;
 
@@ -19,6 +21,17 @@ namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
     public class SetEnergySupplierInfo : InternalCommand
     {
+        [JsonConstructor]
+        public SetEnergySupplierInfo(
+            Guid id,
+            string meteringPointGsrn,
+            Instant startOfSupply)
+        : base(id)
+        {
+            MeteringPointGsrn = meteringPointGsrn;
+            StartOfSupply = startOfSupply;
+        }
+
         public SetEnergySupplierInfo(
             string meteringPointGsrn,
             Instant startOfSupply)

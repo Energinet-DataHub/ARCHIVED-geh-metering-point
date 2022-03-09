@@ -12,22 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Text.Json.Serialization;
-using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
+using MediatR;
+using NodaTime;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.InternalCommands
+namespace Energinet.DataHub.MeteringPoints.Application.Common.SystemTime
 {
-    public class TestCommand : InternalCommand
+    public class TimeHasPassed : INotification
     {
-        [JsonConstructor]
-        public TestCommand(Guid id)
-            : base(id)
+        public TimeHasPassed(Instant now)
         {
+            Now = now;
         }
 
-        public TestCommand()
-        {
-        }
+        public Instant Now { get; }
     }
 }

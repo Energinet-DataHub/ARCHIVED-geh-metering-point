@@ -12,21 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Text.Json.Serialization;
-using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.InternalCommands
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exceptions
 {
-    public class TestCommand : InternalCommand
+    public class CloseDownException : BusinessOperationException
     {
-        [JsonConstructor]
-        public TestCommand(Guid id)
-            : base(id)
+        public CloseDownException(string message)
+            : base(message)
         {
         }
 
-        public TestCommand()
+        public CloseDownException(string message, System.Exception innerException)
+            : base(message, innerException)
+        {
+        }
+
+        public CloseDownException()
         {
         }
     }

@@ -12,22 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Text.Json.Serialization;
-using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.InternalCommands
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.CloseDown
 {
-    public class TestCommand : InternalCommand
+    public class MeteringPointIsAlreadyClosedDown : ValidationError
     {
-        [JsonConstructor]
-        public TestCommand(Guid id)
-            : base(id)
+        public MeteringPointIsAlreadyClosedDown()
         {
-        }
-
-        public TestCommand()
-        {
+            Code = "D16";
+            Message = "Metering is already closed down.";
         }
     }
 }

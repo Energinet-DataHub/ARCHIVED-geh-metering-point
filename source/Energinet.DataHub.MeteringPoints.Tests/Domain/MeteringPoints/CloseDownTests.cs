@@ -15,6 +15,8 @@
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exceptions;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules.CloseDown;
 using Xunit;
 using Xunit.Categories;
 
@@ -33,6 +35,18 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             var domainEvent = meteringPoint.DomainEvents.FirstOrDefault(e => e is MeteringPointWasClosedDown) as MeteringPointWasClosedDown;
             Assert.NotNull(domainEvent);
             Assert.Equal(meteringPoint.Id.Value, domainEvent?.MeteringPointId);
+        }
+
+        [Fact]
+        public void A_metering_point_can_be_closed_down_once_only()
+        {
+            var meteringPoint = CreateMeteringPoint(MeteringPointType.Consumption);
+            meteringPoint.CloseDown();
+
+            var checkResult = meteringPoint.CanCloseDown();
+
+            AssertContainsValidationError<MeteringPointIsAlreadyClosedDown>("D16", checkResult);
+            Assert.Throws<CloseDownException>(() => meteringPoint.CloseDown());
         }
     }
 }
