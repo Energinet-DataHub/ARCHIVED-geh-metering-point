@@ -31,13 +31,11 @@ These are the processes maintained by this domain.
 
 ## Architecture
 
-
-
-![MP domain Architecture]![MP arkitektur](https://user-images.githubusercontent.com/72008816/157631274-8d0c3b81-e64f-4b61-a6e6-9ac5bf5e1829.PNG)
+![MP Architecture](https://user-images.githubusercontent.com/72008816/157631274-8d0c3b81-e64f-4b61-a6e6-9ac5bf5e1829.PNG)
 
 ## Context Streams
 
-![MP context stream]![MP context stream](https://user-images.githubusercontent.com/72008816/157631333-074e2029-5af0-4dac-a048-a3f8f252001b.PNG)
+![MP context stream](https://user-images.githubusercontent.com/72008816/157631333-074e2029-5af0-4dac-a048-a3f8f252001b.PNG)
 
 ## Domain Roadmap
 
