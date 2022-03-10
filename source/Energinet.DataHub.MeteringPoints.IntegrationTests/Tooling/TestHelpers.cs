@@ -70,5 +70,19 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
                 isDaylightSavingTime ? 22 : 23,
                 0);
         }
+
+        public static DateTime DaylightSavingsAdjusted(DateTime date)
+        {
+            var info = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
+            var isDaylightSavingTime = info.IsDaylightSavingTime(date);
+
+            return new DateTime(
+                date.Year,
+                date.Month,
+                date.Day,
+                isDaylightSavingTime ? 22 : 23,
+                0,
+                0);
+        }
     }
 }

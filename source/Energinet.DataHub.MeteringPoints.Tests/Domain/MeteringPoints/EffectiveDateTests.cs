@@ -60,5 +60,15 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             var invalidDate = "2021-06-01";
             Assert.Throws<InvalidEffectiveDateFormat>(() => EffectiveDate.Create(invalidDate));
         }
+
+        [Fact]
+        public void Create_should_succeed_when_date_is_passed()
+        {
+            var date = TestHelpers.DaylightSavingsAdjusted(DateTime.Now);
+            var effectiveDate = EffectiveDate.Create(date);
+
+            Assert.NotNull(effectiveDate);
+            Assert.Equal(date, effectiveDate.DateInUtc.ToDateTimeUtc());
+        }
     }
 }
