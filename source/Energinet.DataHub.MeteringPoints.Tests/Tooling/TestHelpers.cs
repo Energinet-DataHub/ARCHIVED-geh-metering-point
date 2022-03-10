@@ -49,8 +49,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Tooling
 
             var retVal = dateForString.ToString(
                 isDaylightSavingTime
-                ? $"yyyy'-'MM'-'dd'T'23':'mm':'ss'Z'"
-                : "yyyy'-'MM'-'dd'T'22':'mm':'ss'Z'",
+                ? $"yyyy'-'MM'-'dd'T'22':'mm':'ss'Z'"
+                : "yyyy'-'MM'-'dd'T'23':'mm':'ss'Z'",
                 CultureInfo.InvariantCulture);
 
             return retVal;

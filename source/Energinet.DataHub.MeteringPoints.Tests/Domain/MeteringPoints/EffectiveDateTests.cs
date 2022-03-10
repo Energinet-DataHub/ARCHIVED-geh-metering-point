@@ -27,13 +27,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
     public class EffectiveDateTests
     {
         [Theory]
-        [InlineData("2021-06-01T23:00:00Z", true)]
-        [InlineData("2021-12-30T22:00:00Z", true)]
-        [InlineData("2021-06-01T23:00:00.000Z", true)]
-        [InlineData("2021-06-01T23:00:00.100Z", false)]
+        [InlineData("2021-06-01T22:00:00Z", true)]
+        [InlineData("2021-12-30T23:00:00Z", true)]
+        [InlineData("2021-06-01T22:00:00.000Z", true)]
+        [InlineData("2021-06-01T22:00:00.100Z", false)]
         [InlineData("2021-06-01T23:01:00Z", false)]
         [InlineData("2021-06-01T00:00:00Z", false)]
         [InlineData("2021-06-01T00:00:00.000Z", false)]
+        [InlineData("2021-09-25T22:00:00Z", true)]
         [InlineData("2021-06-01", false)]
         [InlineData("Not a date", false)]
         public void Date_format_must_be_able_to_handle_daylight_savings(string dateString, bool isValid)

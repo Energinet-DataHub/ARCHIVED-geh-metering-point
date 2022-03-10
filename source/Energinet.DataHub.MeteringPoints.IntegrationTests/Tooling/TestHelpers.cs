@@ -51,8 +51,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
 
             var retVal = dateForString.ToString(
                 isDaylightSavingTime
-                ? $"yyyy'-'MM'-'dd'T'23':'mm':'ss'Z'"
-                : "yyyy'-'MM'-'dd'T'22':'mm':'ss'Z'",
+                ? $"yyyy'-'MM'-'dd'T'22':'mm':'ss'Z'"
+                : "yyyy'-'MM'-'dd'T'23':'mm':'ss'Z'",
                 CultureInfo.InvariantCulture);
 
             return retVal;
@@ -67,7 +67,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
                 date.Year,
                 date.Month,
                 date.Day,
-                isDaylightSavingTime ? 23 : 22,
+                isDaylightSavingTime ? 22 : 23,
                 0);
         }
     }
