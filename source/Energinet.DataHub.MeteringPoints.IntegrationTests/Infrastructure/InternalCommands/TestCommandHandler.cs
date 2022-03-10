@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.InternalCommands
@@ -23,6 +25,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.Inter
     {
         public Task<Unit> Handle(TestCommand request, CancellationToken cancellationToken)
         {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (request.ThrowException)
+            {
+                throw new BusinessOperationException("This is a test exception");
+            }
+
             return Unit.Task;
         }
     }

@@ -17,6 +17,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
+using Microsoft.Extensions.Logging;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
 {
@@ -26,13 +27,15 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
         private readonly IJsonSerializer _serializer;
         private readonly CommandExecutor _commandExecutor;
+        private readonly ILogger<InternalCommandProcessor> _logger;
 
-        public InternalCommandProcessor(InternalCommandAccessor internalCommandAccessor, ISystemDateTimeProvider systemDateTimeProvider, IJsonSerializer serializer, CommandExecutor commandExecutor)
+        public InternalCommandProcessor(InternalCommandAccessor internalCommandAccessor, ISystemDateTimeProvider systemDateTimeProvider, IJsonSerializer serializer, CommandExecutor commandExecutor, ILogger<InternalCommandProcessor> logger)
         {
             _internalCommandAccessor = internalCommandAccessor ?? throw new ArgumentNullException(nameof(internalCommandAccessor));
             _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
             _serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
             _commandExecutor = commandExecutor ?? throw new ArgumentNullException(nameof(commandExecutor));
+            _logger = logger;
         }
 
         public async Task ProcessPendingAsync()
@@ -41,8 +44,17 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
 
             foreach (var queuedCommand in pendingCommands)
             {
-                var command = queuedCommand.ToCommand(_serializer);
-                await _commandExecutor.ExecuteAsync(command, CancellationToken.None).ConfigureAwait(false);
+                // TODO: Implement more robust exception handling
+                try
+                {
+                    var command = queuedCommand.ToCommand(_serializer);
+                    await _commandExecutor.ExecuteAsync(command, CancellationToken.None).ConfigureAwait(false);
+                }
+                #pragma warning disable CA1031 // Cannot be more specific for now
+                catch (Exception e)
+                {
+                    _logger?.Log(LogLevel.Error, "Failed to process internal command", e.Message);
+                }
             }
         }
     }
