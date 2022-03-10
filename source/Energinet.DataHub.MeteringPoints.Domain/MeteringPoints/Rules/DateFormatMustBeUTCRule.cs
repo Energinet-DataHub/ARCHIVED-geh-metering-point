@@ -42,7 +42,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
                 return;
             }
 
-            var isDaylightSavingTime = TimeZoneInfo.Local.IsDaylightSavingTime(dateParsed);
+            var info = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
+            var isDaylightSavingTime = info.IsDaylightSavingTime(dateParsed);
 
             IsBroken = isDaylightSavingTime
                 ? !Regex.IsMatch(date, FormatRegExSummer)
