@@ -102,6 +102,10 @@ limitations under the License.
     <None Remove="Scripts\Seed\202202091320 Updates from actor registry.sql" />
     <None Remove="Scripts\Seed\202202091335 Updates from actor registry.sql" />
     <EmbeddedResource Include="Scripts\Seed\202202091335 Updates from actor registry.sql" />
+    <None Remove="Scripts\Seed\202203111117 Updates from actor registry.sql" />
+    <EmbeddedResource Include="Scripts\Seed\202203111117 Updates from actor registry.sql" />
+    <None Remove="Scripts\Seed\202203111121 Latest UserActor bindings.sql" />
+    <EmbeddedResource Include="Scripts\Seed\202203111121 Latest UserActor bindings.sql" />
   </ItemGroup>
 
 </Project>
