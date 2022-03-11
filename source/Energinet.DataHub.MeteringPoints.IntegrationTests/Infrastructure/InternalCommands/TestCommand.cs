@@ -26,8 +26,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.Inter
         {
         }
 
-        public TestCommand()
+        public TestCommand(bool throwException = false)
         {
+            ThrowException = throwException;
         }
+
+        public bool ThrowException { get; }
     }
 }
