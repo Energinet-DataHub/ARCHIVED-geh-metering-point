@@ -20,16 +20,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events
 {
     public class MeteringPointReconnected : DomainEventBase
     {
-        public MeteringPointReconnected(Guid meteringPointId, string gsrnNumber, Instant effectiveDate)
+        public MeteringPointReconnected(Guid meteringPointId, Instant effectiveDate)
         {
             MeteringPointId = meteringPointId;
-            GsrnNumber = gsrnNumber;
             EffectiveDate = effectiveDate;
         }
 
         public Guid MeteringPointId { get; }
-
-        public string GsrnNumber { get; }
 
         public Instant EffectiveDate { get; }
     }
