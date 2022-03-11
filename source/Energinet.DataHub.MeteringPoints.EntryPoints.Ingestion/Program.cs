@@ -20,7 +20,7 @@ using Energinet.DataHub.Core.App.FunctionApp.SimpleInjector;
 using Energinet.DataHub.Core.Logging.RequestResponseMiddleware;
 using Energinet.DataHub.Core.Logging.RequestResponseMiddleware.Storage;
 using Energinet.DataHub.Core.XmlConversion.XmlConverter.Configuration;
-using Energinet.DataHub.Core.XmlConversion.XmlConverter.SimpleInjector.Extensions;
+using Energinet.DataHub.Core.XmlConversion.XmlConverter.Extensions;
 using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
