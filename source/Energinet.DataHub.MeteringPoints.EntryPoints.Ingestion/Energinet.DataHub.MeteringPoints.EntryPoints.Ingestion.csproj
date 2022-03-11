@@ -27,10 +27,10 @@ limitations under the License.
     <PackageReference Include="Energinet.DataHub.Core.App.FunctionApp.SimpleInjector" Version="1.0.3" />
     <PackageReference Include="Energinet.DataHub.Core.Logging" Version="1.0.7" />
     <PackageReference Include="Energinet.DataHub.Core.Schemas" Version="1.0.9" />
-    <PackageReference Include="Energinet.DataHub.Core.SchemaValidation" Version="1.0.8" />
-    <PackageReference Include="Energinet.DataHub.Core.XmlConversion.XmlConverter" Version="1.0.4" />
-    <PackageReference Include="Energinet.DataHub.Core.XmlConversion.XmlConverter.Abstractions" Version="1.0.4" />
-    <PackageReference Include="Energinet.DataHub.Core.XmlConversion.XmlConverter.SimpleInjector" Version="1.0.4" />
+    <PackageReference Include="Energinet.DataHub.Core.SchemaValidation" Version="1.0.9" />
+    <PackageReference Include="Energinet.DataHub.Core.XmlConversion.XmlConverter" Version="1.0.5" />
+    <PackageReference Include="Energinet.DataHub.Core.XmlConversion.XmlConverter.Abstractions" Version="1.0.5" />
+    <PackageReference Include="Energinet.DataHub.Core.XmlConversion.XmlConverter.SimpleInjector" Version="1.0.5" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.20.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
