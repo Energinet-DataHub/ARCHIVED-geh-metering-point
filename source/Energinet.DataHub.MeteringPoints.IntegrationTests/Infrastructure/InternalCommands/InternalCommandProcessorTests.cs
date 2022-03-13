@@ -57,20 +57,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.Inter
         }
 
         [Fact]
-        public async Task Continue_processing_even_if_an_exception_is_thrown()
-        {
-            var commandThatThrows = new TestCommand(throwException: true);
-            var command = new TestCommand();
-            await Schedule(commandThatThrows).ConfigureAwait(false);
-            await Schedule(command).ConfigureAwait(false);
-
-            await ProcessPendingCommands().ConfigureAwait(false);
-
-            AssertIsProcessed(command);
-            AssertIsNotProcessed(commandThatThrows);
-        }
-
-        [Fact]
         public async Task Scheduled_commands_are_processed()
         {
             var yesterday = _timeProvider.Now().Minus(Duration.FromDays(1));
