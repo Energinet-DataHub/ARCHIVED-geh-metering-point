@@ -45,6 +45,18 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.Inter
         }
 
         [Fact]
+        public async Task When_execution_fails_the_exception_is_logged_and_command_is_marked_as_processed()
+        {
+            var commandThatThrows = new TestCommand(throwException: true);
+            await Schedule(commandThatThrows).ConfigureAwait(false);
+
+            await ProcessPendingCommands().ConfigureAwait(false);
+
+            AssertIsNotProcessed(commandThatThrows);
+            AssertHasException(commandThatThrows);
+        }
+
+        [Fact]
         public async Task Continue_processing_even_if_an_exception_is_thrown()
         {
             var commandThatThrows = new TestCommand(throwException: true);
@@ -88,6 +100,14 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.Inter
                 $"SELECT COUNT(1) FROM [dbo].[QueuedInternalCommands] WHERE Id = '{command.Id}' AND ProcessedDate IS NOT NULL";
             var isProcessed = GetService<IDbConnectionFactory>().GetOpenConnection().ExecuteScalar<bool>(checkStatement);
             Assert.True(isProcessed);
+        }
+
+        private void AssertHasException(InternalCommand command)
+        {
+            var checkStatement =
+                $"SELECT COUNT(1) FROM [dbo].[QueuedInternalCommands] WHERE Id = '{command.Id}' AND [Error] IS NOT NULL";
+            var hasException = GetService<IDbConnectionFactory>().GetOpenConnection().ExecuteScalar<bool>(checkStatement);
+            Assert.True(hasException);
         }
 
         private void AssertIsNotProcessed(InternalCommand command)

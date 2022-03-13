@@ -63,7 +63,6 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Model\202112131100 Move exchange metering point details.sql" />
     <EmbeddedResource Include="Scripts\Model\202112132025 Delete specific metering point tables.sql" />
     <EmbeddedResource Include="Scripts\Model\202112131115 Add Actor table.sql" />
-    <EmbeddedResource Include="Scripts\Model\202201041930 Delete consumption metering point table.sql" />
     <EmbeddedResource Include="Scripts\Model\202201041935 Change parent metering point data type.sql" />
     <EmbeddedResource Include="Scripts\Model\202201061535 Change Maximum Current and Power to null.sql" />
     <EmbeddedResource Include="Scripts\Model\202202011123 Create user table.sql" />
@@ -72,6 +71,7 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Model\202202091600 Change data type.sql" />
     <EmbeddedResource Include="Scripts\Model\202202241200 Remove servicebus related columns.sql" />
     <EmbeddedResource Include="Scripts\Model\202203011200 Clean QueuedInternalCommands.sql" />
+    <EmbeddedResource Include="Scripts\Model\202203132000 Add error column.sql" />
     <EmbeddedResource Include="Scripts\Seed\202201171400 Distribute grid areas to actors.sql" />
     <EmbeddedResource Include="Scripts\Seed\202112142130 Create Grid Area seed data.sql" />
     <EmbeddedResource Include="Scripts\Seed\202112141430 Actor seed data.sql" />
