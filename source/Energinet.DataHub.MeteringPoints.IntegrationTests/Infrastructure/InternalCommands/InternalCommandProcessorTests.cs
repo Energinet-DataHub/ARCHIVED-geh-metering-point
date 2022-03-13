@@ -52,7 +52,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.Inter
 
             await ProcessPendingCommands().ConfigureAwait(false);
 
-            AssertIsNotProcessed(commandThatThrows);
+            AssertIsProcessed(commandThatThrows);
             AssertHasException(commandThatThrows);
         }
 
