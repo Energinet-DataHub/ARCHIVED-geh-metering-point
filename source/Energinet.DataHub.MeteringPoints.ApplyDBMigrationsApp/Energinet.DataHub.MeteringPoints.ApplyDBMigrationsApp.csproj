@@ -106,6 +106,8 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Seed\202203111117 Updates from actor registry.sql" />
     <None Remove="Scripts\Seed\202203111121 Latest UserActor bindings.sql" />
     <EmbeddedResource Include="Scripts\Seed\202203111121 Latest UserActor bindings.sql" />
+    <None Remove="Scripts\Model\202201041930 Delete consumption metering point table.sql" />
+    <EmbeddedResource Include="Scripts\Model\202201041930 Delete consumption metering point table.sql" />
   </ItemGroup>
 
 </Project>
