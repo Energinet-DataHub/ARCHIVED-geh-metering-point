@@ -27,7 +27,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
             return new IntegrationEventContracts.MeteringPointReconnected
             {
                 EffectiveDate = obj.EffectiveDate.ToTimestamp(),
-                GsrnNumber = obj.GSRNNumber,
                 MeteringpointId = obj.MeteringPointId.ToString(),
             };
         }
