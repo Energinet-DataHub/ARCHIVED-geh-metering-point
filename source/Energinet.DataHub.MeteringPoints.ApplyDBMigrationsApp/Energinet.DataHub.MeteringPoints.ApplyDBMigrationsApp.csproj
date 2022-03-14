@@ -72,6 +72,7 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Model\202202091600 Change data type.sql" />
     <EmbeddedResource Include="Scripts\Model\202202241200 Remove servicebus related columns.sql" />
     <EmbeddedResource Include="Scripts\Model\202203011200 Clean QueuedInternalCommands.sql" />
+    <EmbeddedResource Include="Scripts\Model\202203132000 Add error column.sql" />
     <EmbeddedResource Include="Scripts\Seed\202201171400 Distribute grid areas to actors.sql" />
     <EmbeddedResource Include="Scripts\Seed\202112142130 Create Grid Area seed data.sql" />
     <EmbeddedResource Include="Scripts\Seed\202112141430 Actor seed data.sql" />
@@ -106,8 +107,6 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Seed\202203111117 Updates from actor registry.sql" />
     <None Remove="Scripts\Seed\202203111121 Latest UserActor bindings.sql" />
     <EmbeddedResource Include="Scripts\Seed\202203111121 Latest UserActor bindings.sql" />
-    <None Remove="Scripts\Model\202203011400 Add Administrator to meteringpoints.sql" />
-    <EmbeddedResource Include="Scripts\Model\202203011400 Add Administrator to meteringpoints.sql" />
   </ItemGroup>
 
 </Project>
