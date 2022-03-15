@@ -66,7 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
             {
                 var (succeeded, errorResponse, element) = await ValidateAndReadXmlAsync(request).ConfigureAwait(false);
 
-                if (!succeeded) return errorResponse ?? request.CreateResponse(HttpStatusCode.BadRequest);
+                if (!succeeded) return errorResponse ?? CreateResponse(request, HttpStatusCode.BadRequest);
 
                 var result = _xmlDeserializer.Deserialize(element!);
                 var senderValidationResult = _xmlSenderValidator.ValidateSender(result.HeaderData.Sender);
@@ -81,21 +81,22 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
             #pragma warning restore CA1031
             {
                 _logger.LogError(exception, "Unable to deserialize request");
-                return request.CreateResponse(HttpStatusCode.BadRequest);
+                return CreateResponse(request, HttpStatusCode.BadRequest);
             }
 
             await DispatchCommandsAsync(commands).ConfigureAwait(false);
-            return await CreateOkResponseAsync(request).ConfigureAwait(false);
+            return CreateOkResponse(request);
         }
 
-        private static async Task<HttpResponseData> CreateForbiddenResponseAsync(HttpRequestData request, string errorMessage)
+        private async Task<HttpResponseData> CreateForbiddenResponseAsync(HttpRequestData request, string errorMessage)
         {
-            var response = request.CreateResponse(HttpStatusCode.Forbidden);
+            var response = CreateResponse(request, HttpStatusCode.Forbidden);
             await response.WriteStringAsync(errorMessage).ConfigureAwait(false);
+
             return response;
         }
 
-        private static async Task<(bool Succeeded, HttpResponseData? ErrorResponse, XElement? Element)> ValidateAndReadXmlAsync(HttpRequestData request)
+        private async Task<(bool Succeeded, HttpResponseData? ErrorResponse, XElement? Element)> ValidateAndReadXmlAsync(HttpRequestData request)
         {
             var reader = new SchemaValidatingReader(request.Body, Schemas.CimXml.StructureRequestChangeAccountingPointCharacteristics);
 
@@ -107,7 +108,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
             if (!reader.HasErrors) return (isSucceeded, response, xmlElement);
 
             isSucceeded = false;
-            response = request.CreateResponse(HttpStatusCode.BadRequest);
+            response = CreateResponse(request, HttpStatusCode.BadRequest);
 
             await reader
                 .CreateErrorResponse()
@@ -117,14 +118,12 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
             return (isSucceeded, response, xmlElement);
         }
 
-        private async Task<HttpResponseData> CreateOkResponseAsync(HttpRequestData request)
+        private HttpResponseData CreateOkResponse(HttpRequestData request)
         {
-            var response = request.CreateResponse(HttpStatusCode.Accepted);
+            var response = CreateResponse(request, HttpStatusCode.Accepted);
 
             response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
 
-            await response.WriteStringAsync("Correlation id: " + _correlationContext.Id)
-                .ConfigureAwait(false);
             return response;
         }
 
@@ -134,6 +133,14 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
             {
                 await _dispatcher.DispatchAsync((IOutboundMessage)command).ConfigureAwait(false);
             }
+        }
+
+        private HttpResponseData CreateResponse(HttpRequestData request, HttpStatusCode statusCode)
+        {
+            var response = request.CreateResponse(statusCode);
+            response.Headers.Add("CorrelationId", _correlationContext.Id);
+
+            return response;
         }
     }
 }
