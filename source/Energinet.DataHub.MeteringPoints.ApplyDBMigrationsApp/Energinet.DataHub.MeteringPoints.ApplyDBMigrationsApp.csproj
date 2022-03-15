@@ -63,6 +63,7 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Model\202112131100 Move exchange metering point details.sql" />
     <EmbeddedResource Include="Scripts\Model\202112132025 Delete specific metering point tables.sql" />
     <EmbeddedResource Include="Scripts\Model\202112131115 Add Actor table.sql" />
+    <EmbeddedResource Include="Scripts\Model\202201041930 Delete consumption metering point table.sql" />
     <EmbeddedResource Include="Scripts\Model\202201041935 Change parent metering point data type.sql" />
     <EmbeddedResource Include="Scripts\Model\202201061535 Change Maximum Current and Power to null.sql" />
     <EmbeddedResource Include="Scripts\Model\202202011123 Create user table.sql" />
@@ -107,8 +108,6 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Seed\202203111117 Updates from actor registry.sql" />
     <None Remove="Scripts\Seed\202203111121 Latest UserActor bindings.sql" />
     <EmbeddedResource Include="Scripts\Seed\202203111121 Latest UserActor bindings.sql" />
-    <None Remove="Scripts\Model\202201041930 Delete consumption metering point table.sql" />
-    <EmbeddedResource Include="Scripts\Model\202201041930 Delete consumption metering point table.sql" />
   </ItemGroup>
 
 </Project>
