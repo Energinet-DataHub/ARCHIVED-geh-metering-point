@@ -19,7 +19,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events
 {
     public class MasterDataWasUpdated : DomainEventBase
     {
-        public MasterDataWasUpdated(string? streetName, string? streetCode, string? city, string? floor, string? room, string? buildingNumber, string? countryCode, bool? isActual, string? locationDescription, int? municipalityCode, string? postCode, string? citySubDivision, Guid? geoInfoReference, double? capacity, string? assetType, string? connectionType, string? disconnectionType, string? effectiveDate, string? meterNumber, string? meteringMethod, int? powerLimitInAmpere, int? powerLimitInKwh, bool? productionObligation, string? productType, string? readingOccurrence, string? settlementMethod, string? unitType, string? netSettlementGroup, string? powerPlantGsrnNumber, string? scheduledMeterReadingDate)
+        public MasterDataWasUpdated(string? streetName, string? streetCode, string? city, string? floor, string? room, string? buildingNumber, string? countryCode, bool? isActual, string? locationDescription, int? municipalityCode, string? postCode, string? citySubDivision, Guid? geoInfoReference, double? capacity, string? assetType, string? connectionType, string? disconnectionType, string effectiveDate, string? meterNumber, string? meteringMethod, int? powerLimitInAmpere, int? powerLimitInKwh, bool? productionObligation, string? productType, string? readingOccurrence, string? settlementMethod, string? unitType, string? netSettlementGroup, string? powerPlantGsrnNumber, string? scheduledMeterReadingDate)
         {
             StreetName = streetName;
             StreetCode = streetCode;
@@ -87,7 +87,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events
 
         public string? DisconnectionType { get; }
 
-        public string? EffectiveDate { get; }
+        public string EffectiveDate { get; }
 
         public string? MeterNumber { get; }
 

@@ -78,6 +78,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.ChargeLinks.Cr
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Disconnect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Reconnect;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData.MasterDataUpdated;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
@@ -255,6 +256,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                     typeof(OnMeteringPointConnected),
                     typeof(OnMeteringPointDisconnected),
                     typeof(OnMeteringPointReconnected),
+                    typeof(OnMasterDataWasUpdated),
                     typeof(SetEnergySupplierHACK),
                     typeof(ProcessInternalCommandsOnTimeHasPassed));
 
@@ -351,6 +353,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             messages.Should().NotBeNull();
             messages.Should().AllBeOfType<TMessage>();
             messages.Should().HaveCount(count);
+        }
+
+        protected TMessage? AssertOutboxMessageAndReturnMessage<TMessage>()
+        {
+            var message = GetOutboxMessages<TMessage>().SingleOrDefault();
+
+            message.Should().NotBeNull();
+            message.Should().BeOfType<TMessage>();
+
+            return message;
         }
 
         protected void AssertValidationError(string expectedErrorCode, DocumentType type)
