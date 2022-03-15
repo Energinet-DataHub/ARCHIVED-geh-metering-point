@@ -85,7 +85,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
             }
 
             await DispatchCommandsAsync(commands).ConfigureAwait(false);
-            return CreateOkResponse(request);
+            return CreateResponse(request, HttpStatusCode.Accepted);
         }
 
         private async Task<HttpResponseData> CreateForbiddenResponseAsync(HttpRequestData request, string errorMessage)
@@ -116,15 +116,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
                 .ConfigureAwait(false);
 
             return (isSucceeded, response, xmlElement);
-        }
-
-        private HttpResponseData CreateOkResponse(HttpRequestData request)
-        {
-            var response = CreateResponse(request, HttpStatusCode.Accepted);
-
-            response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
-
-            return response;
         }
 
         private async Task DispatchCommandsAsync(IEnumerable<IInternalMarketDocument> commands)
