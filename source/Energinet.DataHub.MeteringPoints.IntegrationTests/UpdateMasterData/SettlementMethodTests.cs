@@ -15,6 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData.MasterDataUpdated;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
 using Xunit.Categories;
@@ -44,7 +45,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
+            var message = AssertOutboxMessageAndReturnMessage<MasterDataWasUpdatedIntegrationEvent>();
 
+            Assert.Equal(message?.SettlementMethod, SettlementMethod.NonProfiled.Name);
             AssertMasterData()
                 .HasSettlementMethod(SettlementMethod.NonProfiled);
         }

@@ -347,7 +347,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 _masterData.AssetType?.Name,
                 _masterData.ConnectionType?.Name,
                 _masterData.DisconnectionType?.Name,
-                _masterData.EffectiveDate?.DateInUtc.ToString(),
+                _masterData.EffectiveDate.DateInUtc.ToString(),
                 _masterData.MeteringConfiguration.Meter.Value,
                 _masterData.MeteringConfiguration.Method.Name,
                 _masterData.PowerLimit?.Ampere,

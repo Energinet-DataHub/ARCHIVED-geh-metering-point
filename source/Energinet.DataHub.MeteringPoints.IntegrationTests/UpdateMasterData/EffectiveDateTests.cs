@@ -13,8 +13,10 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData.MasterDataUpdated;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using NodaTime.Text;
 using Xunit;
@@ -42,7 +44,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
+            var message = AssertOutboxMessageAndReturnMessage<MasterDataWasUpdatedIntegrationEvent>();
 
+            Assert.Equal(message?.EffectiveDate.ToString(), EffectiveDate.Create(request.EffectiveDate).ToString());
             AssertMasterData()
                 .HasEffectiveDate(EffectiveDate.Create(request.EffectiveDate));
         }

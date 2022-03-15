@@ -36,6 +36,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Disconnect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Reconnect;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData.MasterDataUpdated;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
@@ -160,6 +161,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                         "No MeteringPointReconnected Topic found")),
                 Lifestyle.Singleton);
 
+            container.Register(
+                () => new MasterDataUpdatedTopic(
+                    Environment.GetEnvironmentVariable("MASTER_DATA_UPDATED_TOPIC") ??
+                    throw new InvalidOperationException(
+                        "No MasterDataUpdated Topic found")),
+                Lifestyle.Singleton);
+
             container.Register(typeof(ITopicSender<>), typeof(TopicSender<>), Lifestyle.Singleton);
 
             container.SendProtobuf<IntegrationEventEnvelope>();
@@ -204,6 +212,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                     typeof(NullMeteringConfigrationChangedDispatcher),
                     typeof(ProductionMeteringPointCreatedDispatcher),
                     typeof(RequestDefaultChargeLinksDispatcher),
+                    typeof(MasterDataUpdatedDispatcher),
                     typeof(MessageHubDispatcher));
         }
     }
