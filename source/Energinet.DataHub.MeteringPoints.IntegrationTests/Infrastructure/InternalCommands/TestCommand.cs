@@ -21,9 +21,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.Inter
     public class TestCommand : InternalCommand
     {
         [JsonConstructor]
-        public TestCommand(Guid id)
+        public TestCommand(Guid id, bool throwException)
             : base(id)
         {
+            ThrowException = throwException;
         }
 
         public TestCommand(bool throwException = false)

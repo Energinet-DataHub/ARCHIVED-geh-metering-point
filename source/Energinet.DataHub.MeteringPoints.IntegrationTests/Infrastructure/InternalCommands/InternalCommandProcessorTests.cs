@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
+using System.Data;
 using System.Threading.Tasks;
 using Dapper;
 using Energinet.DataHub.MeteringPoints.Application.Common;
@@ -34,6 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.Inter
         private readonly InternalCommandProcessor _processor;
         private readonly ISystemDateTimeProvider _timeProvider;
         private readonly ICommandScheduler _scheduler;
+        private readonly IDbConnectionFactory _connectionFactory;
 
         public InternalCommandProcessorTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
@@ -42,20 +43,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.Inter
             _processor = GetService<InternalCommandProcessor>();
             _timeProvider = GetService<ISystemDateTimeProvider>();
             _scheduler = GetService<ICommandScheduler>();
+            _connectionFactory = GetService<IDbConnectionFactory>();
         }
 
+        private IDbConnection Connection => _connectionFactory.GetOpenConnection();
+
         [Fact]
-        public async Task Continue_processing_even_if_an_exception_is_thrown()
+        public async Task When_execution_fails_the_exception_is_logged_and_command_is_marked_as_processed()
         {
             var commandThatThrows = new TestCommand(throwException: true);
-            var command = new TestCommand();
             await Schedule(commandThatThrows).ConfigureAwait(false);
-            await Schedule(command).ConfigureAwait(false);
 
             await ProcessPendingCommands().ConfigureAwait(false);
 
-            AssertIsProcessed(command);
-            AssertIsNotProcessed(commandThatThrows);
+            AssertIsProcessed(commandThatThrows);
+            AssertHasException(commandThatThrows);
         }
 
         [Fact]
@@ -86,21 +88,26 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.Inter
         {
             var checkStatement =
                 $"SELECT COUNT(1) FROM [dbo].[QueuedInternalCommands] WHERE Id = '{command.Id}' AND ProcessedDate IS NOT NULL";
-            var isProcessed = GetService<IDbConnectionFactory>().GetOpenConnection().ExecuteScalar<bool>(checkStatement);
-            Assert.True(isProcessed);
+            AssertSqlStatement(checkStatement);
+        }
+
+        private void AssertHasException(InternalCommand command)
+        {
+            var checkStatement =
+                $"SELECT COUNT(1) FROM [dbo].[QueuedInternalCommands] WHERE Id = '{command.Id}' AND [Error] IS NOT NULL";
+            AssertSqlStatement(checkStatement);
         }
 
         private void AssertIsNotProcessed(InternalCommand command)
         {
-            var queuedInternalCommand = GetQueuedCommandFrom(command);
-            Assert.Null(queuedInternalCommand.ProcessedDate);
+            var checkStatement =
+                $"SELECT COUNT(1) FROM [dbo].[QueuedInternalCommands] WHERE Id = '{command.Id}' AND ProcessedDate IS NULL";
+            AssertSqlStatement(checkStatement);
         }
 
-        private QueuedInternalCommand GetQueuedCommandFrom(InternalCommand command)
+        private void AssertSqlStatement(string sqlStatement)
         {
-            var context = GetService<MeteringPointContext>();
-            var queuedInternalCommand = context.QueuedInternalCommands.First(x => x.Id.Equals(command.Id));
-            return queuedInternalCommand;
+            Assert.True(Connection.ExecuteScalar<bool>(sqlStatement));
         }
 
         private async Task ProcessPendingCommands()
