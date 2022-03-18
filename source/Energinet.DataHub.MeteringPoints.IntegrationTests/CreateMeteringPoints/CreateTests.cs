@@ -399,6 +399,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
+        public async Task Should_create_when_geo_reference_is_empty_guid()
+        {
+            var document = Scenarios.CreateDocument()
+                    with
+                    {
+                        GeoInfoReference = Guid.Empty.ToString(),
+                    };
+
+            await SendCommandAsync(document).ConfigureAwait(false);
+
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConfirmCreateMeteringPoint);
+        }
+
+        [Fact]
         public async Task Should_create_when_maximum_current_is_null()
         {
             var document = Scenarios.CreateDocument()
