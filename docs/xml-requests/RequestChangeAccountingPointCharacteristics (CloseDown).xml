@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright 2020 Energinet DataHub A/S
+Licensed under the Apache License, Version 2.0 (the "License2");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<cim:RequestChangeAccountingPointCharacteristics_MarketDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cim="urn:ediel.org:structure:requestchangeaccountingpointcharacteristics:0:1" xsi:schemaLocation="urn:ediel.org:structure:requestchangeaccountingpointcharacteristics:0:1 urn-ediel-org-structure-requestchangeaccountingpointcharacteristics-0-1.xsd">
+    <cim:mRID>253698245</cim:mRID>
+    <cim:type>E58</cim:type>
+    <cim:process.processType>D14</cim:process.processType>
+    <cim:businessSector.type>23</cim:businessSector.type>
+    <cim:sender_MarketParticipant.mRID codingScheme="A10">{{GLN}}</cim:sender_MarketParticipant.mRID>
+    <cim:sender_MarketParticipant.marketRole.type>DDM</cim:sender_MarketParticipant.marketRole.type>
+    <cim:receiver_MarketParticipant.mRID codingScheme="A10">DHGLN</cim:receiver_MarketParticipant.mRID>
+    <cim:receiver_MarketParticipant.marketRole.type>DDZ</cim:receiver_MarketParticipant.marketRole.type>
+    <cim:createdDateTime>2021-06-17T09:30:47Z</cim:createdDateTime>
+    <cim:MktActivityRecord>
+        <cim:mRID>{{transactionId}}</cim:mRID>
+        <cim:validityStart_DateAndOrTime.dateTime>2022-03-09T22:00:00Z</cim:validityStart_DateAndOrTime.dateTime>
+        <cim:MarketEvaluationPoint>
+            <cim:mRID codingScheme="A10">INDSÆT GSRN</cim:mRID>
+            <cim:type>E17</cim:type>
+            <cim:settlementMethod>E02</cim:settlementMethod>
+            <cim:meteringMethod>D02</cim:meteringMethod>
+            <cim:connectionState>E23</cim:connectionState>
+            <cim:readCycle>PT1H</cim:readCycle>
+            <cim:netSettlementGroup>6</cim:netSettlementGroup>
+            <cim:nextReadingDate>--12-01</cim:nextReadingDate>
+            <cim:meteringGridArea_Domain.mRID codingScheme="NDK">112</cim:meteringGridArea_Domain.mRID>
+            <cim:linked_MarketEvaluationPoint.mRID codingScheme="A10">575774240560385464</cim:linked_MarketEvaluationPoint.mRID>
+            <cim:physicalConnectionCapacity unit="KWT">6000</cim:physicalConnectionCapacity>
+            <cim:mPConnectionType>D02</cim:mPConnectionType>
+            <cim:disconnectionMethod>D01</cim:disconnectionMethod>
+            <cim:asset_MktPSRType.psrType>D12</cim:asset_MktPSRType.psrType>
+            <cim:productionObligation>false</cim:productionObligation>
+            <cim:contractedConnectionCapacity unit="KWT">230</cim:contractedConnectionCapacity>
+            <cim:ratedCurrent unit="AMP">32</cim:ratedCurrent>
+            <cim:Series>
+                <cim:product>8716867000030</cim:product>
+                <cim:quantity_Measure_Unit.name>KWH</cim:quantity_Measure_Unit.name>
+            </cim:Series>
+            <cim:description>String</cim:description>
+            <cim:usagePointLocation.geoInfoReference>0a3f50b9-b942-32b8-e044-0003ba298018</cim:usagePointLocation.geoInfoReference>
+            <cim:usagePointLocation.mainAddress>
+                <cim:streetDetail>
+                    <cim:code>0405</cim:code>
+                    <cim:name>Vestergade</cim:name>
+                    <cim:number>10</cim:number>
+                    <cim:floorIdentification>1</cim:floorIdentification>
+                    <cim:suiteNumber>12</cim:suiteNumber>
+                </cim:streetDetail>
+                <cim:townDetail>
+                    <cim:code>0625</cim:code>
+                    <cim:name>Middelfart</cim:name>
+                    <cim:section>Strib</cim:section>
+                    <cim:country>DK</cim:country>
+                </cim:townDetail>
+                <cim:postalCode>5500</cim:postalCode>
+            </cim:usagePointLocation.mainAddress>
+            <cim:usagePointLocation.actualAddressIndicator>true</cim:usagePointLocation.actualAddressIndicator>
+        </cim:MarketEvaluationPoint>
+    </cim:MktActivityRecord>
+</cim:RequestChangeAccountingPointCharacteristics_MarketDocument>
