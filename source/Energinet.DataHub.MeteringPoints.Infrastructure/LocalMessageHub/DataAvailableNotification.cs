@@ -18,5 +18,5 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub
 {
-    public record DataAvailableNotification(Guid Uuid, GlobalLocationNumberDto Recipient, MessageTypeDto MessageType, DomainOrigin Origin, bool SupportsBundling, int RelativeWeight) : IRequest;
+    public record DataAvailableNotification(Guid Uuid, GlobalLocationNumberDto Recipient, MessageTypeDto MessageType, DomainOrigin Origin, bool SupportsBundling, int RelativeWeight, string DocumentType) : IRequest;
 }
