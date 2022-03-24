@@ -140,7 +140,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
                 ""CreatedDateTime"": ""2022-03-23T19:37:00.5370288Z"",""ReasonCode"": ""A01"",""MarketActivityRecord"": {""Id"": ""185bd262-b885-4ec3-b81e-7d51b65b74f3"",
                 ""MarketEvaluationPoint"": ""571313191221249692"",""OriginalTransaction"": ""1""}}";
 
-            _localMessageHubDataAvailableClient.DataAvailable(new MessageHubEnvelope("recipient", content, DocumentType.AccountingPointCharacteristicsMessage, correlationId, "gsrnNumber"));
+            _localMessageHubDataAvailableClient.DataAvailable(new MessageHubEnvelope("recipient", content, DocumentType.AccountingPointCharacteristicsMessage, correlationId, "gsrnNumber", "ConfirmRequestChangeAccountingPointCharacteristics"));
 
             var message = _messageHubMessageRepository.GetMessageByCorrelation(correlationId);
             return (message, correlationId);

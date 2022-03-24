@@ -54,8 +54,7 @@ namespace Energinet.DataHub.MeteringPoints.Messaging
             var messageMetadata = _messageHubMessageFactory.Create(messageHubEnvelope.Correlation, messageHubEnvelope.Content, messageHubEnvelope.MessageType, messageHubEnvelope.Recipient, messageHubEnvelope.GsrnNumber);
             _messageHubMessageRepository.AddMessageMetadata(messageMetadata);
 
-            var documentType = JObject.Parse(messageHubEnvelope.Content)["DocumentName"]?.ToString().Split('_')[0];
-            _dataAvailableOutboxDispatcher.Dispatch(new DataAvailableNotification(messageMetadata.Id, new GlobalLocationNumberDto(messageHubEnvelope.Recipient), new MessageTypeDto(messageHubEnvelope.MessageType.Name), DomainOrigin.MeteringPoints, true, 1, documentType ?? string.Empty));
+            _dataAvailableOutboxDispatcher.Dispatch(new DataAvailableNotification(messageMetadata.Id, new GlobalLocationNumberDto(messageHubEnvelope.Recipient), new MessageTypeDto(messageHubEnvelope.MessageType.Name), DomainOrigin.MeteringPoints, true, 1, messageHubEnvelope.DocumentName));
         }
     }
 }
