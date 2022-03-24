@@ -226,7 +226,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                 _dateTimeProvider.Now());
 
             await _messageHubDispatcher
-                .DispatchAsync(message, DocumentType.AccountingPointCharacteristicsMessage, energySupplier.GlnNumber, meteringPoint.GsrnNumber, string.Empty)
+                .DispatchAsync(message, DocumentType.AccountingPointCharacteristicsMessage, energySupplier.GlnNumber, meteringPoint.GsrnNumber, "APCharacteristics")
                 .ConfigureAwait(false);
         }
 
