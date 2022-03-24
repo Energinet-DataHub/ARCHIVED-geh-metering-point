@@ -77,15 +77,10 @@ namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.Confirm
 
         private XDocument CreateDocumentWithHeader(ConfirmMessage message)
         {
-            XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
-            XNamespace schemaLocation = XNamespace.Get($"{XmlDeclaration.XmlNamespace} {XmlDeclaration.SchemaLocationText}");
-
             var document = new XDocument(
                 new XElement(
                     XmlDeclaration.XmlNamespace + message.DocumentName,
-                    new XAttribute(XNamespace.Xmlns + "xsi", xsi),
                     new XAttribute(XNamespace.Xmlns + "cim", XmlDeclaration.XmlNamespace),
-                    new XAttribute(xsi + "schemaLocation", schemaLocation),
                     new XElement(XmlDeclaration.XmlNamespace + "mRID", Guid.NewGuid().ToString()),
                     new XElement(XmlDeclaration.XmlNamespace + "type", message.Type),
                     new XElement(XmlDeclaration.XmlNamespace + "process.processType", message.ProcessType),

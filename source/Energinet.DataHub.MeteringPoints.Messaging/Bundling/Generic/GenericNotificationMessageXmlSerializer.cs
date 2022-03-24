@@ -73,16 +73,10 @@ namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.Generic
 
         private static XDocument CreateDocumentWithHeader(GenericNotificationMessage message)
         {
-            XNamespace xmlns = XNamespace.Get("urn:ediel.org:structure:accountingpointcharacteristics:0:1");
-            XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
-            XNamespace schemaLocation = XNamespace.Get("urn:ediel.org:structure:genericnotification:0:1 urn-ediel-org-structure-genericnotification-0-1.xsd");
-
             var document = new XDocument(
                 new XElement(
                     _xmlNamespace + "GenericNotification_MarketDocument",
-                    new XAttribute(XNamespace.Xmlns + "xsi", xsi),
                     new XAttribute(XNamespace.Xmlns + "cim", _xmlNamespace),
-                    new XAttribute(xsi + "schemaLocation", schemaLocation),
                     new XElement(_xmlNamespace + "mRID", Guid.NewGuid().ToString()),
                     new XElement(_xmlNamespace + "type", message.Type),
                     new XElement(_xmlNamespace + "process.processType", message.ProcessType),
