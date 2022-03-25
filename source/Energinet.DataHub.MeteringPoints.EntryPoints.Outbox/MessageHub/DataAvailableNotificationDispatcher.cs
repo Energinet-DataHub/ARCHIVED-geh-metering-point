@@ -42,7 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.MessageHub
 
             await _dataAvailableNotificationSender.SendAsync(
                 _correlationContext.Id,
-                new DataAvailableNotificationDto(request.Uuid, request.Recipient, request.MessageType, request.Origin, request.SupportsBundling, request.RelativeWeight)).ConfigureAwait(false);
+                new DataAvailableNotificationDto(request.Uuid, request.Recipient, request.MessageType, request.Origin, request.SupportsBundling, request.RelativeWeight, request.DocumentType)).ConfigureAwait(false);
 
             return Unit.Value;
         }
