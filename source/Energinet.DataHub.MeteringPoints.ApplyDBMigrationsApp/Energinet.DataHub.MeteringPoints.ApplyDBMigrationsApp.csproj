@@ -86,6 +86,7 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Seed\202203150919 Latest UserActor bindings.sql" />
     <EmbeddedResource Include="Scripts\Seed\202203171432 Latest UserActor bindings.sql" />
     <EmbeddedResource Include="Scripts\Seed\202203181138 Update test actor.sql" />
+    <EmbeddedResource Include="Scripts\Seed\202203241940 Latest UserActor bindings.sql" />
     <EmbeddedResource Include="Scripts\Test\202109232129 Clean database.sql" />
     <EmbeddedResource Include="Scripts\Model\202109271100 Add IsOfficialAddress.sql" />
     <EmbeddedResource Include="Scripts\Model\202109271400 Add GeoInfoReference.sql" />
