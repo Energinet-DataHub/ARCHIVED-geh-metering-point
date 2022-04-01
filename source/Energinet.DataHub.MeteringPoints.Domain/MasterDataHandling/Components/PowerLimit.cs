@@ -22,15 +22,19 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components
 {
     public class PowerLimit : ValueObject
     {
+        private const int _isUndefined = -1;
+        private int? _kwh;
+        private int? _ampere;
+
         private PowerLimit(int? kwh, int? ampere)
         {
-            Kwh = kwh;
-            Ampere = ampere;
+            _kwh = kwh ?? _isUndefined;
+            _ampere = ampere ?? _isUndefined;
         }
 
-        public int? Kwh { get; }
+        public int? Kwh => _kwh == _isUndefined ? null : _kwh;
 
-        public int? Ampere { get; }
+        public int? Ampere => _ampere == _isUndefined ? null : _ampere;
 
         public static PowerLimit Create(int? kwh, int? ampere)
         {
@@ -77,7 +81,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components
 
         private static int? ConvertNullableString(string? input)
         {
-            if (input is null) return null;
+            if (string.IsNullOrWhiteSpace(input)) return null;
             return Convert.ToInt32(input, CultureInfo.InvariantCulture);
         }
     }
