@@ -223,6 +223,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register(typeof(ProcessExtractor<>), typeof(ConnectMeteringPointProcessExtractor), Lifestyle.Scoped);
             container.Register(typeof(ProcessExtractor<>), typeof(UpdateMeteringPointProcessExtractor), Lifestyle.Scoped);
             container.Register(typeof(ProcessExtractor<>), typeof(DisconnectReconnectMeteringPointProcessExtractor), Lifestyle.Scoped);
+            container.Register(typeof(ProcessExtractor<>), typeof(CloseDownMeteringPointProcessExtractor), Lifestyle.Scoped);
             container.RegisterConditional(typeof(ProcessExtractor<>), typeof(NullProcessExtractor<>), context => !context.Handled);
 
             container.UseMediatR()

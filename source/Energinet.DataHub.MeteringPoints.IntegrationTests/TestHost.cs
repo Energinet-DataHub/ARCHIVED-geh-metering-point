@@ -270,6 +270,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register(typeof(ProcessExtractor<>), typeof(ConnectMeteringPointProcessExtractor), Lifestyle.Scoped);
             _container.Register(typeof(ProcessExtractor<>), typeof(UpdateMeteringPointProcessExtractor), Lifestyle.Scoped);
             _container.Register(typeof(ProcessExtractor<>), typeof(DisconnectReconnectMeteringPointProcessExtractor), Lifestyle.Scoped);
+            _container.Register(typeof(ProcessExtractor<>), typeof(CloseDownMeteringPointProcessExtractor), Lifestyle.Scoped);
             _container.RegisterConditional(typeof(ProcessExtractor<>), typeof(NullProcessExtractor<>), context => !context.Handled);
 
             _container.Verify();
