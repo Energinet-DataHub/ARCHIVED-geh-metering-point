@@ -235,12 +235,18 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public MasterDataUpdater WithPowerLimit(string? kwh, string? ampere)
         {
-            var updatedKwh = ConvertToNullableString(kwh, GetValue<PowerLimit>(nameof(MasterData.PowerLimit)).Kwh);
-            var updatedAmpere = ConvertToNullableString(ampere, GetValue<PowerLimit>(nameof(MasterData.PowerLimit)).Ampere);
+            var updatedKwh = _currentMasterData.PowerLimit is null
+                ? ConvertToNullableString(kwh, null)
+                : ConvertToNullableString(kwh, GetValue<PowerLimit>(nameof(MasterData.PowerLimit)).Kwh);
+            var updatedAmpere = _currentMasterData.PowerLimit is null
+                ? ConvertToNullableString(ampere, null)
+                : ConvertToNullableString(ampere, GetValue<PowerLimit>(nameof(MasterData.PowerLimit)).Ampere);
+
             SetValueIfValid(
                 nameof(MasterData.PowerLimit),
                 () => PowerLimit.CheckRules(updatedKwh, updatedAmpere),
                 () => PowerLimit.Create(updatedKwh, updatedAmpere));
+
             return this;
         }
 
