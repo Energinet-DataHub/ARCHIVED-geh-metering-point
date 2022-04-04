@@ -652,8 +652,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithPowerLimit((string?)null, null)
                 .Build();
 
-            Assert.Equal(updatedMasterData.PowerLimit.Kwh, masterData.PowerLimit.Kwh);
-            Assert.Equal(updatedMasterData.PowerLimit.Ampere, masterData.PowerLimit.Ampere);
+            Assert.Equal(updatedMasterData.PowerLimit?.Kwh, masterData.PowerLimit?.Kwh);
+            Assert.Equal(updatedMasterData.PowerLimit?.Ampere, masterData.PowerLimit?.Ampere);
         }
 
         [Fact]
@@ -667,8 +667,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithPowerLimit(string.Empty, string.Empty)
                 .Build();
 
-            Assert.Null(updatedMasterData.PowerLimit.Kwh);
-            Assert.Null(updatedMasterData.PowerLimit.Ampere);
+            Assert.Null(updatedMasterData.PowerLimit?.Kwh);
+            Assert.Null(updatedMasterData.PowerLimit?.Ampere);
         }
 
         [Fact]
@@ -682,8 +682,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithPowerLimit(200, 300)
                 .Build();
 
-            Assert.Equal(200, updatedMasterData.PowerLimit.Kwh);
-            Assert.Equal(300, updatedMasterData.PowerLimit.Ampere);
+            Assert.Equal(200, updatedMasterData.PowerLimit?.Kwh);
+            Assert.Equal(300, updatedMasterData.PowerLimit?.Ampere);
         }
 
         [Fact]
@@ -697,8 +697,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithPowerLimit(200, 200)
                 .Build();
 
-            Assert.Equal(200, updatedMasterData.PowerLimit.Kwh);
-            Assert.Equal(200, updatedMasterData.PowerLimit.Ampere);
+            Assert.Equal(200, updatedMasterData.PowerLimit?.Kwh);
+            Assert.Equal(200, updatedMasterData.PowerLimit?.Ampere);
         }
 
         [Fact]

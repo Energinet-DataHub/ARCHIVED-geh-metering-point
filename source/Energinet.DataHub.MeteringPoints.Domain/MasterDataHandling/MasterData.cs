@@ -23,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 {
     public class MasterData : ValueObject
     {
-        public MasterData(ProductType productType, MeasurementUnitType unitType, AssetType? assetType, ReadingOccurrence readingOccurrence, PowerLimit powerLimit, GsrnNumber? powerPlantGsrnNumber, EffectiveDate effectiveDate, Capacity? capacity, Address address, MeteringConfiguration meteringConfiguration, SettlementMethod settlementMethod, ScheduledMeterReadingDate? scheduledMeterReadingDate, ConnectionType? connectionType, DisconnectionType disconnectionType, NetSettlementGroup netSettlementGroup, bool? productionObligation)
+        public MasterData(ProductType productType, MeasurementUnitType unitType, AssetType? assetType, ReadingOccurrence readingOccurrence, PowerLimit? powerLimit, GsrnNumber? powerPlantGsrnNumber, EffectiveDate effectiveDate, Capacity? capacity, Address address, MeteringConfiguration meteringConfiguration, SettlementMethod settlementMethod, ScheduledMeterReadingDate? scheduledMeterReadingDate, ConnectionType? connectionType, DisconnectionType disconnectionType, NetSettlementGroup netSettlementGroup, bool? productionObligation)
         {
             ProductType = productType;
             UnitType = unitType;
@@ -56,7 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public ReadingOccurrence ReadingOccurrence { get; }
 
-        public PowerLimit PowerLimit { get; }
+        public PowerLimit? PowerLimit { get; }
 
         public GsrnNumber? PowerPlantGsrnNumber { get; }
 
