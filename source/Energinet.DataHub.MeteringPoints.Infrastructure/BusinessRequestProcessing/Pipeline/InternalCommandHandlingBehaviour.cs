@@ -23,7 +23,7 @@ using MediatR;
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline
 {
     public class InternalCommandHandlingBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-     where TRequest : InternalCommand
+     where TRequest : InternalCommand, MediatR.IRequest<TResponse>
     {
         private readonly MeteringPointContext _context;
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;

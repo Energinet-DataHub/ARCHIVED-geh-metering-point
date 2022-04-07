@@ -25,7 +25,7 @@ using MediatR;
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline
 {
     public class InputValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : IBusinessRequest
+        where TRequest : IBusinessRequest, MediatR.IRequest<TResponse>
         where TResponse : BusinessProcessResult
     {
         private readonly IValidator<TRequest> _validator;
