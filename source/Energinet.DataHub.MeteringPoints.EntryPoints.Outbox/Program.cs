@@ -47,6 +47,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
+using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using Energinet.DataHub.MeteringPoints.Messaging;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using Microsoft.EntityFrameworkCore;
