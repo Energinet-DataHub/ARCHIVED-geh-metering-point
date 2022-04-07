@@ -35,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common.SimpleInjector
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 
-            await using var scope = AsyncScopedLifestyle.BeginScope(_container);
+            using var scope = AsyncScopedLifestyle.BeginScope(_container);
             if (scope.Container == null) throw new InvalidOperationException("Scope doesn't contain a container.");
             context.InstanceServices = new SimpleInjectorServiceProviderAdapter(scope.Container);
             await next(context).ConfigureAwait(false);

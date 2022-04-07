@@ -70,7 +70,7 @@ namespace Energinet.DataHub.MeteringPoints.Messaging
                 message.AddToBundle(bundleRequestDto.IdempotencyId);
             }
 
-            await using var stream = new MemoryStream(Encoding.UTF8.GetBytes(bundle));
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(bundle));
 
             var uri = await _storageHandler.AddStreamToStorageAsync(stream, bundleRequestDto).ConfigureAwait(false);
 
