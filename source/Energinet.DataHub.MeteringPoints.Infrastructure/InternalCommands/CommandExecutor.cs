@@ -33,7 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
 
         public async Task ExecuteAsync(InternalCommand command, CancellationToken cancellationToken)
         {
-            await using var scope = AsyncScopedLifestyle.BeginScope(_container);
+            using var scope = AsyncScopedLifestyle.BeginScope(_container);
             await scope.GetInstance<IMediator>().Send(command, cancellationToken).ConfigureAwait(false);
         }
     }
