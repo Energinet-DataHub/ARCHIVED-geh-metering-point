@@ -20,13 +20,13 @@ limitations under the License.
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.0.90" />
-    <PackageReference Include="Energinet.DataHub.Core.App.Common" Version="2.0.0" />
-    <PackageReference Include="Energinet.DataHub.Core.App.Common.Security" Version="2.0.0" />
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="Energinet.DataHub.Core.App.Common" Version="2.3.1" />
+    <PackageReference Include="Energinet.DataHub.Core.App.Common.Security" Version="2.3.1" />
     <PackageReference Include="Energinet.DataHub.Core.XmlConversion.XmlConverter.Abstractions" Version="1.0.5" />
-    <PackageReference Include="FluentValidation" Version="10.3.0" />
-    <PackageReference Include="MediatR" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+    <PackageReference Include="FluentValidation" Version="10.4.0" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
   </ItemGroup>
 
   <ItemGroup>

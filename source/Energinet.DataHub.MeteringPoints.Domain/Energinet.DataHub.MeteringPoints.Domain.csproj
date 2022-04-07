@@ -30,8 +30,8 @@ limitations under the License.
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="9.0.0" />
-    <PackageReference Include="NodaTime" Version="3.0.5" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="NodaTime" Version="3.0.10" />
   </ItemGroup>
 
   <ItemGroup>
