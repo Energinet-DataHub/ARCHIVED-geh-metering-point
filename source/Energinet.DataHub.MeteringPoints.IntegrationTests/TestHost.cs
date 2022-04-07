@@ -497,7 +497,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         protected async Task SendCommandAsync(object command, CancellationToken cancellationToken = default)
         {
-            await using var scope = AsyncScopedLifestyle.BeginScope(_container);
+            using var scope = AsyncScopedLifestyle.BeginScope(_container);
             await scope.GetInstance<IMediator>().Send(command, cancellationToken).ConfigureAwait(false);
         }
 
@@ -531,13 +531,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         {
             var request = Scenarios.CreateConsumptionMeteringPointCommand()
                 with
-                {
-                    MeteringMethod = MeteringMethod.Physical.Name,
-                    MeterNumber = "1",
-                    NetSettlementGroup = NetSettlementGroup.Zero.Name,
-                    ConnectionType = null,
-                    ScheduledMeterReadingDate = null,
-                };
+            {
+                MeteringMethod = MeteringMethod.Physical.Name,
+                MeterNumber = "1",
+                NetSettlementGroup = NetSettlementGroup.Zero.Name,
+                ConnectionType = null,
+                ScheduledMeterReadingDate = null,
+            };
             await SendCommandAsync(request).ConfigureAwait(false);
         }
 
@@ -558,24 +558,24 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         {
             return TestUtils.CreateRequest()
                 with
-                {
-                    TransactionId = SampleData.Transaction,
-                    GsrnNumber = SampleData.GsrnNumber,
-                    EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
-                };
+            {
+                TransactionId = SampleData.Transaction,
+                GsrnNumber = SampleData.GsrnNumber,
+                EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
+            };
         }
 
         protected async Task CreateConsumptionMeteringPointInNetSettlementGroup6Async()
         {
             var request = Scenarios.CreateConsumptionMeteringPointCommand()
                 with
-                {
-                    EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
-                    MeteringMethod = MeteringMethod.Virtual.Name,
-                    NetSettlementGroup = NetSettlementGroup.Six.Name,
-                    ConnectionType = ConnectionType.Installation.Name,
-                    ScheduledMeterReadingDate = "0101",
-                };
+            {
+                EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
+                MeteringMethod = MeteringMethod.Virtual.Name,
+                NetSettlementGroup = NetSettlementGroup.Six.Name,
+                ConnectionType = ConnectionType.Installation.Name,
+                ScheduledMeterReadingDate = "0101",
+            };
             await SendCommandAsync(request).ConfigureAwait(false);
         }
 
