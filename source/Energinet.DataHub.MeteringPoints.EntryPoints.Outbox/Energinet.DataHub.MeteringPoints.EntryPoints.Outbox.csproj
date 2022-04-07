@@ -28,7 +28,6 @@ limitations under the License.
     <PackageReference Include="Energinet.DataHub.Charges.Clients.Registration" Version="3.0.0" />
     <PackageReference Include="Energinet.DataHub.MessageHub.Client" Version="1.9.1" />
     <PackageReference Include="Energinet.DataHub.MessageHub.Client.SimpleInjector" Version="1.6.1" />
-    <PackageReference Include="EntityFrameworkCore.SqlServer.NodaTime" Version="5.0.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.20.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Timer" Version="4.1.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.3.0" OutputItemType="Analyzer" />

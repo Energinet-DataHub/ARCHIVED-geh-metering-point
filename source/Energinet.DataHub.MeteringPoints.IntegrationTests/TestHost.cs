@@ -96,7 +96,6 @@ using Energinet.DataHub.MeteringPoints.Messaging.Bundling.AccountingPointCharact
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Confirm;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Generic;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Reject;
-using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentAssertions;
 using FluentValidation;
 using MediatR;
