@@ -18,7 +18,7 @@ resource "azurerm_app_service" "webapi" {
   app_service_plan_id = data.azurerm_key_vault_secret.plan_shared_id.value
 
   site_config {
-    dotnet_framework_version = "v5.0"
+    dotnet_framework_version = "v6.0"
     cors {
       allowed_origins = ["*"]
     }
