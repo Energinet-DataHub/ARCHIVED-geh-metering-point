@@ -24,7 +24,7 @@ using MediatR;
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline
 {
     public class ProcessOverviewBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : notnull, MediatR.IRequest<TResponse>
+        where TRequest : IRequest<TResponse>
     {
         private readonly ProcessExtractor<TRequest> _processExtractor;
         private readonly MeteringPointContext _meteringPointContext;
