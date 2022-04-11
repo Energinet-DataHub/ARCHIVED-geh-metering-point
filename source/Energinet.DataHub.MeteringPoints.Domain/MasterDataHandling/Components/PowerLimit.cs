@@ -77,7 +77,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components
 
         private static int? ConvertNullableString(string? input)
         {
-            if (input is null) return null;
+            if (string.IsNullOrEmpty(input)) return null;
             return Convert.ToInt32(input, CultureInfo.InvariantCulture);
         }
     }
