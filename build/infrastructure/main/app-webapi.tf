@@ -35,7 +35,7 @@ module "app_webapi" {
     {
       name  = "METERINGPOINT_DB_CONNECTION_STRING"
       type  = "SQLAzure"
-      value = local.MS_CHARGE_DB_CONNECTION_STRING
+      value = local.MS_METERING_POINT_CONNECTION_STRING
     }
   ]
 
