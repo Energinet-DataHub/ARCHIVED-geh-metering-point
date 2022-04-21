@@ -201,12 +201,12 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             container.Register<IMessageHubDispatcher, MessageHubDispatcher>(Lifestyle.Scoped);
 
-            container.Register<PolicyThresholds>(() => new PolicyThresholds(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1));
-            container.Register<ConnectSettings>(() => new ConnectSettings(
-                NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 7,
+            container.Register(() => new PolicyThresholds(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 720));
+            container.Register(() => new ConnectSettings(
+                NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 720,
                 NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));
-            container.Register<DisconnectReconnectSettings>(() => new DisconnectReconnectSettings(
-                NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1,
+            container.Register(() => new DisconnectReconnectSettings(
+                NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 720,
                 NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));
 
             container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
