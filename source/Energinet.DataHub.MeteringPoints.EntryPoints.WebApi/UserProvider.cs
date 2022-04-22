@@ -55,7 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             }
             catch (Exception)
             {
-                _logger.LogInformation("GetUserAsync {userId}", userId);
+                _logger.LogInformation("GetUserAsync {UserId}", userId);
                 throw;
             }
         }

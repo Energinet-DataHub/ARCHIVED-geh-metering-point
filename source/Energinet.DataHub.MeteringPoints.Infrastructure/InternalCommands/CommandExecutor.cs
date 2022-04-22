@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
@@ -31,6 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
             _container = container ?? throw new ArgumentNullException(nameof(container));
         }
 
+        [SuppressMessage("Reliability", "CA2007:Consider calling ConfigureAwait on the awaited task", Justification = "Issue: https://github.com/dotnet/roslyn-analyzers/issues/5712")]
         public async Task ExecuteAsync(InternalCommand command, CancellationToken cancellationToken)
         {
             await using var scope = AsyncScopedLifestyle.BeginScope(_container);

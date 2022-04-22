@@ -17,7 +17,6 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Database;
 using Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
-using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling
