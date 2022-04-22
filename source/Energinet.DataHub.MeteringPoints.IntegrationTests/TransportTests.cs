@@ -35,7 +35,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             byte[]? bytes;
 
             // Send setup
-            using var sendingContainer = new Container();
+            await using var sendingContainer = new Container();
             sendingContainer.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
             sendingContainer.Register<InProcessChannel>(Lifestyle.Singleton);
             sendingContainer.Register<Dispatcher>(Lifestyle.Transient);
@@ -58,7 +58,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             }
 
             // Receive setup
-            using var receivingContainer = new Container();
+            await using var receivingContainer = new Container();
             receivingContainer.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
             receivingContainer.ReceiveProtobuf<MeteringPointEnvelope>(
                 config => config
@@ -67,7 +67,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             receivingContainer.Verify();
 
             // Receive scope
-            using var scope = AsyncScopedLifestyle.BeginScope(receivingContainer);
+            await using var scope = AsyncScopedLifestyle.BeginScope(receivingContainer);
             var messageExtractor = receivingContainer.GetRequiredService<MessageExtractor>();
             var message = await messageExtractor.ExtractAsync(bytes).ConfigureAwait(false);
             message.Should().BeOfType<MasterDataDocument>();

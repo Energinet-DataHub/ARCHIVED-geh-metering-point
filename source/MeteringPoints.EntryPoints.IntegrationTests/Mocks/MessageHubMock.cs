@@ -55,7 +55,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Mocks
 
             _serviceBusClient ??= _serviceBusClientFactory.Create();
 
-            var sender = _serviceBusClient.CreateSender(_requestQueueName);
+            await using var sender = _serviceBusClient.CreateSender(_requestQueueName);
+            await sender.SendMessageAsync(serviceBusMessage).ConfigureAwait(false);
             await using (sender.ConfigureAwait(false))
             {
                 await sender.SendMessageAsync(serviceBusMessage).ConfigureAwait(false);

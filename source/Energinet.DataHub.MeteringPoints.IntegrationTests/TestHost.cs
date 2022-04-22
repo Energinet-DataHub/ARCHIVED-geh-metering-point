@@ -496,7 +496,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         protected async Task SendCommandAsync(object command, CancellationToken cancellationToken = default)
         {
-            using var scope = AsyncScopedLifestyle.BeginScope(_container);
+            await using var scope = AsyncScopedLifestyle.BeginScope(_container);
             await scope.GetInstance<IMediator>().Send(command, cancellationToken).ConfigureAwait(false);
         }
 
