@@ -201,12 +201,15 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             container.Register<IMessageHubDispatcher, MessageHubDispatcher>(Lifestyle.Scoped);
 
-            container.Register(() => new PolicyThresholds(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 720));
+            // TODO: NumberOfDaysEffectiveDateIsAllowedToBeforeToday uses days plus one.
+            // So that if changes can be made 720 days back in time, NumberOfDaysEffectiveDateIsAllowedToBeforeToday needs to be 721.
+            // This should probably be changed in the future.
+            container.Register(() => new PolicyThresholds(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 721));
             container.Register(() => new ConnectSettings(
-                NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 720,
+                NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 721,
                 NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));
             container.Register(() => new DisconnectReconnectSettings(
-                NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 720,
+                NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 721,
                 NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));
 
             container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
