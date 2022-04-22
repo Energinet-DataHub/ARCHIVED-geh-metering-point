@@ -50,8 +50,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
             var traceContext = TraceContext.Parse(message.Correlation);
             if (!traceContext.IsValid)
             {
-                _logger.LogWarning("Could not parse trace context for outbox message with id: {messageId} and correlation: {correlationId}", message.Id, message.Correlation);
-                _logger.LogInformation("Outbox dispatched: {messageType}", message.Type);
+                _logger.LogWarning("Could not parse trace context for outbox message with id: {MessageId} and correlation: {CorrelationId}", message.Id, message.Correlation);
+                _logger.LogInformation("Outbox dispatched: {MessageType}", message.Type);
 
                 await _decoratee.DispatchMessageAsync(message).ConfigureAwait(false);
                 return;
@@ -66,7 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common
 
                 operation.Telemetry.Success = true;
 
-                _logger.LogInformation("Outbox dispatched: {messageType}", message.Type);
+                _logger.LogInformation("Outbox dispatched: {MessageType}", message.Type);
 
                 await _decoratee.DispatchMessageAsync(message).ConfigureAwait(false);
             }

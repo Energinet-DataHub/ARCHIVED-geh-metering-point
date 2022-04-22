@@ -49,8 +49,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
 
         private static bool IsMonthAndDayValid(string monthAndDay)
         {
-            var month = int.Parse(monthAndDay.Substring(0, 2), NumberStyles.Integer, new NumberFormatInfo());
-            var day = int.Parse(monthAndDay.Substring(2, 2), NumberStyles.Integer, new NumberFormatInfo());
+            var month = int.Parse(monthAndDay.AsSpan(0, 2), NumberStyles.Integer, new NumberFormatInfo());
+            var day = int.Parse(monthAndDay.AsSpan(2, 2), NumberStyles.Integer, new NumberFormatInfo());
 
             if (month is < 1 or > 12)
             {

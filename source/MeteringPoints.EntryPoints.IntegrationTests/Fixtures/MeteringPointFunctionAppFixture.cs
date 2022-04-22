@@ -92,19 +92,19 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
 
             var buildConfiguration = GetBuildConfiguration();
             var port = 8000;
-            ingestionHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion\\bin\\{buildConfiguration}\\net5.0";
+            ingestionHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion\\bin\\{buildConfiguration}\\net6.0";
             ingestionHostSettings.Functions = "MeteringPoint";
             ingestionHostSettings.Port = ++port;
 
-            processingHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Processing\\bin\\{buildConfiguration}\\net5.0";
+            processingHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Processing\\bin\\{buildConfiguration}\\net6.0";
             processingHostSettings.Functions = "QueueSubscriber RaiseTimeHasPassedEvent";
             processingHostSettings.Port = ++port;
 
-            outboxHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Outbox\\bin\\{buildConfiguration}\\net5.0";
+            outboxHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Outbox\\bin\\{buildConfiguration}\\net6.0";
             outboxHostSettings.Functions = "OutboxWatcher";
             outboxHostSettings.Port = ++port;
 
-            localMessageHubHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub\\bin\\{buildConfiguration}\\net5.0";
+            localMessageHubHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub\\bin\\{buildConfiguration}\\net6.0";
             localMessageHubHostSettings.Functions = "BundleDequeuedQueueSubscriber RequestBundleQueueSubscriber";
             localMessageHubHostSettings.Port = ++port;
 

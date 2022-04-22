@@ -50,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub.Functions
             await _localMessageHubClient.CreateBundleAsync(data, _sessionContext.Id).ConfigureAwait(false);
             await _unitOfWork.CommitAsync().ConfigureAwait(false);
 
-            _logger.LogInformation("Dequeued with correlation id: {correlationId}", _correlationContext.Id);
+            _logger.LogInformation("Dequeued with correlation id: {CorrelationId}", _correlationContext.Id);
         }
     }
 }

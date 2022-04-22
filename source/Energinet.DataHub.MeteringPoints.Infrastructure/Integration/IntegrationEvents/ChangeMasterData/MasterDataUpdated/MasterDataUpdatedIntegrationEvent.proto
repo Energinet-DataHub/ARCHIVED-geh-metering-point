@@ -53,14 +53,14 @@ message MasterDataUpdated {
     SM_PROFILED = 2;
     SM_NONPROFILED = 3;
   }
- 
+
  enum MeteringMethod {
    MM_NULL = 0;
    MM_PHYSICAL = 1;
    MM_VIRTUAL = 2;
    MM_CALCULATED = 3;
  }
-  
+
   enum MeterReadingPeriodicity {
     MRP_NULL = 0;
     MRP_HOURLY = 1;
