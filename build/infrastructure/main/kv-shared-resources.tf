@@ -31,7 +31,7 @@ data "azurerm_key_vault_secret" "sb_domain_relay_transceiver_connection_string" 
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
-data "azurerm_key_vault_secret" "appi_instrumentation_key" {
+data "azurerm_key_vault_secret" "appi_shared_instrumentation_key" {
   name         = "appi-shared-instrumentation-key"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
@@ -133,5 +133,10 @@ data "azurerm_key_vault_secret" "frontend_service_app_id" {
 
 data "azurerm_key_vault_secret" "plan_shared_id" {
   name         = "plan-shared-id"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "log_shared_id" {
+  name         = "log-shared-id"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
