@@ -24,19 +24,19 @@ limitations under the License.
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Energinet.DataHub.Charges.Clients" Version="1.0.13"/>
-    <PackageReference Include="Energinet.DataHub.Charges.Clients.SimpleInjector" Version="1.1.1"/>
-    <PackageReference Include="Energinet.DataHub.MessageHub.Client" Version="1.8.2"/>
-    <PackageReference Include="Energinet.DataHub.MessageHub.Client.SimpleInjector" Version="1.6.0"/>
-    <PackageReference Include="EntityFrameworkCore.SqlServer.NodaTime" Version="5.0.1"/>
-    <PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.20.0"/>
-    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Timer" Version="4.1.0"/>
-    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.3.0" OutputItemType="Analyzer"/>
-    <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.6.0"/>
-    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk.Analyzers" Version="1.1.0"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.7"/>
-    <PackageReference Include="SimpleInjector" Version="5.3.2"/>
-    <PackageReference Include="SimpleInjector.Integration.GenericHost" Version="5.3.0"/>
+    <PackageReference Include="Energinet.DataHub.Charges.Clients" Version="1.0.13" />
+    <PackageReference Include="Energinet.DataHub.Charges.Clients.SimpleInjector" Version="1.1.1" />
+    <PackageReference Include="Energinet.DataHub.MessageHub.Client" Version="1.9.1" />
+    <PackageReference Include="Energinet.DataHub.MessageHub.Client.SimpleInjector" Version="1.6.0" />
+    <PackageReference Include="EntityFrameworkCore.SqlServer.NodaTime" Version="5.0.1" />
+    <PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.20.0" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Timer" Version="4.1.0" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.3.0" OutputItemType="Analyzer" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.6.0" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk.Analyzers" Version="1.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.7" />
+    <PackageReference Include="SimpleInjector" Version="5.3.2" />
+    <PackageReference Include="SimpleInjector.Integration.GenericHost" Version="5.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,13 +50,13 @@ limitations under the License.
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Application\Energinet.DataHub.MeteringPoints.Application.csproj"/>
-    <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.EntryPoints.Common\Energinet.DataHub.MeteringPoints.EntryPoints.Common.csproj"/>
-    <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Infrastructure\Energinet.DataHub.MeteringPoints.Infrastructure.csproj"/>
-    <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Messaging\Energinet.DataHub.MeteringPoints.Messaging.csproj"/>
+    <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Application\Energinet.DataHub.MeteringPoints.Application.csproj" />
+    <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.EntryPoints.Common\Energinet.DataHub.MeteringPoints.EntryPoints.Common.csproj" />
+    <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Infrastructure\Energinet.DataHub.MeteringPoints.Infrastructure.csproj" />
+    <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Messaging\Energinet.DataHub.MeteringPoints.Messaging.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="EventMessageDispatcher.cs"/>
+    <Compile Remove="EventMessageDispatcher.cs" />
   </ItemGroup>
 </Project>

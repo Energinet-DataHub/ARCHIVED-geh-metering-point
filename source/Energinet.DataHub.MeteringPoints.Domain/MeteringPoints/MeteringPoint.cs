@@ -219,7 +219,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             }
 
             ConnectionState = ConnectionState.Disconnected(connectionDetails.EffectiveDate);
-            AddDomainEvent(new MeteringPointDisconnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
+            AddDomainEvent(new MeteringPointDisconnected(Id.Value, connectionDetails.EffectiveDate));
         }
 
         public void Reconnect(ConnectionDetails connectionDetails)
@@ -231,7 +231,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             }
 
             ConnectionState = ConnectionState.Connected(connectionDetails.EffectiveDate);
-            AddDomainEvent(new MeteringPointReconnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
+            AddDomainEvent(new MeteringPointReconnected(Id.Value, connectionDetails.EffectiveDate));
         }
 
         internal BusinessRulesValidationResult CanUpdateMasterData(MasterData updatedMasterData, MasterDataValidator validator)
@@ -347,7 +347,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 _masterData.AssetType?.Name,
                 _masterData.ConnectionType?.Name,
                 _masterData.DisconnectionType?.Name,
-                _masterData.EffectiveDate?.DateInUtc.ToString(),
+                _masterData.EffectiveDate.DateInUtc.ToString(),
                 _masterData.MeteringConfiguration.Meter.Value,
                 _masterData.MeteringConfiguration.Method.Name,
                 _masterData.PowerLimit?.Ampere,

@@ -39,27 +39,29 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
             _outbox = outbox ?? throw new ArgumentNullException(nameof(outbox));
         }
 
-        public Task DispatchAsync<TMessage>(TMessage message, DocumentType documentType, string recipient, string gsrnNumber)
+        public Task DispatchAsync<TMessage>(TMessage message, DocumentType documentType, string recipient, string gsrnNumber, string documentName)
         {
             var envelope = CreateMessageHubEnvelope(
                 recipient: recipient,
                 cimContent: _jsonSerializer.Serialize(message),
                 messageType: documentType,
-                gsrnNumber: gsrnNumber);
+                gsrnNumber: gsrnNumber,
+                documentName);
 
             AddToOutbox(envelope);
 
             return Task.CompletedTask;
         }
 
-        private MessageHubEnvelope CreateMessageHubEnvelope(string recipient, string cimContent, DocumentType messageType, string gsrnNumber)
+        private MessageHubEnvelope CreateMessageHubEnvelope(string recipient, string cimContent, DocumentType messageType, string gsrnNumber, string documentName)
         {
             return new(
                 Recipient: recipient,
                 Content: cimContent,
                 MessageType: messageType,
                 Correlation: _correlationContext.AsTraceContext(),
-                gsrnNumber); // TODO: add correlation when Telemetry is added
+                gsrnNumber,
+                documentName); // TODO: add correlation when Telemetry is added
         }
 
         private void AddToOutbox<TEdiMessage>(TEdiMessage ediMessage)

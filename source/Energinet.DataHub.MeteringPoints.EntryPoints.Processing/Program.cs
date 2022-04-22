@@ -72,6 +72,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.ChargeLinks.Cr
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Disconnect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Reconnect;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData.MasterDataUpdated;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
@@ -201,12 +202,15 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             container.Register<IMessageHubDispatcher, MessageHubDispatcher>(Lifestyle.Scoped);
 
-            container.Register<PolicyThresholds>(() => new PolicyThresholds(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1));
-            container.Register<ConnectSettings>(() => new ConnectSettings(
-                NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 7,
+            // TODO: NumberOfDaysEffectiveDateIsAllowedToBeforeToday uses days plus one.
+            // So that if changes can be made 720 days back in time, NumberOfDaysEffectiveDateIsAllowedToBeforeToday needs to be 721.
+            // This should probably be changed in the future.
+            container.Register(() => new PolicyThresholds(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 721));
+            container.Register(() => new ConnectSettings(
+                NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 721,
                 NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));
-            container.Register<DisconnectReconnectSettings>(() => new DisconnectReconnectSettings(
-                NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1,
+            container.Register(() => new DisconnectReconnectSettings(
+                NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 721,
                 NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));
 
             container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
@@ -255,6 +259,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     typeof(OnMeteringPointConnected),
                     typeof(OnMeteringPointDisconnected),
                     typeof(OnMeteringPointReconnected),
+                    typeof(OnMasterDataWasUpdated),
                     typeof(SetEnergySupplierHACK),
                     typeof(ProcessInternalCommandsOnTimeHasPassed));
 
