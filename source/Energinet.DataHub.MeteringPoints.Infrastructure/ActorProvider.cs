@@ -52,7 +52,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure
             }
             catch (Exception)
             {
-                _logger.LogInformation("GetActorAsync {actorId}", actorId);
+                _logger.LogInformation("GetActorAsync {ActorId}", actorId);
                 throw;
             }
         }

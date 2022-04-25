@@ -15,7 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Clients.DefaultChargeLink;
-using Energinet.DataHub.Charges.Clients.Models;
+using Energinet.DataHub.Charges.Clients.DefaultChargeLink.Models;
 using Energinet.DataHub.MeteringPoints.Application.Integrations.ChargeLinks.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using MediatR;
