@@ -106,6 +106,7 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Seed\202203111117 Updates from actor registry.sql" />
     <EmbeddedResource Include="Scripts\Seed\202203111121 Latest UserActor bindings.sql" />
     <EmbeddedResource Include="Scripts\Seed\202204071059 Updates from actor registry.sql" />
+    <EmbeddedResource Include="Scripts\Seed\202204221026 Updates from actor registry.sql" />
   </ItemGroup>
 
 </Project>
