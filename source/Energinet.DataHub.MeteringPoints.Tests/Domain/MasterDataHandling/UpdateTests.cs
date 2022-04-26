@@ -390,18 +390,24 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
             Assert.Equal("0102", updatedMasterData.ScheduledMeterReadingDate?.MonthAndDay);
         }
 
-        [Fact]
-        public void Asset_type_input_value_must_be_valid()
+        [Theory]
+        [InlineData("", false)]
+        [InlineData(null, false)]
+        [InlineData(nameof(AssetType.GasTurbine), false)]
+        [InlineData("invalid_value", true)]
+        public void Asset_type_input_value_must_be_valid(string assetType, bool expectError)
         {
             var masterData = Builder()
+                .WithNetSettlementGroup(NetSettlementGroup.Zero.Name)
                 .WithAssetType(AssetType.Boiler.Name)
                 .Build();
 
             var validationResult = UpdateBuilder(masterData)
-                .WithAssetType("invalid value")
+                .WithAssetType(assetType)
                 .Validate();
 
-            AssertContainsValidationError<InvalidAssetTypeValue>("D59", validationResult);
+            AssertError<InvalidAssetTypeValue>(validationResult, expectError);
+            //AssertContainsValidationError<InvalidAssetTypeValue>("D59", validationResult);
         }
 
         [Fact]

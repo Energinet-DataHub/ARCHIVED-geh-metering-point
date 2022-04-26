@@ -312,6 +312,25 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("D59");
         }
 
+        [Theory]
+        [InlineData(nameof(AssetType.FuelCells))]
+        [InlineData("")]
+        [InlineData(null)]
+        public async Task Should_accept_if_asset_type_value_is_empty_null_or_valid_value(string assetType)
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    TypeOfMeteringPoint = nameof(MeteringPointType.Consumption),
+                    NetSettlementGroup = nameof(NetSettlementGroup.Zero),
+                    AssetType = assetType,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D59", false);
+        }
+
         [Fact]
         public async Task Should_reject_when_country_code_is_not_dk()
         {
