@@ -64,6 +64,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
 
         public static BusinessProcessResult Fail(string transactionId, params ValidationError[] errors)
         {
+            if (errors == null) throw new ArgumentNullException(nameof(errors));
+            if (errors.Length == 0) throw new ArgumentException("List of errors must be provided.", nameof(errors));
+
             return new BusinessProcessResult(transactionId, errors);
         }
 
