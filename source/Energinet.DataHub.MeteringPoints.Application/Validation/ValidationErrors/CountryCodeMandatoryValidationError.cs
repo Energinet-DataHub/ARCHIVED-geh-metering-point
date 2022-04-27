@@ -20,7 +20,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErro
     {
         public CountryCodeMandatoryValidationError(string gsrnNumber)
         {
-            Code = "D02";
+            Code = "E86";
             Message = $"Country code for metering point {gsrnNumber} is missing";
         }
     }

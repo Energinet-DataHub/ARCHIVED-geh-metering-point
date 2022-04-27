@@ -40,6 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Validation
                     new MeteringPointTypeValidationError(request.MeteringPointType ?? string.Empty));
             RuleFor(request => request.EffectiveDate).SetValidator(new EffectiveDateValidator());
             RuleFor(request => request.CountryCode)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithState(createMeteringPoint =>
                     new CountryCodeMandatoryValidationError(createMeteringPoint.GsrnNumber))
