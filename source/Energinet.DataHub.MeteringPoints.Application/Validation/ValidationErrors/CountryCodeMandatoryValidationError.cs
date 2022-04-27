@@ -16,12 +16,12 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class DisconnectionTypeMandatoryValidationError : ValidationError
+    public class CountryCodeMandatoryValidationError : ValidationError
     {
-        public DisconnectionTypeMandatoryValidationError(string gsrnNumber)
+        public CountryCodeMandatoryValidationError(string gsrnNumber)
         {
             Code = "D02";
-            Message = $"Disconnection type for metering point {gsrnNumber} is missing (type E17/E18) or not allowed (other types)";
+            Message = $"Country code for metering point {gsrnNumber} is missing";
         }
     }
 }
