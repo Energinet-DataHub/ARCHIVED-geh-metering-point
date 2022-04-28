@@ -67,8 +67,8 @@ namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.Generic
                 _xmlNamespace + "MktActivityRecord",
                 new XElement(_xmlNamespace + "mRID", message.MarketActivityRecord.Id),
                 new XElement(_xmlNamespace + "originalTransactionIDReference_MktActivityRecord.mRID", message.MarketActivityRecord.OriginalTransaction),
-                new XElement(_xmlNamespace + "marketEvaluationPoint.mRID", new XAttribute("codingScheme", "A10"), message.MarketActivityRecord.MarketEvaluationPoint),
-                new XElement(_xmlNamespace + "validityStart_DateAndOrTime.dateTime", message.MarketActivityRecord.StartDateAndOrTime));
+                new XElement(_xmlNamespace + "validityStart_DateAndOrTime.dateTime", message.MarketActivityRecord.StartDateAndOrTime),
+                new XElement(_xmlNamespace + "marketEvaluationPoint.mRID", new XAttribute("codingScheme", "A10"), message.MarketActivityRecord.MarketEvaluationPoint));
         }
 
         private static XDocument CreateDocumentWithHeader(GenericNotificationMessage message)
