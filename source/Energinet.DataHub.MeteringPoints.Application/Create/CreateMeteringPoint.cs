@@ -43,7 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             string? PowerPlant = null,
             string? LocationDescription = null,
             string? SettlementMethod = null,
-            string? DisconnectionType = "",
+            string DisconnectionType = "",
             string EffectiveDate = "",
             string? MeterNumber = "",
             string TransactionId = "",
