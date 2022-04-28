@@ -87,10 +87,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Validation
                 .NotEmpty()
                 .WithState(createMeteringPoint =>
                     new DisconnectionTypeMandatoryValidationError(createMeteringPoint.GsrnNumber))
-                .Unless(x => !(x.MeteringPointType.Equals(MeteringPointType.Consumption.Name, StringComparison.OrdinalIgnoreCase)
-                               || x.MeteringPointType.Equals(MeteringPointType.Production.Name, StringComparison.OrdinalIgnoreCase)
-                               || x.MeteringPointType.Equals(MeteringPointType.Exchange.Name, StringComparison.OrdinalIgnoreCase)))
-                .SetValidator(new DisconnectionTypeRule()!);
+                .SetValidator(new DisconnectionTypeRule());
             RuleFor(request => request.ParentRelatedMeteringPoint)
                 .Must(value => GsrnNumber.CheckRules(value!).Success)
                 .WithState(request => new InvalidParentGsrnNumber())
