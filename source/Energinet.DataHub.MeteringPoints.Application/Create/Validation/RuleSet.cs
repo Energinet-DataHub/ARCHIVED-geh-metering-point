@@ -40,7 +40,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Validation
                     new MeteringPointTypeValidationError(request.MeteringPointType ?? string.Empty));
             RuleFor(request => request.EffectiveDate).SetValidator(new EffectiveDateValidator());
             RuleFor(request => request.CountryCode)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
+                .WithState(createMeteringPoint =>
+                    new CountryCodeMandatoryValidationError(createMeteringPoint.GsrnNumber))
                 .SetValidator(new CountryCodeRule());
             RuleFor(request => request.AssetType)
                 .SetValidator(new AssetTypeRule()!)
@@ -83,7 +86,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Validation
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithState(createMeteringPoint =>
-                    new DisconnectionTypeMandatoryValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.DisconnectionType!))
+                    new DisconnectionTypeMandatoryValidationError(createMeteringPoint.GsrnNumber))
                 .Unless(x => !(x.MeteringPointType.Equals(MeteringPointType.Consumption.Name, StringComparison.OrdinalIgnoreCase)
                                || x.MeteringPointType.Equals(MeteringPointType.Production.Name, StringComparison.OrdinalIgnoreCase)
                                || x.MeteringPointType.Equals(MeteringPointType.Exchange.Name, StringComparison.OrdinalIgnoreCase)))
