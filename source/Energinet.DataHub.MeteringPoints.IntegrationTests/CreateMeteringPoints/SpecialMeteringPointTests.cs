@@ -15,11 +15,14 @@
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
 using Xunit.Categories;
+using MeteringPointType = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MeteringPointType;
+using ReadingOccurrence = Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.ReadingOccurrence;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 {
@@ -59,6 +62,27 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError("D53", DocumentType.RejectCreateMeteringPoint);
+        }
+
+        [Theory]
+        [InlineData(nameof(MeteringPointType.Consumption), true)]
+        [InlineData(nameof(MeteringPointType.Production), true)]
+        [InlineData(nameof(MeteringPointType.ConsumptionFromGrid), false)]
+        [InlineData(nameof(MeteringPointType.SupplyToGrid), false)]
+        [InlineData(nameof(MeteringPointType.Exchange), true)]
+        public async Task Consumption_from_grid_should_not_contain_disconnection_type(string meteringPointType, bool expectError)
+        {
+            var request = Scenarios.CreateCommand(meteringPointType)
+                with
+                {
+                    MeteringMethod = MeteringMethod.Physical.Name,
+                    DisconnectionType = null,
+                    MeterNumber = "pva30909290",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02", expectError);
         }
 
         private static CreateMeteringPoint CreateCommand()
