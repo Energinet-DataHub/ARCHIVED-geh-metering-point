@@ -19,7 +19,7 @@ using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class DisconnectionTypeRule : AbstractValidator<string>
+    public class DisconnectionTypeRule : AbstractValidator<string?>
     {
         public DisconnectionTypeRule()
         {
@@ -28,9 +28,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
                 .WithState(inputValue => new InvalidDisconnectionTypeValue(inputValue));
         }
 
-        private static bool IsAllowedDisconnectionType(string disconnectionType)
+        private static bool IsAllowedDisconnectionType(string? disconnectionType)
         {
-            return new HashSet<string>
+            return new HashSet<string?>
             {
                 DisconnectionType.Manual.Name,
                 DisconnectionType.Remote.Name,

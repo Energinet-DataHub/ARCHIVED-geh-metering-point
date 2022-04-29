@@ -18,7 +18,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
     public class InvalidDisconnectionTypeValue : ValidationError
     {
-        public InvalidDisconnectionTypeValue(string disconnectionType)
+        public InvalidDisconnectionTypeValue(string? disconnectionType)
         {
             Code = "D65";
             Message = $"Disconnection type {disconnectionType} has wrong value (outside domain).";

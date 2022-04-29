@@ -70,7 +70,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [InlineData(nameof(MeteringPointType.ConsumptionFromGrid), false)]
         [InlineData(nameof(MeteringPointType.SupplyToGrid), false)]
         [InlineData(nameof(MeteringPointType.Exchange), true)]
-        public async Task Consumption_from_grid_should_not_contain_disconnection_type(string meteringPointType, bool expectError)
+        public async Task Only_parents_should_contain_disconnection_type(string meteringPointType, bool expectError)
         {
             var request = Scenarios.CreateCommand(meteringPointType)
                 with
