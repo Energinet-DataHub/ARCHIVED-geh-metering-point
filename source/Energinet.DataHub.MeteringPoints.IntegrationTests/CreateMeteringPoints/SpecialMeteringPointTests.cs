@@ -16,13 +16,11 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
 using Xunit.Categories;
-using MeteringPointType = Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.MeteringPointType;
-using ReadingOccurrence = Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.ReadingOccurrence;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 {
