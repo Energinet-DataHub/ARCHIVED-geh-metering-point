@@ -14,7 +14,6 @@
 
 using System;
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Application.Validation.Extensions;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
@@ -82,13 +81,9 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Validation
             RuleFor(request => request.MeterReadingOccurrence)
                 .NotEmpty()
                 .WithState(createMeteringPoint => new MeterReadingPeriodicityIsRequired());
-            RuleFor(createMeteringPoint => createMeteringPoint.DisconnectionType)
+            RuleFor(createMeteringPoint => createMeteringPoint)
                 .Cascade(CascadeMode.Stop)
-                .NotEmpty()
-                .WithState(createMeteringPoint =>
-                    new DisconnectionTypeMandatoryValidationError(createMeteringPoint.GsrnNumber))
-                .Unless(x => x.IsNotParentRule())
-                .SetValidator(new DisconnectionTypeRule());
+                .SetValidator(createMeteringPoint => new DisconnectionTypeRule());
             RuleFor(request => request.ParentRelatedMeteringPoint)
                 .Must(value => GsrnNumber.CheckRules(value!).Success)
                 .WithState(request => new InvalidParentGsrnNumber())

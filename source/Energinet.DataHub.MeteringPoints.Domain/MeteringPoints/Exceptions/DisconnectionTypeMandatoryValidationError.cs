@@ -12,22 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using FluentValidation;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Exceptions
 {
-    public class AssetTypeRule : AbstractValidator<string>
+    public class DisconnectionTypeMandatoryValidationError : ValidationError
     {
-        public AssetTypeRule()
+        public DisconnectionTypeMandatoryValidationError(string? gsrnNumber)
         {
-            RuleFor(value => value)
-                .Must(value => EnumerationType.GetAll<AssetType>().Select(item => item.Name).Contains(value))
-                .WithState(value =>
-                    new InvalidAssetTypeValue(value!));
+            Code = "D02";
+            Message = $"Disconnection type for metering point {gsrnNumber} is missing (type E17/E18) or not allowed (other types)";
         }
     }
 }
