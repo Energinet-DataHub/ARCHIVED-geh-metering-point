@@ -83,7 +83,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Validation
                 .WithState(createMeteringPoint => new MeterReadingPeriodicityIsRequired());
             RuleFor(createMeteringPoint => createMeteringPoint)
                 .Cascade(CascadeMode.Stop)
-                .SetValidator(createMeteringPoint => new DisconnectionTypeRule());
+                .SetValidator(createMeteringPoint => new DisconnectionTypeValidator());
             RuleFor(request => request.ParentRelatedMeteringPoint)
                 .Must(value => GsrnNumber.CheckRules(value!).Success)
                 .WithState(request => new InvalidParentGsrnNumber())
