@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.ObjectModel;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components
@@ -24,6 +26,17 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components
         private DisconnectionType(int id, string name)
             : base(id, name)
         {
+        }
+
+        public static BusinessRulesValidationResult CheckRules(string meteringPointType, string disconnectionType, string gsrnNumber)
+        {
+            var rules = new Collection<IBusinessRule>()
+            {
+                new DisconnectionTypeMandatory(meteringPointType, disconnectionType, gsrnNumber),
+                new DisconnectionTypeIsValidRule(meteringPointType, disconnectionType),
+            };
+
+            return new BusinessRulesValidationResult(rules);
         }
     }
 }
