@@ -12,18 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using FluentValidation;
-using InvalidDisconnectionTypeValue = Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors.InvalidDisconnectionTypeValue;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
-    public class DisconnectionTypeValidator : AbstractValidator<string?>
+    public class InvalidDisconnectionTypeValue : ValidationError
     {
-        public DisconnectionTypeValidator()
+        public InvalidDisconnectionTypeValue(string? disconnectionType)
         {
-            RuleFor(input => input)
-                .Must(DisconnectionTypeIsValidRule.IsValidDisconnectionType)
-                .WithState(input => new InvalidDisconnectionTypeValue(input));
+            Code = "D65";
+            Message = $"Disconnection type {disconnectionType} has wrong value (outside domain).";
         }
     }
 }

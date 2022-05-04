@@ -12,32 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
-using Energinet.DataHub.MeteringPoints.Domain.Extensions;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class DisconnectionTypeIsValidRule : IBusinessRule
+    public static class DisconnectionTypeIsValidRule
     {
-        private readonly string _disconnectionType;
-
-        public DisconnectionTypeIsValidRule(string meteringPointType, string disconnectionType)
+        public static bool IsValidDisconnectionType(string? disconnectionType)
         {
-            _disconnectionType = disconnectionType;
-            IsBroken = !IsValidDisconnectionType(meteringPointType, disconnectionType);
-        }
-
-        public bool IsBroken { get; }
-
-        public ValidationError ValidationError => new InvalidDisconnectionTypeValue(_disconnectionType);
-
-        private static bool IsValidDisconnectionType(string meteringPointType, string disconnectionType)
-        {
-            if (meteringPointType.IsParent() && !string.IsNullOrEmpty(disconnectionType))
+            if (!string.IsNullOrEmpty(disconnectionType))
             {
                 return new HashSet<string?>
                 {

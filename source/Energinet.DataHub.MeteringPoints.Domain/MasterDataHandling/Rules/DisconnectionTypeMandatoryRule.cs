@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.Extensions;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
@@ -20,18 +19,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
     public class DisconnectionTypeMandatory : IBusinessRule
     {
-        private readonly string _gsrnNumber;
-
-        public DisconnectionTypeMandatory(string meteringPointType, string? disconnectionType, string gsrnNumber)
+        public DisconnectionTypeMandatory(string? disconnectionType)
         {
-            _gsrnNumber = gsrnNumber;
-
-            IsBroken = meteringPointType.IsParent()
-                       && string.IsNullOrEmpty(disconnectionType);
+            IsBroken = string.IsNullOrEmpty(disconnectionType);
         }
 
         public bool IsBroken { get; }
 
-        public ValidationError ValidationError => new DisconnectionTypeMandatoryValidationError(_gsrnNumber);
+        public ValidationError ValidationError => new DisconnectionTypeMandatoryValidationError();
     }
 }

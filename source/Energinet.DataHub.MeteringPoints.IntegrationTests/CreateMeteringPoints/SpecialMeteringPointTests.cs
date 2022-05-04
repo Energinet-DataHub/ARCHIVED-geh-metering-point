@@ -62,27 +62,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("D53", DocumentType.RejectCreateMeteringPoint);
         }
 
-        [Theory]
-        [InlineData(nameof(MeteringPointType.Consumption), true)]
-        [InlineData(nameof(MeteringPointType.Production), true)]
-        [InlineData(nameof(MeteringPointType.ConsumptionFromGrid), false)]
-        [InlineData(nameof(MeteringPointType.SupplyToGrid), false)]
-        [InlineData(nameof(MeteringPointType.Exchange), true)]
-        public async Task Only_parents_should_contain_disconnection_type(string meteringPointType, bool expectError)
-        {
-            var request = Scenarios.CreateCommand(meteringPointType)
-                with
-                {
-                    MeteringMethod = MeteringMethod.Physical.Name,
-                    DisconnectionType = null,
-                    MeterNumber = "pva30909290",
-                };
-
-            await SendCommandAsync(request).ConfigureAwait(false);
-
-            AssertValidationError("D02", expectError);
-        }
-
         private static CreateMeteringPoint CreateCommand()
         {
             return Scenarios.CreateCommand(MeteringPointType.ElectricalHeating);

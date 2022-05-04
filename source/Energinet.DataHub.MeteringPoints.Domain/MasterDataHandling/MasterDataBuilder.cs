@@ -188,7 +188,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithDisconnectionType(string? disconnectionType)
         {
-            SetValue(nameof(MasterData.DisconnectionType), disconnectionType is null ? null : EnumerationType.FromName<DisconnectionType>(disconnectionType));
+            SetValue(nameof(MasterData.DisconnectionType), string.IsNullOrEmpty(disconnectionType) ? null : EnumerationType.FromName<DisconnectionType>(disconnectionType));
             return this;
         }
 

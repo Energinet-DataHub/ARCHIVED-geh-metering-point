@@ -592,6 +592,24 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             AssertValidationError("E10");
         }
 
+        [Theory]
+        [InlineData(nameof(MeteringPointType.ConsumptionFromGrid), false)]
+        [InlineData(nameof(MeteringPointType.SupplyToGrid), false)]
+        public async Task Only_parents_should_contain_disconnection_type(string meteringPointType, bool expectError)
+        {
+            var request = Scenarios.CreateCommand(meteringPointType)
+                with
+                {
+                    MeteringMethod = MeteringMethod.Physical.Name,
+                    DisconnectionType = null,
+                    MeterNumber = "pva30909290",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02", expectError);
+        }
+
         private static CreateMeteringPoint CreateCommand()
         {
             return Scenarios.CreateConsumptionMeteringPointCommand();

@@ -43,6 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Production
                 new ConnectionTypeRequirementRule(masterData.NetSettlementGroup!, masterData.ConnectionType),
                 new ProductTypeMustBeEnergyActiveRule(masterData.ProductType),
                 new UnitTypeMustBeKwh(masterData.UnitType),
+                new DisconnectionTypeMandatory(masterData.DisconnectionType?.Name),
             });
         }
 

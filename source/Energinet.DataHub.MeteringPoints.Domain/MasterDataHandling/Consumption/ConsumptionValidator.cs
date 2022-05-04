@@ -66,6 +66,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
                 new ProductTypeMustBeEnergyActiveRule(masterData.ProductType),
                 new UnitTypeMustBeKwh(masterData.UnitType),
                 new CountryCodeRequiredRule(masterData.Address),
+                new DisconnectionTypeMandatory(masterData.DisconnectionType?.Name),
             };
         }
     }
