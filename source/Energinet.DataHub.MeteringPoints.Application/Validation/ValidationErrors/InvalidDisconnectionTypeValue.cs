@@ -14,7 +14,7 @@
 
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
 {
     public class InvalidDisconnectionTypeValue : ValidationError
     {

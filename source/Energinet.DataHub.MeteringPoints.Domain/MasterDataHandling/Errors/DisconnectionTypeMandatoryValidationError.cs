@@ -16,12 +16,12 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
 {
-    public class InvalidDisconnectionTypeValue : ValidationError
+    public class DisconnectionTypeMandatoryValidationError : ValidationError
     {
-        public InvalidDisconnectionTypeValue(string? disconnectionType)
+        public DisconnectionTypeMandatoryValidationError()
         {
-            Code = "D65";
-            Message = $"Disconnection type {disconnectionType} has wrong value (outside domain).";
+            Code = "D02";
+            Message = $"Disconnection type is missing (type E17/E18) or not allowed (other types)";
         }
     }
 }
