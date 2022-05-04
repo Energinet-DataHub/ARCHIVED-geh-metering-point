@@ -12,16 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
-namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors
+namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 {
-    public class InvalidDisconnectionTypeValue : ValidationError
+    public class DisconnectionTypeMandatory : IBusinessRule
     {
-        public InvalidDisconnectionTypeValue(string? disconnectionType)
+        public DisconnectionTypeMandatory(string? disconnectionType)
         {
-            Code = "D65";
-            Message = $"Disconnection type {disconnectionType} has wrong value (outside domain).";
+            IsBroken = string.IsNullOrEmpty(disconnectionType);
         }
+
+        public bool IsBroken { get; }
+
+        public ValidationError ValidationError => new DisconnectionTypeMandatoryValidationError();
     }
 }

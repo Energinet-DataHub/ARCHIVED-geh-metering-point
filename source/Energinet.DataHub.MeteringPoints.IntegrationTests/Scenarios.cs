@@ -133,10 +133,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 ProductType: ProductType.EnergyActive.Name);
         }
 
-        internal static CreateMeteringPoint CreateCommand(MeteringPointType meteringPointType)
+        internal static CreateMeteringPoint CreateCommand(string meteringPointType)
         {
             return new CreateMeteringPoint(
-                MeteringPointType: meteringPointType.Name,
+                MeteringPointType: meteringPointType,
                 SampleData.Administrator,
                 SampleData.StreetName,
                 SampleData.BuildingNumber,
@@ -171,6 +171,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 new ExchangeDetails(SampleData.MeteringGridArea, SampleData.MeteringGridArea),
                 UnitType: MeasurementUnitType.KWh.Name,
                 ProductType: ProductType.EnergyActive.Name);
+        }
+
+        internal static CreateMeteringPoint CreateCommand(MeteringPointType meteringPointType)
+        {
+            return CreateCommand(meteringPointType.Name);
         }
 
         internal static CreateMeteringPoint CreateExchangeReactiveEnergy()

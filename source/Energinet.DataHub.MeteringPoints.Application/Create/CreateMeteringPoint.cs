@@ -12,11 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
-using Energinet.DataHub.MeteringPoints.Domain.Actors;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Create
 {
@@ -43,7 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             string? PowerPlant = null,
             string? LocationDescription = null,
             string? SettlementMethod = null,
-            string DisconnectionType = "",
+            string? DisconnectionType = null,
             string EffectiveDate = "",
             string? MeterNumber = "",
             string TransactionId = "",
