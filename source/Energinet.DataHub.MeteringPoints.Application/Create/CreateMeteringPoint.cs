@@ -18,6 +18,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
 {
     public record CreateMeteringPoint(
             string MeteringPointType = "",
+            string AdministratorId = "",
             string? StreetName = null,
             string? BuildingNumber = null,
             string? PostCode = null,
@@ -38,7 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             string? PowerPlant = null,
             string? LocationDescription = null,
             string? SettlementMethod = null,
-            string DisconnectionType = "",
+            string? DisconnectionType = null,
             string EffectiveDate = "",
             string? MeterNumber = "",
             string TransactionId = "",

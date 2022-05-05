@@ -15,6 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData.MasterDataUpdated;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
 using Xunit.Categories;
@@ -44,7 +45,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
+            var message = AssertOutboxMessageAndReturnMessage<MasterDataWasUpdatedIntegrationEvent>();
 
+            Assert.Equal(message?.SettlementMethod, SettlementMethod.NonProfiled.Name);
             AssertMasterData()
                 .HasSettlementMethod(SettlementMethod.NonProfiled);
         }
@@ -95,6 +98,32 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
             await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError("D15");
+        }
+
+        [Fact]
+        public async Task Asset_type_should_not_interfere_with_settlement_method_validation()
+        {
+            var createRequest = Scenarios.CreateConsumptionMeteringPointCommand()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.Zero.Name,
+                    SettlementMethod = SettlementMethod.NonProfiled.Name,
+                    AssetType = null,
+                    ConnectionType = null,
+                    ScheduledMeterReadingDate = null,
+                };
+
+            await SendCommandAsync(createRequest).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    SettlementMethod = SettlementMethod.Flex.Name,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D59", false);
         }
     }
 }

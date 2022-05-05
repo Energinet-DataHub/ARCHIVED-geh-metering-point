@@ -72,6 +72,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.ChargeLinks.Cr
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Disconnect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Reconnect;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData.MasterDataUpdated;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
@@ -89,7 +90,6 @@ using Energinet.DataHub.MeteringPoints.Messaging.Bundling.AccountingPointCharact
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Confirm;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Generic;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Reject;
-using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentValidation;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
@@ -143,9 +143,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             // Register application components.
             container.Register<QueueSubscriber>(Lifestyle.Scoped);
-            container.Register<ProcessInternalCommands>(Lifestyle.Scoped);
+            container.Register<SystemTimer>(Lifestyle.Scoped);
             container.Register<InternalCommandProcessor>(Lifestyle.Scoped);
             container.Register<InternalCommandAccessor>(Lifestyle.Scoped);
+            container.Register<CommandExecutor>(Lifestyle.Scoped);
 
             var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")
                                    ?? throw new InvalidOperationException(
@@ -190,7 +191,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<MeteringPointPipelineContext>(Lifestyle.Scoped);
             container.Register<IActorProvider, ActorProvider>(Lifestyle.Scoped);
             container.Register<IBusinessProcessValidationContext, BusinessProcessValidationContext>(Lifestyle.Scoped);
-            container.Register<IBusinessProcessCommandFactory, BusinessProcessCommandFactory>(Lifestyle.Singleton);
+            container.Register<IBusinessProcessCommandFactory, BusinessProcessCommandFactory>(Lifestyle.Scoped);
 
             // TODO: remove this when infrastructure and application has been split into more assemblies.
             container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageXmlSerializer>(Lifestyle.Singleton);
@@ -200,12 +201,15 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             container.Register<IMessageHubDispatcher, MessageHubDispatcher>(Lifestyle.Scoped);
 
-            container.Register<PolicyThresholds>(() => new PolicyThresholds(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1));
-            container.Register<ConnectSettings>(() => new ConnectSettings(
-                NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 7,
+            // TODO: NumberOfDaysEffectiveDateIsAllowedToBeforeToday uses days plus one.
+            // So that if changes can be made 720 days back in time, NumberOfDaysEffectiveDateIsAllowedToBeforeToday needs to be 721.
+            // This should probably be changed in the future.
+            container.Register(() => new PolicyThresholds(NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 721));
+            container.Register(() => new ConnectSettings(
+                NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 721,
                 NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));
-            container.Register<DisconnectReconnectSettings>(() => new DisconnectReconnectSettings(
-                NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 1,
+            container.Register(() => new DisconnectReconnectSettings(
+                NumberOfDaysEffectiveDateIsAllowedToBeforeToday: 721,
                 NumberOfDaysEffectiveDateIsAllowedToAfterToday: 0));
 
             container.Register<IMeteringPointOwnershipProvider, MeteringPointOwnershipProvider>();
@@ -254,7 +258,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     typeof(OnMeteringPointConnected),
                     typeof(OnMeteringPointDisconnected),
                     typeof(OnMeteringPointReconnected),
-                    typeof(SetEnergySupplierHACK));
+                    typeof(OnMasterDataWasUpdated),
+                    typeof(SetEnergySupplierHACK),
+                    typeof(ProcessInternalCommandsOnTimeHasPassed));
 
             Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
 

@@ -22,21 +22,21 @@ module "app_webapi" {
   location                                  = azurerm_resource_group.this.location
   vnet_integration_subnet_id                = data.azurerm_key_vault_secret.snet_vnet_integrations_id.value
   private_endpoint_subnet_id                = data.azurerm_key_vault_secret.snet_private_endpoints_id.value
-  private_dns_resource_group_name           = data.azurerm_key_vault_secret.pdns_resource_group_name.value
   app_service_plan_id                       = data.azurerm_key_vault_secret.plan_shared_id.value
   application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_instrumentation_key.value
+  dotnet_framework_version                  = "v6.0"
 
-  app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY = "${data.azurerm_key_vault_secret.appi_instrumentation_key.value}"
-    B2C_TENANT_ID = "${data.azurerm_key_vault_secret.b2c_tenant_id.value}"
-    FRONTEND_OPEN_ID_URL = "${data.azurerm_key_vault_secret.frontend_open_id_url.value}"
-    FRONTEND_SERVICE_APP_ID = "${data.azurerm_key_vault_secret.frontend_service_app_id.value}"
+  app_settings                              = {
+    APPINSIGHTS_INSTRUMENTATIONKEY          = "${data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value}"
+    B2C_TENANT_ID                           = "${data.azurerm_key_vault_secret.b2c_tenant_id.value}"
+    FRONTEND_OPEN_ID_URL                    = "${data.azurerm_key_vault_secret.frontend_open_id_url.value}"
+    FRONTEND_SERVICE_APP_ID                 = "${data.azurerm_key_vault_secret.frontend_service_app_id.value}"
   }
 
   connection_strings = [
     {
       name  = "METERINGPOINT_DB_CONNECTION_STRING"
-      type  = "SQLServer"
+      type  = "SQLAzure"
       value = local.MS_METERING_POINT_CONNECTION_STRING
     }
   ]

@@ -45,6 +45,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
 
         public string CorrelationId { get; }
 
+        public string? Error { get; private set; }
+
         public void SetProcessed(Instant now)
         {
             ProcessedDate = now;

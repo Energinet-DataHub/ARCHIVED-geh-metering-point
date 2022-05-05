@@ -24,6 +24,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Actors
             Value = value;
         }
 
+        public static ActorId Empty
+        {
+            get
+            {
+                return new ActorId(Guid.Empty);
+            }
+        }
+
         public Guid Value { get; }
 
         public static ActorId Create(string id)

@@ -22,9 +22,9 @@ module "func_processing" {
   location                                  = azurerm_resource_group.this.location
   vnet_integration_subnet_id                = data.azurerm_key_vault_secret.snet_vnet_integrations_id.value
   private_endpoint_subnet_id                = data.azurerm_key_vault_secret.snet_private_endpoints_id.value
-  private_dns_resource_group_name           = data.azurerm_key_vault_secret.pdns_resource_group_name.value
   app_service_plan_id                       = data.azurerm_key_vault_secret.plan_shared_id.value
-  application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_instrumentation_key.value
+  application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value
+  log_analytics_workspace_id                = data.azurerm_key_vault_secret.log_shared_id.value
   always_on                                 = true
   app_settings                              = {
     # Region: Default Values
@@ -40,7 +40,7 @@ module "func_processing" {
     INTEGRATION_EVENT_QUEUE                 = data.azurerm_key_vault_secret.metering_point_forwarded_name.value
     INTEGRATION_EVENT_QUEUE_CONNECTION      = data.azurerm_key_vault_secret.sb_domain_relay_listen_connection_string.value
     CHARGES_DEFAULT_LINK_RESPONSE_QUEUE     = "create-link-reply"
-    INTERNAL_COMMAND_PROCESSING_INTERVAL    = "*/10 * * * * *"
+    RAISE_TIME_HAS_PASSED_EVENT_SCHEDULE    = "*/10 * * * * *"
   }
 
   tags                                      = azurerm_resource_group.this.tags

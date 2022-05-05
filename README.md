@@ -23,7 +23,7 @@ These are the processes maintained by this domain.
 | [Submission of master data – grid access provider](docs/business-processes/submission-of-master-data-grid-acess-provider.md)                |
 | [Close down metering point](docs/business-processes/close-down-metering-point.md)                                               |
 | [Connection of metering point with status new](docs/business-processes/connection-of-metering-point-with-status-new.md)                                             |
-| [Disconnect or reconnect metering point](docs/business-processes/disconnect-or-reconnect-metering-point.md)                                                            |
+| [Disconnect or reconnect metering point](docs/business-processes/disconnect-or-reconnect-metering-point.md)  
 | [Change of settlement method](docs/business-processes/change-of-settlement-method.md)                                                        |
 | [Update production obligation](docs/business-processes/update-production-obligation.md)                                                              |
 | [Request service from grid access provider](docs/business-processes/request-service-from-grid-access-provider.md)                             |
@@ -31,24 +31,23 @@ These are the processes maintained by this domain.
 
 ## Architecture
 
-___OUTDATED___
-
-![MP domain Architecture](https://user-images.githubusercontent.com/25637982/117973312-87033780-b32c-11eb-9232-32c90cdb0fdb.PNG)
+![MP Architecture](https://user-images.githubusercontent.com/72008816/157631274-8d0c3b81-e64f-4b61-a6e6-9ac5bf5e1829.PNG)
 
 ## Context Streams
 
-![MP context stream](https://user-images.githubusercontent.com/25637982/114844794-6dc5a480-9ddb-11eb-9603-56d6c36a15af.PNG)
+![MP context stream](https://user-images.githubusercontent.com/72008816/157631333-074e2029-5af0-4dac-a048-a3f8f252001b.PNG)
 
 ## Domain Roadmap
 
-In current program increment we are working on the following>
-
-* A market actor can create all metering point types
-* A market actor can update metering point master data on all metering point types
-* We can send messages to market actors through MessageHub
-* We can send metering point master data updates to future and current energy supplier
-* A market actor can cancel their request for create MP
+* A market actor can create all metering point types - Done
+* A market actor can update metering point master data on all metering point types - Done
+* A market actor can connect all metering point types - Done
+* A market actor can disconnect and reconnect metering points - Done
+* We can send messages to market actors through MessageHub - Done
 * We publish all metering point created events
+* A market actor can close down a metering point - In progress
+* A Market actor can access a GUI and search for metering points they own - Done
+* A market actor can access a GUI and view the status of their processes - In progress
 
 ## Where can I get more help?
 

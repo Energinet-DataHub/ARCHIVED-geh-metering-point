@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData.MasterDataUpdated;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
 using Xunit.Categories;
@@ -39,7 +40,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
                     ProductType = ProductType.Tariff.Name,
                 };
             await SendCommandAsync(request).ConfigureAwait(false);
+            var message = AssertOutboxMessageAndReturnMessage<MasterDataWasUpdatedIntegrationEvent>();
 
+            Assert.Equal(message?.ProductType, ProductType.Tariff.Name);
             AssertMasterData()
                 .HasProductType(ProductType.Tariff);
         }

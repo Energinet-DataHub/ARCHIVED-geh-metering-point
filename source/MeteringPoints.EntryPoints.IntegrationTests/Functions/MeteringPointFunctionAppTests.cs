@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -77,26 +78,23 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Function
             // Act
             var ingestionResponse = await Fixture.IngestionHostManager.HttpClient.SendAsync(request)
                 .ConfigureAwait(false);
-            var ingestionResponseBody = await ingestionResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var correlationId = ingestionResponseBody
-                .Replace("Correlation id: ", string.Empty, StringComparison.Ordinal)
-                .Trim();
+            var correlationId = ingestionResponse.Headers.TryGetValues("CorrelationId", out var values) ? values.FirstOrDefault() : null;
 
             // Assert
             // Ingestion
-            Fixture.TestLogger.WriteLine(ingestionResponseBody);
+            Fixture.TestLogger.WriteLine(correlationId ?? string.Empty);
             ingestionResponse.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
             // Processing
             await AssertFunctionExecuted(Fixture.ProcessingHostManager, "QueueSubscriber").ConfigureAwait(false);
-            await AssertFunctionExecuted(Fixture.ProcessingHostManager, "ProcessInternalCommands").ConfigureAwait(false);
+            await AssertFunctionExecuted(Fixture.ProcessingHostManager, "RaiseTimeHasPassedEvent").ConfigureAwait(false);
 
             // Outbox
             await AssertFunctionExecuted(Fixture.OutboxHostManager, "OutboxWatcher").ConfigureAwait(false);
 
             // MessageHub
             await Fixture.MessageHubSimulator
-                    .WaitForNotificationsInDataAvailableQueueAsync(correlationId)
+                    .WaitForNotificationsInDataAvailableQueueAsync(correlationId ?? string.Empty)
                     .ConfigureAwait(false);
 
             var peekSimulationResponseDto = await Fixture.MessageHubSimulator.PeekAsync().ConfigureAwait(false);

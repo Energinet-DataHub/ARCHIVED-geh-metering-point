@@ -80,9 +80,9 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MeteringPoi
                         fromDbValue => EnumerationType.FromName<ReadingOccurrence>(fromDbValue));
                 mapper.OwnsOne(x => x.PowerLimit, y =>
                 {
-                    y.Property(x => x.Ampere)
+                    y.Property(x => x!.Ampere)
                         .HasColumnName("MaximumCurrent");
-                    y.Property(x => x.Kwh)
+                    y.Property(x => x!.Kwh)
                         .HasColumnName("MaximumPower");
                 });
                 mapper.Property(x => x.PowerPlantGsrnNumber)

@@ -25,14 +25,14 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Rules
 {
     public class DateFormatMustBeUTCRule : IBusinessRule
     {
-        private const string FormatRegExSummer = @"\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2]\d|3[0-1])T23:00:00(.000)?Z$";
-        private const string FormatRegExWinter = @"\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2]\d|3[0-1])T22:00:00(.000)?Z$";
+        private const string FormatRegExSummer = @"\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2]\d|3[0-1])T22:00:00(.000)?Z$";
+        private const string FormatRegExWinter = @"\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2]\d|3[0-1])T23:00:00(.000)?Z$";
         private readonly string _date;
 
         public DateFormatMustBeUTCRule(string date)
         {
             _date = date;
-            var canParse = DateTime.TryParse(
+            var canParse = DateTimeOffset.TryParse(
                 date,
                 out var dateParsed);
 

@@ -12,16 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using FluentValidation;
+using InvalidDisconnectionTypeValue = Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors.InvalidDisconnectionTypeValue;
 
-namespace Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors
+namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class DisconnectionTypeMandatoryValidationError : ValidationError
+    public class DisconnectionTypeValidator : AbstractValidator<string?>
     {
-        public DisconnectionTypeMandatoryValidationError(string gsrnNumber, string disconnectionType)
+        public DisconnectionTypeValidator()
         {
-            Code = "D02";
-            Message = $"Disconnection type {disconnectionType} for metering point {gsrnNumber} is missing (type E17/E18) or not allowed (other types)";
+            RuleFor(input => input)
+                .Must(DisconnectionTypeIsValidRule.IsValidDisconnectionType)
+                .WithState(input => new InvalidDisconnectionTypeValue(input));
         }
     }
 }

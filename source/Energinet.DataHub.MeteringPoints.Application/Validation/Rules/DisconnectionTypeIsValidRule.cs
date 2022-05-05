@@ -14,27 +14,25 @@
 
 using System.Collections.Generic;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Errors;
-using FluentValidation;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Validation.Rules
 {
-    public class DisconnectionTypeRule : AbstractValidator<string>
+    public static class DisconnectionTypeIsValidRule
     {
-        public DisconnectionTypeRule()
+        public static bool IsValidDisconnectionType(string? disconnectionType)
         {
-            RuleFor(inputValue => inputValue)
-                .Must(IsAllowedDisconnectionType)
-                .WithState(inputValue => new InvalidDisconnectionTypeValue(inputValue));
-        }
-
-        private static bool IsAllowedDisconnectionType(string disconnectionType)
-        {
-            return new HashSet<string>
+            if (!string.IsNullOrEmpty(disconnectionType))
             {
-                DisconnectionType.Manual.Name,
-                DisconnectionType.Remote.Name,
-            }.Contains(disconnectionType);
+                return new HashSet<string?>
+                {
+                    DisconnectionType.Manual.Name,
+                    DisconnectionType.Remote.Name,
+                }.Contains(disconnectionType);
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }

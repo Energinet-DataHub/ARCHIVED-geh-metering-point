@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
@@ -49,7 +50,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 address: GetValue<Address>(nameof(MasterData.Address)),
                 meteringConfiguration: GetValue<MeteringConfiguration>(nameof(MasterData.MeteringConfiguration)),
                 settlementMethod: GetValue<SettlementMethod>(nameof(MasterData.SettlementMethod)),
-                scheduledMeterReadingDate: GetValue<ScheduledMeterReadingDate>(nameof(MasterData.ScheduledMeterReadingDate)),
+                scheduledMeterReadingDate: GetValue<ScheduledMeterReadingDate>(
+                    nameof(MasterData.ScheduledMeterReadingDate)),
                 connectionType: GetValue<ConnectionType>(nameof(MasterData.ConnectionType)),
                 disconnectionType: GetValue<DisconnectionType>(nameof(MasterData.DisconnectionType)),
                 netSettlementGroup: GetValue<NetSettlementGroup>(nameof(MasterData.NetSettlementGroup)),
@@ -186,7 +188,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithDisconnectionType(string? disconnectionType)
         {
-            SetValue(nameof(MasterData.DisconnectionType), disconnectionType is null ? null : EnumerationType.FromName<DisconnectionType>(disconnectionType));
+            SetValue(nameof(MasterData.DisconnectionType), string.IsNullOrEmpty(disconnectionType) ? null : EnumerationType.FromName<DisconnectionType>(disconnectionType));
             return this;
         }
 

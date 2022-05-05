@@ -76,5 +76,33 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 
             AssertValidationError("D59");
         }
+
+        [Theory]
+        [InlineData("", nameof(AssetType.GasTurbine))]
+        [InlineData(nameof(AssetType.GasTurbine), null)]
+        [InlineData(nameof(AssetType.Boiler), nameof(AssetType.GasTurbine))]
+        public async Task Asset_type_can_be_updated(string oldAssetType, string newAssetType)
+        {
+            var t = Scenarios.CreateConsumptionMeteringPointCommand()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.Zero.Name,
+                    AssetType = oldAssetType,
+                    ConnectionType = null,
+                    ScheduledMeterReadingDate = null,
+                };
+
+            await SendCommandAsync(t).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    AssetType = newAssetType,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D59", false);
+        }
     }
 }

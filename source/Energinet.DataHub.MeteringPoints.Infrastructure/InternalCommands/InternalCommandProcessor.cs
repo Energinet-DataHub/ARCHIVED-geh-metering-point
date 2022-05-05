@@ -13,10 +13,14 @@
 // limitations under the License.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
+using Dapper;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
-using MediatR;
+using Microsoft.Extensions.Logging;
+using Polly;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
 {
@@ -25,26 +29,65 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands
         private readonly InternalCommandAccessor _internalCommandAccessor;
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;
         private readonly IJsonSerializer _serializer;
-        private readonly IMediator _mediator;
+        private readonly CommandExecutor _commandExecutor;
+        private readonly ILogger<InternalCommandProcessor> _logger;
+        private readonly IDbConnectionFactory _connectionFactory;
 
-        public InternalCommandProcessor(InternalCommandAccessor internalCommandAccessor, ISystemDateTimeProvider systemDateTimeProvider, IJsonSerializer serializer, IMediator mediator)
+        public InternalCommandProcessor(InternalCommandAccessor internalCommandAccessor, ISystemDateTimeProvider systemDateTimeProvider, IJsonSerializer serializer, CommandExecutor commandExecutor, ILogger<InternalCommandProcessor> logger, IDbConnectionFactory connectionFactory)
         {
             _internalCommandAccessor = internalCommandAccessor ?? throw new ArgumentNullException(nameof(internalCommandAccessor));
             _systemDateTimeProvider = systemDateTimeProvider ?? throw new ArgumentNullException(nameof(systemDateTimeProvider));
             _serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _commandExecutor = commandExecutor ?? throw new ArgumentNullException(nameof(commandExecutor));
+            _logger = logger;
+            _connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
         }
 
         public async Task ProcessPendingAsync()
         {
             var pendingCommands = await _internalCommandAccessor.GetPendingAsync(_systemDateTimeProvider.Now()).ConfigureAwait(false);
 
+            var executionPolicy = Policy
+                .Handle<Exception>()
+                .WaitAndRetryAsync(new[]
+                {
+                    TimeSpan.FromSeconds(2),
+                });
+
             foreach (var queuedCommand in pendingCommands)
             {
-                queuedCommand.SetProcessed(_systemDateTimeProvider.Now());
-                var command = queuedCommand.ToCommand(_serializer);
-                await _mediator.Send(command).ConfigureAwait(false);
+                var result = await executionPolicy.ExecuteAndCaptureAsync(() =>
+                    ExecuteCommandAsync(queuedCommand)).ConfigureAwait(false);
+
+                if (result.Outcome == OutcomeType.Failure)
+                {
+                    var exception = result.FinalException.ToString();
+                    await MarkAsFailedAsync(queuedCommand, exception).ConfigureAwait(false);
+                    _logger?.Log(LogLevel.Error, "Failed to process internal command", exception);
+                }
             }
+        }
+
+        private Task ExecuteCommandAsync(QueuedInternalCommand queuedInternalCommand)
+        {
+            var command = queuedInternalCommand.ToCommand(_serializer);
+            return _commandExecutor.ExecuteAsync(command, CancellationToken.None);
+        }
+
+        private Task MarkAsFailedAsync(QueuedInternalCommand queuedCommand, string exception)
+        {
+            var connection = _connectionFactory.GetOpenConnection();
+            return connection.ExecuteScalarAsync(
+                "UPDATE [dbo].[QueuedInternalCommands] " +
+                "SET ProcessedDate = @NowDate, " +
+                "Error = @Error " +
+                "WHERE [Id] = @Id",
+                new
+                {
+                    NowDate = DateTime.UtcNow,
+                    Error = exception,
+                    queuedCommand.Id,
+                });
         }
     }
 }

@@ -61,7 +61,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                 startDateAndOrTime,
                 transactionId);
 
-            await _messageHubDispatcher.DispatchAsync(message, DocumentType.GenericNotification, recipient.Identifier, gsrn).ConfigureAwait(false);
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.GenericNotification, recipient.Identifier, gsrn, message.DocumentName.Split('_')[0]).ConfigureAwait(false);
         }
 
         public async Task SendCreateMeteringPointConfirmAsync(string transactionId, string gsrn)
@@ -78,7 +78,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     MarketEvaluationPoint: gsrn,
                     OriginalTransaction: transactionId));
 
-            await _messageHubDispatcher.DispatchAsync(message, DocumentType.ConfirmCreateMeteringPoint, _actorContext.CurrentActor.Identifier, gsrn).ConfigureAwait(false);
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.ConfirmCreateMeteringPoint, _actorContext.CurrentActor.Identifier, gsrn, message.DocumentName.Split('_')[0]).ConfigureAwait(false);
         }
 
         public async Task SendCreateMeteringPointRejectAsync(
@@ -99,7 +99,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     OriginalTransaction: transactionId,
                     Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
 
-            await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectCreateMeteringPoint, _actorContext.CurrentActor.Identifier, gsrn).ConfigureAwait(false);
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectCreateMeteringPoint, _actorContext.CurrentActor.Identifier, gsrn, message.DocumentName.Split('_')[0]).ConfigureAwait(false);
         }
 
         public async Task SendUpdateMeteringPointConfirmAsync(string transactionId, string gsrn)
@@ -116,7 +116,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     MarketEvaluationPoint: gsrn,
                     OriginalTransaction: transactionId));
 
-            await _messageHubDispatcher.DispatchAsync(message, DocumentType.ConfirmChangeMasterData, _actorContext.CurrentActor.Identifier, gsrn).ConfigureAwait(false);
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.ConfirmChangeMasterData, _actorContext.CurrentActor.Identifier, gsrn, message.DocumentName.Split('_')[0]).ConfigureAwait(false);
         }
 
         public async Task SendUpdateMeteringPointRejectAsync(string transactionId, string gsrn, IEnumerable<ErrorMessage> errors)
@@ -134,7 +134,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     OriginalTransaction: transactionId,
                     Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
 
-            await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectChangeMasterData, _actorContext.CurrentActor.Identifier, gsrn).ConfigureAwait(false);
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectChangeMasterData, _actorContext.CurrentActor.Identifier, gsrn, message.DocumentName.Split('_')[0]).ConfigureAwait(false);
         }
 
         public async Task SendConnectMeteringPointConfirmAsync(string transactionId, string gsrn)
@@ -151,7 +151,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     MarketEvaluationPoint: gsrn,
                     OriginalTransaction: transactionId));
 
-            await _messageHubDispatcher.DispatchAsync(message, DocumentType.ConfirmConnectMeteringPoint, _actorContext.CurrentActor.Identifier, gsrn).ConfigureAwait(false);
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.ConfirmConnectMeteringPoint, _actorContext.CurrentActor.Identifier, gsrn, message.DocumentName.Split('_')[0]).ConfigureAwait(false);
         }
 
         public async Task SendConnectMeteringPointRejectAsync(string transactionId, string gsrn, IEnumerable<ErrorMessage> errors)
@@ -169,7 +169,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     OriginalTransaction: transactionId,
                     Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
 
-            await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectConnectMeteringPoint, _actorContext.CurrentActor.Identifier, gsrn).ConfigureAwait(false);
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectConnectMeteringPoint, _actorContext.CurrentActor.Identifier, gsrn, message.DocumentName.Split('_')[0]).ConfigureAwait(false);
         }
 
         public async Task SendConnectionStatusMeteringPointRejectAsync(string transactionId, string gsrn, IEnumerable<ErrorMessage> errors)
@@ -187,7 +187,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     OriginalTransaction: transactionId,
                     Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
 
-            await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectConnectionStatusMeteringPoint, _actorContext.CurrentActor.Identifier, gsrn).ConfigureAwait(false);
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectConnectionStatusMeteringPoint, _actorContext.CurrentActor.Identifier, gsrn, message.DocumentName.Split('_')[0]).ConfigureAwait(false);
         }
 
         public async Task SendConnectionStatusMeteringPointConfirmAsync(string transactionId, string gsrn)
@@ -204,7 +204,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     MarketEvaluationPoint: gsrn,
                     OriginalTransaction: transactionId));
 
-            await _messageHubDispatcher.DispatchAsync(message, DocumentType.ConfirmConnectionStatusMeteringPoint, _actorContext.CurrentActor.Identifier, gsrn).ConfigureAwait(false);
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.ConfirmConnectionStatusMeteringPoint, _actorContext.CurrentActor.Identifier, gsrn, message.DocumentName.Split('_')[0]).ConfigureAwait(false);
         }
 
         public async Task SendAccountingPointCharacteristicsMessageAsync(
@@ -226,7 +226,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                 _dateTimeProvider.Now());
 
             await _messageHubDispatcher
-                .DispatchAsync(message, DocumentType.AccountingPointCharacteristicsMessage, energySupplier.GlnNumber, meteringPoint.GsrnNumber)
+                .DispatchAsync(message, DocumentType.AccountingPointCharacteristicsMessage, energySupplier.GlnNumber, meteringPoint.GsrnNumber, "APCharacteristics")
                 .ConfigureAwait(false);
         }
 
@@ -244,7 +244,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     MarketEvaluationPoint: gsrnNumber,
                     OriginalTransaction: transactionId));
 
-            await _messageHubDispatcher.DispatchAsync(message, DocumentType.AcceptCloseDownRequest, _actorContext.CurrentActor.Identifier, gsrnNumber).ConfigureAwait(false);
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.AcceptCloseDownRequest, _actorContext.CurrentActor.Identifier, gsrnNumber, message.DocumentName.Split('_')[0]).ConfigureAwait(false);
         }
 
         public async Task SendRequestCloseDownRejectedAsync(string transactionId, string gsrnNumber, IEnumerable<ErrorMessage> errors)
@@ -262,7 +262,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                     OriginalTransaction: transactionId,
                     Reasons: errors.Select(error => new Reason(error.Code, error.Description)).ToList()));
 
-            await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectCloseDownRequest, _actorContext.CurrentActor.Identifier, gsrnNumber).ConfigureAwait(false);
+            await _messageHubDispatcher.DispatchAsync(message, DocumentType.RejectCloseDownRequest, _actorContext.CurrentActor.Identifier, gsrnNumber, message.DocumentName.Split('_')[0]).ConfigureAwait(false);
         }
 
         private static MarketRoleParticipant Map(Actor actor, Role documentRole)

@@ -22,6 +22,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
     public static class SampleData
     {
+        public static string Administrator => "90f6f4e5-8073-4842-b33e-c59e9f4a8c3f";
+
         public static string GsrnNumber => "571234567891234568";
 
         public static string TypeOfMeteringPoint => nameof(MeteringPointType.Consumption);
@@ -94,7 +96,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 2021,
                 5,
                 5,
-                23,
+                22,
                 0,
                 0);
 

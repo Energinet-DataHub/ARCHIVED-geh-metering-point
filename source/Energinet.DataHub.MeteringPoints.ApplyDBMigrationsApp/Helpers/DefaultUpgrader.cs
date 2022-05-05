@@ -44,6 +44,7 @@ namespace Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.Helpers
                     Assembly.GetExecutingAssembly(),
                     x => !x.Contains(scriptsTest, StringComparison.Ordinal)))
                 .LogToConsole()
+                .WithExecutionTimeout(TimeSpan.FromMinutes(2))
                 .Build();
             var result = modelUpgrader.PerformUpgrade();
 
@@ -57,6 +58,7 @@ namespace Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.Helpers
                             x => x.Contains(scriptsTest, StringComparison.Ordinal))
                         .JournalTo(new NullJournal())
                         .LogToConsole()
+                        .WithExecutionTimeout(TimeSpan.FromMinutes(2))
                         .Build();
                 result = testDataUpgrader.PerformUpgrade();
             }

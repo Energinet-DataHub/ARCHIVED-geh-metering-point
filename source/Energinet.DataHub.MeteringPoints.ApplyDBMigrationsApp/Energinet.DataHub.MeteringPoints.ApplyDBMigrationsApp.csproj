@@ -17,7 +17,7 @@ limitations under the License.
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
@@ -72,6 +72,7 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Model\202202091600 Change data type.sql" />
     <EmbeddedResource Include="Scripts\Model\202202241200 Remove servicebus related columns.sql" />
     <EmbeddedResource Include="Scripts\Model\202203011200 Clean QueuedInternalCommands.sql" />
+    <EmbeddedResource Include="Scripts\Model\202203132000 Add error column.sql" />
     <EmbeddedResource Include="Scripts\Seed\202201171400 Distribute grid areas to actors.sql" />
     <EmbeddedResource Include="Scripts\Seed\202112142130 Create Grid Area seed data.sql" />
     <EmbeddedResource Include="Scripts\Seed\202112141430 Actor seed data.sql" />
@@ -82,6 +83,11 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Seed\202201260835 Updates from actor registry.sql" />
     <EmbeddedResource Include="Scripts\Seed\202202011400 Add dev users to all actors.sql" />
     <EmbeddedResource Include="Scripts\Seed\202202110822 Add more Energinet users to ENDK actors.sql" />
+    <EmbeddedResource Include="Scripts\Seed\202203150919 Latest UserActor bindings.sql" />
+    <EmbeddedResource Include="Scripts\Seed\202203171432 Latest UserActor bindings.sql" />
+    <EmbeddedResource Include="Scripts\Seed\202203181138 Update test actor.sql" />
+    <EmbeddedResource Include="Scripts\Seed\202203241940 Latest UserActor bindings.sql" />
+    <EmbeddedResource Include="Scripts\Seed\202204071100 Latest UserActor bindings.sql" />
     <EmbeddedResource Include="Scripts\Test\202109232129 Clean database.sql" />
     <EmbeddedResource Include="Scripts\Model\202109271100 Add IsOfficialAddress.sql" />
     <EmbeddedResource Include="Scripts\Model\202109271400 Add GeoInfoReference.sql" />
@@ -93,15 +99,14 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Test\202112142130 Create Grid Area test data.sql" />
     <EmbeddedResource Include="Scripts\Test\202201061300 Create Metering Point test data.sql" />
     <EmbeddedResource Include="Scripts\Seed\202201191330 Add grid access provider test data.sql" />
-    <None Remove="Scripts\Model\202111041429 Add energy supplier table.sql" />
     <EmbeddedResource Include="Scripts\Model\202111041429 Add energy supplier table.sql" />
-    <None Remove="Scripts\Seed\202202011357 Updates from actor registry.sql" />
     <EmbeddedResource Include="Scripts\Seed\202202011357 Updates from actor registry.sql" />
-    <None Remove="Scripts\Test\202202081200 Add process test data.sql" />
     <EmbeddedResource Include="Scripts\Test\202202081200 Add process test data.sql" />
-    <None Remove="Scripts\Seed\202202091320 Updates from actor registry.sql" />
-    <None Remove="Scripts\Seed\202202091335 Updates from actor registry.sql" />
     <EmbeddedResource Include="Scripts\Seed\202202091335 Updates from actor registry.sql" />
+    <EmbeddedResource Include="Scripts\Seed\202203111117 Updates from actor registry.sql" />
+    <EmbeddedResource Include="Scripts\Seed\202203111121 Latest UserActor bindings.sql" />
+    <EmbeddedResource Include="Scripts\Seed\202204071059 Updates from actor registry.sql" />
+    <EmbeddedResource Include="Scripts\Seed\202204221026 Updates from actor registry.sql" />
   </ItemGroup>
 
 </Project>

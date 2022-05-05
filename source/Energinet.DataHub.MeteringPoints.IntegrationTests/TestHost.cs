@@ -78,6 +78,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.ChargeLinks.Cr
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Disconnect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Reconnect;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData.MasterDataUpdated;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
@@ -95,7 +96,6 @@ using Energinet.DataHub.MeteringPoints.Messaging.Bundling.AccountingPointCharact
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Confirm;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Generic;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Reject;
-using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using FluentAssertions;
 using FluentValidation;
 using MediatR;
@@ -183,6 +183,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
             _container.Register<InternalCommandProcessor>(Lifestyle.Scoped);
             _container.Register<InternalCommandAccessor>(Lifestyle.Scoped);
+            _container.Register<CommandExecutor>(Lifestyle.Scoped);
             _container.Register<IActorContext>(() => new ActorContext { CurrentActor = new Actor(SampleData.GridOperatorIdOfGrid870, "GLN", "8200000001409", "GridAccessProvider") }, Lifestyle.Singleton);
             _container.Register<IUserContext>(() => new UserContext { CurrentUser = new User(Guid.NewGuid(), new List<Guid> { Guid.NewGuid() }) }, Lifestyle.Singleton);
             _container.Register<MeteringPointPipelineContext>(Lifestyle.Scoped);
@@ -254,7 +255,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                     typeof(OnMeteringPointConnected),
                     typeof(OnMeteringPointDisconnected),
                     typeof(OnMeteringPointReconnected),
-                    typeof(SetEnergySupplierHACK));
+                    typeof(OnMasterDataWasUpdated),
+                    typeof(SetEnergySupplierHACK),
+                    typeof(ProcessInternalCommandsOnTimeHasPassed));
 
             // Specific for test instead of using Application Insights package
             _container.Register(() => new TelemetryClient(new TelemetryConfiguration()), Lifestyle.Scoped);
@@ -349,6 +352,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             messages.Should().NotBeNull();
             messages.Should().AllBeOfType<TMessage>();
             messages.Should().HaveCount(count);
+        }
+
+        protected TMessage? AssertOutboxMessageAndReturnMessage<TMessage>()
+        {
+            var message = GetOutboxMessages<TMessage>().SingleOrDefault();
+
+            message.Should().NotBeNull();
+            message.Should().BeOfType<TMessage>();
+
+            return message;
         }
 
         protected void AssertValidationError(string expectedErrorCode, DocumentType type)
@@ -517,13 +530,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         {
             var request = Scenarios.CreateConsumptionMeteringPointCommand()
                 with
-                {
-                    MeteringMethod = MeteringMethod.Physical.Name,
-                    MeterNumber = "1",
-                    NetSettlementGroup = NetSettlementGroup.Zero.Name,
-                    ConnectionType = null,
-                    ScheduledMeterReadingDate = null,
-                };
+            {
+                MeteringMethod = MeteringMethod.Physical.Name,
+                MeterNumber = "1",
+                NetSettlementGroup = NetSettlementGroup.Zero.Name,
+                ConnectionType = null,
+                ScheduledMeterReadingDate = null,
+            };
             await SendCommandAsync(request).ConfigureAwait(false);
         }
 
@@ -544,24 +557,24 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         {
             return TestUtils.CreateRequest()
                 with
-                {
-                    TransactionId = SampleData.Transaction,
-                    GsrnNumber = SampleData.GsrnNumber,
-                    EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
-                };
+            {
+                TransactionId = SampleData.Transaction,
+                GsrnNumber = SampleData.GsrnNumber,
+                EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
+            };
         }
 
         protected async Task CreateConsumptionMeteringPointInNetSettlementGroup6Async()
         {
             var request = Scenarios.CreateConsumptionMeteringPointCommand()
                 with
-                {
-                    EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
-                    MeteringMethod = MeteringMethod.Virtual.Name,
-                    NetSettlementGroup = NetSettlementGroup.Six.Name,
-                    ConnectionType = ConnectionType.Installation.Name,
-                    ScheduledMeterReadingDate = "0101",
-                };
+            {
+                EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
+                MeteringMethod = MeteringMethod.Virtual.Name,
+                NetSettlementGroup = NetSettlementGroup.Six.Name,
+                ConnectionType = ConnectionType.Installation.Name,
+                ScheduledMeterReadingDate = "0101",
+            };
             await SendCommandAsync(request).ConfigureAwait(false);
         }
 

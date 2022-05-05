@@ -14,7 +14,6 @@
 
 using System;
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Application.Validation.Extensions;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
@@ -40,7 +39,10 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Validation
                     new MeteringPointTypeValidationError(request.MeteringPointType ?? string.Empty));
             RuleFor(request => request.EffectiveDate).SetValidator(new EffectiveDateValidator());
             RuleFor(request => request.CountryCode)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
+                .WithState(createMeteringPoint =>
+                    new CountryCodeMandatoryValidationError(createMeteringPoint.GsrnNumber))
                 .SetValidator(new CountryCodeRule());
             RuleFor(request => request.AssetType)
                 .SetValidator(new AssetTypeRule()!)
@@ -81,10 +83,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create.Validation
                 .WithState(createMeteringPoint => new MeterReadingPeriodicityIsRequired());
             RuleFor(createMeteringPoint => createMeteringPoint.DisconnectionType)
                 .Cascade(CascadeMode.Stop)
-                .NotEmpty()
-                .WithState(createMeteringPoint =>
-                    new DisconnectionTypeMandatoryValidationError(createMeteringPoint.GsrnNumber, createMeteringPoint.DisconnectionType))
-                .SetValidator(new DisconnectionTypeRule());
+                .SetValidator(createMeteringPoint => new DisconnectionTypeValidator());
             RuleFor(request => request.ParentRelatedMeteringPoint)
                 .Must(value => GsrnNumber.CheckRules(value!).Success)
                 .WithState(request => new InvalidParentGsrnNumber())

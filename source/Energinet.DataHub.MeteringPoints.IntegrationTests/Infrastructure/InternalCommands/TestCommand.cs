@@ -12,11 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Text.Json.Serialization;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.InternalCommands
 {
     public class TestCommand : InternalCommand
     {
+        [JsonConstructor]
+        public TestCommand(Guid id, bool throwException)
+            : base(id)
+        {
+            ThrowException = throwException;
+        }
+
+        public TestCommand(bool throwException = false)
+        {
+            ThrowException = throwException;
+        }
+
+        public bool ThrowException { get; }
     }
 }
