@@ -362,6 +362,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
+        public async Task Should_accept_when_country_code_is_null()
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    CountryCode = null,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
+        }
+
+        [Fact]
         public async Task Effective_date_is_required()
         {
             var request = Scenarios.CreateDocument()
