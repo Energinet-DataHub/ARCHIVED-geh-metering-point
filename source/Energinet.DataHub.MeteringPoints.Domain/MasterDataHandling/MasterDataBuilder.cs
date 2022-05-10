@@ -206,7 +206,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
 
         public IMasterDataBuilder WithCapacity(string? capacity)
         {
-            SetValue(nameof(MasterData.Capacity), capacity is null ? null : Capacity.Create(capacity));
+            SetValue(nameof(MasterData.Capacity), string.IsNullOrEmpty(capacity) ? null : Capacity.Create(capacity));
             return this;
         }
 
