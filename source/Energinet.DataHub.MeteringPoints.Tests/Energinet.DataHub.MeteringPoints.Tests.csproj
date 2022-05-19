@@ -24,7 +24,7 @@ limitations under the License.
   <ItemGroup>
     <PackageReference Include="AutoFixture" Version="4.17.0" />
     <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
-    <PackageReference Include="Energinet.DataHub.Core.Schemas" Version="1.0.9" />
+    <PackageReference Include="Energinet.DataHub.Core.Schemas" Version="1.0.10" />
     <PackageReference Include="Energinet.DataHub.Core.SchemaValidation" Version="1.0.10" />
     <PackageReference Include="Energinet.DataHub.Core.XmlConversion.XmlConverter" Version="1.0.5" />
     <PackageReference Include="Energinet.DataHub.Core.XmlConversion.XmlConverter.Abstractions" Version="1.0.5" />

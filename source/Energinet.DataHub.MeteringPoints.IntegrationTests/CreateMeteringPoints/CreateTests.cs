@@ -131,6 +131,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
+        public async Task Should_create_when_capacity_is_empty_and_not_required()
+        {
+            var document = Scenarios.CreateDocument()
+                with
+                {
+                    PhysicalConnectionCapacity = string.Empty,
+                };
+
+            await SendCommandAsync(document).ConfigureAwait(false);
+
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConfirmCreateMeteringPoint);
+        }
+
+        [Fact]
         public async Task Should_reject_when_capacity_is_required_but_not_specified()
         {
             var request = CreateCommand()
