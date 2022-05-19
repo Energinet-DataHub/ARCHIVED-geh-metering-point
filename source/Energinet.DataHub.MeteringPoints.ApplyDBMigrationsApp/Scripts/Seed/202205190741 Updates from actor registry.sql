@@ -2139,4 +2139,4 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('a3fc0616-ad9b-4e5e-afa6
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('a3fc0616-ad9b-4e5e-afa6-fffdedc037f7', '0e223e42-bed4-4778-a973-8d0ad9813f71')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('a3fc0616-ad9b-4e5e-afa6-fffdedc037f7', '09591f53-b531-4db5-bb66-a2f52a393d82')
 
-ROLLBACK TRANSACTION;
+COMMIT TRANSACTION;
