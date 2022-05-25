@@ -196,6 +196,15 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                 };
         }
 
+        internal static CreateMeteringPoint CreateSurplusProduction()
+        {
+            return CreateCommand(MeteringPointType.SurplusProductionGroup)
+                with
+                {
+                    UnitType = MeasurementUnitType.KWh.Name, ProductType = ProductType.EnergyActive.Name,
+                };
+        }
+
         internal static object CreateTotalComsumptionMeteringPoint()
         {
             return CreateCommand(MeteringPointType.TotalConsumption)
