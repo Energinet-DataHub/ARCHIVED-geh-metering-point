@@ -22,7 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.Actors
         public Actor(ActorId actorId, IdentificationType identificationType, string identificationNumber, Collection<Role> roles)
         {
             Id = actorId;
-            IdentificationType = identificationType;
+            IdentificationType = null!;
             IdentificationNumber = identificationNumber;
             Roles = roles;
         }
