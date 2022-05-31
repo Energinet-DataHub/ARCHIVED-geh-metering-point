@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -376,10 +377,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             if (errorCount > 1)
             {
                 var errorMessage = new StringBuilder();
-                errorMessage.AppendLine($"Reject message contains more ({errorCount}) than 1 error:");
+                errorMessage.AppendLine(CultureInfo.InvariantCulture, $"Reject message contains more ({errorCount}) than 1 error:");
                 foreach (var error in rejectMessage.MarketActivityRecord.Reasons)
                 {
-                    errorMessage.AppendLine($"Code: {error.Code}. Description: {error.Text}.");
+                    errorMessage.AppendLine(CultureInfo.InvariantCulture, $"Code: {error.Code}. Description: {error.Text}.");
                 }
 
                 throw new XunitException(errorMessage.ToString());
@@ -413,10 +414,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             if (errorCount > 1)
             {
                 var errorMessage = new StringBuilder();
-                errorMessage.AppendLine($"Reject message contains more ({errorCount}) than 1 error:");
+                errorMessage.AppendLine(CultureInfo.InvariantCulture, $"Reject message contains more ({errorCount}) than 1 error:");
                 foreach (var error in rejectMessage.MarketActivityRecord.Reasons)
                 {
-                    errorMessage.AppendLine($"Code: {error.Code}. Description: {error.Text}.");
+                    errorMessage.AppendLine(CultureInfo.InvariantCulture, $"Code: {error.Code}. Description: {error.Text}.");
                 }
 
                 throw new XunitException(errorMessage.ToString());

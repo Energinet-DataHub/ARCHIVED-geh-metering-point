@@ -12,16 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 module "sb_meteringpoint" {
-  source                = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-namespace?ref=5.1.0"
+  source                      = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-namespace?ref=6.0.0"
 
-  name                  = "meteringpoint"
-  project_name          = var.domain_name_short
-  environment_short     = var.environment_short
-  environment_instance  = var.environment_instance
-  resource_group_name   = azurerm_resource_group.this.name
-  location              = azurerm_resource_group.this.location
-  sku                   = "basic"
-  auth_rules            = [
+  name                        = "meteringpoint"
+  project_name                = var.domain_name_short
+  environment_short           = var.environment_short
+  environment_instance        = var.environment_instance
+  resource_group_name         = azurerm_resource_group.this.name
+  location                    = azurerm_resource_group.this.location
+  private_endpoint_subnet_id  = data.azurerm_key_vault_secret.snet_private_endpoints_id.value
+  log_analytics_workspace_id  = data.azurerm_key_vault_secret.log_shared_id.value
+
+  auth_rules = [
     {
       name    = "listen",
       listen  = true
@@ -32,13 +34,12 @@ module "sb_meteringpoint" {
     },
   ]
 
-  tags                = azurerm_resource_group.this.tags
+  tags                        = azurerm_resource_group.this.tags
 }
 
 module "sbq_meteringpoint" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-queue?ref=5.1.0"
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-queue?ref=6.0.0"
 
   name                = "meteringpoint"
-  namespace_name      = module.sb_meteringpoint.name
-  resource_group_name = azurerm_resource_group.this.name
+  namespace_id        = module.sb_meteringpoint.id
 }
