@@ -381,11 +381,11 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('59d70458-be5d-406e-add4
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('de74e71c-2625-480d-82c8-0abf1caacfc7', 'add5bf67-9f24-4ebb-94a6-22dfc1e465cf')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('c47e0e77-1b23-4aca-8f96-0c2bda6656e7', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('c47e0e77-1b23-4aca-8f96-0c2bda6656e7', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('c47e0e77-1b23-4aca-8f96-0c2bda6656e7', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('c47e0e77-1b23-4aca-8f96-0c2bda6656e7', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('9b7fb5ae-7b75-432a-8131-14c81e39686a', '03603af3-8f70-4b23-b369-454aec9fb4f4')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('9b7fb5ae-7b75-432a-8131-14c81e39686a', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('9b7fb5ae-7b75-432a-8131-14c81e39686a', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('9b7fb5ae-7b75-432a-8131-14c81e39686a', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('9b7fb5ae-7b75-432a-8131-14c81e39686a', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e7dbbcda-752c-48bb-8171-162ff89520d6', '8e6124b1-36f0-43ac-b022-73d9c0fde334')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e7dbbcda-752c-48bb-8171-162ff89520d6', 'f9b5e62b-3576-4cc6-81b7-ccdea2010d41')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e7dbbcda-752c-48bb-8171-162ff89520d6', '3437964d-ebaa-448a-abfd-eb589228f0e9')
@@ -433,7 +433,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('aaff0dc2-a1ec-40de-acd8
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('aaff0dc2-a1ec-40de-acd8-16e9d6f31d3c', '46e6b59d-6056-4054-a3c2-99356c067817')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('aaff0dc2-a1ec-40de-acd8-16e9d6f31d3c', 'b900386e-ca17-43b5-8fba-9f0e73f4345d')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('aaff0dc2-a1ec-40de-acd8-16e9d6f31d3c', 'fc9ddf32-1985-4831-9c03-9f95aed6f02c')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('aaff0dc2-a1ec-40de-acd8-16e9d6f31d3c', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('aaff0dc2-a1ec-40de-acd8-16e9d6f31d3c', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('aaff0dc2-a1ec-40de-acd8-16e9d6f31d3c', 'f35e48d3-423a-4507-bcf5-a4268d74fa01')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('aaff0dc2-a1ec-40de-acd8-16e9d6f31d3c', '0becf017-4611-429a-89b5-c194de60eac7')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('aaff0dc2-a1ec-40de-acd8-16e9d6f31d3c', '0e71f8a0-38a7-4d79-bf69-c6dcf8929f37')
@@ -452,12 +452,12 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('aaff0dc2-a1ec-40de-acd8
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('2251023b-ad98-418f-9803-18f720e4f4ec', '03603af3-8f70-4b23-b369-454aec9fb4f4')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('2251023b-ad98-418f-9803-18f720e4f4ec', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('2251023b-ad98-418f-9803-18f720e4f4ec', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('2251023b-ad98-418f-9803-18f720e4f4ec', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('2251023b-ad98-418f-9803-18f720e4f4ec', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('339428ed-d150-45a5-9c50-1958a76bdabb', '8e6124b1-36f0-43ac-b022-73d9c0fde334')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('339428ed-d150-45a5-9c50-1958a76bdabb', '3437964d-ebaa-448a-abfd-eb589228f0e9')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('06762b55-e14d-4d98-9277-1a7e409499bd', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('06762b55-e14d-4d98-9277-1a7e409499bd', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('06762b55-e14d-4d98-9277-1a7e409499bd', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('06762b55-e14d-4d98-9277-1a7e409499bd', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('f7de83b9-8313-4066-8ac5-1c3f49730d64', 'af450c03-1937-4ea1-bb66-17b6e4aa51f5')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('f7de83b9-8313-4066-8ac5-1c3f49730d64', 'c2059ddf-ad04-4a99-bc98-2c6fde857025')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('f7de83b9-8313-4066-8ac5-1c3f49730d64', 'e52427c2-204b-4cf2-beec-35b95f935619')
@@ -508,7 +508,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('1e759044-aabf-49b7-b438
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('1e759044-aabf-49b7-b438-2581001bce32', 'f9b5e62b-3576-4cc6-81b7-ccdea2010d41')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7f4acb2d-1f9f-4f5b-a1d1-28fd0afc0824', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7f4acb2d-1f9f-4f5b-a1d1-28fd0afc0824', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7f4acb2d-1f9f-4f5b-a1d1-28fd0afc0824', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7f4acb2d-1f9f-4f5b-a1d1-28fd0afc0824', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('d8a11c57-272a-48f8-9b2a-2994bd6b15cf', '8e6124b1-36f0-43ac-b022-73d9c0fde334')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('d8a11c57-272a-48f8-9b2a-2994bd6b15cf', '3437964d-ebaa-448a-abfd-eb589228f0e9')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('389b87f5-61c6-4eb5-aff2-2b0958fe7b6b', 'c2059ddf-ad04-4a99-bc98-2c6fde857025')
@@ -576,7 +576,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('977d58d7-cdb9-4bac-915b
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('977d58d7-cdb9-4bac-915b-31378a8deecd', '46e6b59d-6056-4054-a3c2-99356c067817')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('977d58d7-cdb9-4bac-915b-31378a8deecd', 'b900386e-ca17-43b5-8fba-9f0e73f4345d')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('977d58d7-cdb9-4bac-915b-31378a8deecd', 'fc9ddf32-1985-4831-9c03-9f95aed6f02c')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('977d58d7-cdb9-4bac-915b-31378a8deecd', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('977d58d7-cdb9-4bac-915b-31378a8deecd', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('977d58d7-cdb9-4bac-915b-31378a8deecd', 'f35e48d3-423a-4507-bcf5-a4268d74fa01')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('977d58d7-cdb9-4bac-915b-31378a8deecd', '0becf017-4611-429a-89b5-c194de60eac7')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('977d58d7-cdb9-4bac-915b-31378a8deecd', '0e71f8a0-38a7-4d79-bf69-c6dcf8929f37')
@@ -594,7 +594,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('977d58d7-cdb9-4bac-915b
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('977d58d7-cdb9-4bac-915b-31378a8deecd', 'bbab4771-3fc4-4c44-99a7-f7ddf0737091')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('fb12b5df-a246-4f37-a4a4-32f75cc764d9', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('fb12b5df-a246-4f37-a4a4-32f75cc764d9', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('fb12b5df-a246-4f37-a4a4-32f75cc764d9', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('fb12b5df-a246-4f37-a4a4-32f75cc764d9', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('89f20a56-f529-4263-bb6c-34dd9bc8788c', '55878bd4-ef25-4f2e-8ba8-b2f3cca962e6')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('52d22414-e419-4d46-a5c8-364301e83a78', '3000e8c2-0dc0-4532-a40d-01ca17fe0d08')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('52d22414-e419-4d46-a5c8-364301e83a78', '2a0fd613-bb31-455b-9182-0534ac42ba59')
@@ -646,7 +646,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('52d22414-e419-4d46-a5c8
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('52d22414-e419-4d46-a5c8-364301e83a78', 'b900386e-ca17-43b5-8fba-9f0e73f4345d')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('52d22414-e419-4d46-a5c8-364301e83a78', 'fc9ddf32-1985-4831-9c03-9f95aed6f02c')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('52d22414-e419-4d46-a5c8-364301e83a78', 'd49bc21d-87c0-426b-bd2d-a097a91de611')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('52d22414-e419-4d46-a5c8-364301e83a78', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('52d22414-e419-4d46-a5c8-364301e83a78', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('52d22414-e419-4d46-a5c8-364301e83a78', 'f35e48d3-423a-4507-bcf5-a4268d74fa01')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('52d22414-e419-4d46-a5c8-364301e83a78', '55878bd4-ef25-4f2e-8ba8-b2f3cca962e6')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('52d22414-e419-4d46-a5c8-364301e83a78', 'f718ac37-9b7f-42dc-943e-bd211ea044ff')
@@ -717,7 +717,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('dc3425d1-e557-489b-959e
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('dc3425d1-e557-489b-959e-3fdcd0db9389', '46e6b59d-6056-4054-a3c2-99356c067817')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('dc3425d1-e557-489b-959e-3fdcd0db9389', 'b900386e-ca17-43b5-8fba-9f0e73f4345d')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('dc3425d1-e557-489b-959e-3fdcd0db9389', 'fc9ddf32-1985-4831-9c03-9f95aed6f02c')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('dc3425d1-e557-489b-959e-3fdcd0db9389', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('dc3425d1-e557-489b-959e-3fdcd0db9389', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('dc3425d1-e557-489b-959e-3fdcd0db9389', 'f35e48d3-423a-4507-bcf5-a4268d74fa01')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('dc3425d1-e557-489b-959e-3fdcd0db9389', '0becf017-4611-429a-89b5-c194de60eac7')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('dc3425d1-e557-489b-959e-3fdcd0db9389', '0e71f8a0-38a7-4d79-bf69-c6dcf8929f37')
@@ -735,22 +735,22 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('dc3425d1-e557-489b-959e
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('dc3425d1-e557-489b-959e-3fdcd0db9389', 'bbab4771-3fc4-4c44-99a7-f7ddf0737091')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7f59e71b-ec3e-4403-87af-4575967a36f8', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7f59e71b-ec3e-4403-87af-4575967a36f8', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7f59e71b-ec3e-4403-87af-4575967a36f8', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7f59e71b-ec3e-4403-87af-4575967a36f8', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('80892f1a-5a9a-466b-a86f-45e98588dc6d', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('80892f1a-5a9a-466b-a86f-45e98588dc6d', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('80892f1a-5a9a-466b-a86f-45e98588dc6d', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('80892f1a-5a9a-466b-a86f-45e98588dc6d', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('002df347-4475-4b95-ba2b-4902388fcb71', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('002df347-4475-4b95-ba2b-4902388fcb71', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('002df347-4475-4b95-ba2b-4902388fcb71', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('002df347-4475-4b95-ba2b-4902388fcb71', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('55c75f0d-ec0b-4508-877f-4a568f45f7d0', '8e6124b1-36f0-43ac-b022-73d9c0fde334')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('55c75f0d-ec0b-4508-877f-4a568f45f7d0', 'f9b5e62b-3576-4cc6-81b7-ccdea2010d41')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('2b090b59-51c9-4d34-b499-53fa350b5540', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('2b090b59-51c9-4d34-b499-53fa350b5540', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('2b090b59-51c9-4d34-b499-53fa350b5540', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('2b090b59-51c9-4d34-b499-53fa350b5540', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7d42f9ee-8915-412d-a03a-54ac6cdc40e3', 'f9b5e62b-3576-4cc6-81b7-ccdea2010d41')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('b6e55220-cba7-47c5-bb11-5966c8e38a6c', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('b6e55220-cba7-47c5-bb11-5966c8e38a6c', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('b6e55220-cba7-47c5-bb11-5966c8e38a6c', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('b6e55220-cba7-47c5-bb11-5966c8e38a6c', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('a459b89f-ab45-4e6f-9d8b-5b2199a5e32c', 'af450c03-1937-4ea1-bb66-17b6e4aa51f5')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('a459b89f-ab45-4e6f-9d8b-5b2199a5e32c', 'c2059ddf-ad04-4a99-bc98-2c6fde857025')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('a459b89f-ab45-4e6f-9d8b-5b2199a5e32c', 'e52427c2-204b-4cf2-beec-35b95f935619')
@@ -819,7 +819,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('57a79a65-9be2-4f02-8027
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('57a79a65-9be2-4f02-8027-5c806fc8dd62', 'b900386e-ca17-43b5-8fba-9f0e73f4345d')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('57a79a65-9be2-4f02-8027-5c806fc8dd62', 'fc9ddf32-1985-4831-9c03-9f95aed6f02c')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('57a79a65-9be2-4f02-8027-5c806fc8dd62', 'd49bc21d-87c0-426b-bd2d-a097a91de611')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('57a79a65-9be2-4f02-8027-5c806fc8dd62', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('57a79a65-9be2-4f02-8027-5c806fc8dd62', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('57a79a65-9be2-4f02-8027-5c806fc8dd62', 'f35e48d3-423a-4507-bcf5-a4268d74fa01')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('57a79a65-9be2-4f02-8027-5c806fc8dd62', '55878bd4-ef25-4f2e-8ba8-b2f3cca962e6')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('57a79a65-9be2-4f02-8027-5c806fc8dd62', 'f718ac37-9b7f-42dc-943e-bd211ea044ff')
@@ -844,29 +844,29 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('54e61697-3314-4f26-a8d2
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('54e61697-3314-4f26-a8d2-5dea9b679e85', '20284dd9-8586-4b9d-87b3-e1f29faec8fd')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('cce395fb-fab3-458b-8eaf-61fb40b4d564', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('cce395fb-fab3-458b-8eaf-61fb40b4d564', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('cce395fb-fab3-458b-8eaf-61fb40b4d564', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('cce395fb-fab3-458b-8eaf-61fb40b4d564', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('2288c650-6cc2-469e-b37e-6785cc2a6d96', '03603af3-8f70-4b23-b369-454aec9fb4f4')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('2288c650-6cc2-469e-b37e-6785cc2a6d96', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('2288c650-6cc2-469e-b37e-6785cc2a6d96', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('2288c650-6cc2-469e-b37e-6785cc2a6d96', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('2288c650-6cc2-469e-b37e-6785cc2a6d96', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('9390a5a5-acbc-4075-b23a-683c53684f3e', '03603af3-8f70-4b23-b369-454aec9fb4f4')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('9390a5a5-acbc-4075-b23a-683c53684f3e', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('9390a5a5-acbc-4075-b23a-683c53684f3e', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('9390a5a5-acbc-4075-b23a-683c53684f3e', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('9390a5a5-acbc-4075-b23a-683c53684f3e', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('0b5d57c9-9419-41f5-b109-6c33e85925ba', 'de716833-4f62-4542-933d-3df435eb90c7')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('0b5d57c9-9419-41f5-b109-6c33e85925ba', 'a982de1f-3703-4e3c-be56-4e54418a2a59')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('0b5d57c9-9419-41f5-b109-6c33e85925ba', 'b65bf5d4-16ed-415a-bc42-90331d2f8eaf')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('0b5d57c9-9419-41f5-b109-6c33e85925ba', '20284dd9-8586-4b9d-87b3-e1f29faec8fd')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('6543508b-eb89-4f26-8f8e-6c605631668e', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('6543508b-eb89-4f26-8f8e-6c605631668e', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('6543508b-eb89-4f26-8f8e-6c605631668e', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('6543508b-eb89-4f26-8f8e-6c605631668e', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('38c33a52-77cb-4770-8eff-6f52ac048244', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('38c33a52-77cb-4770-8eff-6f52ac048244', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('38c33a52-77cb-4770-8eff-6f52ac048244', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('38c33a52-77cb-4770-8eff-6f52ac048244', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('deb95ad6-18d1-4820-bd4d-7a8740c497ec', 'f9b5e62b-3576-4cc6-81b7-ccdea2010d41')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('5cd4b792-c9ba-4302-872e-7bf86df2c991', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('5cd4b792-c9ba-4302-872e-7bf86df2c991', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('5cd4b792-c9ba-4302-872e-7bf86df2c991', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('5cd4b792-c9ba-4302-872e-7bf86df2c991', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7ed4b06c-c573-4e46-9b65-7dda9b1531d8', 'af450c03-1937-4ea1-bb66-17b6e4aa51f5')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7ed4b06c-c573-4e46-9b65-7dda9b1531d8', 'c2059ddf-ad04-4a99-bc98-2c6fde857025')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7ed4b06c-c573-4e46-9b65-7dda9b1531d8', 'e52427c2-204b-4cf2-beec-35b95f935619')
@@ -941,7 +941,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('8a36c0cf-5f16-40c5-a7fd
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('8a36c0cf-5f16-40c5-a7fd-910f0a200209', 'b900386e-ca17-43b5-8fba-9f0e73f4345d')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('8a36c0cf-5f16-40c5-a7fd-910f0a200209', 'fc9ddf32-1985-4831-9c03-9f95aed6f02c')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('8a36c0cf-5f16-40c5-a7fd-910f0a200209', 'd49bc21d-87c0-426b-bd2d-a097a91de611')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('8a36c0cf-5f16-40c5-a7fd-910f0a200209', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('8a36c0cf-5f16-40c5-a7fd-910f0a200209', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('8a36c0cf-5f16-40c5-a7fd-910f0a200209', 'f35e48d3-423a-4507-bcf5-a4268d74fa01')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('8a36c0cf-5f16-40c5-a7fd-910f0a200209', '55878bd4-ef25-4f2e-8ba8-b2f3cca962e6')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('8a36c0cf-5f16-40c5-a7fd-910f0a200209', 'f718ac37-9b7f-42dc-943e-bd211ea044ff')
@@ -962,11 +962,11 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('8a36c0cf-5f16-40c5-a7fd
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('8a36c0cf-5f16-40c5-a7fd-910f0a200209', 'bbab4771-3fc4-4c44-99a7-f7ddf0737091')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('4b32b1b7-83b2-46df-b52a-9daacc75a64b', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('4b32b1b7-83b2-46df-b52a-9daacc75a64b', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('4b32b1b7-83b2-46df-b52a-9daacc75a64b', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('4b32b1b7-83b2-46df-b52a-9daacc75a64b', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('9f801a4b-3015-4772-8ca4-9ec79932b13f', 'f9b5e62b-3576-4cc6-81b7-ccdea2010d41')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('145bb2ed-e8a8-4f22-8d9f-9ff32c3d4055', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('145bb2ed-e8a8-4f22-8d9f-9ff32c3d4055', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('145bb2ed-e8a8-4f22-8d9f-9ff32c3d4055', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('145bb2ed-e8a8-4f22-8d9f-9ff32c3d4055', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('ebbbda78-27d1-434e-8d7a-9ffd9c676c3a', '3000e8c2-0dc0-4532-a40d-01ca17fe0d08')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('ebbbda78-27d1-434e-8d7a-9ffd9c676c3a', '2a0fd613-bb31-455b-9182-0534ac42ba59')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('ebbbda78-27d1-434e-8d7a-9ffd9c676c3a', '5b294533-eb98-4073-8477-094e720c903c')
@@ -1017,7 +1017,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('ebbbda78-27d1-434e-8d7a
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('ebbbda78-27d1-434e-8d7a-9ffd9c676c3a', 'b900386e-ca17-43b5-8fba-9f0e73f4345d')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('ebbbda78-27d1-434e-8d7a-9ffd9c676c3a', 'fc9ddf32-1985-4831-9c03-9f95aed6f02c')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('ebbbda78-27d1-434e-8d7a-9ffd9c676c3a', 'd49bc21d-87c0-426b-bd2d-a097a91de611')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('ebbbda78-27d1-434e-8d7a-9ffd9c676c3a', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('ebbbda78-27d1-434e-8d7a-9ffd9c676c3a', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('ebbbda78-27d1-434e-8d7a-9ffd9c676c3a', 'f35e48d3-423a-4507-bcf5-a4268d74fa01')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('ebbbda78-27d1-434e-8d7a-9ffd9c676c3a', '55878bd4-ef25-4f2e-8ba8-b2f3cca962e6')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('ebbbda78-27d1-434e-8d7a-9ffd9c676c3a', 'f718ac37-9b7f-42dc-943e-bd211ea044ff')
@@ -1040,7 +1040,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('965babf9-7700-49f1-a57d
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('965babf9-7700-49f1-a57d-a009c35a8e29', 'f9b5e62b-3576-4cc6-81b7-ccdea2010d41')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('54134a83-8a98-4342-a5de-a04b37e02040', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('54134a83-8a98-4342-a5de-a04b37e02040', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('54134a83-8a98-4342-a5de-a04b37e02040', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('54134a83-8a98-4342-a5de-a04b37e02040', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e0d9b5dd-31d4-41cb-968d-a203e6178386', 'af450c03-1937-4ea1-bb66-17b6e4aa51f5')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e0d9b5dd-31d4-41cb-968d-a203e6178386', 'c2059ddf-ad04-4a99-bc98-2c6fde857025')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e0d9b5dd-31d4-41cb-968d-a203e6178386', 'e52427c2-204b-4cf2-beec-35b95f935619')
@@ -1103,7 +1103,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7edc2020-e784-4aed-8cd8
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7edc2020-e784-4aed-8cd8-a254806a21c4', '46e6b59d-6056-4054-a3c2-99356c067817')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7edc2020-e784-4aed-8cd8-a254806a21c4', 'b900386e-ca17-43b5-8fba-9f0e73f4345d')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7edc2020-e784-4aed-8cd8-a254806a21c4', 'fc9ddf32-1985-4831-9c03-9f95aed6f02c')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7edc2020-e784-4aed-8cd8-a254806a21c4', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7edc2020-e784-4aed-8cd8-a254806a21c4', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7edc2020-e784-4aed-8cd8-a254806a21c4', 'f35e48d3-423a-4507-bcf5-a4268d74fa01')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7edc2020-e784-4aed-8cd8-a254806a21c4', '0becf017-4611-429a-89b5-c194de60eac7')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7edc2020-e784-4aed-8cd8-a254806a21c4', '0e71f8a0-38a7-4d79-bf69-c6dcf8929f37')
@@ -1169,7 +1169,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('58a495bf-054b-4c62-87b6
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('58a495bf-054b-4c62-87b6-a5cfff59c525', 'b900386e-ca17-43b5-8fba-9f0e73f4345d')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('58a495bf-054b-4c62-87b6-a5cfff59c525', 'fc9ddf32-1985-4831-9c03-9f95aed6f02c')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('58a495bf-054b-4c62-87b6-a5cfff59c525', 'd49bc21d-87c0-426b-bd2d-a097a91de611')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('58a495bf-054b-4c62-87b6-a5cfff59c525', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('58a495bf-054b-4c62-87b6-a5cfff59c525', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('58a495bf-054b-4c62-87b6-a5cfff59c525', 'f35e48d3-423a-4507-bcf5-a4268d74fa01')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('58a495bf-054b-4c62-87b6-a5cfff59c525', '55878bd4-ef25-4f2e-8ba8-b2f3cca962e6')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('58a495bf-054b-4c62-87b6-a5cfff59c525', 'f718ac37-9b7f-42dc-943e-bd211ea044ff')
@@ -1238,7 +1238,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('531b3623-4ea8-42e8-8e8a
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('531b3623-4ea8-42e8-8e8a-a728d5aa4622', 'b900386e-ca17-43b5-8fba-9f0e73f4345d')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('531b3623-4ea8-42e8-8e8a-a728d5aa4622', 'fc9ddf32-1985-4831-9c03-9f95aed6f02c')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('531b3623-4ea8-42e8-8e8a-a728d5aa4622', 'd49bc21d-87c0-426b-bd2d-a097a91de611')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('531b3623-4ea8-42e8-8e8a-a728d5aa4622', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('531b3623-4ea8-42e8-8e8a-a728d5aa4622', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('531b3623-4ea8-42e8-8e8a-a728d5aa4622', 'f35e48d3-423a-4507-bcf5-a4268d74fa01')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('531b3623-4ea8-42e8-8e8a-a728d5aa4622', '55878bd4-ef25-4f2e-8ba8-b2f3cca962e6')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('531b3623-4ea8-42e8-8e8a-a728d5aa4622', 'f718ac37-9b7f-42dc-943e-bd211ea044ff')
@@ -1307,7 +1307,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('6023930b-db51-425c-98de
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('6023930b-db51-425c-98de-a7d514294583', 'b900386e-ca17-43b5-8fba-9f0e73f4345d')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('6023930b-db51-425c-98de-a7d514294583', 'fc9ddf32-1985-4831-9c03-9f95aed6f02c')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('6023930b-db51-425c-98de-a7d514294583', 'd49bc21d-87c0-426b-bd2d-a097a91de611')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('6023930b-db51-425c-98de-a7d514294583', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('6023930b-db51-425c-98de-a7d514294583', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('6023930b-db51-425c-98de-a7d514294583', 'f35e48d3-423a-4507-bcf5-a4268d74fa01')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('6023930b-db51-425c-98de-a7d514294583', '55878bd4-ef25-4f2e-8ba8-b2f3cca962e6')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('6023930b-db51-425c-98de-a7d514294583', 'f718ac37-9b7f-42dc-943e-bd211ea044ff')
@@ -1383,7 +1383,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('afb96804-2447-41f7-ac64
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('afb96804-2447-41f7-ac64-b4219fd1fd8b', 'b900386e-ca17-43b5-8fba-9f0e73f4345d')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('afb96804-2447-41f7-ac64-b4219fd1fd8b', 'fc9ddf32-1985-4831-9c03-9f95aed6f02c')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('afb96804-2447-41f7-ac64-b4219fd1fd8b', 'd49bc21d-87c0-426b-bd2d-a097a91de611')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('afb96804-2447-41f7-ac64-b4219fd1fd8b', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('afb96804-2447-41f7-ac64-b4219fd1fd8b', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('afb96804-2447-41f7-ac64-b4219fd1fd8b', 'f35e48d3-423a-4507-bcf5-a4268d74fa01')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('afb96804-2447-41f7-ac64-b4219fd1fd8b', '55878bd4-ef25-4f2e-8ba8-b2f3cca962e6')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('afb96804-2447-41f7-ac64-b4219fd1fd8b', 'f718ac37-9b7f-42dc-943e-bd211ea044ff')
@@ -1405,7 +1405,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('afb96804-2447-41f7-ac64
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('ccbdb364-2075-4b89-a860-b49da6fac6ab', '03603af3-8f70-4b23-b369-454aec9fb4f4')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('ccbdb364-2075-4b89-a860-b49da6fac6ab', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('ccbdb364-2075-4b89-a860-b49da6fac6ab', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('ccbdb364-2075-4b89-a860-b49da6fac6ab', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('ccbdb364-2075-4b89-a860-b49da6fac6ab', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('6a7f77dc-7c6c-4535-960b-b50e5ace668c', 'af450c03-1937-4ea1-bb66-17b6e4aa51f5')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('6a7f77dc-7c6c-4535-960b-b50e5ace668c', 'c2059ddf-ad04-4a99-bc98-2c6fde857025')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('6a7f77dc-7c6c-4535-960b-b50e5ace668c', 'e52427c2-204b-4cf2-beec-35b95f935619')
@@ -1427,16 +1427,16 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('6a7f77dc-7c6c-4535-960b
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('3dc0084e-2538-4bbf-9b53-b741c1dd0fa2', '03603af3-8f70-4b23-b369-454aec9fb4f4')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('3dc0084e-2538-4bbf-9b53-b741c1dd0fa2', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('3dc0084e-2538-4bbf-9b53-b741c1dd0fa2', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('3dc0084e-2538-4bbf-9b53-b741c1dd0fa2', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('3dc0084e-2538-4bbf-9b53-b741c1dd0fa2', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('be9ee0dc-0c13-48c7-9aaa-b76f765c059c', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('be9ee0dc-0c13-48c7-9aaa-b76f765c059c', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('be9ee0dc-0c13-48c7-9aaa-b76f765c059c', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('be9ee0dc-0c13-48c7-9aaa-b76f765c059c', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('3640eaf7-63b5-4d0c-bf5d-b790b0b24025', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('3640eaf7-63b5-4d0c-bf5d-b790b0b24025', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('3640eaf7-63b5-4d0c-bf5d-b790b0b24025', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('3640eaf7-63b5-4d0c-bf5d-b790b0b24025', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('40220326-5d28-4702-a395-b8029038a149', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('40220326-5d28-4702-a395-b8029038a149', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('40220326-5d28-4702-a395-b8029038a149', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('40220326-5d28-4702-a395-b8029038a149', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7d219acb-8198-4543-8885-b9d04a94ca5c', '8e6124b1-36f0-43ac-b022-73d9c0fde334')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bad13775-7a78-4761-85d4-ba3e595392c6', '3000e8c2-0dc0-4532-a40d-01ca17fe0d08')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bad13775-7a78-4761-85d4-ba3e595392c6', '2a0fd613-bb31-455b-9182-0534ac42ba59')
@@ -1488,7 +1488,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bad13775-7a78-4761-85d4
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bad13775-7a78-4761-85d4-ba3e595392c6', 'b900386e-ca17-43b5-8fba-9f0e73f4345d')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bad13775-7a78-4761-85d4-ba3e595392c6', 'fc9ddf32-1985-4831-9c03-9f95aed6f02c')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bad13775-7a78-4761-85d4-ba3e595392c6', 'd49bc21d-87c0-426b-bd2d-a097a91de611')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bad13775-7a78-4761-85d4-ba3e595392c6', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bad13775-7a78-4761-85d4-ba3e595392c6', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bad13775-7a78-4761-85d4-ba3e595392c6', 'f35e48d3-423a-4507-bcf5-a4268d74fa01')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bad13775-7a78-4761-85d4-ba3e595392c6', '55878bd4-ef25-4f2e-8ba8-b2f3cca962e6')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bad13775-7a78-4761-85d4-ba3e595392c6', 'f718ac37-9b7f-42dc-943e-bd211ea044ff')
@@ -1517,7 +1517,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('5383221c-3dd1-49c7-a30a
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('5383221c-3dd1-49c7-a30a-c48493e1c937', '20284dd9-8586-4b9d-87b3-e1f29faec8fd')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('8633f1c6-fe29-4e75-95fd-c64344087021', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('8633f1c6-fe29-4e75-95fd-c64344087021', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('8633f1c6-fe29-4e75-95fd-c64344087021', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('8633f1c6-fe29-4e75-95fd-c64344087021', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('456226de-c789-4321-a6e2-c730c119eded', 'f9b5e62b-3576-4cc6-81b7-ccdea2010d41')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('a05dcfaa-99fc-4783-a08c-ca72572db428', 'c2059ddf-ad04-4a99-bc98-2c6fde857025')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('a05dcfaa-99fc-4783-a08c-ca72572db428', 'e52427c2-204b-4cf2-beec-35b95f935619')
@@ -1582,7 +1582,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bb5bc5b7-699d-43dd-ba84
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bb5bc5b7-699d-43dd-ba84-cb9ff125c4fa', '46e6b59d-6056-4054-a3c2-99356c067817')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bb5bc5b7-699d-43dd-ba84-cb9ff125c4fa', 'b900386e-ca17-43b5-8fba-9f0e73f4345d')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bb5bc5b7-699d-43dd-ba84-cb9ff125c4fa', 'fc9ddf32-1985-4831-9c03-9f95aed6f02c')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bb5bc5b7-699d-43dd-ba84-cb9ff125c4fa', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bb5bc5b7-699d-43dd-ba84-cb9ff125c4fa', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bb5bc5b7-699d-43dd-ba84-cb9ff125c4fa', 'f35e48d3-423a-4507-bcf5-a4268d74fa01')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bb5bc5b7-699d-43dd-ba84-cb9ff125c4fa', '0becf017-4611-429a-89b5-c194de60eac7')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bb5bc5b7-699d-43dd-ba84-cb9ff125c4fa', '0e71f8a0-38a7-4d79-bf69-c6dcf8929f37')
@@ -1600,7 +1600,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bb5bc5b7-699d-43dd-ba84
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bb5bc5b7-699d-43dd-ba84-cb9ff125c4fa', 'bbab4771-3fc4-4c44-99a7-f7ddf0737091')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('c984eefb-3f06-4458-8e4f-d15aec8c2da0', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('c984eefb-3f06-4458-8e4f-d15aec8c2da0', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('c984eefb-3f06-4458-8e4f-d15aec8c2da0', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('c984eefb-3f06-4458-8e4f-d15aec8c2da0', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e7326ac7-3a69-4d75-8d0e-d255a9e72328', 'af450c03-1937-4ea1-bb66-17b6e4aa51f5')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e7326ac7-3a69-4d75-8d0e-d255a9e72328', 'c2059ddf-ad04-4a99-bc98-2c6fde857025')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e7326ac7-3a69-4d75-8d0e-d255a9e72328', 'e52427c2-204b-4cf2-beec-35b95f935619')
@@ -1663,7 +1663,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('da7cc5f9-0378-44e7-9945
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('da7cc5f9-0378-44e7-9945-d566abc97ddb', '46e6b59d-6056-4054-a3c2-99356c067817')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('da7cc5f9-0378-44e7-9945-d566abc97ddb', 'b900386e-ca17-43b5-8fba-9f0e73f4345d')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('da7cc5f9-0378-44e7-9945-d566abc97ddb', 'fc9ddf32-1985-4831-9c03-9f95aed6f02c')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('da7cc5f9-0378-44e7-9945-d566abc97ddb', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('da7cc5f9-0378-44e7-9945-d566abc97ddb', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('da7cc5f9-0378-44e7-9945-d566abc97ddb', 'f35e48d3-423a-4507-bcf5-a4268d74fa01')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('da7cc5f9-0378-44e7-9945-d566abc97ddb', '0becf017-4611-429a-89b5-c194de60eac7')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('da7cc5f9-0378-44e7-9945-d566abc97ddb', '0e71f8a0-38a7-4d79-bf69-c6dcf8929f37')
@@ -1687,14 +1687,14 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e772c735-e405-4460-b330
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e772c735-e405-4460-b330-d9f3c0007495', 'f35e48d3-423a-4507-bcf5-a4268d74fa01')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('d4d6db92-1291-4cf6-9512-da859c7b503e', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('d4d6db92-1291-4cf6-9512-da859c7b503e', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('d4d6db92-1291-4cf6-9512-da859c7b503e', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('d4d6db92-1291-4cf6-9512-da859c7b503e', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('a4ffa131-6bb8-414d-ae40-dfed8b01fd19', 'de716833-4f62-4542-933d-3df435eb90c7')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('a4ffa131-6bb8-414d-ae40-dfed8b01fd19', 'a982de1f-3703-4e3c-be56-4e54418a2a59')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('a4ffa131-6bb8-414d-ae40-dfed8b01fd19', 'b65bf5d4-16ed-415a-bc42-90331d2f8eaf')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('a4ffa131-6bb8-414d-ae40-dfed8b01fd19', '20284dd9-8586-4b9d-87b3-e1f29faec8fd')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('c5cc7214-ba3c-42ed-8067-e132368352d5', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('c5cc7214-ba3c-42ed-8067-e132368352d5', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('c5cc7214-ba3c-42ed-8067-e132368352d5', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('c5cc7214-ba3c-42ed-8067-e132368352d5', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('4756a304-66f3-4a21-85a3-e51bbd016844', '3000e8c2-0dc0-4532-a40d-01ca17fe0d08')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('4756a304-66f3-4a21-85a3-e51bbd016844', '2a0fd613-bb31-455b-9182-0534ac42ba59')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('4756a304-66f3-4a21-85a3-e51bbd016844', '5b294533-eb98-4073-8477-094e720c903c')
@@ -1745,7 +1745,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('4756a304-66f3-4a21-85a3
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('4756a304-66f3-4a21-85a3-e51bbd016844', 'b900386e-ca17-43b5-8fba-9f0e73f4345d')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('4756a304-66f3-4a21-85a3-e51bbd016844', 'fc9ddf32-1985-4831-9c03-9f95aed6f02c')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('4756a304-66f3-4a21-85a3-e51bbd016844', 'd49bc21d-87c0-426b-bd2d-a097a91de611')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('4756a304-66f3-4a21-85a3-e51bbd016844', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('4756a304-66f3-4a21-85a3-e51bbd016844', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('4756a304-66f3-4a21-85a3-e51bbd016844', 'f35e48d3-423a-4507-bcf5-a4268d74fa01')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('4756a304-66f3-4a21-85a3-e51bbd016844', '55878bd4-ef25-4f2e-8ba8-b2f3cca962e6')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('4756a304-66f3-4a21-85a3-e51bbd016844', 'f718ac37-9b7f-42dc-943e-bd211ea044ff')
@@ -1808,7 +1808,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e6cca180-718c-446e-b8bb
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e6cca180-718c-446e-b8bb-e7086ee39c34', '46e6b59d-6056-4054-a3c2-99356c067817')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e6cca180-718c-446e-b8bb-e7086ee39c34', 'b900386e-ca17-43b5-8fba-9f0e73f4345d')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e6cca180-718c-446e-b8bb-e7086ee39c34', 'fc9ddf32-1985-4831-9c03-9f95aed6f02c')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e6cca180-718c-446e-b8bb-e7086ee39c34', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e6cca180-718c-446e-b8bb-e7086ee39c34', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e6cca180-718c-446e-b8bb-e7086ee39c34', 'f35e48d3-423a-4507-bcf5-a4268d74fa01')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e6cca180-718c-446e-b8bb-e7086ee39c34', '0becf017-4611-429a-89b5-c194de60eac7')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e6cca180-718c-446e-b8bb-e7086ee39c34', '0e71f8a0-38a7-4d79-bf69-c6dcf8929f37')
@@ -1827,7 +1827,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e6cca180-718c-446e-b8bb
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('92f50660-69ea-46d4-99c9-eab74132a60a', '03603af3-8f70-4b23-b369-454aec9fb4f4')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('92f50660-69ea-46d4-99c9-eab74132a60a', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('92f50660-69ea-46d4-99c9-eab74132a60a', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('92f50660-69ea-46d4-99c9-eab74132a60a', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('92f50660-69ea-46d4-99c9-eab74132a60a', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7c0f5d09-1afa-4f52-9f51-f00452042395', 'a363a555-e88b-4cde-a22b-1fd52854ec05')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7c0f5d09-1afa-4f52-9f51-f00452042395', '7fd4af08-11e5-46f1-b0e5-29c00c2f733f')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7c0f5d09-1afa-4f52-9f51-f00452042395', '08707473-ce69-4699-9780-2c118dd527cf')
@@ -1896,7 +1896,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('d962b04e-9050-43df-b777
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('d962b04e-9050-43df-b777-f1e20ad0e820', 'b900386e-ca17-43b5-8fba-9f0e73f4345d')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('d962b04e-9050-43df-b777-f1e20ad0e820', 'fc9ddf32-1985-4831-9c03-9f95aed6f02c')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('d962b04e-9050-43df-b777-f1e20ad0e820', 'd49bc21d-87c0-426b-bd2d-a097a91de611')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('d962b04e-9050-43df-b777-f1e20ad0e820', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('d962b04e-9050-43df-b777-f1e20ad0e820', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('d962b04e-9050-43df-b777-f1e20ad0e820', 'f35e48d3-423a-4507-bcf5-a4268d74fa01')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('d962b04e-9050-43df-b777-f1e20ad0e820', '55878bd4-ef25-4f2e-8ba8-b2f3cca962e6')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('d962b04e-9050-43df-b777-f1e20ad0e820', 'f718ac37-9b7f-42dc-943e-bd211ea044ff')
@@ -1919,7 +1919,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('d10e1b75-40f3-4301-a920
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('09dfbb25-f9d2-4cfe-8d05-f39da7068ecd', 'f9b5e62b-3576-4cc6-81b7-ccdea2010d41')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('116353dc-de65-41f8-9b44-f4a96d191f2f', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('116353dc-de65-41f8-9b44-f4a96d191f2f', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('116353dc-de65-41f8-9b44-f4a96d191f2f', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('116353dc-de65-41f8-9b44-f4a96d191f2f', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('f4d23572-d35d-407f-a9ab-f5f681583f29', '3000e8c2-0dc0-4532-a40d-01ca17fe0d08')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('f4d23572-d35d-407f-a9ab-f5f681583f29', '2a0fd613-bb31-455b-9182-0534ac42ba59')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('f4d23572-d35d-407f-a9ab-f5f681583f29', '5b294533-eb98-4073-8477-094e720c903c')
@@ -1970,7 +1970,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('f4d23572-d35d-407f-a9ab
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('f4d23572-d35d-407f-a9ab-f5f681583f29', 'b900386e-ca17-43b5-8fba-9f0e73f4345d')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('f4d23572-d35d-407f-a9ab-f5f681583f29', 'fc9ddf32-1985-4831-9c03-9f95aed6f02c')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('f4d23572-d35d-407f-a9ab-f5f681583f29', 'd49bc21d-87c0-426b-bd2d-a097a91de611')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('f4d23572-d35d-407f-a9ab-f5f681583f29', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('f4d23572-d35d-407f-a9ab-f5f681583f29', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('f4d23572-d35d-407f-a9ab-f5f681583f29', 'f35e48d3-423a-4507-bcf5-a4268d74fa01')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('f4d23572-d35d-407f-a9ab-f5f681583f29', '55878bd4-ef25-4f2e-8ba8-b2f3cca962e6')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('f4d23572-d35d-407f-a9ab-f5f681583f29', 'f718ac37-9b7f-42dc-943e-bd211ea044ff')
@@ -2040,7 +2040,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('85e6cd69-9f48-4754-a37d
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('85e6cd69-9f48-4754-a37d-f6dbc82527c1', 'b900386e-ca17-43b5-8fba-9f0e73f4345d')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('85e6cd69-9f48-4754-a37d-f6dbc82527c1', 'fc9ddf32-1985-4831-9c03-9f95aed6f02c')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('85e6cd69-9f48-4754-a37d-f6dbc82527c1', 'd49bc21d-87c0-426b-bd2d-a097a91de611')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('85e6cd69-9f48-4754-a37d-f6dbc82527c1', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('85e6cd69-9f48-4754-a37d-f6dbc82527c1', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('85e6cd69-9f48-4754-a37d-f6dbc82527c1', 'f35e48d3-423a-4507-bcf5-a4268d74fa01')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('85e6cd69-9f48-4754-a37d-f6dbc82527c1', '55878bd4-ef25-4f2e-8ba8-b2f3cca962e6')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('85e6cd69-9f48-4754-a37d-f6dbc82527c1', 'f718ac37-9b7f-42dc-943e-bd211ea044ff')
@@ -2061,7 +2061,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('85e6cd69-9f48-4754-a37d
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('85e6cd69-9f48-4754-a37d-f6dbc82527c1', 'bbab4771-3fc4-4c44-99a7-f7ddf0737091')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('8a4a2dd9-cdd0-4dff-9fa9-f774582acaca', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('8a4a2dd9-cdd0-4dff-9fa9-f774582acaca', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('8a4a2dd9-cdd0-4dff-9fa9-f774582acaca', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('8a4a2dd9-cdd0-4dff-9fa9-f774582acaca', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('39a02315-8492-4770-94bd-f82464b9e6d3', '3000e8c2-0dc0-4532-a40d-01ca17fe0d08')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('39a02315-8492-4770-94bd-f82464b9e6d3', '2a0fd613-bb31-455b-9182-0534ac42ba59')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('39a02315-8492-4770-94bd-f82464b9e6d3', '5b294533-eb98-4073-8477-094e720c903c')
@@ -2112,7 +2112,7 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('39a02315-8492-4770-94bd
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('39a02315-8492-4770-94bd-f82464b9e6d3', 'b900386e-ca17-43b5-8fba-9f0e73f4345d')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('39a02315-8492-4770-94bd-f82464b9e6d3', 'fc9ddf32-1985-4831-9c03-9f95aed6f02c')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('39a02315-8492-4770-94bd-f82464b9e6d3', 'd49bc21d-87c0-426b-bd2d-a097a91de611')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('39a02315-8492-4770-94bd-f82464b9e6d3', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('39a02315-8492-4770-94bd-f82464b9e6d3', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('39a02315-8492-4770-94bd-f82464b9e6d3', 'f35e48d3-423a-4507-bcf5-a4268d74fa01')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('39a02315-8492-4770-94bd-f82464b9e6d3', '55878bd4-ef25-4f2e-8ba8-b2f3cca962e6')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('39a02315-8492-4770-94bd-f82464b9e6d3', 'f718ac37-9b7f-42dc-943e-bd211ea044ff')
@@ -2133,9 +2133,106 @@ INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('39a02315-8492-4770-94bd
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('39a02315-8492-4770-94bd-f82464b9e6d3', 'bbab4771-3fc4-4c44-99a7-f7ddf0737091')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('22628d3f-51ad-47a2-b93f-fcc438a03cc8', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('22628d3f-51ad-47a2-b93f-fcc438a03cc8', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('22628d3f-51ad-47a2-b93f-fcc438a03cc8', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('22628d3f-51ad-47a2-b93f-fcc438a03cc8', '427FB0D2-834E-4416-AF56-042E744EFB97')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('a3fc0616-ad9b-4e5e-afa6-fffdedc037f7', '83510249-9f7c-4827-a67c-499a3a94f533')
 INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('a3fc0616-ad9b-4e5e-afa6-fffdedc037f7', '0e223e42-bed4-4778-a973-8d0ad9813f71')
-INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('a3fc0616-ad9b-4e5e-afa6-fffdedc037f7', '09591f53-b531-4db5-bb66-a2f52a393d82')
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('a3fc0616-ad9b-4e5e-afa6-fffdedc037f7', '427FB0D2-834E-4416-AF56-042E744EFB97')
+
+
+-- Add new EG user + permissions
+INSERT INTO [dbo].[User] ([Id]) VALUES ('041870b1-916b-4a48-97f8-ff2041f69c61')
+
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('041870b1-916b-4a48-97f8-ff2041f69c61', 'A363A555-E88B-4CDE-A22B-1FD52854EC05');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('041870b1-916b-4a48-97f8-ff2041f69c61', '08707473-CE69-4699-9780-2C118DD527CF');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('041870b1-916b-4a48-97f8-ff2041f69c61', '7BA7CBD1-EC9D-4352-AE13-4C04251D75BC');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('041870b1-916b-4a48-97f8-ff2041f69c61', '4B8ABB49-71F9-465C-9EC3-8F7CBE3F4659');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('041870b1-916b-4a48-97f8-ff2041f69c61', '0BECF017-4611-429A-89B5-C194DE60EAC7');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('041870b1-916b-4a48-97f8-ff2041f69c61', 'F52CD834-CC72-4BBE-961C-EA1D71BF854F');
+
+
+-- Add ENDK B-001 Users + permissions
+INSERT INTO [dbo].[User] ([Id]) VALUES ('2f2f49f0-eed7-45ac-9660-ed198296955d');
+INSERT INTO [dbo].[User] ([Id]) VALUES ('bc7d61ca-bd6a-423e-806f-b0d82a0b7a6f');
+INSERT INTO [dbo].[User] ([Id]) VALUES ('ae990b17-a7f7-4fb8-835e-d740c0732859');
+INSERT INTO [dbo].[User] ([Id]) VALUES ('313a8b59-7ad2-41a6-9a5c-85aa75e0c0ab');
+INSERT INTO [dbo].[User] ([Id]) VALUES ('e2097106-20fd-403e-8dc2-74629b07a50e');
+INSERT INTO [dbo].[User] ([Id]) VALUES ('e14ae53a-2275-490f-b5d5-0d61254e5cc7');
+INSERT INTO [dbo].[User] ([Id]) VALUES ('ce06e03e-ed4c-4be5-abd9-29dcc464bd9d');
+INSERT INTO [dbo].[User] ([Id]) VALUES ('1a0cf482-7269-4744-b232-b7019028529f');
+INSERT INTO [dbo].[User] ([Id]) VALUES ('22c16b62-d023-49af-949a-95006bf44609');
+INSERT INTO [dbo].[User] ([Id]) VALUES ('7b0f0987-4461-4d00-9bda-7210d8a08f80');
+
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('2f2f49f0-eed7-45ac-9660-ed198296955d', 'b249170b-92bd-476d-9255-4290d599d384');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bc7d61ca-bd6a-423e-806f-b0d82a0b7a6f', 'b249170b-92bd-476d-9255-4290d599d384');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('ae990b17-a7f7-4fb8-835e-d740c0732859', 'b249170b-92bd-476d-9255-4290d599d384');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('313a8b59-7ad2-41a6-9a5c-85aa75e0c0ab', 'b249170b-92bd-476d-9255-4290d599d384');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e2097106-20fd-403e-8dc2-74629b07a50e', 'b249170b-92bd-476d-9255-4290d599d384');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e14ae53a-2275-490f-b5d5-0d61254e5cc7', 'b249170b-92bd-476d-9255-4290d599d384');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('ce06e03e-ed4c-4be5-abd9-29dcc464bd9d', 'b249170b-92bd-476d-9255-4290d599d384');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('1a0cf482-7269-4744-b232-b7019028529f', 'b249170b-92bd-476d-9255-4290d599d384');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('22c16b62-d023-49af-949a-95006bf44609', 'b249170b-92bd-476d-9255-4290d599d384');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7b0f0987-4461-4d00-9bda-7210d8a08f80', 'b249170b-92bd-476d-9255-4290d599d384');
+
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('2f2f49f0-eed7-45ac-9660-ed198296955d', '553aefad-3fc5-4f08-bc82-d3d0dbaf0ea7');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bc7d61ca-bd6a-423e-806f-b0d82a0b7a6f', '553aefad-3fc5-4f08-bc82-d3d0dbaf0ea7');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('ae990b17-a7f7-4fb8-835e-d740c0732859', '553aefad-3fc5-4f08-bc82-d3d0dbaf0ea7');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('313a8b59-7ad2-41a6-9a5c-85aa75e0c0ab', '553aefad-3fc5-4f08-bc82-d3d0dbaf0ea7');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e2097106-20fd-403e-8dc2-74629b07a50e', '553aefad-3fc5-4f08-bc82-d3d0dbaf0ea7');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e14ae53a-2275-490f-b5d5-0d61254e5cc7', '553aefad-3fc5-4f08-bc82-d3d0dbaf0ea7');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('ce06e03e-ed4c-4be5-abd9-29dcc464bd9d', '553aefad-3fc5-4f08-bc82-d3d0dbaf0ea7');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('1a0cf482-7269-4744-b232-b7019028529f', '553aefad-3fc5-4f08-bc82-d3d0dbaf0ea7');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('22c16b62-d023-49af-949a-95006bf44609', '553aefad-3fc5-4f08-bc82-d3d0dbaf0ea7');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7b0f0987-4461-4d00-9bda-7210d8a08f80', '553aefad-3fc5-4f08-bc82-d3d0dbaf0ea7');
+
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('2f2f49f0-eed7-45ac-9660-ed198296955d', 'aeeb8829-0298-47ea-b3f1-c3c30cb297f2');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('bc7d61ca-bd6a-423e-806f-b0d82a0b7a6f', 'aeeb8829-0298-47ea-b3f1-c3c30cb297f2');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('ae990b17-a7f7-4fb8-835e-d740c0732859', 'aeeb8829-0298-47ea-b3f1-c3c30cb297f2');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('313a8b59-7ad2-41a6-9a5c-85aa75e0c0ab', 'aeeb8829-0298-47ea-b3f1-c3c30cb297f2');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e2097106-20fd-403e-8dc2-74629b07a50e', 'aeeb8829-0298-47ea-b3f1-c3c30cb297f2');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('e14ae53a-2275-490f-b5d5-0d61254e5cc7', 'aeeb8829-0298-47ea-b3f1-c3c30cb297f2');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('ce06e03e-ed4c-4be5-abd9-29dcc464bd9d', 'aeeb8829-0298-47ea-b3f1-c3c30cb297f2');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('1a0cf482-7269-4744-b232-b7019028529f', 'aeeb8829-0298-47ea-b3f1-c3c30cb297f2');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('22c16b62-d023-49af-949a-95006bf44609', 'aeeb8829-0298-47ea-b3f1-c3c30cb297f2');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('7b0f0987-4461-4d00-9bda-7210d8a08f80', 'aeeb8829-0298-47ea-b3f1-c3c30cb297f2');
+
+
+-- Add ENDK T-001 Users + permissions
+INSERT INTO [dbo].[User] ([Id]) VALUES ('b9780ff7-a4d3-49fc-8907-238d61c4c109');
+INSERT INTO [dbo].[User] ([Id]) VALUES ('73f1c512-1fef-430f-8739-1ced554f1e10');
+INSERT INTO [dbo].[User] ([Id]) VALUES ('47f5438c-1e99-4157-b346-52d7ee1c8354');
+INSERT INTO [dbo].[User] ([Id]) VALUES ('c839964d-3d04-42bb-b29b-ba39d795998b');
+INSERT INTO [dbo].[User] ([Id]) VALUES ('a4045e58-546e-4194-8d59-d03d595cb21d');
+
+
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('b9780ff7-a4d3-49fc-8907-238d61c4c109','EF69B130-1EAD-4E58-A926-A2B1154D7E2A');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('73f1c512-1fef-430f-8739-1ced554f1e10','EF69B130-1EAD-4E58-A926-A2B1154D7E2A');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('47f5438c-1e99-4157-b346-52d7ee1c8354','EF69B130-1EAD-4E58-A926-A2B1154D7E2A');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('c839964d-3d04-42bb-b29b-ba39d795998b','EF69B130-1EAD-4E58-A926-A2B1154D7E2A');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('a4045e58-546e-4194-8d59-d03d595cb21d','EF69B130-1EAD-4E58-A926-A2B1154D7E2A');
+
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('b9780ff7-a4d3-49fc-8907-238d61c4c109','5ED12387-2926-4A93-A76C-E779D2B54F4A');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('73f1c512-1fef-430f-8739-1ced554f1e10','5ED12387-2926-4A93-A76C-E779D2B54F4A');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('47f5438c-1e99-4157-b346-52d7ee1c8354','5ED12387-2926-4A93-A76C-E779D2B54F4A');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('c839964d-3d04-42bb-b29b-ba39d795998b','5ED12387-2926-4A93-A76C-E779D2B54F4A');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('a4045e58-546e-4194-8d59-d03d595cb21d','5ED12387-2926-4A93-A76C-E779D2B54F4A');
+
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('b9780ff7-a4d3-49fc-8907-238d61c4c109','E52427C2-204B-4CF2-BEEC-35B95F935619');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('73f1c512-1fef-430f-8739-1ced554f1e10','E52427C2-204B-4CF2-BEEC-35B95F935619');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('47f5438c-1e99-4157-b346-52d7ee1c8354','E52427C2-204B-4CF2-BEEC-35B95F935619');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('c839964d-3d04-42bb-b29b-ba39d795998b','E52427C2-204B-4CF2-BEEC-35B95F935619');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('a4045e58-546e-4194-8d59-d03d595cb21d','E52427C2-204B-4CF2-BEEC-35B95F935619');
+
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('b9780ff7-a4d3-49fc-8907-238d61c4c109','BB71F037-692D-4BCD-9C79-741AD90E33CA');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('73f1c512-1fef-430f-8739-1ced554f1e10','BB71F037-692D-4BCD-9C79-741AD90E33CA');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('47f5438c-1e99-4157-b346-52d7ee1c8354','BB71F037-692D-4BCD-9C79-741AD90E33CA');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('c839964d-3d04-42bb-b29b-ba39d795998b','BB71F037-692D-4BCD-9C79-741AD90E33CA');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('a4045e58-546e-4194-8d59-d03d595cb21d','BB71F037-692D-4BCD-9C79-741AD90E33CA');
+
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('b9780ff7-a4d3-49fc-8907-238d61c4c109','C2059DDF-AD04-4A99-BC98-2C6FDE857025');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('73f1c512-1fef-430f-8739-1ced554f1e10','C2059DDF-AD04-4A99-BC98-2C6FDE857025');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('47f5438c-1e99-4157-b346-52d7ee1c8354','C2059DDF-AD04-4A99-BC98-2C6FDE857025');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('c839964d-3d04-42bb-b29b-ba39d795998b','C2059DDF-AD04-4A99-BC98-2C6FDE857025');
+INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('a4045e58-546e-4194-8d59-d03d595cb21d','C2059DDF-AD04-4A99-BC98-2C6FDE857025');
+
 
 COMMIT TRANSACTION;
