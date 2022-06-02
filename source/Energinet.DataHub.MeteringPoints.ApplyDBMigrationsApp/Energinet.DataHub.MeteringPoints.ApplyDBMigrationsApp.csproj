@@ -108,10 +108,9 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Seed\202204071059 Updates from actor registry.sql" />
     <EmbeddedResource Include="Scripts\Seed\202204221026 Updates from actor registry.sql" />
     <EmbeddedResource Include="Scripts\Seed\202205061340 Updates from actor registry.sql" />
-    <None Remove="Scripts\Seed\202205171504 Updates from actor registry.sql" />
     <EmbeddedResource Include="Scripts\Seed\202205171504 Updates from actor registry.sql" />
-    <None Remove="Scripts\Seed\202205190741 Updates from actor registry.sql" />
     <EmbeddedResource Include="Scripts\Seed\202205190741 Updates from actor registry.sql" />
+    <EmbeddedResource Include="Scripts\Model\202205311000 Updates from actor registry.sql" />
   </ItemGroup>
 
 </Project>
