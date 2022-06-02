@@ -55,7 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertConfirmMessage(DocumentType.ConfirmChangeMasterData);
+            AssertConfirmMessage(DocumentType.ConfirmChangeMasterData, "E32");
             AssertMasterData()
                 .HasStreetName(request.StreetName)
                 .HasPostCode(request.PostCode)

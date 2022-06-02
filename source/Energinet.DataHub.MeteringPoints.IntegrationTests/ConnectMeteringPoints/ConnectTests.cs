@@ -150,8 +150,26 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             AssertPersistedMeteringPoint
                 .Initialize(SampleData.GsrnNumber, GetService<IDbConnectionFactory>())
                 .HasConnectionState(PhysicalState.Connected);
-            AssertConfirmMessage(DocumentType.ConfirmConnectMeteringPoint);
+            AssertConfirmMessage(DocumentType.ConfirmConnectMeteringPoint, "D15");
             Assert.NotNull(FindIntegrationEvent<MeteringPointConnectedIntegrationEvent>());
+        }
+
+        [Fact]
+        public async Task Reject_if_business_rules_are_violated()
+        {
+            await CreateMeteringPointWithoutEnergySupplierAssigned(EnumerationType.FromName<MeteringPointType>(nameof(MeteringPointType.Consumption))).ConfigureAwait(false);
+            await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
+
+            AssertRejectMessage(DocumentType.RejectConnectMeteringPoint, "D15");
+        }
+
+        [Fact]
+        public async Task Confirm_should_contain_correct_business_reason_code()
+        {
+            await CreateMeteringPointWithEnergySupplierAssigned().ConfigureAwait(false);
+            await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
+
+            AssertRejectMessage(DocumentType.ConfirmConnectMeteringPoint, "D15");
         }
 
         [Fact]

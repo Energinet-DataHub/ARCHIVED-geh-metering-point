@@ -54,7 +54,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.DisconnectMeteringPo
                 .Initialize(SampleData.GsrnNumber, GetService<IDbConnectionFactory>())
                 .HasConnectionState(PhysicalState.Disconnected);
 
-            AssertConfirmMessage(DocumentType.ConfirmConnectionStatusMeteringPoint);
+            AssertConfirmMessage(DocumentType.ConfirmConnectionStatusMeteringPoint, "E79");
             Assert.NotNull(FindIntegrationEvent<MeteringPointDisconnectedIntegrationEvent>());
 
             await AssertProcessOverviewAsync(
@@ -63,17 +63,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.DisconnectMeteringPo
                     "RequestUpdateConnectionState",
                     "ConfirmUpdateConnectionState")
                 .ConfigureAwait(false);
-        }
-
-        [Fact]
-        public async Task Cannot_disconnect_if_not_connected()
-        {
-            await CreateMeteringPointWithEnergySupplierAssigned().ConfigureAwait(false);
-
-            await SendCommandAsync(CreateDisconnectMeteringPointRequest()).ConfigureAwait(false);
-
-            AssertValidationError("D16");
-            AssertRejectMessage(DocumentType.RejectConnectionStatusMeteringPoint);
         }
 
         [Fact]
