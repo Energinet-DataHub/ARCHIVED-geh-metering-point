@@ -27,16 +27,13 @@ namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync;
 
 public static class SyncActors
 {
-    //TODO: Change to timer trigger
     [FunctionName("SyncActors")]
-    public static void Run(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req, ILogger log)
+    public static void Run([TimerTrigger("*/15 * * * * *")] TimerInfo someTimer, ILogger log)
     {
         log.LogInformation($"C# Timer trigger function executed at: {DateTime.UtcNow}");
         SyncActorsFromExternalSourceToDb();
     }
 
-    //TODO: Refactor
     private static void SyncActorsFromExternalSourceToDb()
     {
         var now = DateTime.Now;
@@ -61,10 +58,7 @@ public static class SyncActors
                 "INSERT INTO [dbo].[Actor] ([Id],[IdentificationNumber],[IdentificationType],[Roles]) VALUES (@Id,@IdentificationNumber,@IdentificationType, @Roles)",
                 new
                 {
-                    actor.Id,
-                    actor.IdentificationNumber,
-                    IdentificationType = GetType(actor.IdentificationType),
-                    Roles = GetRoles(actor.Roles),
+                    actor.Id, actor.IdentificationNumber, IdentificationType = GetType(actor.IdentificationType), Roles = GetRoles(actor.Roles),
                 },
                 transaction);
         }
@@ -73,18 +67,25 @@ public static class SyncActors
         foreach (var gridArea in gridAreas)
         {
             meteringPointSqlConnection.Execute(
-                    "INSERT INTO [dbo].[GridAreas]([Id],[Code],[Name],[PriceAreaCode],[FullFlexFromDate],[ActorId]) VALUES (@Id, @Code, @Name, @PriceAreaCode, null, @ActorId)",
-                    new { gridArea.Id, gridArea.Code, gridArea.Name, gridArea.PriceAreaCode, gridArea.ActorId },
-                    transaction);
+                "INSERT INTO [dbo].[GridAreas]([Id],[Code],[Name],[PriceAreaCode],[FullFlexFromDate],[ActorId]) VALUES (@Id, @Code, @Name, @PriceAreaCode, null, @ActorId)",
+                new
+                {
+                    gridArea.Id,
+                    gridArea.Code,
+                    gridArea.Name,
+                    gridArea.PriceAreaCode,
+                    gridArea.ActorId,
+                },
+                transaction);
         }
 
         var gridAreaLinks = GetGridAreaLinks(sqlConnection);
         foreach (var gridAreaLink in gridAreaLinks)
         {
             meteringPointSqlConnection.Execute(
-                    "INSERT INTO [dbo].[GridAreaLinks] ([Id],[GridAreaId]) VALUES (@GridLinkId ,@GridAreaId)",
-                    new { gridAreaLink.GridLinkId, gridAreaLink.GridAreaId },
-                    transaction);
+                "INSERT INTO [dbo].[GridAreaLinks] ([Id],[GridAreaId]) VALUES (@GridLinkId ,@GridAreaId)",
+                new { gridAreaLink.GridLinkId, gridAreaLink.GridAreaId },
+                transaction);
         }
 
         foreach (var userActor in userActors)
@@ -103,8 +104,8 @@ public static class SyncActors
         return string.Join(
             ',',
             actorRoles.Split(
-                ',',
-                StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                    ',',
+                    StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
                 .Select(MapRole));
     }
 
