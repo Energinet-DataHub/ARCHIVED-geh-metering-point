@@ -47,7 +47,31 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
             var request = CreateRequest();
             await ReceiveRequest(request).ConfigureAwait(false);
 
-            AssertRejectMessage(DocumentType.RejectCloseDownRequest);
+            AssertRejectMessage(DocumentType.RejectCloseDownRequest, "D14");
+        }
+
+        [Fact]
+        public async Task Confirm_should_contain_correct_business_reason_code()
+        {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+
+            var request = CreateRequest();
+            await ReceiveRequest(request).ConfigureAwait(false);
+
+            await AssertMeteringPointExistsAsync(request.GsrnNumber).ConfigureAwait(false);
+            AssertConfirmMessage(DocumentType.AcceptCloseDownRequest, "D14");
+        }
+
+        [Fact]
+        public async Task Reject_should_contain_correct_business_reason_code()
+        {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+            await CloseDownMeteringPointAsync().ConfigureAwait(false);
+
+            var request = CreateRequest();
+            await ReceiveRequest(request).ConfigureAwait(false);
+
+            AssertRejectMessage(DocumentType.RejectCloseDownRequest, "D14");
         }
 
         [Fact]
@@ -71,7 +95,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
 
             AssertProcess()
                 .HasStatus("RequestWasAccepted");
-            AssertConfirmMessage(DocumentType.AcceptCloseDownRequest);
+            AssertConfirmMessage(DocumentType.AcceptCloseDownRequest, "D14");
         }
 
         [Fact]
@@ -82,7 +106,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
 
             AssertProcess()
                 .HasStatus("RequestWasRejected");
-            AssertRejectMessage(DocumentType.RejectCloseDownRequest);
+            AssertRejectMessage(DocumentType.RejectCloseDownRequest, "D14");
         }
 
         [Fact]
