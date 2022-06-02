@@ -16,87 +16,70 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 using Dapper;
-using Energinet.DataHub.MarketRoles.ActorRegistrySync;
-using Microsoft.AspNetCore.Http;
+using Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 
 namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync;
 
 public static class SyncActors
 {
+    private static IEnumerable<UserActor>? _userActors;
+
     [FunctionName("SyncActors")]
-    public static void Run([TimerTrigger("*/15 * * * * *")] TimerInfo someTimer, ILogger log)
+    public static async Task RunAsync([TimerTrigger("*/15 * * * * *")] TimerInfo someTimer, ILogger log)
     {
         log.LogInformation($"C# Timer trigger function executed at: {DateTime.UtcNow}");
-        SyncActorsFromExternalSourceToDb();
+        await SyncActorsFromExternalSourceToDbAsync().ConfigureAwait(false);
     }
 
-    private static void SyncActorsFromExternalSourceToDb()
+    private static async Task SyncActorsFromExternalSourceToDbAsync()
     {
-        var now = DateTime.Now;
-        var connectionString =
-            "INSERT CS FROM LOCALSETTINGS - THIS IS THE CS FROM SHARED REGISTRY";
-        using var sqlConnection = new SqlConnection(connectionString);
-        var meteringPointConnectionString =
-            "INSERT CS FROM LOCALSETTINGS - THIS IS THE TARGET CS IN MP";
+        var actorRegistryConnectionString = Environment.GetEnvironmentVariable("ACTOR_REGISTRY_DB_CONNECTION_STRING");
+        using var actorRegistrySqlConnection = new SqlConnection(actorRegistryConnectionString);
+        var meteringPointConnectionString = Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING");
         using var meteringPointSqlConnection = new SqlConnection(meteringPointConnectionString);
-        meteringPointSqlConnection.Open();
-        var userActors = GetUserActors(meteringPointSqlConnection);
+        await meteringPointSqlConnection.OpenAsync().ConfigureAwait(false);
+
+        // Extract userActors before deleting tables
+        _userActors = await GetUserActorsAsync(meteringPointSqlConnection).ConfigureAwait(false);
+
         using var transaction = meteringPointSqlConnection.BeginTransaction();
-        meteringPointSqlConnection.Execute("DELETE FROM [dbo].[GridAreaLinks]", transaction: transaction);
-        meteringPointSqlConnection.Execute("DELETE FROM [dbo].[GridAreas]", transaction: transaction);
-        meteringPointSqlConnection.Execute("DELETE FROM [dbo].[UserActor]", transaction: transaction);
-        meteringPointSqlConnection.Execute("DELETE FROM [dbo].[Actor]", transaction: transaction);
-
-        var actors = GetActors(sqlConnection);
-        foreach (var actor in actors)
-        {
-            meteringPointSqlConnection.Execute(
-                "INSERT INTO [dbo].[Actor] ([Id],[IdentificationNumber],[IdentificationType],[Roles]) VALUES (@Id,@IdentificationNumber,@IdentificationType, @Roles)",
-                new
-                {
-                    actor.Id, actor.IdentificationNumber, IdentificationType = GetType(actor.IdentificationType), Roles = GetRoles(actor.Roles),
-                },
-                transaction);
-        }
-
-        var gridAreas = GetGridAreas(sqlConnection);
-        foreach (var gridArea in gridAreas)
-        {
-            meteringPointSqlConnection.Execute(
-                "INSERT INTO [dbo].[GridAreas]([Id],[Code],[Name],[PriceAreaCode],[FullFlexFromDate],[ActorId]) VALUES (@Id, @Code, @Name, @PriceAreaCode, null, @ActorId)",
-                new
-                {
-                    gridArea.Id,
-                    gridArea.Code,
-                    gridArea.Name,
-                    gridArea.PriceAreaCode,
-                    gridArea.ActorId,
-                },
-                transaction);
-        }
-
-        var gridAreaLinks = GetGridAreaLinks(sqlConnection);
-        foreach (var gridAreaLink in gridAreaLinks)
-        {
-            meteringPointSqlConnection.Execute(
-                "INSERT INTO [dbo].[GridAreaLinks] ([Id],[GridAreaId]) VALUES (@GridLinkId ,@GridAreaId)",
-                new { gridAreaLink.GridLinkId, gridAreaLink.GridAreaId },
-                transaction);
-        }
-
-        foreach (var userActor in userActors)
-        {
-            meteringPointSqlConnection.Execute(
-                "INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES (@UserId, @ActorId)",
-                new { userActor.UserId, userActor.ActorId },
-                transaction);
-        }
+        await CleanUpAsync(meteringPointSqlConnection, transaction).ConfigureAwait(false);
+        await SyncActorsAsync(actorRegistrySqlConnection, meteringPointSqlConnection, transaction).ConfigureAwait(false);
+        await SyncGridAreasAsync(actorRegistrySqlConnection, meteringPointSqlConnection, transaction).ConfigureAwait(false);
+        await SyncGridAreaLinksAsync(actorRegistrySqlConnection, meteringPointSqlConnection, transaction).ConfigureAwait(false);
+        await SyncUserActorsAsync(meteringPointSqlConnection, transaction).ConfigureAwait(false);
 
         transaction.Commit();
+    }
+
+    private static async Task SyncUserActorsAsync(SqlConnection meteringPointSqlConnection, SqlTransaction transaction)
+    {
+        if (_userActors != null)
+        {
+            foreach (var userActor in _userActors)
+            {
+                await meteringPointSqlConnection.ExecuteAsync(
+                    "INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES (@UserId, @ActorId)",
+                    new { userActor.UserId, userActor.ActorId },
+                    transaction).ConfigureAwait(false);
+            }
+        }
+    }
+
+    private static async Task CleanUpAsync(SqlConnection meteringPointSqlConnection, SqlTransaction transaction)
+    {
+        await meteringPointSqlConnection.ExecuteAsync("DELETE FROM [dbo].[GridAreaLinks]", transaction: transaction)
+            .ConfigureAwait(false);
+        await meteringPointSqlConnection.ExecuteAsync("DELETE FROM [dbo].[GridAreas]", transaction: transaction)
+            .ConfigureAwait(false);
+        await meteringPointSqlConnection.ExecuteAsync("DELETE FROM [dbo].[UserActor]", transaction: transaction)
+            .ConfigureAwait(false);
+        await meteringPointSqlConnection.ExecuteAsync("DELETE FROM [dbo].[Actor]", transaction: transaction)
+            .ConfigureAwait(false);
     }
 
     private static string GetRoles(string actorRoles)
@@ -123,24 +106,32 @@ public static class SyncActors
         }
     }
 
-    private static IEnumerable<UserActor> GetUserActors(SqlConnection sqlConnection)
+    private static async Task<IEnumerable<UserActor>> GetUserActorsAsync(SqlConnection sqlConnection)
     {
-        return sqlConnection.Query<UserActor>(
+        return await sqlConnection.QueryAsync<UserActor>(
             @"SELECT UserId, ActorId
-                   FROM [dbo].[UserActor]") ?? (IEnumerable<UserActor>)Array.Empty<object>();
+                   FROM [dbo].[UserActor]").ConfigureAwait(false) ?? (IEnumerable<UserActor>)Array.Empty<object>();
     }
 
-    private static IEnumerable<GridAreaLink> GetGridAreaLinks(SqlConnection sqlConnection)
+    private static async Task SyncGridAreaLinksAsync(SqlConnection actorRegistrySqlConnection, SqlConnection meteringPointSqlConnection, SqlTransaction transaction)
     {
-        return sqlConnection.Query<GridAreaLink>(
+        var gridAreaLinks = actorRegistrySqlConnection.Query<GridAreaLink>(
             @"SELECT [GridLinkId]
                        ,[GridAreaId]
                    FROM [dbo].[GridAreaLinkInfo]") ?? (IEnumerable<GridAreaLink>)Array.Empty<object>();
+
+        foreach (var gridAreaLink in gridAreaLinks)
+        {
+            await meteringPointSqlConnection.ExecuteAsync(
+                "INSERT INTO [dbo].[GridAreaLinks] ([Id],[GridAreaId]) VALUES (@GridLinkId ,@GridAreaId)",
+                new { gridAreaLink.GridLinkId, gridAreaLink.GridAreaId },
+                transaction).ConfigureAwait(false);
+        }
     }
 
-    private static IEnumerable<GridArea> GetGridAreas(SqlConnection sqlConnection)
+    private static async Task SyncGridAreasAsync(SqlConnection actorRegistrySqlConnection, SqlConnection meteringPointSqlConnection, SqlTransaction transaction)
     {
-        return sqlConnection.Query<GridArea>(
+        var gridAreas = actorRegistrySqlConnection.Query<GridArea>(
             @"SELECT [Code]
                        ,[Name]
                        ,[Active]
@@ -148,17 +139,43 @@ public static class SyncActors
                        ,[PriceAreaCode]
                        ,[Id]
                   FROM [dbo].[GridArea]") ?? (IEnumerable<GridArea>)Array.Empty<object>();
+
+        foreach (var gridArea in gridAreas)
+        {
+            await meteringPointSqlConnection.ExecuteAsync(
+                "INSERT INTO [dbo].[GridAreas]([Id],[Code],[Name],[PriceAreaCode],[FullFlexFromDate],[ActorId]) VALUES (@Id, @Code, @Name, @PriceAreaCode, null, @ActorId)",
+                new
+                {
+                    gridArea.Id,
+                    gridArea.Code,
+                    gridArea.Name,
+                    gridArea.PriceAreaCode,
+                    gridArea.ActorId,
+                },
+                transaction).ConfigureAwait(false);
+        }
     }
 
-    private static IEnumerable<Actor> GetActors(SqlConnection sqlConnection)
+    private static async Task SyncActorsAsync(SqlConnection actorRegistrySqlConnection, SqlConnection meteringPointSqlConnection, SqlTransaction transaction)
     {
-        return sqlConnection.Query<Actor>(
+        var actors = actorRegistrySqlConnection.Query<Actor>(
             @"SELECT [IdentificationNumber]
                        ,[IdentificationType]
                        ,[Roles]
                        ,[Active]
                        ,[Id]
         FROM [dbo].[Actor]") ?? (IEnumerable<Actor>)Array.Empty<object>();
+
+        foreach (var actor in actors)
+        {
+            await meteringPointSqlConnection.ExecuteAsync(
+                "INSERT INTO [dbo].[Actor] ([Id],[IdentificationNumber],[IdentificationType],[Roles]) VALUES (@Id,@IdentificationNumber,@IdentificationType, @Roles)",
+                new
+                {
+                    actor.Id, actor.IdentificationNumber, IdentificationType = GetType(actor.IdentificationType), Roles = GetRoles(actor.Roles),
+                },
+                transaction).ConfigureAwait(false);
+        }
     }
 
     private static string GetType(int identificationType)

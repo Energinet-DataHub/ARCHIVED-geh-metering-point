@@ -14,6 +14,6 @@
 
 using System;
 
-namespace Energinet.DataHub.MarketRoles.ActorRegistrySync;
+namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
 
-public record GridAreaLink(Guid GridLinkId, Guid GridAreaId);
+public record UserActor(Guid UserId, Guid ActorId);

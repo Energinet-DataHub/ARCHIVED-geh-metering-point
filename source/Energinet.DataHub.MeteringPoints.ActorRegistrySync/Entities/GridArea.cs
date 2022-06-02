@@ -14,10 +14,11 @@
 
 using System;
 
-namespace Energinet.DataHub.MarketRoles.ActorRegistrySync;
-public record Actor(
-    string IdentificationNumber,
-    int IdentificationType,
-    string Roles,
+namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
+public record GridArea(
+    string Code,
+    string Name,
     bool Active,
+    Guid ActorId,
+    string PriceAreaCode,
     Guid Id);
