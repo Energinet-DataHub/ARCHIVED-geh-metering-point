@@ -19,7 +19,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
-using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
 namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync;
@@ -28,7 +28,7 @@ public static class SyncActors
 {
     private static IEnumerable<UserActor>? _userActors;
 
-    [FunctionName("SyncActors")]
+    [Function("SyncActors")]
     public static async Task RunAsync([TimerTrigger("%TIMER_TRIGGER%")] TimerInfo someTimer, ILogger log)
     {
         log.LogInformation($"C# Timer trigger function executed at: {DateTime.UtcNow}");
