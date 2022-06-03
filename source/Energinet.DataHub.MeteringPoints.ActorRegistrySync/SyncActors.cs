@@ -29,7 +29,7 @@ public static class SyncActors
     private static IEnumerable<UserActor>? _userActors;
 
     [FunctionName("SyncActors")]
-    public static async Task RunAsync([TimerTrigger("*/15 * * * * *")] TimerInfo someTimer, ILogger log)
+    public static async Task RunAsync([TimerTrigger("%TIMER_TRIGGER%")] TimerInfo someTimer, ILogger log)
     {
         log.LogInformation($"C# Timer trigger function executed at: {DateTime.UtcNow}");
         await SyncActorsFromExternalSourceToDbAsync().ConfigureAwait(false);

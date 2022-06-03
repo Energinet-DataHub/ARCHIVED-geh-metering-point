@@ -35,6 +35,7 @@ module "func_actor_sync" {
     # Endregion: Default Values
     METERINGPOINT_DB_CONNECTION_STRING    = local.MS_METERING_POINT_CONNECTION_STRING
     ACTOR_REGISTRY_DB_CONNECTION_STRING   = local.ACTOR_REGISTRY_DB_CONNECTION_STRING
+    TIMER_TRIGGER                         = "0 0 * * * *"
   }
 
   tags                                    = azurerm_resource_group.this.tags
