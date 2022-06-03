@@ -14,6 +14,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 [assembly: CLSCompliant(false)]
@@ -25,6 +26,7 @@ namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync
         private static async Task Main(string[] args)
         {
             var host = new HostBuilder()
+                .ConfigureAppConfiguration(configBuilder => configBuilder.AddEnvironmentVariables())
                 .ConfigureFunctionsWorkerDefaults()
                 .Build();
 
