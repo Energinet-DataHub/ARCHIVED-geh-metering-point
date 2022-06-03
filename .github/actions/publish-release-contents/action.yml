@@ -67,4 +67,4 @@ runs:
       uses: actions/download-artifact@v2
       with:
         name: actorsync
-        path: ${{ inputs.RELEASE_FOLDER_PATH }}/actorsync
+        path: ${{ inputs.RELEASE_FOLDER_PATH }}/functions/actorsync
