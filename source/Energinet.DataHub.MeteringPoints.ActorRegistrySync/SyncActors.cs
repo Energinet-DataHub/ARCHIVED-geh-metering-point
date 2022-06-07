@@ -19,42 +19,43 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
+using Energinet.DataHub.MeteringPoints.ActorRegistrySync.Services;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 
 namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync;
 
-public static class SyncActors
+public class SyncActors : IDisposable
 {
     private static IEnumerable<UserActor>? _userActors;
     private static IEnumerable<Actor>? _actors;
 
+    private readonly ActorSyncService _actorSyncService;
+
+    public SyncActors()
+    {
+        _actorSyncService = new ActorSyncService();
+    }
+
     [FunctionName("SyncActors")]
-    public static async Task RunAsync([TimerTrigger("%TIMER_TRIGGER%")] TimerInfo someTimer, ILogger log)
+    public async Task RunAsync([TimerTrigger("%TIMER_TRIGGER%")] TimerInfo someTimer, ILogger log)
     {
         log.LogInformation($"C# Timer trigger function executed at: {DateTime.UtcNow}");
         await SyncActorsFromExternalSourceToDbAsync().ConfigureAwait(false);
     }
 
-    private static async Task SyncActorsFromExternalSourceToDbAsync()
+    public void Dispose()
     {
-        var actorRegistryConnectionString = Environment.GetEnvironmentVariable("ACTOR_REGISTRY_DB_CONNECTION_STRING");
-        using var actorRegistrySqlConnection = new SqlConnection(actorRegistryConnectionString);
-        var meteringPointConnectionString = Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING");
-        using var meteringPointSqlConnection = new SqlConnection(meteringPointConnectionString);
-        await meteringPointSqlConnection.OpenAsync().ConfigureAwait(false);
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 
-        // Extract userActors before deleting tables
-        _userActors = await GetUserActorsAsync(meteringPointSqlConnection).ConfigureAwait(false);
-
-        using var transaction = meteringPointSqlConnection.BeginTransaction();
-        await CleanUpAsync(meteringPointSqlConnection, transaction).ConfigureAwait(false);
-        await SyncActorsAsync(actorRegistrySqlConnection, meteringPointSqlConnection, transaction).ConfigureAwait(false);
-        await SyncGridAreasAsync(actorRegistrySqlConnection, meteringPointSqlConnection, transaction).ConfigureAwait(false);
-        await SyncGridAreaLinksAsync(actorRegistrySqlConnection, meteringPointSqlConnection, transaction).ConfigureAwait(false);
-        await SyncUserActorsAsync(meteringPointSqlConnection, transaction).ConfigureAwait(false);
-
-        transaction.Commit();
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _actorSyncService.Dispose();
+        }
     }
 
     private static async Task SyncUserActorsAsync(SqlConnection meteringPointSqlConnection, SqlTransaction transaction)
@@ -183,5 +184,24 @@ public static class SyncActors
     private static string GetType(int identificationType)
     {
         return identificationType == 1 ? "GLN" : "EIC";
+    }
+
+    private async Task SyncActorsFromExternalSourceToDbAsync()
+    {
+        var meteringPointConnectionString = Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING");
+        using var meteringPointSqlConnection = new SqlConnection(meteringPointConnectionString);
+        await meteringPointSqlConnection.OpenAsync().ConfigureAwait(false);
+
+        // Extract userActors before deleting tables
+        _userActors = await GetUserActorsAsync(meteringPointSqlConnection).ConfigureAwait(false);
+
+        using var transaction = meteringPointSqlConnection.BeginTransaction();
+        await CleanUpAsync(meteringPointSqlConnection, transaction).ConfigureAwait(false);
+        await SyncActorsAsync(_actorRegistryDbService.SqlConnection, _meteringPointDbService.SqlConnection, transaction).ConfigureAwait(false);
+        await SyncGridAreasAsync(_actorRegistryDbService.SqlConnection, _meteringPointDbService.SqlConnection, transaction).ConfigureAwait(false);
+        await SyncGridAreaLinksAsync(_actorRegistryDbService.SqlConnection, _meteringPointDbService.SqlConnection, transaction).ConfigureAwait(false);
+        await SyncUserActorsAsync(meteringPointSqlConnection, transaction).ConfigureAwait(false);
+
+        transaction.Commit();
     }
 }
