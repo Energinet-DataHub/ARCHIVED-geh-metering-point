@@ -55,16 +55,12 @@ public static class GrantUserAccess
         using var meteringPointSqlConnection = new SqlConnection(meteringPointConnectionString);
 
         var actorIds = (await GetActorIdsByGlnNumbersAsync(meteringPointSqlConnection, data.GlnNumbers).ConfigureAwait(false)).ToList();
+        var existingActorIdsForUser = await GetExistingActorIdsAsync(meteringPointSqlConnection, userObjectId, actorIds).ConfigureAwait(false);
+        var remainingActorIds = actorIds.Where(id => !existingActorIdsForUser.Contains(id)).ToList();
 
-        var existingPermissions = await GetExistingActorIdsAsync(meteringPointSqlConnection, userObjectId, actorIds).ConfigureAwait(false);
+        await UpdateUserActorPermissionsAsync(meteringPointSqlConnection, userObjectId, remainingActorIds).ConfigureAwait(false);
 
-        var remainingActorIds = actorIds.Where(id => !existingPermissions.Contains(id)).ToList();
-
-        var userActorParams = remainingActorIds.Select(actorId => new UserActorParam(userObjectId, actorId));
-
-        await UpdateUserActorPermissionsAsync(meteringPointSqlConnection, userActorParams).ConfigureAwait(false);
-
-        return new OkObjectResult($"Hello, {userObjectId}");
+        return new OkObjectResult($"User permissions updated.");
     }
 
     private static async Task<IEnumerable<Guid>> GetExistingActorIdsAsync(SqlConnection sqlConnection, Guid userObjectId, IEnumerable<Guid> actorIds)
@@ -76,10 +72,11 @@ public static class GrantUserAccess
             new { userObjectId, actorIds }).ConfigureAwait(false);
     }
 
-    private static async Task UpdateUserActorPermissionsAsync(IDbConnection sqlConnection, IEnumerable<UserActorParam> userActorParams)
+    private static async Task UpdateUserActorPermissionsAsync(IDbConnection sqlConnection, Guid userId, IEnumerable<Guid> actorIds)
     {
-        var insertQuery = "INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES (@UserId, @ActorId)";
-        await sqlConnection.ExecuteAsync(insertQuery, userActorParams).ConfigureAwait(false);
+        var userActorParams = actorIds.Select(actorId => new UserActorParam(userId, actorId));
+
+        await sqlConnection.ExecuteAsync("INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES (@UserId, @ActorId)", userActorParams).ConfigureAwait(false);
     }
 
     private static async Task<IEnumerable<Guid>> GetActorIdsByGlnNumbersAsync(IDbConnection sqlConnection, IReadOnlyCollection<string> glnNumbers)
