@@ -41,6 +41,29 @@ public class ActorRegistryDbService : IDisposable
                    FROM [dbo].[GridAreaLinkInfo]").ConfigureAwait(false) ?? (IEnumerable<GridAreaLink>)Array.Empty<object>();
     }
 
+    public async Task<IEnumerable<GridArea>> GetGridAreasAsync()
+    {
+        return await _sqlConnection.QueryAsync<GridArea>(
+            @"SELECT [Code]
+                       ,[Name]
+                       ,[Active]
+                       ,[ActorId]
+                       ,[PriceAreaCode]
+                       ,[Id]
+                  FROM [dbo].[GridArea]").ConfigureAwait(false) ?? (IEnumerable<GridArea>)Array.Empty<object>();
+    }
+
+    public async Task<IEnumerable<Actor>> GetActorsAsync()
+    {
+        return await _sqlConnection.QueryAsync<Actor>(
+            @"SELECT [IdentificationNumber]
+                       ,[IdentificationType]
+                       ,[Roles]
+                       ,[Active]
+                       ,[Id]
+        FROM [dbo].[Actor]").ConfigureAwait(false) ?? (IEnumerable<Actor>)Array.Empty<object>();
+    }
+
     public void Dispose()
     {
         Dispose(true);
