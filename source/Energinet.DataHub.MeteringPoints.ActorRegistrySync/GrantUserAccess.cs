@@ -42,7 +42,8 @@ public static class GrantUserAccess
 
         using var streamReader = new StreamReader(req.Body);
         var requestBody = await streamReader.ReadToEndAsync().ConfigureAwait(false);
-        var data = JsonSerializer.Deserialize<UserActorDto>(requestBody);
+        var serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, };
+        var data = JsonSerializer.Deserialize<UserActorDto>(requestBody, serializerOptions);
 
         if (data == null || data.UserObjectId == null || data.GlnNumbers == null)
         {
@@ -58,9 +59,32 @@ public static class GrantUserAccess
         var existingActorIdsForUser = await GetExistingActorIdsAsync(meteringPointSqlConnection, userObjectId, actorIds).ConfigureAwait(false);
         var remainingActorIds = actorIds.Where(id => !existingActorIdsForUser.Contains(id)).ToList();
 
-        await UpdateUserActorPermissionsAsync(meteringPointSqlConnection, userObjectId, remainingActorIds).ConfigureAwait(false);
+        var userCreatedCount = await CreateUserAsync(meteringPointSqlConnection, userObjectId).ConfigureAwait(false);
+        var permissionsCreatedCount = await CreateUserActorPermissionsAsync(meteringPointSqlConnection, userObjectId, remainingActorIds).ConfigureAwait(false);
 
-        return new OkObjectResult($"User permissions updated.");
+        return new OkObjectResult($"User permissions updated. \n" +
+                                  $"Created {userCreatedCount} new user(s).\n" +
+                                  $"Created {permissionsCreatedCount} new permission(s)");
+    }
+
+    private static async Task<int> CreateUserAsync(IDbConnection sqlConnection, Guid userId)
+    {
+        var rowsAffected = await sqlConnection.ExecuteAsync(
+            @"
+            BEGIN
+                IF NOT EXISTS (
+                    SELECT * FROM [dbo].[User]
+                    WHERE Id = @userId
+                )
+                BEGIN
+                    INSERT INTO [dbo].[User] (Id)
+                    VALUES (@userId)
+                END
+            END",
+            new { userId }).ConfigureAwait(false);
+
+        // Return 0 instead of -1 when no rows have been affected
+        return Math.Max(rowsAffected, 0);
     }
 
     private static async Task<IEnumerable<Guid>> GetExistingActorIdsAsync(SqlConnection sqlConnection, Guid userObjectId, IEnumerable<Guid> actorIds)
@@ -72,11 +96,14 @@ public static class GrantUserAccess
             new { userObjectId, actorIds }).ConfigureAwait(false);
     }
 
-    private static async Task UpdateUserActorPermissionsAsync(IDbConnection sqlConnection, Guid userId, IEnumerable<Guid> actorIds)
+    private static async Task<int> CreateUserActorPermissionsAsync(IDbConnection sqlConnection, Guid userId, IEnumerable<Guid> actorIds)
     {
         var userActorParams = actorIds.Select(actorId => new UserActorParam(userId, actorId));
 
-        await sqlConnection.ExecuteAsync("INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES (@UserId, @ActorId)", userActorParams).ConfigureAwait(false);
+        var rowsAffected = await sqlConnection.ExecuteAsync("INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES (@UserId, @ActorId)", userActorParams).ConfigureAwait(false);
+
+        // Return 0 instead of -1 when no rows have been affected
+        return Math.Max(rowsAffected, 0);
     }
 
     private static async Task<IEnumerable<Guid>> GetActorIdsByGlnNumbersAsync(IDbConnection sqlConnection, IReadOnlyCollection<string> glnNumbers)
