@@ -17,5 +17,5 @@ using System.Collections.Generic;
 namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
 
 public record UserActorDto(
-    string UserObjectId,
-    IReadOnlyCollection<string> GlnNumbers);
+    string? UserObjectId,
+    IReadOnlyCollection<string>? GlnNumbers);

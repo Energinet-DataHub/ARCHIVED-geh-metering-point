@@ -18,6 +18,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Dapper;
 using Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
@@ -26,7 +27,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync;
 
@@ -42,11 +42,12 @@ public static class GrantUserAccess
 
         using var streamReader = new StreamReader(req.Body);
         var requestBody = await streamReader.ReadToEndAsync().ConfigureAwait(false);
-        var data = JsonConvert.DeserializeObject<UserActorDto>(requestBody);
+        var serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, };
+        var data = JsonSerializer.Deserialize<UserActorDto>(requestBody, serializerOptions);
 
-        if (data == null)
+        if (data == null || data.UserObjectId == null || data.GlnNumbers == null)
         {
-            return new BadRequestObjectResult("Data missing");
+            return new BadRequestObjectResult("Data invalid or properties missing.");
         }
 
         var userObjectId = new Guid(data.UserObjectId);
@@ -55,16 +56,35 @@ public static class GrantUserAccess
         using var meteringPointSqlConnection = new SqlConnection(meteringPointConnectionString);
 
         var actorIds = (await GetActorIdsByGlnNumbersAsync(meteringPointSqlConnection, data.GlnNumbers).ConfigureAwait(false)).ToList();
+        var existingActorIdsForUser = await GetExistingActorIdsAsync(meteringPointSqlConnection, userObjectId, actorIds).ConfigureAwait(false);
+        var remainingActorIds = actorIds.Where(id => !existingActorIdsForUser.Contains(id)).ToList();
 
-        var existingPermissions = await GetExistingActorIdsAsync(meteringPointSqlConnection, userObjectId, actorIds).ConfigureAwait(false);
+        var userCreatedCount = await CreateUserAsync(meteringPointSqlConnection, userObjectId).ConfigureAwait(false);
+        var permissionsCreatedCount = await CreateUserActorPermissionsAsync(meteringPointSqlConnection, userObjectId, remainingActorIds).ConfigureAwait(false);
 
-        var remainingActorIds = actorIds.Where(id => !existingPermissions.Contains(id)).ToList();
+        return new OkObjectResult($"User permissions updated. \n" +
+                                  $"Created {userCreatedCount} new user(s).\n" +
+                                  $"Created {permissionsCreatedCount} new permission(s)");
+    }
 
-        var userActorParams = remainingActorIds.Select(actorId => new UserActorParam(userObjectId, actorId));
+    private static async Task<int> CreateUserAsync(IDbConnection sqlConnection, Guid userId)
+    {
+        var rowsAffected = await sqlConnection.ExecuteAsync(
+            @"
+            BEGIN
+                IF NOT EXISTS (
+                    SELECT * FROM [dbo].[User]
+                    WHERE Id = @userId
+                )
+                BEGIN
+                    INSERT INTO [dbo].[User] (Id)
+                    VALUES (@userId)
+                END
+            END",
+            new { userId }).ConfigureAwait(false);
 
-        await UpdateUserActorPermissionsAsync(meteringPointSqlConnection, userActorParams).ConfigureAwait(false);
-
-        return new OkObjectResult($"Hello, {userObjectId}");
+        // Return 0 instead of -1 when no rows have been affected
+        return Math.Max(rowsAffected, 0);
     }
 
     private static async Task<IEnumerable<Guid>> GetExistingActorIdsAsync(SqlConnection sqlConnection, Guid userObjectId, IEnumerable<Guid> actorIds)
@@ -76,10 +96,14 @@ public static class GrantUserAccess
             new { userObjectId, actorIds }).ConfigureAwait(false);
     }
 
-    private static async Task UpdateUserActorPermissionsAsync(IDbConnection sqlConnection, IEnumerable<UserActorParam> userActorParams)
+    private static async Task<int> CreateUserActorPermissionsAsync(IDbConnection sqlConnection, Guid userId, IEnumerable<Guid> actorIds)
     {
-        var insertQuery = "INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES (@UserId, @ActorId)";
-        await sqlConnection.ExecuteAsync(insertQuery, userActorParams).ConfigureAwait(false);
+        var userActorParams = actorIds.Select(actorId => new UserActorParam(userId, actorId));
+
+        var rowsAffected = await sqlConnection.ExecuteAsync("INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES (@UserId, @ActorId)", userActorParams).ConfigureAwait(false);
+
+        // Return 0 instead of -1 when no rows have been affected
+        return Math.Max(rowsAffected, 0);
     }
 
     private static async Task<IEnumerable<Guid>> GetActorIdsByGlnNumbersAsync(IDbConnection sqlConnection, IReadOnlyCollection<string> glnNumbers)
