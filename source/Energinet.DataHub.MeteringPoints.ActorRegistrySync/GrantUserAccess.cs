@@ -18,6 +18,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Dapper;
 using Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
@@ -26,7 +27,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync;
 
@@ -42,11 +42,11 @@ public static class GrantUserAccess
 
         using var streamReader = new StreamReader(req.Body);
         var requestBody = await streamReader.ReadToEndAsync().ConfigureAwait(false);
-        var data = JsonConvert.DeserializeObject<UserActorDto>(requestBody);
+        var data = JsonSerializer.Deserialize<UserActorDto>(requestBody);
 
-        if (data == null)
+        if (data == null || data.UserObjectId == null || data.GlnNumbers == null)
         {
-            return new BadRequestObjectResult("Data missing");
+            return new BadRequestObjectResult("Data invalid or properties missing.");
         }
 
         var userObjectId = new Guid(data.UserObjectId);
