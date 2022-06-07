@@ -17,14 +17,10 @@ limitations under the License.
     <PropertyGroup>
       <LangVersion>10.0</LangVersion>
       <AzureFunctionsVersion>v4</AzureFunctionsVersion>
-      <OutputType>Exe</OutputType>
-      <_FunctionsSkipCleanOutput>true</_FunctionsSkipCleanOutput>
       <TargetFramework>net6.0</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Dapper" Version="2.0.123" />
-        <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.6.0" />
-        <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.3.0" />
         <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.0.1" />
         <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
     </ItemGroup>
