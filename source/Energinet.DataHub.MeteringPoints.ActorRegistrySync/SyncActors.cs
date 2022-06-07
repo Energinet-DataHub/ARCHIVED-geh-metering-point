@@ -27,6 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync;
 public static class SyncActors
 {
     private static IEnumerable<UserActor>? _userActors;
+    private static IEnumerable<Actor>? _actors;
 
     [FunctionName("SyncActors")]
     public static async Task RunAsync([TimerTrigger("%TIMER_TRIGGER%")] TimerInfo someTimer, ILogger log)
@@ -58,9 +59,10 @@ public static class SyncActors
 
     private static async Task SyncUserActorsAsync(SqlConnection meteringPointSqlConnection, SqlTransaction transaction)
     {
-        if (_userActors != null)
+        if (_userActors != null && _actors != null)
         {
-            foreach (var userActor in _userActors)
+            var userActorsToInsert = _userActors.Where(u => _actors.Any(actor => u.ActorId == actor.Id));
+            foreach (var userActor in userActorsToInsert)
             {
                 await meteringPointSqlConnection.ExecuteAsync(
                     "INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES (@UserId, @ActorId)",
@@ -158,7 +160,7 @@ public static class SyncActors
 
     private static async Task SyncActorsAsync(SqlConnection actorRegistrySqlConnection, SqlConnection meteringPointSqlConnection, SqlTransaction transaction)
     {
-        var actors = actorRegistrySqlConnection.Query<Actor>(
+        _actors = actorRegistrySqlConnection.Query<Actor>(
             @"SELECT [IdentificationNumber]
                        ,[IdentificationType]
                        ,[Roles]
@@ -166,7 +168,7 @@ public static class SyncActors
                        ,[Id]
         FROM [dbo].[Actor]") ?? (IEnumerable<Actor>)Array.Empty<object>();
 
-        foreach (var actor in actors)
+        foreach (var actor in _actors)
         {
             await meteringPointSqlConnection.ExecuteAsync(
                 "INSERT INTO [dbo].[Actor] ([Id],[IdentificationNumber],[IdentificationType],[Roles]) VALUES (@Id,@IdentificationNumber,@IdentificationType, @Roles)",
