@@ -13,12 +13,7 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
-using Dapper;
-using Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
 using Energinet.DataHub.MeteringPoints.ActorRegistrySync.Services;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
