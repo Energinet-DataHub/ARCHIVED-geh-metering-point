@@ -126,6 +126,53 @@ public class MeteringPointDbService : IDisposable
         }
     }
 
+    public async Task<int> CreateUserAsync(Guid userId)
+    {
+        var rowsAffected = await _sqlConnection.ExecuteAsync(
+            @"
+            BEGIN
+                IF NOT EXISTS (
+                    SELECT * FROM [dbo].[User]
+                    WHERE Id = @userId
+                )
+                BEGIN
+                    INSERT INTO [dbo].[User] (Id)
+                    VALUES (@userId)
+                END
+            END",
+            new { userId }).ConfigureAwait(false);
+
+        // Return 0 instead of -1 when no rows have been affected
+        return Math.Max(rowsAffected, 0);
+    }
+
+    public async Task<IEnumerable<Guid>> GetExistingActorIdsAsync(Guid userObjectId, IEnumerable<Guid> actorIds)
+    {
+        return await _sqlConnection.QueryAsync<Guid>(
+            @"SELECT ActorId FROM [dbo].[UserActor]
+               WHERE UserId = @userObjectId
+               AND ActorId IN @actorIds",
+            new { userObjectId, actorIds }).ConfigureAwait(false);
+    }
+
+    public async Task<int> CreateUserActorPermissionsAsync(Guid userId, IEnumerable<Guid> actorIds)
+    {
+        var userActorParams = actorIds.Select(actorId => new UserActorParam(userId, actorId));
+
+        var rowsAffected = await _sqlConnection.ExecuteAsync("INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES (@UserId, @ActorId)", userActorParams).ConfigureAwait(false);
+
+        // Return 0 instead of -1 when no rows have been affected
+        return Math.Max(rowsAffected, 0);
+    }
+
+    public async Task<IEnumerable<Guid>> GetActorIdsByGlnNumbersAsync(IReadOnlyCollection<string> glnNumbers)
+    {
+        return await _sqlConnection.QueryAsync<Guid>(
+            @"SELECT Id
+                   FROM [dbo].[Actor] WHERE Actor.IdentificationNumber IN @glnNumbers",
+            new { glnNumbers }).ConfigureAwait(false);
+    }
+
     public async Task CommitTransactionAsync()
     {
         if (_transaction != null)
@@ -190,3 +237,5 @@ public class MeteringPointDbService : IDisposable
         _transaction = await _sqlConnection.BeginTransactionAsync().ConfigureAwait(false);
     }
 }
+
+internal record UserActorParam(Guid UserId, Guid ActorId);
