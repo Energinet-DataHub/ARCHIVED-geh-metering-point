@@ -13,8 +13,11 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
 using Energinet.DataHub.MeteringPoints.ActorRegistrySync.Services;
@@ -45,29 +48,28 @@ public class GrantUserAccess : IDisposable
 
         using var streamReader = new StreamReader(req.Body);
         var requestBody = await streamReader.ReadToEndAsync().ConfigureAwait(false);
-        var serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, };
-        var data = JsonSerializer.Deserialize<UserActorDto>(requestBody, serializerOptions);
+        var serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, DefaultIgnoreCondition = JsonIgnoreCondition.Never };
 
-        if (data == null || data.UserObjectId == null || data.GlnNumbers == null)
+        List<UserActorDto>? data;
+        try
+        {
+            data = JsonSerializer.Deserialize<List<UserActorDto>>(requestBody, serializerOptions);
+        }
+        catch (JsonException e)
+        {
+            return new BadRequestObjectResult("Data invalid or properties missing: " + e.Message);
+        }
+
+        if (data == null)
         {
             return new BadRequestObjectResult("Data invalid or properties missing.");
         }
 
-        Guid userObjectId;
-        try
-        {
-            userObjectId = new Guid(data.UserObjectId);
-        }
-        catch (Exception e) when (e is FormatException or OverflowException)
-        {
-            return new BadRequestObjectResult("User ID is invalid: \n" + e.Message);
-        }
-
-        var userCreatedCount = await _accessService.CreateUserActorPermissionAsync(userObjectId, data.GlnNumbers).ConfigureAwait(false);
+        var totalCreatedResponse = await _accessService.GrantUserActorPermissionAsync(data).ConfigureAwait(false);
 
         return new OkObjectResult("User permissions updated. \n" +
-                                  $"Created {userCreatedCount.UserCount} new user(s).\n" +
-                                  $"Created {userCreatedCount.PermissionCount} new permission(s)");
+                                  $"Created {totalCreatedResponse.UserCount} new user(s).\n" +
+                                  $"Created {totalCreatedResponse.PermissionCount} new permission(s)");
     }
 
     public void Dispose()

@@ -126,8 +126,9 @@ public class MeteringPointDbService : IDisposable
         }
     }
 
-    public async Task<int> CreateUserAsync(Guid userId)
+    public async Task<int> CreateUsersAsync(IReadOnlyCollection<Guid> userIds)
     {
+        if (_transaction == null) await BeginTransactionAsync().ConfigureAwait(false);
         var rowsAffected = await _sqlConnection.ExecuteAsync(
             @"
             BEGIN
@@ -137,10 +138,11 @@ public class MeteringPointDbService : IDisposable
                 )
                 BEGIN
                     INSERT INTO [dbo].[User] (Id)
-                    VALUES (@userId)
+                    VALUES (@userIds)
                 END
             END",
-            new { userId }).ConfigureAwait(false);
+            new { userIds = userIds },
+            _transaction).ConfigureAwait(false);
 
         // Return 0 instead of -1 when no rows have been affected
         return Math.Max(rowsAffected, 0);
@@ -159,17 +161,22 @@ public class MeteringPointDbService : IDisposable
     {
         var userActorParams = actorIds.Select(actorId => new UserActorParam(userId, actorId));
 
-        var rowsAffected = await _sqlConnection.ExecuteAsync("INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES (@UserId, @ActorId)", userActorParams).ConfigureAwait(false);
+        if (_transaction == null) await BeginTransactionAsync().ConfigureAwait(false);
+        var rowsAffected = await _sqlConnection.ExecuteAsync(
+            "INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES (@UserId, @ActorId)",
+            userActorParams,
+            _transaction).ConfigureAwait(false);
 
         // Return 0 instead of -1 when no rows have been affected
         return Math.Max(rowsAffected, 0);
     }
 
-    public async Task<IEnumerable<Guid>> GetActorIdsByGlnNumbersAsync(IReadOnlyCollection<string> glnNumbers)
+    public async Task<IEnumerable<Actor>> GetActorIdsByGlnNumbersAsync(IReadOnlyCollection<string> glnNumbers)
     {
-        return await _sqlConnection.QueryAsync<Guid>(
-            @"SELECT Id
-                   FROM [dbo].[Actor] WHERE Actor.IdentificationNumber IN @glnNumbers",
+        return await _sqlConnection.QueryAsync<Actor>(
+            @"SELECT 'IdentificationNumber','IdentificationType','Roles','Active','Id'
+                    FROM [dbo].[Actor]
+                    WHERE Actor.IdentificationNumber IN @glnNumbers",
             new { glnNumbers }).ConfigureAwait(false);
     }
 
