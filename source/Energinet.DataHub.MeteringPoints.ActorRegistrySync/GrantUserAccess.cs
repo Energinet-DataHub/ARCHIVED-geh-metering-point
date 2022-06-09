@@ -15,9 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
 using Energinet.DataHub.MeteringPoints.ActorRegistrySync.Services;
@@ -26,6 +23,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync;
 
@@ -48,12 +46,12 @@ public class GrantUserAccess : IDisposable
 
         using var streamReader = new StreamReader(req.Body);
         var requestBody = await streamReader.ReadToEndAsync().ConfigureAwait(false);
-        var serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, DefaultIgnoreCondition = JsonIgnoreCondition.Never };
+        var serializerSettings = new JsonSerializerSettings { MissingMemberHandling = MissingMemberHandling.Error };
 
         List<UserActorDto>? data;
         try
         {
-            data = JsonSerializer.Deserialize<List<UserActorDto>>(requestBody, serializerOptions);
+            data = JsonConvert.DeserializeObject<List<UserActorDto>>(requestBody, serializerSettings);
         }
         catch (JsonException e)
         {
