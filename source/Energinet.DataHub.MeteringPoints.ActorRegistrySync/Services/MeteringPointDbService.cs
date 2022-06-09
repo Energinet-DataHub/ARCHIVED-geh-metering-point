@@ -75,7 +75,7 @@ public class MeteringPointDbService : IDisposable
             transaction: _transaction).ConfigureAwait(false);
     }
 
-    public async Task InsertActorsAsync(IEnumerable<Actor> actors)
+    public async Task InsertActorsAsync(IEnumerable<ActorRegistryActor> actors)
     {
         if (actors == null) throw new ArgumentNullException(nameof(actors));
 
@@ -132,55 +132,42 @@ public class MeteringPointDbService : IDisposable
         }
     }
 
-    public async Task<int> CreateUsersAsync(IReadOnlyCollection<Guid> userIds)
+    public async Task<int> InsertUsersAsync(IReadOnlyCollection<Guid> userIds)
     {
+        var idsToInsert = userIds.Select(userId => new { Id = userId });
         if (_transaction == null) await BeginTransactionAsync().ConfigureAwait(false);
         var rowsAffected = await _sqlConnection.ExecuteAsync(
             @"
             BEGIN
                 IF NOT EXISTS (
-                    SELECT * FROM [dbo].[User]
-                    WHERE Id = @userId
+                    SELECT Id FROM [dbo].[User]
+                    WHERE Id IN @userIds
                 )
                 BEGIN
                     INSERT INTO [dbo].[User] (Id)
-                    VALUES (@userIds)
+                    VALUES @idsToInsert
                 END
             END",
-            new { userIds = userIds },
+            new { userIds, idsToInsert },
             _transaction).ConfigureAwait(false);
 
         // Return 0 instead of -1 when no rows have been affected
         return Math.Max(rowsAffected, 0);
     }
 
-    public async Task<IEnumerable<Guid>> GetExistingActorIdsAsync(Guid userObjectId, IEnumerable<Guid> actorIds)
+    public async Task<IEnumerable<UserActor>> GetUserActorsByUserIdsAsync(IReadOnlyCollection<Guid> userIds)
     {
-        return await _sqlConnection.QueryAsync<Guid>(
-            @"SELECT ActorId FROM [dbo].[UserActor]
-               WHERE UserId = @userObjectId
-               AND ActorId IN @actorIds",
-            new { userObjectId, actorIds }).ConfigureAwait(false);
+        return await _sqlConnection.QueryAsync<UserActor>(
+            @"SELECT UserId, ActorId
+                FROM [dbo].[UserActor]
+                WHERE UserId in @userIds",
+            new { userIds }).ConfigureAwait(false);
     }
 
-    public async Task<int> CreateUserActorPermissionsAsync(Guid userId, IEnumerable<Guid> actorIds)
+    public async Task<IEnumerable<MeteringPointActor>> GetActorIdsByGlnNumbersAsync(IReadOnlyCollection<string> glnNumbers)
     {
-        var userActorParams = actorIds.Select(actorId => new UserActorParam(userId, actorId));
-
-        if (_transaction == null) await BeginTransactionAsync().ConfigureAwait(false);
-        var rowsAffected = await _sqlConnection.ExecuteAsync(
-            "INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES (@UserId, @ActorId)",
-            userActorParams,
-            _transaction).ConfigureAwait(false);
-
-        // Return 0 instead of -1 when no rows have been affected
-        return Math.Max(rowsAffected, 0);
-    }
-
-    public async Task<IEnumerable<Actor>> GetActorIdsByGlnNumbersAsync(IReadOnlyCollection<string> glnNumbers)
-    {
-        return await _sqlConnection.QueryAsync<Actor>(
-            @"SELECT 'IdentificationNumber','IdentificationType','Roles','Active','Id'
+        return await _sqlConnection.QueryAsync<MeteringPointActor>(
+            @"SELECT IdentificationNumber, IdentificationType, Roles, Id
                     FROM [dbo].[Actor]
                     WHERE Actor.IdentificationNumber IN @glnNumbers",
             new { glnNumbers }).ConfigureAwait(false);
