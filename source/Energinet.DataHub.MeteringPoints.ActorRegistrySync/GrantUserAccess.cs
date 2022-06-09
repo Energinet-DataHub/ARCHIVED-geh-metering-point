@@ -13,15 +13,11 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Dapper;
 using Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
+using Energinet.DataHub.MeteringPoints.ActorRegistrySync.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -30,10 +26,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync;
 
-public static class GrantUserAccess
+public class GrantUserAccess : IDisposable
 {
+    private readonly AccessService _accessService;
+
+    public GrantUserAccess()
+    {
+        _accessService = AccessService.Create();
+    }
+
     [FunctionName("GrantUserAccess")]
-    public static async Task<IActionResult> RunAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req, ILogger log)
+    public async Task<IActionResult> RunAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req, ILogger log)
     {
         if (req == null) throw new ArgumentNullException(nameof(req));
         if (log == null) throw new ArgumentNullException(nameof(log));
@@ -50,69 +53,34 @@ public static class GrantUserAccess
             return new BadRequestObjectResult("Data invalid or properties missing.");
         }
 
-        var userObjectId = new Guid(data.UserObjectId);
+        Guid userObjectId;
+        try
+        {
+            userObjectId = new Guid(data.UserObjectId);
+        }
+        catch (Exception e) when (e is FormatException or OverflowException)
+        {
+            return new BadRequestObjectResult("User ID is invalid: \n" + e.Message);
+        }
 
-        var meteringPointConnectionString = Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING");
-        using var meteringPointSqlConnection = new SqlConnection(meteringPointConnectionString);
+        var userCreatedCount = await _accessService.CreateUserActorPermissionAsync(userObjectId, data.GlnNumbers).ConfigureAwait(false);
 
-        var actorIds = (await GetActorIdsByGlnNumbersAsync(meteringPointSqlConnection, data.GlnNumbers).ConfigureAwait(false)).ToList();
-        var existingActorIdsForUser = await GetExistingActorIdsAsync(meteringPointSqlConnection, userObjectId, actorIds).ConfigureAwait(false);
-        var remainingActorIds = actorIds.Where(id => !existingActorIdsForUser.Contains(id)).ToList();
-
-        var userCreatedCount = await CreateUserAsync(meteringPointSqlConnection, userObjectId).ConfigureAwait(false);
-        var permissionsCreatedCount = await CreateUserActorPermissionsAsync(meteringPointSqlConnection, userObjectId, remainingActorIds).ConfigureAwait(false);
-
-        return new OkObjectResult($"User permissions updated. \n" +
-                                  $"Created {userCreatedCount} new user(s).\n" +
-                                  $"Created {permissionsCreatedCount} new permission(s)");
+        return new OkObjectResult("User permissions updated. \n" +
+                                  $"Created {userCreatedCount.UserCount} new user(s).\n" +
+                                  $"Created {userCreatedCount.PermissionCount} new permission(s)");
     }
 
-    private static async Task<int> CreateUserAsync(IDbConnection sqlConnection, Guid userId)
+    public void Dispose()
     {
-        var rowsAffected = await sqlConnection.ExecuteAsync(
-            @"
-            BEGIN
-                IF NOT EXISTS (
-                    SELECT * FROM [dbo].[User]
-                    WHERE Id = @userId
-                )
-                BEGIN
-                    INSERT INTO [dbo].[User] (Id)
-                    VALUES (@userId)
-                END
-            END",
-            new { userId }).ConfigureAwait(false);
-
-        // Return 0 instead of -1 when no rows have been affected
-        return Math.Max(rowsAffected, 0);
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 
-    private static async Task<IEnumerable<Guid>> GetExistingActorIdsAsync(SqlConnection sqlConnection, Guid userObjectId, IEnumerable<Guid> actorIds)
+    protected virtual void Dispose(bool disposing)
     {
-        return await sqlConnection.QueryAsync<Guid>(
-            @"SELECT ActorId FROM [dbo].[UserActor]
-               WHERE UserId = @userObjectId
-               AND ActorId IN @actorIds",
-            new { userObjectId, actorIds }).ConfigureAwait(false);
-    }
-
-    private static async Task<int> CreateUserActorPermissionsAsync(IDbConnection sqlConnection, Guid userId, IEnumerable<Guid> actorIds)
-    {
-        var userActorParams = actorIds.Select(actorId => new UserActorParam(userId, actorId));
-
-        var rowsAffected = await sqlConnection.ExecuteAsync("INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES (@UserId, @ActorId)", userActorParams).ConfigureAwait(false);
-
-        // Return 0 instead of -1 when no rows have been affected
-        return Math.Max(rowsAffected, 0);
-    }
-
-    private static async Task<IEnumerable<Guid>> GetActorIdsByGlnNumbersAsync(IDbConnection sqlConnection, IReadOnlyCollection<string> glnNumbers)
-    {
-        return await sqlConnection.QueryAsync<Guid>(
-            @"SELECT Id
-                   FROM [dbo].[Actor] WHERE Actor.IdentificationNumber IN @glnNumbers",
-            new { glnNumbers }).ConfigureAwait(false);
+        if (disposing)
+        {
+            _accessService.Dispose();
+        }
     }
 }
-
-internal record UserActorParam(Guid UserId, Guid ActorId);
