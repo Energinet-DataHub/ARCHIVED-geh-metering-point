@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
@@ -62,13 +63,16 @@ public class MeteringPointDbService : IDisposable
 
         if (_transaction == null) await BeginTransactionAsync().ConfigureAwait(false);
 
+        var stringBuilder = new StringBuilder();
         foreach (var gridAreaLink in gridAreaLinks)
         {
-            await _sqlConnection.ExecuteAsync(
-                "INSERT INTO [dbo].[GridAreaLinks] ([Id],[GridAreaId]) VALUES (@GridLinkId ,@GridAreaId)",
-                new { gridAreaLink.GridLinkId, gridAreaLink.GridAreaId },
-                _transaction).ConfigureAwait(false);
+            stringBuilder.Append("INSERT INTO [dbo].[GridAreaLinks] ([Id],[GridAreaId]) VALUES ('" + gridAreaLink.GridLinkId + "', '" + gridAreaLink.GridAreaId + "')");
+            stringBuilder.AppendLine();
         }
+
+        await _sqlConnection.ExecuteAsync(
+            stringBuilder.ToString(),
+            transaction: _transaction).ConfigureAwait(false);
     }
 
     public async Task InsertActorsAsync(IEnumerable<Actor> actors)
@@ -77,16 +81,17 @@ public class MeteringPointDbService : IDisposable
 
         if (_transaction == null) await BeginTransactionAsync().ConfigureAwait(false);
 
+        var stringBuilder = new StringBuilder();
         foreach (var actor in actors)
         {
-            await _sqlConnection.ExecuteAsync(
-                "INSERT INTO [dbo].[Actor] ([Id],[IdentificationNumber],[IdentificationType],[Roles]) VALUES (@Id,@IdentificationNumber,@IdentificationType, @Roles)",
-                new
-                {
-                    actor.Id, actor.IdentificationNumber, IdentificationType = GetType(actor.IdentificationType), Roles = GetRoles(actor.Roles),
-                },
-                _transaction).ConfigureAwait(false);
+            stringBuilder.Append(@"INSERT INTO [dbo].[Actor] ([Id],[IdentificationNumber],[IdentificationType],[Roles])
+             VALUES ('" + actor.Id + "', '" + actor.IdentificationNumber + "', '" + GetType(actor.IdentificationType) + "', '" + GetRoles(actor.Roles) + "')");
+            stringBuilder.AppendLine();
         }
+
+        await _sqlConnection.ExecuteAsync(
+            stringBuilder.ToString(),
+            transaction: _transaction).ConfigureAwait(false);
     }
 
     public async Task InsertGridAreasAsync(IEnumerable<GridArea> gridAreas)
@@ -95,20 +100,18 @@ public class MeteringPointDbService : IDisposable
 
         if (_transaction == null) await BeginTransactionAsync().ConfigureAwait(false);
 
+        var stringBuilder = new StringBuilder();
         foreach (var gridArea in gridAreas)
         {
-            await _sqlConnection.ExecuteAsync(
-                "INSERT INTO [dbo].[GridAreas]([Id],[Code],[Name],[PriceAreaCode],[FullFlexFromDate],[ActorId]) VALUES (@Id, @Code, @Name, @PriceAreaCode, null, @ActorId)",
-                new
-                {
-                    gridArea.Id,
-                    gridArea.Code,
-                    gridArea.Name,
-                    gridArea.PriceAreaCode,
-                    gridArea.ActorId,
-                },
-                _transaction).ConfigureAwait(false);
+            stringBuilder.Append(
+                @"INSERT INTO [dbo].[GridAreas]([Id],[Code],[Name],[PriceAreaCode],[FullFlexFromDate],[ActorId])
+                  VALUES ('" + gridArea.Id + "', '" + gridArea.Code + "', '" + gridArea.Name + "', '" + gridArea.PriceAreaCode + "', null , '" + gridArea.ActorId + "')");
+            stringBuilder.AppendLine();
         }
+
+        await _sqlConnection.ExecuteAsync(
+            stringBuilder.ToString(),
+            transaction: _transaction).ConfigureAwait(false);
     }
 
     public async Task InsertUserActorsAsync(IEnumerable<UserActor> userActors)
@@ -116,13 +119,16 @@ public class MeteringPointDbService : IDisposable
         if (userActors == null) throw new ArgumentNullException(nameof(userActors));
         {
             if (_transaction == null) await BeginTransactionAsync().ConfigureAwait(false);
+            var stringBuilder = new StringBuilder();
             foreach (var userActor in userActors)
             {
-                await _sqlConnection.ExecuteAsync(
-                    "INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES (@UserId, @ActorId)",
-                    new { userActor.UserId, userActor.ActorId },
-                    _transaction).ConfigureAwait(false);
+                stringBuilder.Append(@"INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('" + userActor.UserId + "', '" + userActor.ActorId + "')");
+                stringBuilder.AppendLine();
             }
+
+            await _sqlConnection.ExecuteAsync(
+                stringBuilder.ToString(),
+                transaction: _transaction).ConfigureAwait(false);
         }
     }
 

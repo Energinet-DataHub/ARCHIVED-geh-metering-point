@@ -39,7 +39,7 @@ public class GrantUserAccess : IDisposable
     }
 
     [FunctionName("GrantUserAccess")]
-    public async Task<IActionResult> RunAsync([HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req, ILogger log)
+    public async Task<IActionResult> RunAsync([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req, ILogger log)
     {
         if (req == null) throw new ArgumentNullException(nameof(req));
         if (log == null) throw new ArgumentNullException(nameof(log));
