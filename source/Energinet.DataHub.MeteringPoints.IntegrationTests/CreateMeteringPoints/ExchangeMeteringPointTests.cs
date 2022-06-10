@@ -41,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(request).ConfigureAwait(false);
 
             await AssertMeteringPointExistsAsync(request.GsrnNumber).ConfigureAwait(false);
-            AssertConfirmMessage(DocumentType.ConfirmCreateMeteringPoint);
+            AssertConfirmMessage(DocumentType.ConfirmCreateMeteringPoint, "E02");
             var integrationEvent = FindIntegrationEvent<ExchangeMeteringPointCreatedIntegrationEvent>();
             Assert.NotNull(integrationEvent);
             Assert.Equal(request.GsrnNumber, integrationEvent?.GsrnNumber);

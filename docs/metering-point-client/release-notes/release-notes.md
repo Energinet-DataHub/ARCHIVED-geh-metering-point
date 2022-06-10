@@ -1,5 +1,9 @@
 # MeteringPoints.Client Release notes
 
+## Version 3.0.1
+
+Added D98 (NoTechnology) AssetType value
+
 ## Version 3.0.0
 
 .NET 6 and Azure Function v4 upgrades

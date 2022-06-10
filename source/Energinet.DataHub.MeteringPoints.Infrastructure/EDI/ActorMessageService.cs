@@ -89,7 +89,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
             if (_actorContext.CurrentActor is null)
                 throw new InvalidOperationException("Can't create message when current actor is not set (null)");
 
-            var message = RejectMessageFactory.ConnectMeteringPoint(
+            var message = RejectMessageFactory.CreateMeteringPoint(
                 sender: Map(_actorContext.DataHub, Role.MeteringPointAdministrator),
                 receiver: Map(_actorContext.CurrentActor, Role.GridAccessProvider),
                 createdDateTime: _dateTimeProvider.Now(),
@@ -107,7 +107,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
             if (_actorContext.CurrentActor is null)
                 throw new InvalidOperationException("Can't create message when current actor is not set (null)");
 
-            var message = ConfirmMessageFactory.CreateMeteringPoint(
+            var message = ConfirmMessageFactory.UpdateMeteringPoint(
                 sender: Map(_actorContext.DataHub, Role.MeteringPointAdministrator),
                 receiver: Map(_actorContext.CurrentActor, Role.GridAccessProvider),
                 createdDateTime: _dateTimeProvider.Now(),
@@ -124,7 +124,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
             if (_actorContext.CurrentActor is null)
                 throw new InvalidOperationException("Can't create message when current actor is not set (null)");
 
-            var message = RejectMessageFactory.ConnectMeteringPoint(
+            var message = RejectMessageFactory.UpdateMeteringPoint(
                 sender: Map(_actorContext.DataHub, Role.MeteringPointAdministrator),
                 receiver: Map(_actorContext.CurrentActor, Role.GridAccessProvider),
                 createdDateTime: _dateTimeProvider.Now(),

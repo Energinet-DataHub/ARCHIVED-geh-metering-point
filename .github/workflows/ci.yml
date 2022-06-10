@@ -43,7 +43,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/terraform-validate.yml@6.0.0
     with:
       TERRAFORM_WORKING_DIR_PATH: './build/infrastructure/main'
-      TERRAFORM_VERSION: '1.0.10'
+      TERRAFORM_VERSION: '1.1.5'
 
   ingestion_ci:
     needs: [ci_base, terraform_validate, dotnet_solution_ci]
@@ -93,6 +93,14 @@ jobs:
       DOTNET_VERSION: '6.0.201'
       ARTIFACT_NAME: databasemigration
 
+  actorsync_ci:
+    needs: [ci_base, dotnet_solution_ci, terraform_validate]
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@6.1.0
+    with:
+      CSPROJ_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.ActorRegistrySync/Energinet.DataHub.MeteringPoints.ActorRegistrySync.csproj'
+      DOTNET_VERSION: '6.0.201'
+      ARTIFACT_NAME: actorsync  
+
   create_prerelease:
     needs: [
       ingestion_ci,
@@ -100,7 +108,8 @@ jobs:
       processing_ci,
       webapi_ci,
       localmessagehub_ci,
-      database_migration_ci
+      database_migration_ci,
+      actorsync_ci
     ]
     uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@6.0.0
     with:

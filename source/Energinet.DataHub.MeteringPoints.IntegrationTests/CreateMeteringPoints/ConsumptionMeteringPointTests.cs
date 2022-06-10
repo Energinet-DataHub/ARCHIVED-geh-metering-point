@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
-using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
@@ -41,7 +41,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(request).ConfigureAwait(false);
 
             await AssertMeteringPointExistsAsync(request.GsrnNumber).ConfigureAwait(false);
-            AssertConfirmMessage(DocumentType.ConfirmCreateMeteringPoint);
             var integrationEvent = FindIntegrationEvent<ConsumptionMeteringPointCreatedIntegrationEvent>();
             Assert.NotNull(integrationEvent);
             Assert.Equal(request.GsrnNumber, integrationEvent?.GsrnNumber);
@@ -50,6 +49,28 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             Assert.Equal(request.MeteringGridArea, integrationEvent?.GridAreaCode);
             Assert.Equal(request.MeterReadingOccurrence, integrationEvent?.MeterReadingPeriodicity);
             Assert.Equal(request.NetSettlementGroup, integrationEvent?.NetSettlementGroup);
+        }
+
+        [Fact]
+        public async Task Confirm_should_contain_correct_business_reason_code()
+        {
+            var request = CreateCommand();
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            await AssertMeteringPointExistsAsync(request.GsrnNumber).ConfigureAwait(false);
+            AssertConfirmMessage(DocumentType.ConfirmCreateMeteringPoint, "E02");
+        }
+
+        [Fact]
+        public async Task Reject_should_contain_correct_business_reason_code()
+        {
+            var request = CreateCommand()
+                with
+                {
+                   NetSettlementGroup = string.Empty,
+                };
+            await SendCommandAsync(request).ConfigureAwait(false);
+            AssertRejectMessage(DocumentType.RejectCreateMeteringPoint, "E02");
         }
 
         [Fact]

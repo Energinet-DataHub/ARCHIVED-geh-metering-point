@@ -92,7 +92,18 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ReconnectMeteringPoi
             await SendCommandAsync(CreateReconnectMeteringPointRequest()).ConfigureAwait(false);
 
             AssertValidationError("D16");
-            AssertRejectMessage(DocumentType.RejectConnectionStatusMeteringPoint);
+            AssertRejectMessage(DocumentType.RejectConnectionStatusMeteringPoint, "E79");
+        }
+
+        [Fact]
+        public async Task Confirm_should_contain_correct_business_reason_code()
+        {
+            await CreateMeteringPointWithEnergySupplierAssigned().ConfigureAwait(false);
+            await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
+            await SendCommandAsync(CreateDisconnectMeteringPointRequest()).ConfigureAwait(false);
+            await SendCommandAsync(CreateReconnectMeteringPointRequest()).ConfigureAwait(false);
+
+            AssertConfirmMessage(DocumentType.ConfirmConnectionStatusMeteringPoint, "E79");
         }
 
         [Theory]

@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -376,10 +377,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             if (errorCount > 1)
             {
                 var errorMessage = new StringBuilder();
-                errorMessage.AppendLine($"Reject message contains more ({errorCount}) than 1 error:");
+                errorMessage.AppendLine(CultureInfo.InvariantCulture, $"Reject message contains more ({errorCount}) than 1 error:");
                 foreach (var error in rejectMessage.MarketActivityRecord.Reasons)
                 {
-                    errorMessage.AppendLine($"Code: {error.Code}. Description: {error.Text}.");
+                    errorMessage.AppendLine(CultureInfo.InvariantCulture, $"Code: {error.Code}. Description: {error.Text}.");
                 }
 
                 throw new XunitException(errorMessage.ToString());
@@ -413,10 +414,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             if (errorCount > 1)
             {
                 var errorMessage = new StringBuilder();
-                errorMessage.AppendLine($"Reject message contains more ({errorCount}) than 1 error:");
+                errorMessage.AppendLine(CultureInfo.InvariantCulture, $"Reject message contains more ({errorCount}) than 1 error:");
                 foreach (var error in rejectMessage.MarketActivityRecord.Reasons)
                 {
-                    errorMessage.AppendLine($"Code: {error.Code}. Description: {error.Text}.");
+                    errorMessage.AppendLine(CultureInfo.InvariantCulture, $"Code: {error.Code}. Description: {error.Text}.");
                 }
 
                 throw new XunitException(errorMessage.ToString());
@@ -440,26 +441,28 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             return GetOutboxMessages<TIntegrationEvent>().SingleOrDefault();
         }
 
-        protected void AssertConfirmMessage(DocumentType documentType)
+        protected void AssertConfirmMessage(DocumentType documentType, string businessProcess)
         {
             var message = GetOutboxMessages
                     <MessageHubEnvelope>()
-                .Single(msg => msg.MessageType.Equals(documentType));
+                .FirstOrDefault(msg => msg.MessageType.Equals(documentType));
 
-            var confirmMessage = GetService<IJsonSerializer>().Deserialize<ConfirmMessage>(message.Content);
+            var confirmMessage = GetService<IJsonSerializer>().Deserialize<ConfirmMessage>(message!.Content);
 
             Assert.NotNull(confirmMessage);
+            Assert.Equal(businessProcess, confirmMessage.ProcessType);
         }
 
-        protected void AssertRejectMessage(DocumentType documentType)
+        protected void AssertRejectMessage(DocumentType documentType, string businessProcess)
         {
             var message = GetOutboxMessages
                     <MessageHubEnvelope>()
-                .Single(msg => msg.MessageType.Equals(documentType));
+                .FirstOrDefault(msg => msg.MessageType.Equals(documentType));
 
-            var rejectMessage = GetService<IJsonSerializer>().Deserialize<RejectMessage>(message.Content);
+            var rejectMessage = GetService<IJsonSerializer>().Deserialize<RejectMessage>(message!.Content);
 
             Assert.NotNull(rejectMessage);
+            Assert.Equal(businessProcess, rejectMessage.ProcessType);
         }
 
         protected async Task AssertMultipleProcessOverviewAsync(
