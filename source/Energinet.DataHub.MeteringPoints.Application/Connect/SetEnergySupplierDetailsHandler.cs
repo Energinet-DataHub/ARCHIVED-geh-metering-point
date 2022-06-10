@@ -23,7 +23,7 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
-    public class SetEnergySupplierDetailsHandler : ICommandHandler<SetEnergySupplierInfo>
+    public class SetEnergySupplierDetailsHandler : ICommandHandler<SetEnergySupplierInfo, Unit>
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly ISystemDateTimeProvider _systemDateTimeProvider;

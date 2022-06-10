@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Validation.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
@@ -24,7 +25,7 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create
 {
-    public class CreateGridAreaHandler : IBusinessRequestHandler<CreateGridArea>
+    public class CreateGridAreaHandler : ICommandHandler<CreateGridArea, BusinessProcessResult>
     {
         private readonly IGridAreaRepository _gridAreaRepository;
         private readonly ISystemDateTimeProvider _dateTimeProvider;

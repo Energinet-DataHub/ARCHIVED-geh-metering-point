@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Extensions;
 using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
@@ -27,7 +28,7 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
-    public class ConnectMeteringPointHandler : IBusinessRequestHandler<ConnectMeteringPointRequest>
+    public class ConnectMeteringPointHandler : ICommandHandler<ConnectMeteringPointRequest, BusinessProcessResult>
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly MeteringPointPipelineContext _pipelineContext;

@@ -17,16 +17,7 @@ using MediatR;
 namespace Energinet.DataHub.MeteringPoints.Application.Common.Commands
 {
     /// <summary>
-    /// Handler for CQRS command
-    /// </summary>
-    /// <typeparam name="TCommand"><see cref="ICommand{TResult}"/></typeparam>
-    public interface ICommandHandler<in TCommand> : IRequestHandler<TCommand>
-        where TCommand : ICommand
-    {
-    }
-
-    /// <summary>
-    /// Handler for CQRS command with result
+    /// Command handler
     /// </summary>
     /// <typeparam name="TCommand"><see cref="ICommand{TResult}"/></typeparam>
     /// <typeparam name="TResult">Type of result returned by handler</typeparam>
