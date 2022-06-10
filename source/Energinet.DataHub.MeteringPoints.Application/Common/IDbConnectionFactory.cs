@@ -14,7 +14,7 @@
 
 using System.Data;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
+namespace Energinet.DataHub.MeteringPoints.Application.Common
 {
     /// <summary>
     /// Factory for creating database connections

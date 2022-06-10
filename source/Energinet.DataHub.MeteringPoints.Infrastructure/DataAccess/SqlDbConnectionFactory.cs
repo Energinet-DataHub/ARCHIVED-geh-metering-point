@@ -14,6 +14,7 @@
 
 using System;
 using System.Data;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using Microsoft.Data.SqlClient;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess

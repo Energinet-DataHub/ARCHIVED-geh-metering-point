@@ -15,7 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using Dapper;
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents
 {
