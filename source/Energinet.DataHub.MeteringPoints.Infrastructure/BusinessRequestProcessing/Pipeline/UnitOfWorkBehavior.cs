@@ -25,7 +25,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline
 {
     public class UnitOfWorkBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : IRequest<TResponse>
+        where TRequest : ICommand<TResponse>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly MeteringPointContext _context;

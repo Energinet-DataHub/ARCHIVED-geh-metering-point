@@ -324,7 +324,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         }
 
         protected async Task AssertAndRunInternalCommandAsync<TCommand>()
-            where TCommand : ICommand
+            where TCommand : ICommand<Unit>
         {
             var meteringPointContext = GetService<MeteringPointContext>();
             var commands = meteringPointContext

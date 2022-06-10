@@ -24,7 +24,7 @@ using MediatR;
 namespace Energinet.DataHub.MeteringPoints.Application.Connect
 {
     public class
-        SendAccountingPointCharacteristicsMessageHandler : ICommandHandler<SendAccountingPointCharacteristicsMessage>
+        SendAccountingPointCharacteristicsMessageHandler : ICommandHandler<SendAccountingPointCharacteristicsMessage, Unit>
     {
         private readonly IMediator _mediator;
         private readonly IActorMessageService _actorMessageService;

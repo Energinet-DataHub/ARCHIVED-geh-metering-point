@@ -12,12 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
+
 namespace Energinet.DataHub.MeteringPoints.Application.Common
 {
     /// <summary>
     /// Request for creating or changing a metering point
     /// </summary>
-    public interface IChangeMeteringPointRequest : IBusinessRequest
+    public interface IChangeMeteringPointRequest : IBusinessRequest, ICommand<BusinessProcessResult>
     {
         /// <summary>
         /// Metering point GSRN-number
