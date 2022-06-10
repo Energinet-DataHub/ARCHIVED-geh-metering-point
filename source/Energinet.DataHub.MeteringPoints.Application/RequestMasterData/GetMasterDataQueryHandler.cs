@@ -36,6 +36,7 @@ public class GetMasterDataQueryHandler : IQueryHandler<GetMasterDataQuery, Maste
         var selectStatement = $"SELECT " +
                               $"[GsrnNumber] AS {nameof(MasterDataDto.GsrnNumber)}, " +
                               $"[StreetName] AS {nameof(MasterDataDto.StreetName)}, " +
+                              $"[StreetCode] AS {nameof(MasterDataDto.StreetCode)}, " +
                               $"[PostCode] AS {nameof(MasterDataDto.PostCode)}, " +
                               $"[CityName] AS {nameof(MasterDataDto.City)}, " +
                               $"[CountryCode] AS {nameof(MasterDataDto.CountryCode)}, " +
@@ -53,7 +54,6 @@ public class GetMasterDataQueryHandler : IQueryHandler<GetMasterDataQuery, Maste
                               $"[UnitType] AS {nameof(MasterDataDto.UnitType)}, " +
                               $"[EffectiveDate] AS {nameof(MasterDataDto.EffectiveDate)}, " +
                               $"[MeterNumber] AS {nameof(MasterDataDto.MeterNumber)}, " +
-                              $"[StreetCode] AS {nameof(MasterDataDto.StreetCode)}, " +
                               $"[CitySubDivision] AS {nameof(MasterDataDto.CitySubDivision)}, " +
                               $"[Floor] AS {nameof(MasterDataDto.Floor)}, " +
                               $"[Room] AS {nameof(MasterDataDto.Room)}, " +
@@ -90,6 +90,7 @@ public class GetMasterDataQueryHandler : IQueryHandler<GetMasterDataQuery, Maste
 public record MasterDataDto(
     string GsrnNumber,
     string StreetName,
+    string StreetCode,
     string PostCode,
     string City,
     string CountryCode,
@@ -107,7 +108,6 @@ public record MasterDataDto(
     string UnitType,
     DateTime EffectiveDate,
     string MeterNumber,
-    string StreetCode,
     string CitySubDivision,
     string Floor,
     string Room,
