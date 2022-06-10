@@ -21,7 +21,7 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.InternalCommands
 {
-    public class TestCommandHandler : ICommandHandler<TestCommand>
+    public class TestCommandHandler : ICommandHandler<TestCommand, Unit>
     {
         public Task<Unit> Handle(TestCommand request, CancellationToken cancellationToken)
         {

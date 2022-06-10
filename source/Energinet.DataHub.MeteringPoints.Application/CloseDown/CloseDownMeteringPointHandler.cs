@@ -21,7 +21,7 @@ using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.CloseDown
 {
-    public class CloseDownMeteringPointHandler : ICommandHandler<CloseDownMeteringPoint>
+    public class CloseDownMeteringPointHandler : ICommandHandler<CloseDownMeteringPoint, Unit>
     {
         private readonly IMeteringPointRepository _meteringPoints;
 
