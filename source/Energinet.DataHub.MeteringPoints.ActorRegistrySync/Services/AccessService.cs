@@ -63,14 +63,14 @@ public class AccessService : IDisposable
             var userActors = MapGlnAndUserToUserActor(userActor, actorCache);
             userActors = FilterExistingPermissions(userActors, usersCurrentPermissions);
 
-            // TODO: Fix this
-            Console.WriteLine("Filter still doesn't work properly. It keeps adding permissions");
             allUserIds.Add(userActor.UserObjectId);
             allUserActors.AddRange(userActors);
         }
 
         var userCount = await _meteringPointDbService.InsertUsersAsync(allUserIds).ConfigureAwait(false);
         var permissionCount = await _meteringPointDbService.InsertUserActorsAsync(allUserActors).ConfigureAwait(false);
+
+        await _meteringPointDbService.CommitTransactionAsync().ConfigureAwait(false);
 
         return new CreateCountResponse(userCount, permissionCount);
     }
