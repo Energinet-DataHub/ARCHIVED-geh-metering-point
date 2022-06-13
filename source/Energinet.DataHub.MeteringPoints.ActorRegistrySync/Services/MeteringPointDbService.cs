@@ -114,41 +114,43 @@ public class MeteringPointDbService : IDisposable
             transaction: _transaction).ConfigureAwait(false);
     }
 
-    public async Task InsertUserActorsAsync(IEnumerable<UserActor> userActors)
+    public async Task<int> InsertUserActorsAsync(IEnumerable<UserActor> userActors)
     {
         if (userActors == null) throw new ArgumentNullException(nameof(userActors));
-        {
-            if (_transaction == null) await BeginTransactionAsync().ConfigureAwait(false);
-            var stringBuilder = new StringBuilder();
-            foreach (var userActor in userActors)
-            {
-                stringBuilder.Append(@"INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('" + userActor.UserId + "', '" + userActor.ActorId + "')");
-                stringBuilder.AppendLine();
-            }
 
-            await _sqlConnection.ExecuteAsync(
-                stringBuilder.ToString(),
-                transaction: _transaction).ConfigureAwait(false);
+        if (!userActors.Any()) return 0;
+
+        if (_transaction == null) await BeginTransactionAsync().ConfigureAwait(false);
+        var stringBuilder = new StringBuilder();
+
+        foreach (var userActor in userActors)
+        {
+            stringBuilder.Append(@"INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('" + userActor.UserId + "', '" + userActor.ActorId + "')");
+            stringBuilder.AppendLine();
         }
+
+        return await _sqlConnection.ExecuteAsync(
+            stringBuilder.ToString(),
+            transaction: _transaction).ConfigureAwait(false);
     }
 
     public async Task<int> InsertUsersAsync(IReadOnlyCollection<Guid> userIds)
     {
-        var idsToInsert = userIds.Select(userId => new { Id = userId });
+        // var idsToInsert = userIds.Select(userId => new { Id = userId.ToString() });
         if (_transaction == null) await BeginTransactionAsync().ConfigureAwait(false);
         var rowsAffected = await _sqlConnection.ExecuteAsync(
             @"
             BEGIN
                 IF NOT EXISTS (
                     SELECT Id FROM [dbo].[User]
-                    WHERE Id IN @userIds
+                    WHERE Id IN @IdsToInsert
                 )
                 BEGIN
                     INSERT INTO [dbo].[User] (Id)
-                    VALUES @idsToInsert
+                    VALUES @IdsToInsert
                 END
             END",
-            new { userIds, idsToInsert },
+            new { IdsToInsert = userIds },
             _transaction).ConfigureAwait(false);
 
         // Return 0 instead of -1 when no rows have been affected

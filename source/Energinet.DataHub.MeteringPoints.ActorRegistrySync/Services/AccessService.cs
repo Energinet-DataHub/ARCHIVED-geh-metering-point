@@ -54,23 +54,25 @@ public class AccessService : IDisposable
         if (userActorDtos == null) throw new ArgumentNullException(nameof(userActorDtos));
 
         var actorCache = await GetActorsByGlnNumbersAsync(MapUniqueGlnNumbers(userActorDtos).ToList()).ConfigureAwait(false);
-        var userActorCache = await GetUserActorByUserIdAsync(MapUserIds(userActorDtos).ToList()).ConfigureAwait(false);
+        var usersCurrentPermissions = await GetUserActorByUserIdAsync(MapUserIds(userActorDtos).ToList()).ConfigureAwait(false);
 
         List<Guid> allUserIds = new();
         List<UserActor> allUserActors = new();
         foreach (var userActor in userActorDtos)
         {
             var userActors = MapGlnAndUserToUserActor(userActor, actorCache);
-            userActors = FilterExistingPermissions(userActors, userActorCache);
+            userActors = FilterExistingPermissions(userActors, usersCurrentPermissions);
 
             allUserIds.Add(userActor.UserObjectId);
             allUserActors.AddRange(userActors);
         }
 
-        await _meteringPointDbService.InsertUsersAsync(allUserIds).ConfigureAwait(false);
-        await _meteringPointDbService.InsertUserActorsAsync(allUserActors).ConfigureAwait(false);
+        var userCount = await _meteringPointDbService.InsertUsersAsync(allUserIds).ConfigureAwait(false);
+        var permissionCount = await _meteringPointDbService.InsertUserActorsAsync(allUserActors).ConfigureAwait(false);
 
-        return new CreateCountResponse(999, 999);
+        await _meteringPointDbService.CommitTransactionAsync().ConfigureAwait(false);
+
+        return new CreateCountResponse(userCount, permissionCount);
     }
 
     public void Dispose()
@@ -113,9 +115,9 @@ public class AccessService : IDisposable
         return userActorDtos.Select(userActor => userActor.UserObjectId).ToList().AsReadOnly();
     }
 
-    private static IEnumerable<UserActor> FilterExistingPermissions(IEnumerable<UserActor> userActors, IEnumerable<UserActor> userActorCache)
+    private static IEnumerable<UserActor> FilterExistingPermissions(IEnumerable<UserActor> userActors, IEnumerable<UserActor> usersCurrentPermissions)
     {
-        return userActors.Where(userActor => userActorCache.Any(existingUserActor => userActor.ActorId == existingUserActor.ActorId && userActor.UserId == existingUserActor.UserId));
+        return userActors.Where(userActor => !usersCurrentPermissions.Any(existingUserActor => userActor.ActorId == existingUserActor.ActorId && userActor.UserId == existingUserActor.UserId));
     }
 
     private async Task<IReadOnlyCollection<MeteringPointActor>> GetActorsByGlnNumbersAsync(List<string> glnNumbers)
