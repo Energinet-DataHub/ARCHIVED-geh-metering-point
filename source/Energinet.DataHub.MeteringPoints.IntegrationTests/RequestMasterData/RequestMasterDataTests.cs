@@ -35,5 +35,6 @@ public class RequestMasterDataTests : TestHost
         var masterData = await QueryAsync(new GetMasterDataQuery(createCommand.GsrnNumber)).ConfigureAwait(false);
 
         Assert.Equal(createCommand.GsrnNumber, masterData.GsrnNumber);
+        Assert.Equal(createCommand.StreetName, masterData.StreetName);
     }
 }
