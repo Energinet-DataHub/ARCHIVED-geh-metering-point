@@ -40,6 +40,13 @@ public class GetMasterDataQueryHandler : IQueryHandler<GetMasterDataQuery, Maste
                               $"[PostCode] AS {nameof(MasterDataDto.PostCode)}, " +
                               $"[CityName] AS {nameof(MasterDataDto.City)}, " +
                               $"[CountryCode] AS {nameof(MasterDataDto.CountryCode)}, " +
+                              $"[CitySubDivision] AS {nameof(MasterDataDto.CitySubDivision)}, " +
+                              $"[Floor] AS {nameof(MasterDataDto.Floor)}, " +
+                              $"[Room] AS {nameof(MasterDataDto.Room)}, " +
+                              $"[BuildingNumber] AS {nameof(MasterDataDto.BuildingNumber)}, " +
+                              $"[MunicipalityCode] AS {nameof(MasterDataDto.MunicipalityCode)}, " +
+                              $"[IsActualAddress] AS {nameof(MasterDataDto.IsActualAddress)}, " +
+                              $"[GeoInfoReference] AS {nameof(MasterDataDto.GeoInfoReference)}, " +
                               $"[ConnectionState_PhysicalState] AS {nameof(MasterDataDto.ConnectionState)}, " +
                               $"[MeteringPointSubType] AS {nameof(MasterDataDto.MeteringMethod)}, " +
                               $"[MeterReadingOccurrence] AS {nameof(MasterDataDto.ReadingPeriodicity)}, " +
@@ -54,13 +61,6 @@ public class GetMasterDataQueryHandler : IQueryHandler<GetMasterDataQuery, Maste
                               $"[UnitType] AS {nameof(MasterDataDto.UnitType)}, " +
                               $"[EffectiveDate] AS {nameof(MasterDataDto.EffectiveDate)}, " +
                               $"[MeterNumber] AS {nameof(MasterDataDto.MeterNumber)}, " +
-                              $"[CitySubDivision] AS {nameof(MasterDataDto.CitySubDivision)}, " +
-                              $"[Floor] AS {nameof(MasterDataDto.Floor)}, " +
-                              $"[Room] AS {nameof(MasterDataDto.Room)}, " +
-                              $"[BuildingNumber] AS {nameof(MasterDataDto.BuildingNumber)}, " +
-                              $"[MunicipalityCode] AS {nameof(MasterDataDto.MunicipalityCode)}, " +
-                              $"[IsActualAddress] AS {nameof(MasterDataDto.IsActualAddress)}, " +
-                              $"[GeoInfoReference] AS {nameof(MasterDataDto.GeoInfoReference)}, " +
                               $"[Capacity] AS {nameof(MasterDataDto.Capacity)}, " +
                               $"[AssetType] AS {nameof(MasterDataDto.AssetType)}, " +
                               $"[SettlementMethod] AS {nameof(MasterDataDto.SettlementMethod)}, " +
@@ -94,6 +94,13 @@ public record MasterDataDto(
     string PostCode,
     string City,
     string CountryCode,
+    string CitySubDivision,
+    string Floor,
+    string Room,
+    string BuildingNumber,
+    int MunicipalityCode,
+    bool IsActualAddress,
+    Guid GeoInfoReference,
     string ConnectionState,
     string MeteringMethod,
     string ReadingPeriodicity,
@@ -108,13 +115,6 @@ public record MasterDataDto(
     string UnitType,
     DateTime EffectiveDate,
     string MeterNumber,
-    string CitySubDivision,
-    string Floor,
-    string Room,
-    string BuildingNumber,
-    int MunicipalityCode,
-    bool IsActualAddress,
-    Guid GeoInfoReference,
     double Capacity,
     string AssetType,
     string SettlementMethod,
