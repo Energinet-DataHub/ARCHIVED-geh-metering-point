@@ -12,19 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Data;
+using Energinet.DataHub.MeteringPoints.Application.Common.Queries;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
-{
-    /// <summary>
-    /// Factory for creating database connections
-    /// </summary>
-    public interface IDbConnectionFactory
-    {
-        /// <summary>
-        /// Returns an existing open connection if any, or creates a new open connection
-        /// </summary>
-        /// <returns><see cref="IDbConnection"/></returns>
-        IDbConnection GetOpenConnection();
-    }
-}
+namespace Energinet.DataHub.MeteringPoints.Application.RequestMasterData;
+
+public record GetMasterDataQuery(string GsrnNumber) : IQuery<MasterData>;
