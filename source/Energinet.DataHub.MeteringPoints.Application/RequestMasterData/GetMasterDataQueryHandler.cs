@@ -21,7 +21,7 @@ using Energinet.DataHub.MeteringPoints.Application.Common.Queries;
 
 namespace Energinet.DataHub.MeteringPoints.Application.RequestMasterData;
 
-public class GetMasterDataQueryHandler : IQueryHandler<GetMasterDataQuery, MasterDataDto>
+public class GetMasterDataQueryHandler : IQueryHandler<GetMasterDataQuery, MasterData>
 {
     private readonly IDbConnectionFactory _connectionFactory;
 
@@ -30,63 +30,108 @@ public class GetMasterDataQueryHandler : IQueryHandler<GetMasterDataQuery, Maste
         _connectionFactory = connectionFactory;
     }
 
-    public async Task<MasterDataDto> Handle(GetMasterDataQuery request, CancellationToken cancellationToken)
+    public async Task<MasterData> Handle(GetMasterDataQuery request, CancellationToken cancellationToken)
     {
         if (request == null) throw new ArgumentNullException(nameof(request));
         var selectStatement = $"SELECT " +
-                              $"[GsrnNumber] AS {nameof(MasterDataDto.GsrnNumber)}, " +
-                              $"[StreetName] AS {nameof(MasterDataDto.StreetName)}, " +
-                              $"[StreetCode] AS {nameof(MasterDataDto.StreetCode)}, " +
-                              $"[PostCode] AS {nameof(MasterDataDto.PostCode)}, " +
-                              $"[CityName] AS {nameof(MasterDataDto.City)}, " +
-                              $"[CountryCode] AS {nameof(MasterDataDto.CountryCode)}, " +
-                              $"[CitySubDivision] AS {nameof(MasterDataDto.CitySubDivision)}, " +
-                              $"[Floor] AS {nameof(MasterDataDto.Floor)}, " +
-                              $"[Room] AS {nameof(MasterDataDto.Room)}, " +
-                              $"[BuildingNumber] AS {nameof(MasterDataDto.BuildingNumber)}, " +
-                              $"[MunicipalityCode] AS {nameof(MasterDataDto.MunicipalityCode)}, " +
-                              $"[IsActualAddress] AS {nameof(MasterDataDto.IsActualAddress)}, " +
-                              $"[GeoInfoReference] AS {nameof(MasterDataDto.GeoInfoReference)}, " +
-                              $"[ConnectionState_PhysicalState] AS {nameof(MasterDataDto.ConnectionState)}, " +
-                              $"[MeteringPointSubType] AS {nameof(MasterDataDto.MeteringMethod)}, " +
-                              $"[MeterReadingOccurrence] AS {nameof(MasterDataDto.ReadingPeriodicity)}, " +
-                              $"[TypeOfMeteringPoint] AS {nameof(MasterDataDto.Type)}, " +
-                              $"[MaximumCurrent] AS {nameof(MasterDataDto.MaximumCurrent)}, " +
-                              $"[MaximumPower] AS {nameof(MasterDataDto.MaximumPower)}, " +
-                              $"[MeteringGridArea] AS {nameof(MasterDataDto.GridAreaCode)}, " +
-                              $"[PowerPlant] AS {nameof(MasterDataDto.PowerPlantGsrnNumber)}, " +
-                              $"[LocationDescription] AS {nameof(MasterDataDto.LocationDescription)}, " +
-                              $"[ProductType] AS {nameof(MasterDataDto.Product)}, " +
-                              $"[ParentRelatedMeteringPoint] AS {nameof(MasterDataDto.ParentMeteringPointId)}, " +
-                              $"[UnitType] AS {nameof(MasterDataDto.UnitType)}, " +
-                              $"[EffectiveDate] AS {nameof(MasterDataDto.EffectiveDate)}, " +
-                              $"[MeterNumber] AS {nameof(MasterDataDto.MeterNumber)}, " +
-                              $"[Capacity] AS {nameof(MasterDataDto.Capacity)}, " +
-                              $"[AssetType] AS {nameof(MasterDataDto.AssetType)}, " +
-                              $"[SettlementMethod] AS {nameof(MasterDataDto.SettlementMethod)}, " +
-                              $"[ScheduledMeterReadingDate] AS {nameof(MasterDataDto.ScheduledMeterReadingDate)}, " +
-                              $"[ProductionObligation] AS {nameof(MasterDataDto.ProductionObligation)}, " +
-                              $"[NetSettlementGroup] AS {nameof(MasterDataDto.NetSettlementGroup)}, " +
-                              $"[DisconnectionType] AS {nameof(MasterDataDto.DisconnectionType)}, " +
-                              $"[ConnectionType] AS {nameof(MasterDataDto.ConnectionType)}, " +
-                              $"[ToGrid] AS {nameof(MasterDataDto.ToGridAreaCode)}, " +
-                              $"[FromGrid] AS {nameof(MasterDataDto.FromGridAreaCode)} " +
+                              $"[GsrnNumber] AS {nameof(DataModel.GsrnNumber)}, " +
+                              $"[StreetName] AS {nameof(DataModel.StreetName)}, " +
+                              $"[StreetCode] AS {nameof(DataModel.StreetCode)}, " +
+                              $"[PostCode] AS {nameof(DataModel.PostCode)}, " +
+                              $"[CityName] AS {nameof(DataModel.City)}, " +
+                              $"[CountryCode] AS {nameof(DataModel.CountryCode)}, " +
+                              $"[CitySubDivision] AS {nameof(DataModel.CitySubDivision)}, " +
+                              $"[Floor] AS {nameof(DataModel.Floor)}, " +
+                              $"[Room] AS {nameof(DataModel.Room)}, " +
+                              $"[BuildingNumber] AS {nameof(DataModel.BuildingNumber)}, " +
+                              $"[MunicipalityCode] AS {nameof(DataModel.MunicipalityCode)}, " +
+                              $"[IsActualAddress] AS {nameof(DataModel.IsActualAddress)}, " +
+                              $"[GeoInfoReference] AS {nameof(DataModel.GeoInfoReference)}, " +
+                              $"[ConnectionState_PhysicalState] AS {nameof(DataModel.ConnectionState)}, " +
+                              $"[MeteringPointSubType] AS {nameof(DataModel.MeteringMethod)}, " +
+                              $"[MeterReadingOccurrence] AS {nameof(DataModel.ReadingPeriodicity)}, " +
+                              $"[TypeOfMeteringPoint] AS {nameof(DataModel.Type)}, " +
+                              $"[MaximumCurrent] AS {nameof(DataModel.MaximumCurrent)}, " +
+                              $"[MaximumPower] AS {nameof(DataModel.MaximumPower)}, " +
+                              $"[MeteringGridArea] AS {nameof(DataModel.GridAreaCode)}, " +
+                              $"[PowerPlant] AS {nameof(DataModel.PowerPlantGsrnNumber)}, " +
+                              $"[LocationDescription] AS {nameof(DataModel.LocationDescription)}, " +
+                              $"[ProductType] AS {nameof(DataModel.Product)}, " +
+                              $"[ParentRelatedMeteringPoint] AS {nameof(DataModel.ParentMeteringPointId)}, " +
+                              $"[UnitType] AS {nameof(DataModel.UnitType)}, " +
+                              $"[EffectiveDate] AS {nameof(DataModel.EffectiveDate)}, " +
+                              $"[MeterNumber] AS {nameof(DataModel.MeterNumber)}, " +
+                              $"[Capacity] AS {nameof(DataModel.Capacity)}, " +
+                              $"[AssetType] AS {nameof(DataModel.AssetType)}, " +
+                              $"[SettlementMethod] AS {nameof(DataModel.SettlementMethod)}, " +
+                              $"[ScheduledMeterReadingDate] AS {nameof(DataModel.ScheduledMeterReadingDate)}, " +
+                              $"[ProductionObligation] AS {nameof(DataModel.ProductionObligation)}, " +
+                              $"[NetSettlementGroup] AS {nameof(DataModel.NetSettlementGroup)}, " +
+                              $"[DisconnectionType] AS {nameof(DataModel.DisconnectionType)}, " +
+                              $"[ConnectionType] AS {nameof(DataModel.ConnectionType)}, " +
+                              $"[ToGrid] AS {nameof(DataModel.ToGridAreaCode)}, " +
+                              $"[FromGrid] AS {nameof(DataModel.FromGridAreaCode)} " +
                               $"FROM [dbo].[MeteringPoints] " +
                               $"WHERE GsrnNumber = @GsrnNumber";
 
-        var result = await _connectionFactory.GetOpenConnection()
-            .QuerySingleOrDefaultAsync<MasterDataDto>(
+        var dataModel = await _connectionFactory.GetOpenConnection()
+            .QuerySingleOrDefaultAsync<DataModel>(
                 selectStatement,
                 new
                 {
                     GsrnNumber = request.GsrnNumber,
                 }).ConfigureAwait(false);
 
-        return result;
+        return MapFrom(dataModel);
+    }
+
+    private static MasterData MapFrom(DataModel dataModel)
+    {
+        var address = new Address(
+            StreetName: dataModel.StreetName,
+            StreetCode: dataModel.StreetCode,
+            PostCode: dataModel.PostCode,
+            City: dataModel.City,
+            CountryCode: dataModel.CountryCode,
+            CitySubDivision: dataModel.CitySubDivision,
+            Floor: dataModel.Floor,
+            Room: dataModel.Room,
+            BuildingNumber: dataModel.BuildingNumber,
+            MunicipalityCode: dataModel.MunicipalityCode,
+            IsActualAddress: dataModel.IsActualAddress,
+            GeoInfoReference: dataModel.GeoInfoReference,
+            LocationDescription: dataModel.LocationDescription);
+
+        return new MasterData(
+            GsrnNumber: dataModel.GsrnNumber,
+            Address: address,
+            ConnectionState: dataModel.ConnectionState,
+            MeteringMethod: dataModel.MeteringMethod,
+            ReadingPeriodicity: dataModel.ReadingPeriodicity,
+            Type: dataModel.Type,
+            MaximumCurrent: dataModel.MaximumCurrent,
+            MaximumPower: dataModel.MaximumPower,
+            GridAreaCode: dataModel.GridAreaCode,
+            PowerPlantGsrnNumber: dataModel.PowerPlantGsrnNumber,
+            Product: dataModel.Product,
+            ParentMeteringPointId: dataModel.ParentMeteringPointId,
+            UnitType: dataModel.UnitType,
+            EffectiveDate: dataModel.EffectiveDate,
+            MeterNumber: dataModel.MeterNumber,
+            Capacity: dataModel.Capacity,
+            AssetType: dataModel.AssetType,
+            SettlementMethod: dataModel.SettlementMethod,
+            ScheduledMeterReadingDate: dataModel.ScheduledMeterReadingDate,
+            ProductionObligation: dataModel.ProductionObligation,
+            NetSettlementGroup: dataModel.NetSettlementGroup,
+            DisconnectionType: dataModel.DisconnectionType,
+            ConnectionType: dataModel.ConnectionType,
+            ToGridAreaCode: dataModel.ToGridAreaCode,
+            FromGridAreaCode: dataModel.FromGridAreaCode);
     }
 }
 
-public record MasterDataDto(
+public record DataModel(
     string GsrnNumber,
     string StreetName,
     string StreetCode,
@@ -124,3 +169,45 @@ public record MasterDataDto(
     string ConnectionType,
     Guid ToGridAreaCode,
     Guid FromGridAreaCode);
+
+public record MasterData(
+    string GsrnNumber,
+    Address Address,
+    string ConnectionState,
+    string MeteringMethod,
+    string ReadingPeriodicity,
+    string Type,
+    int MaximumCurrent,
+    int MaximumPower,
+    Guid GridAreaCode,
+    string PowerPlantGsrnNumber,
+    string Product,
+    Guid ParentMeteringPointId,
+    string UnitType,
+    DateTime EffectiveDate,
+    string MeterNumber,
+    double Capacity,
+    string AssetType,
+    string SettlementMethod,
+    string ScheduledMeterReadingDate,
+    bool ProductionObligation,
+    string NetSettlementGroup,
+    string DisconnectionType,
+    string ConnectionType,
+    Guid ToGridAreaCode,
+    Guid FromGridAreaCode);
+
+public record Address(
+    string StreetName,
+    string StreetCode,
+    string PostCode,
+    string City,
+    string CountryCode,
+    string CitySubDivision,
+    string Floor,
+    string Room,
+    string BuildingNumber,
+    int MunicipalityCode,
+    bool IsActualAddress,
+    Guid GeoInfoReference,
+    string LocationDescription);

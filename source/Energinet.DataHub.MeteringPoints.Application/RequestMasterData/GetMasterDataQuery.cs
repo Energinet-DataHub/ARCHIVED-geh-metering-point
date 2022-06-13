@@ -16,4 +16,4 @@ using Energinet.DataHub.MeteringPoints.Application.Common.Queries;
 
 namespace Energinet.DataHub.MeteringPoints.Application.RequestMasterData;
 
-public record GetMasterDataQuery(string GsrnNumber) : IQuery<MasterDataDto>;
+public record GetMasterDataQuery(string GsrnNumber) : IQuery<MasterData>;

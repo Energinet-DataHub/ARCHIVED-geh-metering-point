@@ -37,17 +37,18 @@ public class RequestMasterDataTests : TestHost
         var masterData = await QueryAsync(new GetMasterDataQuery(createCommand.GsrnNumber)).ConfigureAwait(false);
 
         Assert.Equal(createCommand.GsrnNumber, masterData.GsrnNumber);
-        Assert.Equal(createCommand.StreetName, masterData.StreetName);
-        Assert.Equal(createCommand.StreetCode, masterData.StreetCode);
-        Assert.Equal(createCommand.CityName, masterData.City);
-        Assert.Equal(createCommand.FloorIdentification, masterData.Floor);
-        Assert.Equal(createCommand.RoomIdentification, masterData.Room);
-        Assert.Equal(createCommand.PostCode, masterData.PostCode);
-        Assert.Equal(createCommand.CountryCode, masterData.CountryCode);
-        Assert.Equal(createCommand.CitySubDivisionName, masterData.CitySubDivision);
-        Assert.Equal(createCommand.BuildingNumber, masterData.BuildingNumber);
-        Assert.Equal(int.Parse(createCommand.MunicipalityCode, CultureInfo.InvariantCulture), masterData.MunicipalityCode);
-        Assert.Equal(createCommand.IsActualAddress, masterData.IsActualAddress);
-        Assert.Equal(createCommand.GeoInfoReference, masterData.GeoInfoReference.ToString());
+        Assert.Equal(createCommand.StreetName, masterData.Address.StreetName);
+        Assert.Equal(createCommand.StreetCode, masterData.Address.StreetCode);
+        Assert.Equal(createCommand.CityName, masterData.Address.City);
+        Assert.Equal(createCommand.FloorIdentification, masterData.Address.Floor);
+        Assert.Equal(createCommand.RoomIdentification, masterData.Address.Room);
+        Assert.Equal(createCommand.PostCode, masterData.Address.PostCode);
+        Assert.Equal(createCommand.CountryCode, masterData.Address.CountryCode);
+        Assert.Equal(createCommand.CitySubDivisionName, masterData.Address.CitySubDivision);
+        Assert.Equal(createCommand.BuildingNumber, masterData.Address.BuildingNumber);
+        Assert.Equal(int.Parse(createCommand.MunicipalityCode, CultureInfo.InvariantCulture), masterData.Address.MunicipalityCode);
+        Assert.Equal(createCommand.IsActualAddress, masterData.Address.IsActualAddress);
+        Assert.Equal(createCommand.GeoInfoReference, masterData.Address.GeoInfoReference.ToString());
+        Assert.Equal(createCommand.LocationDescription, masterData.Address.LocationDescription);
     }
 }
