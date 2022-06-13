@@ -34,44 +34,46 @@ public class GetMasterDataQueryHandler : IQueryHandler<GetMasterDataQuery, Maste
     {
         if (request == null) throw new ArgumentNullException(nameof(request));
         var selectStatement = $"SELECT " +
-                              $"[GsrnNumber] AS {nameof(DataModel.GsrnNumber)}, " +
-                              $"[StreetName] AS {nameof(DataModel.StreetName)}, " +
-                              $"[StreetCode] AS {nameof(DataModel.StreetCode)}, " +
-                              $"[PostCode] AS {nameof(DataModel.PostCode)}, " +
-                              $"[CityName] AS {nameof(DataModel.City)}, " +
-                              $"[CountryCode] AS {nameof(DataModel.CountryCode)}, " +
-                              $"[CitySubDivision] AS {nameof(DataModel.CitySubDivision)}, " +
-                              $"[Floor] AS {nameof(DataModel.Floor)}, " +
-                              $"[Room] AS {nameof(DataModel.Room)}, " +
-                              $"[BuildingNumber] AS {nameof(DataModel.BuildingNumber)}, " +
-                              $"[MunicipalityCode] AS {nameof(DataModel.MunicipalityCode)}, " +
-                              $"[IsActualAddress] AS {nameof(DataModel.IsActualAddress)}, " +
-                              $"[GeoInfoReference] AS {nameof(DataModel.GeoInfoReference)}, " +
-                              $"[ConnectionState_PhysicalState] AS {nameof(DataModel.ConnectionState)}, " +
-                              $"[MeteringPointSubType] AS {nameof(DataModel.MeteringMethod)}, " +
-                              $"[MeterReadingOccurrence] AS {nameof(DataModel.ReadingPeriodicity)}, " +
-                              $"[TypeOfMeteringPoint] AS {nameof(DataModel.Type)}, " +
-                              $"[MaximumCurrent] AS {nameof(DataModel.MaximumCurrent)}, " +
-                              $"[MaximumPower] AS {nameof(DataModel.MaximumPower)}, " +
-                              $"[MeteringGridArea] AS {nameof(DataModel.GridAreaCode)}, " +
-                              $"[PowerPlant] AS {nameof(DataModel.PowerPlantGsrnNumber)}, " +
-                              $"[LocationDescription] AS {nameof(DataModel.LocationDescription)}, " +
-                              $"[ProductType] AS {nameof(DataModel.Product)}, " +
-                              $"[ParentRelatedMeteringPoint] AS {nameof(DataModel.ParentMeteringPointId)}, " +
-                              $"[UnitType] AS {nameof(DataModel.UnitType)}, " +
-                              $"[EffectiveDate] AS {nameof(DataModel.EffectiveDate)}, " +
-                              $"[MeterNumber] AS {nameof(DataModel.MeterNumber)}, " +
-                              $"[Capacity] AS {nameof(DataModel.Capacity)}, " +
-                              $"[AssetType] AS {nameof(DataModel.AssetType)}, " +
-                              $"[SettlementMethod] AS {nameof(DataModel.SettlementMethod)}, " +
-                              $"[ScheduledMeterReadingDate] AS {nameof(DataModel.ScheduledMeterReadingDate)}, " +
-                              $"[ProductionObligation] AS {nameof(DataModel.ProductionObligation)}, " +
-                              $"[NetSettlementGroup] AS {nameof(DataModel.NetSettlementGroup)}, " +
-                              $"[DisconnectionType] AS {nameof(DataModel.DisconnectionType)}, " +
-                              $"[ConnectionType] AS {nameof(DataModel.ConnectionType)}, " +
-                              $"[ToGrid] AS {nameof(DataModel.ToGridAreaCode)}, " +
-                              $"[FromGrid] AS {nameof(DataModel.FromGridAreaCode)} " +
-                              $"FROM [dbo].[MeteringPoints] " +
+                              $"mp.GsrnNumber AS {nameof(DataModel.GsrnNumber)}, " +
+                              $"mp.StreetName AS {nameof(DataModel.StreetName)}, " +
+                              $"mp.StreetCode AS {nameof(DataModel.StreetCode)}, " +
+                              $"mp.PostCode AS {nameof(DataModel.PostCode)}, " +
+                              $"mp.CityName AS {nameof(DataModel.City)}, " +
+                              $"mp.CountryCode AS {nameof(DataModel.CountryCode)}, " +
+                              $"mp.CitySubDivision AS {nameof(DataModel.CitySubDivision)}, " +
+                              $"mp.Floor AS {nameof(DataModel.Floor)}, " +
+                              $"mp.Room AS {nameof(DataModel.Room)}, " +
+                              $"mp.BuildingNumber AS {nameof(DataModel.BuildingNumber)}, " +
+                              $"mp.MunicipalityCode AS {nameof(DataModel.MunicipalityCode)}, " +
+                              $"mp.IsActualAddress AS {nameof(DataModel.IsActualAddress)}, " +
+                              $"mp.GeoInfoReference AS {nameof(DataModel.GeoInfoReference)}, " +
+                              $"mp.ConnectionState_PhysicalState AS {nameof(DataModel.ConnectionState)}, " +
+                              $"mp.MeteringPointSubType AS {nameof(DataModel.MeteringMethod)}, " +
+                              $"mp.MeterReadingOccurrence AS {nameof(DataModel.ReadingPeriodicity)}, " +
+                              $"mp.TypeOfMeteringPoint AS {nameof(DataModel.Type)}, " +
+                              $"mp.MaximumCurrent AS {nameof(DataModel.MaximumCurrent)}, " +
+                              $"mp.MaximumPower AS {nameof(DataModel.MaximumPower)}, " +
+                              $"ga.Code AS {nameof(DataModel.GridAreaCode)}, " +
+                              $"mp.PowerPlant AS {nameof(DataModel.PowerPlantGsrnNumber)}, " +
+                              $"mp.LocationDescription AS {nameof(DataModel.LocationDescription)}, " +
+                              $"mp.ProductType AS {nameof(DataModel.Product)}, " +
+                              $"mp.ParentRelatedMeteringPoint AS {nameof(DataModel.ParentMeteringPointId)}, " +
+                              $"mp.UnitType AS {nameof(DataModel.UnitType)}, " +
+                              $"mp.EffectiveDate AS {nameof(DataModel.EffectiveDate)}, " +
+                              $"mp.MeterNumber AS {nameof(DataModel.MeterNumber)}, " +
+                              $"mp.Capacity AS {nameof(DataModel.Capacity)}, " +
+                              $"mp.AssetType AS {nameof(DataModel.AssetType)}, " +
+                              $"mp.SettlementMethod AS {nameof(DataModel.SettlementMethod)}, " +
+                              $"mp.ScheduledMeterReadingDate AS {nameof(DataModel.ScheduledMeterReadingDate)}, " +
+                              $"mp.ProductionObligation AS {nameof(DataModel.ProductionObligation)}, " +
+                              $"mp.NetSettlementGroup AS {nameof(DataModel.NetSettlementGroup)}, " +
+                              $"mp.DisconnectionType AS {nameof(DataModel.DisconnectionType)}, " +
+                              $"mp.ConnectionType AS {nameof(DataModel.ConnectionType)}, " +
+                              $"mp.ToGrid AS {nameof(DataModel.ToGridAreaCode)}, " +
+                              $"mp.FromGrid AS {nameof(DataModel.FromGridAreaCode)} " +
+                              $"FROM [dbo].[MeteringPoints] mp " +
+                              $"JOIN [dbo].[GridAreaLinks] gl ON gl.Id = mp.MeteringGridArea " +
+                              $"JOIN [dbo].[GridAreas] ga ON ga.Id = gl.GridAreaId " +
                               $"WHERE GsrnNumber = @GsrnNumber";
 
         var dataModel = await _connectionFactory.GetOpenConnection()
@@ -106,13 +108,13 @@ public class GetMasterDataQueryHandler : IQueryHandler<GetMasterDataQuery, Maste
             GsrnNumber: dataModel.GsrnNumber,
             Address: address,
             Series: new Series(dataModel.Product, dataModel.UnitType),
+            GridAreaDetails: new GridAreaDetails(dataModel.GridAreaCode, string.Empty, string.Empty),
             ConnectionState: dataModel.ConnectionState,
             MeteringMethod: dataModel.MeteringMethod,
             ReadingPeriodicity: dataModel.ReadingPeriodicity,
             Type: dataModel.Type,
             MaximumCurrent: dataModel.MaximumCurrent,
             MaximumPower: dataModel.MaximumPower,
-            GridAreaCode: dataModel.GridAreaCode,
             PowerPlantGsrnNumber: dataModel.PowerPlantGsrnNumber,
             ParentMeteringPointId: dataModel.ParentMeteringPointId,
             EffectiveDate: dataModel.EffectiveDate,
@@ -124,9 +126,7 @@ public class GetMasterDataQueryHandler : IQueryHandler<GetMasterDataQuery, Maste
             ProductionObligation: dataModel.ProductionObligation,
             NetSettlementGroup: dataModel.NetSettlementGroup,
             DisconnectionType: dataModel.DisconnectionType,
-            ConnectionType: dataModel.ConnectionType,
-            ToGridAreaCode: dataModel.ToGridAreaCode,
-            FromGridAreaCode: dataModel.FromGridAreaCode);
+            ConnectionType: dataModel.ConnectionType);
     }
 }
 
@@ -150,7 +150,7 @@ public record DataModel(
     string Type,
     int MaximumCurrent,
     int MaximumPower,
-    Guid GridAreaCode,
+    string GridAreaCode,
     string PowerPlantGsrnNumber,
     string LocationDescription,
     string Product,
@@ -173,13 +173,13 @@ public record MasterData(
     string GsrnNumber,
     Address Address,
     Series Series,
+    GridAreaDetails GridAreaDetails,
     string ConnectionState,
     string MeteringMethod,
     string ReadingPeriodicity,
     string Type,
     int MaximumCurrent,
     int MaximumPower,
-    Guid GridAreaCode,
     string PowerPlantGsrnNumber,
     Guid ParentMeteringPointId,
     DateTime EffectiveDate,
@@ -191,9 +191,7 @@ public record MasterData(
     bool ProductionObligation,
     string NetSettlementGroup,
     string DisconnectionType,
-    string ConnectionType,
-    Guid ToGridAreaCode,
-    Guid FromGridAreaCode);
+    string ConnectionType);
 
 public record Address(
     string StreetName,
@@ -211,3 +209,5 @@ public record Address(
     string LocationDescription);
 
 public record Series(string Product, string UnitType);
+
+public record GridAreaDetails(string Code, string ToCode, string FromCode);
