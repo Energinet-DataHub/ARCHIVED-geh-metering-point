@@ -57,5 +57,19 @@ public class RequestMasterDataTests : TestHost
         Assert.Empty(masterData.GridAreaDetails.ToCode);
         Assert.NotEmpty(masterData.ConnectionState);
         Assert.Equal(createCommand.MeteringMethod, masterData.MeteringMethod);
+        Assert.Equal(createCommand.MeterReadingOccurrence, masterData.ReadingPeriodicity);
+        Assert.Equal(createCommand.MeteringPointType, masterData.Type);
+        Assert.Equal(createCommand.MaximumCurrent, masterData.MaximumCurrent.ToString(CultureInfo.InvariantCulture));
+        Assert.Equal(createCommand.MaximumPower, masterData.MaximumPower.ToString(CultureInfo.InvariantCulture));
+        Assert.Equal(createCommand.PowerPlant, masterData.PowerPlantGsrnNumber);
+        Assert.Equal(createCommand.MeterNumber, masterData.MeterNumber);
+        Assert.Equal(createCommand.PhysicalConnectionCapacity, masterData.Capacity.ToString(CultureInfo.InvariantCulture));
+        Assert.Equal(createCommand.AssetType, masterData.AssetType);
+        Assert.Equal(createCommand.SettlementMethod, masterData.SettlementMethod);
+        Assert.Equal(createCommand.NetSettlementGroup, masterData.NetSettlementGroup);
+        Assert.Equal(createCommand.ScheduledMeterReadingDate, masterData.ScheduledMeterReadingDate);
+        Assert.Equal(createCommand.ConnectionType, masterData.ConnectionType);
+        Assert.Equal(createCommand.DisconnectionType, masterData.DisconnectionType);
+        Assert.False(masterData.ProductionObligation);
     }
 }

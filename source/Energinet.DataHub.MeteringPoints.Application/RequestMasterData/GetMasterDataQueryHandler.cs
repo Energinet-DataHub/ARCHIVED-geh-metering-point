@@ -57,7 +57,6 @@ public class GetMasterDataQueryHandler : IQueryHandler<GetMasterDataQuery, Maste
                               $"mp.PowerPlant AS {nameof(DataModel.PowerPlantGsrnNumber)}, " +
                               $"mp.LocationDescription AS {nameof(DataModel.LocationDescription)}, " +
                               $"mp.ProductType AS {nameof(DataModel.Product)}, " +
-                              $"mp.ParentRelatedMeteringPoint AS {nameof(DataModel.ParentMeteringPointId)}, " +
                               $"mp.UnitType AS {nameof(DataModel.UnitType)}, " +
                               $"mp.EffectiveDate AS {nameof(DataModel.EffectiveDate)}, " +
                               $"mp.MeterNumber AS {nameof(DataModel.MeterNumber)}, " +
@@ -116,7 +115,6 @@ public class GetMasterDataQueryHandler : IQueryHandler<GetMasterDataQuery, Maste
             MaximumCurrent: dataModel.MaximumCurrent,
             MaximumPower: dataModel.MaximumPower,
             PowerPlantGsrnNumber: dataModel.PowerPlantGsrnNumber,
-            ParentMeteringPointId: dataModel.ParentMeteringPointId,
             EffectiveDate: dataModel.EffectiveDate,
             MeterNumber: dataModel.MeterNumber,
             Capacity: dataModel.Capacity,
@@ -154,7 +152,6 @@ public record DataModel(
     string PowerPlantGsrnNumber,
     string LocationDescription,
     string Product,
-    Guid ParentMeteringPointId,
     string UnitType,
     DateTime EffectiveDate,
     string MeterNumber,
@@ -181,7 +178,6 @@ public record MasterData(
     int MaximumCurrent,
     int MaximumPower,
     string PowerPlantGsrnNumber,
-    Guid ParentMeteringPointId,
     DateTime EffectiveDate,
     string MeterNumber,
     double Capacity,
