@@ -56,5 +56,6 @@ public class RequestMasterDataTests : TestHost
         Assert.Empty(masterData.GridAreaDetails.FromCode);
         Assert.Empty(masterData.GridAreaDetails.ToCode);
         Assert.NotEmpty(masterData.ConnectionState);
+        Assert.Equal(createCommand.MeteringMethod, masterData.MeteringMethod);
     }
 }
