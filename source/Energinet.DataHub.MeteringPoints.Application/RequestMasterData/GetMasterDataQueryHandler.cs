@@ -124,18 +124,3 @@ public record MasterDataDto(
     string ConnectionType,
     Guid ToGridAreaCode,
     Guid FromGridAreaCode);
-
-public record Address(
-    string StreetName,
-    string PostCode,
-    string City,
-    string StreetCode,
-    string BuildingNumber,
-    string CitySubDivision,
-    string CountryCode,
-    string Floor,
-    string Room,
-    int MunicipalityCode,
-    bool IsActualAddress,
-    string GeoInfoReference,
-    string LocationDescription);
