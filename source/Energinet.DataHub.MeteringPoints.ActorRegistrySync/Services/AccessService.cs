@@ -40,15 +40,6 @@ public class AccessService : IDisposable
         return new AccessService(dbConnection);
     }
 
-    // public async Task<CreateCountResponse> CreateUserActorPermissionAsync(Guid userObjectId, IReadOnlyCollection<string> glnNumbers)
-    // {
-    //     var existingActorIdsForUser = await _meteringPointDbService.GetExistingActorIdsAsync(userObjectId, actorIds).ConfigureAwait(false);
-    //     var remainingActorIds = actorIds.Where(id => !existingActorIdsForUser.Contains(id)).ToList();
-    //
-    //     var userCreatedCount = await _meteringPointDbService.CreateUserAsync(userObjectId).ConfigureAwait(false);
-    //     var permissionsCreatedCount = await _meteringPointDbService.CreateUserActorPermissionsAsync(userObjectId, remainingActorIds).ConfigureAwait(false);
-    //     return new CreateCountResponse(userCreatedCount, permissionsCreatedCount);
-    // }
     public async Task<CreateCountResponse> GrantUserActorPermissionAsync(IReadOnlyCollection<UserActorDto> userActorDtos)
     {
         if (userActorDtos == null) throw new ArgumentNullException(nameof(userActorDtos));
