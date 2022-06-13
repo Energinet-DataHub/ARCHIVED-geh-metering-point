@@ -19,3 +19,7 @@ terraform {
     azurerm = "=3.9.0"
   }
 }
+
+provider "azurerm" {
+  features {}
+}
