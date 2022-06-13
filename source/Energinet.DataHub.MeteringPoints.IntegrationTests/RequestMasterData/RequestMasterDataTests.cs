@@ -36,5 +36,6 @@ public class RequestMasterDataTests : TestHost
 
         Assert.Equal(createCommand.GsrnNumber, masterData.GsrnNumber);
         Assert.Equal(createCommand.StreetName, masterData.StreetName);
+        Assert.Equal(createCommand.StreetCode, masterData.StreetCode);
     }
 }
