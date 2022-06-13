@@ -69,7 +69,6 @@ public class GetMasterDataQueryHandler : IQueryHandler<GetMasterDataQuery, Maste
                               $"[NetSettlementGroup] AS {nameof(MasterDataDto.NetSettlementGroup)}, " +
                               $"[DisconnectionType] AS {nameof(MasterDataDto.DisconnectionType)}, " +
                               $"[ConnectionType] AS {nameof(MasterDataDto.ConnectionType)}, " +
-                              $"[StartOfSupplyDate] AS {nameof(MasterDataDto.SupplyStart)}, " +
                               $"[ToGrid] AS {nameof(MasterDataDto.ToGridAreaCode)}, " +
                               $"[FromGrid] AS {nameof(MasterDataDto.FromGridAreaCode)} " +
                               $"FROM [dbo].[MeteringPoints] " +
@@ -123,7 +122,6 @@ public record MasterDataDto(
     string NetSettlementGroup,
     string DisconnectionType,
     string ConnectionType,
-    DateTime SupplyStart,
     Guid ToGridAreaCode,
     Guid FromGridAreaCode);
 
