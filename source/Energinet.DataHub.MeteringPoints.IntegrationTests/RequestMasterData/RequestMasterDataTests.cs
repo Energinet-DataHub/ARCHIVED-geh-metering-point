@@ -50,5 +50,7 @@ public class RequestMasterDataTests : TestHost
         Assert.Equal(createCommand.IsActualAddress, masterData.Address.IsActualAddress);
         Assert.Equal(createCommand.GeoInfoReference, masterData.Address.GeoInfoReference.ToString());
         Assert.Equal(createCommand.LocationDescription, masterData.Address.LocationDescription);
+        Assert.Equal(createCommand.ProductType, masterData.Series.Product);
+        Assert.Equal(createCommand.UnitType, masterData.Series.UnitType);
     }
 }

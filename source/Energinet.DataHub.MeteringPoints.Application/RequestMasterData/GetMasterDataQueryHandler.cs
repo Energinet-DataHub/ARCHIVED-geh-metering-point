@@ -105,6 +105,7 @@ public class GetMasterDataQueryHandler : IQueryHandler<GetMasterDataQuery, Maste
         return new MasterData(
             GsrnNumber: dataModel.GsrnNumber,
             Address: address,
+            Series: new Series(dataModel.Product, dataModel.UnitType),
             ConnectionState: dataModel.ConnectionState,
             MeteringMethod: dataModel.MeteringMethod,
             ReadingPeriodicity: dataModel.ReadingPeriodicity,
@@ -113,9 +114,7 @@ public class GetMasterDataQueryHandler : IQueryHandler<GetMasterDataQuery, Maste
             MaximumPower: dataModel.MaximumPower,
             GridAreaCode: dataModel.GridAreaCode,
             PowerPlantGsrnNumber: dataModel.PowerPlantGsrnNumber,
-            Product: dataModel.Product,
             ParentMeteringPointId: dataModel.ParentMeteringPointId,
-            UnitType: dataModel.UnitType,
             EffectiveDate: dataModel.EffectiveDate,
             MeterNumber: dataModel.MeterNumber,
             Capacity: dataModel.Capacity,
@@ -173,6 +172,7 @@ public record DataModel(
 public record MasterData(
     string GsrnNumber,
     Address Address,
+    Series Series,
     string ConnectionState,
     string MeteringMethod,
     string ReadingPeriodicity,
@@ -181,9 +181,7 @@ public record MasterData(
     int MaximumPower,
     Guid GridAreaCode,
     string PowerPlantGsrnNumber,
-    string Product,
     Guid ParentMeteringPointId,
-    string UnitType,
     DateTime EffectiveDate,
     string MeterNumber,
     double Capacity,
@@ -211,3 +209,5 @@ public record Address(
     bool IsActualAddress,
     Guid GeoInfoReference,
     string LocationDescription);
+
+public record Series(string Product, string UnitType);
