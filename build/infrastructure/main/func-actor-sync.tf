@@ -26,12 +26,14 @@ module "func_actor_sync" {
   application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value
   log_analytics_workspace_id                = data.azurerm_key_vault_secret.log_shared_id.value
   always_on                                 = true
+  dotnet_framework_version                  = "6"
+  use_dotnet_isolated_runtime               = false
+
   app_settings                              = {
     # Region: Default Values
     WEBSITE_ENABLE_SYNC_UPDATE_SITE       = true
     WEBSITE_RUN_FROM_PACKAGE              = 1
     WEBSITES_ENABLE_APP_SERVICE_STORAGE   = true
-    FUNCTIONS_WORKER_RUNTIME              = "dotnet"
     # Endregion: Default Values
     METERINGPOINT_DB_CONNECTION_STRING    = local.MS_METERING_POINT_CONNECTION_STRING
     ACTOR_REGISTRY_DB_CONNECTION_STRING   = local.ACTOR_REGISTRY_DB_CONNECTION_STRING

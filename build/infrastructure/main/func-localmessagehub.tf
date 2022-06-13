@@ -26,12 +26,14 @@ module "func_localmessagehub" {
   application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value
   log_analytics_workspace_id                = data.azurerm_key_vault_secret.log_shared_id.value
   always_on                                 = true
+  dotnet_framework_version                  = "6"
+  use_dotnet_isolated_runtime               = true
+
   app_settings                              = {
     # Region: Default Values
     WEBSITE_ENABLE_SYNC_UPDATE_SITE       = true
     WEBSITE_RUN_FROM_PACKAGE              = 1
     WEBSITES_ENABLE_APP_SERVICE_STORAGE   = true
-    FUNCTIONS_WORKER_RUNTIME              = "dotnet-isolated"
     # Endregion: Default Values
     METERINGPOINT_DB_CONNECTION_STRING    = local.MS_METERING_POINT_CONNECTION_STRING
     MESSAGEHUB_STORAGE_CONNECTION_STRING  = data.azurerm_key_vault_secret.st_market_operator_response_primary_connection_string.value
