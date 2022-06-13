@@ -15,7 +15,8 @@
 using System;
 
 namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
-public record Actor(
+
+public record ActorRegistryActor(
     string IdentificationNumber,
     int IdentificationType,
     string Roles,

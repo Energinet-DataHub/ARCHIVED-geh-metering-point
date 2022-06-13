@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
 using Energinet.DataHub.MeteringPoints.ActorRegistrySync.Services;
@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync;
 
@@ -45,29 +46,28 @@ public class GrantUserAccess : IDisposable
 
         using var streamReader = new StreamReader(req.Body);
         var requestBody = await streamReader.ReadToEndAsync().ConfigureAwait(false);
-        var serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, };
-        var data = JsonSerializer.Deserialize<UserActorDto>(requestBody, serializerOptions);
+        var serializerSettings = new JsonSerializerSettings { MissingMemberHandling = MissingMemberHandling.Error };
 
-        if (data == null || data.UserObjectId == null || data.GlnNumbers == null)
+        List<UserActorDto>? data;
+        try
+        {
+            data = JsonConvert.DeserializeObject<List<UserActorDto>>(requestBody, serializerSettings);
+        }
+        catch (JsonException e)
+        {
+            return new BadRequestObjectResult("Data invalid or properties missing: " + e.Message);
+        }
+
+        if (data == null)
         {
             return new BadRequestObjectResult("Data invalid or properties missing.");
         }
 
-        Guid userObjectId;
-        try
-        {
-            userObjectId = new Guid(data.UserObjectId);
-        }
-        catch (Exception e) when (e is FormatException or OverflowException)
-        {
-            return new BadRequestObjectResult("User ID is invalid: \n" + e.Message);
-        }
-
-        var userCreatedCount = await _accessService.CreateUserActorPermissionAsync(userObjectId, data.GlnNumbers).ConfigureAwait(false);
+        var totalCreatedResponse = await _accessService.GrantUserActorPermissionAsync(data).ConfigureAwait(false);
 
         return new OkObjectResult("User permissions updated. \n" +
-                                  $"Created {userCreatedCount.UserCount} new user(s).\n" +
-                                  $"Created {userCreatedCount.PermissionCount} new permission(s)");
+                                  $"Created {totalCreatedResponse.UserCount} new user(s).\n" +
+                                  $"Created {totalCreatedResponse.PermissionCount} new permission(s)");
     }
 
     public void Dispose()

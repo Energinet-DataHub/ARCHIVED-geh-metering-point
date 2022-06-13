@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -75,7 +76,7 @@ public class MeteringPointDbService : IDisposable
             transaction: _transaction).ConfigureAwait(false);
     }
 
-    public async Task InsertActorsAsync(IEnumerable<Actor> actors)
+    public async Task InsertActorsAsync(IEnumerable<ActorRegistryActor> actors)
     {
         if (actors == null) throw new ArgumentNullException(nameof(actors));
 
@@ -114,68 +115,75 @@ public class MeteringPointDbService : IDisposable
             transaction: _transaction).ConfigureAwait(false);
     }
 
-    public async Task InsertUserActorsAsync(IEnumerable<UserActor> userActors)
+    public async Task<int> InsertUserActorsAsync(IEnumerable<UserActor> userActors)
     {
         if (userActors == null) throw new ArgumentNullException(nameof(userActors));
+
+        if (!userActors.Any()) return 0;
+
+        if (_transaction == null) await BeginTransactionAsync().ConfigureAwait(false);
+        var stringBuilder = new StringBuilder();
+
+        foreach (var userActor in userActors)
         {
-            if (_transaction == null) await BeginTransactionAsync().ConfigureAwait(false);
-            var stringBuilder = new StringBuilder();
-            foreach (var userActor in userActors)
-            {
-                stringBuilder.Append(@"INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('" + userActor.UserId + "', '" + userActor.ActorId + "')");
-                stringBuilder.AppendLine();
-            }
-
-            await _sqlConnection.ExecuteAsync(
-                stringBuilder.ToString(),
-                transaction: _transaction).ConfigureAwait(false);
+            stringBuilder.Append(@"INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES ('" + userActor.UserId + "', '" + userActor.ActorId + "')");
+            stringBuilder.AppendLine();
         }
+
+        return await _sqlConnection.ExecuteAsync(
+            stringBuilder.ToString(),
+            transaction: _transaction).ConfigureAwait(false);
     }
 
-    public async Task<int> CreateUserAsync(Guid userId)
+    public async Task<int> InsertUsersAsync(IReadOnlyCollection<Guid> userIds)
     {
+        if (userIds == null) throw new ArgumentNullException(nameof(userIds));
+        if (_transaction == null) await BeginTransactionAsync().ConfigureAwait(false);
+
+        var stringBuilder = new StringBuilder();
+
+        // The only protection against SQL injections here is that userId is that the value must be a Guid and that it is an internal request. But it'll have to work for now.
+        foreach (var userId in userIds)
+        {
+            var query = @$"
+                    BEGIN
+                        IF NOT EXISTS (
+                            SELECT Id FROM [dbo].[User]
+                            WHERE Id = '{userId}'
+                        )
+                        BEGIN
+                            INSERT INTO [dbo].[User] (Id)
+                            VALUES ('{userId}')
+                        END
+                    END";
+
+            stringBuilder.Append(query);
+            stringBuilder.AppendLine();
+        }
+
         var rowsAffected = await _sqlConnection.ExecuteAsync(
-            @"
-            BEGIN
-                IF NOT EXISTS (
-                    SELECT * FROM [dbo].[User]
-                    WHERE Id = @userId
-                )
-                BEGIN
-                    INSERT INTO [dbo].[User] (Id)
-                    VALUES (@userId)
-                END
-            END",
-            new { userId }).ConfigureAwait(false);
+            stringBuilder.ToString(),
+            transaction: _transaction).ConfigureAwait(false);
 
-        // Return 0 instead of -1 when no rows have been affected
+        // In case of no rows effected the value will be -1 so we set 0 as our lower bound
         return Math.Max(rowsAffected, 0);
     }
 
-    public async Task<IEnumerable<Guid>> GetExistingActorIdsAsync(Guid userObjectId, IEnumerable<Guid> actorIds)
+    public async Task<IEnumerable<UserActor>> GetUserActorsByUserIdsAsync(IReadOnlyCollection<Guid> userIds)
     {
-        return await _sqlConnection.QueryAsync<Guid>(
-            @"SELECT ActorId FROM [dbo].[UserActor]
-               WHERE UserId = @userObjectId
-               AND ActorId IN @actorIds",
-            new { userObjectId, actorIds }).ConfigureAwait(false);
+        return await _sqlConnection.QueryAsync<UserActor>(
+            @"SELECT UserId, ActorId
+                FROM [dbo].[UserActor]
+                WHERE UserId in @userIds",
+            new { userIds }).ConfigureAwait(false);
     }
 
-    public async Task<int> CreateUserActorPermissionsAsync(Guid userId, IEnumerable<Guid> actorIds)
+    public async Task<IEnumerable<MeteringPointActor>> GetActorIdsByGlnNumbersAsync(IReadOnlyCollection<string> glnNumbers)
     {
-        var userActorParams = actorIds.Select(actorId => new UserActorParam(userId, actorId));
-
-        var rowsAffected = await _sqlConnection.ExecuteAsync("INSERT INTO [dbo].[UserActor] (UserId, ActorId) VALUES (@UserId, @ActorId)", userActorParams).ConfigureAwait(false);
-
-        // Return 0 instead of -1 when no rows have been affected
-        return Math.Max(rowsAffected, 0);
-    }
-
-    public async Task<IEnumerable<Guid>> GetActorIdsByGlnNumbersAsync(IReadOnlyCollection<string> glnNumbers)
-    {
-        return await _sqlConnection.QueryAsync<Guid>(
-            @"SELECT Id
-                   FROM [dbo].[Actor] WHERE Actor.IdentificationNumber IN @glnNumbers",
+        return await _sqlConnection.QueryAsync<MeteringPointActor>(
+            @"SELECT IdentificationNumber, IdentificationType, Roles, Id
+                    FROM [dbo].[Actor]
+                    WHERE Actor.IdentificationNumber IN @glnNumbers",
             new { glnNumbers }).ConfigureAwait(false);
     }
 
