@@ -29,6 +29,7 @@ using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.ChildMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
+using Energinet.DataHub.MeteringPoints.Application.Common.Queries;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Create.Validation;
@@ -37,6 +38,7 @@ using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.ProcessOverview;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
+using Energinet.DataHub.MeteringPoints.Application.RequestMasterData;
 using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
 using Energinet.DataHub.MeteringPoints.Contracts;
@@ -247,7 +249,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                     typeof(MeteringPointByGsrnQueryHandler),
                     typeof(CreateGridAreaHandler),
                     typeof(CloseDownMeteringPointHandler),
-                    typeof(TestCommandHandler))
+                    typeof(TestCommandHandler),
+                    typeof(GetMasterDataQueryHandler))
                 .WithNotificationHandlers(
                     typeof(MeteringPointCreatedNotificationHandler),
                     typeof(OnProductionMeteringPointCreated),
@@ -501,6 +504,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         {
             await using var scope = AsyncScopedLifestyle.BeginScope(_container);
             await scope.GetInstance<IMediator>().Send(command, cancellationToken).ConfigureAwait(false);
+        }
+
+        protected async Task<TResult> QueryAsync<TResult>(IQuery<TResult> query)
+        {
+            await using var scope = AsyncScopedLifestyle.BeginScope(_container);
+            return await scope.GetInstance<IMediator>().Send(query, CancellationToken.None).ConfigureAwait(false);
         }
 
         protected async Task AssertMeteringPointExistsAsync(string gsrnNumber)

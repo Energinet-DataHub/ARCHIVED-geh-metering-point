@@ -12,11 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
+using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
-
-public record UserActorDto(
-    Guid UserObjectId,
-    IReadOnlyCollection<string> GlnNumbers);
+namespace Energinet.DataHub.MeteringPoints.Application.Common.Queries
+{
+    /// <summary>
+    /// Query handler
+    /// </summary>
+    /// <typeparam name="TQuery"><see cref="ICommand{TResult}"/></typeparam>
+    /// <typeparam name="TResult">Type of result returned by handler</typeparam>
+    public interface IQueryHandler<in TQuery, TResult> : IRequestHandler<TQuery, TResult>
+        where TQuery : IQuery<TResult>
+    {
+    }
+}

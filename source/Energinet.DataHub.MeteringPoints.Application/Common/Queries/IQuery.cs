@@ -12,19 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Data;
+using MediatR;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess
+namespace Energinet.DataHub.MeteringPoints.Application.Common.Queries;
+
+/// <summary>
+/// Data query
+/// </summary>
+#pragma warning disable CA1040 // This marker interface is needed in order to distinguish between commands and queries
+public interface IQuery<out TResult> : IRequest<TResult>
 {
-    /// <summary>
-    /// Factory for creating database connections
-    /// </summary>
-    public interface IDbConnectionFactory
-    {
-        /// <summary>
-        /// Returns an existing open connection if any, or creates a new open connection
-        /// </summary>
-        /// <returns><see cref="IDbConnection"/></returns>
-        IDbConnection GetOpenConnection();
-    }
 }
+#pragma warning restore

@@ -33,6 +33,7 @@ using Energinet.DataHub.MeteringPoints.Application.Integrations.ChargeLinks.Crea
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.ProcessOverview;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
+using Energinet.DataHub.MeteringPoints.Application.RequestMasterData;
 using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
 using Energinet.DataHub.MeteringPoints.Contracts;
@@ -248,7 +249,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     typeof(MeteringPointByIdQueryHandler),
                     typeof(MeteringPointGsrnExistsQueryHandler),
                     typeof(EnergySuppliersByMeteringPointIdQueryHandler),
-                    typeof(CloseDownMeteringPointHandler))
+                    typeof(CloseDownMeteringPointHandler),
+                    typeof(GetMasterDataQueryHandler))
                 .WithNotificationHandlers(
                     typeof(CreateDefaultChargeLinksNotificationHandler),
                     typeof(MeteringPointCreatedNotificationHandler),
