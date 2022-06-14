@@ -53,15 +53,15 @@ public class ActorRegistryDbService : IDisposable
                   FROM [dbo].[GridArea]").ConfigureAwait(false) ?? (IEnumerable<GridArea>)Array.Empty<object>();
     }
 
-    public async Task<IEnumerable<Actor>> GetActorsAsync()
+    public async Task<IEnumerable<ActorRegistryActor>> GetActorsAsync()
     {
-        return await _sqlConnection.QueryAsync<Actor>(
+        return await _sqlConnection.QueryAsync<ActorRegistryActor>(
             @"SELECT [IdentificationNumber]
                        ,[IdentificationType]
                        ,[Roles]
                        ,[Active]
                        ,[Id]
-        FROM [dbo].[Actor]").ConfigureAwait(false) ?? (IEnumerable<Actor>)Array.Empty<object>();
+        FROM [dbo].[Actor]").ConfigureAwait(false) ?? (IEnumerable<ActorRegistryActor>)Array.Empty<object>();
     }
 
     public void Dispose()

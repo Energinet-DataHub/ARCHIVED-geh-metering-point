@@ -13,10 +13,12 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 
 namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
 
-public record UserActorDto(
-    Guid UserObjectId,
-    IReadOnlyCollection<string> GlnNumbers);
+public record ActorRegistryActor(
+    string IdentificationNumber,
+    int IdentificationType,
+    string Roles,
+    bool Active,
+    Guid Id);

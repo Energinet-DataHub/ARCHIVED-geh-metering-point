@@ -24,7 +24,7 @@ public class ActorSyncService : IDisposable
 {
     private readonly ActorRegistryDbService _actorRegistryDbService;
     private readonly MeteringPointDbService _meteringPointDbService;
-    private IEnumerable<Actor>? _actors;
+    private IEnumerable<ActorRegistryActor>? _actors;
 
     private bool _disposed;
 
