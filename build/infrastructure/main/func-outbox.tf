@@ -30,11 +30,6 @@ module "func_outbox" {
   use_dotnet_isolated_runtime               = true
 
   app_settings                              = {
-    # Region: Default Values
-    WEBSITE_ENABLE_SYNC_UPDATE_SITE                               = true
-    WEBSITE_RUN_FROM_PACKAGE                                      = 1
-    WEBSITES_ENABLE_APP_SERVICE_STORAGE                           = true
-    # Endregion: Default Values
     METERINGPOINT_DB_CONNECTION_STRING                            = local.MS_METERING_POINT_CONNECTION_STRING
     METERINGPOINT_QUEUE_TOPIC_NAME                                = module.sbq_meteringpoint.name
     SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING = data.azurerm_key_vault_secret.sb_domain_relay_send_connection_string.value

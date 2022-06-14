@@ -30,11 +30,6 @@ module "func_localmessagehub" {
   use_dotnet_isolated_runtime               = true
 
   app_settings                              = {
-    # Region: Default Values
-    WEBSITE_ENABLE_SYNC_UPDATE_SITE       = true
-    WEBSITE_RUN_FROM_PACKAGE              = 1
-    WEBSITES_ENABLE_APP_SERVICE_STORAGE   = true
-    # Endregion: Default Values
     METERINGPOINT_DB_CONNECTION_STRING    = local.MS_METERING_POINT_CONNECTION_STRING
     MESSAGEHUB_STORAGE_CONNECTION_STRING  = data.azurerm_key_vault_secret.st_market_operator_response_primary_connection_string.value
     MESSAGEHUB_QUEUE_CONNECTION_STRING    = data.azurerm_key_vault_secret.sb_domain_relay_transceiver_connection_string.value

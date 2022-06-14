@@ -30,11 +30,6 @@ module "func_processing" {
   use_dotnet_isolated_runtime               = true
 
   app_settings                              = {
-    # Region: Default Values
-    WEBSITE_ENABLE_SYNC_UPDATE_SITE       = true
-    WEBSITE_RUN_FROM_PACKAGE              = 1
-    WEBSITES_ENABLE_APP_SERVICE_STORAGE   = true
-    # Endregion: Default Values
     METERINGPOINT_QUEUE_URL                 = "${module.sb_meteringpoint.name}.servicebus.windows.net:9093"
     METERINGPOINT_QUEUE_CONNECTION_STRING   = module.sb_meteringpoint.primary_connection_strings["listen"]
     METERINGPOINT_DB_CONNECTION_STRING      = local.MS_METERING_POINT_CONNECTION_STRING
