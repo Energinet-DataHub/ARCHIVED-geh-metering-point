@@ -14,6 +14,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.App.Common;
 using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware;
@@ -156,6 +157,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
             container.Register<IntegrationEventReceiver>(Lifestyle.Scoped);
             container.Register<ChargesResponseReceiver>(Lifestyle.Scoped);
+            container.Register<MasterDataRequestListener>(Lifestyle.Scoped);
             container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
             container.Register<IEnergySupplierRepository, EnergySupplierRepository>(Lifestyle.Scoped);
             container.Register<IGridAreaRepository, GridAreaRepository>(Lifestyle.Scoped);
@@ -193,6 +195,12 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IActorProvider, ActorProvider>(Lifestyle.Scoped);
             container.Register<IBusinessProcessValidationContext, BusinessProcessValidationContext>(Lifestyle.Scoped);
             container.Register<IBusinessProcessCommandFactory, BusinessProcessCommandFactory>(Lifestyle.Scoped);
+
+            var serviceBusConnectionString =
+                Environment.GetEnvironmentVariable("SERVICE_BUS_SENDER_CONNECTION_STRING");
+            container.Register<ServiceBusClient>(
+                () => new ServiceBusClient(serviceBusConnectionString),
+                Lifestyle.Singleton);
 
             // TODO: remove this when infrastructure and application has been split into more assemblies.
             container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageXmlSerializer>(Lifestyle.Singleton);

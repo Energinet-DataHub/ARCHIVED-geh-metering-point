@@ -55,11 +55,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
 
             var request = Requests.MasterDataRequest.Parser.ParseFrom(data);
             var query = new GetMasterDataQuery(request.GsrnNumber);
+
             var result = await _mediator.Send(query).ConfigureAwait(false);
 
             var message = _mapper.Convert(result);
             var bytes = message.ToByteArray();
-
             ServiceBusMessage serviceBusMessage = new(bytes)
             {
                 ContentType = "application/octet-stream;charset=utf-8",
