@@ -12,12 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using Energinet.DataHub.MeteringPoints.Application.Common.Queries;
 
-namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
-public record Actor(
-    string IdentificationNumber,
-    int IdentificationType,
-    string Roles,
-    bool Active,
-    Guid Id);
+namespace Energinet.DataHub.MeteringPoints.Application.RequestMasterData;
+
+public record GetMasterDataQuery(string GsrnNumber) : IQuery<MasterData>;

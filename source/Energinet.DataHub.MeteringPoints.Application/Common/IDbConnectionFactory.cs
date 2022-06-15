@@ -12,11 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
+using System.Data;
 
-namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
-
-public record UserActorDto(
-    Guid UserObjectId,
-    IReadOnlyCollection<string> GlnNumbers);
+namespace Energinet.DataHub.MeteringPoints.Application.Common
+{
+    /// <summary>
+    /// Factory for creating database connections
+    /// </summary>
+    public interface IDbConnectionFactory
+    {
+        /// <summary>
+        /// Returns an existing open connection if any, or creates a new open connection
+        /// </summary>
+        /// <returns><see cref="IDbConnection"/></returns>
+        IDbConnection GetOpenConnection();
+    }
+}
