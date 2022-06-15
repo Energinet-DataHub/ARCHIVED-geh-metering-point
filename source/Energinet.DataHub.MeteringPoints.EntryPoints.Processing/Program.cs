@@ -197,7 +197,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IBusinessProcessCommandFactory, BusinessProcessCommandFactory>(Lifestyle.Scoped);
 
             var serviceBusConnectionString =
-                Environment.GetEnvironmentVariable("SERVICE_BUS_SENDER_CONNECTION_STRING");
+                Environment.GetEnvironmentVariable("SERVICE_BUS_SEND_CONNECTION_STRING");
             container.Register<ServiceBusClient>(
                 () => new ServiceBusClient(serviceBusConnectionString),
                 Lifestyle.Singleton);
