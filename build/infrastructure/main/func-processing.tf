@@ -41,6 +41,8 @@ module "func_processing" {
     INTEGRATION_EVENT_QUEUE_CONNECTION      = data.azurerm_key_vault_secret.sb_domain_relay_listen_connection_string.value
     CHARGES_DEFAULT_LINK_RESPONSE_QUEUE     = "create-link-reply"
     RAISE_TIME_HAS_PASSED_EVENT_SCHEDULE    = "*/10 * * * * *"
+    SERVICE_BUS_LISTEN_CONNECTION_STRING    = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-listen-connection-string)",
+    MASTER_DATA_REQUEST_QUEUE_NAME          = data.azurerm_key_vault_secret.sbq_metering_point_master_data_request_name.value
   }
 
   tags                                      = azurerm_resource_group.this.tags
