@@ -1,0 +1,76 @@
+/* Copyright 2020 Energinet DataHub A/S
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License2");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+option csharp_namespace = "Energinet.DataHub.MeteringPoints.Requests";
+
+/**
+ * This message is sent out when a metering point is connected.
+ */
+message Address {
+    google.protobuf.StringValue street_name = 1;
+    google.protobuf.StringValue street_code = 2;
+    google.protobuf.StringValue post_code = 3;
+    google.protobuf.StringValue city = 4;
+    google.protobuf.StringValue country_code = 5;
+    google.protobuf.StringValue city_sub_division = 6;
+    google.protobuf.StringValue floor = 7;
+    google.protobuf.StringValue room = 8;
+    google.protobuf.StringValue building_number = 9;
+    int32 municipality_code = 10;
+    bool is_actual_address = 11;
+    google.protobuf.StringValue geo_info_reference = 12;
+    google.protobuf.StringValue location_description = 13;
+}
+
+message Series {
+    google.protobuf.StringValue product = 1;
+    google.protobuf.StringValue unit_type = 2;
+}
+
+message GridAreaDetails {
+    google.protobuf.StringValue code = 1;
+    google.protobuf.StringValue to_code = 2;
+    google.protobuf.StringValue from_code = 3;
+}
+
+
+message MasterDataRequestResponse {
+  string gsrn_number = 1; // Business facing metering point identifier
+  Address address = 2;
+  Series series = 3;
+  GridAreaDetails grid_area_details = 4;
+  google.protobuf.StringValue connection_state = 5;
+  google.protobuf.StringValue metering_method = 6;
+  google.protobuf.StringValue reading_periodicity = 7;
+  google.protobuf.StringValue type = 8;
+  int32 maximum_current = 9;
+  int32 maximum_power = 10;
+  google.protobuf.StringValue power_plant_gsrn_number = 11;
+  google.protobuf.Timestamp effective_date = 12; // Date which the metering point is connected
+  google.protobuf.StringValue meter_number = 13;
+  double capacity = 14;
+  google.protobuf.StringValue asset_type = 15;
+  google.protobuf.StringValue settlement_method = 16;
+  google.protobuf.StringValue scheduled_meter_reading_date = 17;
+  bool production_obligation = 18;
+  google.protobuf.StringValue net_settlement_group = 19;
+  google.protobuf.StringValue disconnetion_type = 20;
+  google.protobuf.StringValue connection_type = 21;
+}
