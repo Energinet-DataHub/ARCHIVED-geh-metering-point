@@ -13,7 +13,8 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application.Common.Queries;
+using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 
 namespace Energinet.DataHub.MeteringPoints.Application.RequestMasterData;
 
-public record GetMasterDataQuery(string GsrnNumber) : IQuery<MasterData>;
+public record GetMasterDataQuery(string GsrnNumber) : IQuery<MasterData>, IInboundMessage;

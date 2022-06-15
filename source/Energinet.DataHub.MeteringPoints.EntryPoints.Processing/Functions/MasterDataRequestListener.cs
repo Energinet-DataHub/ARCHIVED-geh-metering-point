@@ -52,7 +52,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
         {
             if (data == null) throw new ArgumentNullException(nameof(data));
             if (context == null) throw new ArgumentNullException(nameof(context));
-            var query = new GetMasterDataQuery("575881470646342169");
+
+            var request = Requests.MasterDataRequest.Parser.ParseFrom(data);
+            var query = new GetMasterDataQuery(request.GsrnNumber);
             var result = await _mediator.Send(query).ConfigureAwait(false);
 
             var message = _mapper.Convert(result);
