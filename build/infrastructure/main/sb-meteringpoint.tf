@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 module "sb_meteringpoint" {
-  source                      = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-namespace?ref=6.0.0"
+  source                      = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-namespace?ref=7.0.0"
 
   name                        = "meteringpoint"
   project_name                = var.domain_name_short
@@ -38,7 +38,7 @@ module "sb_meteringpoint" {
 }
 
 module "sbq_meteringpoint" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-queue?ref=6.0.0"
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-queue?ref=7.0.0"
 
   name                = "meteringpoint"
   namespace_id        = module.sb_meteringpoint.id

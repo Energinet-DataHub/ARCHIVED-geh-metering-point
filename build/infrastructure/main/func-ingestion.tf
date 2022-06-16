@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 module "func_ingestion" {
-  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=6.0.0"
+  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=7.0.0"
 
   name                                      = "ingestion"
   project_name                              = var.domain_name_short
@@ -26,24 +26,21 @@ module "func_ingestion" {
   application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value
   log_analytics_workspace_id                = data.azurerm_key_vault_secret.log_shared_id.value
   always_on                                 = true
+  dotnet_framework_version                  = "6"
+  use_dotnet_isolated_runtime               = true
+
   app_settings                              = {
-    # Region: Default Values
-    WEBSITE_ENABLE_SYNC_UPDATE_SITE       = true
-    WEBSITE_RUN_FROM_PACKAGE              = 1
-    WEBSITES_ENABLE_APP_SERVICE_STORAGE   = true
-    FUNCTIONS_WORKER_RUNTIME              = "dotnet-isolated"
-    # Endregion: Default Values
-    METERINGPOINT_QUEUE_URL               = "${module.sb_meteringpoint.name}.servicebus.windows.net:9093"
-    METERINGPOINT_QUEUE_CONNECTION_STRING = module.sb_meteringpoint.primary_connection_strings["send"]
-    METERINGPOINT_DB_CONNECTION_STRING    = local.MS_METERING_POINT_CONNECTION_STRING
-    METERINGPOINT_QUEUE_TOPIC_NAME        = module.sbq_meteringpoint.name
-    INTERNAL_SERVICEBUS_RETRY_COUNT       = 3
+    METERINGPOINT_QUEUE_URL                     = "${module.sb_meteringpoint.name}.servicebus.windows.net:9093"
+    METERINGPOINT_QUEUE_CONNECTION_STRING       = module.sb_meteringpoint.primary_connection_strings["send"]
+    METERINGPOINT_DB_CONNECTION_STRING          = local.MS_METERING_POINT_CONNECTION_STRING
+    METERINGPOINT_QUEUE_TOPIC_NAME              = module.sbq_meteringpoint.name
+    INTERNAL_SERVICEBUS_RETRY_COUNT             = 3
     # Shared resources logging
-    REQUEST_RESPONSE_LOGGING_CONNECTION_STRING   = data.azurerm_key_vault_secret.st_market_operator_logs_primary_connection_string.value
-    REQUEST_RESPONSE_LOGGING_CONTAINER_NAME      = data.azurerm_key_vault_secret.st_market_operator_logs_container_name.value
-    B2C_TENANT_ID                         = data.azurerm_key_vault_secret.b2c_tenant_id.value
-    BACKEND_SERVICE_APP_ID                = data.azurerm_key_vault_secret.backend_service_app_id.value
+    REQUEST_RESPONSE_LOGGING_CONNECTION_STRING  = data.azurerm_key_vault_secret.st_market_operator_logs_primary_connection_string.value
+    REQUEST_RESPONSE_LOGGING_CONTAINER_NAME     = data.azurerm_key_vault_secret.st_market_operator_logs_container_name.value
+    B2C_TENANT_ID                               = data.azurerm_key_vault_secret.b2c_tenant_id.value
+    BACKEND_SERVICE_APP_ID                      = data.azurerm_key_vault_secret.backend_service_app_id.value
   }
 
-  tags                                    = azurerm_resource_group.this.tags
+  tags                                      = azurerm_resource_group.this.tags
 }
