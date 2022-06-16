@@ -21,13 +21,13 @@ limitations under the License.
     <Nullable>enable</Nullable>
     <IsPackable>true</IsPackable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors />
+    <WarningsAsErrors/>
     <RootNamespace>Energinet.DataHub.MeteringPoints.Client.Abstractions</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageId>Energinet.DataHub.MeteringPoints.Client.Abstractions</PackageId>
-    <PackageVersion>3.0.1$(VersionSuffix)</PackageVersion>
+    <PackageVersion>3.0.2$(VersionSuffix)</PackageVersion>
     <Title>MeteringPoints client abstractions library</Title>
     <Company>Energinet-DataHub</Company>
     <Authors>Energinet-DataHub</Authors>
