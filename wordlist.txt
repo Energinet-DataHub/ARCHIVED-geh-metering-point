@@ -161,3 +161,13 @@ NINETYNINE
 MessageHub
 NuGet
 NoTechnology
+WebApi
+Backend
+backend
+Frontend
+frontend
+MeteringPoint
+dh
+repo
+enums
+GreenForce
