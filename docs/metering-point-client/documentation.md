@@ -24,4 +24,4 @@ The bundle contains the following packages:
 
 ## Diagram
 
-![](meteringpoint-client.drawio.png)
+![Simplified BFF to MP Client diagram](meteringpoint-client.drawio.png)
