@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.Requests;
 using Google.Protobuf;
@@ -63,7 +64,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Requests.M
                 MaximumCurrent = obj.MaximumCurrent,
                 MaximumPower = obj.MaximumPower,
                 PowerPlantGsrnNumber = obj.PowerPlantGsrnNumber,
-                EffectiveDate = obj.EffectiveDate.ToTimestamp(),
+                EffectiveDate = obj.EffectiveDate.ToUniversalTime().ToTimestamp(),
                 MeterNumber = obj.MeterNumber,
                 Capacity = obj.Capacity,
                 AssetType = obj.AssetType,
