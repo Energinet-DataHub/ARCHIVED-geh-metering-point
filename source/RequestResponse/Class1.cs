@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.IntegrationEvents;
+namespace Energinet.DataHub.MeteringPoints.RequestResponse;
 
 public class Class1
 {
