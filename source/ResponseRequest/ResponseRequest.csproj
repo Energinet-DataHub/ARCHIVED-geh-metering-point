@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AssemblyName>Energinet.DataHub.MeteringPoints.ResponseRequest</AssemblyName>
+        <RootNamespace>Energinet.DataHub.MeteringPoints.ResponseRequest</RootNamespace>
+        <PackageId>Energinet.DataHub.MeteringPoints.ResponseRequest</PackageId>
+        <Title>EnergySupplying IntegrationEvents library</Title>
+        <Authors>Energinet-DataHub</Authors>
+        <Description>Library to use for implementation of request response integration from EnergySupplying (MarketRoles) domain.</Description>
+        <PackageProjectUrl>https://github.com/Energinet-DataHub</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Energinet-DataHub/geh-metering-point</RepositoryUrl>
+        <PackageTags>energinet;datahub;request;response</PackageTags>
+        <PackageReleaseNotes>
+      [Release Notes](https://github.com/Energinet-DataHub/geh-metering-point/blob/master/source/RequestResponse/documents/release-notes/release-notes.md)
+      [Documentation](https://github.com/Energinet-DataHub/geh-metering-point/blob/master/source/RequestResponse/documents/development.md)
+    </PackageReleaseNotes>
+        <Company>Energinet-DataHub</Company>
+        <Product>Energinet.DataHub.MeteringPoints.ResponseRequest</Product>
+    </PropertyGroup>
+
+</Project>

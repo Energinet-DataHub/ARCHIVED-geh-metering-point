@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AssemblyName>Energinet.DataHub.MeteringPoints.IntegrationEvents</AssemblyName>
+        <RootNamespace>Energinet.DataHub.MeteringPoints.IntegrationEvents</RootNamespace>
+        <PackageId>Energinet.DataHub.MeteringPoints.IntegrationEvents</PackageId>
+        <Title>MeteringPoint IntegrationEvents library</Title>
+        <Authors>Energinet-DataHub</Authors>
+        <Description>Library to use for implementation of integration events from MeteringPoint domain.</Description>
+        <PackageProjectUrl>https://github.com/Energinet-DataHub</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Energinet-DataHub/geh-metering-point</RepositoryUrl>
+        <PackageTags>energinet;datahub;integrationevent</PackageTags>
+        <PackageReleaseNotes>
+      [Release Notes](https://github.com/Energinet-DataHub/geh-metering-point/blob/master/source/IntegrationEvents/documents/release-notes/release-notes.md)
+      [Documentation](https://github.com/Energinet-DataHub/geh-metering-point/blob/master/source/IntegrationEvents/documents/development.md)
+    </PackageReleaseNotes>
+        <Company>Energinet-DataHub</Company>
+        <Product>Energinet.DataHub.MeteringPoints.IntegrationEvents</Product>
+    </PropertyGroup>
+
+</Project>
