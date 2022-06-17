@@ -80,6 +80,6 @@
     " */"
   ],
   "ignore": [
-    "source/IntegrationEvents/source/**/*.cs"
+    "source/IntegrationEvents/source/IntegrationEvents/**/*.cs"
   ]
 }
