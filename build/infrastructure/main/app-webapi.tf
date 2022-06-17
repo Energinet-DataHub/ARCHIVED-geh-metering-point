@@ -27,10 +27,9 @@ module "app_webapi" {
   dotnet_framework_version                  = "v6.0"
 
   app_settings                              = {
-    APPINSIGHTS_INSTRUMENTATIONKEY          = "${data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value}"
-    B2C_TENANT_ID                           = "${data.azurerm_key_vault_secret.b2c_tenant_id.value}"
-    FRONTEND_OPEN_ID_URL                    = "${data.azurerm_key_vault_secret.frontend_open_id_url.value}"
-    FRONTEND_SERVICE_APP_ID                 = "${data.azurerm_key_vault_secret.frontend_service_app_id.value}"
+    B2C_TENANT_ID                           = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=b2c-tenant-id)"
+    FRONTEND_OPEN_ID_URL                    = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=frontend-open-id-url)"
+    FRONTEND_SERVICE_APP_ID                 = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=frontend-service-app-id)"
   }
 
   connection_strings = [
