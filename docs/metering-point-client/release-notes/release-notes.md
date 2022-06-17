@@ -1,5 +1,9 @@
 # MeteringPoints.Client Release notes
 
+## Version 3.0.2
+
+Updated documentation
+
 ## Version 3.0.1
 
 Added D98 (NoTechnology) AssetType value
