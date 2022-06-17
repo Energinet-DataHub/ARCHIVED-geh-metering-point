@@ -31,15 +31,17 @@ module "func_localmessagehub" {
 
   app_settings                              = {
     METERINGPOINT_DB_CONNECTION_STRING    = local.MS_METERING_POINT_CONNECTION_STRING
-    MESSAGEHUB_STORAGE_CONNECTION_STRING  = data.azurerm_key_vault_secret.st_market_operator_response_primary_connection_string.value
-    MESSAGEHUB_QUEUE_CONNECTION_STRING    = data.azurerm_key_vault_secret.sb_domain_relay_transceiver_connection_string.value
-    MESSAGEHUB_STORAGE_CONTAINER_NAME     = data.azurerm_key_vault_secret.st_market_operator_response_postofficereply_container_name.value
+    MESSAGEHUB_STORAGE_CONNECTION_STRING  = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=st-marketres-primary-connection-string)"
+    MESSAGEHUB_QUEUE_CONNECTION_STRING    = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-transceiver-connection-string)"
+    MESSAGEHUB_STORAGE_CONTAINER_NAME     = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=st-marketres-postofficereply-container-name)"
+
     METERINGPOINT_QUEUE_CONNECTION_STRING = module.sb_meteringpoint.primary_connection_strings["send"]
     METERINGPOINT_QUEUE_TOPIC_NAME        = module.sbq_meteringpoint.name
-    MESSAGEHUB_DATA_AVAILABLE_QUEUE       = data.azurerm_key_vault_secret.sbq_data_available_name.value
-    MESSAGEHUB_DOMAIN_REPLY_QUEUE         = data.azurerm_key_vault_secret.sbq_metering_points_reply_name.value
-    REQUEST_BUNDLE_QUEUE_SUBSCRIBER_QUEUE = data.azurerm_key_vault_secret.sbq_metering_points_name.value
-    BUNDLE_DEQUEUED_SUBSCRIBER_QUEUE      = data.azurerm_key_vault_secret.sbq_metering_points_dequeue_name.value
+    
+    MESSAGEHUB_DATA_AVAILABLE_QUEUE       = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-data-available-name)"
+    MESSAGEHUB_DOMAIN_REPLY_QUEUE         = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-metering-points-reply-name)"
+    REQUEST_BUNDLE_QUEUE_SUBSCRIBER_QUEUE = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-metering-points-name)"
+    BUNDLE_DEQUEUED_SUBSCRIBER_QUEUE      = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-metering-points-dequeue-name)"
   }
 
   tags                                    = azurerm_resource_group.this.tags

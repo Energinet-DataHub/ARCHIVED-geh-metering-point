@@ -35,11 +35,12 @@ module "func_ingestion" {
     METERINGPOINT_DB_CONNECTION_STRING          = local.MS_METERING_POINT_CONNECTION_STRING
     METERINGPOINT_QUEUE_TOPIC_NAME              = module.sbq_meteringpoint.name
     INTERNAL_SERVICEBUS_RETRY_COUNT             = 3
-    # Shared resources logging
-    REQUEST_RESPONSE_LOGGING_CONNECTION_STRING  = data.azurerm_key_vault_secret.st_market_operator_logs_primary_connection_string.value
-    REQUEST_RESPONSE_LOGGING_CONTAINER_NAME     = data.azurerm_key_vault_secret.st_market_operator_logs_container_name.value
-    B2C_TENANT_ID                               = data.azurerm_key_vault_secret.b2c_tenant_id.value
-    BACKEND_SERVICE_APP_ID                      = data.azurerm_key_vault_secret.backend_service_app_id.value
+    
+    # Shared resources logging    
+    REQUEST_RESPONSE_LOGGING_CONNECTION_STRING  = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=st-marketoplogs-primary-connection-string)"
+    REQUEST_RESPONSE_LOGGING_CONTAINER_NAME     = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=st-marketoplogs-container-name)"
+    B2C_TENANT_ID                               = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=b2c-tenant-id)"
+    BACKEND_SERVICE_APP_ID                      = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=backend-service-app-id)"
   }
 
   tags                                      = azurerm_resource_group.this.tags

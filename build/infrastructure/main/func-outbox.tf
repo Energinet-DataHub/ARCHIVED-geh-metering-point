@@ -32,7 +32,9 @@ module "func_outbox" {
   app_settings                              = {
     METERINGPOINT_DB_CONNECTION_STRING                            = local.MS_METERING_POINT_CONNECTION_STRING
     METERINGPOINT_QUEUE_TOPIC_NAME                                = module.sbq_meteringpoint.name
-    SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING = data.azurerm_key_vault_secret.sb_domain_relay_send_connection_string.value
+
+    SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-send-connection-string)"
+
     METERING_POINT_CREATED_TOPIC                                  = "metering-point-created"
     CONSUMPTION_METERING_POINT_CREATED_TOPIC                      = "consumption-metering-point-created"
     PRODUCTION_METERING_POINT_CREATED_TOPIC                       = "production-metering-point-created"
@@ -44,12 +46,13 @@ module "func_outbox" {
     MASTER_DATA_UPDATED_TOPIC                                     = "master-data-updated"
     ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER                          = "*/10 * * * * *"
     EVENT_MESSAGE_DISPATCH_TRIGGER_TIMER                          = "*/10 * * * * *"
-    MESSAGEHUB_STORAGE_CONNECTION_STRING                          = data.azurerm_key_vault_secret.st_market_operator_response_primary_connection_string.value
-    MESSAGEHUB_QUEUE_CONNECTION_STRING                            = data.azurerm_key_vault_secret.sb_domain_relay_transceiver_connection_string.value
-    MESSAGEHUB_STORAGE_CONTAINER_NAME                             = data.azurerm_key_vault_secret.st_market_operator_response_postofficereply_container_name.value
-    CHARGES_DEFAULT_LINK_RESPONSE_QUEUE                           = data.azurerm_key_vault_secret.sbq_create_link_reply_name.value
-    MESSAGEHUB_DATA_AVAILABLE_QUEUE                               = data.azurerm_key_vault_secret.sbq_data_available_name.value
-    MESSAGEHUB_DOMAIN_REPLY_QUEUE                                 = data.azurerm_key_vault_secret.sbq_metering_points_reply_name.value
+
+    MESSAGEHUB_STORAGE_CONNECTION_STRING                          = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=st-marketres-primary-connection-string)"
+    MESSAGEHUB_QUEUE_CONNECTION_STRING                            = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-transceiver-connection-string)"
+    MESSAGEHUB_STORAGE_CONTAINER_NAME                             = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=st-marketres-postofficereply-container-name)"
+    CHARGES_DEFAULT_LINK_RESPONSE_QUEUE                           = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-create-link-reply-name)"
+    MESSAGEHUB_DATA_AVAILABLE_QUEUE                               = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-data-available-name)"
+    MESSAGEHUB_DOMAIN_REPLY_QUEUE                                 = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-metering-points-reply-name)"
   }
 
   tags                                      = azurerm_resource_group.this.tags
