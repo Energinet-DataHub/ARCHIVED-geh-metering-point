@@ -157,7 +157,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
             container.Register<IntegrationEventReceiver>(Lifestyle.Scoped);
             container.Register<ChargesResponseReceiver>(Lifestyle.Scoped);
-            container.Register<MasterDataRequestListener>(Lifestyle.Scoped);
+            // container.Register<MasterDataRequestListener>(Lifestyle.Scoped);
             container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
             container.Register<IEnergySupplierRepository, EnergySupplierRepository>(Lifestyle.Scoped);
             container.Register<IGridAreaRepository, GridAreaRepository>(Lifestyle.Scoped);
@@ -196,15 +196,15 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IBusinessProcessValidationContext, BusinessProcessValidationContext>(Lifestyle.Scoped);
             container.Register<IBusinessProcessCommandFactory, BusinessProcessCommandFactory>(Lifestyle.Scoped);
 
-            var serviceBusConnectionString =
-                Environment.GetEnvironmentVariable("SERVICE_BUS_SEND_CONNECTION_STRING");
-            container.Register<ServiceBusSender>(
-                () =>
-                {
-                    var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
-                    return serviceBusClient.CreateSender("metering-point-master-data-response");
-                },
-                Lifestyle.Singleton);
+            // var serviceBusConnectionString =
+            //     Environment.GetEnvironmentVariable("SERVICE_BUS_SEND_CONNECTION_STRING");
+            // container.Register<ServiceBusSender>(
+            //     () =>
+            //     {
+            //         var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
+            //         return serviceBusClient.CreateSender("metering-point-master-data-response");
+            //     },
+            //     Lifestyle.Singleton);
 
             // TODO: remove this when infrastructure and application has been split into more assemblies.
             container.Register<IDocumentSerializer<ConfirmMessage>, ConfirmMessageXmlSerializer>(Lifestyle.Singleton);
