@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Dapper;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Queries;
+using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 
 namespace Energinet.DataHub.MeteringPoints.Application.RequestMasterData;
 
@@ -187,7 +188,7 @@ public record MasterData(
     bool ProductionObligation,
     string NetSettlementGroup,
     string DisconnectionType,
-    string ConnectionType);
+    string ConnectionType) : IOutboundMessage;
 
 public record Address(
     string StreetName,
