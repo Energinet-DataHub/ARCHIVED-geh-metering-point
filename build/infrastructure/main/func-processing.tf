@@ -39,8 +39,9 @@ module "func_processing" {
 
     CHARGES_DEFAULT_LINK_RESPONSE_QUEUE     = "create-link-reply"
     RAISE_TIME_HAS_PASSED_EVENT_SCHEDULE    = "*/10 * * * * *"
-    SERVICE_BUS_LISTEN_CONNECTION_STRING    = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-listen-connection-string)"
-    MASTER_DATA_REQUEST_QUEUE_NAME          = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-metering-point-master-data-request-name)"
+    SERVICE_BUS_LISTEN_CONNECTION_STRING    = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-listen-connection-string)",
+    SERVICE_BUS_SEND_CONNECTION_STRING      = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-send-connection-string)"        
+    MASTER_DATA_REQUEST_QUEUE_NAME          = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-metering-point-master-data-request-name)"    
   }
 
   tags                                      = azurerm_resource_group.this.tags
