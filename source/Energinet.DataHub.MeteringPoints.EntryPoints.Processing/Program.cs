@@ -198,8 +198,12 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
             var serviceBusConnectionString =
                 Environment.GetEnvironmentVariable("SERVICE_BUS_SEND_CONNECTION_STRING");
-            container.Register<ServiceBusClient>(
-                () => new ServiceBusClient(serviceBusConnectionString),
+            container.Register<ServiceBusSender>(
+                () =>
+                {
+                    var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
+                    return serviceBusClient.CreateSender("metering-point-master-data-response");
+                },
                 Lifestyle.Singleton);
 
             // TODO: remove this when infrastructure and application has been split into more assemblies.

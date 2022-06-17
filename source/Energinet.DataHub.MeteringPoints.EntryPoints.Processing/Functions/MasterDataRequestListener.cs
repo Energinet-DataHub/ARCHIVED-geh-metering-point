@@ -35,14 +35,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
         public MasterDataRequestListener(
             ILogger logger,
             IMediator mediator,
-            ServiceBusClient serviceBusClient,
+            ServiceBusSender serviceBusSender,
             ProtobufOutboundMapper<MasterData> mapper)
         {
-            if (serviceBusClient == null) throw new ArgumentNullException(nameof(serviceBusClient));
             _logger = logger;
             _mediator = mediator;
             _mapper = mapper;
-            _serviceBusSender = serviceBusClient.CreateSender("metering-point-master-data-response");
+            _serviceBusSender = serviceBusSender;
         }
 
         [Function("MasterDataRequestListener")]
