@@ -39,6 +39,7 @@ module "func_processing" {
     CHARGES_DEFAULT_LINK_RESPONSE_QUEUE     = "create-link-reply"
     RAISE_TIME_HAS_PASSED_EVENT_SCHEDULE    = "*/10 * * * * *"
     SERVICE_BUS_LISTEN_CONNECTION_STRING    = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-listen-connection-string)",
+    SERVICE_BUS_SEND_CONNECTION_STRING    = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-send-connection-string)"
     MASTER_DATA_REQUEST_QUEUE_NAME          = data.azurerm_key_vault_secret.sbq_metering_point_master_data_request_name.value
   }
 
