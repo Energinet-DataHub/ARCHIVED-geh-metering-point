@@ -45,6 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
         {
             Environment.SetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING", SomeString);
             Environment.SetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", SomeString);
+            Environment.SetEnvironmentVariable("SERVICE_BUS_SEND_CONNECTION_STRING", ServiceBusConnectionString);
             var program = new EntryPoints.Processing.Program();
 
             program.ConfigureApplication();
