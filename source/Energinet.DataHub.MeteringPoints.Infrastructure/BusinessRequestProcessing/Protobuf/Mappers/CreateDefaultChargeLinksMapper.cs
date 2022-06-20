@@ -15,13 +15,12 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
-using Energinet.DataHub.MeteringPoints.RequestResponse.Contract;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Protobuf.Mappers
 {
-    public class CreateDefaultChargeLinksMapper : ProtobufInboundMapper<CreateDefaultChargeLinks>
+    public class CreateDefaultChargeLinksMapper : ProtobufInboundMapper<RequestResponse.Contract.CreateDefaultChargeLinks>
     {
-        protected override IInboundMessage Convert(CreateDefaultChargeLinks obj)
+        protected override IInboundMessage Convert(RequestResponse.Contract.CreateDefaultChargeLinks obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 
