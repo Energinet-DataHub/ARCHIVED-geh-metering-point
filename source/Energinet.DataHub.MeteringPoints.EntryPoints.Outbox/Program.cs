@@ -46,6 +46,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEve
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.IntegrationEvents.Contracts;
 using Energinet.DataHub.MeteringPoints.Messaging;
