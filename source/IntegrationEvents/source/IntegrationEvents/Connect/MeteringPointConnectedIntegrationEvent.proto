@@ -17,7 +17,7 @@ syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
 
-option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEventContracts";
+option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEvents.Connect";
 
 /**
  * This message is sent out when a metering point is connected.
