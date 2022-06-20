@@ -29,19 +29,19 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
     {
         private readonly ILogger _logger;
         private readonly IMediator _mediator;
-        private readonly ProtobufOutboundMapper<MasterData> _mapper;
         private readonly ServiceBusSender _serviceBusSender;
+        private readonly ProtobufOutboundMapperFactory _factory;
 
         public MasterDataRequestListener(
             ILogger logger,
             IMediator mediator,
             ServiceBusSender serviceBusSender,
-            ProtobufOutboundMapper<MasterData> mapper)
+            ProtobufOutboundMapperFactory factory)
         {
             _logger = logger;
             _mediator = mediator;
-            _mapper = mapper;
             _serviceBusSender = serviceBusSender;
+            _factory = factory;
         }
 
         [Function("MasterDataRequestListener")]
@@ -57,7 +57,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
 
             var result = await _mediator.Send(query).ConfigureAwait(false);
 
-            var message = _mapper.Convert(result);
+            var mapper = _factory.GetMapper(result);
+            var message = mapper.Convert(result);
             var bytes = message.ToByteArray();
             ServiceBusMessage serviceBusMessage = new(bytes)
             {

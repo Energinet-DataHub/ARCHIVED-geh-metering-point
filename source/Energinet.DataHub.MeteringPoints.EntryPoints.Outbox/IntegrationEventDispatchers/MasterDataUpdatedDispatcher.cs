@@ -24,8 +24,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDi
 {
     public class MasterDataUpdatedDispatcher : IntegrationEventDispatcher<MasterDataUpdatedTopic, MasterDataWasUpdatedIntegrationEvent>
     {
-        public MasterDataUpdatedDispatcher(ITopicSender<MasterDataUpdatedTopic> topicSender, ProtobufOutboundMapper<MasterDataWasUpdatedIntegrationEvent> mapper, IIntegrationEventMessageFactory integrationEventMessageFactory, IIntegrationMetadataContext integrationMetadataContext)
-            : base(topicSender, mapper, integrationEventMessageFactory, integrationMetadataContext)
+        public MasterDataUpdatedDispatcher(ITopicSender<MasterDataUpdatedTopic> topicSender, ProtobufOutboundMapperFactory protobufOutboundMapperFactory, IIntegrationEventMessageFactory integrationEventMessageFactory, IIntegrationMetadataContext integrationMetadataContext)
+            : base(topicSender, protobufOutboundMapperFactory, integrationEventMessageFactory, integrationMetadataContext)
         {
         }
 
