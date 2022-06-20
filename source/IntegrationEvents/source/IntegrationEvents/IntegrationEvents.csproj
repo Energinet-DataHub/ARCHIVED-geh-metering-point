@@ -1,16 +1,18 @@
-<!--Copyright 2020 Energinet DataHub A/S
+<!--
+Copyright 2020 Energinet DataHub A/S
 
 Licensed under the Apache License, Version 2.0 (the "License2");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-   http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-limitations under the License.-->
+limitations under the License.
+-->
 
 <Project Sdk="Microsoft.NET.Sdk">
 
@@ -35,10 +37,22 @@ limitations under the License.-->
     </PackageReleaseNotes>
     <Company>Energinet-DataHub</Company>
     <Product>Energinet.DataHub.MeteringPoints.IntegrationEvents</Product>
+    <IsPackable>true</IsPackable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageDescription>
+      [Release Notes](https://github.com/Energinet-DataHub/geh-metering-point/blob/master/source/IntegrationEvents/documents/release-notes/release-notes.md)
+      [Documentation](https://github.com/Energinet-DataHub/geh-metering-point/blob/master/source/IntegrationEvents/documents/development.md)
+    </PackageDescription>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <!-- Disable warning on your public types/methods for not having added full documentation tags -->
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.21.1"/>
+    <PackageReference Include="Google.Protobuf" Version="3.21.1" />
     <PackageReference Include="Grpc.Tools" Version="2.46.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -54,6 +68,10 @@ limitations under the License.-->
       <OutputDir>.</OutputDir>
       <Generator>MSBuild:Compile</Generator>
     </Protobuf>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="ChangeConnectionStatus\MeteringPointDisconnectedIntegrationEvent.cs" />
   </ItemGroup>
 
 </Project>
