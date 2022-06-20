@@ -69,9 +69,4 @@ limitations under the License.
       <Generator>MSBuild:Compile</Generator>
     </Protobuf>
   </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="ChangeConnectionStatus\MeteringPointDisconnectedIntegrationEvent.cs" />
-  </ItemGroup>
-
 </Project>
