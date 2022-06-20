@@ -13,10 +13,10 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Send;
+using Energinet.DataHub.MeteringPoints.RequestResponse.Contract;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleInjector;

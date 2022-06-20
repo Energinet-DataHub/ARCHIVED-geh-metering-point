@@ -15,9 +15,9 @@
 using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Application.RequestMasterData;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
+using Energinet.DataHub.MeteringPoints.RequestResponse.Requests;
 using Google.Protobuf;
 using MediatR;
 using Microsoft.Azure.Functions.Worker;
@@ -52,7 +52,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
             if (data == null) throw new ArgumentNullException(nameof(data));
             if (context == null) throw new ArgumentNullException(nameof(context));
 
-            var request = Requests.MasterDataRequest.Parser.ParseFrom(data);
+            var request = MasterDataRequest.Parser.ParseFrom(data);
             var query = new GetMasterDataQuery(request.GsrnNumber);
 
             var result = await _mediator.Send(query).ConfigureAwait(false);
