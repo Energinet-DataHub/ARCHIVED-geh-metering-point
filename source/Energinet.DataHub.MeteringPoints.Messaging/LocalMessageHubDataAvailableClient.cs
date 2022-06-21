@@ -17,6 +17,7 @@ using Energinet.DataHub.MessageHub.Model.Model;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 
 namespace Energinet.DataHub.MeteringPoints.Messaging
@@ -27,17 +28,20 @@ namespace Energinet.DataHub.MeteringPoints.Messaging
         private readonly MessageHubMessageFactory _messageHubMessageFactory;
         private readonly ICorrelationContext _correlationContext;
         private readonly IMessageHubMessageRepository _messageHubMessageRepository;
+        private readonly ILogger _logger;
 
         public LocalMessageHubDataAvailableClient(
             IMessageHubMessageRepository messageHubMessageRepository,
             IOutboxDispatcher<DataAvailableNotification> dataAvailableOutboxDispatcher,
             MessageHubMessageFactory messageHubMessageFactory,
-            ICorrelationContext correlationContext)
+            ICorrelationContext correlationContext,
+            ILogger logger)
         {
             _messageHubMessageRepository = messageHubMessageRepository;
             _dataAvailableOutboxDispatcher = dataAvailableOutboxDispatcher;
             _messageHubMessageFactory = messageHubMessageFactory;
             _correlationContext = correlationContext;
+            _logger = logger;
         }
 
         public void DataAvailable(MessageHubEnvelope messageHubEnvelope)
@@ -54,6 +58,7 @@ namespace Energinet.DataHub.MeteringPoints.Messaging
             var messageMetadata = _messageHubMessageFactory.Create(messageHubEnvelope.Correlation, messageHubEnvelope.Content, messageHubEnvelope.MessageType, messageHubEnvelope.Recipient, messageHubEnvelope.GsrnNumber);
             _messageHubMessageRepository.AddMessageMetadata(messageMetadata);
 
+            _logger.LogInformation($"Sending DataAvailableNotification to Post Office");
             _dataAvailableOutboxDispatcher.Dispatch(new DataAvailableNotification(messageMetadata.Id, new GlobalLocationNumberDto(messageHubEnvelope.Recipient), new MessageTypeDto(messageHubEnvelope.MessageType.Name), DomainOrigin.MeteringPoints, true, 1, messageHubEnvelope.DocumentName));
         }
     }

@@ -25,6 +25,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 using Energinet.DataHub.MeteringPoints.Messaging;
 using Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Xunit;
 using Xunit.Categories;
 
@@ -61,11 +62,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
                 new BundleCreatorMock(),
                 new SystemDateTimeProviderStub());
 
+            using var loggerFactory = new LoggerFactory();
             _localMessageHubDataAvailableClient = new LocalMessageHubDataAvailableClient(
                 _messageHubMessageRepository,
                 _dataAvailableNotificationOutboxDispatcher,
                 new MessageHubMessageFactory(new SystemDateTimeProviderStub()),
-                new CorrelationContext());
+                new CorrelationContext(),
+                new Logger<LocalMessageHubTests>(loggerFactory));
         }
 
         [Fact]
