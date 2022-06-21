@@ -13,7 +13,9 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Send;
 using Energinet.DataHub.MeteringPoints.RequestResponse.Contract;
@@ -22,6 +24,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 using Xunit;
+using InboundMapper = Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Protobuf.Mappers;
 using MasterDataDocument = Energinet.DataHub.MeteringPoints.Application.MarketDocuments.MasterDataDocument;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests
@@ -36,10 +39,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
             // Send setup
             await using var sendingContainer = new Container();
+            sendingContainer.Options.ResolveUnregisteredConcreteTypes = true;
             sendingContainer.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
             sendingContainer.Register<InProcessChannel>(Lifestyle.Singleton);
             sendingContainer.Register<Dispatcher>(Lifestyle.Transient);
             sendingContainer.SendProtobuf<MeteringPointEnvelope>();
+            sendingContainer.Register<ProtobufOutboundMapper<MasterDataDocument>, MasterDataDocumentMapper>();
             sendingContainer.Verify();
 
             // Send scope
@@ -60,6 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             // Receive setup
             await using var receivingContainer = new Container();
             receivingContainer.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
+            receivingContainer.Register<ProtobufInboundMapper<MeteringPoints.RequestResponse.Contract.MasterDataDocument>, InboundMapper.MasterDataDocumentMapper>();
             receivingContainer.ReceiveProtobuf<MeteringPointEnvelope>(
                 config => config
                     .FromOneOf(envelope => envelope.MeteringPointMessagesCase)
