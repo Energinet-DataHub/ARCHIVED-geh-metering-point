@@ -65,6 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             // Receive setup
             await using var receivingContainer = new Container();
             receivingContainer.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
+            receivingContainer.Options.ResolveUnregisteredConcreteTypes = true;
             receivingContainer.Register<ProtobufInboundMapper<MeteringPoints.RequestResponse.Contract.MasterDataDocument>, InboundMapper.MasterDataDocumentMapper>();
             receivingContainer.ReceiveProtobuf<MeteringPointEnvelope>(
                 config => config

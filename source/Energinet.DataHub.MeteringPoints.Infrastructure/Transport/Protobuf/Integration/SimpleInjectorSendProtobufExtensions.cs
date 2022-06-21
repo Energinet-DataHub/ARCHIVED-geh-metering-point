@@ -45,7 +45,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Int
 
             var mapperTypes = ScanForMappers(container, assemblies);
 
-            container.Register<ProtobufOutboundMapperFactory>(Lifestyle.Scoped);
             container.Register<MessageSerializer, ProtobufMessageSerializer>(Lifestyle.Scoped);
             container.Register(_mapperType, mapperTypes, Lifestyle.Scoped);
         }

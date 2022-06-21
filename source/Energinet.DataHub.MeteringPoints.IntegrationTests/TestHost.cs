@@ -90,6 +90,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Providers.MeteringPointOwnership;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
@@ -194,6 +195,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IUserProvider, UserProvider>(Lifestyle.Scoped);
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(databaseFixture.DatabaseManager.ConnectionString), Lifestyle.Scoped);
             _container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
+            _container.Register<ProtobufOutboundMapperFactory>();
+            _container.Register<ProtobufInboundMapperFactory>();
             Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
 
             _container.Register<IBusinessProcessValidationContext, BusinessProcessValidationContext>(Lifestyle.Scoped);
