@@ -71,6 +71,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
                 var result = _xmlDeserializer.Deserialize(element!);
                 var senderValidationResult = _xmlSenderValidator.ValidateSender(result.HeaderData.Sender);
 
+                _logger.LogInformation($"Received request of type {result.HeaderData.ProcessType} from sender {result.HeaderData.Sender.Id}");
+
                 if (!senderValidationResult.IsValid)
                     return await CreateForbiddenResponseAsync(request, senderValidationResult.ErrorMessage).ConfigureAwait(false);
 
@@ -122,6 +124,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
         {
             foreach (var command in commands)
             {
+                _logger.LogInformation($"Dispatching command for internal processing");
                 await _dispatcher.DispatchAsync((IOutboundMessage)command).ConfigureAwait(false);
             }
         }
