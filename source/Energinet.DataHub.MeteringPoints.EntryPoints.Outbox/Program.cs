@@ -102,6 +102,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
             container.Register<IIntegrationMetadataContext, IntegrationMetadataContext>(Lifestyle.Scoped);
             container.Register<IIntegrationEventMessageFactory, IntegrationEventServiceBusMessageFactory>(Lifestyle.Scoped);
+            container.Register(typeof(ProtobufOutboundMapper<>), typeof(ProtobufOutboundMapper<>).Assembly);
             container.Register<ProtobufOutboundMapperFactory>();
             container.Register<ProtobufInboundMapperFactory>();
 

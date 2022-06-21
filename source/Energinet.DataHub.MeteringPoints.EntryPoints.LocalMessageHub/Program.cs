@@ -111,6 +111,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub
             container.Register<IMessageDispatcher, InternalDispatcher>(Lifestyle.Scoped);
             container.Register<Channel, InternalServiceBus>(Lifestyle.Scoped);
             container.Register<IActorContext, ActorContext>(Lifestyle.Scoped);
+            container.Register(typeof(ProtobufOutboundMapper<>), typeof(ProtobufOutboundMapper<>).Assembly);
             container.Register<ProtobufOutboundMapperFactory>();
             container.Register<ProtobufInboundMapperFactory>();
 
