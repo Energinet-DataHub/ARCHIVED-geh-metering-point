@@ -41,6 +41,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SimpleInjector;
+using InboundMapper = Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Protobuf.Mappers;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 {
@@ -77,6 +78,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             container.Register<CorrelationIdMiddleware>(Lifestyle.Scoped);
             container.Register<EntryPointTelemetryScopeMiddleware>(Lifestyle.Scoped);
             container.Register<ProtobufOutboundMapper<Application.MarketDocuments.MasterDataDocument>, MasterDataDocumentMapper>();
+            container.Register<ProtobufInboundMapper<MeteringPoints.RequestResponse.Contract.MasterDataDocument>, InboundMapper.MasterDataDocumentMapper>();
 
             var tenantId = Environment.GetEnvironmentVariable("B2C_TENANT_ID") ?? throw new InvalidOperationException(
                 "B2C tenant id not found.");

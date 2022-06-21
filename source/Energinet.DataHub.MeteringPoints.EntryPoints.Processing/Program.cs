@@ -100,6 +100,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SimpleInjector;
 using MasterDataDocument = Energinet.DataHub.MeteringPoints.Application.MarketDocuments.MasterDataDocument;
+using InboundMapper = Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Protobuf.Mappers;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 {
@@ -197,6 +198,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IBusinessProcessValidationContext, BusinessProcessValidationContext>(Lifestyle.Scoped);
             container.Register<IBusinessProcessCommandFactory, BusinessProcessCommandFactory>(Lifestyle.Scoped);
             container.Register<ProtobufOutboundMapper<Application.MarketDocuments.MasterDataDocument>, MasterDataDocumentMapper>();
+            container.Register<ProtobufInboundMapper<MeteringPoints.RequestResponse.Contract.MasterDataDocument>, InboundMapper.MasterDataDocumentMapper>();
 
             var serviceBusConnectionString =
                 Environment.GetEnvironmentVariable("SERVICE_BUS_SEND_CONNECTION_STRING");
