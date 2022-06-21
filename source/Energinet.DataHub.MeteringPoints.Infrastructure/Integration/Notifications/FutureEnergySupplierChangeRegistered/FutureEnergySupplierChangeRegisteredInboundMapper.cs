@@ -19,9 +19,9 @@ using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notifications.FutureEnergySupplierChangeRegistered
 {
-    public class FutureEnergySupplierChangeRegisteredInboundMapper : ProtobufInboundMapper<NotificationContracts.FutureEnergySupplierChangeRegistered>
+    public class FutureEnergySupplierChangeRegisteredInboundMapper : ProtobufInboundMapper<MeteringPoints.IntegrationEvents.NotificationContracts.FutureEnergySupplierChangeRegistered>
     {
-        protected override IInboundMessage Convert(NotificationContracts.FutureEnergySupplierChangeRegistered obj)
+        protected override IInboundMessage Convert(MeteringPoints.IntegrationEvents.NotificationContracts.FutureEnergySupplierChangeRegistered obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 

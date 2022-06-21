@@ -18,7 +18,7 @@ syntax = "proto3";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
-option csharp_namespace = "Energinet.DataHub.MeteringPoints.Requests";
+option csharp_namespace = "Energinet.DataHub.MeteringPoints.RequestResponse.Response";
 
 message Address {
     google.protobuf.StringValue street_name = 1;

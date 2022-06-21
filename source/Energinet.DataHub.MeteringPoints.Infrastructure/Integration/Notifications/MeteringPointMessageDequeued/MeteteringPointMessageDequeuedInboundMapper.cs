@@ -16,12 +16,13 @@ using System;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Application.Integrations.ChargeLinks.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
+using Energinet.DataHub.MeteringPoints.IntegrationEvents.CreateMeteringPoint;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notifications.MeteringPointMessageDequeued
 {
-    public class MeteteringPointMessageDequeuedInboundMapper : ProtobufInboundMapper<IntegrationEventContracts.MeteringPointMessageDequeuedIntegrationEvent>
+    public class MeteteringPointMessageDequeuedInboundMapper : ProtobufInboundMapper<MeteringPointMessageDequeuedIntegrationEvent>
     {
-        protected override IInboundMessage Convert(IntegrationEventContracts.MeteringPointMessageDequeuedIntegrationEvent obj)
+        protected override IInboundMessage Convert(MeteringPointMessageDequeuedIntegrationEvent obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 

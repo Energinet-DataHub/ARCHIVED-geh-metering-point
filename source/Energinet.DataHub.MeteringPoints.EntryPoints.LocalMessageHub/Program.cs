@@ -20,7 +20,6 @@ using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.MessageHub.Client;
 using Energinet.DataHub.MessageHub.Client.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Application.Common;
-using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
@@ -34,11 +33,13 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.AccountingPointCharact
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GenericNotification;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.Messaging;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling;
@@ -46,6 +47,7 @@ using Energinet.DataHub.MeteringPoints.Messaging.Bundling.AccountingPointCharact
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Confirm;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Generic;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Reject;
+using Energinet.DataHub.MeteringPoints.RequestResponse.Contract;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -109,6 +111,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub
             container.Register<IMessageDispatcher, InternalDispatcher>(Lifestyle.Scoped);
             container.Register<Channel, InternalServiceBus>(Lifestyle.Scoped);
             container.Register<IActorContext, ActorContext>(Lifestyle.Scoped);
+            container.Register(typeof(ProtobufOutboundMapper<>), typeof(ProtobufOutboundMapper<>).Assembly);
+            container.Register<ProtobufOutboundMapperFactory>();
+            container.Register<ProtobufInboundMapperFactory>();
 
             container.UseMediatR()
                 .WithPipeline()

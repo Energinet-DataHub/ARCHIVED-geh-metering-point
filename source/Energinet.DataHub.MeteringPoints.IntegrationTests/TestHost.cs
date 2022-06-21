@@ -41,7 +41,6 @@ using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwners
 using Energinet.DataHub.MeteringPoints.Application.RequestMasterData;
 using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
-using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
@@ -91,6 +90,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Providers.MeteringPointOwnership;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
@@ -99,6 +99,7 @@ using Energinet.DataHub.MeteringPoints.Messaging.Bundling.AccountingPointCharact
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Confirm;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Generic;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Reject;
+using Energinet.DataHub.MeteringPoints.RequestResponse.Contract;
 using FluentAssertions;
 using FluentValidation;
 using MediatR;
@@ -194,6 +195,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IUserProvider, UserProvider>(Lifestyle.Scoped);
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(databaseFixture.DatabaseManager.ConnectionString), Lifestyle.Scoped);
             _container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
+            _container.Register<ProtobufOutboundMapperFactory>();
+            _container.Register<ProtobufInboundMapperFactory>();
             Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
 
             _container.Register<IBusinessProcessValidationContext, BusinessProcessValidationContext>(Lifestyle.Scoped);

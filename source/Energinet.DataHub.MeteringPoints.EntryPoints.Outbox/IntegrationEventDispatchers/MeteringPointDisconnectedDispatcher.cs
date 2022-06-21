@@ -24,8 +24,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDi
 {
     public class MeteringPointDisconnectedDispatcher : IntegrationEventDispatcher<MeteringPointDisconnectedTopic, MeteringPointDisconnectedIntegrationEvent>
     {
-        public MeteringPointDisconnectedDispatcher(ITopicSender<MeteringPointDisconnectedTopic> topicSender, ProtobufOutboundMapper<MeteringPointDisconnectedIntegrationEvent> mapper, IIntegrationEventMessageFactory integrationEventMessageFactory, IIntegrationMetadataContext integrationMetadataContext)
-            : base(topicSender, mapper, integrationEventMessageFactory, integrationMetadataContext)
+        public MeteringPointDisconnectedDispatcher(ITopicSender<MeteringPointDisconnectedTopic> topicSender, ProtobufOutboundMapperFactory protobufOutboundMapperFactory, IIntegrationEventMessageFactory integrationEventMessageFactory, IIntegrationMetadataContext integrationMetadataContext)
+            : base(topicSender, protobufOutboundMapperFactory, integrationEventMessageFactory, integrationMetadataContext)
         {
         }
 

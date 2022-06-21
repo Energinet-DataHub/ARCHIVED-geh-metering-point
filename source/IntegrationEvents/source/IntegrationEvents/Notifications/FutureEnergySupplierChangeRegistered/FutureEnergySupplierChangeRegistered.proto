@@ -17,13 +17,14 @@ syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
 
-option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEventContracts";
-
+option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEvents.NotificationContracts";
 /**
- * This message is sent out when a metering point is connected.
+ * This message is sent out when an energy supplier has been changed.
  */
-message MeteringPointConnected {
-  string meteringpoint_id = 1; // Unique identification for metering point
-  string gsrn_number = 2; // Business facing metering point identifier
-  google.protobuf.Timestamp effective_date = 3; // Date which the metering point is connected
+
+message FutureEnergySupplierChangeRegistered {
+  string accountingpoint_id = 1;
+  string gsrn_number = 2; // Unique metering point identification
+  string energy_supplier_gln = 3; // Unique Energy Supplier identifcation.
+  google.protobuf.Timestamp effective_date = 4; // Date which the change of supplier goes into effect.
 }

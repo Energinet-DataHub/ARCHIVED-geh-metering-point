@@ -15,14 +15,15 @@
 
 syntax = "proto3";
 
-option csharp_namespace = "NotificationContracts";
-/**
- * This message is sent out when an energy supplier has been changed.
- */
+import "google/protobuf/timestamp.proto";
 
-message EnergySupplierChanged {
-  string accountingpoint_id = 1;
-  string gsrn_number = 2; // Unique metering point identification
-  string energy_supplier_gln = 3; // Unique Energy Supplier identifcation.
-  string effective_date = 4; // Date which the change of supplier goes into effect.
+option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEvents.Connect";
+
+/**
+ * This message is sent out when a metering point is connected.
+ */
+message MeteringPointConnected {
+  string meteringpoint_id = 1; // Unique identification for metering point
+  string gsrn_number = 2; // Business facing metering point identifier
+  google.protobuf.Timestamp effective_date = 3; // Date which the metering point is connected
 }

@@ -37,7 +37,6 @@ using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwners
 using Energinet.DataHub.MeteringPoints.Application.RequestMasterData;
 using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Application.Validation;
-using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
@@ -70,6 +69,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ChangeMasterData;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.ConnectMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GenericNotification;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.ChargeLinks.Create;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Disconnect;
@@ -92,6 +92,7 @@ using Energinet.DataHub.MeteringPoints.Messaging.Bundling.AccountingPointCharact
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Confirm;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Generic;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Reject;
+using Energinet.DataHub.MeteringPoints.RequestResponse.Contract;
 using FluentValidation;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
@@ -195,6 +196,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IActorProvider, ActorProvider>(Lifestyle.Scoped);
             container.Register<IBusinessProcessValidationContext, BusinessProcessValidationContext>(Lifestyle.Scoped);
             container.Register<IBusinessProcessCommandFactory, BusinessProcessCommandFactory>(Lifestyle.Scoped);
+            container.Register(typeof(ProtobufOutboundMapper<>), typeof(ProtobufOutboundMapper<>).Assembly);
+            container.Register(typeof(ProtobufInboundMapper<>), typeof(ProtobufInboundMapper<>).Assembly);
+            container.Register<ProtobufOutboundMapperFactory>();
+            container.Register<ProtobufInboundMapperFactory>();
 
             var serviceBusConnectionString =
                 Environment.GetEnvironmentVariable("SERVICE_BUS_SEND_CONNECTION_STRING");

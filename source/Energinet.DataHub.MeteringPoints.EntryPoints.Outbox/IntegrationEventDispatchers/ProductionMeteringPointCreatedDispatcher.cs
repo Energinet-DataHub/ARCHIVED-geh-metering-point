@@ -23,8 +23,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDi
 {
     public class ProductionMeteringPointCreatedDispatcher : IntegrationEventDispatcher<ProductionMeteringPointCreatedTopic, ProductionMeteringPointCreatedIntegrationEvent>
     {
-        public ProductionMeteringPointCreatedDispatcher(ITopicSender<ProductionMeteringPointCreatedTopic> topicSender, ProtobufOutboundMapper<ProductionMeteringPointCreatedIntegrationEvent> mapper, IIntegrationEventMessageFactory integrationEventMessageFactory, IIntegrationMetadataContext integrationMetadataContext)
-            : base(topicSender, mapper, integrationEventMessageFactory, integrationMetadataContext)
+        public ProductionMeteringPointCreatedDispatcher(ITopicSender<ProductionMeteringPointCreatedTopic> topicSender, ProtobufOutboundMapperFactory protobufOutboundMapperFactory, IIntegrationEventMessageFactory integrationEventMessageFactory, IIntegrationMetadataContext integrationMetadataContext)
+            : base(topicSender, protobufOutboundMapperFactory, integrationEventMessageFactory, integrationMetadataContext)
         {
         }
 

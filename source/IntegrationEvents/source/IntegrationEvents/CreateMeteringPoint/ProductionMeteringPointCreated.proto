@@ -17,12 +17,21 @@ syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
 
-option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEventContracts";
+option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEvents.CreateMeteringPoint";
 
 /**
  * This message is sent out when a Consumption metering point is created.
  */
-message ExchangeMeteringPointCreated {
+message ProductionMeteringPointCreated {
+  enum NetSettlementGroup {
+    NSG_ZERO = 0;
+    NSG_ONE = 1;
+    NSG_TWO = 2;
+    NSG_THREE = 3;
+    NSG_SIX = 4;
+    NSG_NINETYNINE = 5;
+  }
+
   enum ProductType {
     PT_TARIFF = 0;
     PT_FUELQUANTITY = 1;
@@ -42,27 +51,26 @@ message ExchangeMeteringPointCreated {
     MRP_HOURLY = 0; // Read every hour
     MRP_QUARTERLY = 1; // Read every 15 minutes
   }
-
+  
   enum ConnectionState {
     CS_NEW = 0; // Always created with connection state new
   }
-
+  
   enum UnitType {
-    UT_WH = 0; // Watt per hour
-    UT_KWH = 1; // Kilowatt per hour
-    UT_MWH = 2; // Megawatt per hour
-    UT_GWH = 3; // Gigawatt per hour
+      UT_WH = 0; // Watt per hour
+      UT_KWH = 1; // Kilowatt per hour
+      UT_MWH = 2; // Megawatt per hour
+      UT_GWH = 3; // Gigawatt per hour
   }
 
   string metering_point_id = 1; // Unique identification for metering point
   string gsrn_number = 2; // Business facing metering point identifier
   string grid_area_code = 3; // Signifies which grid area a metering point belongs to
-  string to_grid_area_code = 4; // Denotes which grid area energy is exchanged to
-  string from_grid_area_code = 5; // Denotes which grid area energy is exchange from
-  MeteringMethod metering_method = 6; // Metering method denotes where energy quantities originate
-  MeterReadingPeriodicity meter_reading_periodicity = 7; // Denotes how often a energy quantity is read on a metering point
-  ProductType product = 8; // Denotes the product type
-  ConnectionState connection_state = 9; // Denotes which connection state a metering point is created with. For an exchange metering point this is always "New"
-  UnitType unit_type = 10; // Denotes the unit type. For a production metering point this is always a variation of watt/hour 
-  google.protobuf.Timestamp effective_date = 11; // The date on which the metering point is created
+  MeteringMethod metering_method = 4; // Metering method denotes where energy quantities originate
+  MeterReadingPeriodicity meter_reading_periodicity = 5; // Denotes how often a energy quantity is read on a metering point
+  NetSettlementGroup net_settlement_group = 6; // Denotes the net settlement group
+  ProductType product = 7; // Denotes the product type
+  ConnectionState connection_state = 8; // Denotes which connection state a metering point is created with. For a production metering point this is always "New"
+  UnitType unit_type = 9; // Denotes the unit type. For a production metering point this is always a variation of watt/hour 
+  google.protobuf.Timestamp effective_Date = 10; // The date on which the metering point is created
 }

@@ -15,6 +15,7 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
+using Energinet.DataHub.MeteringPoints.IntegrationEvents.Connect;
 using Google.Protobuf;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect
@@ -24,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         protected override IMessage Convert(MeteringPointConnectedIntegrationEvent obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
-            return new IntegrationEventContracts.MeteringPointConnected
+            return new MeteringPointConnected
             {
                 EffectiveDate = obj.EffectiveDate.ToTimestamp(),
                 GsrnNumber = obj.GSRNNumber,

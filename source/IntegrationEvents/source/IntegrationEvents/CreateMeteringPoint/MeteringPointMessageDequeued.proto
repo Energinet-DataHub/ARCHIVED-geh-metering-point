@@ -15,7 +15,7 @@
 
 syntax = "proto3";
 
-option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEventContracts";
+option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEvents.CreateMeteringPoint";
 
 /**
  * This message is sent out when a metering point message is dequeued in MessageHub.

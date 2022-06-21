@@ -24,7 +24,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 
-            return new IntegrationEventContracts.MeteringPointMessageDequeuedIntegrationEvent
+            return new MeteringPoints.IntegrationEvents.CreateMeteringPoint.MeteringPointMessageDequeuedIntegrationEvent
             {
                 Correlation = obj.Correlation,
                 GsrnNumber = obj.GsrnNumber,

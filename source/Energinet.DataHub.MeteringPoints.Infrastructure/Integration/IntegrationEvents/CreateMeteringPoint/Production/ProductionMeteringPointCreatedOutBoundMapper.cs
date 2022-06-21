@@ -13,14 +13,10 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Google.Protobuf;
-using NodaTime;
-using NodaTime.Text;
-using ProductionMeteringPointCreated = Energinet.DataHub.MeteringPoints.IntegrationEventContracts.ProductionMeteringPointCreated;
+using ProductionMeteringPointCreated = Energinet.DataHub.MeteringPoints.IntegrationEvents.CreateMeteringPoint.ProductionMeteringPointCreated;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Production
 {
