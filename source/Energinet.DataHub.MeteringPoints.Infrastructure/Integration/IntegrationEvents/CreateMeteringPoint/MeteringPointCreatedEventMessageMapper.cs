@@ -15,7 +15,7 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
-using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
+using Energinet.DataHub.MeteringPoints.IntegrationEvents.Contracts;
 using Google.Protobuf;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint

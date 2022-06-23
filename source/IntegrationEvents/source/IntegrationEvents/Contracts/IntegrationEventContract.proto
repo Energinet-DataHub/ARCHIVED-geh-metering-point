@@ -21,7 +21,7 @@ syntax = "proto3";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
-option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEventContracts";
+option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEvents.Contracts";
 
 /**
  * Represents the creation of a metering point.

@@ -1,4 +1,4 @@
-/* Copyright 2020 Energinet DataHub A/S
+﻿/* Copyright 2020 Energinet DataHub A/S
  *
  * Licensed under the Apache License, Version 2.0 (the "License2");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,15 @@
 
 syntax = "proto3";
 
-option csharp_namespace = "Energinet.DataHub.MeteringPoints.Requests";
+import "google/protobuf/timestamp.proto";
 
-message MasterDataRequest {
-  string gsrn_number = 1; // Business facing metering point identifier
+option csharp_namespace = "Energinet.DataHub.MeteringPoints.IntegrationEvents.ChangeConnectionStatus";
+
+/**
+ * This message is sent out when a metering point is disconnected.
+ */
+message MeteringPointReconnected {
+  string meteringpoint_id = 1; // Unique identification for metering point
+  string gsrn_number = 2; // Business facing metering point identifier
+  google.protobuf.Timestamp effective_date = 3; // Date which the metering point is connected
 }

@@ -18,14 +18,14 @@ using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData.MasterDataUpdated;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
-using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
+using Energinet.DataHub.MeteringPoints.IntegrationEvents.ChangeMasterData;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDispatchers
 {
     public class MasterDataUpdatedDispatcher : IntegrationEventDispatcher<MasterDataUpdatedTopic, MasterDataWasUpdatedIntegrationEvent>
     {
-        public MasterDataUpdatedDispatcher(ITopicSender<MasterDataUpdatedTopic> topicSender, ProtobufOutboundMapper<MasterDataWasUpdatedIntegrationEvent> mapper, IIntegrationEventMessageFactory integrationEventMessageFactory, IIntegrationMetadataContext integrationMetadataContext)
-            : base(topicSender, mapper, integrationEventMessageFactory, integrationMetadataContext)
+        public MasterDataUpdatedDispatcher(ITopicSender<MasterDataUpdatedTopic> topicSender, ProtobufOutboundMapperFactory protobufOutboundMapperFactory, IIntegrationEventMessageFactory integrationEventMessageFactory, IIntegrationMetadataContext integrationMetadataContext)
+            : base(topicSender, protobufOutboundMapperFactory, integrationEventMessageFactory, integrationMetadataContext)
         {
         }
 

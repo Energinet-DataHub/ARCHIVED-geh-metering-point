@@ -13,11 +13,9 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
-using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
+using Energinet.DataHub.MeteringPoints.IntegrationEvents.CreateMeteringPoint;
 using Google.Protobuf;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Exchange

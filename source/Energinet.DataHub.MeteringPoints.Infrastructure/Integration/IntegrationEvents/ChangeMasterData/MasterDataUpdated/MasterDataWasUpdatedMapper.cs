@@ -25,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 
-            return new IntegrationEventContracts.MasterDataUpdated
+            return new MeteringPoints.IntegrationEvents.ChangeMasterData.MasterDataUpdated
             {
                 MeteringPointId = obj.MeteringPointId,
                 EffectiveDate = obj.EffectiveDate.ToTimestamp(),

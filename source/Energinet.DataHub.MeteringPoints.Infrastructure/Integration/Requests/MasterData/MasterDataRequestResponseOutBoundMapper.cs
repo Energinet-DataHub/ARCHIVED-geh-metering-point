@@ -13,9 +13,8 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
-using Energinet.DataHub.MeteringPoints.Requests;
+using Energinet.DataHub.MeteringPoints.RequestResponse.Response;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 

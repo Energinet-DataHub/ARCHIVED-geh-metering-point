@@ -15,6 +15,7 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
+using Energinet.DataHub.MeteringPoints.IntegrationEvents.ChangeConnectionStatus;
 using Google.Protobuf;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Disconnect
@@ -24,7 +25,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         protected override IMessage Convert(MeteringPointDisconnectedIntegrationEvent obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
-            return new IntegrationEventContracts.MeteringPointDisconnected
+            return new MeteringPointDisconnected
             {
                 EffectiveDate = obj.EffectiveDate.ToTimestamp(),
                 MeteringpointId = obj.MeteringPointId.ToString(),
