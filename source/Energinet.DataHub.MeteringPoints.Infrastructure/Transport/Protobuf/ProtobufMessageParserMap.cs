@@ -15,6 +15,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Energinet.DataHub.MeteringPoints.IntegrationEvents.Contracts;
 using Google.Protobuf;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf
@@ -31,7 +32,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf
 
         public string EventName { get; }
 
-        public static IReadOnlyList<ProtobufMessageParserMap> GetKnownParsers() => GetKnownParsers(typeof(ProtobufMessageParserMap).Assembly);
+        public static IReadOnlyList<ProtobufMessageParserMap> GetKnownParsers() => GetKnownParsers(typeof(MeteringPointCreated).Assembly);
 
         private static IReadOnlyList<ProtobufMessageParserMap> GetKnownParsers(Assembly assembly)
         {
