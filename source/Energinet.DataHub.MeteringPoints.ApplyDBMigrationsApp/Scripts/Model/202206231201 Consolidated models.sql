@@ -275,20 +275,19 @@ IF OBJECT_ID(N'dbo.QueuedInternalCommands', N'U') IS NULL
     BEGIN
         create table QueuedInternalCommands
         (
-            Id             uniqueidentifier             not null
+            Id            uniqueidentifier             not null
                 constraint PK_InternalCommandQueue
                     primary key nonclustered,
-            RecordId       int identity
+            RecordId      int identity
                 constraint UC_InternalCommandQueue_Id
                     unique clustered,
-            Type           nvarchar(255)                not null,
-            Data           varbinary(max)               not null,
-            ScheduleDate   datetime2(1),
-            DispatchedDate datetime2(1),
-            SequenceId     bigint,
-            ProcessedDate  datetime2(1),
-            CreationDate   datetime2                    not null,
-            CorrelationId  nvarchar(255) default 'None' not null
+            Type          nvarchar(255)                not null,
+            Data          nvarchar(max),
+            ScheduleDate  datetime2(1),
+            ProcessedDate datetime2(1),
+            CreationDate  datetime2                    not null,
+            CorrelationId nvarchar(255) default 'None' not null,
+            Error         nvarchar(max)
         )
     END
 go
