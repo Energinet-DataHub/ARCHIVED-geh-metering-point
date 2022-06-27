@@ -13,5 +13,4 @@ VALUES ('08e2ba01-0ead-48c0-bdc7-8e2c7f7c5525', '5790001330552', 'GLN', 'Meterin
        ('e9365635-bae6-4da3-aeee-100f55f2116d', '8200000003939', 'GLN', 'GridAccessProvider'),
        ('f0cc5ecf-3401-4714-a1a1-1bfc3ce61f3d', '8100000000016', 'GLN', 'GridAccessProvider'),
        ('a117349a-0265-4ce9-9303-a4f84bf0eb9c', '8100000000023', 'GLN', 'GridAccessProvider'),
-       ('31e06e54-3473-4f3d-94d3-c91f26dcd092', '8100000000030', 'GLN', 'GridAccessProvider'),
-       ('e9365635-bae6-4da3-aeee-100f55f2116d', '8200000003939', 'GLN', 'GridAccessProvider')
+       ('31e06e54-3473-4f3d-94d3-c91f26dcd092', '8100000000030', 'GLN', 'GridAccessProvider')

@@ -29,6 +29,7 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Model\202206231201 Consolidated models.sql" />
     <EmbeddedResource Include="Scripts\Seed\202206231203 Create grid area seed data.sql" />
     <EmbeddedResource Include="Scripts\Seed\202206231201 Seed cleanup.sql" />
+    <EmbeddedResource Include="Scripts\Seed\202206231202 Actor seed data.sql" />
   </ItemGroup>
 
 </Project>
