@@ -27,9 +27,15 @@ limitations under the License.
 
   <ItemGroup>
     <EmbeddedResource Include="Scripts\Model\202206231201 Consolidated models.sql" />
-    <EmbeddedResource Include="Scripts\Seed\202206231203 Create grid area seed data.sql" />
     <EmbeddedResource Include="Scripts\Seed\202206231201 Seed cleanup.sql" />
-    <EmbeddedResource Include="Scripts\Seed\202206231202 Actor seed data.sql" />
+    <EmbeddedResource Include="Scripts\Test\202109232129 Clean database.sql" />
+    <EmbeddedResource Include="Scripts\Test\202110281315 Create Metering Point test data.sql" />
+    <EmbeddedResource Include="Scripts\Test\202112141430 Actor test data.sql" />
+    <EmbeddedResource Include="Scripts\Test\202112142130 Create Grid Area test data.sql" />
+    <EmbeddedResource Include="Scripts\Test\202201061300 Create Metering Point test data.sql" />
+    <EmbeddedResource Include="Scripts\Test\202201181200 Fix actor ids.sql" />
+    <EmbeddedResource Include="Scripts\Test\202202081200 Add process test data.sql" />
+    <EmbeddedResource Include="Scripts\Test\202202220830 User test data.sql" />
   </ItemGroup>
 
 </Project>
