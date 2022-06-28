@@ -1,5 +1,9 @@
 # MeteringPoints.Client Release notes
 
+## Version 3.0.3
+
+Updated pipeline
+
 ## Version 3.0.2
 
 Updated documentation
