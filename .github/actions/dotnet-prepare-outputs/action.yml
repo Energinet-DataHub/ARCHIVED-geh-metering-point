@@ -66,7 +66,7 @@ runs:
           --no-build \
           --no-restore \
           --configuration Release \
-          --output '${{ inputs.OUTPUT_PATH }}\functions\localmessagehub
+          --output '${{ inputs.OUTPUT_PATH }}\functions\localmessagehub'
     - name: Publish ActorSync
       shell: bash
       run: |
