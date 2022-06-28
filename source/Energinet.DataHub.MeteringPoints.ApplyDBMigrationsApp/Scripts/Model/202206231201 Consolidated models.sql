@@ -4,325 +4,369 @@ WHERE ScriptName like 'Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.Scr
 
 IF OBJECT_ID(N'dbo.Actor', N'U') IS NULL
     BEGIN
-        create table Actor
+        CREATE TABLE [dbo].[Actor]
         (
-            Id                   uniqueidentifier not null
-                constraint PK_Actor
-                    primary key nonclustered,
-            RecordId             int identity,
-            IdentificationNumber nvarchar(50)     not null,
-            IdentificationType   nvarchar(50)     not null,
-            Roles                nvarchar(max)    not null
-        )
+            [Id]                   [uniqueidentifier]   NOT NULL,
+            [RecordId]             [int] IDENTITY (1,1) NOT NULL,
+            [IdentificationNumber] [nvarchar](50)       NOT NULL,
+            [IdentificationType]   [nvarchar](50)       NOT NULL,
+            [Roles]                [nvarchar](max)      NOT NULL,
+            CONSTRAINT [PK_Actor] PRIMARY KEY NONCLUSTERED
+                (
+                 [Id] ASC
+                    ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+        ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
     END
-go
+GO
 
 IF OBJECT_ID(N'dbo.BusinessProcesses', N'U') IS NULL
     BEGIN
-        create table BusinessProcesses
+        CREATE TABLE [dbo].[BusinessProcesses]
         (
-            Id            uniqueidentifier not null
-                constraint PK_BusinessProcesses
-                    primary key nonclustered,
-            RecordId      int identity,
-            TransactionId nvarchar(36)     not null,
-            ProcessType   nvarchar(50)     not null,
-            Status        nvarchar(50)     not null
-        )
-
-        create unique clustered index CIX_BusinessProcesses
-            on BusinessProcesses (RecordId)
+            [Id]            [uniqueidentifier]   NOT NULL,
+            [RecordId]      [int] IDENTITY (1,1) NOT NULL,
+            [TransactionId] [nvarchar](36)       NOT NULL,
+            [ProcessType]   [nvarchar](50)       NOT NULL,
+            [Status]        [nvarchar](50)       NOT NULL,
+            CONSTRAINT [PK_BusinessProcesses] PRIMARY KEY NONCLUSTERED
+                (
+                 [Id] ASC
+                    ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+        ) ON [PRIMARY]
     END
-go
-
+GO
 
 IF OBJECT_ID(N'dbo.GridAreas', N'U') IS NULL
     BEGIN
-        create table GridAreas
+        CREATE TABLE [dbo].[GridAreas]
         (
-            Id               uniqueidentifier not null
-                constraint PK_GridAreas
-                    primary key nonclustered,
-            RecordId         int identity,
-            Code             nvarchar(3)      not null,
-            Name             nvarchar(50)     not null,
-            PriceAreaCode    nvarchar(5)      not null,
-            FullFlexFromDate datetime2,
-            ActorId          uniqueidentifier not null
-                constraint FK_GridAreas_Actor
-                    references Actor
-        )
+            [Id]               [uniqueidentifier]   NOT NULL,
+            [RecordId]         [int] IDENTITY (1,1) NOT NULL,
+            [Code]             [nvarchar](3)        NOT NULL,
+            [Name]             [nvarchar](50)       NOT NULL,
+            [PriceAreaCode]    [nvarchar](5)        NOT NULL,
+            [FullFlexFromDate] [datetime2](7)       NULL,
+            [ActorId]          [uniqueidentifier]   NOT NULL,
+            CONSTRAINT [PK_GridAreas] PRIMARY KEY NONCLUSTERED
+                (
+                 [Id] ASC
+                    ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+        ) ON [PRIMARY]
+        ALTER TABLE [dbo].[GridAreas]
+            WITH CHECK ADD CONSTRAINT [FK_GridAreas_Actor] FOREIGN KEY ([ActorId])
+                REFERENCES [dbo].[Actor] ([Id])
+
+        ALTER TABLE [dbo].[GridAreas]
+            CHECK CONSTRAINT [FK_GridAreas_Actor]
+
     END
-go
+GO
 
 IF OBJECT_ID(N'dbo.GridAreaLinks', N'U') IS NULL
     BEGIN
-        create table GridAreaLinks
+        CREATE TABLE [dbo].[GridAreaLinks]
         (
-            Id         uniqueidentifier not null
-                constraint PK_GridAreaLinks
-                    primary key nonclustered,
-            RecordId   int identity,
-            GridAreaId uniqueidentifier not null
-                constraint FK_GridAreaLinks_GridAreas
-                    references GridAreas
-        )
+            [Id]         [uniqueidentifier]   NOT NULL,
+            [RecordId]   [int] IDENTITY (1,1) NOT NULL,
+            [GridAreaId] [uniqueidentifier]   NOT NULL,
+            CONSTRAINT [PK_GridAreaLinks] PRIMARY KEY NONCLUSTERED
+                (
+                 [Id] ASC
+                    ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+        ) ON [PRIMARY]
+        ALTER TABLE [dbo].[GridAreaLinks]
+            WITH CHECK ADD CONSTRAINT [FK_GridAreaLinks_GridAreas] FOREIGN KEY ([GridAreaId])
+                REFERENCES [dbo].[GridAreas] ([Id])
 
-        create unique clustered index CIX_GridAreaLink
-            on GridAreaLinks (RecordId)
-
-        create unique clustered index CIX_GridArea
-            on GridAreas (RecordId)
-
-        create unique index CIX_GridAreas_Code
-            on GridAreas (Code)
+        ALTER TABLE [dbo].[GridAreaLinks]
+            CHECK CONSTRAINT [FK_GridAreaLinks_GridAreas]
     END
-go
+GO
 
 IF OBJECT_ID(N'dbo.IncomingMessages', N'U') IS NULL
     BEGIN
-        create table IncomingMessages
+        CREATE TABLE [dbo].[IncomingMessages]
         (
-            RecordId    int identity,
-            MessageId   nvarchar(50)  not null,
-            MessageType nvarchar(255) not null,
-            constraint PK_IncomingMessages
-                primary key nonclustered (MessageId, MessageType)
-        )
-        create unique clustered index CIX_IncomingMessages
-            on IncomingMessages (RecordId)
+            [RecordId]    [int] IDENTITY (1,1) NOT NULL,
+            [MessageId]   [nvarchar](50)       NOT NULL,
+            [MessageType] [nvarchar](255)      NOT NULL,
+            CONSTRAINT [PK_IncomingMessages] PRIMARY KEY NONCLUSTERED
+                (
+                 [MessageId] ASC,
+                 [MessageType] ASC
+                    ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+        ) ON [PRIMARY]
     END
-go
-
-
+GO
 
 IF OBJECT_ID(N'dbo.MessageHubMessages', N'U') IS NULL
     BEGIN
-        create table MessageHubMessages
+        CREATE TABLE [dbo].[MessageHubMessages]
         (
-            Id           uniqueidentifier        not null
-                constraint PK_MessageHubMessages
-                    primary key nonclustered,
-            RecordId     int identity,
-            Correlation  nvarchar(500)           not null,
-            Type         nvarchar(500)           not null,
-            Content      nvarchar(max)           not null,
-            Date         datetime2               not null,
-            Recipient    nvarchar(128)           not null,
-            BundleId     nvarchar(50),
-            DequeuedDate datetime2,
-            GsrnNumber   nvarchar(36) default '' not null
-        )
+            [Id]           [uniqueidentifier]   NOT NULL,
+            [RecordId]     [int] IDENTITY (1,1) NOT NULL,
+            [Correlation]  [nvarchar](500)      NOT NULL,
+            [Type]         [nvarchar](500)      NOT NULL,
+            [Content]      [nvarchar](max)      NOT NULL,
+            [Date]         [datetime2](7)       NOT NULL,
+            [Recipient]    [nvarchar](128)      NOT NULL,
+            [BundleId]     [nvarchar](50)       NULL,
+            [DequeuedDate] [datetime2](7)       NULL,
+            [GsrnNumber]   [nvarchar](36)       NOT NULL,
+            CONSTRAINT [PK_MessageHubMessages] PRIMARY KEY NONCLUSTERED
+                (
+                 [Id] ASC
+                    ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+        ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+        ALTER TABLE [dbo].[MessageHubMessages]
+            ADD DEFAULT ('') FOR [GsrnNumber]
 
-        create unique clustered index CIX_MessageHubMessages
-            on MessageHubMessages (RecordId)
     END
-go
-
+GO
 
 IF OBJECT_ID(N'dbo.MeteringPoints', N'U') IS NULL
     BEGIN
-        create table MeteringPoints
+        CREATE TABLE [dbo].[MeteringPoints]
         (
-            Id                            uniqueidentifier not null
-                constraint PK_MeteringPoints
-                    primary key nonclustered,
-            RecordId                      int identity,
-            GsrnNumber                    nvarchar(36)     not null,
-            StreetName                    nvarchar(500)    not null,
-            PostCode                      nvarchar(10)     not null,
-            CityName                      nvarchar(100)    not null,
-            CountryCode                   nvarchar(4)      not null,
-            ConnectionState_PhysicalState nvarchar(255)    not null,
-            MeteringPointSubType          nvarchar(50),
-            MeterReadingOccurrence        nvarchar(50),
-            TypeOfMeteringPoint           nvarchar(50)     not null,
-            MaximumCurrent                int default 0,
-            MaximumPower                  int default 0,
-            MeteringGridArea              uniqueidentifier,
-            PowerPlant                    nvarchar(255),
-            LocationDescription           nvarchar(255),
-            ProductType                   nvarchar(255),
-            ParentRelatedMeteringPoint    uniqueidentifier,
-            UnitType                      nvarchar(255),
-            EffectiveDate                 datetime2,
-            MeterNumber                   nvarchar(255),
-            ConnectionState_EffectiveDate datetime2,
-            StreetCode                    nvarchar(4),
-            CitySubDivision               nvarchar(34),
-            Floor                         nvarchar(4),
-            Room                          nvarchar(4),
-            BuildingNumber                nvarchar(6),
-            MunicipalityCode              int,
-            IsActualAddress               bit default 0,
-            GeoInfoReference              uniqueidentifier,
-            Capacity                      float,
-            AssetType                     nvarchar(255),
-            SettlementMethod              nvarchar(50),
-            ScheduledMeterReadingDate     nvarchar(10),
-            ProductionObligation          bit default 0,
-            NetSettlementGroup            nvarchar(10),
-            DisconnectionType             nvarchar(10),
-            ConnectionType                nvarchar(50),
-            StartOfSupplyDate             datetime2,
-            ToGrid                        uniqueidentifier,
-            FromGrid                      uniqueidentifier
-        )
+            [Id]                            [uniqueidentifier]   NOT NULL,
+            [RecordId]                      [int] IDENTITY (1,1) NOT NULL,
+            [GsrnNumber]                    [nvarchar](36)       NOT NULL,
+            [StreetName]                    [nvarchar](500)      NOT NULL,
+            [PostCode]                      [nvarchar](10)       NOT NULL,
+            [CityName]                      [nvarchar](100)      NOT NULL,
+            [CountryCode]                   [nvarchar](4)        NOT NULL,
+            [ConnectionState_PhysicalState] [nvarchar](255)      NOT NULL,
+            [MeteringPointSubType]          [nvarchar](50)       NULL,
+            [MeterReadingOccurrence]        [nvarchar](50)       NULL,
+            [TypeOfMeteringPoint]           [nvarchar](50)       NOT NULL,
+            [MaximumCurrent]                [int]                NULL,
+            [MaximumPower]                  [int]                NULL,
+            [MeteringGridArea]              [uniqueidentifier]   NULL,
+            [PowerPlant]                    [nvarchar](255)      NULL,
+            [LocationDescription]           [nvarchar](255)      NULL,
+            [ProductType]                   [nvarchar](255)      NULL,
+            [ParentRelatedMeteringPoint]    [uniqueidentifier]   NULL,
+            [UnitType]                      [nvarchar](255)      NULL,
+            [EffectiveDate]                 [datetime2](7)       NULL,
+            [MeterNumber]                   [nvarchar](255)      NULL,
+            [ConnectionState_EffectiveDate] [datetime2](7)       NULL,
+            [StreetCode]                    [nvarchar](4)        NULL,
+            [CitySubDivision]               [nvarchar](34)       NULL,
+            [Floor]                         [nvarchar](4)        NULL,
+            [Room]                          [nvarchar](4)        NULL,
+            [BuildingNumber]                [nvarchar](6)        NULL,
+            [MunicipalityCode]              [int]                NULL,
+            [IsActualAddress]               [bit]                NULL,
+            [GeoInfoReference]              [uniqueidentifier]   NULL,
+            [Capacity]                      [float]              NULL,
+            [AssetType]                     [nvarchar](255)      NULL,
+            [SettlementMethod]              [nvarchar](50)       NULL,
+            [ScheduledMeterReadingDate]     [nvarchar](10)       NULL,
+            [ProductionObligation]          [bit]                NULL,
+            [NetSettlementGroup]            [nvarchar](10)       NULL,
+            [DisconnectionType]             [nvarchar](10)       NULL,
+            [ConnectionType]                [nvarchar](50)       NULL,
+            [StartOfSupplyDate]             [datetime2](7)       NULL,
+            [ToGrid]                        [uniqueidentifier]   NULL,
+            [FromGrid]                      [uniqueidentifier]   NULL,
+            CONSTRAINT [PK_MeteringPoints] PRIMARY KEY NONCLUSTERED
+                (
+                 [Id] ASC
+                    ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+        ) ON [PRIMARY]
+        ALTER TABLE [dbo].[MeteringPoints]
+            ADD DEFAULT ((0)) FOR [MaximumCurrent]
+
+        ALTER TABLE [dbo].[MeteringPoints]
+            ADD DEFAULT ((0)) FOR [MaximumPower]
+
+        ALTER TABLE [dbo].[MeteringPoints]
+            ADD DEFAULT ((0)) FOR [IsActualAddress]
+
+        ALTER TABLE [dbo].[MeteringPoints]
+            ADD DEFAULT ((0)) FOR [ProductionObligation]
     END
-go
+GO
 
 IF OBJECT_ID(N'dbo.EnergySuppliers', N'U') IS NULL
     BEGIN
-        create table EnergySuppliers
+        CREATE TABLE [dbo].[EnergySuppliers]
         (
-            Id                    uniqueidentifier not null
-                constraint PK_EnergySupplier
-                    primary key nonclustered,
-            RecordId              int identity,
-            StartOfSupplyDate     datetime2        not null,
-            GlnNumber             nvarchar(50)     not null,
-            MarketMeteringPointId uniqueidentifier not null
-                references MeteringPoints
-        )
-
-        create unique clustered index CIX_EnergySupplier
-            on EnergySuppliers (RecordId)
-
-        create unique clustered index CIX_MeteringPoints
-            on MeteringPoints (RecordId)
-
-        create unique index CIX_MeteringPoints_GsrnNumber
-            on MeteringPoints (GsrnNumber)
+            [Id]                    [uniqueidentifier]   NOT NULL,
+            [RecordId]              [int] IDENTITY (1,1) NOT NULL,
+            [StartOfSupplyDate]     [datetime2](7)       NOT NULL,
+            [GlnNumber]             [nvarchar](50)       NOT NULL,
+            [MarketMeteringPointId] [uniqueidentifier]   NOT NULL,
+            CONSTRAINT [PK_EnergySupplier] PRIMARY KEY NONCLUSTERED
+                (
+                 [Id] ASC
+                    ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+        ) ON [PRIMARY]
+        ALTER TABLE [dbo].[EnergySuppliers]
+            WITH CHECK ADD FOREIGN KEY ([MarketMeteringPointId])
+                REFERENCES [dbo].[MeteringPoints] ([Id])
     END
-go
+GO
 
 IF OBJECT_ID(N'dbo.OutboxMessages', N'U') IS NULL
     BEGIN
-        create table OutboxMessages
+        CREATE TABLE [dbo].[OutboxMessages]
         (
-            Id            uniqueidentifier             not null
-                constraint PK_OutboxMessages
-                    primary key nonclustered,
-            RecordId      int identity,
-            Type          nvarchar(255)                not null,
-            Data          nvarchar(max)                not null,
-            Category      nvarchar(50)                 not null,
-            CreationDate  datetime2                    not null,
-            ProcessedDate datetime2,
-            Correlation   nvarchar(255) default 'None' not null
-        )
+            [Id]            [uniqueidentifier]   NOT NULL,
+            [RecordId]      [int] IDENTITY (1,1) NOT NULL,
+            [Type]          [nvarchar](255)      NOT NULL,
+            [Data]          [nvarchar](max)      NOT NULL,
+            [Category]      [nvarchar](50)       NOT NULL,
+            [CreationDate]  [datetime2](7)       NOT NULL,
+            [ProcessedDate] [datetime2](7)       NULL,
+            [Correlation]   [nvarchar](255)      NOT NULL,
+            CONSTRAINT [PK_OutboxMessages] PRIMARY KEY NONCLUSTERED
+                (
+                 [Id] ASC
+                    ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+        ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+        ALTER TABLE [dbo].[OutboxMessages]
+            ADD DEFAULT ('None') FOR [Correlation]
 
-        create unique clustered index CIX_OutboxMessages
-            on OutboxMessages (RecordId)
-
-        create index ProcessedOutboxMessagesNonClusteredIndex
-            on OutboxMessages (CreationDate, Category) include (Id, Data, Type, ProcessedDate)
-            where [ProcessedDate] IS NULL
     END
-go
-
-
+GO
 
 IF OBJECT_ID(N'dbo.ProcessDetailErrors', N'U') IS NULL
     BEGIN
-        create table ProcessDetailErrors
+        CREATE TABLE [dbo].[ProcessDetailErrors]
         (
-            Id              uniqueidentifier not null
-                constraint PK_ProcessDetailErrors
-                    primary key,
-            ProcessDetailId uniqueidentifier not null,
-            Code            nvarchar(50)     not null,
-            Description     nvarchar(max)
-        )
+            [Id]              [uniqueidentifier] NOT NULL,
+            [ProcessDetailId] [uniqueidentifier] NOT NULL,
+            [Code]            [nvarchar](50)     NOT NULL,
+            [Description]     [nvarchar](max)    NULL,
+            CONSTRAINT [PK_ProcessDetailErrors] PRIMARY KEY CLUSTERED
+                (
+                 [Id] ASC
+                    ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+        ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
     END
-go
+GO
 
 IF OBJECT_ID(N'dbo.ProcessDetails', N'U') IS NULL
     BEGIN
-        create table ProcessDetails
+        CREATE TABLE [dbo].[ProcessDetails]
         (
-            Id            uniqueidentifier not null
-                constraint PK_ProcessDetails
-                    primary key,
-            ProcessId     uniqueidentifier not null,
-            Name          nvarchar(1024)   not null,
-            Sender        nvarchar(1024),
-            Receiver      nvarchar(1024),
-            CreatedDate   datetime2        not null,
-            EffectiveDate datetime2,
-            Status        int
-        )
+            [Id]            [uniqueidentifier] NOT NULL,
+            [ProcessId]     [uniqueidentifier] NOT NULL,
+            [Name]          [nvarchar](1024)   NOT NULL,
+            [Sender]        [nvarchar](1024)   NULL,
+            [Receiver]      [nvarchar](1024)   NULL,
+            [CreatedDate]   [datetime2](7)     NOT NULL,
+            [EffectiveDate] [datetime2](7)     NULL,
+            [Status]        [int]              NULL,
+            CONSTRAINT [PK_ProcessDetails] PRIMARY KEY CLUSTERED
+                (
+                 [Id] ASC
+                    ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+        ) ON [PRIMARY]
     END
-go
+GO
 
 IF OBJECT_ID(N'dbo.Processes', N'U') IS NULL
     BEGIN
-        create table Processes
+        CREATE TABLE [dbo].[Processes]
         (
-            Id                uniqueidentifier not null
-                constraint PK_Processes
-                    primary key,
-            Name              nvarchar(1024)   not null,
-            MeteringPointGsrn nvarchar(128)    not null,
-            CreatedDate       datetime2        not null,
-            EffectiveDate     datetime2,
-            Status            int
-        )
+            [Id]                [uniqueidentifier] NOT NULL,
+            [Name]              [nvarchar](1024)   NOT NULL,
+            [MeteringPointGsrn] [nvarchar](128)    NOT NULL,
+            [CreatedDate]       [datetime2](7)     NOT NULL,
+            [EffectiveDate]     [datetime2](7)     NULL,
+            [Status]            [int]              NULL,
+            CONSTRAINT [PK_Processes] PRIMARY KEY CLUSTERED
+                (
+                 [Id] ASC
+                    ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+        ) ON [PRIMARY]
     END
-go
+GO
 
 IF OBJECT_ID(N'dbo.QueuedInternalCommands', N'U') IS NULL
     BEGIN
-        create table QueuedInternalCommands
+        CREATE TABLE [dbo].[QueuedInternalCommands]
         (
-            Id            uniqueidentifier             not null
-                constraint PK_InternalCommandQueue
-                    primary key nonclustered,
-            RecordId      int identity
-                constraint UC_InternalCommandQueue_Id
-                    unique clustered,
-            Type          nvarchar(255)                not null,
-            Data          nvarchar(max),
-            ScheduleDate  datetime2(1),
-            ProcessedDate datetime2(1),
-            CreationDate  datetime2                    not null,
-            CorrelationId nvarchar(255) default 'None' not null,
-            Error         nvarchar(max)
-        )
+            [Id]            [uniqueidentifier]   NOT NULL,
+            [RecordId]      [int] IDENTITY (1,1) NOT NULL,
+            [Type]          [nvarchar](255)      NOT NULL,
+            [Data]          [nvarchar](max)      NULL,
+            [ScheduleDate]  [datetime2](1)       NULL,
+            [ProcessedDate] [datetime2](1)       NULL,
+            [CreationDate]  [datetime2](7)       NOT NULL,
+            [CorrelationId] [nvarchar](255)      NOT NULL,
+            [Error]         [nvarchar](max)      NULL,
+            CONSTRAINT [PK_InternalCommandQueue] PRIMARY KEY NONCLUSTERED
+                (
+                 [Id] ASC
+                    ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY],
+            CONSTRAINT [UC_InternalCommandQueue_Id] UNIQUE CLUSTERED
+                (
+                 [RecordId] ASC
+                    ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+        ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+        ALTER TABLE [dbo].[QueuedInternalCommands]
+            ADD DEFAULT ('None') FOR [CorrelationId]
     END
-go
+GO
+
+IF OBJECT_ID(N'dbo.SchemaVersions', N'U') IS NULL
+    BEGIN
+        CREATE TABLE [dbo].[SchemaVersions]
+        (
+            [Id]         [int] IDENTITY (1,1) NOT NULL,
+            [ScriptName] [nvarchar](255)      NOT NULL,
+            [Applied]    [datetime]           NOT NULL,
+            CONSTRAINT [PK_SchemaVersions_Id] PRIMARY KEY CLUSTERED
+                (
+                 [Id] ASC
+                    ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+        ) ON [PRIMARY]
+    END
+GO
 
 IF OBJECT_ID(N'dbo.User', N'U') IS NULL
     BEGIN
-        create table [User]
+        CREATE TABLE [dbo].[User]
         (
-            Id       uniqueidentifier not null
-                constraint User_pk
-                    primary key nonclustered,
-            RecordId int identity
-        )
-
-        create unique index User_RecordId_uindex
-            on [User] (RecordId)
+            [Id]       [uniqueidentifier]   NOT NULL,
+            [RecordId] [int] IDENTITY (1,1) NOT NULL,
+            CONSTRAINT [User_pk] PRIMARY KEY NONCLUSTERED
+                (
+                 [Id] ASC
+                    ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+        ) ON [PRIMARY]
     END
-go
+GO
 
 IF OBJECT_ID(N'dbo.UserActor', N'U') IS NULL
     BEGIN
-        create table UserActor
+        CREATE TABLE [dbo].[UserActor]
         (
-            UserId   uniqueidentifier not null
-                constraint UserActor_User_Id_fk
-                    references [User],
-            RecordId int identity,
-            ActorId  uniqueidentifier not null
-                constraint UserActor_Actor_Id_fk
-                    references Actor,
-            constraint UserActor_pk
-                primary key nonclustered (UserId, ActorId)
-        )
+            [UserId]   [uniqueidentifier]   NOT NULL,
+            [RecordId] [int] IDENTITY (1,1) NOT NULL,
+            [ActorId]  [uniqueidentifier]   NOT NULL,
+            CONSTRAINT [UserActor_pk] PRIMARY KEY NONCLUSTERED
+                (
+                 [UserId] ASC,
+                 [ActorId] ASC
+                    ) WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+        ) ON [PRIMARY]
 
-        create unique index UserActor_RecordId_uindex
-            on UserActor (RecordId)
+        ALTER TABLE [dbo].[UserActor]
+            WITH CHECK ADD CONSTRAINT [UserActor_Actor_Id_fk] FOREIGN KEY ([ActorId])
+                REFERENCES [dbo].[Actor] ([Id])
+
+        ALTER TABLE [dbo].[UserActor]
+            CHECK CONSTRAINT [UserActor_Actor_Id_fk]
+
+        ALTER TABLE [dbo].[UserActor]
+            WITH CHECK ADD CONSTRAINT [UserActor_User_Id_fk] FOREIGN KEY ([UserId])
+                REFERENCES [dbo].[User] ([Id])
+
+        ALTER TABLE [dbo].[UserActor]
+            CHECK CONSTRAINT [UserActor_User_Id_fk]
     END
-go
+GO
