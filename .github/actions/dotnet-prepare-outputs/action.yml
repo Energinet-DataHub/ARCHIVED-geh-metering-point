@@ -75,7 +75,7 @@ runs:
           --no-build \
           --no-restore \
           --configuration Release \
-          --output '${{ inputs.OUTPUT_PATH }}\functions\actorsync
+          --output '${{ inputs.OUTPUT_PATH }}\functions\actorsync'
     - name: Publish Web API
       shell: bash
       run: |
