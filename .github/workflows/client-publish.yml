@@ -48,18 +48,18 @@ env:
   DOTNET_VERSION: '6.0.301'
   AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
   AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID }}
-  AZURE_SPN_SECRET: ${{ secrets.AZURE_SPN_SECRET }}
+  AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID_OIDC }}
   AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
   AZURE_SECRETS_KEYVAULT_URL: ${{ secrets.AZURE_SECRETS_KEYVAULT_URL }}
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   build_and_publish:
     runs-on: windows-2022
     name: Publish bundle to NuGet.org
-
-    permissions:
-      contents: read
 
     steps:
       - name: Checkout repository
@@ -73,10 +73,12 @@ jobs:
           DOTNET_INSTALL_DIR: 'C:\Program Files\dotnet'
 
       - name: Login to use Azure resources in integration tests
-        if: ${{ env.AZURE_KEYVAULT_URL != '' && env.AZURE_SECRETS_KEYVAULT_URL != '' }}
-        run: |
-          az login --service-principal --username "${{ secrets.AZURE_SPN_ID }}" --password "${{ secrets.AZURE_SPN_SECRET }}" --tenant "${{ secrets.AZURE_TENANT_ID }}"
-          az account set --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+        if: ${{ env.AZURE_KEYVAULT_URL != '' || env.AZURE_SECRETS_KEYVAULT_URL != '' }}
+        uses: azure/login@v1
+        with:
+          client-id: ${{ env.AZURE_SPN_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Cache NuGet packages
         uses: actions/cache@v3
