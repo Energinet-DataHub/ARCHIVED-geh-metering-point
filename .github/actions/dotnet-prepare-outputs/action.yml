@@ -89,7 +89,7 @@ runs:
       shell: bash
       run: |
         dotnet publish \
-          '\.source\Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp\Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.csproj' \
+          '.\source\Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp\Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.csproj' \
           --no-build \
           --no-restore \
           --configuration Release \
