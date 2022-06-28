@@ -11,7 +11,7 @@ on:
     types: [opened, synchronize, reopened]
 env:
   SOLUTION_PATH: 'source\Energinet.DataHub.MeteringPoints.sln'
-  DOTNET_VERSION: '6.0.201'
+  DOTNET_VERSION: '6.0.301'
   SONAR_PROJECTKEY: 'geh-metering-point'
   SOURCE_PATH_ON_BUILDMACHINE: 'D:\a\geh-metering-point\geh-metering-point\source' # We have to be speficic with this path to get around a .NET 5.0 issue in SonarCLoud
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -26,7 +26,7 @@ jobs:
           java-version: 1.11
 
       - name: Setup .NET ${{ env.DOTNET_VERSION }} environment
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
         env:
