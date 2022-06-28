@@ -93,4 +93,4 @@ runs:
           --no-build \
           --no-restore \
           --configuration Release \
-          --output '${{ inputs.OUTPUT_PATH }}\migration\databasemigration'        
+          --output '${{ inputs.OUTPUT_PATH }}\migration\databasemigration' 
