@@ -1,0 +1,96 @@
+# Copyright 2020 Energinet DataHub A/S
+#
+# Licensed under the Apache License, Version 2.0 (the "License2");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: Prepare dotnet outputs
+
+#
+# This action is called from the 'dotnet-solution-ci.yml' file if the
+# workflow parameter PREPARE_OUTPUTS is set to 'true'.
+#
+# Prepared outputs will be uploaded as the 'dotnet' artifact.
+#
+# All 'apps' must be output into the '\functions\' subfolder, to match
+# how they are later retrieved in the '<domain>-stage-deployment.yml' file.
+#
+
+inputs:
+  OUTPUT_PATH:
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Publish Ingestion
+      shell: bash
+      run: |
+        dotnet publish \
+          '.\source\Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion\Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.csproj' \
+          --no-build \
+          --no-restore \
+          --configuration Release \
+          --output '${{ inputs.OUTPUT_PATH }}\functions\ingestion'
+    - name: Publish Outbox
+      shell: bash
+      run: |
+        dotnet publish \
+          '.\source\Energinet.DataHub.MeteringPoints.EntryPoints.Outbox\Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.csproj' \
+          --no-build \
+          --no-restore \
+          --configuration Release \
+          --output '${{ inputs.OUTPUT_PATH }}\functions\outbox'
+    - name: Publish Processing
+      shell: bash
+      run: |
+        dotnet publish \
+          '.\source\Energinet.DataHub.MeteringPoints.EntryPoints.Processing\Energinet.DataHub.MeteringPoints.EntryPoints.Processing.csproj' \
+          --no-build \
+          --no-restore \
+          --configuration Release \
+          --output '${{ inputs.OUTPUT_PATH }}\functions\processing'
+    - name: Publish LocalMessageHub
+      shell: bash
+      run: |
+        dotnet publish \
+          '.\source\Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub\Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub.csproj' \
+          --no-build \
+          --no-restore \
+          --configuration Release \
+          --output '${{ inputs.OUTPUT_PATH }}\functions\localmessagehub'
+    - name: Publish ActorSync
+      shell: bash
+      run: |
+        dotnet publish \
+          '.\source\Energinet.DataHub.MeteringPoints.ActorRegistrySync\Energinet.DataHub.MeteringPoints.ActorRegistrySync.csproj' \
+          --no-build \
+          --no-restore \
+          --configuration Release \
+          --output '${{ inputs.OUTPUT_PATH }}\functions\actorsync'
+    - name: Publish Web API
+      shell: bash
+      run: |
+        dotnet publish \
+          '.\source\Energinet.DataHub.MeteringPoints.EntryPoints.WebApi\Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.csproj' \
+          --no-build \
+          --no-restore \
+          --configuration Release \
+          --output '${{ inputs.OUTPUT_PATH }}\functions\webapi'
+    - name: Publish Database Migration
+      shell: bash
+      run: |
+        dotnet publish \
+          '.\source\Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp\Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.csproj' \
+          --no-build \
+          --no-restore \
+          --configuration Release \
+          --output '${{ inputs.OUTPUT_PATH }}\migration\databasemigration' 
