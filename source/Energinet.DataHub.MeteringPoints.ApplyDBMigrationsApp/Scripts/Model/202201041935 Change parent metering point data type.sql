@@ -1,2 +1,0 @@
-ALTER TABLE MeteringPoints
-ALTER COLUMN ParentRelatedMeteringPoint UNIQUEIDENTIFIER NULL
