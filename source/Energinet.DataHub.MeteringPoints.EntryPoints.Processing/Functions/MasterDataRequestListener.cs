@@ -16,6 +16,7 @@ using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.MeteringPoints.Application.RequestMasterData;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.RequestResponse.Requests;
 using Google.Protobuf;
@@ -31,17 +32,20 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
         private readonly IMediator _mediator;
         private readonly ServiceBusSender _serviceBusSender;
         private readonly ProtobufOutboundMapperFactory _factory;
+        private readonly IJsonSerializer _jsonSerializer;
 
         public MasterDataRequestListener(
             ILogger logger,
             IMediator mediator,
             ServiceBusSender serviceBusSender,
-            ProtobufOutboundMapperFactory factory)
+            ProtobufOutboundMapperFactory factory,
+            IJsonSerializer jsonSerializer)
         {
             _logger = logger;
             _mediator = mediator;
             _serviceBusSender = serviceBusSender;
             _factory = factory;
+            _jsonSerializer = jsonSerializer;
         }
 
         [Function("MasterDataRequestListener")]
@@ -52,6 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
             if (data == null) throw new ArgumentNullException(nameof(data));
             if (context == null) throw new ArgumentNullException(nameof(context));
 
+            var metaData = GetMetadata(context);
             var request = MasterDataRequest.Parser.ParseFrom(data);
             var query = new GetMasterDataQuery(request.GsrnNumber);
 
@@ -64,9 +69,23 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
             {
                 ContentType = "application/octet-stream;charset=utf-8",
             };
+            serviceBusMessage.ApplicationProperties.Add("BusinessProcessId", metaData.BusinessProcessId ?? throw new InvalidOperationException("Service bus metadata property BusinessProcessId is missing"));
+            serviceBusMessage.ApplicationProperties.Add("TransactionId", metaData.TransactionId ?? throw new InvalidOperationException("Service bus metadata property TransactionId is missing"));
             await _serviceBusSender.SendMessageAsync(serviceBusMessage).ConfigureAwait(false);
 
             _logger.LogInformation($"Received request for master data: {data}");
+        }
+
+        private MasterDataRequestMetadata GetMetadata(FunctionContext context)
+        {
+            context.BindingContext.BindingData.TryGetValue("UserProperties", out var metadata);
+
+            if (metadata is null)
+            {
+                throw new InvalidOperationException($"Service bus metadata must be specified as User Properties attributes");
+            }
+
+            return _jsonSerializer.Deserialize<MasterDataRequestMetadata>(metadata.ToString() ?? throw new InvalidOperationException());
         }
     }
 }
