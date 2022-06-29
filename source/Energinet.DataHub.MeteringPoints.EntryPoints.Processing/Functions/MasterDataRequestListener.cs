@@ -56,7 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
             if (data == null) throw new ArgumentNullException(nameof(data));
             if (context == null) throw new ArgumentNullException(nameof(context));
 
-            var businessProcessId = GetBusinessProcessId(context);
+            var metaData = GetMetadata(context);
             var request = MasterDataRequest.Parser.ParseFrom(data);
             var query = new GetMasterDataQuery(request.GsrnNumber);
 
@@ -69,13 +69,14 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
             {
                 ContentType = "application/octet-stream;charset=utf-8",
             };
-            serviceBusMessage.ApplicationProperties.Add("BusinessProcessId", businessProcessId);
+            serviceBusMessage.ApplicationProperties.Add("BusinessProcessId", metaData.BusinessProcessId ?? throw new InvalidOperationException("Service bus metadata property MessageType is missing"));
+            serviceBusMessage.ApplicationProperties.Add("TransactionId", metaData.TransactionId ?? throw new InvalidOperationException("Service bus metadata property MessageType is missing"));
             await _serviceBusSender.SendMessageAsync(serviceBusMessage).ConfigureAwait(false);
 
             _logger.LogInformation($"Received request for master data: {data}");
         }
 
-        private string GetBusinessProcessId(FunctionContext context)
+        private MasterDataRequestMetadata GetMetadata(FunctionContext context)
         {
             context.BindingContext.BindingData.TryGetValue("UserProperties", out var metadata);
 
@@ -84,8 +85,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
                 throw new InvalidOperationException($"Service bus metadata must be specified as User Properties attributes");
             }
 
-            var masterDataRequestMetadata = _jsonSerializer.Deserialize<MasterDataRequestMetadata>(metadata.ToString() ?? throw new InvalidOperationException());
-            return masterDataRequestMetadata.BusinessProcessId ?? throw new InvalidOperationException("Service bus metadata property MessageType is missing");
+            return _jsonSerializer.Deserialize<MasterDataRequestMetadata>(metadata.ToString() ?? throw new InvalidOperationException());
         }
     }
 }

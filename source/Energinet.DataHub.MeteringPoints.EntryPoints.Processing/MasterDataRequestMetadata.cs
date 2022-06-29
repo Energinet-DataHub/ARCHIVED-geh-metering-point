@@ -17,5 +17,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
     public class MasterDataRequestMetadata
     {
         public string? BusinessProcessId { get; set; }
+
+        public string? TransactionId { get; set; }
     }
 }
