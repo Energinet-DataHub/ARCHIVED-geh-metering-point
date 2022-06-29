@@ -69,8 +69,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
             {
                 ContentType = "application/octet-stream;charset=utf-8",
             };
-            serviceBusMessage.ApplicationProperties.Add("BusinessProcessId", metaData.BusinessProcessId ?? throw new InvalidOperationException("Service bus metadata property MessageType is missing"));
-            serviceBusMessage.ApplicationProperties.Add("TransactionId", metaData.TransactionId ?? throw new InvalidOperationException("Service bus metadata property MessageType is missing"));
+            serviceBusMessage.ApplicationProperties.Add("BusinessProcessId", metaData.BusinessProcessId ?? throw new InvalidOperationException("Service bus metadata property BusinessProcessId is missing"));
+            serviceBusMessage.ApplicationProperties.Add("TransactionId", metaData.TransactionId ?? throw new InvalidOperationException("Service bus metadata property TransactionId is missing"));
             await _serviceBusSender.SendMessageAsync(serviceBusMessage).ConfigureAwait(false);
 
             _logger.LogInformation($"Received request for master data: {data}");
