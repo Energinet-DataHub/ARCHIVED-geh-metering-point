@@ -84,8 +84,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
                 throw new InvalidOperationException($"Service bus metadata must be specified as User Properties attributes");
             }
 
-            var eventMetadata = _jsonSerializer.Deserialize<EventMetadata>(metadata.ToString() ?? throw new InvalidOperationException());
-            return eventMetadata.BusinessProcessId ?? throw new InvalidOperationException("Service bus metadata property MessageType is missing");
+            var masterDataRequestMetadata = _jsonSerializer.Deserialize<MasterDataRequestMetadata>(metadata.ToString() ?? throw new InvalidOperationException());
+            return masterDataRequestMetadata.BusinessProcessId ?? throw new InvalidOperationException("Service bus metadata property MessageType is missing");
         }
     }
 }
