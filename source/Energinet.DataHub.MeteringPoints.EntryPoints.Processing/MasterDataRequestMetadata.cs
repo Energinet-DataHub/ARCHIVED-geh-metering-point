@@ -14,10 +14,10 @@
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 {
-    public class EventMetadata
+    public class MasterDataRequestMetadata
     {
-        public string? MessageType { get; set; }
-
         public string? BusinessProcessId { get; set; }
+
+        public string? TransactionId { get; set; }
     }
 }
