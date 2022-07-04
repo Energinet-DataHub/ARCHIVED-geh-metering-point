@@ -53,8 +53,8 @@ public class RequestMasterDataTests : TestHost
         Assert.Equal(createCommand.ProductType, masterData.Series.Product);
         Assert.Equal(createCommand.UnitType, masterData.Series.UnitType);
         Assert.Equal(createCommand.MeteringGridArea, masterData.GridAreaDetails.Code);
-        Assert.Empty(masterData.GridAreaDetails.FromCode);
-        Assert.Empty(masterData.GridAreaDetails.ToCode);
+        Assert.Empty(masterData.GridAreaDetails.FromCode!);
+        Assert.Empty(masterData.GridAreaDetails.ToCode!);
         Assert.NotEmpty(masterData.ConnectionState);
         Assert.Equal(createCommand.MeteringMethod, masterData.MeteringMethod);
         Assert.Equal(createCommand.MeterReadingOccurrence, masterData.ReadingPeriodicity);
@@ -72,5 +72,6 @@ public class RequestMasterDataTests : TestHost
         Assert.Equal(createCommand.DisconnectionType, masterData.DisconnectionType);
         Assert.False(masterData.ProductionObligation);
         Assert.Null(masterData.ParentRelatedMeteringPoint);
+        Assert.NotNull(masterData.GridOperatorId.ToString());
     }
 }

@@ -71,7 +71,8 @@ public class GetMasterDataQueryHandler : IQueryHandler<GetMasterDataQuery, Maste
                               $"mp.ConnectionType AS {nameof(DataModel.ConnectionType)}, " +
                               $"mp.ToGrid AS {nameof(DataModel.ToGridAreaCode)}, " +
                               $"mp.FromGrid AS {nameof(DataModel.FromGridAreaCode)}, " +
-                              $"mp.ParentRelatedMeteringPoint AS {nameof(DataModel.ParentRelatedMeteringPoint)} " +
+                              $"mp.ParentRelatedMeteringPoint AS {nameof(DataModel.ParentRelatedMeteringPoint)}, " +
+                              $"ga.ActorId AS {nameof(DataModel.GridOperatorId)} " +
                               $"FROM [dbo].[MeteringPoints] mp " +
                               $"JOIN [dbo].[GridAreaLinks] gl ON gl.Id = mp.MeteringGridArea " +
                               $"JOIN [dbo].[GridAreas] ga ON ga.Id = gl.GridAreaId " +
@@ -109,7 +110,7 @@ public class GetMasterDataQueryHandler : IQueryHandler<GetMasterDataQuery, Maste
             GsrnNumber: dataModel.GsrnNumber,
             Address: address,
             Series: new Series(dataModel.Product, dataModel.UnitType),
-            GridAreaDetails: new GridAreaDetails(dataModel.GridAreaCode, string.Empty, string.Empty),
+            GridAreaDetails: new GridAreaDetails(dataModel.GridAreaCode, dataModel.ToGridAreaCode.ToString(), dataModel.FromGridAreaCode.ToString()),
             ConnectionState: dataModel.ConnectionState,
             MeteringMethod: dataModel.MeteringMethod,
             ReadingPeriodicity: dataModel.ReadingPeriodicity,
@@ -127,7 +128,8 @@ public class GetMasterDataQueryHandler : IQueryHandler<GetMasterDataQuery, Maste
             NetSettlementGroup: dataModel.NetSettlementGroup,
             DisconnectionType: dataModel.DisconnectionType,
             ConnectionType: dataModel.ConnectionType,
-            ParentRelatedMeteringPoint: dataModel.ParentRelatedMeteringPoint);
+            ParentRelatedMeteringPoint: dataModel.ParentRelatedMeteringPoint,
+            GridOperatorId: dataModel.GridOperatorId);
     }
 }
 
@@ -166,9 +168,10 @@ public record DataModel(
     string NetSettlementGroup,
     string DisconnectionType,
     string ConnectionType,
-    Guid ToGridAreaCode,
-    Guid FromGridAreaCode,
-    Guid? ParentRelatedMeteringPoint);
+    Guid? ToGridAreaCode,
+    Guid? FromGridAreaCode,
+    Guid? ParentRelatedMeteringPoint,
+    Guid GridOperatorId);
 
 public record MasterData(
     string GsrnNumber,
@@ -192,7 +195,8 @@ public record MasterData(
     string NetSettlementGroup,
     string DisconnectionType,
     string ConnectionType,
-    Guid? ParentRelatedMeteringPoint) : IOutboundMessage;
+    Guid? ParentRelatedMeteringPoint,
+    Guid GridOperatorId) : IOutboundMessage;
 
 public record Address(
     string StreetName,
@@ -211,4 +215,4 @@ public record Address(
 
 public record Series(string Product, string UnitType);
 
-public record GridAreaDetails(string Code, string ToCode, string FromCode);
+public record GridAreaDetails(string Code, string? ToCode, string? FromCode);
