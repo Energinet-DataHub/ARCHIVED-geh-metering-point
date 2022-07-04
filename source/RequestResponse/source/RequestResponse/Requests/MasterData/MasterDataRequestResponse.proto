@@ -70,4 +70,6 @@ message MasterDataRequestResponse {
   google.protobuf.StringValue net_settlement_group = 19;
   google.protobuf.StringValue disconnetion_type = 20;
   google.protobuf.StringValue connection_type = 21;
+  google.protobuf.StringValue parent_related_metering_point = 22;
+  google.protobuf.StringValue grid_operator_id = 23;
 }
