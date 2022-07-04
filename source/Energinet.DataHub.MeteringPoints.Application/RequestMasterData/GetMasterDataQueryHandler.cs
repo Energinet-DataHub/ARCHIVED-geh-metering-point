@@ -70,7 +70,8 @@ public class GetMasterDataQueryHandler : IQueryHandler<GetMasterDataQuery, Maste
                               $"mp.DisconnectionType AS {nameof(DataModel.DisconnectionType)}, " +
                               $"mp.ConnectionType AS {nameof(DataModel.ConnectionType)}, " +
                               $"mp.ToGrid AS {nameof(DataModel.ToGridAreaCode)}, " +
-                              $"mp.FromGrid AS {nameof(DataModel.FromGridAreaCode)} " +
+                              $"mp.FromGrid AS {nameof(DataModel.FromGridAreaCode)}, " +
+                              $"mp.ParentRelatedMeteringPoint AS {nameof(DataModel.ParentRelatedMeteringPoint)} " +
                               $"FROM [dbo].[MeteringPoints] mp " +
                               $"JOIN [dbo].[GridAreaLinks] gl ON gl.Id = mp.MeteringGridArea " +
                               $"JOIN [dbo].[GridAreas] ga ON ga.Id = gl.GridAreaId " +
@@ -125,7 +126,8 @@ public class GetMasterDataQueryHandler : IQueryHandler<GetMasterDataQuery, Maste
             ProductionObligation: dataModel.ProductionObligation,
             NetSettlementGroup: dataModel.NetSettlementGroup,
             DisconnectionType: dataModel.DisconnectionType,
-            ConnectionType: dataModel.ConnectionType);
+            ConnectionType: dataModel.ConnectionType,
+            ParentRelatedMeteringPoint: dataModel.ParentRelatedMeteringPoint);
     }
 }
 
@@ -165,7 +167,8 @@ public record DataModel(
     string DisconnectionType,
     string ConnectionType,
     Guid ToGridAreaCode,
-    Guid FromGridAreaCode);
+    Guid FromGridAreaCode,
+    Guid? ParentRelatedMeteringPoint);
 
 public record MasterData(
     string GsrnNumber,
@@ -188,7 +191,8 @@ public record MasterData(
     bool ProductionObligation,
     string NetSettlementGroup,
     string DisconnectionType,
-    string ConnectionType) : IOutboundMessage;
+    string ConnectionType,
+    Guid? ParentRelatedMeteringPoint) : IOutboundMessage;
 
 public record Address(
     string StreetName,

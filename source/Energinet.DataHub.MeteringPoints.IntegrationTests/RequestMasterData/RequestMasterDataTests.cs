@@ -71,5 +71,6 @@ public class RequestMasterDataTests : TestHost
         Assert.Equal(createCommand.ConnectionType, masterData.ConnectionType);
         Assert.Equal(createCommand.DisconnectionType, masterData.DisconnectionType);
         Assert.False(masterData.ProductionObligation);
+        Assert.Null(masterData.ParentRelatedMeteringPoint);
     }
 }
