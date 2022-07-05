@@ -47,7 +47,7 @@ limitations under the License.
       <!-- Disable warning on your public types/methods for not having added full documentation tags -->
       <NoWarn>$(NoWarn);1591</NoWarn>
       <PublishRepositoryUrl>true</PublishRepositoryUrl>
-      <PackageVersion>1.0.1</PackageVersion>
+      <PackageVersion>1.0.2</PackageVersion>
     </PropertyGroup>
 
   <ItemGroup>
@@ -64,7 +64,6 @@ limitations under the License.
       <Access>Public</Access>
       <ProtoCompile>True</ProtoCompile>
       <CompileOutputs>True</CompileOutputs>
-      <OutputDir>.</OutputDir>
       <Generator>MSBuild:Compile</Generator>
     </Protobuf>
   </ItemGroup>
