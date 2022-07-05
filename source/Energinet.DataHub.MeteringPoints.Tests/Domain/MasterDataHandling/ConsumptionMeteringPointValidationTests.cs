@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
@@ -192,7 +193,21 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MasterDataHandling
                 .WithAssetType(null!)
                 .Build();
 
-            AssertContainsValidationError<AssetTypeIsRequired>("D59", CheckRules(masterData));
+            AssertContainsValidationError<CapacityIsRequiredRuleError>("D56", CheckRules(masterData));
+        }
+
+        [Theory]
+        [InlineData(nameof(AssetType.FuelCells))]
+        [InlineData("")]
+        [InlineData(null)]
+        public void Asset_type_is_not_required_for_net_settlement_group_0(string assetType)
+        {
+            var masterData = Builder()
+                .WithNetSettlementGroup(NetSettlementGroup.Zero.Name)
+                .WithAssetType(assetType)
+                .Build();
+
+            AssertDoesNotContainValidationError<AssetTypeIsRequired>(CheckRules(masterData));
         }
 
         [Fact]

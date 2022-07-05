@@ -69,8 +69,8 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             Assert.Equal(updatedMasterData.EffectiveDate?.DateInUtc.ToString(), masterDataWasUpdated?.EffectiveDate);
             Assert.Equal(updatedMasterData.MeteringConfiguration.Meter.Value, masterDataWasUpdated?.MeterNumber);
             Assert.Equal(updatedMasterData.MeteringConfiguration.Method.Name, masterDataWasUpdated?.MeteringMethod);
-            Assert.Equal(updatedMasterData.PowerLimit.Ampere, masterDataWasUpdated?.PowerLimitInAmpere);
-            Assert.Equal(updatedMasterData.PowerLimit.Kwh, masterDataWasUpdated?.PowerLimitInKwh);
+            Assert.Equal(updatedMasterData.PowerLimit?.Ampere, masterDataWasUpdated?.PowerLimitInAmpere);
+            Assert.Equal(updatedMasterData.PowerLimit?.Kwh, masterDataWasUpdated?.PowerLimitInKwh);
             Assert.Equal(updatedMasterData.ProductionObligation, masterDataWasUpdated?.ProductionObligation);
             Assert.Equal(updatedMasterData.ProductType.Name, masterDataWasUpdated?.ProductType);
             Assert.Equal(updatedMasterData.ReadingOccurrence.Name, masterDataWasUpdated?.ReadingOccurrence);

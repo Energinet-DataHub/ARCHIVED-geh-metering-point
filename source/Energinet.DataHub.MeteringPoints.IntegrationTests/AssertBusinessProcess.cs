@@ -14,10 +14,9 @@
 
 using System;
 using Dapper;
-using Energinet.DataHub.MeteringPoints.Domain;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Xunit;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests

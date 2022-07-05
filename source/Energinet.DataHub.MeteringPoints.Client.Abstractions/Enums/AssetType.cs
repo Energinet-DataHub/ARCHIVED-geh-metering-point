@@ -31,6 +31,7 @@ namespace Energinet.DataHub.MeteringPoints.Client.Abstractions.Enums
         D17 = 12, // DispatchableWindTurbines
         D19 = 13, // DieselCombustionEngine
         D20 = 14, // BioCombustionEngine
+        D98 = 99, // NoTechnology
         D99 = 100, // UnknownTechnology
     }
 }

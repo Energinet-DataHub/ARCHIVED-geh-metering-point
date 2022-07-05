@@ -33,7 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Rules
 
         private static bool IsGeoInfoReferencePresent(Address address)
         {
-            return !(address.GeoInfoReference == Guid.Empty || address.GeoInfoReference.HasValue == false);
+            return address.GeoInfoReference.HasValue != false;
         }
     }
 }

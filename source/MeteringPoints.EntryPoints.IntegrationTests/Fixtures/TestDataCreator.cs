@@ -36,8 +36,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             var isDaylightSavingTime = info.IsDaylightSavingTime(date);
 
             return isDaylightSavingTime
-                ? date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) + "T23:00:00Z"
-                : date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) + "T22:00:00Z";
+                ? date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) + "T22:00:00Z"
+                : date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) + "T23:00:00Z";
         }
 
         private static int Parse(string input)

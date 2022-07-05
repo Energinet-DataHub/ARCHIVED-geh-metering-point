@@ -20,16 +20,30 @@ on:
 
 jobs:
   publish_release:
-    uses: Energinet-DataHub/.github/.github/workflows/publish-release.yml@3.0.2
+    uses: Energinet-DataHub/.github/.github/workflows/publish-release.yml@7.6.0
     secrets:
       PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
 
   dispatch_deployment_request:
     needs: publish_release
-    uses: Energinet-DataHub/.github/.github/workflows/dispatch-deployment-request.yml@3.0.2
+    uses: Energinet-DataHub/.github/.github/workflows/dispatch-deployment-request.yml@7.6.0
     with:
       CALLER_REPOSITORY_NAME: geh-metering-point
       CALLER_REPOSITORY_PATH: Energinet-DataHub/geh-metering-point
     secrets:
       PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
       ENVIRONMENT_REPOSITORY_PATH: ${{ secrets.ENVIRONMENT_REPOSITORY_PATH }}
+
+  update_coverage_report:
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@7.6.0
+    with:
+      SOLUTION_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.sln'
+      DOTNET_VERSION: '6.0.301'
+      USE_AZURE_FUNCTIONS_TOOLS: true
+      USE_SQLLOCALDB_2019: true
+    secrets:
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID_OIDC }}
+      AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
+      AZURE_SECRETS_KEYVAULT_URL: ${{ secrets.AZURE_SECRETS_KEYVAULT_URL }}

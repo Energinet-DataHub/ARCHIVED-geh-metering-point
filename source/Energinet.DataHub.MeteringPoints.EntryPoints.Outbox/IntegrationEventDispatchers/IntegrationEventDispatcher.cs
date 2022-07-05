@@ -30,25 +30,26 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDi
         where TEvent : IOutboundMessage, IRequest<Unit>
     {
         private readonly ITopicSender<TTopic> _topicSender;
-        private readonly ProtobufOutboundMapper<TEvent> _mapper;
+        private readonly ProtobufOutboundMapperFactory _factory;
         private readonly IIntegrationEventMessageFactory _integrationEventMessageFactory;
         private readonly IIntegrationMetadataContext _integrationMetadataContext;
 
         protected IntegrationEventDispatcher(
             ITopicSender<TTopic> topicSender,
-            ProtobufOutboundMapper<TEvent> mapper,
+            ProtobufOutboundMapperFactory factory,
             IIntegrationEventMessageFactory integrationEventMessageFactory,
             IIntegrationMetadataContext integrationMetadataContext)
         {
             _topicSender = topicSender;
-            _mapper = mapper;
+            _factory = factory;
             _integrationEventMessageFactory = integrationEventMessageFactory;
             _integrationMetadataContext = integrationMetadataContext;
         }
 
         public async Task<Unit> Handle(TEvent request, CancellationToken cancellationToken)
         {
-            var message = _mapper.Convert(request);
+            var mapper = _factory.GetMapper(request);
+            var message = mapper.Convert(request);
             var bytes = message.ToByteArray();
 
             var serviceBusMessage = _integrationEventMessageFactory.CreateMessage(bytes, _integrationMetadataContext);

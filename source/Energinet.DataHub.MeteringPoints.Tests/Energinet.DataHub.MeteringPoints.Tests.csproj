@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 Copyright 2020 Energinet DataHub A/S
 
 Licensed under the Apache License, Version 2.0 (the "License2");
@@ -16,7 +16,7 @@ limitations under the License.
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <LangVersion>9.0</LangVersion>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -24,22 +24,22 @@ limitations under the License.
   <ItemGroup>
     <PackageReference Include="AutoFixture" Version="4.17.0" />
     <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
-    <PackageReference Include="Energinet.DataHub.Core.Schemas" Version="1.0.9" />
-    <PackageReference Include="Energinet.DataHub.Core.SchemaValidation" Version="1.0.8" />
-    <PackageReference Include="Energinet.DataHub.Core.XmlConversion.XmlConverter" Version="1.0.4" />
-    <PackageReference Include="Energinet.DataHub.Core.XmlConversion.XmlConverter.Abstractions" Version="1.0.4" />
-    <PackageReference Include="FluentAssertions" Version="6.5.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.7" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
-    <PackageReference Include="SimpleInjector" Version="5.3.2" />
-    <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="Energinet.DataHub.Core.Schemas" Version="1.0.10" />
+    <PackageReference Include="Energinet.DataHub.Core.SchemaValidation" Version="1.0.10" />
+    <PackageReference Include="Energinet.DataHub.Core.XmlConversion.XmlConverter" Version="1.0.5" />
+    <PackageReference Include="Energinet.DataHub.Core.XmlConversion.XmlConverter.Abstractions" Version="1.0.5" />
+    <PackageReference Include="FluentAssertions" Version="6.6.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.3" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+    <PackageReference Include="SimpleInjector" Version="5.3.3" />
+    <PackageReference Include="Moq" Version="4.17.2" />
     <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.categories" Version="2.0.5" />
+    <PackageReference Include="xunit.categories" Version="2.0.6" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="coverlet.collector" Version="3.0.3">
+    <PackageReference Include="coverlet.collector" Version="3.1.2">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -49,7 +49,6 @@ limitations under the License.
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.Application\Energinet.DataHub.MeteringPoints.Application.csproj" />
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp\Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.csproj" />
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion\Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.csproj" />
-    <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher\Energinet.DataHub.MeteringPoints.EntryPoints.InternalCommandDispatcher.csproj" />
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.EntryPoints.Outbox\Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.csproj" />
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.EntryPoints.Processing\Energinet.DataHub.MeteringPoints.EntryPoints.Processing.csproj" />
     <ProjectReference Include="..\Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub\Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub.csproj" />

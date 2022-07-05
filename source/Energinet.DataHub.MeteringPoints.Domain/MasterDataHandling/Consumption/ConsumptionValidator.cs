@@ -61,11 +61,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Consumption
                 new PowerPlantIsRequiredForNetSettlementGroupRule(masterData.NetSettlementGroup!, masterData.PowerPlantGsrnNumber),
                 new CapacityRequirementRule(masterData.Capacity, masterData.NetSettlementGroup!),
                 new AssetTypeRequirementRule(masterData.AssetType, masterData.NetSettlementGroup!),
+                new AssetTypeNoTechnologyRule(masterData.AssetType!, masterData.NetSettlementGroup!),
                 new ConnectionTypeRequirementRule(masterData.NetSettlementGroup!, masterData.ConnectionType),
                 new SettlementMethodMustBeFlexOrNonProfiledRule(masterData.SettlementMethod!),
                 new ProductTypeMustBeEnergyActiveRule(masterData.ProductType),
                 new UnitTypeMustBeKwh(masterData.UnitType),
                 new CountryCodeRequiredRule(masterData.Address),
+                new DisconnectionTypeMandatory(masterData.DisconnectionType?.Name),
             };
         }
     }

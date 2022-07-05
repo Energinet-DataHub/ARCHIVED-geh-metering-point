@@ -18,6 +18,7 @@
     "METERING_POINT_MESSAGE_DEQUEUED_TOPIC": "<Topic name for MeteringPointMessageDequeued events>",
     "METERING_POINT_DISCONNECTED_TOPIC": "<Topic name for meteringPointDisconnected events>",
     "METERING_POINT_RECONNECTED_TOPIC": "<Topic name for meteringPointReconnected events>",
+    "MASTER_DATA_UPDATED_TOPIC": "<Topic name for masterDataUpdated events>",
 
     "METERINGPOINT_DB_CONNECTION_STRING": "<Main SQL database connection string>",
     "ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER": "*/10 * * * * *",

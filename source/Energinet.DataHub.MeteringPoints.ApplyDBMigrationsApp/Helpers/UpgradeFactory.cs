@@ -34,7 +34,8 @@ namespace Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.Helpers
                 .SqlDatabase(connectionString)
                 .WithScriptNameComparer(new ScriptComparer())
                 .WithScripts(new CustomScriptProvider(Assembly.GetExecutingAssembly(), scriptFilter))
-                .LogToConsole();
+                .LogToConsole()
+                .WithExecutionTimeout(TimeSpan.FromMinutes(2));
 
             if (isDryRun)
             {

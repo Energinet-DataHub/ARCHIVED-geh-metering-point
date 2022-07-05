@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -28,6 +29,7 @@ using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.ChildMeteringPoints;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.DomainEvents;
+using Energinet.DataHub.MeteringPoints.Application.Common.Queries;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.Create.Validation;
@@ -36,9 +38,9 @@ using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.ProcessOverview;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
+using Energinet.DataHub.MeteringPoints.Application.RequestMasterData;
 using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Client.Abstractions.Models;
-using Energinet.DataHub.MeteringPoints.Contracts;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses.UpdateMasterData;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
@@ -78,6 +80,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.ChargeLinks.Cr
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Disconnect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Reconnect;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData.MasterDataUpdated;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
@@ -87,6 +90,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Providers.MeteringPointOwnership;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
@@ -95,7 +99,7 @@ using Energinet.DataHub.MeteringPoints.Messaging.Bundling.AccountingPointCharact
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Confirm;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Generic;
 using Energinet.DataHub.MeteringPoints.Messaging.Bundling.Reject;
-using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
+using Energinet.DataHub.MeteringPoints.RequestResponse.Contract;
 using FluentAssertions;
 using FluentValidation;
 using MediatR;
@@ -183,6 +187,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<ICommandScheduler, CommandScheduler>(Lifestyle.Scoped);
             _container.Register<InternalCommandProcessor>(Lifestyle.Scoped);
             _container.Register<InternalCommandAccessor>(Lifestyle.Scoped);
+            _container.Register<CommandExecutor>(Lifestyle.Scoped);
             _container.Register<IActorContext>(() => new ActorContext { CurrentActor = new Actor(SampleData.GridOperatorIdOfGrid870, "GLN", "8200000001409", "GridAccessProvider") }, Lifestyle.Singleton);
             _container.Register<IUserContext>(() => new UserContext { CurrentUser = new User(Guid.NewGuid(), new List<Guid> { Guid.NewGuid() }) }, Lifestyle.Singleton);
             _container.Register<MeteringPointPipelineContext>(Lifestyle.Scoped);
@@ -190,6 +195,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IUserProvider, UserProvider>(Lifestyle.Scoped);
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(databaseFixture.DatabaseManager.ConnectionString), Lifestyle.Scoped);
             _container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
+            _container.Register<ProtobufOutboundMapperFactory>();
+            _container.Register<ProtobufInboundMapperFactory>();
             Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
 
             _container.Register<IBusinessProcessValidationContext, BusinessProcessValidationContext>(Lifestyle.Scoped);
@@ -245,7 +252,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                     typeof(MeteringPointByGsrnQueryHandler),
                     typeof(CreateGridAreaHandler),
                     typeof(CloseDownMeteringPointHandler),
-                    typeof(TestCommandHandler))
+                    typeof(TestCommandHandler),
+                    typeof(GetMasterDataQueryHandler))
                 .WithNotificationHandlers(
                     typeof(MeteringPointCreatedNotificationHandler),
                     typeof(OnProductionMeteringPointCreated),
@@ -254,7 +262,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                     typeof(OnMeteringPointConnected),
                     typeof(OnMeteringPointDisconnected),
                     typeof(OnMeteringPointReconnected),
-                    typeof(SetEnergySupplierHACK));
+                    typeof(OnMasterDataWasUpdated),
+                    typeof(SetEnergySupplierHACK),
+                    typeof(ProcessInternalCommandsOnTimeHasPassed));
 
             // Specific for test instead of using Application Insights package
             _container.Register(() => new TelemetryClient(new TelemetryConfiguration()), Lifestyle.Scoped);
@@ -321,7 +331,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         }
 
         protected async Task AssertAndRunInternalCommandAsync<TCommand>()
-            where TCommand : ICommand
+            where TCommand : ICommand<Unit>
         {
             var meteringPointContext = GetService<MeteringPointContext>();
             var commands = meteringPointContext
@@ -351,6 +361,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             messages.Should().HaveCount(count);
         }
 
+        protected TMessage? AssertOutboxMessageAndReturnMessage<TMessage>()
+        {
+            var message = GetOutboxMessages<TMessage>().SingleOrDefault();
+
+            message.Should().NotBeNull();
+            message.Should().BeOfType<TMessage>();
+
+            return message;
+        }
+
         protected void AssertValidationError(string expectedErrorCode, DocumentType type)
         {
             var message = GetOutboxMessages
@@ -363,10 +383,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             if (errorCount > 1)
             {
                 var errorMessage = new StringBuilder();
-                errorMessage.AppendLine($"Reject message contains more ({errorCount}) than 1 error:");
+                errorMessage.AppendLine(CultureInfo.InvariantCulture, $"Reject message contains more ({errorCount}) than 1 error:");
                 foreach (var error in rejectMessage.MarketActivityRecord.Reasons)
                 {
-                    errorMessage.AppendLine($"Code: {error.Code}. Description: {error.Text}.");
+                    errorMessage.AppendLine(CultureInfo.InvariantCulture, $"Code: {error.Code}. Description: {error.Text}.");
                 }
 
                 throw new XunitException(errorMessage.ToString());
@@ -400,10 +420,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             if (errorCount > 1)
             {
                 var errorMessage = new StringBuilder();
-                errorMessage.AppendLine($"Reject message contains more ({errorCount}) than 1 error:");
+                errorMessage.AppendLine(CultureInfo.InvariantCulture, $"Reject message contains more ({errorCount}) than 1 error:");
                 foreach (var error in rejectMessage.MarketActivityRecord.Reasons)
                 {
-                    errorMessage.AppendLine($"Code: {error.Code}. Description: {error.Text}.");
+                    errorMessage.AppendLine(CultureInfo.InvariantCulture, $"Code: {error.Code}. Description: {error.Text}.");
                 }
 
                 throw new XunitException(errorMessage.ToString());
@@ -427,26 +447,28 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             return GetOutboxMessages<TIntegrationEvent>().SingleOrDefault();
         }
 
-        protected void AssertConfirmMessage(DocumentType documentType)
+        protected void AssertConfirmMessage(DocumentType documentType, string businessProcess)
         {
             var message = GetOutboxMessages
                     <MessageHubEnvelope>()
-                .Single(msg => msg.MessageType.Equals(documentType));
+                .FirstOrDefault(msg => msg.MessageType.Equals(documentType));
 
-            var confirmMessage = GetService<IJsonSerializer>().Deserialize<ConfirmMessage>(message.Content);
+            var confirmMessage = GetService<IJsonSerializer>().Deserialize<ConfirmMessage>(message!.Content);
 
             Assert.NotNull(confirmMessage);
+            Assert.Equal(businessProcess, confirmMessage.ProcessType);
         }
 
-        protected void AssertRejectMessage(DocumentType documentType)
+        protected void AssertRejectMessage(DocumentType documentType, string businessProcess)
         {
             var message = GetOutboxMessages
                     <MessageHubEnvelope>()
-                .Single(msg => msg.MessageType.Equals(documentType));
+                .FirstOrDefault(msg => msg.MessageType.Equals(documentType));
 
-            var rejectMessage = GetService<IJsonSerializer>().Deserialize<RejectMessage>(message.Content);
+            var rejectMessage = GetService<IJsonSerializer>().Deserialize<RejectMessage>(message!.Content);
 
             Assert.NotNull(rejectMessage);
+            Assert.Equal(businessProcess, rejectMessage.ProcessType);
         }
 
         protected async Task AssertMultipleProcessOverviewAsync(
@@ -487,6 +509,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             await scope.GetInstance<IMediator>().Send(command, cancellationToken).ConfigureAwait(false);
         }
 
+        protected async Task<TResult> QueryAsync<TResult>(IQuery<TResult> query)
+        {
+            await using var scope = AsyncScopedLifestyle.BeginScope(_container);
+            return await scope.GetInstance<IMediator>().Send(query, CancellationToken.None).ConfigureAwait(false);
+        }
+
         protected async Task AssertMeteringPointExistsAsync(string gsrnNumber)
         {
             if (gsrnNumber == null)
@@ -517,13 +545,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         {
             var request = Scenarios.CreateConsumptionMeteringPointCommand()
                 with
-                {
-                    MeteringMethod = MeteringMethod.Physical.Name,
-                    MeterNumber = "1",
-                    NetSettlementGroup = NetSettlementGroup.Zero.Name,
-                    ConnectionType = null,
-                    ScheduledMeterReadingDate = null,
-                };
+            {
+                MeteringMethod = MeteringMethod.Physical.Name,
+                MeterNumber = "1",
+                NetSettlementGroup = NetSettlementGroup.Zero.Name,
+                ConnectionType = null,
+                ScheduledMeterReadingDate = null,
+            };
             await SendCommandAsync(request).ConfigureAwait(false);
         }
 
@@ -544,24 +572,24 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         {
             return TestUtils.CreateRequest()
                 with
-                {
-                    TransactionId = SampleData.Transaction,
-                    GsrnNumber = SampleData.GsrnNumber,
-                    EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
-                };
+            {
+                TransactionId = SampleData.Transaction,
+                GsrnNumber = SampleData.GsrnNumber,
+                EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
+            };
         }
 
         protected async Task CreateConsumptionMeteringPointInNetSettlementGroup6Async()
         {
             var request = Scenarios.CreateConsumptionMeteringPointCommand()
                 with
-                {
-                    EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
-                    MeteringMethod = MeteringMethod.Virtual.Name,
-                    NetSettlementGroup = NetSettlementGroup.Six.Name,
-                    ConnectionType = ConnectionType.Installation.Name,
-                    ScheduledMeterReadingDate = "0101",
-                };
+            {
+                EffectiveDate = CreateEffectiveDateAsOfToday().ToString(),
+                MeteringMethod = MeteringMethod.Virtual.Name,
+                NetSettlementGroup = NetSettlementGroup.Six.Name,
+                ConnectionType = ConnectionType.Installation.Name,
+                ScheduledMeterReadingDate = "0101",
+            };
             await SendCommandAsync(request).ConfigureAwait(false);
         }
 

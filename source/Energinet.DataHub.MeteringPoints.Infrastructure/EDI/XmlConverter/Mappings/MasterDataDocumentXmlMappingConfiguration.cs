@@ -198,6 +198,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappi
                 "D17" => nameof(AssetType.DispatchableWindTurbines),
                 "D19" => nameof(AssetType.DieselCombustionEngine),
                 "D20" => nameof(AssetType.BioCombustionEngine),
+                "D98" => nameof(AssetType.NoTechnology),
                 "D99" => nameof(AssetType.UnknownTechnology),
 
                 _ => element.SourceValue,

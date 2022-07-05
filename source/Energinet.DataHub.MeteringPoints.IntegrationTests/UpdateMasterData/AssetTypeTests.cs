@@ -12,8 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
 using Xunit.Categories;
@@ -75,6 +79,239 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
             await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError("D59");
+        }
+
+        [Theory]
+        [InlineData(nameof(AssetType.NoTechnology), nameof(AssetType.GasTurbine))]
+        [InlineData(nameof(AssetType.GasTurbine), null)]
+        [InlineData(nameof(AssetType.Boiler), nameof(AssetType.GasTurbine))]
+        [InlineData(nameof(AssetType.Boiler), "")]
+        public async Task Asset_type_can_be_updated(string oldAssetType, string newAssetType)
+        {
+            var meteringPoint = Scenarios.CreateConsumptionMeteringPointCommand()
+                with
+                {
+                    NetSettlementGroup = NetSettlementGroup.Zero.Name,
+                    AssetType = oldAssetType,
+                    ConnectionType = null,
+                    ScheduledMeterReadingDate = null,
+                };
+
+            await SendCommandAsync(meteringPoint).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    AssetType = newAssetType,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D59", false);
+        }
+
+        [Fact]
+        public async Task? VE_production_metering_point_can_change_asset_type_to_no_technology()
+        {
+            await SendCommandAsync(Scenarios.CreateVEProduction()).ConfigureAwait(false);
+
+            var request = await UpdateMeteringpoint().ConfigureAwait(false);
+
+            AssertAssetType(request);
+        }
+
+        [Fact]
+        public async Task? Surplus_production_metering_point_can_change_asset_type_to_no_technology()
+        {
+            var meteringPoint = Scenarios.CreateSurplusProduction();
+
+            await SendCommandAsync(meteringPoint).ConfigureAwait(false);
+
+            var request = await UpdateMeteringpoint().ConfigureAwait(false);
+
+            AssertAssetType(request);
+        }
+
+        [Fact]
+        public async Task? Net_production_metering_point_can_change_asset_type_to_no_technology()
+        {
+            var meteringPoint = Scenarios.CreateCommand(MeteringPointType.NetProduction);
+
+            await SendCommandAsync(meteringPoint).ConfigureAwait(false);
+
+            var request = await UpdateMeteringpoint().ConfigureAwait(false);
+
+            AssertAssetType(request);
+        }
+
+        [Fact]
+        public async Task? Supply_to_grid_metering_point_can_change_asset_type_to_no_technology()
+        {
+            var meteringPoint = Scenarios.CreateCommand(MeteringPointType.SupplyToGrid);
+
+            await SendCommandAsync(meteringPoint).ConfigureAwait(false);
+
+            var request = await UpdateMeteringpoint().ConfigureAwait(false);
+
+            AssertAssetType(request);
+        }
+
+        [Fact]
+        public async Task? Consumption_from_grid_metering_point_can_change_asset_type_to_no_technology()
+        {
+            var meteringPoint = Scenarios.CreateCommand(MeteringPointType.ConsumptionFromGrid);
+
+            await SendCommandAsync(meteringPoint).ConfigureAwait(false);
+
+            var request = await UpdateMeteringpoint().ConfigureAwait(false);
+
+            AssertAssetType(request);
+        }
+
+        [Fact]
+        public async Task? Wholesale_services_metering_point_can_change_asset_type_to_no_technology()
+        {
+            var meteringPoint = Scenarios.CreateCommand(MeteringPointType.WholesaleServices);
+
+            await SendCommandAsync(meteringPoint).ConfigureAwait(false);
+
+            var request = await UpdateMeteringpoint().ConfigureAwait(false);
+
+            AssertAssetType(request);
+        }
+
+        [Fact]
+        public async Task? Own_production_metering_point_can_change_asset_type_to_no_technology()
+        {
+            var meteringPoint = Scenarios.CreateCommand(MeteringPointType.OwnProduction);
+
+            await SendCommandAsync(meteringPoint).ConfigureAwait(false);
+
+            var request = await UpdateMeteringpoint().ConfigureAwait(false);
+
+            AssertAssetType(request);
+        }
+
+        [Fact]
+        public async Task? Net_from_grid_metering_point_can_change_asset_type_to_no_technology()
+        {
+            var meteringPoint = Scenarios.CreateCommand(MeteringPointType.NetFromGrid);
+
+            await SendCommandAsync(meteringPoint).ConfigureAwait(false);
+
+            var request = await UpdateMeteringpoint().ConfigureAwait(false);
+
+            AssertAssetType(request);
+        }
+
+        [Fact]
+        public async Task? Net_to_grid_metering_point_can_change_asset_type_to_no_technology()
+        {
+            var meteringPoint = Scenarios.CreateCommand(MeteringPointType.NetToGrid);
+
+            await SendCommandAsync(meteringPoint).ConfigureAwait(false);
+
+            var request = await UpdateMeteringpoint().ConfigureAwait(false);
+
+            AssertAssetType(request);
+        }
+
+        [Fact]
+        public async Task? Total_consumption_metering_point_can_change_asset_type_to_no_technology()
+        {
+            var meteringPoint = Scenarios.CreateCommand(MeteringPointType.TotalConsumption);
+
+            await SendCommandAsync(meteringPoint).ConfigureAwait(false);
+
+            var request = await UpdateMeteringpoint().ConfigureAwait(false);
+
+            AssertAssetType(request);
+        }
+
+        [Fact]
+        public async Task? Other_consumption_metering_point_can_change_asset_type_to_no_technology()
+        {
+            var meteringPoint = Scenarios.CreateCommand(MeteringPointType.OtherConsumption)
+                with
+                {
+                    MeteringMethod = MeteringMethod.Physical.Name,
+                    MeterNumber = "1234",
+                };
+
+            await SendCommandAsync(meteringPoint).ConfigureAwait(false);
+
+            var request = await UpdateMeteringpoint().ConfigureAwait(false);
+
+            AssertAssetType(request);
+        }
+
+        [Fact]
+        public async Task? Other_production_metering_point_can_change_asset_type_to_no_technology()
+        {
+            var meteringPoint = Scenarios.CreateCommand(MeteringPointType.OtherProduction)
+                with
+                {
+                    MeteringMethod = MeteringMethod.Physical.Name,
+                    MeterNumber = "1234",
+                };
+
+            await SendCommandAsync(meteringPoint).ConfigureAwait(false);
+
+            var request = await UpdateMeteringpoint().ConfigureAwait(false);
+
+            AssertAssetType(request);
+        }
+
+        [Fact]
+        public async Task Consumption_metering_point_with_net_settlement_group_0_can_change_asset_type_to_no_technology()
+        {
+            var meteringPoint = Scenarios.CreateConsumptionMeteringPointCommand()
+                with
+                {
+                    NetSettlementGroup = nameof(NetSettlementGroup.Zero),
+                    ConnectionType = string.Empty,
+                    ScheduledMeterReadingDate = string.Empty,
+                };
+
+            await SendCommandAsync(meteringPoint).ConfigureAwait(false);
+
+            var request = await UpdateMeteringpoint().ConfigureAwait(false);
+
+            AssertAssetType(request);
+        }
+
+        [Fact]
+        public async Task Consumption_metering_point_with_net_settlement_group_other_than_0_cannot_change_asset_type_to_no_technology()
+        {
+            var meteringPoint = Scenarios.CreateConsumptionMeteringPointCommand()
+                with
+                {
+                    NetSettlementGroup = nameof(NetSettlementGroup.Six),
+                };
+
+            await SendCommandAsync(meteringPoint).ConfigureAwait(false);
+
+            await UpdateMeteringpoint().ConfigureAwait(false);
+
+            AssertValidationError("D60", true);
+        }
+
+        private async Task<MasterDataDocument> UpdateMeteringpoint()
+        {
+            var request = CreateUpdateRequest()
+                with
+                {
+                    AssetType = nameof(AssetType.NoTechnology),
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+            return request;
+        }
+
+        private void AssertAssetType(MasterDataDocument request)
+        {
+            var masterData = AssertMasterData(request.GsrnNumber);
+            masterData.HasAssetType(AssetType.NoTechnology);
         }
     }
 }

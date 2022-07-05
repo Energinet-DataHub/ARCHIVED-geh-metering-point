@@ -17,7 +17,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using Microsoft.Extensions.Logging;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
@@ -55,7 +55,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             }
             catch (Exception)
             {
-                _logger.LogInformation("GetUserAsync {userId}", userId);
+                _logger.LogInformation("GetUserAsync {UserId}", userId);
                 throw;
             }
         }

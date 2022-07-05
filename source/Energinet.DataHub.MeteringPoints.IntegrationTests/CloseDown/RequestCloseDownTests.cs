@@ -13,14 +13,17 @@
 // limitations under the License.
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.CloseDown;
 using Energinet.DataHub.MeteringPoints.Application.Common.ReceiveBusinessRequests;
+using Energinet.DataHub.MeteringPoints.Application.Common.SystemTime;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
+using MediatR;
 using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
@@ -44,7 +47,31 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
             var request = CreateRequest();
             await ReceiveRequest(request).ConfigureAwait(false);
 
-            AssertRejectMessage(DocumentType.RejectCloseDownRequest);
+            AssertRejectMessage(DocumentType.RejectCloseDownRequest, "D14");
+        }
+
+        [Fact]
+        public async Task Confirm_should_contain_correct_business_reason_code()
+        {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+
+            var request = CreateRequest();
+            await ReceiveRequest(request).ConfigureAwait(false);
+
+            await AssertMeteringPointExistsAsync(request.GsrnNumber).ConfigureAwait(false);
+            AssertConfirmMessage(DocumentType.AcceptCloseDownRequest, "D14");
+        }
+
+        [Fact]
+        public async Task Reject_should_contain_correct_business_reason_code()
+        {
+            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+            await CloseDownMeteringPointAsync().ConfigureAwait(false);
+
+            var request = CreateRequest();
+            await ReceiveRequest(request).ConfigureAwait(false);
+
+            AssertRejectMessage(DocumentType.RejectCloseDownRequest, "D14");
         }
 
         [Fact]
@@ -68,7 +95,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
 
             AssertProcess()
                 .HasStatus("RequestWasAccepted");
-            AssertConfirmMessage(DocumentType.AcceptCloseDownRequest);
+            AssertConfirmMessage(DocumentType.AcceptCloseDownRequest, "D14");
         }
 
         [Fact]
@@ -79,7 +106,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
 
             AssertProcess()
                 .HasStatus("RequestWasRejected");
-            AssertRejectMessage(DocumentType.RejectCloseDownRequest);
+            AssertRejectMessage(DocumentType.RejectCloseDownRequest, "D14");
         }
 
         [Fact]
@@ -133,28 +160,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
         }
 
         [Fact]
-        public async Task The_close_down_activity_is_scheduled_when_process_is_started()
+        public async Task Metering_point_is_closed_down_when_due_date_has_transpired()
         {
             await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
-
             var request = CreateRequest();
             await ReceiveRequest(request).ConfigureAwait(false);
 
-            var command =
-                await GetScheduledCommandAsync<CloseDownMeteringPoint>(InstantPattern.General
-                    .Parse(request.EffectiveDate).Value).ConfigureAwait(false);
-
-            Assert.NotNull(command);
-            Assert.Equal(request.GsrnNumber, command?.GsrnNumber);
-        }
-
-        [Fact]
-        public async Task Metering_point_is_closed_down()
-        {
-            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
-
-            var command = new CloseDownMeteringPoint(SampleData.GsrnNumber);
-            await SendCommandAsync(command).ConfigureAwait(false);
+            await TimeHasPassed(request.EffectiveDate).ConfigureAwait(false);
 
             AssertMasterData()
                 .HasConnectionState(PhysicalState.ClosedDown);
@@ -167,6 +179,12 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
                 TransactionId: SampleData.Transaction,
                 EffectiveDate: SampleData.EffectiveDate,
                 GsrnNumber: SampleData.GsrnNumber);
+        }
+
+        private Task TimeHasPassed(string now)
+        {
+            return GetService<IMediator>()
+                .Publish(new TimeHasPassed(InstantPattern.General.Parse(now).Value), CancellationToken.None);
         }
 
         private IRequestReceiver CreateReceiver()

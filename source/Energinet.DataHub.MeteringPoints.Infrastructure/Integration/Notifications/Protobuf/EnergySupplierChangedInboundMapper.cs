@@ -20,9 +20,9 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notifications.Protobuf
 {
-    public class EnergySupplierChangedInboundMapper : ProtobufInboundMapper<NotificationContracts.EnergySupplierChanged>
+    public class EnergySupplierChangedInboundMapper : ProtobufInboundMapper<Energinet.DataHub.MeteringPoints.IntegrationEvents.NotificationContracts.EnergySupplierChanged>
     {
-        protected override IInboundMessage Convert(NotificationContracts.EnergySupplierChanged obj)
+        protected override IInboundMessage Convert(Energinet.DataHub.MeteringPoints.IntegrationEvents.NotificationContracts.EnergySupplierChanged obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 

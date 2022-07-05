@@ -67,22 +67,16 @@ namespace Energinet.DataHub.MeteringPoints.Messaging.Bundling.Generic
                 _xmlNamespace + "MktActivityRecord",
                 new XElement(_xmlNamespace + "mRID", message.MarketActivityRecord.Id),
                 new XElement(_xmlNamespace + "originalTransactionIDReference_MktActivityRecord.mRID", message.MarketActivityRecord.OriginalTransaction),
-                new XElement(_xmlNamespace + "marketEvaluationPoint.mRID", new XAttribute("codingScheme", "A10"), message.MarketActivityRecord.MarketEvaluationPoint),
-                new XElement(_xmlNamespace + "validityStart_DateAndOrTime.dateTime", message.MarketActivityRecord.StartDateAndOrTime));
+                new XElement(_xmlNamespace + "validityStart_DateAndOrTime.dateTime", message.MarketActivityRecord.StartDateAndOrTime),
+                new XElement(_xmlNamespace + "marketEvaluationPoint.mRID", new XAttribute("codingScheme", "A10"), message.MarketActivityRecord.MarketEvaluationPoint));
         }
 
         private static XDocument CreateDocumentWithHeader(GenericNotificationMessage message)
         {
-            XNamespace xmlns = XNamespace.Get("urn:ediel.org:structure:accountingpointcharacteristics:0:1");
-            XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
-            XNamespace schemaLocation = XNamespace.Get("urn:ediel.org:structure:genericnotification:0:1 urn-ediel-org-structure-genericnotification-0-1.xsd");
-
             var document = new XDocument(
                 new XElement(
                     _xmlNamespace + "GenericNotification_MarketDocument",
-                    new XAttribute(XNamespace.Xmlns + "xsi", xsi),
                     new XAttribute(XNamespace.Xmlns + "cim", _xmlNamespace),
-                    new XAttribute(xsi + "schemaLocation", schemaLocation),
                     new XElement(_xmlNamespace + "mRID", Guid.NewGuid().ToString()),
                     new XElement(_xmlNamespace + "type", message.Type),
                     new XElement(_xmlNamespace + "process.processType", message.ProcessType),

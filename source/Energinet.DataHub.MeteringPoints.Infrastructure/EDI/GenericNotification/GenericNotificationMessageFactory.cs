@@ -33,7 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI.GenericNotificatio
                 Id: Guid.NewGuid().ToString(),
                 Type: "E44",
                 ProcessType: "E65",
-                BusinessSectorType: "E23",
+                BusinessSectorType: "23",
                 Sender: sender,
                 Receiver: receiver,
                 CreatedDateTime: createdDateTime,

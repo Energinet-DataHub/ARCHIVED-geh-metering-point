@@ -36,6 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exchange
                 new MeterReadingOccurrenceRule(masterData.ReadingOccurrence),
                 new ProductTypeMustBeEnergyActiveRule(masterData.ProductType),
                 new UnitTypeMustBeKwh(masterData.UnitType),
+                new DisconnectionTypeMandatory(masterData.DisconnectionType?.Name),
             });
         }
 

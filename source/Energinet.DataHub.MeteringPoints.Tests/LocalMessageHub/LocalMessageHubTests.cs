@@ -25,6 +25,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 using Energinet.DataHub.MeteringPoints.Messaging;
 using Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Xunit;
 using Xunit.Categories;
 
@@ -61,11 +62,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
                 new BundleCreatorMock(),
                 new SystemDateTimeProviderStub());
 
+            using var loggerFactory = new LoggerFactory();
             _localMessageHubDataAvailableClient = new LocalMessageHubDataAvailableClient(
                 _messageHubMessageRepository,
                 _dataAvailableNotificationOutboxDispatcher,
                 new MessageHubMessageFactory(new SystemDateTimeProviderStub()),
-                new CorrelationContext());
+                new CorrelationContext(),
+                new Logger<LocalMessageHubTests>(loggerFactory));
         }
 
         [Fact]
@@ -134,7 +137,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
         {
             var correlationId = Guid.NewGuid().ToString();
 
-            _localMessageHubDataAvailableClient.DataAvailable(new MessageHubEnvelope("recipient", "content", DocumentType.AccountingPointCharacteristicsMessage, correlationId, "gsrnNumber"));
+            var content = @"{""DocumentName"": ""ConfirmRequestChangeAccountingPointCharacteristics_MarketDocument"",""Id"": ""d0112b45-c4fc-4ce3-a157-e8489738c62a"",""Type"": ""E59"",""ProcessType"": ""E02""
+                ,""BusinessSectorType"": ""23"",""Sender"": {""Id"": ""5790001330552""
+                ,""CodingScheme"":""A10"",""Role"": ""DDZ""  },
+                ""CreatedDateTime"": ""2022-03-23T19:37:00.5370288Z"",""ReasonCode"": ""A01"",""MarketActivityRecord"": {""Id"": ""185bd262-b885-4ec3-b81e-7d51b65b74f3"",
+                ""MarketEvaluationPoint"": ""571313191221249692"",""OriginalTransaction"": ""1""}}";
+
+            _localMessageHubDataAvailableClient.DataAvailable(new MessageHubEnvelope("recipient", content, DocumentType.AccountingPointCharacteristicsMessage, correlationId, "gsrnNumber", "ConfirmRequestChangeAccountingPointCharacteristics"));
 
             var message = _messageHubMessageRepository.GetMessageByCorrelation(correlationId);
             return (message, correlationId);

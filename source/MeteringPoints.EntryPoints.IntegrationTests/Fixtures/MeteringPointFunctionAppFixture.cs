@@ -92,19 +92,19 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
 
             var buildConfiguration = GetBuildConfiguration();
             var port = 8000;
-            ingestionHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion\\bin\\{buildConfiguration}\\net5.0";
+            ingestionHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion\\bin\\{buildConfiguration}\\net6.0";
             ingestionHostSettings.Functions = "MeteringPoint";
             ingestionHostSettings.Port = ++port;
 
-            processingHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Processing\\bin\\{buildConfiguration}\\net5.0";
-            processingHostSettings.Functions = "QueueSubscriber ProcessInternalCommands";
+            processingHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Processing\\bin\\{buildConfiguration}\\net6.0";
+            processingHostSettings.Functions = "QueueSubscriber RaiseTimeHasPassedEvent";
             processingHostSettings.Port = ++port;
 
-            outboxHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Outbox\\bin\\{buildConfiguration}\\net5.0";
+            outboxHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.Outbox\\bin\\{buildConfiguration}\\net6.0";
             outboxHostSettings.Functions = "OutboxWatcher";
             outboxHostSettings.Port = ++port;
 
-            localMessageHubHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub\\bin\\{buildConfiguration}\\net5.0";
+            localMessageHubHostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub\\bin\\{buildConfiguration}\\net6.0";
             localMessageHubHostSettings.Functions = "BundleDequeuedQueueSubscriber RequestBundleQueueSubscriber";
             localMessageHubHostSettings.Port = ++port;
 
@@ -114,7 +114,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
 
             // Use "0 0 8 1 1 *", to do: 8:00 1. January ~ we must set this setting, but we do not want the trigger to run automatically, we want to trigger it manually
             outboxHostSettings.ProcessEnvironmentVariables.Add("ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER", "*/1 * * * * *");
-            processingHostSettings.ProcessEnvironmentVariables.Add("INTERNAL_COMMAND_PROCESSING_INTERVAL", "*/1 * * * * *");
+            processingHostSettings.ProcessEnvironmentVariables.Add("RAISE_TIME_HAS_PASSED_EVENT_SCHEDULE", "*/1 * * * * *");
 
             ingestionHostSettings.ProcessEnvironmentVariables.Add("AzureWebJobsStorage", "UseDevelopmentStorage=true");
             processingHostSettings.ProcessEnvironmentVariables.Add("AzureWebJobsStorage", "UseDevelopmentStorage=true");
@@ -136,6 +136,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             // => MeteringPoint
             ingestionHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
             processingHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
+            processingHostSettings.ProcessEnvironmentVariables.Add("SERVICE_BUS_SEND_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
             localMessageHubHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
 
             var meteringPointQueue = await ServiceBusResourceProvider
@@ -216,6 +217,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
                 .CreateAsync().ConfigureAwait(false);
             await ServiceBusResourceProvider
                 .BuildTopic("sbt-meteringpoint-reconnected").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("METERING_POINT_RECONNECTED_TOPIC", p.Name))
+                .CreateAsync().ConfigureAwait(false);
+            await ServiceBusResourceProvider
+                .BuildTopic("sbt-master-data-updated").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("MASTER_DATA_UPDATED_TOPIC", p.Name))
                 .CreateAsync().ConfigureAwait(false);
 
             // => Database

@@ -15,15 +15,14 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Extensions;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
-using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.Connect;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
@@ -150,8 +149,26 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ConnectMeteringPoint
             AssertPersistedMeteringPoint
                 .Initialize(SampleData.GsrnNumber, GetService<IDbConnectionFactory>())
                 .HasConnectionState(PhysicalState.Connected);
-            AssertConfirmMessage(DocumentType.ConfirmConnectMeteringPoint);
+            AssertConfirmMessage(DocumentType.ConfirmConnectMeteringPoint, "D15");
             Assert.NotNull(FindIntegrationEvent<MeteringPointConnectedIntegrationEvent>());
+        }
+
+        [Fact]
+        public async Task Reject_if_business_rules_are_violated()
+        {
+            await CreateMeteringPointWithoutEnergySupplierAssigned(EnumerationType.FromName<MeteringPointType>(nameof(MeteringPointType.Consumption))).ConfigureAwait(false);
+            await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
+
+            AssertRejectMessage(DocumentType.RejectConnectMeteringPoint, "D15");
+        }
+
+        [Fact]
+        public async Task Confirm_should_contain_correct_business_reason_code()
+        {
+            await CreateMeteringPointWithEnergySupplierAssigned().ConfigureAwait(false);
+            await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
+
+            AssertRejectMessage(DocumentType.ConfirmConnectMeteringPoint, "D15");
         }
 
         [Fact]

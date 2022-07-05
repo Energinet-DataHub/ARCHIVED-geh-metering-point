@@ -14,13 +14,12 @@
 
 using System;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.ChangeConnectionStatus;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.Acknowledgements;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Reconnect;
@@ -92,7 +91,18 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.ReconnectMeteringPoi
             await SendCommandAsync(CreateReconnectMeteringPointRequest()).ConfigureAwait(false);
 
             AssertValidationError("D16");
-            AssertRejectMessage(DocumentType.RejectConnectionStatusMeteringPoint);
+            AssertRejectMessage(DocumentType.RejectConnectionStatusMeteringPoint, "E79");
+        }
+
+        [Fact]
+        public async Task Confirm_should_contain_correct_business_reason_code()
+        {
+            await CreateMeteringPointWithEnergySupplierAssigned().ConfigureAwait(false);
+            await SendCommandAsync(CreateConnectMeteringPointRequest()).ConfigureAwait(false);
+            await SendCommandAsync(CreateDisconnectMeteringPointRequest()).ConfigureAwait(false);
+            await SendCommandAsync(CreateReconnectMeteringPointRequest()).ConfigureAwait(false);
+
+            AssertConfirmMessage(DocumentType.ConfirmConnectionStatusMeteringPoint, "E79");
         }
 
         [Theory]

@@ -13,16 +13,22 @@
 // limitations under the License.
 
 using System;
+using MediatR;
 
 namespace Energinet.DataHub.MeteringPoints.Application.Common.Commands
 {
-    public abstract class InternalCommand : ICommand
+    public abstract class InternalCommand : ICommand<Unit>
     {
         protected InternalCommand()
         {
             Id = Guid.NewGuid();
         }
 
-        public Guid Id { get; protected set; }
+        protected InternalCommand(Guid id)
+        {
+            Id = id;
+        }
+
+        public Guid Id { get; }
     }
 }

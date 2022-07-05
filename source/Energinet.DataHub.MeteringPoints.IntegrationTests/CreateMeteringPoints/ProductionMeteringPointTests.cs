@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Create;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Production;
@@ -36,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             var request = CreateCommand();
             await SendCommandAsync(request).ConfigureAwait(false);
 
-            AssertConfirmMessage(DocumentType.ConfirmCreateMeteringPoint);
+            AssertConfirmMessage(DocumentType.ConfirmCreateMeteringPoint, "E02");
             await AssertMeteringPointExistsAsync(request.GsrnNumber).ConfigureAwait(false);
             var integrationEvent = FindIntegrationEvent<ProductionMeteringPointCreatedIntegrationEvent>();
             Assert.NotNull(integrationEvent);
@@ -157,6 +158,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError("E86", DocumentType.RejectCreateMeteringPoint);
+        }
+
+        [Fact]
+        public async Task Production_metering_point_should_contain_disconnection_type()
+        {
+            var request = Scenarios.CreateCommand(MeteringPointType.Production)
+                with
+                {
+                    DisconnectionType = null,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
         }
 
         private static CreateMeteringPoint CreateCommand()

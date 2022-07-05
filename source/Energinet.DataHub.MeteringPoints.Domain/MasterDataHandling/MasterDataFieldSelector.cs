@@ -27,7 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling
                 {
                     new(nameof(MasterData.ProductType), Applicability.Required),
                     new(nameof(MasterData.UnitType), Applicability.Required),
-                    new(nameof(MasterData.AssetType), Applicability.Required),
+                    new(nameof(MasterData.AssetType), Applicability.Optional),
                     new(nameof(MasterData.SettlementMethod), Applicability.Required),
                     new(nameof(MasterData.ScheduledMeterReadingDate), Applicability.Optional),
                     new(nameof(MasterData.ReadingOccurrence), Applicability.Required),

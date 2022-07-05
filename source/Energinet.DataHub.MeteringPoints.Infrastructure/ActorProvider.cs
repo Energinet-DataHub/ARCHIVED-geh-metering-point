@@ -16,7 +16,7 @@ using System;
 using System.Threading.Tasks;
 using Dapper;
 using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
-using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using Microsoft.Extensions.Logging;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure
@@ -52,7 +52,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure
             }
             catch (Exception)
             {
-                _logger.LogInformation("GetActorAsync {actorId}", actorId);
+                _logger.LogInformation("GetActorAsync {ActorId}", actorId);
                 throw;
             }
         }

@@ -50,6 +50,50 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         }
 
         [Fact]
+        public async Task Power_limit_is_changed_if_null()
+        {
+            await SendCommandAsync(Scenarios.CreateVEProduction() with
+            {
+                MaximumCurrent = null,
+                MaximumPower = null,
+            }).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    MaximumCurrent = "2",
+                    MaximumPower = string.Empty,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertMasterData()
+                .HasPowerLimit(null, 2);
+        }
+
+        [Fact]
+        public async Task Power_limit_is_changed_if_original_values_is_null_and_properties_are_omitted_in_future_updates()
+        {
+            await SendCommandAsync(Scenarios.CreateVEProduction() with
+            {
+                MaximumCurrent = null,
+                MaximumPower = null,
+            }).ConfigureAwait(false);
+
+            var request = CreateUpdateRequest()
+                with
+                {
+                    MaximumCurrent = null,
+                    MaximumPower = null,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertMasterData()
+                .HasPowerLimit(null, null);
+        }
+
+        [Fact]
         public async Task Reject_if_max_current_input_is_invalid()
         {
             await SendCommandAsync(Scenarios.CreateVEProduction() with

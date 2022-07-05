@@ -14,6 +14,8 @@
 
 using System;
 using System.Globalization;
+using Energinet.DataHub.Core.App.Common;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.MeteringPoints.Application.ChangeConnectionStatus;
 using Energinet.DataHub.MeteringPoints.Application.Connect;
 using Energinet.DataHub.MeteringPoints.Application.Create;
@@ -26,6 +28,13 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
 {
     public class BusinessProcessCommandFactory : IBusinessProcessCommandFactory
     {
+        private static IActorContext _actorContext = new ActorContext();
+
+        public BusinessProcessCommandFactory(IActorContext actorContext)
+        {
+            _actorContext = actorContext;
+        }
+
         public IBusinessRequest? CreateFrom(MasterDataDocument document)
         {
             if (document == null) throw new ArgumentNullException(nameof(document));
@@ -92,6 +101,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Common
             return new CreateMeteringPoint
             {
                 MeteringPointType = document.TypeOfMeteringPoint,
+                AdministratorId = _actorContext.CurrentActor == null ? Guid.Empty.ToString() : _actorContext.CurrentActor.ActorId.ToString(),
                 AssetType = document.AssetType,
                 BuildingNumber = document.BuildingNumber,
                 CityName = document.CityName,

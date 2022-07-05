@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create
@@ -25,5 +26,5 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.GridAreas.Create
             string ActorId = "")
         : IBusinessRequest,
             IOutboundMessage,
-            IInboundMessage;
+            IInboundMessage, ICommand<BusinessProcessResult>;
 }

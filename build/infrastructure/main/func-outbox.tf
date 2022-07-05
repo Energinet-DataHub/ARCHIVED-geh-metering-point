@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 module "func_outbox" {
-  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=5.1.0"
+  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=7.0.0"
 
   name                                      = "outbox"
   project_name                              = var.domain_name_short
@@ -20,19 +20,21 @@ module "func_outbox" {
   environment_instance                      = var.environment_instance
   resource_group_name                       = azurerm_resource_group.this.name
   location                                  = azurerm_resource_group.this.location
+  vnet_integration_subnet_id                = data.azurerm_key_vault_secret.snet_vnet_integrations_id.value
+  private_endpoint_subnet_id                = data.azurerm_key_vault_secret.snet_private_endpoints_id.value
   app_service_plan_id                       = data.azurerm_key_vault_secret.plan_shared_id.value
-  application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_instrumentation_key.value
+  application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value
+  log_analytics_workspace_id                = data.azurerm_key_vault_secret.log_shared_id.value
   always_on                                 = true
+  dotnet_framework_version                  = "6"
+  use_dotnet_isolated_runtime               = true
+
   app_settings                              = {
-    # Region: Default Values
-    WEBSITE_ENABLE_SYNC_UPDATE_SITE                               = true
-    WEBSITE_RUN_FROM_PACKAGE                                      = 1
-    WEBSITES_ENABLE_APP_SERVICE_STORAGE                           = true
-    FUNCTIONS_WORKER_RUNTIME                                      = "dotnet-isolated"
-    # Endregion: Default Values
     METERINGPOINT_DB_CONNECTION_STRING                            = local.MS_METERING_POINT_CONNECTION_STRING
     METERINGPOINT_QUEUE_TOPIC_NAME                                = module.sbq_meteringpoint.name
-    SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING = data.azurerm_key_vault_secret.sb_domain_relay_send_connection_string.value
+
+    SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-send-connection-string)"
+
     METERING_POINT_CREATED_TOPIC                                  = "metering-point-created"
     CONSUMPTION_METERING_POINT_CREATED_TOPIC                      = "consumption-metering-point-created"
     PRODUCTION_METERING_POINT_CREATED_TOPIC                       = "production-metering-point-created"
@@ -41,14 +43,16 @@ module "func_outbox" {
     METERING_POINT_MESSAGE_DEQUEUED_TOPIC                         = "metering-point-message-dequeued"
     METERING_POINT_DISCONNECTED_TOPIC                             = "metering-point-disconnected"
     METERING_POINT_RECONNECTED_TOPIC                              = "metering-point-reconnected"
+    MASTER_DATA_UPDATED_TOPIC                                     = "master-data-updated"
     ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER                          = "*/10 * * * * *"
     EVENT_MESSAGE_DISPATCH_TRIGGER_TIMER                          = "*/10 * * * * *"
-    MESSAGEHUB_STORAGE_CONNECTION_STRING                          = data.azurerm_key_vault_secret.st_market_operator_response_primary_connection_string.value
-    MESSAGEHUB_QUEUE_CONNECTION_STRING                            = data.azurerm_key_vault_secret.sb_domain_relay_transceiver_connection_string.value
-    MESSAGEHUB_STORAGE_CONTAINER_NAME                             = data.azurerm_key_vault_secret.st_market_operator_response_postofficereply_container_name.value
-    CHARGES_DEFAULT_LINK_RESPONSE_QUEUE                           = data.azurerm_key_vault_secret.sbq_create_link_reply_name.value
-    MESSAGEHUB_DATA_AVAILABLE_QUEUE                               = data.azurerm_key_vault_secret.sbq_data_available_name.value
-    MESSAGEHUB_DOMAIN_REPLY_QUEUE                                 = data.azurerm_key_vault_secret.sbq_metering_points_reply_name.value
+
+    MESSAGEHUB_STORAGE_CONNECTION_STRING                          = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=st-marketres-primary-connection-string)"
+    MESSAGEHUB_QUEUE_CONNECTION_STRING                            = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-transceiver-connection-string)"
+    MESSAGEHUB_STORAGE_CONTAINER_NAME                             = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=st-marketres-postofficereply-container-name)"
+    CHARGES_DEFAULT_LINK_RESPONSE_QUEUE                           = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-create-link-reply-name)"
+    MESSAGEHUB_DATA_AVAILABLE_QUEUE                               = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-data-available-name)"
+    MESSAGEHUB_DOMAIN_REPLY_QUEUE                                 = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-metering-points-reply-name)"
   }
 
   tags                                      = azurerm_resource_group.this.tags

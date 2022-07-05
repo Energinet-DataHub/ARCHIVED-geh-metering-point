@@ -33,6 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components
         public static readonly AssetType DispatchableWindTurbines = new AssetType(12, nameof(DispatchableWindTurbines));
         public static readonly AssetType DieselCombustionEngine = new AssetType(13, nameof(DieselCombustionEngine));
         public static readonly AssetType BioCombustionEngine = new AssetType(14, nameof(BioCombustionEngine));
+        public static readonly AssetType NoTechnology = new AssetType(99, nameof(NoTechnology));
         public static readonly AssetType UnknownTechnology = new AssetType(100, nameof(UnknownTechnology));
 
         private AssetType(int id, string name)

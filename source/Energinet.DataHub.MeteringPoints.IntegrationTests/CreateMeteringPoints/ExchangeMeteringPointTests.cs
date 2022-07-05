@@ -15,6 +15,7 @@
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Exchange;
@@ -40,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(request).ConfigureAwait(false);
 
             await AssertMeteringPointExistsAsync(request.GsrnNumber).ConfigureAwait(false);
-            AssertConfirmMessage(DocumentType.ConfirmCreateMeteringPoint);
+            AssertConfirmMessage(DocumentType.ConfirmCreateMeteringPoint, "E02");
             var integrationEvent = FindIntegrationEvent<ExchangeMeteringPointCreatedIntegrationEvent>();
             Assert.NotNull(integrationEvent);
             Assert.Equal(request.GsrnNumber, integrationEvent?.GsrnNumber);
@@ -148,6 +149,22 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(request).ConfigureAwait(false);
 
             AssertValidationError("E86", DocumentType.RejectCreateMeteringPoint);
+        }
+
+        [Fact]
+        public async Task Exchange_metering_point_should_contain_disconnection_type()
+        {
+            var request = Scenarios.CreateCommand(MeteringPointType.Exchange)
+                with
+                {
+                    MeteringMethod = MeteringMethod.Physical.Name,
+                    DisconnectionType = null,
+                    MeterNumber = "pva30909290",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02");
         }
 
         private static CreateMeteringPoint CreateCommand()

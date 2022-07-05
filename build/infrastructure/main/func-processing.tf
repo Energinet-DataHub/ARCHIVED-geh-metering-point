@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 module "func_processing" {
-  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=5.1.0"
+  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=7.0.0"
 
   name                                      = "processing"
   project_name                              = var.domain_name_short
@@ -20,24 +20,28 @@ module "func_processing" {
   environment_instance                      = var.environment_instance
   resource_group_name                       = azurerm_resource_group.this.name
   location                                  = azurerm_resource_group.this.location
+  vnet_integration_subnet_id                = data.azurerm_key_vault_secret.snet_vnet_integrations_id.value
+  private_endpoint_subnet_id                = data.azurerm_key_vault_secret.snet_private_endpoints_id.value
   app_service_plan_id                       = data.azurerm_key_vault_secret.plan_shared_id.value
-  application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_instrumentation_key.value
+  application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value
+  log_analytics_workspace_id                = data.azurerm_key_vault_secret.log_shared_id.value
   always_on                                 = true
+  dotnet_framework_version                  = "6"
+  use_dotnet_isolated_runtime               = true
+
   app_settings                              = {
-    # Region: Default Values
-    WEBSITE_ENABLE_SYNC_UPDATE_SITE       = true
-    WEBSITE_RUN_FROM_PACKAGE              = 1
-    WEBSITES_ENABLE_APP_SERVICE_STORAGE   = true
-    FUNCTIONS_WORKER_RUNTIME              = "dotnet-isolated"
-    # Endregion: Default Values
     METERINGPOINT_QUEUE_URL                 = "${module.sb_meteringpoint.name}.servicebus.windows.net:9093"
     METERINGPOINT_QUEUE_CONNECTION_STRING   = module.sb_meteringpoint.primary_connection_strings["listen"]
     METERINGPOINT_DB_CONNECTION_STRING      = local.MS_METERING_POINT_CONNECTION_STRING
     METERINGPOINT_QUEUE_TOPIC_NAME          = module.sbq_meteringpoint.name
-    INTEGRATION_EVENT_QUEUE                 = data.azurerm_key_vault_secret.metering_point_forwarded_name.value
-    INTEGRATION_EVENT_QUEUE_CONNECTION      = data.azurerm_key_vault_secret.sb_domain_relay_listen_connection_string.value
+    INTEGRATION_EVENT_QUEUE                 = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-metering-point-forward-name)"
+    INTEGRATION_EVENT_QUEUE_CONNECTION      = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-listen-connection-string)"
+
     CHARGES_DEFAULT_LINK_RESPONSE_QUEUE     = "create-link-reply"
-    INTERNAL_COMMAND_PROCESSING_INTERVAL    = "*/10 * * * * *"
+    RAISE_TIME_HAS_PASSED_EVENT_SCHEDULE    = "*/10 * * * * *"
+    SERVICE_BUS_LISTEN_CONNECTION_STRING    = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-listen-connection-string)",
+    SERVICE_BUS_SEND_CONNECTION_STRING      = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-send-connection-string)"        
+    MASTER_DATA_REQUEST_QUEUE_NAME          = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-metering-point-master-data-request-name)"    
   }
 
   tags                                      = azurerm_resource_group.this.tags

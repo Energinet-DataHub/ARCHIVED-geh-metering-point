@@ -19,6 +19,6 @@ using NodaTime;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Reconnect
 {
-    public record MeteringPointReconnectedIntegrationEvent(Guid MeteringPointId, string GSRNNumber, Instant EffectiveDate)
+    public record MeteringPointReconnectedIntegrationEvent(Guid MeteringPointId, Instant EffectiveDate)
         : IIntegrationEvent, IRequest, IOutboundMessage;
 }

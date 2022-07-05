@@ -16,23 +16,13 @@ data "azurerm_key_vault" "kv_shared_resources" {
   resource_group_name = var.shared_resources_resource_group_name
 }
 
-data "azurerm_key_vault_secret" "sb_domain_relay_listen_connection_string" {
-  name         = "sb-domain-relay-listen-connection-string"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "sb_domain_relay_send_connection_string" {
-  name         = "sb-domain-relay-send-connection-string"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "sb_domain_relay_transceiver_connection_string" {
-  name         = "sb-domain-relay-transceiver-connection-string"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "appi_instrumentation_key" {
+data "azurerm_key_vault_secret" "appi_shared_instrumentation_key" {
   name         = "appi-shared-instrumentation-key"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "appi_shared_id" {
+  name         = "appi-shared-id"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
@@ -56,77 +46,27 @@ data "azurerm_key_vault_secret" "mssql_data_url" {
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
-data "azurerm_key_vault_secret" "metering_point_forwarded_name" {
-  name         = "sbq-metering-point-forward-name"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "st_market_operator_response_primary_connection_string" {
-  name         = "st-marketres-primary-connection-string"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "st_market_operator_response_postofficereply_container_name" {
-  name         = "st-marketres-postofficereply-container-name"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "sbq_data_available_name" {
-  name         = "sbq-data-available-name"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "sbq_metering_points_name" {
-  name         = "sbq-metering-points-name"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "sbq_metering_points_reply_name" {
-  name         = "sbq-metering-points-reply-name"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "sbq_metering_points_dequeue_name" {
-  name         = "sbq-metering-points-dequeue-name"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "sbq_create_link_reply_name" {
-  name         = "sbq-create-link-reply-name"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "b2c_tenant_id" {
-  name         = "b2c-tenant-id"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "backend_service_app_id" {
-  name         = "backend-service-app-id"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "st_market_operator_logs_primary_connection_string" {
-  name         = "st-marketoplogs-primary-connection-string"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "st_market_operator_logs_container_name" {
-  name         = "st-marketoplogs-container-name"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "frontend_open_id_url" {
-  name         = "frontend-open-id-url"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "frontend_service_app_id" {
-  name         = "frontend-service-app-id"
+data "azurerm_key_vault_secret" "mssql_market_participant_database_name" {
+  name         = "mssql-market-participant-database-name"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
 data "azurerm_key_vault_secret" "plan_shared_id" {
-  name         = "plan-shared-id"
+  name         = "plan-services-id"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "log_shared_id" {
+  name         = "log-shared-id"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "snet_private_endpoints_id" {
+  name         = "snet-private-endpoints-id"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "snet_vnet_integrations_id" {
+  name         = "snet-vnet-integration-id"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }

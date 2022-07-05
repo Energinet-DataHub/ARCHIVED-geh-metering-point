@@ -45,6 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
         {
             Environment.SetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING", SomeString);
             Environment.SetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", SomeString);
+            Environment.SetEnvironmentVariable("SERVICE_BUS_SEND_CONNECTION_STRING", ServiceBusConnectionString);
             var program = new EntryPoints.Processing.Program();
 
             program.ConfigureApplication();
@@ -62,6 +63,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
             Environment.SetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", SomeString);
             Environment.SetEnvironmentVariable("METERING_POINT_CREATED_TOPIC", SomeString);
             Environment.SetEnvironmentVariable("CONSUMPTION_METERING_POINT_CREATED_TOPIC", SomeString);
+            Environment.SetEnvironmentVariable("MASTER_DATA_UPDATED_TOPIC", SomeString);
             Environment.SetEnvironmentVariable("EXCHANGE_METERING_POINT_CREATED_TOPIC", SomeString);
             Environment.SetEnvironmentVariable("PRODUCTION_METERING_POINT_CREATED_TOPIC", SomeString);
             Environment.SetEnvironmentVariable("METERING_POINT_MESSAGE_DEQUEUED_TOPIC", SomeString);

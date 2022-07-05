@@ -13,8 +13,10 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData.MasterDataUpdated;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using NodaTime.Text;
 using Xunit;
@@ -42,7 +44,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
                 };
 
             await SendCommandAsync(request).ConfigureAwait(false);
+            var message = AssertOutboxMessageAndReturnMessage<MasterDataWasUpdatedIntegrationEvent>();
 
+            Assert.Equal(message?.EffectiveDate.ToString(), EffectiveDate.Create(request.EffectiveDate).ToString());
             AssertMasterData()
                 .HasEffectiveDate(EffectiveDate.Create(request.EffectiveDate));
         }
@@ -60,10 +64,10 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         }
 
         [Theory]
-        [InlineData("2021-01-02T22:00:00Z", true)]
-        [InlineData("2020-12-30T22:00:00Z", true)]
-        [InlineData("2021-01-01T22:00:00Z", false)]
-        [InlineData("2020-12-31T22:00:00Z", false)]
+        [InlineData("2021-01-02T23:00:00Z", true)]
+        [InlineData("2020-12-30T23:00:00Z", true)]
+        [InlineData("2021-01-01T23:00:00Z", false)]
+        [InlineData("2020-12-31T23:00:00Z", false)]
         public async Task Effective_date_is_today_or_the_day_before(string effectiveDate, bool expectError)
         {
             const string today = "2021-01-01T18:00:00Z";

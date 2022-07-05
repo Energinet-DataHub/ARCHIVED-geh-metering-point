@@ -146,6 +146,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         }
 
         [Fact]
+        public async Task Should_create_when_capacity_is_empty_and_not_required()
+        {
+            var document = Scenarios.CreateDocument()
+                with
+                {
+                    PhysicalConnectionCapacity = string.Empty,
+                };
+
+            await SendCommandAsync(document).ConfigureAwait(false);
+
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConfirmCreateMeteringPoint);
+        }
+
+        [Fact]
         public async Task Should_reject_when_capacity_is_required_but_not_specified()
         {
             var request = CreateCommand()
@@ -325,6 +339,25 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             Assert.ValidationError("D59");
         }
 
+        [Theory]
+        [InlineData(nameof(AssetType.FuelCells))]
+        [InlineData("")]
+        [InlineData(null)]
+        public async Task Should_accept_if_asset_type_value_is_empty_null_or_valid_value(string assetType)
+        {
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    TypeOfMeteringPoint = nameof(MeteringPointType.Consumption),
+                    NetSettlementGroup = nameof(NetSettlementGroup.Zero),
+                    AssetType = assetType,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D59", false);
+        }
+
         [Fact]
         public async Task Should_reject_when_country_code_is_not_dk()
         {
@@ -338,6 +371,21 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await Act.SendCommandAsync(request).ConfigureAwait(false);
 
             Assert.ValidationError("E86");
+        }
+
+        [Fact]
+        public async Task Should_reject_when_country_code_is_empty()
+        {
+            var invalidCountryCode = string.Empty;
+            var request = Scenarios.CreateDocument()
+                with
+                {
+                    CountryCode = invalidCountryCode,
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("E86");
         }
 
         [Fact]
@@ -409,6 +457,20 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await Act.SendCommandAsync(document).ConfigureAwait(false);
 
             Assert.OutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConfirmCreateMeteringPoint);
+        }
+
+        [Fact]
+        public async Task Should_create_when_geo_reference_is_empty_guid()
+        {
+            var document = Scenarios.CreateDocument()
+                    with
+                    {
+                        GeoInfoReference = Guid.Empty.ToString(),
+                    };
+
+            await SendCommandAsync(document).ConfigureAwait(false);
+
+            AssertOutboxMessage<MessageHubEnvelope>(envelope => envelope.MessageType == DocumentType.ConfirmCreateMeteringPoint);
         }
 
         [Fact]
@@ -532,7 +594,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task Should_reject_when_current_actor_is_not_grid_operator_for_applied_grid_area()
         {
-            Arrange.SetCurrentAuthenticatedActor(Guid.NewGuid());
+            SetCurrentAuthenticatedActor(new Guid("08e2ba01-0ead-48c0-bdc7-8e2c7f7c5525"));
+
             var request = Scenarios.CreateDocument();
 
             await Act.SendCommandAsync(request).ConfigureAwait(false);
@@ -558,6 +621,44 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
 
             // Only for asserting process overview creation
             container.Register<IRequestHandler<MeteringPointProcessesByGsrnQuery, List<Process>>, MeteringPointProcessesByGsrnQueryHandler>();
+        }
+
+        [Fact]
+        public async Task Grid_operator_is_not_known()
+        {
+            SetCurrentAuthenticatedActor(new Guid("FA37E2A1-7E00-4BBC-89EA-3CAB9981A105"));
+            var request = Scenarios.CreateDocument();
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+            AssertValidationError("E10");
+        }
+
+        [Fact]
+        public async Task Grid_operator_is_empty()
+        {
+            SetCurrentAuthenticatedActor(Guid.Empty);
+            var request = Scenarios.CreateDocument();
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+            AssertValidationError("E10");
+        }
+
+        [Theory]
+        [InlineData(nameof(MeteringPointType.ConsumptionFromGrid), false)]
+        [InlineData(nameof(MeteringPointType.SupplyToGrid), false)]
+        public async Task Only_parents_should_contain_disconnection_type(string meteringPointType, bool expectError)
+        {
+            var request = Scenarios.CreateCommand(meteringPointType)
+                with
+                {
+                    MeteringMethod = MeteringMethod.Physical.Name,
+                    DisconnectionType = null,
+                    MeterNumber = "pva30909290",
+                };
+
+            await SendCommandAsync(request).ConfigureAwait(false);
+
+            AssertValidationError("D02", expectError);
         }
 
         private static CreateMeteringPoint CreateCommand()

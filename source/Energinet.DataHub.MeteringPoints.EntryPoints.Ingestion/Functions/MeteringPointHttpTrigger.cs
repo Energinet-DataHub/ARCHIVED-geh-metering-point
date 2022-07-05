@@ -66,10 +66,12 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
             {
                 var (succeeded, errorResponse, element) = await ValidateAndReadXmlAsync(request).ConfigureAwait(false);
 
-                if (!succeeded) return errorResponse ?? request.CreateResponse(HttpStatusCode.BadRequest);
+                if (!succeeded) return errorResponse ?? CreateResponse(request, HttpStatusCode.BadRequest);
 
                 var result = _xmlDeserializer.Deserialize(element!);
                 var senderValidationResult = _xmlSenderValidator.ValidateSender(result.HeaderData.Sender);
+
+                _logger.LogInformation($"Received request of type {result.HeaderData.ProcessType} from sender {result.HeaderData.Sender.Id}");
 
                 if (!senderValidationResult.IsValid)
                     return await CreateForbiddenResponseAsync(request, senderValidationResult.ErrorMessage).ConfigureAwait(false);
@@ -81,21 +83,22 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
             #pragma warning restore CA1031
             {
                 _logger.LogError(exception, "Unable to deserialize request");
-                return request.CreateResponse(HttpStatusCode.BadRequest);
+                return CreateResponse(request, HttpStatusCode.BadRequest);
             }
 
             await DispatchCommandsAsync(commands).ConfigureAwait(false);
-            return await CreateOkResponseAsync(request).ConfigureAwait(false);
+            return CreateResponse(request, HttpStatusCode.Accepted);
         }
 
-        private static async Task<HttpResponseData> CreateForbiddenResponseAsync(HttpRequestData request, string errorMessage)
+        private async Task<HttpResponseData> CreateForbiddenResponseAsync(HttpRequestData request, string errorMessage)
         {
-            var response = request.CreateResponse(HttpStatusCode.Forbidden);
+            var response = CreateResponse(request, HttpStatusCode.Forbidden);
             await response.WriteStringAsync(errorMessage).ConfigureAwait(false);
+
             return response;
         }
 
-        private static async Task<(bool Succeeded, HttpResponseData? ErrorResponse, XElement? Element)> ValidateAndReadXmlAsync(HttpRequestData request)
+        private async Task<(bool Succeeded, HttpResponseData? ErrorResponse, XElement? Element)> ValidateAndReadXmlAsync(HttpRequestData request)
         {
             var reader = new SchemaValidatingReader(request.Body, Schemas.CimXml.StructureRequestChangeAccountingPointCharacteristics);
 
@@ -107,7 +110,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
             if (!reader.HasErrors) return (isSucceeded, response, xmlElement);
 
             isSucceeded = false;
-            response = request.CreateResponse(HttpStatusCode.BadRequest);
+            response = CreateResponse(request, HttpStatusCode.BadRequest);
 
             await reader
                 .CreateErrorResponse()
@@ -117,23 +120,21 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
             return (isSucceeded, response, xmlElement);
         }
 
-        private async Task<HttpResponseData> CreateOkResponseAsync(HttpRequestData request)
-        {
-            var response = request.CreateResponse(HttpStatusCode.Accepted);
-
-            response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
-
-            await response.WriteStringAsync("Correlation id: " + _correlationContext.Id)
-                .ConfigureAwait(false);
-            return response;
-        }
-
         private async Task DispatchCommandsAsync(IEnumerable<IInternalMarketDocument> commands)
         {
             foreach (var command in commands)
             {
+                _logger.LogInformation($"Dispatching command for internal processing");
                 await _dispatcher.DispatchAsync((IOutboundMessage)command).ConfigureAwait(false);
             }
+        }
+
+        private HttpResponseData CreateResponse(HttpRequestData request, HttpStatusCode statusCode)
+        {
+            var response = request.CreateResponse(statusCode);
+            response.Headers.Add("CorrelationId", _correlationContext.Id);
+
+            return response;
         }
     }
 }

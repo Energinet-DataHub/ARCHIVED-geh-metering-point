@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Exceptions;
@@ -42,6 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GsrnNumber gsrnNumber,
             MeteringPointType meteringPointType,
             GridAreaLinkId gridAreaLinkId,
+            ActorId administrator,
             MasterData masterData)
         {
             Id = id;
@@ -49,6 +51,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             MeteringPointType = meteringPointType;
             GridAreaLinkId = gridAreaLinkId;
             _masterData = masterData;
+            Administrator = administrator;
 
             RaiseMeteringPointCreated();
         }
@@ -58,6 +61,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GsrnNumber gsrnNumber,
             GridAreaLinkId gridAreaLinkId,
             ExchangeGridAreas exchangeGridAreas,
+            ActorId administrator,
             MasterData masterData)
         {
             Id = id;
@@ -66,9 +70,12 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GridAreaLinkId = gridAreaLinkId;
             _exchangeGridAreas = exchangeGridAreas ?? throw new ArgumentNullException(nameof(exchangeGridAreas));
             _masterData = masterData;
+            Administrator = administrator;
 
             RaiseMeteringPointCreated();
         }
+
+        public ActorId Administrator { get; }
 
         public MeteringPointId Id { get; }
 
@@ -99,6 +106,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             GsrnNumber gsrnNumber,
             GridAreaLinkId gridAreaLinkId,
             ExchangeGridAreas exchangeGridAreas,
+            ActorId administrator,
             MasterData masterData)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
@@ -106,18 +114,20 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             if (gridAreaLinkId == null) throw new ArgumentNullException(nameof(gridAreaLinkId));
             if (exchangeGridAreas == null) throw new ArgumentNullException(nameof(exchangeGridAreas));
             if (masterData == null) throw new ArgumentNullException(nameof(masterData));
+            if (administrator == null) throw new ArgumentNullException(nameof(administrator));
 
-            return new MeteringPoint(id, gsrnNumber, gridAreaLinkId, exchangeGridAreas, masterData);
+            return new MeteringPoint(id, gsrnNumber, gridAreaLinkId, exchangeGridAreas, administrator, masterData);
         }
 
-        public static MeteringPoint Create(MeteringPointId id, GsrnNumber gsrnNumber, MeteringPointType meteringPointType, GridAreaLinkId gridAreaLinkId, MasterData masterData)
+        public static MeteringPoint Create(MeteringPointId id, GsrnNumber gsrnNumber, MeteringPointType meteringPointType, GridAreaLinkId gridAreaLinkId, ActorId administrator, MasterData masterData)
         {
             if (id == null) throw new ArgumentNullException(nameof(id));
             if (gsrnNumber == null) throw new ArgumentNullException(nameof(gsrnNumber));
             if (meteringPointType is null) throw new ArgumentNullException(nameof(meteringPointType));
             if (gridAreaLinkId == null) throw new ArgumentNullException(nameof(gridAreaLinkId));
             if (masterData == null) throw new ArgumentNullException(nameof(masterData));
-            return new MeteringPoint(id, gsrnNumber, meteringPointType, gridAreaLinkId, masterData);
+            if (administrator == null) throw new ArgumentNullException(nameof(administrator));
+            return new MeteringPoint(id, gsrnNumber, meteringPointType, gridAreaLinkId, administrator, masterData);
         }
 
         public BusinessRulesValidationResult CanCloseDown()
@@ -209,7 +219,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             }
 
             ConnectionState = ConnectionState.Disconnected(connectionDetails.EffectiveDate);
-            AddDomainEvent(new MeteringPointDisconnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
+            AddDomainEvent(new MeteringPointDisconnected(Id.Value, connectionDetails.EffectiveDate));
         }
 
         public void Reconnect(ConnectionDetails connectionDetails)
@@ -221,7 +231,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
             }
 
             ConnectionState = ConnectionState.Connected(connectionDetails.EffectiveDate);
-            AddDomainEvent(new MeteringPointReconnected(Id.Value, GsrnNumber.Value, connectionDetails.EffectiveDate));
+            AddDomainEvent(new MeteringPointReconnected(Id.Value, connectionDetails.EffectiveDate));
         }
 
         internal BusinessRulesValidationResult CanUpdateMasterData(MasterData updatedMasterData, MasterDataValidator validator)
@@ -337,7 +347,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.MeteringPoints
                 _masterData.AssetType?.Name,
                 _masterData.ConnectionType?.Name,
                 _masterData.DisconnectionType?.Name,
-                _masterData.EffectiveDate?.DateInUtc.ToString(),
+                _masterData.EffectiveDate.DateInUtc.ToString(),
                 _masterData.MeteringConfiguration.Meter.Value,
                 _masterData.MeteringConfiguration.Method.Name,
                 _masterData.PowerLimit?.Ampere,

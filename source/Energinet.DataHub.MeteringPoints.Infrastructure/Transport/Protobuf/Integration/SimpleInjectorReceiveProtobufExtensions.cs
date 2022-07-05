@@ -51,7 +51,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Int
             configuration.Invoke(config);
             container.Register<MessageExtractor>(Lifestyle.Scoped);
             container.Register<MessageDeserializer, ProtobufMessageDeserializer>(Lifestyle.Scoped);
-            container.Register<ProtobufInboundMapperFactory>(Lifestyle.Scoped);
             container.Register(() => config.GetParser(), Lifestyle.Scoped);
             container.Register(_mapperType, mapperTypes, Lifestyle.Scoped);
         }
