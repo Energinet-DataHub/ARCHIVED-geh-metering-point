@@ -27,7 +27,7 @@ limitations under the License.
     <PackageReference Include="Energinet.DataHub.Core.XmlConversion.XmlConverter.Abstractions" Version="1.0.5" />
     <PackageReference Include="Energinet.DataHub.MessageHub.Client" Version="1.9.1" />
     <PackageReference Include="Energinet.DataHub.MeteringPoints.IntegrationEvents" Version="1.0.0" />
-    <PackageReference Include="Energinet.DataHub.MeteringPoints.RequestResponse" Version="1.0.1" />
+    <PackageReference Include="Energinet.DataHub.MeteringPoints.RequestResponse" Version="1.0.2" />
     <PackageReference Include="Google.Protobuf" Version="3.21.1" />
     <PackageReference Include="Grpc.Tools" Version="2.37.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
