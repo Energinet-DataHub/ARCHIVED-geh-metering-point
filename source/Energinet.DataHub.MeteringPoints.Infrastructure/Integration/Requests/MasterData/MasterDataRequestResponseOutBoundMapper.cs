@@ -73,6 +73,8 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Requests.M
                 NetSettlementGroup = obj.NetSettlementGroup,
                 DisconnetionType = obj.DisconnectionType,
                 ConnectionType = obj.ConnectionType,
+                ParentRelatedMeteringPoint = obj.ParentRelatedMeteringPoint.ToString(),
+                GridOperatorId = obj.GridOperatorId.ToString(),
             };
         }
     }
