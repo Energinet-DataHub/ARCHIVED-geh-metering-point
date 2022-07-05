@@ -60,7 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.RequestResponse.Response {
             "ZSKdAQoPR3JpZEFyZWFEZXRhaWxzEioKBGNvZGUYASABKAsyHC5nb29nbGUu",
             "cHJvdG9idWYuU3RyaW5nVmFsdWUSLQoHdG9fY29kZRgCIAEoCzIcLmdvb2ds",
             "ZS5wcm90b2J1Zi5TdHJpbmdWYWx1ZRIvCglmcm9tX2NvZGUYAyABKAsyHC5n",
-            "b29nbGUucHJvdG9idWYuU3RyaW5nVmFsdWUiygcKGU1hc3RlckRhdGFSZXF1",
+            "b29nbGUucHJvdG9idWYuU3RyaW5nVmFsdWUixwgKGU1hc3RlckRhdGFSZXF1",
             "ZXN0UmVzcG9uc2USEwoLZ3Nybl9udW1iZXIYASABKAkSGQoHYWRkcmVzcxgC",
             "IAEoCzIILkFkZHJlc3MSFwoGc2VyaWVzGAMgASgLMgcuU2VyaWVzEisKEWdy",
             "aWRfYXJlYV9kZXRhaWxzGAQgASgLMhAuR3JpZEFyZWFEZXRhaWxzEjYKEGNv",
@@ -82,15 +82,18 @@ namespace Energinet.DataHub.MeteringPoints.RequestResponse.Response {
             "KAsyHC5nb29nbGUucHJvdG9idWYuU3RyaW5nVmFsdWUSNwoRZGlzY29ubmV0",
             "aW9uX3R5cGUYFCABKAsyHC5nb29nbGUucHJvdG9idWYuU3RyaW5nVmFsdWUS",
             "NQoPY29ubmVjdGlvbl90eXBlGBUgASgLMhwuZ29vZ2xlLnByb3RvYnVmLlN0",
-            "cmluZ1ZhbHVlQjyqAjlFbmVyZ2luZXQuRGF0YUh1Yi5NZXRlcmluZ1BvaW50",
-            "cy5SZXF1ZXN0UmVzcG9uc2UuUmVzcG9uc2ViBnByb3RvMw=="));
+            "cmluZ1ZhbHVlEkMKHXBhcmVudF9yZWxhdGVkX21ldGVyaW5nX3BvaW50GBYg",
+            "ASgLMhwuZ29vZ2xlLnByb3RvYnVmLlN0cmluZ1ZhbHVlEjYKEGdyaWRfb3Bl",
+            "cmF0b3JfaWQYFyABKAsyHC5nb29nbGUucHJvdG9idWYuU3RyaW5nVmFsdWVC",
+            "PKoCOUVuZXJnaW5ldC5EYXRhSHViLk1ldGVyaW5nUG9pbnRzLlJlcXVlc3RS",
+            "ZXNwb25zZS5SZXNwb25zZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, global::Google.Protobuf.WellKnownTypes.WrappersReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Energinet.DataHub.MeteringPoints.RequestResponse.Response.Address), global::Energinet.DataHub.MeteringPoints.RequestResponse.Response.Address.Parser, new[]{ "StreetName", "StreetCode", "PostCode", "City", "CountryCode", "CitySubDivision", "Floor", "Room", "BuildingNumber", "MunicipalityCode", "IsActualAddress", "GeoInfoReference", "LocationDescription" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Energinet.DataHub.MeteringPoints.RequestResponse.Response.Series), global::Energinet.DataHub.MeteringPoints.RequestResponse.Response.Series.Parser, new[]{ "Product", "UnitType" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Energinet.DataHub.MeteringPoints.RequestResponse.Response.GridAreaDetails), global::Energinet.DataHub.MeteringPoints.RequestResponse.Response.GridAreaDetails.Parser, new[]{ "Code", "ToCode", "FromCode" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Energinet.DataHub.MeteringPoints.RequestResponse.Response.MasterDataRequestResponse), global::Energinet.DataHub.MeteringPoints.RequestResponse.Response.MasterDataRequestResponse.Parser, new[]{ "GsrnNumber", "Address", "Series", "GridAreaDetails", "ConnectionState", "MeteringMethod", "ReadingPeriodicity", "Type", "MaximumCurrent", "MaximumPower", "PowerPlantGsrnNumber", "EffectiveDate", "MeterNumber", "Capacity", "AssetType", "SettlementMethod", "ScheduledMeterReadingDate", "ProductionObligation", "NetSettlementGroup", "DisconnetionType", "ConnectionType" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Energinet.DataHub.MeteringPoints.RequestResponse.Response.MasterDataRequestResponse), global::Energinet.DataHub.MeteringPoints.RequestResponse.Response.MasterDataRequestResponse.Parser, new[]{ "GsrnNumber", "Address", "Series", "GridAreaDetails", "ConnectionState", "MeteringMethod", "ReadingPeriodicity", "Type", "MaximumCurrent", "MaximumPower", "PowerPlantGsrnNumber", "EffectiveDate", "MeterNumber", "Capacity", "AssetType", "SettlementMethod", "ScheduledMeterReadingDate", "ProductionObligation", "NetSettlementGroup", "DisconnetionType", "ConnectionType", "ParentRelatedMeteringPoint", "GridOperatorId" }, null, null, null, null)
           }));
     }
     #endregion
@@ -1402,6 +1405,8 @@ namespace Energinet.DataHub.MeteringPoints.RequestResponse.Response {
       NetSettlementGroup = other.NetSettlementGroup;
       DisconnetionType = other.DisconnetionType;
       ConnectionType = other.ConnectionType;
+      ParentRelatedMeteringPoint = other.ParentRelatedMeteringPoint;
+      GridOperatorId = other.GridOperatorId;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1693,6 +1698,34 @@ namespace Energinet.DataHub.MeteringPoints.RequestResponse.Response {
     }
 
 
+    /// <summary>Field number for the "parent_related_metering_point" field.</summary>
+    public const int ParentRelatedMeteringPointFieldNumber = 22;
+    private static readonly pb::FieldCodec<string> _single_parentRelatedMeteringPoint_codec = pb::FieldCodec.ForClassWrapper<string>(178);
+    private string parentRelatedMeteringPoint_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string ParentRelatedMeteringPoint {
+      get { return parentRelatedMeteringPoint_; }
+      set {
+        parentRelatedMeteringPoint_ = value;
+      }
+    }
+
+
+    /// <summary>Field number for the "grid_operator_id" field.</summary>
+    public const int GridOperatorIdFieldNumber = 23;
+    private static readonly pb::FieldCodec<string> _single_gridOperatorId_codec = pb::FieldCodec.ForClassWrapper<string>(186);
+    private string gridOperatorId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string GridOperatorId {
+      get { return gridOperatorId_; }
+      set {
+        gridOperatorId_ = value;
+      }
+    }
+
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1729,6 +1762,8 @@ namespace Energinet.DataHub.MeteringPoints.RequestResponse.Response {
       if (NetSettlementGroup != other.NetSettlementGroup) return false;
       if (DisconnetionType != other.DisconnetionType) return false;
       if (ConnectionType != other.ConnectionType) return false;
+      if (ParentRelatedMeteringPoint != other.ParentRelatedMeteringPoint) return false;
+      if (GridOperatorId != other.GridOperatorId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1757,6 +1792,8 @@ namespace Energinet.DataHub.MeteringPoints.RequestResponse.Response {
       if (netSettlementGroup_ != null) hash ^= NetSettlementGroup.GetHashCode();
       if (disconnetionType_ != null) hash ^= DisconnetionType.GetHashCode();
       if (connectionType_ != null) hash ^= ConnectionType.GetHashCode();
+      if (parentRelatedMeteringPoint_ != null) hash ^= ParentRelatedMeteringPoint.GetHashCode();
+      if (gridOperatorId_ != null) hash ^= GridOperatorId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1847,6 +1884,12 @@ namespace Energinet.DataHub.MeteringPoints.RequestResponse.Response {
       if (connectionType_ != null) {
         _single_connectionType_codec.WriteTagAndValue(output, ConnectionType);
       }
+      if (parentRelatedMeteringPoint_ != null) {
+        _single_parentRelatedMeteringPoint_codec.WriteTagAndValue(output, ParentRelatedMeteringPoint);
+      }
+      if (gridOperatorId_ != null) {
+        _single_gridOperatorId_codec.WriteTagAndValue(output, GridOperatorId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1929,6 +1972,12 @@ namespace Energinet.DataHub.MeteringPoints.RequestResponse.Response {
       if (connectionType_ != null) {
         _single_connectionType_codec.WriteTagAndValue(ref output, ConnectionType);
       }
+      if (parentRelatedMeteringPoint_ != null) {
+        _single_parentRelatedMeteringPoint_codec.WriteTagAndValue(ref output, ParentRelatedMeteringPoint);
+      }
+      if (gridOperatorId_ != null) {
+        _single_gridOperatorId_codec.WriteTagAndValue(ref output, GridOperatorId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -2001,6 +2050,12 @@ namespace Energinet.DataHub.MeteringPoints.RequestResponse.Response {
       }
       if (connectionType_ != null) {
         size += _single_connectionType_codec.CalculateSizeWithTag(ConnectionType);
+      }
+      if (parentRelatedMeteringPoint_ != null) {
+        size += _single_parentRelatedMeteringPoint_codec.CalculateSizeWithTag(ParentRelatedMeteringPoint);
+      }
+      if (gridOperatorId_ != null) {
+        size += _single_gridOperatorId_codec.CalculateSizeWithTag(GridOperatorId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -2111,6 +2166,16 @@ namespace Energinet.DataHub.MeteringPoints.RequestResponse.Response {
       if (other.connectionType_ != null) {
         if (connectionType_ == null || other.ConnectionType != "") {
           ConnectionType = other.ConnectionType;
+        }
+      }
+      if (other.parentRelatedMeteringPoint_ != null) {
+        if (parentRelatedMeteringPoint_ == null || other.ParentRelatedMeteringPoint != "") {
+          ParentRelatedMeteringPoint = other.ParentRelatedMeteringPoint;
+        }
+      }
+      if (other.gridOperatorId_ != null) {
+        if (gridOperatorId_ == null || other.GridOperatorId != "") {
+          GridOperatorId = other.GridOperatorId;
         }
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -2260,6 +2325,20 @@ namespace Energinet.DataHub.MeteringPoints.RequestResponse.Response {
             }
             break;
           }
+          case 178: {
+            string value = _single_parentRelatedMeteringPoint_codec.Read(input);
+            if (parentRelatedMeteringPoint_ == null || value != "") {
+              ParentRelatedMeteringPoint = value;
+            }
+            break;
+          }
+          case 186: {
+            string value = _single_gridOperatorId_codec.Read(input);
+            if (gridOperatorId_ == null || value != "") {
+              GridOperatorId = value;
+            }
+            break;
+          }
         }
       }
     #endif
@@ -2404,6 +2483,20 @@ namespace Energinet.DataHub.MeteringPoints.RequestResponse.Response {
             string value = _single_connectionType_codec.Read(ref input);
             if (connectionType_ == null || value != "") {
               ConnectionType = value;
+            }
+            break;
+          }
+          case 178: {
+            string value = _single_parentRelatedMeteringPoint_codec.Read(ref input);
+            if (parentRelatedMeteringPoint_ == null || value != "") {
+              ParentRelatedMeteringPoint = value;
+            }
+            break;
+          }
+          case 186: {
+            string value = _single_gridOperatorId_codec.Read(ref input);
+            if (gridOperatorId_ == null || value != "") {
+              GridOperatorId = value;
             }
             break;
           }
