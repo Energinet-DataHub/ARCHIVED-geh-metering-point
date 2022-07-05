@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: Publish Integration Events
+name: Publish Request Response
 
 on:
   # Build, test, pack and publish release packages
-  # Only executed if (*.)Integration events packages content or build scripts has changed; not if solution file, documentation or tests has changed
+  # Only executed if (*.)Request response packages content or build scripts has changed; not if solution file, documentation or tests has changed
   push:
     branches:
       - main
@@ -24,7 +24,7 @@ on:
       - source/RequestResponse/source/RequestResponse/**
       - .github/workflows/request-response-publish.yml
   # Build, test, pack
-  # Executed if Integration events folder or build scripts has changed; including if documentation or tests has changed
+  # Executed if Request response folder or build scripts has changed; including if documentation or tests has changed
   pull_request:
     branches:
       - main
@@ -62,7 +62,7 @@ jobs:
           SOLUTION_FILE_PATH: './source/RequestResponse/RequestResponse.sln'
           USE_CODE_COVERAGE: 'false'
 
-      - name: Pack IntegrationEvents project
+      - name: Pack RequestResponse project
         uses: Energinet-DataHub/.github/.github/actions/nuget-project-pack@7.5.0
         with:
           PROJECT_PATH: './source/RequestResponse/source/RequestResponse/RequestResponse.csproj'
