@@ -24,7 +24,7 @@ limitations under the License.
     <AssemblyName>Energinet.DataHub.MeteringPoints.IntegrationEvents</AssemblyName>
     <RootNamespace>Energinet.DataHub.MeteringPoints.IntegrationEvents</RootNamespace>
     <PackageId>Energinet.DataHub.MeteringPoints.IntegrationEvents</PackageId>
-    <PackageVersion>1.0.0$(VersionSuffix)</PackageVersion>
+    <PackageVersion>1.0.1$(VersionSuffix)</PackageVersion>
     <Title>MeteringPoint IntegrationEvents library</Title>
     <Authors>Energinet-DataHub</Authors>
     <Description>Library to use for implementation of integration events from MeteringPoint domain.</Description>
@@ -65,7 +65,6 @@ limitations under the License.
       <Access>Public</Access>
       <ProtoCompile>True</ProtoCompile>
       <CompileOutputs>True</CompileOutputs>
-      <OutputDir>.</OutputDir>
       <Generator>MSBuild:Compile</Generator>
     </Protobuf>
   </ItemGroup>
