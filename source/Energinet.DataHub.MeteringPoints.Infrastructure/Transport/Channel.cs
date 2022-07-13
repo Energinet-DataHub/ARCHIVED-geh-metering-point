@@ -20,8 +20,10 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Transport
     /// <summary>
     /// Abstract class representing an out-of-process transport channel.
     /// </summary>
+    #pragma warning disable
     public abstract class Channel
     {
+    #pragma warning restore
         /// <summary>
         /// Write the <paramref name="data"/> to the channel
         /// </summary>
