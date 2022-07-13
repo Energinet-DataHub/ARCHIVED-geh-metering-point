@@ -143,6 +143,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             // Health Checks
             services.AddLiveHealthCheck();
             services.AddSqlServerHealthCheck(Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")!);
+            services.AddExternalServiceBusQueuesHealthCheck(
+                Environment.GetEnvironmentVariable("SERVICE_BUS_CONNECTION_STRING_MANAGE_FOR_INTEGRATION_EVENTS")!,
+                Environment.GetEnvironmentVariable("MASTER_DATA_REQUEST_QUEUE_NAME")!,
+                "metering-point-master-data-response");
+            services.AddInternalDomainServiceBusQueuesHealthCheck(
+                Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_MANAGE_CONNECTION_STRING")!,
+                Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME")!);
         }
 
         protected override void ConfigureContainer(Container container)
