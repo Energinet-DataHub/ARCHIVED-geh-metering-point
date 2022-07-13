@@ -124,7 +124,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions
         {
             foreach (var command in commands)
             {
-                _logger.LogInformation($"Dispatching command for internal processing");
+                _logger.LogInformation($"Dispatching command for internal processing. CorrelationId: {_correlationContext.Id}");
                 await _dispatcher.DispatchAsync((IOutboundMessage)command).ConfigureAwait(false);
             }
         }
