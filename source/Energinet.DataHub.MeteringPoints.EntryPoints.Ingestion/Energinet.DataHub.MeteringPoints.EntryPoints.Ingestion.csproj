@@ -23,8 +23,8 @@ limitations under the License.
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.7.0" />
-    <PackageReference Include="Energinet.DataHub.Core.App.FunctionApp" Version="4.0.2" />
-    <PackageReference Include="Energinet.DataHub.Core.App.FunctionApp.SimpleInjector" Version="4.0.2" />
+    <PackageReference Include="Energinet.DataHub.Core.App.FunctionApp" Version="2.3.1" />
+    <PackageReference Include="Energinet.DataHub.Core.App.FunctionApp.SimpleInjector" Version="2.3.1" />
     <PackageReference Include="Energinet.DataHub.Core.Logging" Version="1.2.1" />
     <PackageReference Include="Energinet.DataHub.Core.Schemas" Version="1.0.10" />
     <PackageReference Include="Energinet.DataHub.Core.SchemaValidation" Version="1.0.10" />
