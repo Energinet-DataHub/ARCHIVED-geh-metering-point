@@ -46,10 +46,12 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Monitor;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Authorization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing.Pipeline;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Configuration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.ContainerExtensions;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
@@ -137,6 +139,17 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
 
                 x.UseSqlServer(connectionString, y => y.UseNodaTime());
             });
+
+            // Health Checks
+            services.AddLiveHealthCheck();
+            services.AddSqlServerHealthCheck(Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")!);
+            services.AddExternalServiceBusQueuesHealthCheck(
+                Environment.GetEnvironmentVariable("SERVICE_BUS_CONNECTION_STRING_MANAGE_FOR_INTEGRATION_EVENTS")!,
+                Environment.GetEnvironmentVariable("MASTER_DATA_REQUEST_QUEUE_NAME")!,
+                "metering-point-master-data-response");
+            services.AddInternalDomainServiceBusQueuesHealthCheck(
+                Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_MANAGE_CONNECTION_STRING")!,
+                Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME")!);
         }
 
         protected override void ConfigureContainer(Container container)
@@ -200,6 +213,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register(typeof(ProtobufInboundMapper<>), typeof(ProtobufInboundMapper<>).Assembly);
             container.Register<ProtobufOutboundMapperFactory>();
             container.Register<ProtobufInboundMapperFactory>();
+            container.Register<HealthCheckEndpoint>(Lifestyle.Scoped);
 
             var serviceBusConnectionString =
                 Environment.GetEnvironmentVariable("SERVICE_BUS_SEND_CONNECTION_STRING");
