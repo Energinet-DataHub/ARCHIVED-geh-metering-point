@@ -28,12 +28,14 @@ module "func_outbox" {
   always_on                                 = true
   dotnet_framework_version                  = "6"
   use_dotnet_isolated_runtime               = true
+  health_check_path                         = "/api/monitor/ready"
 
   app_settings                              = {
     METERINGPOINT_DB_CONNECTION_STRING                            = local.MS_METERING_POINT_CONNECTION_STRING
     METERINGPOINT_QUEUE_TOPIC_NAME                                = module.sbq_meteringpoint.name
 
     SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-send-connection-string)"
+    SHARED_INTEGRATION_EVENT_SERVICE_BUS_MANAGE_CONNECTION_STRING = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-manage-connection-string)"
 
     METERING_POINT_CREATED_TOPIC                                  = "metering-point-created"
     CONSUMPTION_METERING_POINT_CREATED_TOPIC                      = "consumption-metering-point-created"
