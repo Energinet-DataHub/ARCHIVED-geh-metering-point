@@ -24,6 +24,7 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub.Functions;
+using Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub.Monitor;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Configuration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
@@ -92,6 +93,16 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub
 
             // Health Checks
             services.AddLiveHealthCheck();
+            services.AddSqlServerHealthCheck(Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")!);
+            services.AddInternalDomainServiceBusQueuesHealthCheck(
+                Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_MANAGE_CONNECTION_STRING")!,
+                Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME")!);
+            services.AddExternalServiceBusQueuesHealthCheck(
+                Environment.GetEnvironmentVariable("SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING")!,
+                Environment.GetEnvironmentVariable("MESSAGEHUB_DATA_AVAILABLE_QUEUE")!,
+                Environment.GetEnvironmentVariable("MESSAGEHUB_DOMAIN_REPLY_QUEUE")!,
+                Environment.GetEnvironmentVariable("REQUEST_BUNDLE_QUEUE_SUBSCRIBER_QUEUE")!,
+                Environment.GetEnvironmentVariable("BUNDLE_DEQUEUED_SUBSCRIBER_QUEUE")!);
         }
 
         protected override void ConfigureContainer(Container container)
@@ -100,6 +111,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub
             base.ConfigureContainer(container);
 
             // Register application components.
+            container.Register<HealthCheckEndpoint>(Lifestyle.Scoped);
             container.Register<RequestBundleQueueSubscriber>(Lifestyle.Scoped);
             container.Register<BundleDequeuedQueueSubscriber>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
