@@ -22,7 +22,7 @@
 
     "METERINGPOINT_DB_CONNECTION_STRING": "<Main SQL database connection string>",
     "ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER": "*/10 * * * * *",
-    "MESSAGEHUB_QUEUE_CONNECTION_STRING": "<MessageHub Service Bus connection string>",
+    "MESSAGEHUB_QUEUE_CONNECTION_STRING": "<MessageHub Service Bus connection string transceiver >",
     "MESSAGEHUB_STORAGE_CONNECTION_STRING": "<MessageHub Storage Account connection string>",
     "MESSAGEHUB_STORAGE_CONTAINER_NAME": "<MessageHub Storage Account container name>",
     "MESSAGEHUB_DATA_AVAILABLE_QUEUE": "<MessageHub Data Available Queue name>",
