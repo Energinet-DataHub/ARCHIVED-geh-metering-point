@@ -92,7 +92,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub
 
             // Health Checks
             services.AddLiveHealthCheck();
-            services.AddSqlServerHealthCheck(Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")!);
         }
 
         protected override void ConfigureContainer(Container container)
