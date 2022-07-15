@@ -15,6 +15,12 @@
 using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.Core.App.Common;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
+using Energinet.DataHub.Core.App.Common.Abstractions.Identity;
+using Energinet.DataHub.Core.App.Common.Abstractions.Security;
+using Energinet.DataHub.Core.App.Common.Identity;
+using Energinet.DataHub.Core.App.Common.Security;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware;
 using Energinet.DataHub.Core.App.FunctionApp.SimpleInjector;
 using Energinet.DataHub.Core.Logging.RequestResponseMiddleware;
@@ -25,7 +31,9 @@ using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Functions;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Monitor;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Configuration;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappings;
@@ -45,6 +53,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 {
     public class Program : EntryPoint
     {
+        private static readonly string[] _functionNamesToExclude =
+        {
+            "HealthCheck",
+        };
+
         public static async Task Main()
         {
             var program = new Program();
@@ -65,6 +78,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             options.UseMiddleware<RequestResponseLoggingMiddleware>();
         }
 
+        protected override void ConfigureServiceCollection(IServiceCollection services)
+        {
+            base.ConfigureServiceCollection(services);
+            services.AddLiveHealthCheck();
+            services.AddSqlServerHealthCheck(Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")!);
+        }
+
         protected override void ConfigureContainer(Container container)
         {
             if (container == null) throw new ArgumentNullException(nameof(container));
@@ -72,6 +92,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
 
             // Register application components.
             container.Register<MeteringPointHttpTrigger>(Lifestyle.Scoped);
+            container.Register<HealthCheckEndpoint>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
             container.Register<CorrelationIdMiddleware>(Lifestyle.Scoped);
             container.Register<EntryPointTelemetryScopeMiddleware>(Lifestyle.Scoped);
@@ -84,8 +105,24 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             var audience = Environment.GetEnvironmentVariable("BACKEND_SERVICE_APP_ID") ?? throw new InvalidOperationException(
                 "Backend service app id not found.");
 
-            container.AddJwtTokenSecurity($"https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration", audience);
-            container.AddActorContext<ActorProvider>();
+            // container.AddJwtTokenSecurity($"https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration", audience);
+            container.Register<JwtTokenMiddleware>(() => new JwtTokenMiddleware(
+                container.GetInstance<ClaimsPrincipalContext>(),
+                container.GetInstance<IJwtTokenValidator>(),
+                _functionNamesToExclude));
+            container.Register<IJwtTokenValidator, JwtTokenValidator>(Lifestyle.Scoped);
+            container.Register<IClaimsPrincipalAccessor, ClaimsPrincipalAccessor>(Lifestyle.Scoped);
+            container.Register<ClaimsPrincipalContext>(Lifestyle.Scoped);
+            container.Register(() => new OpenIdSettings($"https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration", audience));
+
+            //container.AddActorContext<ActorProvider>();
+            container.Register<ActorMiddleware>(() => new ActorMiddleware(
+                container.GetInstance<IClaimsPrincipalAccessor>(),
+                container.GetInstance<IActorProvider>(),
+                container.GetInstance<IActorContext>(),
+                _functionNamesToExclude));
+            container.Register<IActorContext, ActorContext>(Lifestyle.Scoped);
+            container.Register(typeof(IActorProvider), typeof(ActorProvider), Lifestyle.Scoped);
             var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")
                                    ?? throw new InvalidOperationException(
                                        "Metering point db connection string not found.");

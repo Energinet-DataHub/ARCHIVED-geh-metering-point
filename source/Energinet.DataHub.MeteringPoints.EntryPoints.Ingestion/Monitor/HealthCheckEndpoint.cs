@@ -17,7 +17,7 @@ using Energinet.DataHub.Core.App.FunctionApp.Diagnostics.HealthChecks;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Monitor
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion.Monitor
 {
     public class HealthCheckEndpoint
     {
