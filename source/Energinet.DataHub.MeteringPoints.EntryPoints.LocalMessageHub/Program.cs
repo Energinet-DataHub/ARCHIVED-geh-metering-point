@@ -93,15 +93,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub
             // Health Checks
             services.AddLiveHealthCheck();
             services.AddSqlServerHealthCheck(Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")!);
-            services.AddInternalDomainServiceBusQueuesHealthCheck(
-                Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_MANAGE_CONNECTION_STRING")!,
-                Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME")!);
-            services.AddExternalServiceBusQueuesHealthCheck(
-                Environment.GetEnvironmentVariable("SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING")!,
-                Environment.GetEnvironmentVariable("MESSAGEHUB_DATA_AVAILABLE_QUEUE")!,
-                Environment.GetEnvironmentVariable("MESSAGEHUB_DOMAIN_REPLY_QUEUE")!,
-                Environment.GetEnvironmentVariable("REQUEST_BUNDLE_QUEUE_SUBSCRIBER_QUEUE")!,
-                Environment.GetEnvironmentVariable("BUNDLE_DEQUEUED_SUBSCRIBER_QUEUE")!);
         }
 
         protected override void ConfigureContainer(Container container)
