@@ -45,7 +45,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
         }
 
         [Function("IntegrationEventReceiver")]
-        public Task RunAsync([ServiceBusTrigger("%INTEGRATION_EVENT_QUEUE%", Connection = "INTEGRATION_EVENT_QUEUE_CONNECTION")] byte[] data, FunctionContext context)
+        public Task RunAsync([ServiceBusTrigger("%INTEGRATION_EVENT_QUEUE%", Connection = "SHARED_SERVICE_BUS_LISTEN_CONNECTION_STRING")] byte[] data, FunctionContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
 

@@ -134,10 +134,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             await storage.CreateIfNotExistsAsync().ConfigureAwait(false);
 
             // => MeteringPoint
-            ingestionHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_SERVICE_BUS_SEND_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
-            processingHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_SERVICE_BUS_LISTEN_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
-            processingHostSettings.ProcessEnvironmentVariables.Add("SERVICE_BUS_SEND_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
-            localMessageHubHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_SERVICE_BUS_SEND_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
+            ingestionHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_SEND_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
+            processingHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_LISTEN_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
+            processingHostSettings.ProcessEnvironmentVariables.Add("SHARED_SERVICE_BUS_SEND_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
+            localMessageHubHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_SEND_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
 
             var meteringPointQueue = await ServiceBusResourceProvider
                 .BuildQueue("sbq-meteringpoint")
@@ -186,7 +186,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             MessageHubSimulator = new MessageHubSimulation(messageHubSimulationConfig);
 
             // => Integration events
-            outboxHostSettings.ProcessEnvironmentVariables.Add("SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
+            outboxHostSettings.ProcessEnvironmentVariables.Add("SHARED_SERVICE_BUS_SENDER_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
 
             await ServiceBusResourceProvider
                 .BuildQueue("sbq-charges-link").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("CHARGES_DEFAULT_LINK_RESPONSE_QUEUE", p.Name))

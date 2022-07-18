@@ -32,17 +32,16 @@ module "func_processing" {
 
   app_settings                              = {
     METERINGPOINT_QUEUE_URL                                     = "${module.sb_meteringpoint.name}.servicebus.windows.net:9093"
-    METERINGPOINT_SERVICE_BUS_LISTEN_CONNECTION_STRING          = module.sb_meteringpoint.primary_connection_strings["listen"]
+    METERINGPOINT_QUEUE_LISTEN_CONNECTION_STRING   = module.sb_meteringpoint.primary_connection_strings["listen"]
     METERINGPOINT_DB_CONNECTION_STRING                          = local.MS_METERING_POINT_CONNECTION_STRING
     METERINGPOINT_QUEUE_NAME                                    = module.sbq_meteringpoint.name
     INTEGRATION_EVENT_QUEUE                                     = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-metering-point-forward-name)"
-    INTEGRATION_EVENT_QUEUE_CONNECTION                          = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-listen-connection-string)"
     CHARGES_DEFAULT_LINK_RESPONSE_QUEUE                         = "create-link-reply"
     RAISE_TIME_HAS_PASSED_EVENT_SCHEDULE                        = "*/10 * * * * *"
-    SERVICE_BUS_LISTEN_CONNECTION_STRING                        = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-listen-connection-string)"
-    SERVICE_BUS_SEND_CONNECTION_STRING                          = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-send-connection-string)"        
+    SHARED_SERVICE_BUS_LISTEN_CONNECTION_STRING                 = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-listen-connection-string)"
+    SHARED_SERVICE_BUS_SEND_CONNECTION_STRING                   = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-send-connection-string)"        
     MASTER_DATA_REQUEST_QUEUE_NAME                              = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-metering-point-master-data-request-name)"    
-    SERVICE_BUS_CONNECTION_STRING_MANAGE_FOR_INTEGRATION_EVENTS = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-manage-connection-string)"
+    SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING                 = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-manage-connection-string)"
     METERINGPOINT_QUEUE_MANAGE_CONNECTION_STRING                = module.sb_meteringpoint.primary_connection_strings["manage"]
   }
 

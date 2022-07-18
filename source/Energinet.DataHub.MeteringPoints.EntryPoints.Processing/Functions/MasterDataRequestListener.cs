@@ -50,7 +50,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
 
         [Function("MasterDataRequestListener")]
         public async Task RunAsync(
-            [ServiceBusTrigger("%MASTER_DATA_REQUEST_QUEUE_NAME%", Connection = "SERVICE_BUS_LISTEN_CONNECTION_STRING")] byte[] data,
+            [ServiceBusTrigger("%MASTER_DATA_REQUEST_QUEUE_NAME%", Connection = "SHARED_SERVICE_BUS_LISTEN_CONNECTION_STRING")] byte[] data,
             FunctionContext context)
         {
             if (data == null) throw new ArgumentNullException(nameof(data));
