@@ -38,7 +38,7 @@ module "func_localmessagehub" {
 
     METERINGPOINT_QUEUE_CONNECTION_STRING                       = module.sb_meteringpoint.primary_connection_strings["send"]
     METERINGPOINT_QUEUE_MANAGE_CONNECTION_STRING                = module.sb_meteringpoint.primary_connection_strings["manage"]
-    METERINGPOINT_QUEUE_NAME                              = module.sbq_meteringpoint.name
+    METERINGPOINT_QUEUE_NAME                                    = module.sbq_meteringpoint.name
     SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING                 = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-manage-connection-string)"
     MESSAGEHUB_DATA_AVAILABLE_QUEUE                             = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-data-available-name)"
     MESSAGEHUB_DOMAIN_REPLY_QUEUE                               = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-metering-points-reply-name)"
