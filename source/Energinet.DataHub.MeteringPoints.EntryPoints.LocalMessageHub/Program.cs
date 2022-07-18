@@ -163,7 +163,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub
             container.Register<IDocumentSerializer<GenericNotificationMessage>, GenericNotificationMessageXmlSerializer>(Lifestyle.Singleton);
             container.Register<IDocumentSerializer<AccountingPointCharacteristicsMessage>, AccountingPointCharacteristicsMessageXmlSerializer>(Lifestyle.Singleton);
 
-            var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING");
+            var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_SERVICE_BUS_SEND_CONNECTION_STRING");
             var topic = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_NAME");
 
             container.Register(() => new ServiceBusClient(connectionString).CreateSender(topic), Lifestyle.Singleton);

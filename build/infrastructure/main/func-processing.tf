@@ -32,7 +32,7 @@ module "func_processing" {
 
   app_settings                              = {
     METERINGPOINT_QUEUE_URL                                     = "${module.sb_meteringpoint.name}.servicebus.windows.net:9093"
-    METERINGPOINT_QUEUE_CONNECTION_STRING                       = module.sb_meteringpoint.primary_connection_strings["listen"]
+    METERINGPOINT_SERVICE_BUS_LISTEN_CONNECTION_STRING          = module.sb_meteringpoint.primary_connection_strings["listen"]
     METERINGPOINT_DB_CONNECTION_STRING                          = local.MS_METERING_POINT_CONNECTION_STRING
     METERINGPOINT_QUEUE_NAME                                    = module.sbq_meteringpoint.name
     INTEGRATION_EVENT_QUEUE                                     = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-metering-point-forward-name)"
