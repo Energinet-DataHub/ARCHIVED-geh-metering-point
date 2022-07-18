@@ -144,7 +144,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             services.AddLiveHealthCheck();
             services.AddSqlServerHealthCheck(Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")!);
             services.AddExternalServiceBusQueuesHealthCheck(
-                Environment.GetEnvironmentVariable("SERVICE_BUS_CONNECTION_STRING_MANAGE_FOR_INTEGRATION_EVENTS")!,
+                Environment.GetEnvironmentVariable("SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING")!,
                 Environment.GetEnvironmentVariable("MASTER_DATA_REQUEST_QUEUE_NAME")!,
                 "metering-point-master-data-response");
             services.AddInternalDomainServiceBusQueuesHealthCheck(
@@ -216,7 +216,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<HealthCheckEndpoint>(Lifestyle.Scoped);
 
             var serviceBusConnectionString =
-                Environment.GetEnvironmentVariable("SERVICE_BUS_SEND_CONNECTION_STRING");
+                Environment.GetEnvironmentVariable("SHARED_SERVICE_BUS_SEND_CONNECTION_STRING");
             container.Register<ServiceBusSender>(
                 () =>
                 {
