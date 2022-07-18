@@ -27,7 +27,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
         {
             Environment.SetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING", SomeString);
             Environment.SetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusConnectionString);
-            Environment.SetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME", SomeString);
+            Environment.SetEnvironmentVariable("METERINGPOINT_QUEUE_NAME", SomeString);
             Environment.SetEnvironmentVariable("APPINSIGHTS_INSTRUMENTATIONKEY", SomeString);
             Environment.SetEnvironmentVariable("B2C_TENANT_ID", SomeString);
             Environment.SetEnvironmentVariable("BACKEND_SERVICE_APP_ID", SomeString);
@@ -87,7 +87,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests
         {
             Environment.SetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING", SomeString);
             Environment.SetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING", ServiceBusConnectionString);
-            Environment.SetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME", SomeString);
+            Environment.SetEnvironmentVariable("METERINGPOINT_QUEUE_NAME", SomeString);
             Environment.SetEnvironmentVariable("MESSAGEHUB_QUEUE_CONNECTION_STRING", ServiceBusConnectionString);
             Environment.SetEnvironmentVariable("MESSAGEHUB_STORAGE_CONNECTION_STRING", SomeString);
             Environment.SetEnvironmentVariable("MESSAGEHUB_STORAGE_CONTAINER_NAME", SomeString);

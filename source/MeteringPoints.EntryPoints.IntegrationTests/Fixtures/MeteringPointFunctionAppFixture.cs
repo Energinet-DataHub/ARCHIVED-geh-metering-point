@@ -143,9 +143,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
                 .BuildQueue("sbq-meteringpoint")
                 .Do(p =>
                 {
-                    ingestionHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_TOPIC_NAME", p.Name);
-                    processingHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_TOPIC_NAME", p.Name);
-                    localMessageHubHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_TOPIC_NAME", p.Name);
+                    ingestionHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_NAME", p.Name);
+                    processingHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_NAME", p.Name);
+                    localMessageHubHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_NAME", p.Name);
                 })
                 .CreateAsync().ConfigureAwait(false);
 

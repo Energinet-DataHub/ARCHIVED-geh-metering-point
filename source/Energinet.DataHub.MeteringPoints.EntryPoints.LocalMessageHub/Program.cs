@@ -96,7 +96,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub
             services.AddSqlServerHealthCheck(Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")!);
             services.AddInternalDomainServiceBusQueuesHealthCheck(
                 Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_MANAGE_CONNECTION_STRING")!,
-                Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME")!);
+                Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_NAME")!);
             services.AddExternalServiceBusQueuesHealthCheck(
                 Environment.GetEnvironmentVariable("SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING")!,
                 Environment.GetEnvironmentVariable("MESSAGEHUB_DATA_AVAILABLE_QUEUE")!,
@@ -164,7 +164,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub
             container.Register<IDocumentSerializer<AccountingPointCharacteristicsMessage>, AccountingPointCharacteristicsMessageXmlSerializer>(Lifestyle.Singleton);
 
             var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING");
-            var topic = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME");
+            var topic = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_NAME");
 
             container.Register(() => new ServiceBusClient(connectionString).CreateSender(topic), Lifestyle.Singleton);
         }

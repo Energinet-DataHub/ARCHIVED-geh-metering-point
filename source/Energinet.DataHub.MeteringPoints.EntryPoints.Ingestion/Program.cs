@@ -153,7 +153,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             container.AddXmlDeserialization(XmlMappingConfiguration, TranslateProcessType);
 
             var queueConnectionString = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_CONNECTION_STRING");
-            var topic = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_TOPIC_NAME");
+            var topic = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_NAME");
             container.Register(() => new ServiceBusClient(queueConnectionString).CreateSender(topic), Lifestyle.Singleton);
 
             container.SendProtobuf<MeteringPointEnvelope>();
