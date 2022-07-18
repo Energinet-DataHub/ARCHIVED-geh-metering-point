@@ -41,7 +41,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
         }
 
         [Function("ChargesResponseReceiver")]
-        public async Task RunAsync([ServiceBusTrigger("%CHARGES_DEFAULT_LINK_RESPONSE_QUEUE%", Connection = "INTEGRATION_EVENT_QUEUE_CONNECTION")] byte[] data, FunctionContext context)
+        public async Task RunAsync([ServiceBusTrigger("%CHARGES_DEFAULT_LINK_RESPONSE_QUEUE%", Connection = "SHARED_SERVICE_BUS_LISTEN_CONNECTION_STRING")] byte[] data, FunctionContext context)
         {
             if (data == null) throw new ArgumentNullException(nameof(data));
             if (context == null) throw new ArgumentNullException(nameof(context));

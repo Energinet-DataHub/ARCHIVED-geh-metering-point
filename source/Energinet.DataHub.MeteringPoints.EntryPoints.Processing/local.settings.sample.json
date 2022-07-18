@@ -6,15 +6,14 @@
     "APPINSIGHTS_INSTRUMENTATIONKEY": "<Azure application insights instrumentation key>",
     "METERINGPOINT_DB_CONNECTION_STRING": "<Main SQL server database connection string>",
     "METERINGPOINT_QUEUE_NAME": "<Name of Service Bus queue for receiving business requests and internal commands>",
-    "METERINGPOINT_SERVICE_BUS_LISTEN_CONNECTION_STRING": "<Service Bus connection string with listen permissions where business requests and internal commands are received>",
+    "METERINGPOINT_QUEUE_LISTEN_CONNECTION_STRING": "<Service Bus connection string with listen permissions where business requests and internal commands are received>",
     "METERINGPOINT_QUEUE_MANAGE_CONNECTION_STRING" : "<Service Bus connection string where business requests and internal commands are received with manage permissions>",
     "INTEGRATION_EVENT_QUEUE": "<Name of Service Bus queue for receiving integration/notification events>",
-    "INTEGRATION_EVENT_QUEUE_CONNECTION": "<Service Bus connection string where integration/notification events are received>",
-    "SHARED_SERVICE_BUS_SENDER_CONNECTION_STRING": "<Shared Azure Service Bus connection string>",
+    "SHARED_SERVICE_BUS_LISTEN_CONNECTION_STRING": "<Service Bus connection string where integration/notification events are received>",
     "CHARGES_DEFAULT_LINK_RESPONSE_QUEUE": "<Queue name that Charges response to in request/response pattern>",
     "RAISE_TIME_HAS_PASSED_EVENT_SCHEDULE": "*/10 * * * * *",
-    "SERVICE_BUS_LISTEN_CONNECTION_STRING": "<Service bus listening endpoint>",
-    "SERVICE_BUS_SEND_CONNECTION_STRING": "<Service bus sender endpoint>",
+    "SHARED_SERVICE_BUS_LISTEN_CONNECTION_STRING": "<Service bus listening endpoint>",
+    "SHARED_SERVICE_BUS_SEND_CONNECTION_STRING": "<Service bus sender endpoint>",
     "MASTER_DATA_REQUEST_QUEUE_NAME": "<Master data request queue name>"
   }
 }
