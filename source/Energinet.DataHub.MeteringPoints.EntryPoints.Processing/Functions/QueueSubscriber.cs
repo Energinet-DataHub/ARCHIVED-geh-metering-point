@@ -43,7 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
 
         [Function("QueueSubscriber")]
         public async Task RunAsync(
-            [ServiceBusTrigger("%METERINGPOINT_QUEUE_NAME%", Connection = "METERINGPOINT_QUEUE_CONNECTION_STRING")] byte[] data,
+            [ServiceBusTrigger("%METERINGPOINT_QUEUE_NAME%", Connection = "METERINGPOINT_SERVICE_BUS_LISTEN_CONNECTION_STRING")] byte[] data,
             FunctionContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
