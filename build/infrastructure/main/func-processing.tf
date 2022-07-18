@@ -43,7 +43,7 @@ module "func_processing" {
     SERVICE_BUS_SEND_CONNECTION_STRING                          = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-send-connection-string)"        
     MASTER_DATA_REQUEST_QUEUE_NAME                              = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-metering-point-master-data-request-name)"    
     SERVICE_BUS_CONNECTION_STRING_MANAGE_FOR_INTEGRATION_EVENTS = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-manage-connection-string)"
-    METERINGPOINT_QUEUE_MANAGE_CONNECTION_STRING          = module.sb_meteringpoint.primary_connection_strings["manage"]
+    METERINGPOINT_QUEUE_MANAGE_CONNECTION_STRING                = module.sb_meteringpoint.primary_connection_strings["manage"]
   }
 
   tags                                      = azurerm_resource_group.this.tags
