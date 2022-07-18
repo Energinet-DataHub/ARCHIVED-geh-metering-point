@@ -91,7 +91,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                                              ?? throw new InvalidOperationException(
                                                  "Metering point db connection string not found."));
             services.AddExternalServiceBusTopicsHealthCheck(
-                Environment.GetEnvironmentVariable("SHARED_INTEGRATION_EVENT_SERVICE_BUS_MANAGE_CONNECTION_STRING")!,
+                Environment.GetEnvironmentVariable("SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING")!,
                 Environment.GetEnvironmentVariable("METERING_POINT_CREATED_TOPIC") ?? throw new InvalidOperationException("No MeteringPointCreated Topic found"),
                 Environment.GetEnvironmentVariable("METERING_POINT_CONNECTED_TOPIC") ?? throw new InvalidOperationException("No MeteringPointConnected Topic found"),
                 Environment.GetEnvironmentVariable("METERING_POINT_MESSAGE_DEQUEUED_TOPIC") ?? throw new InvalidOperationException("No MeteringPointMessageDequeued Topic found"),
@@ -123,7 +123,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             container.Register<HealthCheckEndpoint>(Lifestyle.Scoped);
 
             var connectionString =
-                Environment.GetEnvironmentVariable("SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING");
+                Environment.GetEnvironmentVariable("SHARED_SERVICE_BUS_SENDER_CONNECTION_STRING");
             container.Register<ServiceBusClient>(
                 () => new ServiceBusClient(connectionString),
                 Lifestyle.Singleton);

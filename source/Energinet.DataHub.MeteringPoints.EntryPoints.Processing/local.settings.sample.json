@@ -10,7 +10,7 @@
     "METERINGPOINT_SERVICE_BUS_MANAGE_CONNECTION_STRING" : "<Service Bus connection string where business requests and internal commands are received with manage permissions>",
     "INTEGRATION_EVENT_QUEUE": "<Name of Service Bus queue for receiving integration/notification events>",
     "INTEGRATION_EVENT_QUEUE_CONNECTION": "<Service Bus connection string where integration/notification events are received>",
-    "SHARED_INTEGRATION_EVENT_SERVICE_BUS_SENDER_CONNECTION_STRING": "<Shared Azure Service Bus connection string>",
+    "SHARED_SERVICE_BUS_SENDER_CONNECTION_STRING": "<Shared Azure Service Bus connection string>",
     "CHARGES_DEFAULT_LINK_RESPONSE_QUEUE": "<Queue name that Charges response to in request/response pattern>",
     "RAISE_TIME_HAS_PASSED_EVENT_SCHEDULE": "*/10 * * * * *",
     "SERVICE_BUS_LISTEN_CONNECTION_STRING": "<Service bus listening endpoint>",
