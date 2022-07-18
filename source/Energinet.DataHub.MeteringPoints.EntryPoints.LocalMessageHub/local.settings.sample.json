@@ -6,7 +6,7 @@
     "APPINSIGHTS_INSTRUMENTATIONKEY": "<Azure application insights instrumentation key>",
     "METERINGPOINT_DB_CONNECTION_STRING": "<Main SQL server database connection string>",
     "METERINGPOINT_QUEUE_NAME": "<Name of Service Bus queue for receiving business requests and internal commands>",
-    "METERINGPOINT_SERVICE_BUS_SEND_CONNECTION_STRING": "<Service Bus connection string with send permissions where business requests and internal commands are received>",
+    "METERINGPOINT_QUEUE_SEND_CONNECTION_STRING": "<Service Bus connection string with send permissions where business requests and internal commands are received>",
     "METERINGPOINT_SERVICE_BUS_MANAGE_CONNECTION_STRING" : "<Service Bus connection string where business requests and internal commands are received with manage permissions>",
     "SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING" : "<Service Bus connection string with manage permissions for shared service bus>",
     "MESSAGEHUB_QUEUE_CONNECTION_STRING": "<PostOffice Service Bus connection string>",
