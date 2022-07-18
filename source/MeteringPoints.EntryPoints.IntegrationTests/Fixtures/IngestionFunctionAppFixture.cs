@@ -85,7 +85,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             Environment.SetEnvironmentVariable("BACKEND_SERVICE_APP_ID", AuthorizationConfiguration.BackendAppId);
 
             var meteringPointQueue = await ServiceBusResourceProvider
-                .BuildQueue("queue").SetEnvironmentVariableToQueueName("METERINGPOINT_QUEUE_TOPIC_NAME")
+                .BuildQueue("queue").SetEnvironmentVariableToQueueName("METERINGPOINT_QUEUE_NAME")
                 .CreateAsync().ConfigureAwait(false);
 
             // Shared logging blob storage container
