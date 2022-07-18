@@ -7,7 +7,7 @@
     "METERINGPOINT_DB_CONNECTION_STRING": "<Main SQL server database connection string>",
     "METERINGPOINT_QUEUE_NAME": "<Name of Service Bus queue for receiving business requests and internal commands>",
     "METERINGPOINT_SERVICE_BUS_LISTEN_CONNECTION_STRING": "<Service Bus connection string with listen permissions where business requests and internal commands are received>",
-    "METERINGPOINT_SERVICE_BUS_MANAGE_CONNECTION_STRING" : "<Service Bus connection string where business requests and internal commands are received with manage permissions>",
+    "METERINGPOINT_QUEUE_MANAGE_CONNECTION_STRING" : "<Service Bus connection string where business requests and internal commands are received with manage permissions>",
     "INTEGRATION_EVENT_QUEUE": "<Name of Service Bus queue for receiving integration/notification events>",
     "INTEGRATION_EVENT_QUEUE_CONNECTION": "<Service Bus connection string where integration/notification events are received>",
     "SHARED_SERVICE_BUS_SENDER_CONNECTION_STRING": "<Shared Azure Service Bus connection string>",

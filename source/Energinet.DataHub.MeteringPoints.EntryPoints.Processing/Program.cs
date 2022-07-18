@@ -148,7 +148,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 Environment.GetEnvironmentVariable("MASTER_DATA_REQUEST_QUEUE_NAME")!,
                 "metering-point-master-data-response");
             services.AddInternalDomainServiceBusQueuesHealthCheck(
-                Environment.GetEnvironmentVariable("METERINGPOINT_SERVICE_BUS_MANAGE_CONNECTION_STRING")!,
+                Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_MANAGE_CONNECTION_STRING")!,
                 Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_NAME")!);
         }
 

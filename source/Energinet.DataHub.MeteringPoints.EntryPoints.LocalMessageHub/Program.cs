@@ -95,7 +95,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub
             services.AddLiveHealthCheck();
             services.AddSqlServerHealthCheck(Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")!);
             services.AddInternalDomainServiceBusQueuesHealthCheck(
-                Environment.GetEnvironmentVariable("METERINGPOINT_SERVICE_BUS_MANAGE_CONNECTION_STRING")!,
+                Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_MANAGE_CONNECTION_STRING")!,
                 Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_NAME")!);
             services.AddExternalServiceBusQueuesHealthCheck(
                 Environment.GetEnvironmentVariable("SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING")!,
