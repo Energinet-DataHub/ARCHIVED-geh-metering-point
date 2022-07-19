@@ -32,6 +32,7 @@ module "func_ingestion" {
   app_settings                              = {
     METERINGPOINT_QUEUE_URL                                 = "${module.sb_meteringpoint.name}.servicebus.windows.net:9093"
     METERINGPOINT_QUEUE_SEND_CONNECTION_STRING              = module.sb_meteringpoint.primary_connection_strings["send"]
+    METERINGPOINT_QUEUE_MANAGE_CONNECTION_STRING            = module.sb_meteringpoint.primary_connection_strings["manage"]
     METERINGPOINT_DB_CONNECTION_STRING                      = local.MS_METERING_POINT_CONNECTION_STRING
     METERINGPOINT_QUEUE_NAME                                = module.sbq_meteringpoint.name
     INTERNAL_SERVICEBUS_RETRY_COUNT                         = 3
