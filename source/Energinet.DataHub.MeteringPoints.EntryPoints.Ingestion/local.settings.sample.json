@@ -7,6 +7,7 @@
         "METERINGPOINT_DB_CONNECTION_STRING": "<Main SQL server database connection string>",
         "INTERNAL_SERVICEBUS_RETRY_COUNT": 3,
         "METERINGPOINT_QUEUE_SEND_CONNECTION_STRING": "<Azure Service Bus namespace connection with send permissions>",
+        "METERINGPOINT_QUEUE_MANAGE_CONNECTION_STRING" : "<Azure Service Bus namespace connection with manage permissions>",
         "METERINGPOINT_QUEUE_NAME": "<Name of Azure Service Bus queue>",
         "B2C_TENANT_ID": "<Azure B2C tenant id>",
         "BACKEND_SERVICE_APP_ID": "<Backend service application id>",
