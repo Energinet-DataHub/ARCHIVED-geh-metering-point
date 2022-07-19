@@ -98,6 +98,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                 Environment.GetEnvironmentVariable("METERING_POINT_DISCONNECTED_TOPIC") ?? throw new InvalidOperationException("No MeteringPointDisconnected Topic found"),
                 Environment.GetEnvironmentVariable("METERING_POINT_RECONNECTED_TOPIC") ?? throw new InvalidOperationException("No MeteringPointReconnected Topic found"),
                 Environment.GetEnvironmentVariable("MASTER_DATA_UPDATED_TOPIC") ?? throw new InvalidOperationException("No MasterDataUpdated Topic found"));
+
+            services.AddExternalServiceBusQueuesHealthCheck(
+                Environment.GetEnvironmentVariable("SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING")!,
+                Environment.GetEnvironmentVariable("MESSAGEHUB_DATA_AVAILABLE_QUEUE")!,
+                Environment.GetEnvironmentVariable("MESSAGEHUB_DOMAIN_REPLY_QUEUE")!,
+                Environment.GetEnvironmentVariable("CHARGES_DEFAULT_LINK_RESPONSE_QUEUE")!,
+                Environment.GetEnvironmentVariable("CHARGES_DEFAULT_MESSAGES_RESPONSE_QUEUE")!);
         }
 
         protected override void ConfigureContainer(Container container)
