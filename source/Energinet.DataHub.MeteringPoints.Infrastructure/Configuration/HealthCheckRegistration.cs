@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using Energinet.DataHub.Core.App.Common.Diagnostics.HealthChecks;
 using Energinet.DataHub.Core.App.FunctionApp.Diagnostics.HealthChecks;
@@ -35,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Configuration
             {
                 services.AddHealthChecks()
                     .AddAzureServiceBusQueue(
-                        name: name + "Exists",
+                        name: name + "Exists" + Guid.NewGuid(),
                         connectionString: serviceBusConnectionString,
                         queueName: name);
             }
@@ -47,7 +48,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Configuration
             {
                 services.AddHealthChecks()
                     .AddAzureServiceBusTopic(
-                        name: name + "Exists",
+                        name: name + "Exists" + Guid.NewGuid(),
                         connectionString: serviceBusConnectionString,
                         topicName: name);
             }
@@ -59,7 +60,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Configuration
             {
                 services.AddHealthChecks()
                     .AddAzureServiceBusQueue(
-                        name: name + "Exists",
+                        name: name + "Exists" + Guid.NewGuid(),
                         connectionString: serviceBusConnectionString,
                         queueName: name);
             }
