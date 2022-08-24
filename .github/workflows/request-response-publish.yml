@@ -71,7 +71,7 @@ jobs:
         with:
           files: |
             source/RequestResponse/source/RequestResponse/**/*.*
-            .github/workflows/request-response-events.yml
+            .github/workflows/request-response-publish.yml
 
       - name: Assert versions of NuGet packages and push them to NuGet.org
         uses: Energinet-DataHub/.github/.github/actions/nuget-packages-assert-and-push@v8
