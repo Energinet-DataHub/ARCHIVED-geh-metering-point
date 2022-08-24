@@ -67,7 +67,7 @@ jobs:
         with:
           USE_AZURE_FUNCTIONS_TOOLS: 'true'
           NODE_VERSION: '16'
-          AZURITE_VERSION: '3.15.0'
+          AZURITE_VERSION: '3.18.0'
           AZURE_FUNCTIONS_CORE_TOOLS_VERSION: '4.0.3971'
           USE_SQLLOCALDB_2019: 'true'
 
