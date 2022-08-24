@@ -39,97 +39,67 @@ on:
   workflow_dispatch: {}
 
 env:
-  SOLUTION_FILE_PATH: source/Energinet.DataHub.MeteringPoints.sln
-  BUILD_CONFIGURATION: Release
   # Conditions
   PUSH_PACKAGES: ${{ github.event_name != 'pull_request' }}
-  # Tool versions
-  DOTNET_VERSION: '6.0.301'
-  AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-  AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID_OIDC }}
-  AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
-  AZURE_SECRETS_KEYVAULT_URL: ${{ secrets.AZURE_SECRETS_KEYVAULT_URL }}
 
 permissions:
   id-token: write
   contents: read
 
 jobs:
+
   build_and_publish:
+
     runs-on: windows-2022
     name: Publish bundle to NuGet.org
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: Energinet-DataHub/.github/.github/actions/nuget-checkout-repository@v8
 
-      - name: Setup .NET ${{ env.DOTNET_VERSION }} environment
-        uses: actions/setup-dotnet@v2
+      - name: Setup dotnet and tools
+        uses: Energinet-DataHub/.github/.github/actions/dotnet-setup-and-tools@v8
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-        env:
-          DOTNET_INSTALL_DIR: 'C:\Program Files\dotnet'
+          USE_AZURE_FUNCTIONS_TOOLS: 'true'
+          NODE_VERSION: '16'
+          AZURITE_VERSION: '3.15.0'
+          AZURE_FUNCTIONS_CORE_TOOLS_VERSION: '4.0.3971'
+          USE_SQLLOCALDB_2019: 'true'
 
-      - name: Login to use Azure resources in integration tests
-        if: ${{ env.AZURE_KEYVAULT_URL != '' || env.AZURE_SECRETS_KEYVAULT_URL != '' }}
-        uses: azure/login@v1
+      - name: Build and test solution
+        uses: Energinet-DataHub/.github/.github/actions/dotnet-solution-build-and-test@v8
         with:
-          client-id: ${{ env.AZURE_SPN_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Cache NuGet packages
-        uses: actions/cache@v3
-        id: cache-nuget
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }} #hash of project files
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
-      - name: Install SQL LocalDB 2019
-        shell: pwsh
-        run: |
-          Write-Host "Downloading..."
-          Import-Module BitsTransfer
-          Start-BitsTransfer -Source https://download.microsoft.com/download/7/c/1/7c14e92e-bdcb-4f89-b7cf-93543e7112d1/SqlLocalDB.msi -Destination SqlLocalDB.msi
-          Write-Host "Installing..."
-          Start-Process -FilePath "SqlLocalDB.msi" -Wait -ArgumentList "/qn", "/norestart", "/l*v SqlLocalDBInstall.log", "IACCEPTSQLLOCALDBLICENSETERMS=YES";
-          Write-Host "Checking version..."
-          sqlcmd -l 60 -S "(localdb)\MSSQLLocalDB" -Q "SELECT @@VERSION;"
-
-      - name: Restore NuGet packages
-        run: dotnet restore ${{ env.SOLUTION_FILE_PATH }}
-
-      - name: Build solution
-        run: dotnet build ${{ env.SOLUTION_FILE_PATH }} --no-restore --configuration ${{ env.BUILD_CONFIGURATION }}
-
-      - name: Run tests
-        run: dotnet test ${{ env.SOLUTION_FILE_PATH }} --no-build --configuration ${{ env.BUILD_CONFIGURATION }} --verbosity normal --filter "FullyQualifiedName~MeteringPointClientTests"
-
-      - name: Get version suffix property value
-        uses: Energinet-DataHub/.github/.github/actions/get-version-suffix@3.0.2
-        id: get_version_suffix
+          SOLUTION_FILE_PATH: './source/Energinet.DataHub.MeteringPoints.sln'
+          # TODO: Add flag?
+          #CODE_COVERAGE_FLAGS: appcommon
+          AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID_OIDC }}
 
       - name: Pack MeteringPoints.Client project
-        run: dotnet pack ${{ env.PROJECT_PATH }} --configuration ${{ env.BUILD_CONFIGURATION }} --include-symbols -p:SymbolPackageFormat=snupkg -p:RepositoryCommit=${{ github.sha }} ${{ steps.get_version_suffix.outputs.version_suffix_property }}
-        env:
-          PROJECT_PATH: 'source/Energinet.DataHub.MeteringPoints.Client/Energinet.DataHub.MeteringPoints.Client.csproj'
+        uses: Energinet-DataHub/.github/.github/actions/nuget-project-pack@v8
+        with:
+          PROJECT_PATH: './source/Energinet.DataHub.MeteringPoints.Client/Energinet.DataHub.MeteringPoints.Client.csproj'
 
       - name: Pack MeteringPoints.Client.Abstractions project
-        run: dotnet pack ${{ env.PROJECT_PATH }} --configuration ${{ env.BUILD_CONFIGURATION }} --include-symbols -p:SymbolPackageFormat=snupkg -p:RepositoryCommit=${{ github.sha }} ${{ steps.get_version_suffix.outputs.version_suffix_property }}
-        env:
-          PROJECT_PATH: 'source/Energinet.DataHub.MeteringPoints.Client.Abstractions/Energinet.DataHub.MeteringPoints.Client.Abstractions.csproj'
-
-      - name: Check each NuGet package version does not exists (not looking at prereleases)
-        uses: Energinet-DataHub/.github/.github/actions/nuget-assert-release-version@3.0.2
+        uses: Energinet-DataHub/.github/.github/actions/nuget-project-pack@v8
         with:
-          NUPKG_RECURSE_PATH: 'source'
+          PROJECT_PATH: './source/Energinet.DataHub.MeteringPoints.Client.Abstractions/Energinet.DataHub.MeteringPoints.Client.Abstractions.csproj'
 
-      - name: Push to NuGet.org
-        if: ${{ env.PUSH_PACKAGES == 'true' }}
-        run: dotnet nuget push ${{ env.NUPKG_FILTER_PATTERN }} --api-key ${{ secrets.NUGET_TOKEN }} --source ${{ env.NUGET_FEED_PATH }}
-        env:
-          NUPKG_FILTER_PATTERN: 'source/**/*.nupkg'
-          NUGET_FEED_PATH: 'https://api.nuget.org/v3/index.json'
+      - name: Package content or build has changed
+        id: changed-content
+        uses: tj-actions/changed-files@v17.2
+        with:
+          files: |
+            source/Energinet.DataHub.MeteringPoints.Client/**/*.*
+            source/Energinet.DataHub.MeteringPoints.Client.Abstractions/**/*.*
+            .github/workflows/client-publish.yml
+
+      - name: Assert versions of NuGet packages and push them to NuGet.org
+        uses: Energinet-DataHub/.github/.github/actions/nuget-packages-assert-and-push@v8
+        with:
+          PUSH_PACKAGES: ${{ env.PUSH_PACKAGES }}
+          CONTENT_CHANGED: ${{ steps.changed-content.outputs.any_changed }}
+          NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
+          NUPKG_RECURSE_PATH: 'source'
