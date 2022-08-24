@@ -43,6 +43,7 @@ env:
   PUSH_PACKAGES: ${{ github.event_name != 'pull_request' }}
   # Variables necessary to manage Azure resources for tests (similar to local use of 'integrationtest.local.settings.json')
   AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
+  AZURE_SECRETS_KEYVAULT_URL: ${{ secrets.AZURE_SECRETS_KEYVAULT_URL }}
 
 permissions:
   id-token: write
@@ -72,8 +73,7 @@ jobs:
         uses: Energinet-DataHub/.github/.github/actions/dotnet-solution-build-and-test@v8
         with:
           SOLUTION_FILE_PATH: './source/Energinet.DataHub.MeteringPoints.sln'
-          # TODO: Add flag?
-          #CODE_COVERAGE_FLAGS: appcommon
+          CODE_COVERAGE_FLAGS: clientlibraries
           AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
           AZURE_SECRETS_KEYVAULT_URL: ${{ secrets.AZURE_SECRETS_KEYVAULT_URL }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}

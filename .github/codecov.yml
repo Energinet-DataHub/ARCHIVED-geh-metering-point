@@ -1,0 +1,27 @@
+flag_management:
+  default_rules: # the rules that will be followed for any flag added, generally
+    carryforward: true
+  individual_flags: # exceptions to the default rules above, stated flag by flag
+    - name: business
+      paths:
+      - source/Energinet.DataHub.MeteringPoints.ActorRegistrySync
+      - source/Energinet.DataHub.MeteringPoints.Application
+      - source/Energinet.DataHub.MeteringPoints.Domain
+      - source/Energinet.DataHub.MeteringPoints.EntryPoints.Common
+      - source/Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
+      - source/Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub
+      - source/Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
+      - source/Energinet.DataHub.MeteringPoints.EntryPoints.Processing
+      - source/Energinet.DataHub.MeteringPoints.EntryPoints.WebAPI
+      - source/Energinet.DataHub.MeteringPoints.Infrastructure
+      - source/Energinet.DataHub.MeteringPoints.Messaging
+    - name: clientlibraries
+      paths:
+      - source/Energinet.DataHub.MeteringPoints.Client
+      - source/Energinet.DataHub.MeteringPoints.Client.Abstractions
+
+# https://docs.codecov.com/docs/ignoring-paths
+ignore:
+  - source/Energinet.DataHub.MeteringPoints.IntegrationTests
+  - source/Energinet.DataHub.MeteringPoints.Tests
+  - source/MeteringPoints.EntryPoints.IntegrationTests
