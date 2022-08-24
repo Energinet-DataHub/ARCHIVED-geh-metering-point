@@ -34,7 +34,6 @@ on:
       - source/Energinet.DataHub.MeteringPoints.Client.Abstractions/**
       - .github/workflows/client-publish.yml
       - docs/metering-point-client/**
-      - source/Energinet.DataHub.MeteringPoints.IntegrationTests/Client/**
   # Build, test, pack and publish prerelease packages
   # Executed if manually triggered
   workflow_dispatch: {}
