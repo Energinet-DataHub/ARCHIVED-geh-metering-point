@@ -11,8 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-output ms_metering_point_connection_string {
-  description = "Connection string of the metering point database created in the shared server"
-  value       = local.MS_METERING_POINT_CONNECTION_STRING_SQL_AUTH
-  sensitive   = true
+module "mssqldb_meteringpoint" {
+  developer_ad_group_name     = var.developer_ad_group_name
 }
