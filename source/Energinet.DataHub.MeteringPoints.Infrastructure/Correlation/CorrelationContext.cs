@@ -38,12 +38,12 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Correlation
 
         public string AsTraceContext()
         {
-            if (string.IsNullOrEmpty(_id))
+            if (string.IsNullOrEmpty(_id) || string.IsNullOrEmpty(_parentId))
             {
                 return string.Empty;
             }
 
-            return _id;
+            return $"00-{_id}-{_parentId}-00";
         }
     }
 }

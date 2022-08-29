@@ -47,7 +47,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Outbox
 
             var data = _jsonSerializer.Serialize(message);
 
-            return new OutboxMessage(type, data, _correlationContext.AsTraceContext(), category, _systemDateTimeProvider.Now());
+            return new OutboxMessage(type, data, _correlationContext.Id, category, _systemDateTimeProvider.Now());
         }
     }
 }
