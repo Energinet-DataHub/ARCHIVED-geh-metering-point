@@ -38,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common
 
             var traceContext = TraceContext.Parse(context.TraceContext.TraceParent);
 
-            _correlationContext.SetId(Guid.NewGuid().ToString());
+            _correlationContext.SetId(traceContext.TraceId);
             await next(context).ConfigureAwait(false);
         }
     }
