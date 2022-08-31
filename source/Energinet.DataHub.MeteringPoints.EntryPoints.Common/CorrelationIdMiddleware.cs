@@ -57,19 +57,20 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common
             if (correlationId is null)
             {
                 correlationId = Guid.NewGuid().ToString();
+                LogIfSet(correlationId, "Create new correlation id.");
             }
 
-            _logger.LogInformation($"Correlation id is: {correlationId}");
             correlationContext.SetId(correlationId);
 
             await next(context).ConfigureAwait(false);
         }
 
-        private static string? ParseFromMessageProperty(FunctionContext context)
+        private string? ParseFromMessageProperty(FunctionContext context)
         {
             context.BindingContext.BindingData.TryGetValue("CorrelationId", out var correlationIdValue);
             if (correlationIdValue is string correlationId)
             {
+                LogIfSet(correlationId, "Correlation is parsed from CorrelationId property on ServiceBus message.");
                 return correlationId;
             }
 
@@ -83,6 +84,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common
             {
                 var parsedUserProperties = _serializer.Deserialize<UserProperties>(userProperties);
                 {
+                    LogIfSet(parsedUserProperties.OperationCorrelationId, "Correlation is parsed from UserProperties on ServiceBus message.");
                     return parsedUserProperties.OperationCorrelationId;
                 }
             }
@@ -113,7 +115,17 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common
             #pragma warning restore
 
             normalizedKeyHeaders.TryGetValue("correlationid", out var correlationId);
+            LogIfSet(correlationId, "Correlation is parsed from HTTP header.");
             return correlationId;
+        }
+
+        private void LogIfSet(string? correlationId, string text)
+        {
+            if (correlationId is not null)
+            {
+                _logger.LogInformation(text);
+                _logger.LogInformation($"Correlation id is: {correlationId}");
+            }
         }
     }
 }
