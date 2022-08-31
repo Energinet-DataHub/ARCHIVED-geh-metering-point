@@ -39,6 +39,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI.XmlConverter.Mappings;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Resilience;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
@@ -94,6 +95,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Ingestion
             base.ConfigureContainer(container);
 
             // Register application components.
+            container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Scoped);
             container.Register<MeteringPointHttpTrigger>(Lifestyle.Scoped);
             container.Register<HealthCheckEndpoint>(Lifestyle.Scoped);
             container.Register<ICorrelationContext, CorrelationContext>(Lifestyle.Scoped);
