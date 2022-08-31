@@ -65,19 +65,38 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common
             await next(context).ConfigureAwait(false);
         }
 
-        private static string ParseCorrelationIdFromMessage(FunctionContext context)
+        private static string? ParseFromMessageProperty(FunctionContext context)
         {
-            context.BindingContext.BindingData.TryGetValue("CorrelationId", out var correlationObj);
-
-            if (correlationObj is not string correlationId)
+            context.BindingContext.BindingData.TryGetValue("CorrelationId", out var correlationIdValue);
+            if (correlationIdValue is string correlationId)
             {
-                throw new InvalidOperationException($"Could not parse correlation id Service bus message.");
+                return correlationId;
             }
 
-            return correlationId;
+            return null;
         }
 
-        private string ParseCorrelationIdFromHeader(FunctionContext context)
+        private string? ParseFromUserProperties(FunctionContext context)
+        {
+            context.BindingContext.BindingData.TryGetValue("UserProperties", out var userPropertiesValue);
+            if (userPropertiesValue is string userProperties)
+            {
+                var parsedUserProperties = _serializer.Deserialize<UserProperties>(userProperties);
+                {
+                    return parsedUserProperties.OperationCorrelationId;
+                }
+            }
+
+            return null;
+        }
+
+        private string? ParseCorrelationIdFromMessage(FunctionContext context)
+        {
+            var correlationId = ParseFromUserProperties(context);
+            return correlationId ?? ParseFromMessageProperty(context);
+        }
+
+        private string? ParseCorrelationIdFromHeader(FunctionContext context)
         {
             context.BindingContext.BindingData.TryGetValue("Headers", out var headersObj);
 
@@ -94,12 +113,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common
             #pragma warning restore
 
             normalizedKeyHeaders.TryGetValue("correlationid", out var correlationId);
-
-            if (correlationId is null)
-            {
-                throw new InvalidOperationException($"Could not parse correlation id from HTTP header.");
-            }
-
             return correlationId;
         }
     }
