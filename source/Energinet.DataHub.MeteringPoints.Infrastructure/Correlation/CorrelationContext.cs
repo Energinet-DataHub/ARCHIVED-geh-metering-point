@@ -22,7 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Correlation
 
         private string? _parentId;
 
-        public string Id => _id ?? throw new InvalidOperationException("Correlation id not set");
+        public string Id => _id ?? Guid.NewGuid().ToString();
 
         public string? ParentId => _parentId;
 
