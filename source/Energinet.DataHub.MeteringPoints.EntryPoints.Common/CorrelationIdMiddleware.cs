@@ -56,7 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common
 
             if (correlationId is null)
             {
-                throw new InvalidOperationException($"Could not parse correlation id.");
+                correlationId = Guid.NewGuid().ToString();
             }
 
             _logger.LogInformation($"Correlation id is: {correlationId}");
