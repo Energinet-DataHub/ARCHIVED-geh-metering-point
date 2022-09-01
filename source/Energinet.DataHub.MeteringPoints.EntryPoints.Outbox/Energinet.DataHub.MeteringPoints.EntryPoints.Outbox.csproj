@@ -24,7 +24,7 @@ limitations under the License.
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Energinet.DataHub.Charges.Clients" Version="3.0.0" />
+    <PackageReference Include="Energinet.DataHub.Charges.Clients" Version="3.0.10" />
     <PackageReference Include="Energinet.DataHub.Charges.Clients.Registration" Version="3.0.0" />
     <PackageReference Include="Energinet.DataHub.MessageHub.Client" Version="1.9.1" />
     <PackageReference Include="Energinet.DataHub.MessageHub.Client.SimpleInjector" Version="1.6.1" />
@@ -35,7 +35,7 @@ limitations under the License.
     <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.6.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk.Analyzers" Version="1.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.3" />
-    <PackageReference Include="SimpleInjector" Version="5.3.3" />
+    <PackageReference Include="SimpleInjector" Version="5.4.0" />
     <PackageReference Include="SimpleInjector.Integration.GenericHost" Version="5.3.0" />
   </ItemGroup>
 
