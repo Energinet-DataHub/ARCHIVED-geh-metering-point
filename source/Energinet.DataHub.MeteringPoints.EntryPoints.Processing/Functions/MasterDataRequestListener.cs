@@ -56,6 +56,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
             if (data == null) throw new ArgumentNullException(nameof(data));
             if (context == null) throw new ArgumentNullException(nameof(context));
 
+            var correlationId = ParseCorrelationIdFromMessage(context);
             var metaData = GetMetadata(context);
             var request = MasterDataRequest.Parser.ParseFrom(data);
             var query = new GetMasterDataQuery(request.GsrnNumber);
@@ -71,9 +72,22 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
             };
             serviceBusMessage.ApplicationProperties.Add("BusinessProcessId", metaData.BusinessProcessId ?? throw new InvalidOperationException("Service bus metadata property BusinessProcessId is missing"));
             serviceBusMessage.ApplicationProperties.Add("TransactionId", metaData.TransactionId ?? throw new InvalidOperationException("Service bus metadata property TransactionId is missing"));
+            serviceBusMessage.CorrelationId = correlationId;
+
             await _serviceBusSender.SendMessageAsync(serviceBusMessage).ConfigureAwait(false);
 
             _logger.LogInformation($"Received request for master data: {data}");
+        }
+
+        private static string ParseCorrelationIdFromMessage(FunctionContext context)
+        {
+            context.BindingContext.BindingData.TryGetValue("CorrelationId", out var correlationIdValue);
+            if (correlationIdValue is string correlationId)
+            {
+                return correlationId;
+            }
+
+            throw new InvalidOperationException("Correlation id is not set on customer master data request message.");
         }
 
         private MasterDataRequestMetadata GetMetadata(FunctionContext context)
