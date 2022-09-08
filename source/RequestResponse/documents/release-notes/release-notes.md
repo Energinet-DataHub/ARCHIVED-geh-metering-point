@@ -1,5 +1,9 @@
 # Integration events Release notes
 
+## Version 1.0.3
+
+- Restructured contracts for requesting metering point master data
+
 ## Version 1.0.2
 
 - Changed location for compiled files.
