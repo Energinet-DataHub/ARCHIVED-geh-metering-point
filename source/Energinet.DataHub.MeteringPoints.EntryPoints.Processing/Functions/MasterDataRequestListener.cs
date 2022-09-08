@@ -65,14 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
 
             var result = await _mediator.Send(query).ConfigureAwait(false);
             var response = CreateResponseFrom(result);
-            var bytes = response.ToByteArray();
-            ServiceBusMessage serviceBusMessage = new(bytes)
-            {
-                ContentType = "application/octet-stream;charset=utf-8",
-            };
-            serviceBusMessage.ApplicationProperties.Add("BusinessProcessId", metaData.BusinessProcessId ?? throw new InvalidOperationException("Service bus metadata property BusinessProcessId is missing"));
-            serviceBusMessage.ApplicationProperties.Add("TransactionId", metaData.TransactionId ?? throw new InvalidOperationException("Service bus metadata property TransactionId is missing"));
-            await _serviceBusSender.SendMessageAsync(serviceBusMessage).ConfigureAwait(false);
+            await RespondAsync(response, metaData).ConfigureAwait(false);
 
             _logger.LogInformation($"Received request for master data: {data}");
         }
@@ -141,6 +134,20 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
             }
 
             return _jsonSerializer.Deserialize<MasterDataRequestMetadata>(metadata.ToString() ?? throw new InvalidOperationException());
+        }
+
+        private Task RespondAsync(MeteringPointMasterDataResponse response, MasterDataRequestMetadata metaData)
+        {
+            var bytes = response.ToByteArray();
+            ServiceBusMessage serviceBusMessage = new(bytes)
+            {
+                ContentType = "application/octet-stream;charset=utf-8",
+            };
+            serviceBusMessage.ApplicationProperties.Add(
+                "BusinessProcessId", metaData.BusinessProcessId ?? throw new InvalidOperationException("Service bus metadata property BusinessProcessId is missing"));
+            serviceBusMessage.ApplicationProperties.Add(
+                "TransactionId", metaData.TransactionId ?? throw new InvalidOperationException("Service bus metadata property TransactionId is missing"));
+            return _serviceBusSender.SendMessageAsync(serviceBusMessage);
         }
     }
 }
