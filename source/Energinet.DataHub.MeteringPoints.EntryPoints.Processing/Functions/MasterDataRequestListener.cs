@@ -59,12 +59,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
             if (data == null) throw new ArgumentNullException(nameof(data));
             if (context == null) throw new ArgumentNullException(nameof(context));
 
-            var metaData = GetMetadata(context);
             var request = MeteringPointMasterDataRequest.Parser.ParseFrom(data);
             var query = new GetMasterDataQuery(request.GsrnNumber);
 
             var result = await _mediator.Send(query).ConfigureAwait(false);
-            await RespondAsync(CreateResponseFrom(result), metaData).ConfigureAwait(false);
+            await RespondAsync(CreateResponseFrom(result), GetMetadata(context)).ConfigureAwait(false);
 
             _logger.LogInformation($"Received request for master data: {data}");
         }
