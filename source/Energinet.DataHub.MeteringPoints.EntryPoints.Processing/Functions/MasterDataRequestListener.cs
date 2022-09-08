@@ -19,10 +19,13 @@ using Energinet.DataHub.MeteringPoints.Application.RequestMasterData;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.RequestResponse.Requests;
+using Energinet.DataHub.MeteringPoints.RequestResponse.Response;
 using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
 using MediatR;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
+using MasterData = Energinet.DataHub.MeteringPoints.Application.RequestMasterData.MasterData;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
 {
@@ -57,14 +60,12 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
             if (context == null) throw new ArgumentNullException(nameof(context));
 
             var metaData = GetMetadata(context);
-            var request = MasterDataRequest.Parser.ParseFrom(data);
+            var request = MeteringPointMasterDataRequest.Parser.ParseFrom(data);
             var query = new GetMasterDataQuery(request.GsrnNumber);
 
             var result = await _mediator.Send(query).ConfigureAwait(false);
-
-            var mapper = _factory.GetMapper(result);
-            var message = mapper.Convert(result);
-            var bytes = message.ToByteArray();
+            var response = CreateResponseFrom(result);
+            var bytes = response.ToByteArray();
             ServiceBusMessage serviceBusMessage = new(bytes)
             {
                 ContentType = "application/octet-stream;charset=utf-8",
@@ -74,6 +75,60 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
             await _serviceBusSender.SendMessageAsync(serviceBusMessage).ConfigureAwait(false);
 
             _logger.LogInformation($"Received request for master data: {data}");
+        }
+
+        private static MeteringPointMasterDataResponse CreateResponseFrom(MasterData result)
+        {
+            return new MeteringPointMasterDataResponse
+            {
+                MasterData = new RequestResponse.Response.MasterData()
+                {
+                    GsrnNumber = result.GsrnNumber,
+                    Address = new RequestResponse.Response.Address
+                    {
+                        StreetName = result.Address.StreetName,
+                        StreetCode = result.Address.StreetCode,
+                        PostCode = result.Address.PostCode,
+                        City = result.Address.City,
+                        CountryCode = result.Address.CountryCode,
+                        CitySubDivision = result.Address.CitySubDivision,
+                        Floor = result.Address.Floor,
+                        Room = result.Address.Room,
+                        BuildingNumber = result.Address.BuildingNumber,
+                        MunicipalityCode = result.Address.MunicipalityCode,
+                        IsActualAddress = result.Address.IsActualAddress,
+                        GeoInfoReference = result.Address.GeoInfoReference.ToString(),
+                        LocationDescription = result.Address.LocationDescription,
+                    },
+                    Series = new RequestResponse.Response.Series { Product = result.Series.Product, UnitType = result.Series.UnitType, },
+                    GridAreaDetails =
+                        new RequestResponse.Response.GridAreaDetails
+                        {
+                            Code = result.GridAreaDetails.Code,
+                            ToCode = result.GridAreaDetails.ToCode,
+                            FromCode = result.GridAreaDetails.FromCode,
+                        },
+                    ConnectionState = result.ConnectionState,
+                    MeteringMethod = result.MeteringMethod,
+                    ReadingPeriodicity = result.ReadingPeriodicity,
+                    Type = result.Type,
+                    MaximumCurrent = result.MaximumCurrent,
+                    MaximumPower = result.MaximumPower,
+                    PowerPlantGsrnNumber = result.PowerPlantGsrnNumber,
+                    EffectiveDate = result.EffectiveDate.ToUniversalTime().ToTimestamp(),
+                    MeterNumber = result.MeterNumber,
+                    Capacity = result.Capacity,
+                    AssetType = result.AssetType,
+                    SettlementMethod = result.SettlementMethod,
+                    ScheduledMeterReadingDate = result.ScheduledMeterReadingDate,
+                    ProductionObligation = result.ProductionObligation,
+                    NetSettlementGroup = result.NetSettlementGroup,
+                    DisconnetionType = result.DisconnectionType,
+                    ConnectionType = result.ConnectionType,
+                    ParentRelatedMeteringPoint = result.ParentRelatedMeteringPoint.ToString(),
+                    GridOperatorId = result.GridOperatorId.ToString(),
+                },
+            };
         }
 
         private MasterDataRequestMetadata GetMetadata(FunctionContext context)
