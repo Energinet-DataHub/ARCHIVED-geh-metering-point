@@ -64,8 +64,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
             var query = new GetMasterDataQuery(request.GsrnNumber);
 
             var result = await _mediator.Send(query).ConfigureAwait(false);
-            var response = CreateResponseFrom(result);
-            await RespondAsync(response, metaData).ConfigureAwait(false);
+            await RespondAsync(CreateResponseFrom(result), metaData).ConfigureAwait(false);
 
             _logger.LogInformation($"Received request for master data: {data}");
         }
