@@ -16,8 +16,6 @@ using System;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.MeteringPoints.Application.RequestMasterData;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.RequestResponse.Requests;
 using Energinet.DataHub.MeteringPoints.RequestResponse.Response;
 using Google.Protobuf;
@@ -34,21 +32,15 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
         private readonly ILogger _logger;
         private readonly IMediator _mediator;
         private readonly ServiceBusSender _serviceBusSender;
-        private readonly ProtobufOutboundMapperFactory _factory;
-        private readonly IJsonSerializer _jsonSerializer;
 
         public MasterDataRequestListener(
             ILogger logger,
             IMediator mediator,
-            ServiceBusSender serviceBusSender,
-            ProtobufOutboundMapperFactory factory,
-            IJsonSerializer jsonSerializer)
+            ServiceBusSender serviceBusSender)
         {
             _logger = logger;
             _mediator = mediator;
             _serviceBusSender = serviceBusSender;
-            _factory = factory;
-            _jsonSerializer = jsonSerializer;
         }
 
         [Function("MasterDataRequestListener")]
@@ -63,9 +55,20 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
             var query = new GetMasterDataQuery(request.GsrnNumber);
 
             var result = await _mediator.Send(query).ConfigureAwait(false);
-            await RespondAsync(CreateResponseFrom(result), GetMetadata(context)).ConfigureAwait(false);
+            await RespondAsync(CreateResponseFrom(result), ParseCorrelationIdFromMessage(context)).ConfigureAwait(false);
 
             _logger.LogInformation($"Received request for master data: {data}");
+        }
+
+        private static string ParseCorrelationIdFromMessage(FunctionContext context)
+        {
+            context.BindingContext.BindingData.TryGetValue("CorrelationId", out var correlationIdValue);
+            if (correlationIdValue is string correlationId)
+            {
+                return correlationId;
+            }
+
+            throw new InvalidOperationException("Correlation id is not set on metering point master data request message.");
         }
 
         private static MeteringPointMasterDataResponse CreateResponseFrom(MasterData result)
@@ -122,29 +125,14 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
             };
         }
 
-        private MasterDataRequestMetadata GetMetadata(FunctionContext context)
-        {
-            context.BindingContext.BindingData.TryGetValue("UserProperties", out var metadata);
-
-            if (metadata is null)
-            {
-                throw new InvalidOperationException($"Service bus metadata must be specified as User Properties attributes");
-            }
-
-            return _jsonSerializer.Deserialize<MasterDataRequestMetadata>(metadata.ToString() ?? throw new InvalidOperationException());
-        }
-
-        private Task RespondAsync(MeteringPointMasterDataResponse response, MasterDataRequestMetadata metaData)
+        private Task RespondAsync(MeteringPointMasterDataResponse response, string correlationId)
         {
             var bytes = response.ToByteArray();
             ServiceBusMessage serviceBusMessage = new(bytes)
             {
                 ContentType = "application/octet-stream;charset=utf-8",
             };
-            serviceBusMessage.ApplicationProperties.Add(
-                "BusinessProcessId", metaData.BusinessProcessId ?? throw new InvalidOperationException("Service bus metadata property BusinessProcessId is missing"));
-            serviceBusMessage.ApplicationProperties.Add(
-                "TransactionId", metaData.TransactionId ?? throw new InvalidOperationException("Service bus metadata property TransactionId is missing"));
+            serviceBusMessage.CorrelationId = correlationId;
             return _serviceBusSender.SendMessageAsync(serviceBusMessage);
         }
     }
