@@ -27,7 +27,7 @@ limitations under the License.
 
   <PropertyGroup>
     <PackageId>Energinet.DataHub.MeteringPoints.Client.Abstractions</PackageId>
-    <PackageVersion>3.0.3$(VersionSuffix)</PackageVersion>
+    <PackageVersion>3.0.4$(VersionSuffix)</PackageVersion>
     <Title>MeteringPoints client abstractions library</Title>
     <Company>Energinet-DataHub</Company>
     <Authors>Energinet-DataHub</Authors>
@@ -61,6 +61,7 @@ limitations under the License.
     <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
+  <!-- Enable Source Link (https://github.com/dotnet/sourcelink/blob/master/README.md) -->
   <PropertyGroup>
     <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
