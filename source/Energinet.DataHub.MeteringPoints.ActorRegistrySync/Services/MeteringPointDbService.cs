@@ -15,13 +15,12 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Data.SqlClient;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
+using Microsoft.Data.SqlClient;
 
 namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync.Services;
 
@@ -35,8 +34,6 @@ public class MeteringPointDbService : IDisposable
     {
         _sqlConnection = new SqlConnection(connectionString);
     }
-
-    public SqlConnection SqlConnection => _sqlConnection;
 
     public async Task CleanUpAsync()
     {

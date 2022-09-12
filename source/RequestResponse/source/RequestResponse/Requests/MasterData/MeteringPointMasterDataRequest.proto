@@ -17,6 +17,6 @@ syntax = "proto3";
 
 option csharp_namespace = "Energinet.DataHub.MeteringPoints.RequestResponse.Requests";
 
-message MasterDataRequest {
+message MeteringPointMasterDataRequest {
   string gsrn_number = 1; // Business facing metering point identifier
 }

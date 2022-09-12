@@ -14,10 +14,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Dapper;
 using Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
+using Microsoft.Data.SqlClient;
 
 namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync.Services;
 

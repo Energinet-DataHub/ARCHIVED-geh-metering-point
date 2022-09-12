@@ -38,10 +38,5 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Correlation
         /// Set the id of the parent operation.
         /// </summary>
         void SetParentId(string parentId);
-
-        /// <summary>
-        /// Return the id and parent in trace context format.
-        /// </summary>
-        string AsTraceContext();
     }
 }

@@ -22,7 +22,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Correlation
 
         private string? _parentId;
 
-        public string Id => _id ?? throw new InvalidOperationException("Correlation id not set");
+        public string Id => _id ?? Guid.NewGuid().ToString();
 
         public string? ParentId => _parentId;
 
@@ -34,16 +34,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Correlation
         public void SetParentId(string parentId)
         {
             _parentId = parentId;
-        }
-
-        public string AsTraceContext()
-        {
-            if (string.IsNullOrEmpty(_id) || string.IsNullOrEmpty(_parentId))
-            {
-                return string.Empty;
-            }
-
-            return $"00-{_id}-{_parentId}-00";
         }
     }
 }

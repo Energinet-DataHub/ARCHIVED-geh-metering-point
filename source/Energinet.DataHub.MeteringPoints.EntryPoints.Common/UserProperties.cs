@@ -12,12 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Common
 {
-    public class MasterDataRequestMetadata
-    {
-        public string? BusinessProcessId { get; set; }
-
-        public string? TransactionId { get; set; }
-    }
+    public record UserProperties(string OperationCorrelationId);
 }

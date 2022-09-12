@@ -59,7 +59,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.EDI
                 Recipient: recipient,
                 Content: cimContent,
                 MessageType: messageType,
-                Correlation: _correlationContext.AsTraceContext(),
+                Correlation: _correlationContext.Id,
                 gsrnNumber,
                 documentName); // TODO: add correlation when Telemetry is added
         }

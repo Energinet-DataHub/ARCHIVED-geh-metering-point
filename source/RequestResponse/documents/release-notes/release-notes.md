@@ -1,8 +1,12 @@
 # Integration events Release notes
 
-## Version 1.0.3
+## Version 1.0.4
 
 - Bump version as part of pipeline change.
+
+## Version 1.0.3
+
+- Restructured contracts for requesting metering point master data
 
 ## Version 1.0.2
 
