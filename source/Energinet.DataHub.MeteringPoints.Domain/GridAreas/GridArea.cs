@@ -28,6 +28,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 
         private GridArea(
             GridAreaId gridAreaId,
+            GridAreaLinkId gridAreaLinkId,
             GridAreaName name,
             GridAreaCode code,
             GridOperatorId actorId)
@@ -37,7 +38,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
             _name = name;
             ActorId = actorId;
 
-            AddDefaultLink();
+            AddDefaultLink(gridAreaLinkId);
         }
 
         public GridAreaCode Code { get; }
@@ -48,18 +49,19 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 
         public GridAreaLink DefaultLink => _gridAreaLinks.First(); // TODO: Add metering points via Grid Area instead
 
-        public static GridArea Create(GridAreaId id, GridAreaName name, GridAreaCode code, GridOperatorId gridOperatorId)
+        public static GridArea Create(GridAreaId id, GridAreaLinkId gridAreaLinkId, GridAreaName name, GridAreaCode code, GridOperatorId gridOperatorId)
         {
             return new GridArea(
                 id,
+                gridAreaLinkId,
                 name,
                 code,
                 gridOperatorId);
         }
 
-        private void AddDefaultLink()
+        private void AddDefaultLink(GridAreaLinkId gridAreaLinkId)
         {
-            _gridAreaLinks.Add(new GridAreaLink(GridAreaLinkId.New(), Id));
+            _gridAreaLinks.Add(new GridAreaLink(gridAreaLinkId, Id));
         }
     }
 }
