@@ -50,10 +50,10 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 
         public GridAreaLink DefaultLink => _gridAreaLinks.First(); // TODO: Add metering points via Grid Area instead
 
-        public static GridArea Create(GridAreaName name, GridAreaCode code, ActorId gridOperatorId)
+        public static GridArea Create(GridAreaId id, GridAreaName name, GridAreaCode code, ActorId gridOperatorId)
         {
             return new GridArea(
-                GridAreaId.New(),
+                id,
                 name,
                 code,
                 gridOperatorId);
