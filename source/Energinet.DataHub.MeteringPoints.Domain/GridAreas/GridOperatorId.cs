@@ -12,14 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.Domain.Actors;
+using System;
+using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 {
-    public record GridAreaDetails(
-        GridAreaName Name,
-        GridAreaCode Code,
-        PriceAreaCode PriceAreaCode,
-        FullFlexFromDate? FullFlexFromDate,
-        ActorId ActorId);
+    public class GridOperatorId : ValueObject
+    {
+        private GridOperatorId(Guid value)
+        {
+            Value = value;
+        }
+
+        public Guid Value { get; }
+
+        public static GridOperatorId Create(Guid gridOperatorId)
+        {
+            return new GridOperatorId(gridOperatorId);
+        }
+    }
 }

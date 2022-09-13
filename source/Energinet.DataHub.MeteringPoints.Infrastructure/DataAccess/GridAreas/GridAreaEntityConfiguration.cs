@@ -13,9 +13,7 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MeteringPoints.Domain.Actors;
 using Energinet.DataHub.MeteringPoints.Domain.GridAreas;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -49,17 +47,6 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas
                 .HasConversion(
                     toDbValue => toDbValue.Name,
                     fromDbValue => GridAreaName.Create(fromDbValue));
-
-            builder.Property<PriceAreaCode>("_priceAreaCode")
-                .HasColumnName("PriceAreaCode")
-                .HasConversion(
-                    toDbValue => toDbValue.Name,
-                    fromDbValue => EnumerationType.FromName<PriceAreaCode>(fromDbValue));
-
-            builder.Property<FullFlexFromDate>("_fullFlexFromDate")
-                .HasColumnName("FullFlexFromDate")
-                .HasConversion(toDbValue => toDbValue.DateInUtc.ToDateTimeUtc(), fromDbValue => FullFlexFromDate.Create(fromDbValue));
-
             builder
                 .OwnsMany<GridAreaLink>("_gridAreaLinks", area =>
                 {
@@ -82,7 +69,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.GridAreas
             builder.Property(x => x.ActorId)
                 .HasConversion(
                     toDbValue => toDbValue.Value,
-                    fromDbValue => new ActorId(fromDbValue));
+                    fromDbValue => GridOperatorId.Create(fromDbValue));
         }
     }
 }
