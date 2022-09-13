@@ -52,26 +52,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 
         public GridAreaLink DefaultLink => _gridAreaLinks.First(); // TODO: Add metering points via Grid Area instead
 
-        public static BusinessRulesValidationResult CanCreate(GridAreaDetails gridAreaDetails)
-        {
-            if (gridAreaDetails == null) throw new ArgumentNullException(nameof(gridAreaDetails));
-
-            var rules = new Collection<IBusinessRule>
-            {
-                // Note: For now, all rules are enforced by value objects.
-            };
-
-            return new BusinessRulesValidationResult(rules);
-        }
-
         public static GridArea Create(GridAreaDetails gridAreaDetails)
         {
             if (gridAreaDetails == null) throw new ArgumentNullException(nameof(gridAreaDetails));
-
-            if (!CanCreate(gridAreaDetails).Success)
-            {
-                throw new InvalidOperationException("Cannot create grid area due to violation of one or more business rules.");
-            }
 
             return new GridArea(
                 GridAreaId.New(),
