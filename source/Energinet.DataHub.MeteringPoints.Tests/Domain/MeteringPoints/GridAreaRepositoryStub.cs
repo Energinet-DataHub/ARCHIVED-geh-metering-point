@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,9 +28,9 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
             _gridAreas.Add(gridArea);
         }
 
-        public Task<GridArea?> GetByCodeAsync(string code)
+        public Task<GridArea?> GetByCodeAsync(GridAreaCode code)
         {
-            return Task.FromResult(_gridAreas.FirstOrDefault(gridArea => gridArea.Code.Value.Equals(code, StringComparison.OrdinalIgnoreCase)));
+            return Task.FromResult(_gridAreas.FirstOrDefault(gridArea => gridArea.Code == code));
         }
 
         public Task<GridArea?> GetByLinkIdAsync(GridAreaLinkId linkId)

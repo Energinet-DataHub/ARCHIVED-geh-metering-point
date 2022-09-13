@@ -67,7 +67,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
         [Fact]
         public async Task Should_reject_when_grid_area_doesnt_exist()
         {
-            var request = CreateCommand() with { MeteringGridArea = "foo" };
+            var request = CreateCommand() with { MeteringGridArea = "999" };
 
             await SendCommandAsync(request).ConfigureAwait(false);
 
