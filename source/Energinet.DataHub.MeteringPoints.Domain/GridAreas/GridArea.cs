@@ -12,10 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Domain.Actors;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 {
@@ -32,7 +30,7 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
             GridAreaId gridAreaId,
             GridAreaName name,
             GridAreaCode code,
-            ActorId actorId)
+            GridOperatorId actorId)
         {
             Id = gridAreaId;
             Code = code;
@@ -46,11 +44,11 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 
         public GridAreaId Id { get; }
 
-        public ActorId ActorId { get; }
+        public GridOperatorId ActorId { get; }
 
         public GridAreaLink DefaultLink => _gridAreaLinks.First(); // TODO: Add metering points via Grid Area instead
 
-        public static GridArea Create(GridAreaId id, GridAreaName name, GridAreaCode code, ActorId gridOperatorId)
+        public static GridArea Create(GridAreaId id, GridAreaName name, GridAreaCode code, GridOperatorId gridOperatorId)
         {
             return new GridArea(
                 id,
