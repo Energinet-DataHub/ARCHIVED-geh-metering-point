@@ -1,0 +1,9 @@
+{
+    "IsEncrypted": false,
+    "Values": {
+      "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+      "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+      "METERINGPOINT_ACTOR_QUEUE_NAME": "<bla>",
+      "METERINGPOINT_ACTOR_QUEUE_LISTEN_CONNECTION_STRING": "<bla>"
+    }
+}
