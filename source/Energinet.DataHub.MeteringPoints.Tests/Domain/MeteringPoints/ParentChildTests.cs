@@ -131,7 +131,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.MeteringPoints
 
         private GridArea CreateGridArea()
         {
-            var gridArea = GridArea.Create(new GridAreaDetails(GridAreaName.Create("870"), GridAreaCode.Create("870"), PriceAreaCode.DK1, null, ActorId.Create()));
+            var gridArea = GridArea.Create(new GridAreaDetails(GridAreaName.Create("870"), GridAreaCode.Create("870"), ActorId.Create()));
             _gridAreaRepository.Add(gridArea);
             return gridArea;
         }

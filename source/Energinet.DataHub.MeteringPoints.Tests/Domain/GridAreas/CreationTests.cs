@@ -40,8 +40,6 @@ namespace Energinet.DataHub.MeteringPoints.Tests.Domain.GridAreas
             return new GridAreaDetails(
                 GridAreaName.Create(SampleData.GridAreaName),
                 GridAreaCode.Create(SampleData.GridAreaCode),
-                EnumerationType.FromName<PriceAreaCode>(SampleData.PriceAreaCode),
-                FullFlexFromDate.Create(DateTime.Now),
                 ActorId.Create("90f6f4e5-8073-4842-b33e-c59e9f4a8c3f"));
         }
 
