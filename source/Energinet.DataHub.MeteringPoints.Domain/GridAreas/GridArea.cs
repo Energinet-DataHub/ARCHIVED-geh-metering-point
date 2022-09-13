@@ -14,10 +14,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.Domain.Actors;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 {
@@ -52,15 +50,13 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 
         public GridAreaLink DefaultLink => _gridAreaLinks.First(); // TODO: Add metering points via Grid Area instead
 
-        public static GridArea Create(GridAreaDetails gridAreaDetails)
+        public static GridArea Create(GridAreaName name, GridAreaCode code, ActorId gridOperatorId)
         {
-            if (gridAreaDetails == null) throw new ArgumentNullException(nameof(gridAreaDetails));
-
             return new GridArea(
                 GridAreaId.New(),
-                gridAreaDetails.Name,
-                gridAreaDetails.Code,
-                gridAreaDetails.ActorId);
+                name,
+                code,
+                gridOperatorId);
         }
 
         private void AddDefaultLink()
