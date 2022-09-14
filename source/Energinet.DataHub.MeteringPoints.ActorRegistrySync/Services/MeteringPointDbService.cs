@@ -60,7 +60,7 @@ public class MeteringPointDbService : IDisposable
         var stringBuilder = new StringBuilder();
         foreach (var gridAreaLink in gridAreaLinks)
         {
-            stringBuilder.Append("INSERT INTO [dbo].[GridAreaLinksNew] ([Id],[GridAreaId]) VALUES ('" + gridAreaLink.GridLinkId + "', '" + gridAreaLink.GridAreaId + "')");
+            stringBuilder.Append("INSERT INTO [dbo].[GridAreaLinks] ([Id],[GridAreaId]) VALUES ('" + gridAreaLink.GridLinkId + "', '" + gridAreaLink.GridAreaId + "')");
             stringBuilder.AppendLine();
         }
 
@@ -98,7 +98,7 @@ public class MeteringPointDbService : IDisposable
         foreach (var gridArea in gridAreas)
         {
             stringBuilder.Append(
-                @"INSERT INTO [dbo].[GridAreasNew]([Id],[Code],[Name],[ActorId])
+                @"INSERT INTO [dbo].[GridAreas]([Id],[Code],[Name],[ActorId])
                   VALUES ('" + gridArea.Id + "', '" + gridArea.Code + "', '" + gridArea.Name + "', '" + gridArea.ActorId + "')");
             stringBuilder.AppendLine();
         }
