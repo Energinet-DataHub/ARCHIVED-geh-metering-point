@@ -202,8 +202,8 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                     "Cannot create an Exchange metering point without specifying source and target grid areas.");
             }
 
-            var sourceGridArea = await _gridAreaRepository.GetByCodeAsync(request.ExchangeDetails.SourceGridAreaCode).ConfigureAwait(false);
-            var targetGridArea = await _gridAreaRepository.GetByCodeAsync(request.ExchangeDetails.TargetGridAreaCode).ConfigureAwait(false);
+            var sourceGridArea = await _gridAreaRepository.GetByCodeAsync(GridAreaCode.Create(request.ExchangeDetails.SourceGridAreaCode)).ConfigureAwait(false);
+            var targetGridArea = await _gridAreaRepository.GetByCodeAsync(GridAreaCode.Create(request.ExchangeDetails.TargetGridAreaCode)).ConfigureAwait(false);
 
             var errors = new List<ValidationError>();
             if (sourceGridArea is null) errors.Add(new FromGridAreaMustExistRuleError(null));
@@ -229,7 +229,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
 
         private Task<GridArea?> GetGridAreaAsync(CreateMeteringPoint request)
         {
-            return _gridAreaRepository.GetByCodeAsync(request.MeteringGridArea);
+            return _gridAreaRepository.GetByCodeAsync(GridAreaCode.Create(request.MeteringGridArea));
         }
 
         private async Task<bool> MeteringPointExistsAsync(CreateMeteringPoint request, CancellationToken cancellationToken)

@@ -12,20 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using Energinet.DataHub.MeteringPoints.Domain.Actors;
-using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 {
     public class GridArea
     {
         private readonly GridAreaName _name;
-        private readonly PriceAreaCode _priceAreaCode;
-        private readonly FullFlexFromDate? _fullFlexFromDate;
         private readonly List<GridAreaLink> _gridAreaLinks = new();
 
 #pragma warning disable 8618 // Must have an empty constructor, since EF cannot bind complex types in constructor
@@ -34,63 +28,40 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 
         private GridArea(
             GridAreaId gridAreaId,
+            GridAreaLinkId gridAreaLinkId,
             GridAreaName name,
             GridAreaCode code,
-            PriceAreaCode priceAreaCode,
-            FullFlexFromDate? fullFlexFromDate,
-            ActorId actorId)
+            GridOperatorId actorId)
         {
             Id = gridAreaId;
             Code = code;
             _name = name;
-            _priceAreaCode = priceAreaCode;
-            _fullFlexFromDate = fullFlexFromDate;
             ActorId = actorId;
 
-            AddDefaultLink();
+            AddDefaultLink(gridAreaLinkId);
         }
 
         public GridAreaCode Code { get; }
 
         public GridAreaId Id { get; }
 
-        public ActorId ActorId { get; }
+        public GridOperatorId ActorId { get; }
 
         public GridAreaLink DefaultLink => _gridAreaLinks.First(); // TODO: Add metering points via Grid Area instead
 
-        public static BusinessRulesValidationResult CanCreate(GridAreaDetails gridAreaDetails)
+        public static GridArea Create(GridAreaId id, GridAreaLinkId gridAreaLinkId, GridAreaName name, GridAreaCode code, GridOperatorId gridOperatorId)
         {
-            if (gridAreaDetails == null) throw new ArgumentNullException(nameof(gridAreaDetails));
-
-            var rules = new Collection<IBusinessRule>
-            {
-                // Note: For now, all rules are enforced by value objects.
-            };
-
-            return new BusinessRulesValidationResult(rules);
-        }
-
-        public static GridArea Create(GridAreaDetails gridAreaDetails)
-        {
-            if (gridAreaDetails == null) throw new ArgumentNullException(nameof(gridAreaDetails));
-
-            if (!CanCreate(gridAreaDetails).Success)
-            {
-                throw new InvalidOperationException("Cannot create grid area due to violation of one or more business rules.");
-            }
-
             return new GridArea(
-                GridAreaId.New(),
-                gridAreaDetails.Name,
-                gridAreaDetails.Code,
-                gridAreaDetails.PriceAreaCode,
-                gridAreaDetails.FullFlexFromDate,
-                gridAreaDetails.ActorId);
+                id,
+                gridAreaLinkId,
+                name,
+                code,
+                gridOperatorId);
         }
 
-        private void AddDefaultLink()
+        private void AddDefaultLink(GridAreaLinkId gridAreaLinkId)
         {
-            _gridAreaLinks.Add(new GridAreaLink(GridAreaLinkId.New(), Id));
+            _gridAreaLinks.Add(new GridAreaLink(gridAreaLinkId, Id));
         }
     }
 }

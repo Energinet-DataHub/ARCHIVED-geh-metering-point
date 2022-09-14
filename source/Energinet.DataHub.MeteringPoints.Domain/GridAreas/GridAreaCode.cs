@@ -12,9 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
-using Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
@@ -28,28 +25,9 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 
         public string Value { get; }
 
-        public static GridAreaCode Create(string? gridAreaCode)
+        public static GridAreaCode Create(string gridAreaCode)
         {
-            if (string.IsNullOrWhiteSpace(gridAreaCode))
-            {
-                throw new ArgumentException($"'{nameof(gridAreaCode)}' cannot be null or whitespace", nameof(gridAreaCode));
-            }
-
-            var result = CheckRules(gridAreaCode);
-            if (!result.Success)
-            {
-                throw new InvalidOperationException("Invalid grid area code.");
-            }
-
             return new GridAreaCode(gridAreaCode);
-        }
-
-        public static BusinessRulesValidationResult CheckRules(string? gridAreaCodeValue)
-        {
-            return new BusinessRulesValidationResult(new List<IBusinessRule>()
-            {
-                new GridAreaCodeFormatRule(gridAreaCodeValue),
-            });
         }
     }
 }

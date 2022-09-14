@@ -12,9 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.ObjectModel;
-using Energinet.DataHub.MeteringPoints.Domain.GridAreas.Rules;
 using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 
 namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
@@ -28,27 +25,8 @@ namespace Energinet.DataHub.MeteringPoints.Domain.GridAreas
 
         public string Name { get; }
 
-        public static BusinessRulesValidationResult CheckRules(string name)
+        public static GridAreaName Create(string name)
         {
-            var rules = new Collection<IBusinessRule>()
-            {
-                new GridAreaNameMaxLengthRule(name),
-            };
-            return new BusinessRulesValidationResult(rules);
-        }
-
-        public static GridAreaName Create(string? name)
-        {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace", nameof(name));
-            }
-
-            if (!CheckRules(name).Success)
-            {
-                throw new FormatException(name);
-            }
-
             return new GridAreaName(name);
         }
 
