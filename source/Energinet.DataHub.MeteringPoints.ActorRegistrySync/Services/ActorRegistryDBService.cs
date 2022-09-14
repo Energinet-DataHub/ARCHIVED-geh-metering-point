@@ -43,14 +43,16 @@ public class ActorRegistryDbService : IDisposable
 
     public async Task<IEnumerable<GridArea>> GetGridAreasAsync()
     {
-        return await _sqlConnection.QueryAsync<GridArea>(
-            @"SELECT [Code]
-                       ,[Name]
-                       ,[Active]
-                       ,[ActorId]
-                       ,[PriceAreaCode]
-                       ,[Id]
-                  FROM [dbo].[GridArea]").ConfigureAwait(false) ?? (IEnumerable<GridArea>)Array.Empty<object>();
+        var sqlStatement = @$"SELECT ga.Id AS {nameof(GridArea.Id)},
+                            ga.Code AS {nameof(GridArea.Code)},
+	                        ga.Name AS {nameof(GridArea.Name)},
+	                        a.ActorId AS {nameof(GridArea.ActorId)}
+                            FROM [dbo].[GridAreaNew] ga
+                            JOIN [dbo].[GridAreaActorInfoLink] gal ON ga.Id = gal.GridAreaId
+                            JOIN [dbo].[ActorInfoNew] a ON a.Id = gal.ActorInfoId
+                            WHERE a.ActorId IS NOT NULL";
+
+        return await _sqlConnection.QueryAsync<GridArea>(sqlStatement).ConfigureAwait(false) ?? (IEnumerable<GridArea>)Array.Empty<object>();
     }
 
     public async Task<IEnumerable<ActorRegistryActor>> GetActorsAsync()
