@@ -214,38 +214,9 @@ public class MeteringPointDbService : IDisposable
         return identificationType == 1 ? "GLN" : "EIC";
     }
 
-    private static string GetRoles(string actorRoles)
-    {
-        return string.Join(
-            ',',
-            actorRoles.Split(
-                    ',',
-                    StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
-                .Select(MapRole));
-    }
-
-    private static string MapRole(string ediRole)
-    {
-        switch (ediRole)
-        {
-            case "DDK": return "BalanceResponsibleParty";
-            case "DDM": return "GridAccessProvider";
-            case "DDQ": return "BalancePowerSupplier";
-            case "DDX": return "ImBalanceSettlementResponsible";
-            case "DDZ": return "MeteringPointAdministrator";
-            case "DEA": return "MeteredDataAggregator";
-            case "EZ": return "SystemOperator";
-            case "MDR": return "MeteredDataResponsible";
-            case "STS": return "DanishEnegeryAgency";
-            default: throw new InvalidOperationException("Role not known: " + ediRole);
-        }
-    }
-
     private async Task BeginTransactionAsync()
     {
         await _sqlConnection.OpenAsync().ConfigureAwait(false);
         _transaction = await _sqlConnection.BeginTransactionAsync().ConfigureAwait(false);
     }
 }
-
-internal record UserActorParam(Guid UserId, Guid ActorId);
