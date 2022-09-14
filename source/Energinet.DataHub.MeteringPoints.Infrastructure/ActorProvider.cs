@@ -37,7 +37,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure
             var sql = @"SELECT TOP 1 [Id] AS ActorId
                                     ,[IdentificationType]
                                     ,[IdentificationNumber] AS Identifier
-                                    ,[Roles]
+                                    ,'' AS Roles
                         FROM  [dbo].[Actor]
                         WHERE Id = @ActorId";
 
