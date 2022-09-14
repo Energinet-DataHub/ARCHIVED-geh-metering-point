@@ -38,10 +38,6 @@ public class MeteringPointDbService : IDisposable
     public async Task CleanUpAsync()
     {
         if (_transaction == null) await BeginTransactionAsync().ConfigureAwait(false);
-        await _sqlConnection.ExecuteAsync("DELETE FROM [dbo].[GridAreaLinks]", transaction: _transaction)
-            .ConfigureAwait(false);
-        await _sqlConnection.ExecuteAsync("DELETE FROM [dbo].[GridAreas]", transaction: _transaction)
-            .ConfigureAwait(false);
         await _sqlConnection.ExecuteAsync("DELETE FROM [dbo].[UserActor]", transaction: _transaction)
             .ConfigureAwait(false);
         await _sqlConnection.ExecuteAsync("DELETE FROM [dbo].[Actor]", transaction: _transaction)
