@@ -31,8 +31,6 @@ public class ActorRegistryDbService : IDisposable
         _sqlConnection = new SqlConnection(connectionString);
     }
 
-    public SqlConnection SqlConnection => _sqlConnection;
-
     public async Task<IEnumerable<GridAreaLink>> GetGriAreaLinkAsync()
     {
         return await _sqlConnection.QueryAsync<GridAreaLink>(
