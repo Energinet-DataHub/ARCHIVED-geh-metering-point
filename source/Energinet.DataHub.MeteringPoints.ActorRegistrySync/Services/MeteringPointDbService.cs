@@ -102,8 +102,8 @@ public class MeteringPointDbService : IDisposable
         foreach (var gridArea in gridAreas)
         {
             stringBuilder.Append(
-                @"INSERT INTO [dbo].[GridAreas]([Id],[Code],[Name],[PriceAreaCode],[FullFlexFromDate],[ActorId])
-                  VALUES ('" + gridArea.Id + "', '" + gridArea.Code + "', '" + gridArea.Name + "', '" + gridArea.PriceAreaCode + "', null , '" + gridArea.ActorId + "')");
+                @"INSERT INTO [dbo].[GridAreas]([Id],[Code],[Name],[ActorId])
+                  VALUES ('" + gridArea.Id + "', '" + gridArea.Code + "', '" + gridArea.Name + "', '" + gridArea.ActorId + "')");
             stringBuilder.AppendLine();
         }
 
