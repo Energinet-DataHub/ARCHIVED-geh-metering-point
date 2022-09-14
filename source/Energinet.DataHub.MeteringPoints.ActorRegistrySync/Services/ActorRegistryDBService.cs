@@ -36,9 +36,9 @@ public class ActorRegistryDbService : IDisposable
     public async Task<IEnumerable<GridAreaLink>> GetGriAreaLinkAsync()
     {
         return await _sqlConnection.QueryAsync<GridAreaLink>(
-            @"SELECT [GridLinkId]
-                       ,[GridAreaId]
-                   FROM [dbo].[GridAreaLinkInfo]").ConfigureAwait(false) ?? (IEnumerable<GridAreaLink>)Array.Empty<object>();
+            @$"SELECT [Id] AS {nameof(GridAreaLink.GridLinkId)},
+                       [GridAreaId] AS {nameof(GridAreaLink.GridAreaId)}
+                   FROM [dbo].[GridAreaLinkNew]").ConfigureAwait(false) ?? (IEnumerable<GridAreaLink>)Array.Empty<object>();
     }
 
     public async Task<IEnumerable<GridArea>> GetGridAreasAsync()
