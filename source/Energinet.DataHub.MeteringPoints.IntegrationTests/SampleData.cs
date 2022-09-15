@@ -90,6 +90,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 
         public static string ParentGsrnNumber => "570851247381952311";
 
+        public static string LocationDescription => "Test location";
+
         private static string GetEffectiveDate()
         {
             var effectiveDate = Instant.FromUtc(

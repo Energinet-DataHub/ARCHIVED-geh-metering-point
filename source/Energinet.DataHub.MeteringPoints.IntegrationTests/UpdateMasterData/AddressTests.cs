@@ -15,10 +15,14 @@
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
+using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
+using MediatR;
 using Xunit;
 using Xunit.Categories;
 
@@ -27,18 +31,43 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
     [IntegrationTest]
     public class AddressTests : TestHost
     {
+        private readonly ScenarioBuilder _scenario;
+
         public AddressTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
         {
-            var scenario = new ScenarioBuilder(GetService<MeteringPointContext>());
-            scenario.WithGridArea(SampleData.MeteringGridArea, SampleData.GridOperatorIdOfGrid870)
-                .Build();
+            SetCurrentAuthenticatedActor(SampleData.GridOperatorIdOfGrid870);
+            _scenario = new ScenarioBuilder(
+                GetService<MeteringPointContext>(),
+                GetService<IMediator>());
+
+            _scenario
+                .WithGridArea(SampleData.MeteringGridArea, SampleData.GridOperatorIdOfGrid870)
+                .WithAddress(Address.Create(
+                    SampleData.StreetName,
+                    SampleData.StreetCode,
+                    SampleData.BuildingNumber,
+                    SampleData.CityName,
+                    SampleData.CitySubDivisionName,
+                    SampleData.PostCode,
+                    CountryCode.DK,
+                    SampleData.FloorIdentification,
+                    SampleData.RoomIdentification,
+                    int.Parse(SampleData.MunicipalityCode, NumberFormatInfo.InvariantInfo),
+                    SampleData.IsActualAddress,
+                    SampleData.GeoInfoReference,
+                    SampleData.LocationDescription))
+                .WithMeteringMethod(MeteringMethod.Physical)
+                .WithMeterNumber(MeterId.Create(SampleData.MeterNumber))
+                .WithNetSettlementGroup(NetSettlementGroup.Zero)
+                .WithGsrnNumber(GsrnNumber.Create(SampleData.GsrnNumber))
+                .WithAdministratorId(SampleData.GridOperatorIdOfGrid870);
         }
 
         [Fact]
         public async Task Address_is_updated()
         {
-            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
+            await _scenario.BuildAsync().ConfigureAwait(false);
 
             var request = CreateUpdateRequest()
                 with
