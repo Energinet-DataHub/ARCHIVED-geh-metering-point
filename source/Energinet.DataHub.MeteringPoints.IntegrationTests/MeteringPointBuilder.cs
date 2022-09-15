@@ -198,6 +198,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             }
         }
 
+        public async Task CloseDownAsync()
+        {
+            var meteringPoint = await _context.MeteringPoints.FirstAsync(meteringPoint => meteringPoint.GsrnNumber.Equals(_gsrnNumber));
+            meteringPoint?.CloseDown();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+        }
+
         private async Task SendCommandAsync(object command, CancellationToken cancellationToken = default)
         {
             var result = await _mediator.Send(command, cancellationToken).ConfigureAwait(false);

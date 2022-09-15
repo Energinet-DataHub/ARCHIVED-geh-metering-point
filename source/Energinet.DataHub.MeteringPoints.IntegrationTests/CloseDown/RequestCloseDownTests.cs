@@ -84,7 +84,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
         [Fact]
         public async Task Reject_if_business_rules_are_violated()
         {
-            await CloseDownMeteringPointAsync().ConfigureAwait(false);
+            await _meteringPoint!.CloseDownAsync().ConfigureAwait(false);
 
             var request = CreateRequest();
             await ReceiveRequest(request).ConfigureAwait(false);
@@ -105,7 +105,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
         [Fact]
         public async Task Reject_should_contain_correct_business_reason_code()
         {
-            await CloseDownMeteringPointAsync().ConfigureAwait(false);
+            await _meteringPoint!.CloseDownAsync().ConfigureAwait(false);
 
             var request = CreateRequest();
             await ReceiveRequest(request).ConfigureAwait(false);
