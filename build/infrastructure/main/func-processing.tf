@@ -46,7 +46,7 @@ module "func_processing" {
     MARKET_PARTICIPANT_CHANGED_TOPIC_NAME                                 = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-integrationevent-received-name)"
     MARKET_PARTICIPANT_CHANGED_ACTOR_CREATED_SUBSCRIPTION_NAME            = module.sbs_metering_point_market_participant_actor_created.name
     MARKET_PARTICIPANT_CHANGED_ACTOR_ROLE_ADDED_SUBSCRIPTION_NAME         = module.sbs_metering_point_market_participant_actor_role_added.name
-    MARKET_PARTICIPANT_CHANGED_ACTOR_ROLE_REMOVED_SUBSCRIPTION_NAME       = module.sbs_metering_point_market_participant_actor_role_removed
+    MARKET_PARTICIPANT_CHANGED_ACTOR_ROLE_REMOVED_SUBSCRIPTION_NAME       = module.sbs_metering_point_market_participant_actor_role_removed.name
     MARKET_PARTICIPANT_CHANGED_ACTOR_GRID_AREA_ADDED_SUBSCRIPTION_NAME    = module.sbs_metering_point_market_participant_actor_grid_area_added.name
     MARKET_PARTICIPANT_CHANGED_ACTOR_GRID_AREA_REMOVED_SUBSCRIPTION_NAME  = module.sbs_metering_point_market_participant_actor_grid_area_removed.name
     MARKET_PARTICIPANT_CHANGED_GRID_AREA_CREATED_SUBSCRIPTION_NAME        = module.sbs_metering_point_market_participant_grid_area_created.name
