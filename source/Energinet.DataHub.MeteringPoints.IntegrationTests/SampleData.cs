@@ -24,6 +24,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
     {
         public static string Administrator => "90f6f4e5-8073-4842-b33e-c59e9f4a8c3f";
 
+        public static string ActorId => "cddabab9-4df4-46dc-9d44-fb13055ace11";
+
         public static string GsrnNumber => "571234567891234568";
 
         public static string TypeOfMeteringPoint => nameof(MeteringPointType.Consumption);

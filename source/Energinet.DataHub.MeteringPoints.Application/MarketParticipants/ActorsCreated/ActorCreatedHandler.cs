@@ -12,8 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Dapper;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using MediatR;
 
@@ -21,8 +24,27 @@ namespace Energinet.DataHub.MeteringPoints.Application.MarketParticipants.Actors
 
 public class ActorCreatedHandler : ICommandHandler<ActorCreated, Unit>
 {
-    public Task<Unit> Handle(ActorCreated request, CancellationToken cancellationToken)
+    private readonly IDbConnectionFactory _dbConnectionFactory;
+
+    public ActorCreatedHandler(IDbConnectionFactory dbConnectionFactory)
     {
-        throw new System.NotImplementedException();
+        _dbConnectionFactory = dbConnectionFactory;
+    }
+
+    public async Task<Unit> Handle(ActorCreated request, CancellationToken cancellationToken)
+    {
+        if (request == null) throw new ArgumentNullException(nameof(request));
+        var conn = _dbConnectionFactory.GetOpenConnection();
+        var sql = @$"INSERT INTO [dbo].[Actor] ([Id], [IdentificationNumber], [IdentificationType]) VALUES (@Id, @IdentificationNumber, @Type)";
+        await conn.ExecuteAsync(
+            sql,
+            new
+            {
+                Id = request.Id,
+                IdentificationNumber = request.IdentificationNumber,
+                Type = request.IdentificationType,
+            }).ConfigureAwait(false);
+
+        return await Task.FromResult(Unit.Value).ConfigureAwait(false);
     }
 }

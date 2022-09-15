@@ -14,6 +14,8 @@
 
 using System;
 using System.Threading.Tasks;
+using Dapper;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Energinet.DataHub.MeteringPoints.Application.MarketParticipants.ActorsCreated;
@@ -48,14 +50,25 @@ public class ActorCreatedTests : TestHost
     public async Task New_actor_is_created()
     {
         await EventIsReceivedAndProcessed().ConfigureAwait(false);
+
+        var actor = await GetActor().ConfigureAwait(false);
+
+        Assert.NotNull(actor);
+        Assert.Equal(Guid.Parse(SampleData.ActorId), actor!.Id);
     }
 
     private static ActorCreated CreateCommand()
     {
         return new ActorCreated(
-            Guid.NewGuid(),
+            Guid.Parse(SampleData.ActorId),
             SampleData.GlnNumber,
             "GLN");
+    }
+
+    private async Task<Actor?> GetActor()
+    {
+        var sql = $"SELECT Id FROM [dbo].[Actor] WHERE Id = '{SampleData.ActorId}'";
+        return await _connectionFactory.GetOpenConnection().QuerySingleOrDefaultAsync<Actor>(sql).ConfigureAwait(false);
     }
 
     private async Task EventIsReceivedAndProcessed()
@@ -75,4 +88,8 @@ public class ActorCreatedTests : TestHost
         await _scheduler.EnqueueAsync(command, executeOn).ConfigureAwait(false);
         await _unitOfWork.CommitAsync().ConfigureAwait(false);
     }
+
+    #pragma warning disable
+    public record Actor(Guid Id);
+    #pragma warning restore
 }
