@@ -36,6 +36,7 @@ using Energinet.DataHub.MeteringPoints.Application.Create.Validation;
 using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
+using Energinet.DataHub.MeteringPoints.Application.MarketParticipants.ActorsCreated;
 using Energinet.DataHub.MeteringPoints.Application.ProcessOverview;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
 using Energinet.DataHub.MeteringPoints.Application.RequestMasterData;
@@ -249,7 +250,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
                     typeof(MeteringPointByGsrnQueryHandler),
                     typeof(CloseDownMeteringPointHandler),
                     typeof(TestCommandHandler),
-                    typeof(GetMasterDataQueryHandler))
+                    typeof(GetMasterDataQueryHandler),
+                    typeof(ActorCreatedHandler))
                 .WithNotificationHandlers(
                     typeof(MeteringPointCreatedNotificationHandler),
                     typeof(OnProductionMeteringPointCreated),

@@ -54,6 +54,23 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Configuration
             }
         }
 
+        public static void AddExternalServiceBusSubscriptionsHealthCheck(
+            this IServiceCollection services,
+            string serviceBusConnectionString,
+            [NotNull] string topicName,
+            [NotNull] params string[] subscriptionNames)
+        {
+            foreach (var name in subscriptionNames)
+            {
+                services.AddHealthChecks()
+                    .AddAzureServiceBusSubscription(
+                        name: name + "Exists" + Guid.NewGuid(),
+                        connectionString: serviceBusConnectionString,
+                        topicName: topicName,
+                        subscriptionName: name);
+            }
+        }
+
         public static void AddInternalDomainServiceBusQueuesHealthCheck(this IServiceCollection services, string serviceBusConnectionString, [NotNull] params string[] queueNames)
         {
             foreach (var name in queueNames)
