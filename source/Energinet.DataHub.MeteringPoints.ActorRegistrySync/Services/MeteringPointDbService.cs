@@ -213,8 +213,13 @@ public class MeteringPointDbService : IDisposable
         _disposed = true;
     }
 
-    private static string MapFrom(string roles)
+    private static string MapFrom(string? roles)
     {
+        if (string.IsNullOrEmpty(roles))
+        {
+            return string.Empty;
+        }
+
         var output = new List<string>();
         var rolesByNumber = roles.Split(',');
 
