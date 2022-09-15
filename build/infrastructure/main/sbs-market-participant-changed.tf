@@ -13,7 +13,7 @@
 # limitations under the License.
 module "sbs_metering_point_actor_created" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
-  name                = "actor-created-to-mp"
+  name                = "actor-created"
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_name_id.value
   project_name        = var.domain_name_short
   max_delivery_count  = 10 
@@ -26,7 +26,7 @@ module "sbs_metering_point_actor_created" {
 
 module "sbs_metering_point_actor_role_added" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
-  name                = "actor-role-added-to-mp"
+  name                = "actor-role-added"
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_name_id.value
   project_name        = var.domain_name_short
   max_delivery_count  = 10 
@@ -39,7 +39,7 @@ module "sbs_metering_point_actor_role_added" {
 
 module "sbs_metering_point_actor_role_removed" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
-  name                = "actor-role-removed-to-mp"
+  name                = "actor-role-removed"
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_name_id.value
   project_name        = var.domain_name_short
   max_delivery_count  = 10 
@@ -52,7 +52,7 @@ module "sbs_metering_point_actor_role_removed" {
 
 module "sbs_metering_point_actor_grid_area_added" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
-  name                = "actor-grid-area-added-to-mp"
+  name                = "actor-grid-area-added"
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_name_id.value
   project_name        = var.domain_name_short
   max_delivery_count  = 10 
@@ -65,7 +65,7 @@ module "sbs_metering_point_actor_grid_area_added" {
 
 module "sbs_metering_point_actor_grid_area_removed" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
-  name                = "actor-grid-area-removed-to-mp"
+  name                = "actor-grid-area-removed"
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_name_id.value
   project_name        = var.domain_name_short
   max_delivery_count  = 10 
@@ -78,7 +78,7 @@ module "sbs_metering_point_actor_grid_area_removed" {
 
 module "sbs_metering_point_grid_area_created" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
-  name                = "grid-area-created-to-mp"
+  name                = "grid-area-created"
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_name_id.value
   project_name        = var.domain_name_short
   max_delivery_count  = 10 
@@ -91,7 +91,7 @@ module "sbs_metering_point_grid_area_created" {
 
 module "sbs_metering_point_grid_area_name_changed" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
-  name                = "grid-area-name-changed-to-mp"
+  name                = "grid-area-name-changed"
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_name_id.value
   project_name        = var.domain_name_short
   max_delivery_count  = 10 
