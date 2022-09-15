@@ -41,10 +41,10 @@ public class ActorRegistryDbService : IDisposable
 
     public async Task<IEnumerable<GridArea>> GetGridAreasAsync()
     {
-        var sqlStatement = @$"SELECT ga.Id AS {nameof(GridArea.Id)},
-                            ga.Code AS {nameof(GridArea.Code)},
-	                        ga.Name AS {nameof(GridArea.Name)},
-	                        a.ActorId AS {nameof(GridArea.ActorId)}
+        var sqlStatement = @$"SELECT ga.Code AS {nameof(GridArea.Code)},
+                            ga.Name AS {nameof(GridArea.Name)},
+                            a.ActorId AS {nameof(GridArea.ActorId)},
+                            ga.Id AS {nameof(GridArea.Id)}
                             FROM [dbo].[GridAreaNew] ga
                             JOIN [dbo].[GridAreaActorInfoLink] gal ON ga.Id = gal.GridAreaId
                             JOIN [dbo].[ActorInfoNew] a ON a.Id = gal.ActorInfoId
