@@ -16,12 +16,18 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions.MarketParticipant
 {
-    public static class MarketParticipantChangedListener
+    public static class ActorGridAreaAddedListener
     {
-        [Function("MarketParticipantChangedListener")]
-        public static Task RunAsync([ServiceBusTrigger("%MARKET_PARTICIPANT_CHANGED_TOPIC_NAME%", "%MARKET_PARTICIPANT_CHANGED_SUBSCRIPTION_NAME%", Connection = "SHARED_SERVICE_BUS_LISTEN_CONNECTION_STRING")] byte[] data, FunctionContext context)
+        [Function("ActorGridAreaAddedListener")]
+        public static Task RunAsync(
+            [ServiceBusTrigger(
+            "%MARKET_PARTICIPANT_CHANGED_TOPIC_NAME%",
+            "%MARKET_PARTICIPANT_CHANGED_ACTOR_GRID_AREA_ADDED_SUBSCRIPTION_NAME%",
+            Connection = "SHARED_SERVICE_BUS_LISTEN_CONNECTION_STRING")]
+            byte[] data,
+            FunctionContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
             return Task.CompletedTask;
