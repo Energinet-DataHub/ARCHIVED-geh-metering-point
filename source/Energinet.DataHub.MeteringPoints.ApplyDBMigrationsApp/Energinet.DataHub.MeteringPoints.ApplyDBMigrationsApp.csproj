@@ -36,7 +36,6 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Test\202112142130 Create Grid Area test data.sql" />
     <EmbeddedResource Include="Scripts\Test\202201061300 Create Metering Point test data.sql" />
     <EmbeddedResource Include="Scripts\Test\202201181200 Fix actor ids.sql" />
-    <EmbeddedResource Include="Scripts\Test\202202081200 Add process test data.sql" />
   </ItemGroup>
 
 </Project>
