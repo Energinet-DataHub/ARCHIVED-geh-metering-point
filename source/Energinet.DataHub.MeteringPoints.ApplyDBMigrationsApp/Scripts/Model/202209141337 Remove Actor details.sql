@@ -1,0 +1,2 @@
+ALTER TABLE dbo.Actor
+DROP COLUMN Roles

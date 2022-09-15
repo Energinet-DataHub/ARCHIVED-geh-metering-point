@@ -19,6 +19,4 @@ namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
 public record ActorRegistryActor(
     string IdentificationNumber,
     int IdentificationType,
-    string Roles,
-    bool Active,
     Guid Id);

@@ -18,7 +18,5 @@ namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
 public record GridArea(
     string Code,
     string Name,
-    bool Active,
     Guid ActorId,
-    string PriceAreaCode,
     Guid Id);

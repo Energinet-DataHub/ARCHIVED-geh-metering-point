@@ -31,36 +31,34 @@ public class ActorRegistryDbService : IDisposable
         _sqlConnection = new SqlConnection(connectionString);
     }
 
-    public SqlConnection SqlConnection => _sqlConnection;
-
     public async Task<IEnumerable<GridAreaLink>> GetGriAreaLinkAsync()
     {
         return await _sqlConnection.QueryAsync<GridAreaLink>(
-            @"SELECT [GridLinkId]
-                       ,[GridAreaId]
-                   FROM [dbo].[GridAreaLinkInfo]").ConfigureAwait(false) ?? (IEnumerable<GridAreaLink>)Array.Empty<object>();
+            @$"SELECT [Id] AS {nameof(GridAreaLink.GridLinkId)},
+                       [GridAreaId] AS {nameof(GridAreaLink.GridAreaId)}
+                   FROM [dbo].[GridAreaLinkNew]").ConfigureAwait(false) ?? (IEnumerable<GridAreaLink>)Array.Empty<object>();
     }
 
     public async Task<IEnumerable<GridArea>> GetGridAreasAsync()
     {
-        return await _sqlConnection.QueryAsync<GridArea>(
-            @"SELECT [Code]
-                       ,[Name]
-                       ,[Active]
-                       ,[ActorId]
-                       ,[PriceAreaCode]
-                       ,[Id]
-                  FROM [dbo].[GridArea]").ConfigureAwait(false) ?? (IEnumerable<GridArea>)Array.Empty<object>();
+        var sqlStatement = @$"SELECT ga.Id AS {nameof(GridArea.Id)},
+                            ga.Code AS {nameof(GridArea.Code)},
+	                        ga.Name AS {nameof(GridArea.Name)},
+	                        a.ActorId AS {nameof(GridArea.ActorId)}
+                            FROM [dbo].[GridAreaNew] ga
+                            JOIN [dbo].[GridAreaActorInfoLink] gal ON ga.Id = gal.GridAreaId
+                            JOIN [dbo].[ActorInfoNew] a ON a.Id = gal.ActorInfoId
+                            WHERE a.ActorId IS NOT NULL";
+
+        return await _sqlConnection.QueryAsync<GridArea>(sqlStatement).ConfigureAwait(false) ?? (IEnumerable<GridArea>)Array.Empty<object>();
     }
 
     public async Task<IEnumerable<ActorRegistryActor>> GetActorsAsync()
     {
         return await _sqlConnection.QueryAsync<ActorRegistryActor>(
-            @"SELECT [IdentificationNumber]
-                       ,[IdentificationType]
-                       ,[Roles]
-                       ,[Active]
-                       ,[Id]
+            @$"SELECT ActorNumber AS {nameof(ActorRegistryActor.IdentificationNumber)}
+                       ,'GLN' AS {nameof(ActorRegistryActor.IdentificationType)}
+                       ,[Id] {nameof(ActorRegistryActor.Id)}
         FROM [dbo].[Actor]").ConfigureAwait(false) ?? (IEnumerable<ActorRegistryActor>)Array.Empty<object>();
     }
 
