@@ -11,9 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-module "sbs_metering_point_market_participant_actor_created" {
+module "sbs_metering_point_actor_created" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
-  name                = "market-participant-changed-actor-created-to-meteringpoint"
+  name                = "actor-created-to-mp"
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_name_id.value
   project_name        = var.domain_name_short
   max_delivery_count  = 10 
@@ -24,9 +24,9 @@ module "sbs_metering_point_market_participant_actor_created" {
   }
 }
 
-module "sbs_metering_point_market_participant_actor_role_added" {
+module "sbs_metering_point_actor_role_added" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
-  name                = "market-participant-changed-actor-role-added-to-meteringpoint"
+  name                = "actor-role-added-to-mp"
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_name_id.value
   project_name        = var.domain_name_short
   max_delivery_count  = 10 
@@ -37,9 +37,9 @@ module "sbs_metering_point_market_participant_actor_role_added" {
   }
 }
 
-module "sbs_metering_point_market_participant_actor_role_removed" {
+module "sbs_metering_point_actor_role_removed" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
-  name                = "market-participant-changed-actor-role-removed-to-meteringpoint"
+  name                = "actor-role-removed-to-mp"
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_name_id.value
   project_name        = var.domain_name_short
   max_delivery_count  = 10 
@@ -50,9 +50,9 @@ module "sbs_metering_point_market_participant_actor_role_removed" {
   }
 }
 
-module "sbs_metering_point_market_participant_actor_grid_area_added" {
+module "sbs_metering_point_actor_grid_area_added" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
-  name                = "market-participant-changed-actor-grid-area-added-to-meteringpoint"
+  name                = "actor-grid-area-added-to-mp"
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_name_id.value
   project_name        = var.domain_name_short
   max_delivery_count  = 10 
@@ -63,9 +63,9 @@ module "sbs_metering_point_market_participant_actor_grid_area_added" {
   }
 }
 
-module "sbs_metering_point_market_participant_actor_grid_area_removed" {
+module "sbs_metering_point_actor_grid_area_removed" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
-  name                = "market-participant-changed-actor-grid-area-removed-to-meteringpoint"
+  name                = "actor-grid-area-removed-to-mp"
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_name_id.value
   project_name        = var.domain_name_short
   max_delivery_count  = 10 
@@ -76,9 +76,9 @@ module "sbs_metering_point_market_participant_actor_grid_area_removed" {
   }
 }
 
-module "sbs_metering_point_market_participant_grid_area_created" {
+module "sbs_metering_point_grid_area_created" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
-  name                = "market-participant-changed-grid-area-created-to-meteringpoint"
+  name                = "grid-area-created-to-mp"
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_name_id.value
   project_name        = var.domain_name_short
   max_delivery_count  = 10 
@@ -89,9 +89,9 @@ module "sbs_metering_point_market_participant_grid_area_created" {
   }
 }
 
-module "sbs_metering_point_market_participant_grid_area_name_changed" {
+module "sbs_metering_point_grid_area_name_changed" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
-  name                = "market-participant-changed-grid-area-name-changed-to-meteringpoint"
+  name                = "grid-area-name-changed-to-mp"
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_name_id.value
   project_name        = var.domain_name_short
   max_delivery_count  = 10 
