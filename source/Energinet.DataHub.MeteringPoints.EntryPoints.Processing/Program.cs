@@ -147,6 +147,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 Environment.GetEnvironmentVariable("SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING")!,
                 Environment.GetEnvironmentVariable("MASTER_DATA_REQUEST_QUEUE_NAME")!,
                 "metering-point-master-data-response");
+            services.AddExternalServiceBusTopicsHealthCheck(
+                Environment.GetEnvironmentVariable("SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING")!,
+                Environment.GetEnvironmentVariable("MARKET_PARTICIPANT_CHANGED_TOPIC_NAME")!);
+            services.AddExternalServiceBusSubscriptionsHealthCheck(
+                Environment.GetEnvironmentVariable("SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING")!,
+                Environment.GetEnvironmentVariable("MARKET_PARTICIPANT_CHANGED_TOPIC_NAME")!,
+                Environment.GetEnvironmentVariable("MARKET_PARTICIPANT_CHANGED_ACTOR_CREATED_SUBSCRIPTION_NAME")!);
             services.AddInternalDomainServiceBusQueuesHealthCheck(
                 Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_MANAGE_CONNECTION_STRING")!,
                 Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_NAME")!);
