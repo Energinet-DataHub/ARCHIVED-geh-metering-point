@@ -32,6 +32,7 @@ using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Application.Integrations.ChargeLinks.Create;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
+using Energinet.DataHub.MeteringPoints.Application.MarketParticipants.ActorsCreated;
 using Energinet.DataHub.MeteringPoints.Application.ProcessOverview;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
 using Energinet.DataHub.MeteringPoints.Application.RequestMasterData;
@@ -46,6 +47,7 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions.MarketParticipant;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Monitor;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
@@ -147,6 +149,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 Environment.GetEnvironmentVariable("SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING")!,
                 Environment.GetEnvironmentVariable("MASTER_DATA_REQUEST_QUEUE_NAME")!,
                 "metering-point-master-data-response");
+            services.AddExternalServiceBusTopicsHealthCheck(
+                Environment.GetEnvironmentVariable("SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING")!,
+                Environment.GetEnvironmentVariable("MARKET_PARTICIPANT_CHANGED_TOPIC_NAME")!);
+            services.AddExternalServiceBusSubscriptionsHealthCheck(
+                Environment.GetEnvironmentVariable("SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING")!,
+                Environment.GetEnvironmentVariable("MARKET_PARTICIPANT_CHANGED_TOPIC_NAME")!,
+                Environment.GetEnvironmentVariable("MARKET_PARTICIPANT_CHANGED_ACTOR_CREATED_SUBSCRIPTION_NAME")!);
             services.AddInternalDomainServiceBusQueuesHealthCheck(
                 Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_MANAGE_CONNECTION_STRING")!,
                 Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_NAME")!);
@@ -172,6 +181,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<IntegrationEventReceiver>(Lifestyle.Scoped);
             container.Register<ChargesResponseReceiver>(Lifestyle.Scoped);
             container.Register<MasterDataRequestListener>(Lifestyle.Scoped);
+            container.Register<ActorCreatedListener>(Lifestyle.Scoped);
             container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
             container.Register<IEnergySupplierRepository, EnergySupplierRepository>(Lifestyle.Scoped);
             container.Register<IGridAreaRepository, GridAreaRepository>(Lifestyle.Scoped);
@@ -281,7 +291,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                     typeof(MeteringPointGsrnExistsQueryHandler),
                     typeof(EnergySuppliersByMeteringPointIdQueryHandler),
                     typeof(CloseDownMeteringPointHandler),
-                    typeof(GetMasterDataQueryHandler))
+                    typeof(GetMasterDataQueryHandler),
+                    typeof(ActorCreatedHandler))
                 .WithNotificationHandlers(
                     typeof(CreateDefaultChargeLinksNotificationHandler),
                     typeof(MeteringPointCreatedNotificationHandler),
