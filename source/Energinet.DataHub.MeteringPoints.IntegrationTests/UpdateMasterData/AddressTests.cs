@@ -16,6 +16,7 @@ using System;
 using System.Globalization;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
@@ -29,6 +30,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         public AddressTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
         {
+            var scenario = new ScenarioBuilder(GetService<MeteringPointContext>());
+            scenario.WithGridArea(SampleData.MeteringGridArea, SampleData.GridOperatorIdOfGrid870)
+                .Build();
         }
 
         [Fact]
