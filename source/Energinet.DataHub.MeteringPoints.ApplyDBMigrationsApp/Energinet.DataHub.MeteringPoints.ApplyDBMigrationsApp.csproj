@@ -28,6 +28,7 @@ limitations under the License.
   <ItemGroup>
     <EmbeddedResource Include="Scripts\Model\202206231201 Consolidated models.sql" />
     <EmbeddedResource Include="Scripts\Model\202209131345 Remove GridArea details.sql" />
+    <EmbeddedResource Include="Scripts\Model\202209141337 Remove Actor details.sql" />
     <EmbeddedResource Include="Scripts\Seed\202206231201 Seed cleanup.sql" />
     <EmbeddedResource Include="Scripts\Test\202109232129 Clean database.sql" />
     <EmbeddedResource Include="Scripts\Test\202110281315 Create Metering Point test data.sql" />
