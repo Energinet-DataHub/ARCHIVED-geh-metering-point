@@ -36,6 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
         public RequestCloseDownTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
         {
+            SetCurrentAuthenticatedActor(SampleData.GridOperatorIdOfGrid870);
         }
 
         [Fact]

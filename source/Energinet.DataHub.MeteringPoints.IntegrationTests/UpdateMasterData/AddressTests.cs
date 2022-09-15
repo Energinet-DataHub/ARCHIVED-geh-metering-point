@@ -29,12 +29,16 @@ using Xunit.Categories;
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
 {
     [IntegrationTest]
-    public class AddressTests : TestHost
+    public class AddressTests : TestHost, IAsyncLifetime
     {
-        private readonly MeteringPointBuilder _meteringPoint;
+        private MeteringPointBuilder? _meteringPoint;
 
         public AddressTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
+        {
+        }
+
+        public Task InitializeAsync()
         {
             SetCurrentAuthenticatedActor(SampleData.GridOperatorIdOfGrid870);
             _meteringPoint = new MeteringPointBuilder(
@@ -62,13 +66,17 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
                 .WithNetSettlementGroup(NetSettlementGroup.Zero)
                 .WithGsrnNumber(GsrnNumber.Create(SampleData.GsrnNumber))
                 .WithAdministratorId(SampleData.GridOperatorIdOfGrid870);
+            return _meteringPoint.BuildAsync();
+        }
+
+        public Task DisposeAsync()
+        {
+            return Task.CompletedTask;
         }
 
         [Fact]
         public async Task Address_is_updated()
         {
-            await _meteringPoint.BuildAsync().ConfigureAwait(false);
-
             var request = CreateUpdateRequest()
                 with
                 {
@@ -107,8 +115,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         [Fact]
         public async Task Reject_if_street_code_is_invalid()
         {
-            await _meteringPoint.BuildAsync().ConfigureAwait(false);
-
             var request = CreateUpdateRequest()
                 with
                 {
@@ -123,8 +129,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         [Fact]
         public async Task Reject_if_street_name_is_empty()
         {
-            await _meteringPoint.BuildAsync().ConfigureAwait(false);
-
             var request = CreateUpdateRequest()
                 with
                 {
@@ -139,8 +143,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         [Fact]
         public async Task Reject_if_street_name_is_too_long()
         {
-            await _meteringPoint.BuildAsync().ConfigureAwait(false);
-
             var request = CreateUpdateRequest()
                 with
                 {
@@ -155,8 +157,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         [Fact]
         public async Task Reject_if_building_number_is_invalid()
         {
-            await _meteringPoint.BuildAsync().ConfigureAwait(false);
-
             var request = CreateUpdateRequest()
                 with
                 {
@@ -171,8 +171,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         [Fact]
         public async Task Reject_if_floor_identification_is_invalid()
         {
-            await _meteringPoint.BuildAsync().ConfigureAwait(false);
-
             var request = CreateUpdateRequest()
                 with
                 {
@@ -187,8 +185,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         [Fact]
         public async Task Reject_if_room_identification_is_invalid()
         {
-            await _meteringPoint.BuildAsync().ConfigureAwait(false);
-
             var request = CreateUpdateRequest()
                 with
                 {
@@ -203,8 +199,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         [Fact]
         public async Task Reject_if_city_name_is_empty()
         {
-            await _meteringPoint.BuildAsync().ConfigureAwait(false);
-
             var request = CreateUpdateRequest()
                 with
                 {
@@ -219,8 +213,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         [Fact]
         public async Task Reject_if_city_name_is_too_long()
         {
-            await _meteringPoint.BuildAsync().ConfigureAwait(false);
-
             var request = CreateUpdateRequest()
                 with
                 {
@@ -235,8 +227,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         [Fact]
         public async Task Reject_if_post_code_is_empty()
         {
-            await _meteringPoint.BuildAsync().ConfigureAwait(false);
-
             var request = CreateUpdateRequest()
                 with
                 {
@@ -251,8 +241,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         [Fact]
         public async Task Reject_if_post_code_is_invalid()
         {
-            await _meteringPoint.BuildAsync().ConfigureAwait(false);
-
             var request = CreateUpdateRequest()
                 with
                 {
@@ -267,8 +255,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         [Fact]
         public async Task Reject_if_city_sub_division_is_too_long()
         {
-            await _meteringPoint.BuildAsync().ConfigureAwait(false);
-
             var request = CreateUpdateRequest()
                 with
                 {
@@ -283,8 +269,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         [Fact]
         public async Task Reject_if_municipality_code_is_invalid()
         {
-            await _meteringPoint.BuildAsync().ConfigureAwait(false);
-
             var request = CreateUpdateRequest()
                 with
                 {
@@ -299,8 +283,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         [Fact]
         public async Task Reject_if_country_code_is_invalid()
         {
-            await _meteringPoint.BuildAsync().ConfigureAwait(false);
-
             var request = CreateUpdateRequest()
                 with
                 {
@@ -315,8 +297,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         [Fact]
         public async Task Reject_if_country_code_is_required()
         {
-            await _meteringPoint.BuildAsync().ConfigureAwait(false);
-
             var request = CreateUpdateRequest()
                 with
                 {
@@ -331,8 +311,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         [Fact]
         public async Task Reject_if_description_is_too_long()
         {
-            await _meteringPoint.BuildAsync().ConfigureAwait(false);
-
             var request = CreateUpdateRequest()
                 with
                 {
