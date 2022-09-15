@@ -14,6 +14,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Energinet.DataHub.MarketParticipant.Integration.Model.Protobuf;
 using Microsoft.Azure.Functions.Worker;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions.MarketParticipant
@@ -29,6 +30,14 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions.Mark
             byte[] data,
             FunctionContext context)
         {
+            var message = ActorCreatedIntegrationEventContract.Parser.ParseFrom(data);
+            if (message == null) return Task.CompletedTask;
+
+            var command = new Application.MarketParticipants.ActorsCreated.ActorCreated(
+                Guid.Parse(message.ActorId),
+                message.ActorNumber,
+                message.Type);
+
             if (context == null) throw new ArgumentNullException(nameof(context));
             return Task.CompletedTask;
         }
