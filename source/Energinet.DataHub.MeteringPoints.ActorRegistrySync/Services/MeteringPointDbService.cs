@@ -83,7 +83,7 @@ public class MeteringPointDbService : IDisposable
         foreach (var actor in actors)
         {
             stringBuilder.Append(@"INSERT INTO [dbo].[Actor] ([Id],[IdentificationNumber],[IdentificationType])
-             VALUES ('" + actor.Id + "', '" + actor.IdentificationNumber + "', '" + GetType(actor.IdentificationType) + "')");
+             VALUES ('" + actor.Id + "', '" + actor.IdentificationNumber + "', '" + actor.IdentificationType + "')");
             stringBuilder.AppendLine();
         }
 
@@ -211,11 +211,6 @@ public class MeteringPointDbService : IDisposable
         }
 
         _disposed = true;
-    }
-
-    private static string GetType(int identificationType)
-    {
-        return identificationType == 1 ? "GLN" : "EIC";
     }
 
     private async Task BeginTransactionAsync()
