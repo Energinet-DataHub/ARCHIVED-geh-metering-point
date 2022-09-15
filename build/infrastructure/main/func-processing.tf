@@ -43,14 +43,14 @@ module "func_processing" {
     MASTER_DATA_REQUEST_QUEUE_NAME                                        = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-metering-point-master-data-request-name)"    
     SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING                           = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-manage-connection-string)"
     METERINGPOINT_QUEUE_MANAGE_CONNECTION_STRING                          = module.sb_meteringpoint.primary_connection_strings["manage"]
-    MARKET_PARTICIPANT_CHANGED_TOPIC_NAME                                 = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-market-participant-changed-name)"
-    MARKET_PARTICIPANT_CHANGED_ACTOR_CREATED_SUBSCRIPTION_NAME            = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbs-market-participant-changed-actor-created-to-meteringpoint-name)"
-    MARKET_PARTICIPANT_CHANGED_ACTOR_ROLE_ADDED_SUBSCRIPTION_NAME         = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbs-market-participant-changed-actor-role-added-to-meteringpoint-name)"
-    MARKET_PARTICIPANT_CHANGED_ACTOR_ROLE_REMOVED_SUBSCRIPTION_NAME       = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbs-market-participant-changed-actor-role-removed-to-meteringpoint-name)"
-    MARKET_PARTICIPANT_CHANGED_ACTOR_GRID_AREA_ADDED_SUBSCRIPTION_NAME    = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbs-market-participant-changed-actor-grid-area-added-to-meteringpoint-name)"
-    MARKET_PARTICIPANT_CHANGED_ACTOR_GRID_AREA_REMOVED_SUBSCRIPTION_NAME  = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbs-market-participant-changed-actor-grid-area-removed-to-meteringpoint-name)"
-    MARKET_PARTICIPANT_CHANGED_GRID_AREA_CREATED_SUBSCRIPTION_NAME        = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbs-market-participant-changed-grid-area-created-to-meteringpoint-name)"
-  MARKET_PARTICIPANT_CHANGED_GRID_AREA_NAME_CHANGED_SUBSCRIPTION_NAME     = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbs-market-participant-changed-grid-area-name-changed-to-meteringpoint-name)"
+    MARKET_PARTICIPANT_CHANGED_TOPIC_NAME                                 = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-integrationevent-received-name)"
+    MARKET_PARTICIPANT_CHANGED_ACTOR_CREATED_SUBSCRIPTION_NAME            = module.sbs_metering_point_market_participant_actor_created.name
+    MARKET_PARTICIPANT_CHANGED_ACTOR_ROLE_ADDED_SUBSCRIPTION_NAME         = module.sbs_metering_point_market_participant_actor_role_added.name
+    MARKET_PARTICIPANT_CHANGED_ACTOR_ROLE_REMOVED_SUBSCRIPTION_NAME       = module.sbs_metering_point_market_participant_actor_role_removed
+    MARKET_PARTICIPANT_CHANGED_ACTOR_GRID_AREA_ADDED_SUBSCRIPTION_NAME    = module.sbs_metering_point_market_participant_actor_grid_area_added.name
+    MARKET_PARTICIPANT_CHANGED_ACTOR_GRID_AREA_REMOVED_SUBSCRIPTION_NAME  = module.sbs_metering_point_market_participant_actor_grid_area_removed.name
+    MARKET_PARTICIPANT_CHANGED_GRID_AREA_CREATED_SUBSCRIPTION_NAME        = module.sbs_metering_point_market_participant_grid_area_created.name
+    MARKET_PARTICIPANT_CHANGED_GRID_AREA_NAME_CHANGED_SUBSCRIPTION_NAME   = module.sbs_metering_point_market_participant_grid_area_name_changed.name
 
 
   }
