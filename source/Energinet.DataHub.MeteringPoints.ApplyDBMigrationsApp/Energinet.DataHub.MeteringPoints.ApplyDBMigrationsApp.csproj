@@ -38,6 +38,8 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Test\202201181200 Fix actor ids.sql" />
     <EmbeddedResource Include="Scripts\Test\202202081200 Add process test data.sql" />
     <EmbeddedResource Include="Scripts\Test\202202220830 User test data.sql" />
+    <None Remove="Scripts\Model\202209151551 Add Roles to Actor table.sql" />
+    <EmbeddedResource Include="Scripts\Model\202209151551 Add Roles to Actor table.sql" />
   </ItemGroup>
 
 </Project>
