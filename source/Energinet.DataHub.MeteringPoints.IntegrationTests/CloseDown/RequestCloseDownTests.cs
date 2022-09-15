@@ -13,14 +13,18 @@
 // limitations under the License.
 
 using System;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Application.CloseDown;
 using Energinet.DataHub.MeteringPoints.Application.Common.ReceiveBusinessRequests;
 using Energinet.DataHub.MeteringPoints.Application.Common.SystemTime;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.Addresses;
+using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
+using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using MediatR;
@@ -31,18 +35,55 @@ using Xunit.Categories;
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
 {
     [IntegrationTest]
-    public class RequestCloseDownTests : TestHost
+    public class RequestCloseDownTests : TestHost, IAsyncLifetime
     {
+        private MeteringPointBuilder? _meteringPoint;
+
         public RequestCloseDownTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
         {
             SetCurrentAuthenticatedActor(SampleData.GridOperatorIdOfGrid870);
         }
 
+        public Task InitializeAsync()
+        {
+            SetCurrentAuthenticatedActor(SampleData.GridOperatorIdOfGrid870);
+            _meteringPoint = new MeteringPointBuilder(
+                GetService<MeteringPointContext>(),
+                GetService<IMediator>());
+
+            _meteringPoint
+                .WithGridArea(SampleData.MeteringGridArea, SampleData.GridOperatorIdOfGrid870)
+                .WithAddress(Address.Create(
+                    SampleData.StreetName,
+                    SampleData.StreetCode,
+                    SampleData.BuildingNumber,
+                    SampleData.CityName,
+                    SampleData.CitySubDivisionName,
+                    SampleData.PostCode,
+                    CountryCode.DK,
+                    SampleData.FloorIdentification,
+                    SampleData.RoomIdentification,
+                    int.Parse(SampleData.MunicipalityCode, NumberFormatInfo.InvariantInfo),
+                    SampleData.IsActualAddress,
+                    SampleData.GeoInfoReference,
+                    SampleData.LocationDescription))
+                .WithMeteringMethod(MeteringMethod.Physical)
+                .WithMeterNumber(MeterId.Create(SampleData.MeterNumber))
+                .WithNetSettlementGroup(NetSettlementGroup.Zero)
+                .WithGsrnNumber(GsrnNumber.Create(SampleData.GsrnNumber))
+                .WithAdministratorId(SampleData.GridOperatorIdOfGrid870);
+            return _meteringPoint.BuildAsync();
+        }
+
+        public Task DisposeAsync()
+        {
+            return Task.CompletedTask;
+        }
+
         [Fact]
         public async Task Reject_if_business_rules_are_violated()
         {
-            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
             await CloseDownMeteringPointAsync().ConfigureAwait(false);
 
             var request = CreateRequest();
@@ -54,8 +95,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
         [Fact]
         public async Task Confirm_should_contain_correct_business_reason_code()
         {
-            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
-
             var request = CreateRequest();
             await ReceiveRequest(request).ConfigureAwait(false);
 
@@ -66,7 +105,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
         [Fact]
         public async Task Reject_should_contain_correct_business_reason_code()
         {
-            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
             await CloseDownMeteringPointAsync().ConfigureAwait(false);
 
             var request = CreateRequest();
@@ -89,8 +127,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
         [Fact]
         public async Task Request_is_accepted_if_validation_check_is_passed()
         {
-            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
-
             var request = CreateRequest();
             await ReceiveRequest(request).ConfigureAwait(false);
 
@@ -102,6 +138,8 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
         [Fact]
         public async Task Request_is_rejected_if_validation_check_is_fails()
         {
+            await _meteringPoint!.RemoveAsync().ConfigureAwait(false);
+
             var request = CreateRequest();
             await ReceiveRequest(request).ConfigureAwait(false);
 
@@ -153,7 +191,9 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
         [Fact]
         public async Task Reject_if_metering_point_does_not_exist()
         {
-            var request = CreateRequest();
+            await _meteringPoint!.RemoveAsync().ConfigureAwait(false);
+
+            var request = CreateRequest("571234567891234568");
 
             await ReceiveRequest(request).ConfigureAwait(false);
 
@@ -163,7 +203,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
         [Fact]
         public async Task Metering_point_is_closed_down_when_due_date_has_transpired()
         {
-            await CreatePhysicalConsumptionMeteringPointAsync().ConfigureAwait(false);
             var request = CreateRequest();
             await ReceiveRequest(request).ConfigureAwait(false);
 
@@ -175,11 +214,16 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CloseDown
 
         private static MasterDataDocument CreateRequest()
         {
+            return CreateRequest(SampleData.GsrnNumber);
+        }
+
+        private static MasterDataDocument CreateRequest(string gsrnNumber)
+        {
             return new MasterDataDocument(
                 ProcessType: BusinessProcessType.CloseDownMeteringPoint.Name,
                 TransactionId: SampleData.Transaction,
                 EffectiveDate: SampleData.EffectiveDate,
-                GsrnNumber: SampleData.GsrnNumber);
+                GsrnNumber: gsrnNumber);
         }
 
         private Task TimeHasPassed(string now)
