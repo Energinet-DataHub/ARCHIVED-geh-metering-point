@@ -28,7 +28,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
-    public class ScenarioBuilder
+    public class MeteringPointBuilder
     {
         private readonly MeteringPointContext _context;
         private readonly IMediator _mediator;
@@ -57,7 +57,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
         private string? _sourceGridArea;
         private string? _targetGridArea;
 
-        public ScenarioBuilder(MeteringPointContext context, IMediator mediator)
+        public MeteringPointBuilder(MeteringPointContext context, IMediator mediator)
         {
             _context = context;
             _mediator = mediator;
@@ -65,7 +65,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _context.Database.ExecuteSqlRaw("DELETE FROM dbo.GridAreas");
         }
 
-        public ScenarioBuilder WithGridArea(string code, Guid operatorId)
+        public MeteringPointBuilder WithGridArea(string code, Guid operatorId)
         {
             _gridArea = GridArea.Create(
                 GridAreaId.New(),
@@ -77,92 +77,92 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             return this;
         }
 
-        public ScenarioBuilder OfType(MeteringPointType type)
+        public MeteringPointBuilder OfType(MeteringPointType type)
         {
             _meteringPointType = type;
             return this;
         }
 
-        public ScenarioBuilder WithAdministratorId(Guid administratorId)
+        public MeteringPointBuilder WithAdministratorId(Guid administratorId)
         {
             _administratorId = administratorId;
             return this;
         }
 
-        public ScenarioBuilder WithAddress(Address address)
+        public MeteringPointBuilder WithAddress(Address address)
         {
             _address = address;
             return this;
         }
 
-        public ScenarioBuilder WithGsrnNumber(GsrnNumber gsrnNumber)
+        public MeteringPointBuilder WithGsrnNumber(GsrnNumber gsrnNumber)
         {
             _gsrnNumber = gsrnNumber;
             return this;
         }
 
-        public ScenarioBuilder WithMeteringMethod(MeteringMethod meteringMethod)
+        public MeteringPointBuilder WithMeteringMethod(MeteringMethod meteringMethod)
         {
             _meteringMethod = meteringMethod;
             return this;
         }
 
-        public ScenarioBuilder WithReadingOccurrence(ReadingOccurrence readingOccurrence)
+        public MeteringPointBuilder WithReadingOccurrence(ReadingOccurrence readingOccurrence)
         {
             _readingOccurrence = readingOccurrence;
             return this;
         }
 
-        public ScenarioBuilder WithCapacity(string maxPower, string maxCurrent)
+        public MeteringPointBuilder WithCapacity(string maxPower, string maxCurrent)
         {
             _maxPower = maxPower;
             _maxCurrent = maxCurrent;
             return this;
         }
 
-        public ScenarioBuilder WithPowerPlantGsrnNumber(GsrnNumber gsrnNumber)
+        public MeteringPointBuilder WithPowerPlantGsrnNumber(GsrnNumber gsrnNumber)
         {
             _powerPlantGsrnNumber = gsrnNumber;
             return this;
         }
 
-        public ScenarioBuilder WithSettlementMethod(SettlementMethod settlementMethod)
+        public MeteringPointBuilder WithSettlementMethod(SettlementMethod settlementMethod)
         {
             _settlementMethod = settlementMethod;
             return this;
         }
 
-        public ScenarioBuilder WithDisconnectionType(DisconnectionType disconnectionType)
+        public MeteringPointBuilder WithDisconnectionType(DisconnectionType disconnectionType)
         {
             _disconnectionType = disconnectionType;
             return this;
         }
 
-        public ScenarioBuilder WithMeterNumber(MeterId meterId)
+        public MeteringPointBuilder WithMeterNumber(MeterId meterId)
         {
             _meterId = meterId;
             return this;
         }
 
-        public ScenarioBuilder WithNetSettlementGroup(NetSettlementGroup netSettlementGroup)
+        public MeteringPointBuilder WithNetSettlementGroup(NetSettlementGroup netSettlementGroup)
         {
             _netSettlementGroup = netSettlementGroup;
             return this;
         }
 
-        public ScenarioBuilder WithConnectionType(ConnectionType connectionType)
+        public MeteringPointBuilder WithConnectionType(ConnectionType connectionType)
         {
             _connectionType = connectionType;
             return this;
         }
 
-        public ScenarioBuilder WithAssetType(AssetType assetType)
+        public MeteringPointBuilder WithAssetType(AssetType assetType)
         {
             _assetType = assetType;
             return this;
         }
 
-        public ScenarioBuilder OfExchangeMeteringPoint(string sourceGridArea, string targetGridArea)
+        public MeteringPointBuilder OfExchangeMeteringPoint(string sourceGridArea, string targetGridArea)
         {
             _sourceGridArea = sourceGridArea;
             _targetGridArea = targetGridArea;
@@ -170,13 +170,13 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             return this;
         }
 
-        public ScenarioBuilder WithUnitType(MeasurementUnitType unitType)
+        public MeteringPointBuilder WithUnitType(MeasurementUnitType unitType)
         {
             _unitType = unitType;
             return this;
         }
 
-        public ScenarioBuilder WithProductType(ProductType productType)
+        public MeteringPointBuilder WithProductType(ProductType productType)
         {
             _productType = productType;
             return this;

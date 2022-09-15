@@ -31,17 +31,17 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
     [IntegrationTest]
     public class AddressTests : TestHost
     {
-        private readonly ScenarioBuilder _scenario;
+        private readonly MeteringPointBuilder _meteringPoint;
 
         public AddressTests(DatabaseFixture databaseFixture)
             : base(databaseFixture)
         {
             SetCurrentAuthenticatedActor(SampleData.GridOperatorIdOfGrid870);
-            _scenario = new ScenarioBuilder(
+            _meteringPoint = new MeteringPointBuilder(
                 GetService<MeteringPointContext>(),
                 GetService<IMediator>());
 
-            _scenario
+            _meteringPoint
                 .WithGridArea(SampleData.MeteringGridArea, SampleData.GridOperatorIdOfGrid870)
                 .WithAddress(Address.Create(
                     SampleData.StreetName,
@@ -67,7 +67,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.UpdateMasterData
         [Fact]
         public async Task Address_is_updated()
         {
-            await _scenario.BuildAsync().ConfigureAwait(false);
+            await _meteringPoint.BuildAsync().ConfigureAwait(false);
 
             var request = CreateUpdateRequest()
                 with
