@@ -17,7 +17,6 @@ using System.Globalization;
 using Energinet.DataHub.MeteringPoints.Application;
 using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
-using Energinet.DataHub.MeteringPoints.Domain;
 using Energinet.DataHub.MeteringPoints.Domain.BusinessProcesses;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components.MeteringDetails;
@@ -27,23 +26,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
 {
     public static class Scenarios
     {
-        internal static Address CreateAddress()
-        {
-            return new Address(
-                SampleData.StreetName,
-                SampleData.PostCode,
-                SampleData.CityName,
-                SampleData.StreetCode,
-                SampleData.BuildingNumber,
-                SampleData.CitySubDivisionName,
-                SampleData.CountryCode,
-                SampleData.FloorIdentification,
-                SampleData.RoomIdentification,
-                int.Parse(SampleData.MunicipalityCode, NumberStyles.Any, new NumberFormatInfo()),
-                SampleData.IsActualAddress,
-                SampleData.GeoInfoReference);
-        }
-
         internal static CreateMeteringPoint CreateVirtualConsumptionMeteringPoint()
         {
             return CreateConsumptionMeteringPointCommand() with
