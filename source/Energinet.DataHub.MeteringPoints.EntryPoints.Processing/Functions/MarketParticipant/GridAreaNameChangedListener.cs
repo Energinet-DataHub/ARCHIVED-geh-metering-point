@@ -18,13 +18,13 @@ using Microsoft.Azure.Functions.Worker;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions.MarketParticipant
 {
-    public static class ActorCreated
+    public static class GridAreaNameChangedListener
     {
-        [Function("ActorCreated")]
+        [Function("GridAreaNameChangedListener")]
         public static Task RunAsync(
             [ServiceBusTrigger(
             "%MARKET_PARTICIPANT_CHANGED_TOPIC_NAME%",
-            "%MARKET_PARTICIPANT_CHANGED_ACTOR_CREATED_SUBSCRIPTION_NAME%",
+            "%MARKET_PARTICIPANT_CHANGED_GRID_AREA_NAME_CHANGED_SUBSCRIPTION_NAME%",
             Connection = "SHARED_SERVICE_BUS_LISTEN_CONNECTION_STRING")]
             byte[] data,
             FunctionContext context)
