@@ -20,16 +20,16 @@ using Microsoft.Azure.Functions.Worker;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions.MarketParticipant
 {
-    public class ActorCreatedReceiver
+    public class ActorCreatedListener
     {
         private readonly ICommandScheduler _commandScheduler;
 
-        public ActorCreatedReceiver(ICommandScheduler commandScheduler)
+        public ActorCreatedListener(ICommandScheduler commandScheduler)
         {
             _commandScheduler = commandScheduler;
         }
 
-        [Function("ActorCreatedReceiver")]
+        [Function("ActorCreatedListener")]
         public async Task RunAsync(
             [ServiceBusTrigger(
             "%MARKET_PARTICIPANT_CHANGED_TOPIC_NAME%",
