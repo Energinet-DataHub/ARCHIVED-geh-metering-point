@@ -15,14 +15,22 @@
 using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Protobuf;
+using Energinet.DataHub.MeteringPoints.Application.Common.Commands;
 using Microsoft.Azure.Functions.Worker;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions.MarketParticipant
 {
-    public static class ActorCreated
+    public class ActorCreatedReceiver
     {
-        [Function("ActorCreated")]
-        public static Task RunAsync(
+        private readonly ICommandScheduler _commandScheduler;
+
+        public ActorCreatedReceiver(ICommandScheduler commandScheduler)
+        {
+            _commandScheduler = commandScheduler;
+        }
+
+        [Function("ActorCreatedReceiver")]
+        public async Task RunAsync(
             [ServiceBusTrigger(
             "%MARKET_PARTICIPANT_CHANGED_TOPIC_NAME%",
             "%MARKET_PARTICIPANT_CHANGED_ACTOR_CREATED_SUBSCRIPTION_NAME%",
@@ -30,16 +38,18 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions.Mark
             byte[] data,
             FunctionContext context)
         {
+            if (data == null) throw new ArgumentNullException(nameof(data));
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
             var message = ActorCreatedIntegrationEventContract.Parser.ParseFrom(data);
-            if (message == null) return Task.CompletedTask;
+            if (message == null) throw new ArgumentException(nameof(message));
 
             var command = new Application.MarketParticipants.ActorsCreated.ActorCreated(
                 Guid.Parse(message.ActorId),
                 message.ActorNumber,
                 message.Type);
 
-            if (context == null) throw new ArgumentNullException(nameof(context));
-            return Task.CompletedTask;
+            await _commandScheduler.EnqueueAsync(command).ConfigureAwait(false);
         }
     }
 }
