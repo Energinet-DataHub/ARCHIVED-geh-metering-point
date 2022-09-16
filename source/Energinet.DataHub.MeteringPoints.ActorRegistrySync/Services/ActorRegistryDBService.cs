@@ -52,11 +52,12 @@ public class ActorRegistryDbService : IDisposable
                     select
                         g.Code AS {nameof(GridArea.Code)},
                         g.Name AS {nameof(GridArea.Name)},
-                        mr.ActorInfoId AS {nameof(GridArea.ActorId)},
+                        actorinfo.ActorId AS {nameof(GridArea.ActorId)},
                         g.Id AS {nameof(GridArea.Id)}
                     from GridAreaNew g
                     join MarketRoleGridArea mrg on mrg.GridAreaId = g.Id
                     join MarketRole mr on mrg.MarketRoleId = mr.Id
+                    join ActorInfoNew actorinfo on actorinfo.Id = mr.ActorInfoId
                     where mr.[Function] = 14";
 
         return await _sqlConnection.QueryAsync<GridArea>(sqlStatement).ConfigureAwait(false) ?? (IEnumerable<GridArea>)Array.Empty<object>();
