@@ -34,11 +34,14 @@ public class ActorRegistryDbService : IDisposable
     public async Task<IEnumerable<GridAreaLink>> GetGriAreaLinkAsync()
     {
         var sqlStatement = @$"
-        select gal.Id {nameof(GridAreaLink.GridLinkId)}, gal.GridAreaId AS {nameof(GridAreaLink.GridAreaId)} from [dbo].[GridAreaLinkNew] gal
-        join [dbo].[GridAreaNew] ga ON ga.Id = gal.GridAreaId
-        join [dbo].[GridAreaActorInfoLink] gaa ON gaa.GridAreaId = ga.Id
-        join [dbo].[ActorInfoNew] a ON a.Id = gaa.ActorInfoId
-        where a.ActorId IS NOT NULL";
+                    select
+                        gl.Id {nameof(GridAreaLink.GridLinkId)},
+                        gl.GridAreaId AS {nameof(GridAreaLink.GridAreaId)}
+                    from GridAreaLinkNew gl
+                    join GridAreaNew g on gl.GridAreaId = g.Id
+                    join MarketRoleGridArea mrg on mrg.GridAreaId = g.Id
+                    join MarketRole mr on mrg.MarketRoleId = mr.Id
+                    where mr.[Function] = 14";
 
         return await _sqlConnection.QueryAsync<GridAreaLink>(sqlStatement).ConfigureAwait(false) ?? (IEnumerable<GridAreaLink>)Array.Empty<object>();
     }
