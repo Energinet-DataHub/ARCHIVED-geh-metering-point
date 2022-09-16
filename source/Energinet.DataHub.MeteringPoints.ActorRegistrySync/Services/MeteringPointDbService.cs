@@ -82,8 +82,8 @@ public class MeteringPointDbService : IDisposable
         var stringBuilder = new StringBuilder();
         foreach (var actor in actors)
         {
-            stringBuilder.Append(@"INSERT INTO [dbo].[Actor] ([Id],[IdentificationNumber],[IdentificationType])
-             VALUES ('" + actor.Id + "', '" + actor.IdentificationNumber + "', '" + actor.IdentificationType + "')");
+            stringBuilder.Append(@"INSERT INTO [dbo].[Actor] ([Id],[IdentificationNumber],[IdentificationType], [Roles])
+             VALUES ('" + actor.Id + "', '" + actor.IdentificationNumber + "', '" + actor.IdentificationType + "' , '" + MapFrom(actor.Roles) + "')");
             stringBuilder.AppendLine();
         }
 
@@ -211,6 +211,170 @@ public class MeteringPointDbService : IDisposable
         }
 
         _disposed = true;
+    }
+
+    private static string MapFrom(string? roles)
+    {
+        if (string.IsNullOrEmpty(roles))
+        {
+            return string.Empty;
+        }
+
+        var output = new List<string>();
+        var rolesByNumber = roles.Split(',');
+
+        foreach (var number in rolesByNumber)
+        {
+            switch (number)
+            {
+                case "1":
+                    output.Add("BalanceResponsibleParty");
+                    break;
+                case "2":
+                    output.Add("BalancingServiceProvider");
+                    break;
+                case "3":
+                    output.Add("BillingAgent");
+                    break;
+                case "4":
+                    output.Add("CapacityTrader");
+                    break;
+                case "5":
+                    output.Add("Consumer");
+                    break;
+                case "6":
+                    output.Add("ConsumptionResponsibleParty");
+                    break;
+                case "7":
+                    output.Add("ConsentAdministrator");
+                    break;
+                case "8":
+                    output.Add("CoordinatedCapacityCalculator");
+                    break;
+                case "9":
+                    output.Add("CoordinationCentreOperator");
+                    break;
+                case "10":
+                    output.Add("DataProvider");
+                    break;
+                case "11":
+                    output.Add("EnergyServiceCompany");
+                    break;
+                case "12":
+                    output.Add("EnergySupplier");
+                    break;
+                case "13":
+                    output.Add("EnergyTrader");
+                    break;
+                case "14":
+                    output.Add("GridAccessProvider");
+                    break;
+                case "15":
+                    output.Add("ImbalanceSettlementResponsible");
+                    break;
+                case "16":
+                    output.Add("InterconnectionTradeResponsible");
+                    break;
+                case "17":
+                    output.Add("LfcOperator");
+                    break;
+                case "18":
+                    output.Add("MarketInformationAggregator");
+                    break;
+                case "19":
+                    output.Add("MarketOperator");
+                    break;
+                case "20":
+                    output.Add("MeritOrderListResponsible");
+                    break;
+                case "21":
+                    output.Add("MeterAdministrator");
+                    break;
+                case "22":
+                    output.Add("MeterOperator");
+                    break;
+                case "23":
+                    output.Add("MeteredDataAdministrator");
+                    break;
+                case "24":
+                    output.Add("MeteredDataAggregator");
+                    break;
+                case "25":
+                    output.Add("MeteredDataCollector");
+                    break;
+                case "26":
+                    output.Add("MeteredDataResponsible");
+                    break;
+                case "27":
+                    output.Add("MeteringPointAdministrator");
+                    break;
+                case "28":
+                    output.Add("ModelMergingAgent");
+                    break;
+                case "29":
+                    output.Add("ModellingAuthority");
+                    break;
+                case "30":
+                    output.Add("NominatedElectricityMarketOperator");
+                    break;
+                case "31":
+                    output.Add("NominationValidator");
+                    break;
+                case "32":
+                    output.Add("PartyAdministrator");
+                    break;
+                case "33":
+                    output.Add("PartyConnectedToTheGrid");
+                    break;
+                case "34":
+                    output.Add("Producer");
+                    break;
+                case "35":
+                    output.Add("ProductionResponsibleParty");
+                    break;
+                case "36":
+                    output.Add("ReconciliationAccountable");
+                    break;
+                case "37":
+                    output.Add("ReconciliationResponsible");
+                    break;
+                case "38":
+                    output.Add("ReserveAllocator");
+                    break;
+                case "39":
+                    output.Add("ResourceAggregator");
+                    break;
+                case "40":
+                    output.Add("ResourceCapacityMechanismOperator");
+                    break;
+                case "41":
+                    output.Add("ResourceProvider");
+                    break;
+                case "42":
+                    output.Add("Scheduling");
+                    break;
+                case "43":
+                    output.Add("Agent");
+                    break;
+                case "44":
+                    output.Add("SchedulingAreaResponsible");
+                    break;
+                case "45":
+                    output.Add("SystemOperator");
+                    break;
+                case "46":
+                    output.Add("TradeResponsibleParty");
+                    break;
+                case "47":
+                    output.Add("TransmissionCapacityAllocator");
+                    break;
+                case "48":
+                    output.Add("DanishEnergyAgency");
+                    break;
+            }
+        }
+
+        return string.Join(',', output);
     }
 
     private async Task BeginTransactionAsync()
