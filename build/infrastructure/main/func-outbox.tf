@@ -37,9 +37,6 @@ module "func_outbox" {
     SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING                   = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-manage-connection-string)"
 
     METERING_POINT_CREATED_TOPIC                                  = "metering-point-created"
-    CONSUMPTION_METERING_POINT_CREATED_TOPIC                      = "consumption-metering-point-created"
-    PRODUCTION_METERING_POINT_CREATED_TOPIC                       = "production-metering-point-created"
-    EXCHANGE_METERING_POINT_CREATED_TOPIC                         = "exchange-metering-point-created"
     METERING_POINT_CONNECTED_TOPIC                                = "metering-point-connected"
     METERING_POINT_MESSAGE_DEQUEUED_TOPIC                         = "metering-point-message-dequeued"
     METERING_POINT_DISCONNECTED_TOPIC                             = "metering-point-disconnected"

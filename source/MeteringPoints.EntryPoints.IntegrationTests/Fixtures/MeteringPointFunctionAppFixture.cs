@@ -201,15 +201,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
                 .BuildTopic("sbt-meteringpoint-created").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("METERING_POINT_CREATED_TOPIC", p.Name))
                 .CreateAsync().ConfigureAwait(false);
             await ServiceBusResourceProvider
-                .BuildTopic("sbt-consumption-meteringpoint-created").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("CONSUMPTION_METERING_POINT_CREATED_TOPIC", p.Name))
-                .CreateAsync().ConfigureAwait(false);
-            await ServiceBusResourceProvider
-                .BuildTopic("sbt-production-meteringpoint-created").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("PRODUCTION_METERING_POINT_CREATED_TOPIC", p.Name))
-                .CreateAsync().ConfigureAwait(false);
-            await ServiceBusResourceProvider
-                .BuildTopic("sbt-exchange-meteringpoint-created").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("EXCHANGE_METERING_POINT_CREATED_TOPIC", p.Name))
-                .CreateAsync().ConfigureAwait(false);
-            await ServiceBusResourceProvider
                 .BuildTopic("sbt-meteringpoint-connected").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("METERING_POINT_CONNECTED_TOPIC", p.Name))
                 .CreateAsync().ConfigureAwait(false);
             await ServiceBusResourceProvider

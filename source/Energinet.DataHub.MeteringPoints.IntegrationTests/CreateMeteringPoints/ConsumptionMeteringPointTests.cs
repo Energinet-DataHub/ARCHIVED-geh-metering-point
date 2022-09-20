@@ -18,7 +18,7 @@ using Energinet.DataHub.MeteringPoints.Application.Create;
 using Energinet.DataHub.MeteringPoints.Domain.MasterDataHandling.Components;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.Consumption;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.IntegrationTests.Tooling;
 using Xunit;
 using Xunit.Categories;
@@ -41,12 +41,11 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             await SendCommandAsync(request).ConfigureAwait(false);
 
             await AssertMeteringPointExistsAsync(request.GsrnNumber).ConfigureAwait(false);
-            var integrationEvent = FindIntegrationEvent<ConsumptionMeteringPointCreatedIntegrationEvent>();
+            var integrationEvent = FindIntegrationEvent<MeteringPointCreatedEventMessage>();
             Assert.NotNull(integrationEvent);
             Assert.Equal(request.GsrnNumber, integrationEvent?.GsrnNumber);
             Assert.Equal(request.MeteringMethod, integrationEvent?.MeteringMethod);
             Assert.Equal(request.SettlementMethod, integrationEvent?.SettlementMethod);
-            Assert.Equal(request.MeteringGridArea, integrationEvent?.GridAreaCode);
             Assert.Equal(request.MeterReadingOccurrence, integrationEvent?.MeterReadingPeriodicity);
             Assert.Equal(request.NetSettlementGroup, integrationEvent?.NetSettlementGroup);
         }
