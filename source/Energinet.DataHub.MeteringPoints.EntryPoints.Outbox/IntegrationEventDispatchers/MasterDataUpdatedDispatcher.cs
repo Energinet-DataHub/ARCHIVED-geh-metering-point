@@ -16,15 +16,16 @@ using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.MeteringPoints.Application.Integrations;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData.MasterDataUpdated;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.IntegrationEvents.ChangeMasterData;
 
 namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDispatchers
 {
-    public class MasterDataUpdatedDispatcher : IntegrationEventDispatcher<MasterDataUpdatedTopic, MasterDataWasUpdatedIntegrationEvent>
+    public class MasterDataUpdatedDispatcher : IntegrationEventDispatcher<IntegrationEventTopic, MasterDataWasUpdatedIntegrationEvent>
     {
-        public MasterDataUpdatedDispatcher(ITopicSender<MasterDataUpdatedTopic> topicSender, ProtobufOutboundMapperFactory protobufOutboundMapperFactory, IIntegrationEventMessageFactory integrationEventMessageFactory, IIntegrationMetadataContext integrationMetadataContext)
+        public MasterDataUpdatedDispatcher(ITopicSender<IntegrationEventTopic> topicSender, ProtobufOutboundMapperFactory protobufOutboundMapperFactory, IIntegrationEventMessageFactory integrationEventMessageFactory, IIntegrationMetadataContext integrationMetadataContext)
             : base(topicSender, protobufOutboundMapperFactory, integrationEventMessageFactory, integrationMetadataContext)
         {
         }

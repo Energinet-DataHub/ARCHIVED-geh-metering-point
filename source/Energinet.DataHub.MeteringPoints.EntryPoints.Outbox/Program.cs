@@ -37,6 +37,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess;
 using Energinet.DataHub.MeteringPoints.Infrastructure.DataAccess.MessageHub;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Ingestion.Mappers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Disconnect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeConnectionStatus.Reconnect;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData.MasterDataUpdated;
@@ -89,12 +90,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                                                  "Metering point db connection string not found."));
             services.AddExternalServiceBusTopicsHealthCheck(
                 Environment.GetEnvironmentVariable("SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING")!,
+                Environment.GetEnvironmentVariable("INTEGRATION_EVENT_TOPIC_NAME") ?? throw new InvalidOperationException("No integration event topic found"),
                 Environment.GetEnvironmentVariable("METERING_POINT_CREATED_TOPIC") ?? throw new InvalidOperationException("No MeteringPointCreated Topic found"),
                 Environment.GetEnvironmentVariable("METERING_POINT_CONNECTED_TOPIC") ?? throw new InvalidOperationException("No MeteringPointConnected Topic found"),
-                Environment.GetEnvironmentVariable("METERING_POINT_MESSAGE_DEQUEUED_TOPIC") ?? throw new InvalidOperationException("No MeteringPointMessageDequeued Topic found"),
-                Environment.GetEnvironmentVariable("METERING_POINT_DISCONNECTED_TOPIC") ?? throw new InvalidOperationException("No MeteringPointDisconnected Topic found"),
-                Environment.GetEnvironmentVariable("METERING_POINT_RECONNECTED_TOPIC") ?? throw new InvalidOperationException("No MeteringPointReconnected Topic found"),
-                Environment.GetEnvironmentVariable("MASTER_DATA_UPDATED_TOPIC") ?? throw new InvalidOperationException("No MasterDataUpdated Topic found"));
+                Environment.GetEnvironmentVariable("METERING_POINT_MESSAGE_DEQUEUED_TOPIC") ?? throw new InvalidOperationException("No MeteringPointMessageDequeued Topic found"));
 
             services.AddExternalServiceBusQueuesHealthCheck(
                 Environment.GetEnvironmentVariable("SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING")!,
@@ -132,6 +131,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                 Lifestyle.Singleton);
 
             container.Register(
+                () => new IntegrationEventTopic(
+                    Environment.GetEnvironmentVariable("INTEGRATION_EVENT_TOPIC_NAME") ??
+                    throw new InvalidOperationException(
+                        "No integration event topic found")),
+                Lifestyle.Singleton);
+
+            container.Register(
                 () => new MeteringPointCreatedTopic(
                     Environment.GetEnvironmentVariable("METERING_POINT_CREATED_TOPIC") ??
                     throw new InvalidOperationException(
@@ -148,27 +154,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                     Environment.GetEnvironmentVariable("METERING_POINT_MESSAGE_DEQUEUED_TOPIC") ??
                     throw new InvalidOperationException(
                         "No MeteringPointConnected Topic found")),
-                Lifestyle.Singleton);
-
-            container.Register(
-                () => new MeteringPointDisconnectedTopic(
-                    Environment.GetEnvironmentVariable("METERING_POINT_DISCONNECTED_TOPIC") ??
-                    throw new InvalidOperationException(
-                        "No MeteringPointDisconnected Topic found")),
-                Lifestyle.Singleton);
-
-            container.Register(
-                () => new MeteringPointReconnectedTopic(
-                    Environment.GetEnvironmentVariable("METERING_POINT_RECONNECTED_TOPIC") ??
-                    throw new InvalidOperationException(
-                        "No MeteringPointReconnected Topic found")),
-                Lifestyle.Singleton);
-
-            container.Register(
-                () => new MasterDataUpdatedTopic(
-                    Environment.GetEnvironmentVariable("MASTER_DATA_UPDATED_TOPIC") ??
-                    throw new InvalidOperationException(
-                        "No MasterDataUpdated Topic found")),
                 Lifestyle.Singleton);
 
             container.Register(typeof(ITopicSender<>), typeof(TopicSender<>), Lifestyle.Singleton);

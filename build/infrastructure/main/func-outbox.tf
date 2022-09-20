@@ -36,12 +36,10 @@ module "func_outbox" {
     SHARED_SERVICE_BUS_SENDER_CONNECTION_STRING                   = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-send-connection-string)"
     SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING                   = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-manage-connection-string)"
 
+    INTEGRATION_EVENT_TOPIC_NAME                                  = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-sharedres-integrationevent-received-name)"
     METERING_POINT_CREATED_TOPIC                                  = "metering-point-created"
     METERING_POINT_CONNECTED_TOPIC                                = "metering-point-connected"
     METERING_POINT_MESSAGE_DEQUEUED_TOPIC                         = "metering-point-message-dequeued"
-    METERING_POINT_DISCONNECTED_TOPIC                             = "metering-point-disconnected"
-    METERING_POINT_RECONNECTED_TOPIC                              = "metering-point-reconnected"
-    MASTER_DATA_UPDATED_TOPIC                                     = "master-data-updated"
     ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER                          = "*/10 * * * * *"
     EVENT_MESSAGE_DISPATCH_TRIGGER_TIMER                          = "*/10 * * * * *"
 
