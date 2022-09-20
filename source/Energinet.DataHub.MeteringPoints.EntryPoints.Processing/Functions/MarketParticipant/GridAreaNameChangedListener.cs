@@ -23,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions.Mark
         [Function("GridAreaNameChangedListener")]
         public static Task RunAsync(
             [ServiceBusTrigger(
-            "%MARKET_PARTICIPANT_CHANGED_TOPIC_NAME%",
+            "%INTEGRATION_EVENT_TOPIC_NAME%",
             "%MARKET_PARTICIPANT_CHANGED_GRID_AREA_NAME_CHANGED_SUBSCRIPTION_NAME%",
             Connection = "SHARED_SERVICE_BUS_LISTEN_CONNECTION_STRING")]
             byte[] data,
