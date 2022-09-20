@@ -51,7 +51,7 @@ module "func_processing" {
     MARKET_PARTICIPANT_CHANGED_ACTOR_GRID_AREA_REMOVED_SUBSCRIPTION_NAME  = module.sbs_metering_point_actor_grid_area_removed.name
     MARKET_PARTICIPANT_CHANGED_GRID_AREA_CREATED_SUBSCRIPTION_NAME        = module.sbs_metering_point_grid_area_created.name
     MARKET_PARTICIPANT_CHANGED_GRID_AREA_NAME_CHANGED_SUBSCRIPTION_NAME   = module.sbs_metering_point_grid_area_name_changed.name
-
+    ENERGY_SUPPLIER_CHANGED_EVENT_SUBSCRIPTION_NAME                       = module.sbs_energy_supplier_changed.name
 
   }
 
