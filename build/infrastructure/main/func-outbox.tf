@@ -40,9 +40,7 @@ module "func_outbox" {
     METERING_POINT_CREATED_TOPIC                                  = "metering-point-created"
     METERING_POINT_CONNECTED_TOPIC                                = "metering-point-connected"
     METERING_POINT_MESSAGE_DEQUEUED_TOPIC                         = "metering-point-message-dequeued"
-    METERING_POINT_DISCONNECTED_TOPIC                             = "metering-point-disconnected"
     METERING_POINT_RECONNECTED_TOPIC                              = "metering-point-reconnected"
-    MASTER_DATA_UPDATED_TOPIC                                     = "master-data-updated"
     ACTOR_MESSAGE_DISPATCH_TRIGGER_TIMER                          = "*/10 * * * * *"
     EVENT_MESSAGE_DISPATCH_TRIGGER_TIMER                          = "*/10 * * * * *"
 

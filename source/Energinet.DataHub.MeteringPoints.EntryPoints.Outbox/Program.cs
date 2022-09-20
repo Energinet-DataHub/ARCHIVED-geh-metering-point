@@ -94,7 +94,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                 Environment.GetEnvironmentVariable("METERING_POINT_CREATED_TOPIC") ?? throw new InvalidOperationException("No MeteringPointCreated Topic found"),
                 Environment.GetEnvironmentVariable("METERING_POINT_CONNECTED_TOPIC") ?? throw new InvalidOperationException("No MeteringPointConnected Topic found"),
                 Environment.GetEnvironmentVariable("METERING_POINT_MESSAGE_DEQUEUED_TOPIC") ?? throw new InvalidOperationException("No MeteringPointMessageDequeued Topic found"),
-                Environment.GetEnvironmentVariable("METERING_POINT_DISCONNECTED_TOPIC") ?? throw new InvalidOperationException("No MeteringPointDisconnected Topic found"),
                 Environment.GetEnvironmentVariable("METERING_POINT_RECONNECTED_TOPIC") ?? throw new InvalidOperationException("No MeteringPointReconnected Topic found"));
 
             services.AddExternalServiceBusQueuesHealthCheck(
@@ -156,13 +155,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                     Environment.GetEnvironmentVariable("METERING_POINT_MESSAGE_DEQUEUED_TOPIC") ??
                     throw new InvalidOperationException(
                         "No MeteringPointConnected Topic found")),
-                Lifestyle.Singleton);
-
-            container.Register(
-                () => new MeteringPointDisconnectedTopic(
-                    Environment.GetEnvironmentVariable("METERING_POINT_DISCONNECTED_TOPIC") ??
-                    throw new InvalidOperationException(
-                        "No MeteringPointDisconnected Topic found")),
                 Lifestyle.Singleton);
 
             container.Register(
