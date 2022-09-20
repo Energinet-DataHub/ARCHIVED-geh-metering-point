@@ -159,7 +159,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 Environment.GetEnvironmentVariable("MARKET_PARTICIPANT_CHANGED_ACTOR_GRID_AREA_ADDED_SUBSCRIPTION_NAME")!,
                 Environment.GetEnvironmentVariable("MARKET_PARTICIPANT_CHANGED_ACTOR_GRID_AREA_REMOVED_SUBSCRIPTION_NAME")!,
                 Environment.GetEnvironmentVariable("MARKET_PARTICIPANT_CHANGED_GRID_AREA_CREATED_SUBSCRIPTION_NAME")!,
-                Environment.GetEnvironmentVariable("MARKET_PARTICIPANT_CHANGED_GRID_AREA_NAME_CHANGED_SUBSCRIPTION_NAME")!);
+                Environment.GetEnvironmentVariable("MARKET_PARTICIPANT_CHANGED_GRID_AREA_NAME_CHANGED_SUBSCRIPTION_NAME")!,
+                Environment.GetEnvironmentVariable("ENERGY_SUPPLIER_CHANGED_EVENT_SUBSCRIPTION_NAME")!);
             services.AddInternalDomainServiceBusQueuesHealthCheck(
                 Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_MANAGE_CONNECTION_STRING")!,
                 Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_NAME")!);
