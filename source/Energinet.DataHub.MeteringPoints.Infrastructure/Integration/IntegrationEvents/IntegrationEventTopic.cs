@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.ChangeMasterData.MasterDataUpdated
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents
 {
-    public record MasterDataUpdatedTopic(string Name) : Topic;
+    public record IntegrationEventTopic(string Name) : Topic;
 }
