@@ -1,0 +1,1 @@
+﻿CREATE INDEX IDX_ProcessedDate ON dbo.QueuedInternalCommands (ProcessedDate)
