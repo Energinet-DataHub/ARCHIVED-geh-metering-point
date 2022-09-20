@@ -14,23 +14,20 @@
 
 using System;
 using System.Threading.Tasks;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notifications;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Extensions.Logging;
 
-namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions.MarketParticipant
+namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions.EventListeners
 {
-    public static class ActorGridAreaRemovedListener
+    public static class EnergySupplierChangedListener
     {
-        [Function("ActorGridAreaRemovedListener")]
-        public static Task RunAsync(
-            [ServiceBusTrigger(
-            "%INTEGRATION_EVENT_RECEIVED_TOPIC_NAME%",
-            "%MARKET_PARTICIPANT_CHANGED_ACTOR_GRID_AREA_REMOVED_SUBSCRIPTION_NAME%",
-            Connection = "SHARED_SERVICE_BUS_LISTEN_CONNECTION_STRING")]
-            byte[] data,
-            FunctionContext context)
+        [Function("EnergySupplierChangedListener")]
+        public static void Run([ServiceBusTrigger("%INTEGRATION_EVENT_RECEIVED_TOPIC_NAME%", "%ENERGY_SUPPLIER_CHANGED_EVENT_SUBSCRIPTION_NAME%", Connection = "SHARED_SERVICE_BUS_LISTEN_CONNECTION_STRING")] byte[] data, FunctionContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
-            return Task.CompletedTask;
         }
     }
 }

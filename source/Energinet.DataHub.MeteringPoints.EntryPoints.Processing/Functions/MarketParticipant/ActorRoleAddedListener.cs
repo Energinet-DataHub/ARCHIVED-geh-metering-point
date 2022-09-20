@@ -23,7 +23,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions.Mark
         [Function("ActorRoleAddedListener")]
         public static Task RunAsync(
             [ServiceBusTrigger(
-            "%MARKET_PARTICIPANT_CHANGED_TOPIC_NAME%",
+            "%INTEGRATION_EVENT_RECEIVED_TOPIC_NAME%",
             "%MARKET_PARTICIPANT_CHANGED_ACTOR_ROLE_ADDED_SUBSCRIPTION_NAME%",
             Connection = "SHARED_SERVICE_BUS_LISTEN_CONNECTION_STRING")]
             byte[] data,
