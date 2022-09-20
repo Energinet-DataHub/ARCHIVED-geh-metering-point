@@ -149,10 +149,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 "metering-point-master-data-response");
             services.AddExternalServiceBusTopicsHealthCheck(
                 Environment.GetEnvironmentVariable("SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING")!,
-                Environment.GetEnvironmentVariable("INTEGRATION_EVENT_RECEIVED_TOPIC_NAME")!);
+                Environment.GetEnvironmentVariable("INTEGRATION_EVENT_TOPIC_NAME")!);
             services.AddExternalServiceBusSubscriptionsHealthCheck(
                 Environment.GetEnvironmentVariable("SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING")!,
-                Environment.GetEnvironmentVariable("INTEGRATION_EVENT_RECEIVED_TOPIC_NAME")!,
+                Environment.GetEnvironmentVariable("INTEGRATION_EVENT_TOPIC_NAME")!,
                 Environment.GetEnvironmentVariable("MARKET_PARTICIPANT_CHANGED_ACTOR_CREATED_SUBSCRIPTION_NAME")!,
                 Environment.GetEnvironmentVariable("MARKET_PARTICIPANT_CHANGED_ACTOR_ROLE_ADDED_SUBSCRIPTION_NAME")!,
                 Environment.GetEnvironmentVariable("MARKET_PARTICIPANT_CHANGED_ACTOR_ROLE_REMOVED_SUBSCRIPTION_NAME")!,

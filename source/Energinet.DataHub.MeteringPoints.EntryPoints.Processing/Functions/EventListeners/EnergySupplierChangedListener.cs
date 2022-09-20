@@ -36,7 +36,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions.Even
         }
 
         [Function("EnergySupplierChangedListener")]
-        public async Task RunAsync([ServiceBusTrigger("%INTEGRATION_EVENT_RECEIVED_TOPIC_NAME%", "%ENERGY_SUPPLIER_CHANGED_EVENT_SUBSCRIPTION_NAME%", Connection = "SHARED_SERVICE_BUS_LISTEN_CONNECTION_STRING")] byte[] data, FunctionContext context)
+        public async Task RunAsync([ServiceBusTrigger("%INTEGRATION_EVENT_TOPIC_NAME%", "%ENERGY_SUPPLIER_CHANGED_EVENT_SUBSCRIPTION_NAME%", Connection = "SHARED_SERVICE_BUS_LISTEN_CONNECTION_STRING")] byte[] data, FunctionContext context)
         {
             if (data == null) throw new ArgumentNullException(nameof(data));
             if (context == null) throw new ArgumentNullException(nameof(context));
