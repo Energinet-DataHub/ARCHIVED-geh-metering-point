@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.MeteringPoints.Application.Integrations;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
@@ -25,7 +26,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDi
 {
     public class MeteringPointReconnectedDispatcher : IntegrationEventDispatcher<IntegrationEventTopic, MeteringPointReconnectedIntegrationEvent>
     {
-        public MeteringPointReconnectedDispatcher(ITopicSender<IntegrationEventTopic> topicSender, ProtobufOutboundMapperFactory protobufOutboundMapperFactory, IIntegrationEventMessageFactory integrationEventMessageFactory, IIntegrationMetadataContext integrationMetadataContext)
+        public MeteringPointReconnectedDispatcher(
+            ITopicSender<IntegrationEventTopic> topicSender,
+            ProtobufOutboundMapperFactory protobufOutboundMapperFactory,
+            IIntegrationEventMessageFactory integrationEventMessageFactory,
+            IIntegrationMetadataContext integrationMetadataContext)
             : base(topicSender, protobufOutboundMapperFactory, integrationEventMessageFactory, integrationMetadataContext)
         {
         }
@@ -35,6 +40,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDi
             serviceBusMessage.EnrichMetadata(
                 nameof(MeteringPointReconnected),
                 1);
+        }
+
+        protected override Task SendExtraMessageIfNeededAsync(ServiceBusMessage serviceBusMessage)
+        {
+            return Task.CompletedTask;
         }
     }
 }
