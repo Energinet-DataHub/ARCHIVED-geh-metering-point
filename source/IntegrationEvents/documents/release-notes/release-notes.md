@@ -1,5 +1,9 @@
 # Integration events Release notes
 
+## Version 1.0.3
+
+- Added Id-field to all integration events
+
 ## Version 1.0.2
 
 - Bump version as part of pipeline change
