@@ -85,4 +85,5 @@ message MasterDataUpdated {
   ProductType product = 6;
   google.protobuf.Timestamp effective_date = 7; // The date on which the metering point is created
   UnitType unit_type = 8; // Denotes the unit type. For a production metering point this is always a variation of watt/hour
+  string id = 9; 
 }

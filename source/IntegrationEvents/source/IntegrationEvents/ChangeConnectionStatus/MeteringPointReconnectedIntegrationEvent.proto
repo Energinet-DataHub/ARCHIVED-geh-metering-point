@@ -26,4 +26,5 @@ message MeteringPointReconnected {
   string meteringpoint_id = 1; // Unique identification for metering point
   string gsrn_number = 2; // Business facing metering point identifier
   google.protobuf.Timestamp effective_date = 3; // Date which the metering point is connected
+  string id = 4;
 }
