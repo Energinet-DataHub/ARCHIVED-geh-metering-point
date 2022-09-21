@@ -37,7 +37,7 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\source\IntegrationEvents\IntegrationEvents.csproj" />
+      <ProjectReference Include="..\IntegrationEvents\IntegrationEvents.csproj" />
     </ItemGroup>
 
 </Project>
