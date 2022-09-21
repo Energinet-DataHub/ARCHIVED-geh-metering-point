@@ -65,4 +65,5 @@ message ExchangeMeteringPointCreated {
   ConnectionState connection_state = 9; // Denotes which connection state a metering point is created with. For an exchange metering point this is always "New"
   UnitType unit_type = 10; // Denotes the unit type. For a production metering point this is always a variation of watt/hour 
   google.protobuf.Timestamp effective_date = 11; // The date on which the metering point is created
+  string id = 12;
 }
