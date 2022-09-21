@@ -73,4 +73,5 @@ message ProductionMeteringPointCreated {
   ConnectionState connection_state = 8; // Denotes which connection state a metering point is created with. For a production metering point this is always "New"
   UnitType unit_type = 9; // Denotes the unit type. For a production metering point this is always a variation of watt/hour 
   google.protobuf.Timestamp effective_Date = 10; // The date on which the metering point is created
+  string id = 11;
 }

@@ -79,5 +79,6 @@ message ConsumptionMeteringPointCreated {
   ProductType product = 8;  
   google.protobuf.Timestamp effective_date = 9; // The date on which the metering point is created
   ConnectionState connection_state = 10; // Denotes which connection state a metering point is created with. For a consumption metering point this is always "New"
-  UnitType unit_type = 11; // Denotes the unit type. For a production metering point this is always a variation of watt/hour 
+  UnitType unit_type = 11; // Denotes the unit type. For a production metering point this is always a variation of watt/hour
+  string id = 12; 
 }

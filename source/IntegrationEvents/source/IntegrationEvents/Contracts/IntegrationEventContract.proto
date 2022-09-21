@@ -117,6 +117,7 @@ message MeteringPointCreated {
   google.protobuf.StringValue from_grid_area_code = 13; // Denotes which grid area energy is exchange from
   MeteringPointType metering_point_type = 14; // Defines the type of metering point created
   google.protobuf.StringValue parent_gsrn_number = 15; // Business facing metering point identifier for this metering points parent
+  string id = 16;
 
 }
 
@@ -126,6 +127,7 @@ message MeteringPointCreated {
 message MeteringPointClosed {
   string metering_point_id = 1; // Unique metering point identifier.
   string effective_date = 2; // The date on which the metering point is closed.
+  string id = 3;
 }
 
 /**
@@ -133,6 +135,7 @@ message MeteringPointClosed {
  */
 message MeteringPointCancelled {
   string metering_point_id = 1; // Unique metering point identifier.
+  string id = 2; 
 }
 
 /**
@@ -143,6 +146,7 @@ message ParentCoupled {
   string metering_point_id = 1; // Unique metering point identifier of the child metering point.
   string parent_metering_point_id = 2; // Unique identifier of associated parent metering point.
   string effective_date = 3; // The date on which the parent is coupled.
+  string id = 4;
 }
 
 /**
@@ -152,6 +156,7 @@ message ParentCoupled {
 message ParentDecoupled {
   string metering_point_id = 1; // Unique metering point identifier of the metering point which has the existing parent decoupled.
   string effective_date = 2; // The date on which the parent is decoupled.
+  string id = 3;
 }
 
 /**
@@ -162,6 +167,7 @@ message SettlementDetailsChanged {
   string settlement_method = 2; // The settlement method of the metering point.
   string meter_reading_periodicity = 3; // The reading periodicity of the metering point.
   string effective_date = 4; // The date on which the settlement details are change.
+  string id = 5;
 }
 
 /**
@@ -171,6 +177,7 @@ message MeteringMethodChanged {
   string metering_point_id = 1; // Unique metering point identifier of the metering point which has its settlement details changed.
   string metering_method = 2; // This indicates if the metering point is now physical, virtual, or calculated.
   string effective_date = 3; // The date on which the metering method is changed.
+  string id = 4;
 }
 
 /**
@@ -180,6 +187,7 @@ message NetSettlementGroupChanged {
   string metering_point_id = 1; // Unique metering point identifier of the metering point which has its net settlement group changed.
   string net_settlement_group = 2; // This indicates if the new net settlement group.
   string effective_date = 3; // The date on which the net settlement group is changed.
+  string id = 4;
 }
 
 message IntegrationEventEnvelope {
@@ -192,5 +200,6 @@ message IntegrationEventEnvelope {
     SettlementDetailsChanged settlementDetailsChangedMessage = 6;
     MeteringMethodChanged meteringMethodChangedMessage = 7;
     NetSettlementGroupChanged netSettlementGroupChangedMessage = 8;
+    string id = 9; 
   }
 }
