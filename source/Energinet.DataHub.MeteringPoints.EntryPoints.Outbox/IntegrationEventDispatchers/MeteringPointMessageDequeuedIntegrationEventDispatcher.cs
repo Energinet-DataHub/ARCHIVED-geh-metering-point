@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.MeteringPoints.Application.Integrations;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
@@ -23,9 +24,17 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDi
 {
     public class MeteringPointMessageDequeuedIntegrationEventDispatcher : IntegrationEventDispatcher<MeteringPointMessageDequeuedTopic, MeteringPointMessageDequeuedIntegrationEvent>
     {
-        public MeteringPointMessageDequeuedIntegrationEventDispatcher(ITopicSender<MeteringPointMessageDequeuedTopic> topicSender, ProtobufOutboundMapperFactory protobufOutboundMapperFactory, IIntegrationEventMessageFactory integrationEventMessageFactory, IIntegrationMetadataContext integrationMetadataContext)
+        private readonly IIntegrationEventTopicSender _integrationEventTopicSender;
+
+        public MeteringPointMessageDequeuedIntegrationEventDispatcher(
+            ITopicSender<MeteringPointMessageDequeuedTopic> topicSender,
+            ProtobufOutboundMapperFactory protobufOutboundMapperFactory,
+            IIntegrationEventMessageFactory integrationEventMessageFactory,
+            IIntegrationMetadataContext integrationMetadataContext,
+            IIntegrationEventTopicSender integrationEventTopicSender)
             : base(topicSender, protobufOutboundMapperFactory, integrationEventMessageFactory, integrationMetadataContext)
         {
+            _integrationEventTopicSender = integrationEventTopicSender;
         }
 
         protected override void EnrichMessage(ServiceBusMessage serviceBusMessage)
@@ -33,6 +42,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDi
             serviceBusMessage.EnrichMetadata(
                 nameof(MeteringPointMessageDequeuedIntegrationEvent),
                 1);
+        }
+
+        protected override async Task SendExtraMessageIfNeededAsync(ServiceBusMessage serviceBusMessage)
+        {
+            await _integrationEventTopicSender.SendMessageAsync(serviceBusMessage).ConfigureAwait(false);
         }
     }
 }

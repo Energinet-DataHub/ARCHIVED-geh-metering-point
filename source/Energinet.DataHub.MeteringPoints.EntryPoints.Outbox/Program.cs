@@ -157,6 +157,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                 Lifestyle.Singleton);
 
             container.Register(typeof(ITopicSender<>), typeof(TopicSender<>), Lifestyle.Singleton);
+            container.RegisterSingleton<IIntegrationEventTopicSender>(() =>
+                new IntegrationEventTopicSender(
+                    container.GetInstance<ServiceBusClient>,
+                    Environment.GetEnvironmentVariable("INTEGRATION_EVENT_TOPIC_NAME") ?? throw new InvalidOperationException("No integration event topic found")));
 
             container.SendProtobuf<IntegrationEventEnvelope>();
 

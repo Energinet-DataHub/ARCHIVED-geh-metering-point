@@ -19,6 +19,7 @@ using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using Energinet.DataHub.MeteringPoints.Application.Integrations;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.Common;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Google.Protobuf;
 using MediatR;
@@ -57,10 +58,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.IntegrationEventDi
             EnrichMessage(serviceBusMessage);
 
             await _topicSender.SendMessageAsync(serviceBusMessage).ConfigureAwait(false);
+            await SendExtraMessageIfNeededAsync(serviceBusMessage).ConfigureAwait(false);
 
             return Unit.Value;
         }
 
         protected abstract void EnrichMessage(ServiceBusMessage serviceBusMessage);
+
+        protected abstract Task SendExtraMessageIfNeededAsync(ServiceBusMessage serviceBusMessage);
     }
 }
