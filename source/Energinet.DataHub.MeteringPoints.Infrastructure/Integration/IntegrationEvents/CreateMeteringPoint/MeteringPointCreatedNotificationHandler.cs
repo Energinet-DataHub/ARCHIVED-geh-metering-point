@@ -42,7 +42,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
 
-            var gridOperatorId = await GetGridOperatorIdAsync(notification.GsrnNumber).ConfigureAwait(false);
+            var gridOperatorId = await GetGridOperatorIdAsync(notification.GridAreaLinkId).ConfigureAwait(false);
 
             var message = new MeteringPointCreatedEventMessage(
                 notification.MeteringPointId.ToString(),
@@ -65,20 +65,19 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
             CreateAndAddOutboxMessage(message);
         }
 
-        public async Task<Guid> GetGridOperatorIdAsync(string gsrnNumber)
+        public async Task<Guid> GetGridOperatorIdAsync(Guid gridAreaLinkId)
         {
             var sql = "SELECT " +
                       "ga.ActorId AS GridOperatorId " +
-                      "FROM [dbo].[MeteringPoints] mp " +
-                      "JOIN [dbo].[GridAreaLinks] gl ON gl.Id = mp.MeteringGridArea " +
+                      "FROM [dbo].[GridAreaLinks] gl " +
                       "JOIN [dbo].[GridAreas] ga ON ga.Id = gl.GridAreaId " +
-                      "WHERE GsrnNumber = @GsrnNumber";
+                      "WHERE gl.Id = @GridAreaLinkId";
             return await _dbConnectionFactory.GetOpenConnection()
                 .QuerySingleOrDefaultAsync<Guid>(
                     sql,
                     new
                     {
-                        GsrnNumber = gsrnNumber,
+                        GridAreaLinkId = gridAreaLinkId,
                     }).ConfigureAwait(false);
         }
     }
