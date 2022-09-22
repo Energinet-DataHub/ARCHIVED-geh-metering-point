@@ -2,7 +2,7 @@
 
 ## Version 1.0.4
 
-- Extend Metering Point Created event with grid opereator id
+- Extend Metering Point Created event with grid operator id
 - Contracts cleanup
 
 ## Version 1.0.3
