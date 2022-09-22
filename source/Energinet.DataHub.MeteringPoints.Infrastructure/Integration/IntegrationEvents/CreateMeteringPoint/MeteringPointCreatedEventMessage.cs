@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.MeteringPoints.Application.Common.Transport;
 using MediatR;
 using NodaTime;
@@ -33,6 +34,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
         string Product,
         string UnitType,
         string ParentGsrn,
-        Instant EffectiveDate)
+        Instant EffectiveDate,
+        Guid GridOperatorId)
         : IOutboundMessage, IRequest, IIntegrationEvent;
 }

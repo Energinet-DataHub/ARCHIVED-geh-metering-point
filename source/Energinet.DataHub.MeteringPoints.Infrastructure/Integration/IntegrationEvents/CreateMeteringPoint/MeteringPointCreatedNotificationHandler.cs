@@ -15,6 +15,8 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Dapper;
+using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Domain.MeteringPoints.Events;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
 
@@ -23,16 +25,25 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
     public class MeteringPointCreatedNotificationHandler
         : IntegrationEventPublisher<MeteringPointCreated>
     {
-        public MeteringPointCreatedNotificationHandler(IOutbox outbox, IOutboxMessageFactory outboxMessageFactory)
+        private readonly IDbConnectionFactory _dbConnectionFactory;
+
+        public MeteringPointCreatedNotificationHandler(
+            IOutbox outbox,
+            IOutboxMessageFactory outboxMessageFactory,
+            IDbConnectionFactory dbConnectionFactory)
             : base(outbox, outboxMessageFactory)
         {
+            _dbConnectionFactory = dbConnectionFactory;
         }
 
-        public override Task Handle(
+        public override async Task Handle(
             MeteringPointCreated notification,
             CancellationToken cancellationToken)
         {
             if (notification == null) throw new ArgumentNullException(nameof(notification));
+
+            var gridOperatorId = await GetGridOperatorIdAsync(notification.GsrnNumber).ConfigureAwait(false);
+
             var message = new MeteringPointCreatedEventMessage(
                 notification.MeteringPointId.ToString(),
                 notification.GsrnNumber,
@@ -48,11 +59,27 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 notification.ProductType,
                 notification.UnitType,
                 string.Empty,
-                notification.EffectiveDate);
+                notification.EffectiveDate,
+                gridOperatorId);
 
             CreateAndAddOutboxMessage(message);
+        }
 
-            return Task.CompletedTask;
+        public async Task<Guid> GetGridOperatorIdAsync(string gsrnNumber)
+        {
+            var sql = "SELECT " +
+                      "ga.ActorId AS GridOperatorId " +
+                      "FROM [dbo].[MeteringPoints] mp " +
+                      "JOIN [dbo].[GridAreaLinks] gl ON gl.Id = mp.MeteringGridArea " +
+                      "JOIN [dbo].[GridAreas] ga ON ga.Id = gl.GridAreaId " +
+                      "WHERE GsrnNumber = @GsrnNumber";
+            return await _dbConnectionFactory.GetOpenConnection()
+                .QuerySingleOrDefaultAsync<Guid>(
+                    sql,
+                    new
+                    {
+                        GsrnNumber = gsrnNumber,
+                    }).ConfigureAwait(false);
         }
     }
 }
