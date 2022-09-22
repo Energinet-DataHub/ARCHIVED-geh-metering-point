@@ -1,5 +1,10 @@
 # Integration events Release notes
 
+## Version 1.0.4
+
+- Extend Metering Point Created event with grid opereator id
+- Contracts cleanup
+
 ## Version 1.0.3
 
 - Added Id-field to all integration events
