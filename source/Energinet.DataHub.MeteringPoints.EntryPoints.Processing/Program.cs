@@ -46,6 +46,7 @@ using Energinet.DataHub.MeteringPoints.Domain.SeedWork;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Common.MediatR;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions;
+using Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Functions.EventListeners;
 using Energinet.DataHub.MeteringPoints.EntryPoints.Processing.Monitor;
 using Energinet.DataHub.MeteringPoints.Infrastructure;
 using Energinet.DataHub.MeteringPoints.Infrastructure.BusinessRequestProcessing;
@@ -181,6 +182,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
             container.Register<ChargesResponseReceiver>(Lifestyle.Scoped);
             container.Register<MasterDataRequestListener>(Lifestyle.Scoped);
+            container.Register<EnergySupplierChangedListener>(Lifestyle.Scoped);
             container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
             container.Register<IEnergySupplierRepository, EnergySupplierRepository>(Lifestyle.Scoped);
             container.Register<IGridAreaRepository, GridAreaRepository>(Lifestyle.Scoped);
