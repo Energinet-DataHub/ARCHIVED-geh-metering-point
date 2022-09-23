@@ -44,6 +44,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests.CreateMeteringPoints
             Assert.Equal(request.MeteringMethod, integrationEvent?.MeteringMethod);
             Assert.Equal(request.MeterReadingOccurrence, integrationEvent?.MeterReadingPeriodicity);
             Assert.Equal(request.NetSettlementGroup, integrationEvent?.NetSettlementGroup);
+            Assert.NotNull(integrationEvent?.GridOperatorId);
         }
 
         [Fact]
