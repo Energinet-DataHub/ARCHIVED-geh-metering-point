@@ -15,7 +15,7 @@
 using System;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Helpers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
-using Energinet.DataHub.MeteringPoints.IntegrationEvents.Contracts;
+using Energinet.DataHub.MeteringPoints.IntegrationEvents.CreateMeteringPoint;
 using Google.Protobuf;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint
@@ -43,6 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 UnitType = obj.GetUnitType(),
                 EffectiveDate = obj.EffectiveDate.ToTimestamp(),
                 ParentGsrnNumber = obj.ParentGsrn,
+                GridOperatorId = obj.GridOperatorId.ToString(),
             };
         }
     }
