@@ -43,6 +43,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Integratio
                 UnitType = obj.GetUnitType(),
                 EffectiveDate = obj.EffectiveDate.ToTimestamp(),
                 ParentGsrnNumber = obj.ParentGsrn,
+                GridOperatorId = obj.GridOperatorId.ToString(),
             };
         }
     }
