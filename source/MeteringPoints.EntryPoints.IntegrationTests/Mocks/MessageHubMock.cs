@@ -41,7 +41,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Mocks
 
             // TODO: save ids to storage (new messagehub version)
             var idempotencyId = Guid.NewGuid().ToString();
-            var bundleRequestDto = new DataBundleRequestDto(Guid.NewGuid(), dataAvailableNotification.Uuid.ToString(), idempotencyId, dataAvailableNotification.MessageType.Value);
+            var bundleRequestDto = new DataBundleRequestDto(
+                Guid.NewGuid(),
+                dataAvailableNotification.Uuid.ToString(),
+                idempotencyId,
+                dataAvailableNotification.MessageType,
+                ResponseFormat.Xml,
+                1);
             var bundleRequest = new RequestBundleParser().Parse(bundleRequestDto);
 
             var sessionId = Guid.NewGuid().ToString();
