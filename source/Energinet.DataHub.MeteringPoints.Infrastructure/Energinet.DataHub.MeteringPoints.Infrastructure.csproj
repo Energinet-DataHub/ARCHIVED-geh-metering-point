@@ -23,15 +23,15 @@ limitations under the License.
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.AzureServiceBus" Version="6.0.3" />
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="6.0.2" />
-    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.7.0" />
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.13.0" />
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.10.0" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.13.1" />
     <PackageReference Include="Energinet.DataHub.Core.App.FunctionApp" Version="2.3.1" />
     <PackageReference Include="Energinet.DataHub.Core.XmlConversion.XmlConverter" Version="1.0.5" />
     <PackageReference Include="Energinet.DataHub.Core.XmlConversion.XmlConverter.Abstractions" Version="1.0.5" />
-    <PackageReference Include="Energinet.DataHub.MessageHub.Client" Version="1.9.1" />
+    <PackageReference Include="Energinet.DataHub.MessageHub.Client" Version="3.2.0" />
     <PackageReference Include="Energinet.DataHub.MeteringPoints.IntegrationEvents" Version="1.0.0" />
     <PackageReference Include="Energinet.DataHub.MeteringPoints.RequestResponse" Version="1.0.3" />
-    <PackageReference Include="Google.Protobuf" Version="3.21.1" />
+    <PackageReference Include="Google.Protobuf" Version="3.21.5" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
     <PackageReference Include="Polly" Version="7.2.3" />

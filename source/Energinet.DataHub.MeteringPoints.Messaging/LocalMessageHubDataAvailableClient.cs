@@ -13,12 +13,13 @@
 // limitations under the License.
 
 using System;
+using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Model.Model;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Providers;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 
 namespace Energinet.DataHub.MeteringPoints.Messaging
 {
@@ -29,22 +30,25 @@ namespace Energinet.DataHub.MeteringPoints.Messaging
         private readonly ICorrelationContext _correlationContext;
         private readonly IMessageHubMessageRepository _messageHubMessageRepository;
         private readonly ILogger _logger;
+        private readonly IActorLookup _actorLookup;
 
         public LocalMessageHubDataAvailableClient(
             IMessageHubMessageRepository messageHubMessageRepository,
             IOutboxDispatcher<DataAvailableNotification> dataAvailableOutboxDispatcher,
             MessageHubMessageFactory messageHubMessageFactory,
             ICorrelationContext correlationContext,
-            ILogger logger)
+            ILogger logger,
+            IActorLookup actorLookup)
         {
             _messageHubMessageRepository = messageHubMessageRepository;
             _dataAvailableOutboxDispatcher = dataAvailableOutboxDispatcher;
             _messageHubMessageFactory = messageHubMessageFactory;
             _correlationContext = correlationContext;
             _logger = logger;
+            _actorLookup = actorLookup;
         }
 
-        public void DataAvailable(MessageHubEnvelope messageHubEnvelope)
+        public async Task DataAvailableAsync(MessageHubEnvelope messageHubEnvelope)
         {
             if (messageHubEnvelope is null)
             {
@@ -58,8 +62,23 @@ namespace Energinet.DataHub.MeteringPoints.Messaging
             var messageMetadata = _messageHubMessageFactory.Create(messageHubEnvelope.Correlation, messageHubEnvelope.Content, messageHubEnvelope.MessageType, messageHubEnvelope.Recipient, messageHubEnvelope.GsrnNumber);
             _messageHubMessageRepository.AddMessageMetadata(messageMetadata);
 
+            var actorId = await _actorLookup.GetIdByActorNumberAsync(messageMetadata.Recipient)
+                .ConfigureAwait(false);
+            if (actorId == Guid.Empty)
+            {
+                throw new InvalidOperationException($"Could not find actor with number {messageMetadata.Recipient}");
+            }
+
             _logger.LogInformation($"Sending DataAvailableNotification to Post Office. CorrelationId: {_correlationContext.Id}");
-            _dataAvailableOutboxDispatcher.Dispatch(new DataAvailableNotification(messageMetadata.Id, new GlobalLocationNumberDto(messageHubEnvelope.Recipient), new MessageTypeDto(messageHubEnvelope.MessageType.Name), DomainOrigin.MeteringPoints, true, 1, messageHubEnvelope.DocumentName));
+            _dataAvailableOutboxDispatcher.Dispatch(
+                new DataAvailableNotification(
+                    messageMetadata.Id,
+                    new ActorIdDto(actorId),
+                    new MessageTypeDto(messageHubEnvelope.MessageType.Name),
+                    DomainOrigin.MeteringPoints,
+                    true,
+                    1,
+                    messageHubEnvelope.DocumentName));
         }
     }
 }

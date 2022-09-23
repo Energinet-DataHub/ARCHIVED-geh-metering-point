@@ -26,6 +26,6 @@ namespace Energinet.DataHub.MeteringPoints.Messaging
         /// Dispatch message to Local Post Office
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        void DataAvailable(MessageHubEnvelope messageHubEnvelope);
+        Task DataAvailableAsync(MessageHubEnvelope messageHubEnvelope);
     }
 }
