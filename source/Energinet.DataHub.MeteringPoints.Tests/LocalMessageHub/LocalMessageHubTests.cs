@@ -68,13 +68,14 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
                 _dataAvailableNotificationOutboxDispatcher,
                 new MessageHubMessageFactory(new SystemDateTimeProviderStub()),
                 new CorrelationContext(),
-                new Logger<LocalMessageHubTests>(loggerFactory));
+                new Logger<LocalMessageHubTests>(loggerFactory),
+                new ActorLookupStub());
         }
 
         [Fact]
-        public void Dispatch_Should_Result_In_MessageReady_Notification()
+        public async Task Dispatch_Should_Result_In_MessageReady_Notification()
         {
-            var message = DispatchMessage();
+            var message = await DispatchMessage().ConfigureAwait(false);
             _messageHubMessageRepository.GetMessageAsync(message.Message.Id).Should().NotBeNull();
             _dataAvailableNotificationOutboxDispatcher.IsDispatched().Should().BeTrue();
         }
@@ -82,7 +83,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
         [Fact]
         public async Task GenerateBundle_Should_Result_In_BundleReady_Notification()
         {
-            var message = DispatchMessage();
+            var message = await DispatchMessage().ConfigureAwait(false);
             await RequestBundle(message.Message).ConfigureAwait(false);
 
             _dataBundleResponseOutboxDispatcher.IsDispatched().Should().BeTrue();
@@ -95,13 +96,13 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
 
             for (var i = 0; i < 100; i++)
             {
-                var message = DispatchMessage();
+                var message = await DispatchMessage().ConfigureAwait(false);
                 messages.Add(message);
             }
 
             await RequestBundle(messages).ConfigureAwait(false);
 
-            var bytes = _dequeueNotificationParser.Parse(new DequeueNotificationDto("foo", new GlobalLocationNumberDto("recipient")));
+            var bytes = _dequeueNotificationParser.Parse(new DequeueNotificationDto("foo", new ActorIdDto(Guid.NewGuid())));
 
             await _localMessageHubClient.BundleDequeuedAsync(bytes).ConfigureAwait(false);
 
@@ -126,14 +127,16 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
                     messageHubMessage.Id,
                     "foo",
                     "idempotencyId",
-                    DocumentType.ConfirmCreateMeteringPoint.Name);
+                    new MessageTypeDto(DocumentType.ConfirmCreateMeteringPoint.Name),
+                    ResponseFormat.Xml,
+                    1);
 
             var bytes = _requestBundleParser.Parse(requestBundleDto);
 
             await _localMessageHubClient.CreateBundleAsync(bytes, "sessionId").ConfigureAwait(false);
         }
 
-        private (MessageHubMessage Message, string Correlation) DispatchMessage()
+        private async Task<(MessageHubMessage Message, string Correlation)> DispatchMessage()
         {
             var correlationId = Guid.NewGuid().ToString();
 
@@ -143,7 +146,7 @@ namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub
                 ""CreatedDateTime"": ""2022-03-23T19:37:00.5370288Z"",""ReasonCode"": ""A01"",""MarketActivityRecord"": {""Id"": ""185bd262-b885-4ec3-b81e-7d51b65b74f3"",
                 ""MarketEvaluationPoint"": ""571313191221249692"",""OriginalTransaction"": ""1""}}";
 
-            _localMessageHubDataAvailableClient.DataAvailable(new MessageHubEnvelope("recipient", content, DocumentType.AccountingPointCharacteristicsMessage, correlationId, "gsrnNumber", "ConfirmRequestChangeAccountingPointCharacteristics"));
+            await _localMessageHubDataAvailableClient.DataAvailableAsync(new MessageHubEnvelope("recipient", content, DocumentType.AccountingPointCharacteristicsMessage, correlationId, "gsrnNumber", "ConfirmRequestChangeAccountingPointCharacteristics")).ConfigureAwait(false);
 
             var message = _messageHubMessageRepository.GetMessageByCorrelation(correlationId);
             return (message, correlationId);

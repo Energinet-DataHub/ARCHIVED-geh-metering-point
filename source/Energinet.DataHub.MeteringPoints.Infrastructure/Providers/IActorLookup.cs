@@ -13,10 +13,19 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.MessageHub.Model.Model;
-using MediatR;
+using System.Threading.Tasks;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub
+namespace Energinet.DataHub.MeteringPoints.Infrastructure.Providers
 {
-    public record DataAvailableNotification(Guid Uuid, ActorIdDto Recipient, MessageTypeDto MessageType, DomainOrigin Origin, bool SupportsBundling, int RelativeWeight, string DocumentType) : IRequest;
+    /// <summary>
+    /// Actor lookup service
+    /// </summary>
+    public interface IActorLookup
+    {
+        /// <summary>
+        /// Finds the actor id by actor number
+        /// </summary>
+        /// <param name="actorNumber"></param>
+        Task<Guid> GetIdByActorNumberAsync(string actorNumber);
+    }
 }
