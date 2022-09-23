@@ -42,6 +42,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEve
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint.MessageDequeued;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Providers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf.Integration;
@@ -76,7 +77,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
                 var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")
                                        ?? throw new InvalidOperationException(
                                            "Metering point db connection string not found.");
-
                 x.UseSqlServer(connectionString, y => y.UseNodaTime());
             });
 
@@ -104,6 +104,16 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox
             base.ConfigureContainer(container);
 
             // Register application components.
+            container.Register<IDbConnectionFactory>(
+                () =>
+            {
+                var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")
+                                       ?? throw new InvalidOperationException(
+                                           "Metering point db connection string not found.");
+                return new SqlDbConnectionFactory(connectionString);
+            },
+                Lifestyle.Scoped);
+            container.Register<IActorLookup, ActorLookup>();
             container.Register<ISystemDateTimeProvider, SystemDateTimeProvider>(Lifestyle.Scoped);
             container.Register<IJsonSerializer, JsonSerializer>(Lifestyle.Scoped);
             container.Register<IOutboxManager, OutboxManager>(Lifestyle.Scoped);

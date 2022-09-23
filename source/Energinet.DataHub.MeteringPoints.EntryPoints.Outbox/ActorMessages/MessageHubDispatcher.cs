@@ -30,13 +30,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Outbox.ActorMessages
             _localMessageHubDataAvailableClient = localMessageHubDataAvailableClient;
         }
 
-        public Task<Unit> Handle(MessageHubEnvelope request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(MessageHubEnvelope request, CancellationToken cancellationToken)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            _localMessageHubDataAvailableClient.DataAvailable(request);
+            await _localMessageHubDataAvailableClient.DataAvailableAsync(request).ConfigureAwait(false);
 
-            return Task.FromResult(Unit.Value);
+            return Unit.Value;
         }
     }
 }

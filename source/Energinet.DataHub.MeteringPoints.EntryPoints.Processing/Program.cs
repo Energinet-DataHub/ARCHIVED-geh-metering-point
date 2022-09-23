@@ -83,6 +83,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.Notifications;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Messaging.Idempotency;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Providers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Providers.MeteringPointOwnership;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
@@ -169,6 +170,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             base.ConfigureContainer(container);
 
             // Register application components.
+            container.Register<IActorLookup, ActorLookup>(Lifestyle.Scoped);
             container.Register<QueueSubscriber>(Lifestyle.Scoped);
             container.Register<SystemTimer>(Lifestyle.Scoped);
             container.Register<InternalCommandProcessor>(Lifestyle.Scoped);
