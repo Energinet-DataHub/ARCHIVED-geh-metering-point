@@ -185,6 +185,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             container.Register<ChargesResponseReceiver>(Lifestyle.Scoped);
             container.Register<MasterDataRequestListener>(Lifestyle.Scoped);
             container.Register<EnergySupplierChangedListener>(Lifestyle.Scoped);
+            container.Register<MeteringPointMessageDequeuedListener>(Lifestyle.Scoped);
             container.Register<IMeteringPointRepository, MeteringPointRepository>(Lifestyle.Scoped);
             container.Register<IEnergySupplierRepository, EnergySupplierRepository>(Lifestyle.Scoped);
             container.Register<IGridAreaRepository, GridAreaRepository>(Lifestyle.Scoped);
