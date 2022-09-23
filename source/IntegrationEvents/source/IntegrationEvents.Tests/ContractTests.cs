@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MeteringPoints.IntegrationEvents.Contracts;
+using Energinet.DataHub.MeteringPoints.IntegrationEvents.CreateMeteringPoint;
 using Google.Protobuf;
 
 namespace IntegrationEvents.Tests;
