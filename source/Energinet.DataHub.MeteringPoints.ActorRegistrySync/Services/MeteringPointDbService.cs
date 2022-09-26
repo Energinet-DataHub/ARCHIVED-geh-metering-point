@@ -103,15 +103,6 @@ public class MeteringPointDbService : IDisposable
             transaction: _transaction).ConfigureAwait(false);
     }
 
-    public async Task<IEnumerable<MeteringPointActor>> GetActorIdsByGlnNumbersAsync(IReadOnlyCollection<string> glnNumbers)
-    {
-        return await _sqlConnection.QueryAsync<MeteringPointActor>(
-            @"SELECT IdentificationNumber, IdentificationType, Roles, Id
-                    FROM [dbo].[Actor]
-                    WHERE Actor.IdentificationNumber IN @glnNumbers",
-            new { glnNumbers }).ConfigureAwait(false);
-    }
-
     public async Task CommitTransactionAsync()
     {
         if (_transaction != null)
