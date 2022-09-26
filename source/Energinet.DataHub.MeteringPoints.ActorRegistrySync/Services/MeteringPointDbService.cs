@@ -42,8 +42,6 @@ public class MeteringPointDbService : IDisposable
             .ConfigureAwait(false);
         await _sqlConnection.ExecuteAsync("DELETE FROM [dbo].[GridAreas]", transaction: _transaction)
             .ConfigureAwait(false);
-        await _sqlConnection.ExecuteAsync("DELETE FROM [dbo].[UserActor]", transaction: _transaction)
-            .ConfigureAwait(false);
         await _sqlConnection.ExecuteAsync("DELETE FROM [dbo].[Actor]", transaction: _transaction)
             .ConfigureAwait(false);
     }
