@@ -40,32 +40,6 @@ public class AccessService : IDisposable
         return new AccessService(dbConnection);
     }
 
-    public async Task<CreateCountResponse> GrantUserActorPermissionAsync(IReadOnlyCollection<UserActorDto> userActorDtos)
-    {
-        if (userActorDtos == null) throw new ArgumentNullException(nameof(userActorDtos));
-
-        var actorCache = await GetActorsByGlnNumbersAsync(MapUniqueGlnNumbers(userActorDtos).ToList()).ConfigureAwait(false);
-        var usersCurrentPermissions = await GetUserActorByUserIdAsync(MapUserIds(userActorDtos).ToList()).ConfigureAwait(false);
-
-        List<Guid> allUserIds = new();
-        List<UserActor> allUserActors = new();
-        foreach (var userActor in userActorDtos)
-        {
-            var userActors = MapGlnAndUserToUserActor(userActor, actorCache);
-            userActors = FilterExistingPermissions(userActors, usersCurrentPermissions);
-
-            allUserIds.Add(userActor.UserObjectId);
-            allUserActors.AddRange(userActors);
-        }
-
-        var userCount = await _meteringPointDbService.InsertUsersAsync(allUserIds).ConfigureAwait(false);
-        var permissionCount = await _meteringPointDbService.InsertUserActorsAsync(allUserActors).ConfigureAwait(false);
-
-        await _meteringPointDbService.CommitTransactionAsync().ConfigureAwait(false);
-
-        return new CreateCountResponse(userCount, permissionCount);
-    }
-
     public void Dispose()
     {
         Dispose(true);
@@ -114,10 +88,5 @@ public class AccessService : IDisposable
     private async Task<IReadOnlyCollection<MeteringPointActor>> GetActorsByGlnNumbersAsync(List<string> glnNumbers)
     {
         return (await _meteringPointDbService.GetActorIdsByGlnNumbersAsync(glnNumbers).ConfigureAwait(false)).ToList().AsReadOnly();
-    }
-
-    private async Task<IReadOnlyCollection<UserActor>> GetUserActorByUserIdAsync(List<Guid> userIds)
-    {
-        return (await _meteringPointDbService.GetUserActorsByUserIdsAsync(userIds).ConfigureAwait(false)).ToList().AsReadOnly();
     }
 }
