@@ -186,7 +186,6 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IUserContext>(() => new UserContext { CurrentUser = new User(Guid.NewGuid(), new List<Guid> { Guid.NewGuid() }) }, Lifestyle.Singleton);
             _container.Register<MeteringPointPipelineContext>(Lifestyle.Scoped);
             _container.Register<IActorProvider, ActorProvider>(Lifestyle.Scoped);
-            _container.Register<IUserProvider, UserProvider>(Lifestyle.Scoped);
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(databaseFixture.DatabaseManager.ConnectionString), Lifestyle.Scoped);
             _container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
             _container.Register<ProtobufOutboundMapperFactory>();
