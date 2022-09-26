@@ -51,7 +51,7 @@ public class ActorSyncService : IDisposable
     {
         if (_actors != null)
         {
-            var userActorsToInsert = userActors.Where(u => _actors.Any(actor => u.ActorId == actor.Id));
+            var userActorsToInsert = userActors.Where(u => _actors.Any(actor => u.ActorId == actor.B2CId));
             await _meteringPointDbService.InsertUserActorsAsync(userActorsToInsert).ConfigureAwait(false);
         }
     }

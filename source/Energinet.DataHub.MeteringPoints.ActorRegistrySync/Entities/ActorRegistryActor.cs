@@ -20,4 +20,5 @@ public record ActorRegistryActor(
     string IdentificationNumber,
     string IdentificationType,
     string Roles,
-    Guid Id);
+    Guid B2CId,
+    Guid ActorId);

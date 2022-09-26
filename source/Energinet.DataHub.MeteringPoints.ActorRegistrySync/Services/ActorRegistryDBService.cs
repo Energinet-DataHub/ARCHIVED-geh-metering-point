@@ -52,7 +52,7 @@ public class ActorRegistryDbService : IDisposable
                     select
                         g.Code AS {nameof(GridArea.Code)},
                         g.Name AS {nameof(GridArea.Name)},
-                        actorinfo.ActorId AS {nameof(GridArea.ActorId)},
+                        actorinfo.Id AS {nameof(GridArea.ActorId)},
                         g.Id AS {nameof(GridArea.Id)}
                     from GridAreaNew g
                     join MarketRoleGridArea mrg on mrg.GridAreaId = g.Id
@@ -69,7 +69,8 @@ public class ActorRegistryDbService : IDisposable
         select a.ActorNumber AS {nameof(ActorRegistryActor.IdentificationNumber)},
                'GLN' AS {nameof(ActorRegistryActor.IdentificationType)},
                (SELECT STRING_AGG([Function], ',') FROM MarketRole WHERE ActorInfoId = a.Id) AS {nameof(ActorRegistryActor.Roles)},
-                a.ActorId AS {nameof(ActorRegistryActor.Id)}
+                a.ActorId AS {nameof(ActorRegistryActor.B2CId)},
+               a.Id AS {nameof(ActorRegistryActor.ActorId)}
         from [dbo].[ActorInfoNew] a where a.ActorId is not null";
 
         return await _sqlConnection.QueryAsync<ActorRegistryActor>(sqlStatement).ConfigureAwait(false) ?? (IEnumerable<ActorRegistryActor>)Array.Empty<object>();
