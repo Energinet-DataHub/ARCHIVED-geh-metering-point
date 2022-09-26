@@ -1,2 +1,2 @@
-﻿DROP TABLE [dbo].[UserActor];
-DROP TABLE [dbo].[User];
+﻿DROP TABLE [dbo].[UserActor]
+DROP TABLE [dbo].[User]
