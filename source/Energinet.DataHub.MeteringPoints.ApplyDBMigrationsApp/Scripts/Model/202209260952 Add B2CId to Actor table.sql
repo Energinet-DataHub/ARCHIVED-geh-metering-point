@@ -1,0 +1,2 @@
+﻿ALTER TABLE dbo.Actor
+ADD COLUMN B2CId

@@ -70,7 +70,7 @@ public class ActorRegistryDbService : IDisposable
                'GLN' AS {nameof(ActorRegistryActor.IdentificationType)},
                (SELECT STRING_AGG([Function], ',') FROM MarketRole WHERE ActorInfoId = a.Id) AS {nameof(ActorRegistryActor.Roles)},
                 a.ActorId AS {nameof(ActorRegistryActor.B2CId)},
-               a.Id AS {nameof(ActorRegistryActor.ActorId)}
+               a.Id AS {nameof(ActorRegistryActor.Id)}
         from [dbo].[ActorInfoNew] a where a.ActorId is not null";
 
         return await _sqlConnection.QueryAsync<ActorRegistryActor>(sqlStatement).ConfigureAwait(false) ?? (IEnumerable<ActorRegistryActor>)Array.Empty<object>();

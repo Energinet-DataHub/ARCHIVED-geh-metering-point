@@ -83,7 +83,7 @@ public class MeteringPointDbService : IDisposable
         foreach (var actor in actors)
         {
             stringBuilder.Append(@"INSERT INTO [dbo].[Actor] ([ActorId], [IdentificationNumber],[IdentificationType], [Roles], [B2CId])
-             VALUES ('" + actor.ActorId + "', '" + actor.IdentificationNumber + "', '" + actor.IdentificationType + "' , '" + MapFrom(actor.Roles) + "' , '" + actor.B2CId + "')");
+             VALUES ('" + actor.Id + "', '" + actor.IdentificationNumber + "', '" + actor.IdentificationType + "' , '" + MapFrom(actor.Roles) + "' , '" + actor.B2CId + "')");
             stringBuilder.AppendLine();
         }
 
