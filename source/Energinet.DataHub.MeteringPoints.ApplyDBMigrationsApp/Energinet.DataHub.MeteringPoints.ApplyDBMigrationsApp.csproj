@@ -38,11 +38,14 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Test\202201061300 Create Metering Point test data.sql" />
     <EmbeddedResource Include="Scripts\Test\202201181200 Fix actor ids.sql" />
     <EmbeddedResource Include="Scripts\Test\202202081200 Add process test data.sql" />
-    <EmbeddedResource Include="Scripts\Test\202202220830 User test data.sql" />
     <None Remove="Scripts\Model\202209151551 Add Roles to Actor table.sql" />
     <EmbeddedResource Include="Scripts\Model\202209151551 Add Roles to Actor table.sql" />
     <None Remove="Scripts\Model\202209260952 Add new ActorId to Actor table.sql" />
     <EmbeddedResource Include="Scripts\Model\202209260952 Add field to Actor table.sql" />
+    <None Remove="Scripts\Model\202209261411 Drop UserActor table.sql" />
+    <EmbeddedResource Include="Scripts\Model\202209261411 Drop UserActor table.sql" />
+    <None Remove="Scripts\Model\202209271546 Change size of bundleid column.sql" />
+    <EmbeddedResource Include="Scripts\Model\202209271546 Change size of bundleid column.sql" />
   </ItemGroup>
 
 </Project>

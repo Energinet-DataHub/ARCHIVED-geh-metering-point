@@ -33,7 +33,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
         public AuthorizationConfiguration()
         {
             RootConfiguration = BuildKeyVaultConfigurationRoot();
-            Environment = "u002";
+            // u002 didn't work
+            Environment = "u001";
             var team = "batman";
 
             SecretsConfiguration = BuildSecretsKeyVaultConfiguration(RootConfiguration.GetValue<string>("AZURE_SECRETS_KEYVAULT_URL"));

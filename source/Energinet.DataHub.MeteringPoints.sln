@@ -41,8 +41,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Energinet.DataHub.MeteringPoints.Client.Abstractions", "Energinet.DataHub.MeteringPoints.Client.Abstractions\Energinet.DataHub.MeteringPoints.Client.Abstractions.csproj", "{C83F8BF9-8CFE-4743-BBDC-4CD7D20614F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeteringPoints.EntryPoints.IntegrationTests", "MeteringPoints.EntryPoints.IntegrationTests\MeteringPoints.EntryPoints.IntegrationTests.csproj", "{9949E60E-7592-4994-8823-D392949D8D63}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Energinet.DataHub.MeteringPoints.ActorRegistrySync", "Energinet.DataHub.MeteringPoints.ActorRegistrySync\Energinet.DataHub.MeteringPoints.ActorRegistrySync.csproj", "{64016C6B-D770-492E-A6DB-9204C79F8433}"
 EndProject
 Global
@@ -115,10 +113,6 @@ Global
 		{C83F8BF9-8CFE-4743-BBDC-4CD7D20614F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C83F8BF9-8CFE-4743-BBDC-4CD7D20614F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C83F8BF9-8CFE-4743-BBDC-4CD7D20614F4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9949E60E-7592-4994-8823-D392949D8D63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9949E60E-7592-4994-8823-D392949D8D63}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9949E60E-7592-4994-8823-D392949D8D63}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9949E60E-7592-4994-8823-D392949D8D63}.Release|Any CPU.Build.0 = Release|Any CPU
 		{64016C6B-D770-492E-A6DB-9204C79F8433}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{64016C6B-D770-492E-A6DB-9204C79F8433}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64016C6B-D770-492E-A6DB-9204C79F8433}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -139,7 +133,6 @@ Global
 		{1E8BC6B4-C2D2-4343-8C9A-474452FB0BC2} = {698CCD74-174C-493E-BDC4-69A0E3EA3F82}
 		{39302585-1B26-4101-AFBA-AD9D83E40DCD} = {6ADA8295-FA91-4DBC-96C6-B1028AED6032}
 		{C83F8BF9-8CFE-4743-BBDC-4CD7D20614F4} = {6ADA8295-FA91-4DBC-96C6-B1028AED6032}
-		{9949E60E-7592-4994-8823-D392949D8D63} = {251113C8-9673-45D2-AFA6-2D53AF6E8756}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0A38FA8A-EE54-4B3C-8EAD-26B2FD4A82A7}

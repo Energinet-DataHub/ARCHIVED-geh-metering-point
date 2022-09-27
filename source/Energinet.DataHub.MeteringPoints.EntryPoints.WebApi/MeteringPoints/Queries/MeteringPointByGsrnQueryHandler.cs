@@ -43,12 +43,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.MeteringPoints.Que
     public class MeteringPointByGsrnQueryHandler : IRequestHandler<MeteringPointByGsrnQuery, MeteringPointCimDto?>
     {
         private readonly IDbConnectionFactory _connectionFactory;
-        private readonly IUserContext _userContext;
 
-        public MeteringPointByGsrnQueryHandler(IDbConnectionFactory connectionFactory, IUserContext userContext)
+        public MeteringPointByGsrnQueryHandler(IDbConnectionFactory connectionFactory)
         {
             _connectionFactory = connectionFactory;
-            _userContext = userContext;
         }
 
         public async Task<MeteringPointCimDto?> Handle(MeteringPointByGsrnQuery request, CancellationToken cancellationToken)
@@ -58,11 +56,11 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi.MeteringPoints.Que
             var sql = $@"{MeteringPointDtoQueryHelper.Sql}
                         INNER JOIN GridAreaLinks gl ON mp.MeteringGridArea = gl.Id
                         INNER JOIN GridAreas ga ON gl.GridAreaId = ga.Id
-                        WHERE mp.GsrnNumber = @GsrnNumber AND ga.ActorId in @ActorIds";
+                        WHERE mp.GsrnNumber = @GsrnNumber";
 
             var meteringPointDto = await _connectionFactory
                 .GetOpenConnection()
-                .QuerySingleOrDefaultAsync<MeteringPointDto>(sql, new { request.GsrnNumber, _userContext.CurrentUser.ActorIds })
+                .QuerySingleOrDefaultAsync<MeteringPointDto>(sql, new { request.GsrnNumber })
                 .ConfigureAwait(false);
 
             if (meteringPointDto == null)

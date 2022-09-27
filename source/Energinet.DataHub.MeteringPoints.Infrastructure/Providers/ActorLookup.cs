@@ -15,7 +15,10 @@
 using System;
 using System.Threading.Tasks;
 using Dapper;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.MeteringPoints.Application.Common;
+using Energinet.DataHub.MeteringPoints.Application.Providers;
+using Energinet.DataHub.MeteringPoints.Domain.Actors;
 
 namespace Energinet.DataHub.MeteringPoints.Infrastructure.Providers
 {
@@ -35,6 +38,15 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Providers
                 .ExecuteScalarAsync<Guid>(
                     "SELECT Id FROM [dbo].[Actor] WHERE IdentificationNumber = @ActorNumber",
                     new { ActorNumber = actorNumber, });
+        }
+
+        public Task<bool> ActorExistAsync(Guid actorId)
+        {
+            return _dbConnectionFactory
+                .GetOpenConnection()
+                .ExecuteScalarAsync<bool>(
+                    "SELECT COUNT(1) Id FROM [dbo].[Actor] WHERE Id = @ActorId",
+                    new { ActorId = actorId.ToString() });
         }
     }
 }
