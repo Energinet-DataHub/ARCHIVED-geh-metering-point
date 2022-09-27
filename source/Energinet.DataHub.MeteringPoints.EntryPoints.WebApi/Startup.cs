@@ -144,6 +144,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
                 "Frontend service app id not found.");
 
             _container.AddJwtTokenSecurity(openIdUrl, audience);
+            _container.Register<UserMiddleware>(Lifestyle.Scoped);
             _container.Register<IUserContext, UserContext>(Lifestyle.Scoped);
 
             Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
