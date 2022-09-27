@@ -44,6 +44,8 @@ limitations under the License.
     <EmbeddedResource Include="Scripts\Model\202209260952 Add field to Actor table.sql" />
     <None Remove="Scripts\Model\202209261411 Drop UserActor table.sql" />
     <EmbeddedResource Include="Scripts\Model\202209261411 Drop UserActor table.sql" />
+    <None Remove="Scripts\Model\202209271546 Change size of bundleid column.sql" />
+    <EmbeddedResource Include="Scripts\Model\202209271546 Change size of bundleid column.sql" />
   </ItemGroup>
 
 </Project>
