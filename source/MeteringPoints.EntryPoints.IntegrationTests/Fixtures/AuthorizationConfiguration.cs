@@ -33,6 +33,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
         public AuthorizationConfiguration()
         {
             RootConfiguration = BuildKeyVaultConfigurationRoot();
+            // u002 didn't work
             Environment = "u001";
             var team = "batman";
 
