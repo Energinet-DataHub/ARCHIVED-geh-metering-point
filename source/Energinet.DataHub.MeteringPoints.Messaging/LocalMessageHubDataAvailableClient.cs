@@ -15,6 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Model.Model;
+using Energinet.DataHub.MeteringPoints.Application.Providers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Correlation;
 using Energinet.DataHub.MeteringPoints.Infrastructure.EDI;
 using Energinet.DataHub.MeteringPoints.Infrastructure.LocalMessageHub;

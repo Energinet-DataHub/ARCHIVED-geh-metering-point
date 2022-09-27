@@ -33,6 +33,7 @@ using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Application.Integrations.ChargeLinks.Create;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.ProcessOverview;
+using Energinet.DataHub.MeteringPoints.Application.Providers;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
 using Energinet.DataHub.MeteringPoints.Application.RequestMasterData;
 using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData;

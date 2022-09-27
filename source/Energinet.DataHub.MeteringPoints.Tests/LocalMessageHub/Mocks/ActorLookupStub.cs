@@ -14,15 +14,24 @@
 
 using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.MeteringPoints.Infrastructure.Providers;
+using Energinet.DataHub.MeteringPoints.Application.Providers;
 
 namespace Energinet.DataHub.MeteringPoints.Tests.LocalMessageHub.Mocks
 {
     public class ActorLookupStub : IActorLookup
     {
+        #pragma warning disable
+        public Task<bool> ActorExistAsync(Guid actorId)
+        {
+            return Task.FromResult(true);
+        }
+
+
         public Task<Guid> GetIdByActorNumberAsync(string actorNumber)
         {
             return Task.FromResult(Guid.NewGuid());
         }
+
+#pragma warning restore
     }
 }

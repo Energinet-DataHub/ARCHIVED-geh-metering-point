@@ -15,7 +15,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Energinet.DataHub.MeteringPoints.Infrastructure.Providers
+namespace Energinet.DataHub.MeteringPoints.Application.Providers
 {
     /// <summary>
     /// Actor lookup service
@@ -27,5 +27,11 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure.Providers
         /// </summary>
         /// <param name="actorNumber"></param>
         Task<Guid> GetIdByActorNumberAsync(string actorNumber);
+
+        /// <summary>
+        /// Finds the actor by actor id
+        /// </summary>
+        /// <param name="actorId"></param>
+        Task<bool> ActorExistAsync(Guid actorId);
     }
 }

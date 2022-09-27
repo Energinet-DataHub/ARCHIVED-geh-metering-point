@@ -37,6 +37,7 @@ using Energinet.DataHub.MeteringPoints.Application.EDI;
 using Energinet.DataHub.MeteringPoints.Application.EnergySuppliers;
 using Energinet.DataHub.MeteringPoints.Application.MarketDocuments;
 using Energinet.DataHub.MeteringPoints.Application.ProcessOverview;
+using Energinet.DataHub.MeteringPoints.Application.Providers;
 using Energinet.DataHub.MeteringPoints.Application.Providers.MeteringPointOwnership;
 using Energinet.DataHub.MeteringPoints.Application.RequestMasterData;
 using Energinet.DataHub.MeteringPoints.Application.UpdateMasterData;
@@ -84,6 +85,7 @@ using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEve
 using Energinet.DataHub.MeteringPoints.Infrastructure.Integration.IntegrationEvents.CreateMeteringPoint;
 using Energinet.DataHub.MeteringPoints.Infrastructure.InternalCommands;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Outbox;
+using Energinet.DataHub.MeteringPoints.Infrastructure.Providers;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Providers.MeteringPointOwnership;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Serialization;
 using Energinet.DataHub.MeteringPoints.Infrastructure.Transport.Protobuf;
@@ -186,6 +188,7 @@ namespace Energinet.DataHub.MeteringPoints.IntegrationTests
             _container.Register<IUserContext>(() => new UserContext { CurrentUser = new User(Guid.NewGuid(), new List<Guid> { Guid.NewGuid() }) }, Lifestyle.Singleton);
             _container.Register<MeteringPointPipelineContext>(Lifestyle.Scoped);
             _container.Register<IActorProvider, ActorProvider>(Lifestyle.Scoped);
+            _container.Register<IActorLookup, ActorLookup>();
             _container.Register<IDbConnectionFactory>(() => new SqlDbConnectionFactory(databaseFixture.DatabaseManager.ConnectionString), Lifestyle.Scoped);
             _container.Register<DbGridAreaHelper>(Lifestyle.Scoped);
             _container.Register<ProtobufOutboundMapperFactory>();
