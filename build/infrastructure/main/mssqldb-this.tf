@@ -30,3 +30,13 @@ module "mssqldb_meteringpoint" {
 
   tags                        = data.azurerm_resource_group.shared_resources.tags
 }
+
+module "kvs_metering_point_database_name" {
+  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/key-vault-secret?ref=7.0.0"
+
+  name          = "metering-point-databse-name"
+  value         = module.mssqldb_meteringpoint.name
+  key_vault_id  = module.kv_shared.id
+
+  tags          = azurerm_resource_group.this.tags
+}
