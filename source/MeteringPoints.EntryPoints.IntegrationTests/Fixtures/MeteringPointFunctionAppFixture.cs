@@ -212,6 +212,9 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             await ServiceBusResourceProvider
                 .BuildTopic("sbt-master-data-updated").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("MASTER_DATA_UPDATED_TOPIC", p.Name))
                 .CreateAsync().ConfigureAwait(false);
+            await ServiceBusResourceProvider
+                .BuildTopic("sbt-sharedres-integrationevent-received").Do(p => outboxHostSettings.ProcessEnvironmentVariables.Add("INTEGRATION_EVENT_TOPIC_NAME", p.Name))
+                .CreateAsync().ConfigureAwait(false);
 
             // => Database
             await DatabaseManager.CreateDatabaseAsync().ConfigureAwait(false);

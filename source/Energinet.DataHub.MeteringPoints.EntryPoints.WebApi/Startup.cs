@@ -176,7 +176,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             app.UseRouting();
 
             app.UseMiddleware<JwtTokenMiddleware>();
-            app.UseMiddleware<UserMiddleware>();
 
             app.UseAuthorization();
 
