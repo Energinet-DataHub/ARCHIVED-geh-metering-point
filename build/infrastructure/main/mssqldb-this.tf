@@ -36,7 +36,7 @@ module "kvs_metering_point_database_name" {
 
   name          = "metering-point-database-name"
   value         = module.mssqldb_meteringpoint.name
-  key_vault_id  = module.kv_shared.id
+  key_vault_id  = module.kv_shared_resources.id
 
   tags          = azurerm_resource_group.this.tags
 }
