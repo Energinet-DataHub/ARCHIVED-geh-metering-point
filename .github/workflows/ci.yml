@@ -25,7 +25,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@v8
 
   dotnet_solution_ci:
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@v8
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@temporarily_disable_integration_test
     with:
       SOLUTION_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.sln'
       USE_AZURE_FUNCTIONS_TOOLS: true
