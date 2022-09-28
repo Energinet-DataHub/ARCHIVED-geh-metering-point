@@ -42,20 +42,6 @@ public class ActorSyncService : IDisposable
         await _meteringPointDbService.CleanUpAsync().ConfigureAwait(false);
     }
 
-    public async Task<IEnumerable<UserActor>> GetUserActorsAsync()
-    {
-       return await _meteringPointDbService.GetUserActorsAsync().ConfigureAwait(false);
-    }
-
-    public async Task InsertUserActorsAsync(IEnumerable<UserActor> userActors)
-    {
-        if (_actors != null)
-        {
-            var userActorsToInsert = userActors.Where(u => _actors.Any(actor => u.ActorId == actor.B2CId));
-            await _meteringPointDbService.InsertUserActorsAsync(userActorsToInsert).ConfigureAwait(false);
-        }
-    }
-
     public async Task SyncActorsAsync()
     {
         _actors = await _actorRegistryDbService.GetActorsAsync().ConfigureAwait(false);

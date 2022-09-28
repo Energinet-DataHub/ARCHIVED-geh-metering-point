@@ -39,7 +39,7 @@ namespace Energinet.DataHub.MeteringPoints.Infrastructure
                                     ,[IdentificationNumber] AS Identifier
                                     ,[Roles]
                         FROM  [dbo].[Actor]
-                        WHERE Id = @ActorId";
+                        WHERE B2CId = @ActorId";
 
             try
             {

@@ -14,6 +14,8 @@
 
 using System;
 using System.Text.Json.Serialization;
+using Energinet.DataHub.Core.App.Common;
+using Energinet.DataHub.Core.App.Common.Abstractions.Users;
 using Energinet.DataHub.Core.App.WebApp.Middleware;
 using Energinet.DataHub.Core.App.WebApp.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Application.Common;
@@ -142,7 +144,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
                 "Frontend service app id not found.");
 
             _container.AddJwtTokenSecurity(openIdUrl, audience);
-            _container.AddUserContext<UserProvider>();
 
             Dapper.SqlMapper.AddTypeHandler(NodaTimeSqlMapper.Instance);
 
@@ -175,7 +176,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             app.UseRouting();
 
             app.UseMiddleware<JwtTokenMiddleware>();
-            app.UseMiddleware<UserMiddleware>();
 
             app.UseAuthorization();
 

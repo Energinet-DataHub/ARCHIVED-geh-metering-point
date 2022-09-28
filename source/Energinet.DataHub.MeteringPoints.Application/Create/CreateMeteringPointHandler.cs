@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.MeteringPoints.Application.Common;
 using Energinet.DataHub.MeteringPoints.Application.Common.ChildMeteringPoints;
+using Energinet.DataHub.MeteringPoints.Application.Providers;
 using Energinet.DataHub.MeteringPoints.Application.Queries;
 using Energinet.DataHub.MeteringPoints.Application.Validation.ValidationErrors;
 using Energinet.DataHub.MeteringPoints.Domain.Actors;
@@ -39,7 +40,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly IGridAreaRepository _gridAreaRepository;
         private readonly IMediator _mediator;
-        private readonly IActorProvider _actorProvider;
+        private readonly IActorLookup _actorLookup;
         private readonly CreateMeteringPointAuthorizer _authorizer;
         private readonly MasterDataValidator _masterDataValidator;
         private readonly ParentCouplingService _parentCouplingService;
@@ -48,7 +49,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             IMeteringPointRepository meteringPointRepository,
             IGridAreaRepository gridAreaRepository,
             IMediator mediator,
-            IActorProvider actorProvider,
+            IActorLookup actorLookup,
             CreateMeteringPointAuthorizer authorizer,
             MasterDataValidator masterDataValidator,
             ParentCouplingService parentCouplingService)
@@ -56,7 +57,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
             _meteringPointRepository = meteringPointRepository ?? throw new ArgumentNullException(nameof(meteringPointRepository));
             _gridAreaRepository = gridAreaRepository;
             _mediator = mediator;
-            _actorProvider = actorProvider;
+            _actorLookup = actorLookup;
             _authorizer = authorizer;
             _parentCouplingService = parentCouplingService ?? throw new ArgumentNullException(nameof(parentCouplingService));
             _masterDataValidator = masterDataValidator ?? throw new ArgumentNullException(nameof(masterDataValidator));
@@ -77,11 +78,7 @@ namespace Energinet.DataHub.MeteringPoints.Application.Create
                 return Failure(request, new GridAreaMustExistRuleError());
             }
 
-            try
-            {
-                var actor = await _actorProvider.GetActorAsync(ActorId.Create(request.AdministratorId).Value).ConfigureAwait(false);
-            }
-            catch (InvalidOperationException)
+            if (!await _actorLookup.ActorExistAsync(ActorId.Create(request.AdministratorId).Value).ConfigureAwait(false))
             {
                 return Failure(request, new ActorDoesNotExistRuleError(request.AdministratorId));
             }

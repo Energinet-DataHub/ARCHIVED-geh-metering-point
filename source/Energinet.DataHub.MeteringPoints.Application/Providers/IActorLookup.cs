@@ -13,7 +13,25 @@
 // limitations under the License.
 
 using System;
+using System.Threading.Tasks;
 
-namespace Energinet.DataHub.MeteringPoints.ActorRegistrySync.Entities;
+namespace Energinet.DataHub.MeteringPoints.Application.Providers
+{
+    /// <summary>
+    /// Actor lookup service
+    /// </summary>
+    public interface IActorLookup
+    {
+        /// <summary>
+        /// Finds the actor id by actor number
+        /// </summary>
+        /// <param name="actorNumber"></param>
+        Task<Guid> GetIdByActorNumberAsync(string actorNumber);
 
-public record UserActor(Guid UserId, Guid ActorId);
+        /// <summary>
+        /// Finds the actor by actor id
+        /// </summary>
+        /// <param name="actorId"></param>
+        Task<bool> ActorExistAsync(Guid actorId);
+    }
+}
