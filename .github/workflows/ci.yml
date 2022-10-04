@@ -54,5 +54,6 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@v8
     with:
       CALLER_REPOSITORY_PATH: Energinet-DataHub/geh-metering-point
+      RELEASE_NAME_PREFIX: dotnet
     secrets:
       PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
