@@ -31,7 +31,6 @@ module "func_processing" {
   health_check_path                         = "/api/monitor/ready"
 
   app_settings                              = {
-    METERINGPOINT_QUEUE_URL                                               = "${module.sb_meteringpoint.name}.servicebus.windows.net:9093"
     METERINGPOINT_DB_CONNECTION_STRING                                    = local.MS_METERING_POINT_CONNECTION_STRING
     METERINGPOINT_QUEUE_NAME                                              = module.sbq_meteringpoint.name
     CHARGES_DEFAULT_LINK_RESPONSE_QUEUE                                   = "create-link-reply"
