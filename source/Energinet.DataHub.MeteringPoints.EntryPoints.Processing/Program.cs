@@ -145,7 +145,8 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
             services.AddExternalServiceBusQueuesHealthCheck(
                 Environment.GetEnvironmentVariable("SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING")!,
                 Environment.GetEnvironmentVariable("MASTER_DATA_REQUEST_QUEUE_NAME")!,
-                "metering-point-master-data-response");
+                "metering-point-master-data-response",
+                Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_NAME")!);
             services.AddExternalServiceBusTopicsHealthCheck(
                 Environment.GetEnvironmentVariable("SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING")!,
                 Environment.GetEnvironmentVariable("INTEGRATION_EVENT_TOPIC_NAME")!);
@@ -160,9 +161,6 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.Processing
                 Environment.GetEnvironmentVariable("MARKET_PARTICIPANT_CHANGED_GRID_AREA_CREATED_SUBSCRIPTION_NAME")!,
                 Environment.GetEnvironmentVariable("MARKET_PARTICIPANT_CHANGED_GRID_AREA_NAME_CHANGED_SUBSCRIPTION_NAME")!,
                 Environment.GetEnvironmentVariable("ENERGY_SUPPLIER_CHANGED_EVENT_SUBSCRIPTION_NAME")!);
-            services.AddInternalDomainServiceBusQueuesHealthCheck(
-                Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_MANAGE_CONNECTION_STRING")!,
-                Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_NAME")!);
         }
 
         protected override void ConfigureContainer(Container container)
