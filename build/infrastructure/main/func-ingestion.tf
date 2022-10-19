@@ -30,7 +30,6 @@ module "func_ingestion" {
   use_dotnet_isolated_runtime               = true
 
   app_settings                              = {
-    METERINGPOINT_QUEUE_URL                                 = "${module.sb_meteringpoint.name}.servicebus.windows.net:9093"
     SHARED_SERVICE_BUS_SENDER_CONNECTION_STRING             = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-send-connection-string)"
     SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING             = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-manage-connection-string)"
     METERINGPOINT_DB_CONNECTION_STRING                      = local.MS_METERING_POINT_CONNECTION_STRING
