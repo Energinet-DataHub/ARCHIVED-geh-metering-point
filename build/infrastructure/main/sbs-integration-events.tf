@@ -19,7 +19,7 @@ module "sbs_energy_supplier_changed" {
   max_delivery_count  = 10 
   correlation_filter  = {
     properties     = {
-      "MessageType" = "EnergySupplierChanged",
+      "messageType" = "EnergySupplierChanged",
     }  
   }
 }
@@ -32,7 +32,7 @@ module "sbs_metering_point_message_dequeued" {
   max_delivery_count  = 10 
   correlation_filter  = {
     properties     = {
-      "MessageType" = "MeteringPointMessageDequeuedIntegrationEvent",
+      "messageType" = "MeteringPointMessageDequeuedIntegrationEvent",
     }  
   }
 }
