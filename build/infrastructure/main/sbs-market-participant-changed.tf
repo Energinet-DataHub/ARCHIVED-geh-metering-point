@@ -19,7 +19,7 @@ module "sbs_metering_point_actor_created" {
   max_delivery_count  = 10 
   correlation_filter  = {
     properties     = {
-      "MessageType" = "ActorCreated",
+      "messageType" = "ActorCreated",
     }  
   }
 }
@@ -32,7 +32,7 @@ module "sbs_metering_point_actor_role_added" {
   max_delivery_count  = 10 
   correlation_filter  = {
     properties     = {
-      "MessageType" = "ActorRoleAdded",
+      "messageType" = "ActorRoleAdded",
     }  
   }
 }
@@ -45,7 +45,7 @@ module "sbs_metering_point_actor_role_removed" {
   max_delivery_count  = 10 
   correlation_filter  = {
     properties     = {
-      "MessageType" = "ActorRoleRemoved",
+      "messageType" = "ActorRoleRemoved",
     }  
   }
 }
@@ -58,7 +58,7 @@ module "sbs_metering_point_actor_grid_area_added" {
   max_delivery_count  = 10 
   correlation_filter  = {
     properties     = {
-      "MessageType" = "ActorGridAreaAdded",
+      "messageType" = "ActorGridAreaAdded",
     }  
   }
 }
@@ -71,7 +71,7 @@ module "sbs_metering_point_actor_grid_area_removed" {
   max_delivery_count  = 10 
   correlation_filter  = {
     properties     = {
-      "MessageType" = "ActorGridAreaRemoved",
+      "messageType" = "ActorGridAreaRemoved",
     }  
   }
 }
@@ -84,7 +84,7 @@ module "sbs_metering_point_grid_area_created" {
   max_delivery_count  = 10 
   correlation_filter  = {
     properties     = {
-      "MessageType" = "GridAreaCreated",
+      "messageType" = "GridAreaCreated",
     }  
   }
 }
@@ -97,7 +97,7 @@ module "sbs_metering_point_grid_area_name_changed" {
   max_delivery_count  = 10 
   correlation_filter  = {
     properties     = {
-      "MessageType" = "GridAreaNameChanged",      
+      "messageType" = "GridAreaNameChanged",      
     }  
   }
 }
