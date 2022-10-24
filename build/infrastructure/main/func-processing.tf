@@ -31,8 +31,6 @@ module "func_processing" {
   health_check_path                         = "/api/monitor/ready"
 
   app_settings                              = {
-    METERINGPOINT_QUEUE_URL                                               = "${module.sb_meteringpoint.name}.servicebus.windows.net:9093"
-    METERINGPOINT_QUEUE_LISTEN_CONNECTION_STRING                          = module.sb_meteringpoint.primary_connection_strings["listen"]
     METERINGPOINT_DB_CONNECTION_STRING                                    = local.MS_METERING_POINT_CONNECTION_STRING
     METERINGPOINT_QUEUE_NAME                                              = module.sbq_meteringpoint.name
     CHARGES_DEFAULT_LINK_RESPONSE_QUEUE                                   = "create-link-reply"
@@ -41,7 +39,6 @@ module "func_processing" {
     SHARED_SERVICE_BUS_SEND_CONNECTION_STRING                             = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-send-connection-string)"        
     MASTER_DATA_REQUEST_QUEUE_NAME                                        = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-metering-point-master-data-request-name)"    
     SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING                           = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-manage-connection-string)"
-    METERINGPOINT_QUEUE_MANAGE_CONNECTION_STRING                          = module.sb_meteringpoint.primary_connection_strings["manage"]
     INTEGRATION_EVENT_TOPIC_NAME                                          = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-sharedres-integrationevent-received-name)"
     MARKET_PARTICIPANT_CHANGED_ACTOR_CREATED_SUBSCRIPTION_NAME            = module.sbs_metering_point_actor_created.name
     MARKET_PARTICIPANT_CHANGED_ACTOR_ROLE_ADDED_SUBSCRIPTION_NAME         = module.sbs_metering_point_actor_role_added.name
