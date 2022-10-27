@@ -21,16 +21,55 @@ on:
       - main
 
 jobs:
+  #
+  # License and Markdown Check
+  #
+
   ci_base:
     uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@v8
 
-  dotnet_solution_ci:
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@v8
+  #
+  # Detect changes to start relevant jobs
+  #
+
+  changes:
+    uses: ./.github/workflows/detect-changes.yml
+
+  #
+  # CI Infrastructure
+  #
+
+  infrastructure_ci_build:
+    needs: changes
+    if: ${{ needs.changes.outputs.infrastructure == 'true' }}
+    uses: Energinet-DataHub/.github/.github/workflows/infrastructure-build-prerelease.yml@v8
+    with:
+      TERRAFORM_WORKING_DIRECTORY: './build/infrastructure/main'
+      TERRAFORM_VERSION: '1.2.2'
+      INFRASTRUCTURE_PATH: './build/infrastructure'
+
+  #
+  # CI .NET
+  #
+
+  # Build all projects within solution
+  dotnet_ci_build:
+    needs: changes
+    if: ${{ needs.changes.outputs.dotnet == 'true' }}
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-build-prerelease.yml@v8
     with:
       SOLUTION_FILE_PATH: 'source/Energinet.DataHub.MeteringPoints.sln'
+
+  # Run all tests in 'IntegrationTests.dll'
+  dotnet_ci_test_integrationtests:
+    needs: changes
+    if: ${{ needs.changes.outputs.dotnet == 'true' }}
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci-test.yml@v8
+    with:
+      TESTS_DLL_FILE_PATH: '\source\Energinet.DataHub.MeteringPoints.IntegrationTests\bin\Release\net6.0\Energinet.DataHub.MeteringPoints.IntegrationTests.dll'
+      DOWNLOAD_ATTEMPT_LIMIT: 8
       USE_AZURE_FUNCTIONS_TOOLS: true
       USE_SQLLOCALDB_2019: true
-      PREPARE_OUTPUTS: true
       CODE_COVERAGE_FLAGS: business
       ENVIRONMENT: AzureAuth
     secrets:
@@ -40,21 +79,34 @@ jobs:
       AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
       AZURE_SECRETS_KEYVAULT_URL: ${{ secrets.AZURE_SECRETS_KEYVAULT_URL }}
 
-  terraform_validate:
-    uses: Energinet-DataHub/.github/.github/workflows/terraform-validate.yml@v8
+  # Run all tests in 'Tests.dll'
+  dotnet_ci_test_unittests:
+    needs: changes
+    if: ${{ needs.changes.outputs.dotnet == 'true' }}
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci-test.yml@v8
     with:
-      TERRAFORM_WORKING_DIR_PATH: './build/infrastructure/main'
-      TERRAFORM_VERSION: '1.2.2'
+      TESTS_DLL_FILE_PATH: '\source\Energinet.DataHub.MeteringPoints.Tests\bin\Release\net6.0\Energinet.DataHub.MeteringPoints.Tests.dll'
+      DOWNLOAD_ATTEMPT_LIMIT: 8
+      CODE_COVERAGE_FLAGS: business
 
-  create_prerelease:
+  #
+  # Branch policy status check
+  #
+
+  allow_merge:
+    runs-on: ubuntu-latest
     needs: [
       ci_base,
-      terraform_validate,
-      dotnet_solution_ci
+      # Infrastructure
+      infrastructure_ci_build,
+      # .NET
+      dotnet_ci_build,
+      dotnet_ci_test_integrationtests,
+      dotnet_ci_test_unittests
     ]
-    uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@v8
-    with:
-      CALLER_REPOSITORY_PATH: Energinet-DataHub/geh-metering-point
-      RELEASE_NAME_PREFIX: dotnet
-    secrets:
-      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+    if: |
+      always() &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled')
+    steps:
+      - run: echo "${{ toJSON(needs) }}"
