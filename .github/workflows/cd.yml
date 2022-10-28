@@ -18,6 +18,7 @@ on:
   push:
     branches:
       - main
+      - dstenroejl/ci-cd-split # TODO: Remove after test
 
 jobs:
   #
