@@ -134,10 +134,10 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.IntegrationTests.Fixtures
             await storage.CreateIfNotExistsAsync().ConfigureAwait(false);
 
             // => MeteringPoint
-            ingestionHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_SEND_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
+            ingestionHostSettings.ProcessEnvironmentVariables.Add("SHARED_SERVICE_BUS_SENDER_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
             processingHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_LISTEN_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
             processingHostSettings.ProcessEnvironmentVariables.Add("SHARED_SERVICE_BUS_SEND_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
-            localMessageHubHostSettings.ProcessEnvironmentVariables.Add("METERINGPOINT_QUEUE_SEND_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
+            localMessageHubHostSettings.ProcessEnvironmentVariables.Add("SHARED_SERVICE_BUS_SENDER_CONNECTION_STRING", ServiceBusResourceProvider.ConnectionString);
 
             var meteringPointQueue = await ServiceBusResourceProvider
                 .BuildQueue("sbq-meteringpoint")

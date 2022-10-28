@@ -11,14 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+module "sbq_meteringpoint" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-queue?ref=7.0.0"
 
-# To learn more about .editorconfig see https://aka.ms/editorconfigdocs
-
-[*.cs]
-
-###############################
-# .NET Analyzers              #
-###############################
-
-# Set as suggestion at the moment, because of issue: https://github.com/dotnet/roslyn-analyzers/issues/5712
-dotnet_diagnostic.CA2007.severity = suggestion
+  name                = "meteringpoint-processing"
+  namespace_id        = data.azurerm_key_vault_secret.sb_domain_relay_namespace_id.value
+}
