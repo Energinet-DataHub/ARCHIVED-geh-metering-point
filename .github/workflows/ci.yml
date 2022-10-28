@@ -67,7 +67,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci-test.yml@v8
     with:
       TESTS_DLL_FILE_PATH: '\source\Energinet.DataHub.MeteringPoints.IntegrationTests\bin\Release\net6.0\Energinet.DataHub.MeteringPoints.IntegrationTests.dll'
-      DOWNLOAD_ATTEMPT_LIMIT: 8
+      DOWNLOAD_ATTEMPT_LIMIT: 12
       USE_AZURE_FUNCTIONS_TOOLS: true
       USE_SQLLOCALDB_2019: true
       CODE_COVERAGE_FLAGS: business
@@ -86,7 +86,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci-test.yml@v8
     with:
       TESTS_DLL_FILE_PATH: '\source\Energinet.DataHub.MeteringPoints.Tests\bin\Release\net6.0\Energinet.DataHub.MeteringPoints.Tests.dll'
-      DOWNLOAD_ATTEMPT_LIMIT: 8
+      DOWNLOAD_ATTEMPT_LIMIT: 12
       CODE_COVERAGE_FLAGS: business
 
   #
