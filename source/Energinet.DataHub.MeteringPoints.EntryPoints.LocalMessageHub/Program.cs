@@ -94,15 +94,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub
             // Health Checks
             services.AddLiveHealthCheck();
             services.AddSqlServerHealthCheck(Environment.GetEnvironmentVariable("METERINGPOINT_DB_CONNECTION_STRING")!);
-            services.AddInternalDomainServiceBusQueuesHealthCheck(
-                Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_MANAGE_CONNECTION_STRING")!,
-                Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_NAME")!);
             services.AddExternalServiceBusQueuesHealthCheck(
                 Environment.GetEnvironmentVariable("SHARED_SERVICE_BUS_MANAGE_CONNECTION_STRING")!,
                 Environment.GetEnvironmentVariable("MESSAGEHUB_DATA_AVAILABLE_QUEUE")!,
                 Environment.GetEnvironmentVariable("MESSAGEHUB_DOMAIN_REPLY_QUEUE")!,
                 Environment.GetEnvironmentVariable("REQUEST_BUNDLE_QUEUE_SUBSCRIBER_QUEUE")!,
-                Environment.GetEnvironmentVariable("BUNDLE_DEQUEUED_SUBSCRIBER_QUEUE")!);
+                Environment.GetEnvironmentVariable("BUNDLE_DEQUEUED_SUBSCRIBER_QUEUE")!,
+                Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_NAME")!);
         }
 
         protected override void ConfigureContainer(Container container)
@@ -163,7 +161,7 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.LocalMessageHub
             container.Register<IDocumentSerializer<GenericNotificationMessage>, GenericNotificationMessageXmlSerializer>(Lifestyle.Singleton);
             container.Register<IDocumentSerializer<AccountingPointCharacteristicsMessage>, AccountingPointCharacteristicsMessageXmlSerializer>(Lifestyle.Singleton);
 
-            var connectionString = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_SEND_CONNECTION_STRING");
+            var connectionString = Environment.GetEnvironmentVariable("SHARED_SERVICE_BUS_SENDER_CONNECTION_STRING");
             var topic = Environment.GetEnvironmentVariable("METERINGPOINT_QUEUE_NAME");
 
             container.Register(() => new ServiceBusClient(connectionString).CreateSender(topic), Lifestyle.Singleton);
