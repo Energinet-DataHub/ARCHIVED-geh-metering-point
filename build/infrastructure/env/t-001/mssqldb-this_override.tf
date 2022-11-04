@@ -13,5 +13,5 @@
 # limitations under the License.
 module "mssqldb_meteringpoint" {
   developer_ad_group_name     = var.developer_ad_group_name
-  max_size_gb                 = 8
+  max_size_gb                 = 10
 }
