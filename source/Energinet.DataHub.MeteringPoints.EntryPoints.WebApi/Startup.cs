@@ -16,6 +16,8 @@ using System;
 using System.Text.Json.Serialization;
 using Energinet.DataHub.Core.App.Common;
 using Energinet.DataHub.Core.App.Common.Abstractions.Users;
+using Energinet.DataHub.Core.App.Common.Diagnostics.HealthChecks;
+using Energinet.DataHub.Core.App.WebApp.Diagnostics.HealthChecks;
 using Energinet.DataHub.Core.App.WebApp.Middleware;
 using Energinet.DataHub.Core.App.WebApp.SimpleInjector;
 using Energinet.DataHub.MeteringPoints.Application.Common;
@@ -110,6 +112,12 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
                 options.AddLogging();
             });
 
+            services.AddHealthChecks()
+                .AddLiveCheck()
+                .AddSqlServer(
+                    name: "MeteringPointDb",
+                    connectionString: connectionString);
+
             services.AddTransient<IMiddlewareFactory>(_ => new SimpleInjectorMiddlewareFactory(_container));
 
             services.UseSimpleInjectorAspNetRequestScoping(_container);
@@ -182,6 +190,13 @@ namespace Energinet.DataHub.MeteringPoints.EntryPoints.WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseEndpoints(endpoints =>
+            {
+                // Health check
+                endpoints.MapLiveHealthChecks();
+                endpoints.MapReadyHealthChecks();
             });
 
             app.UseSimpleInjector(_container);
