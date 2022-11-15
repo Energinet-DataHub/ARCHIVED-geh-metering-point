@@ -14,6 +14,7 @@
 
 using System.Linq;
 using Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp.Helpers;
+using Microsoft.Data.SqlClient;
 
 namespace Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp
 {
@@ -24,6 +25,8 @@ namespace Energinet.DataHub.MeteringPoints.ApplyDBMigrationsApp
             var connectionString = ConnectionStringFactory.GetConnectionString(args);
             var filter = EnvironmentFilter.GetFilter(args);
             var isDryRun = args.Contains("dryRun");
+
+            SqlAuthenticationProvider.SetProvider(SqlAuthenticationMethod.ActiveDirectoryInteractive, new SqlAppAuthenticationProvider());
 
             var upgrader = UpgradeFactory.GetUpgradeEngine(connectionString, filter, isDryRun);
 
