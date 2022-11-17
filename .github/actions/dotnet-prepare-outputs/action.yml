@@ -72,16 +72,6 @@ runs:
           --configuration Release \
           --output '${{ inputs.OUTPUT_PATH }}\functions\localmessagehub'
 
-    - name: Publish ActorSync
-      shell: bash
-      run: |
-        dotnet publish \
-          '.\source\Energinet.DataHub.MeteringPoints.ActorRegistrySync\Energinet.DataHub.MeteringPoints.ActorRegistrySync.csproj' \
-          --no-build \
-          --no-restore \
-          --configuration Release \
-          --output '${{ inputs.OUTPUT_PATH }}\functions\actorsync'
-
     - name: Publish Web API
       shell: bash
       run: |
